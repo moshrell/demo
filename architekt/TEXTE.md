@@ -26,8 +26,8 @@ RU: Дом на одну семью, половина дуплекса или м
 Ziel-Link: *Honorar einschätzen* (оценить гонорар)
 
 **2. Umbau & Sanierung** (перестройка и санация)
-DE: Altbau kaufen und nicht wissen, was drinsteckt? Ich prüfe den Bestand, nenne Risiken früh und plane Schritt für Schritt.
-RU: Купили старый дом и не знаете, что внутри? Проверяю существующую постройку (Bestand), называю риски заранее и планирую поэтапно.
+DE: Altbau kaufen und nicht wissen, was drinsteckt? Ich prüfe den Bestand schon vor dem Kauf (Kaufberatung), nenne Risiken früh und plane Schritt für Schritt.
+RU: Покупаете старый дом и не знаете, что внутри? Проверяю существующую постройку (Bestand) ещё до покупки (Kaufberatung — консультация перед покупкой), называю риски заранее и планирую поэтапно.
 
 **3. Anbau & Aufstockung** (пристройка и надстройка этажа)
 DE: Mehr Platz auf dem eigenen Grundstück: Anbau, Dachausbau oder zusätzliches Geschoss, bauordnungsrechtlich sauber geplant.
@@ -149,6 +149,14 @@ RU: Да, и там я всегда начинаю с обследования, 
 DE: Hannover und die Region, zum Beispiel Gehrden, Barsinghausen, Springe, Isernhagen und Langenhagen. Für andere Orte fragen Sie gern an.
 RU: Ганновер и регион, например Герден, Барзингхаузен, Шпринге, Изернхаген и Лангенхаген. По другим местам можно спросить.
 
+**8. Gibt es Fördergeld für Sanierung oder Neubau?** (Есть ли государственные субсидии?)
+DE: Oft ja, zum Beispiel für energieeffiziente Gebäude. Förderanträge laufen über eine Energieberatung. Ich arbeite mit Energieberatern zusammen und plane Ihr Projekt so, dass die Anforderungen passen.
+RU: Часто да, например на энергоэффективные здания. Заявки на субсидии идут через энергоконсультанта. Я работаю с энергоконсультантами и планирую проект так, чтобы требования выполнялись.
+
+**9. Ich möchte ein Haus kaufen. Können Sie vorher draufschauen?** (Хочу купить дом. Можете посмотреть до покупки?)
+DE: Ja. Bei einer Kaufberatung sehe ich mir Bestand, Bausubstanz und mögliche Umbaukosten an, bevor Sie unterschreiben.
+RU: Да. При Kaufberatung я смотрю на состояние дома, несущие конструкции и возможные расходы на перестройку до того, как вы подпишете договор.
+
 ---
 
 ## Kontakt (контакт)
@@ -177,6 +185,7 @@ RU: Ганновер и регион, например Герден, Барзи�
 - Einwilligung fehlt → **DE:** Bitte stimmen Sie der Datenverarbeitung zu. (Пожалуйста, подтвердите согласие.)
 
 Блок контактов: Studio Wendt Architekten · Podbielskistraße 0 · 30177 Hannover · 0511 1234567 · kontakt@beispiel.de · Mo–Fr 9–17 Uhr (пн–пт 9–17)
+**Offene Sprechstunde** (открытая консультация): jeden 1. Donnerstag im Monat, 16–18 Uhr, ohne Anmeldung (каждый первый четверг месяца, 16–18, без записи)
 
 ---
 

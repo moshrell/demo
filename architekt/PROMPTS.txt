@@ -1,0 +1,53 @@
+PROMPTS ДЛЯ GEMINI: сайт архитектора (Studio Wendt Architekten, демо)
+
+Как работать:
+- Все 9 кадров делай в ОДНОМ чате Gemini, по порядку (единый свет и стиль).
+- Перед каждым промптом выбери кнопку формата, указанную в заголовке.
+- Сохраняй файлы ТОЧНО под указанными именами (jpg) и положи в папку D:\Webdesign\architekt\img\
+- Если кадр не понравился, попроси в том же чате «сделай другой вариант» и всё равно сохрани под тем же именем.
+- На кадрах нет текста и логотипов: если Gemini нарисовал надпись, перегенерируй.
+
+====================================================================
+01 · projekt-deister-haus.jpg · формат 16:9
+====================================================================
+Architectural exterior photograph of a modern single-family house on a gentle hillside in Lower Saxony, Germany, in late autumn. The house has a compact gabled form with a warm light timber facade on the upper floor and a pale concrete ground floor with a large glazed living-room opening facing a green garden. Muted terracotta-colored roof tiles. Soft overcast daylight, no harsh shadows, calm and honest documentary architecture photography, shot on a 35mm lens at eye level, slightly desaturated natural colors, paper-white sky, no people, no cars, no text, no logos, no signs, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+02 · projekt-linden-altbau.jpg · формат 4:3
+====================================================================
+Interior architectural photograph of a renovated apartment in a German Gründerzeit building from 1912, in the Linden district of Hannover. High ceilings with preserved original plaster stucco, tall wooden box-type windows, restored herringbone parquet floor, a freshly opened bright floor plan with a simple minimalist kitchen block in graphite grey and a plain white wall. Soft overcast daylight coming through the windows, calm and honest documentary architecture photography, 35mm lens, slightly desaturated natural colors, no people, no text, no logos, no pictures with writing on the walls, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+03 · projekt-isernhagen-anbau.jpg · формат 4:3
+====================================================================
+Architectural photograph of a single-storey extension added to the garden side of a German terraced end-of-row brick house. The extension has a large floor-to-ceiling glass front with slim graphite-grey frames facing a lawn, a flat roof with a thin edge, and a bright eat-in kitchen with a long oak table visible through the glass. South-facing, soft overcast daylight, calm and honest documentary architecture photography, 35mm lens, slightly desaturated natural colors, no people, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+04 · projekt-list-dachausbau.jpg · формат 4:3
+====================================================================
+Interior architectural photograph of a newly converted attic apartment under a pitched roof in an old German apartment building. Two dormer windows bring in soft light, visible white-painted timber roof beams, a light open gallery with a slim steel railing above a living area, pale oak floor, white walls, one simple graphite-grey sofa. Soft overcast daylight, calm and honest documentary architecture photography, 35mm lens, slightly desaturated natural colors, no people, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+05 · projekt-deister-innen.jpg · формат 3:4
+====================================================================
+Vertical interior architectural photograph of a modern living room in a single-family house in Germany. Floor-to-ceiling glazing opening to a green garden, light oak floor, a pale concrete wall, a simple wooden staircase with slim steel balustrade rising along one side, a single graphite-grey armchair, a terracotta-colored ceramic vase on the floor. Soft overcast daylight, calm and honest documentary architecture photography, 35mm lens, slightly desaturated natural colors, no people, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+06 · projekt-linden-detail.jpg · формат 1:1
+====================================================================
+Square close-up architectural detail photograph where an old and a new building element meet: a corner of preserved historic plaster stucco ornament on a ceiling edge next to a clean new white plaster wall and a thin graphite-grey steel profile. Soft overcast daylight from a window out of frame, shallow depth of field, calm documentary photography, slightly desaturated natural colors, no people, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+07 · buero-portrait.jpg · формат 3:4
+====================================================================
+Vertical half-length portrait of a fictional male architect in his early forties with short dark hair and a light stubble, wearing a simple dark charcoal sweater over a white shirt. He stands in a bright studio office near a large window, looking calmly at the camera with a slight friendly expression, one hand resting on a table with architectural drawings. Soft overcast window light, shallow depth of field, natural skin tones, slightly desaturated colors, documentary portrait style, no text, no logos, no name tags, no watermark. The person does not resemble any real person. Realistic, sharp, high resolution.
+
+====================================================================
+08 · buero-schreibtisch.jpg · формат 4:3
+====================================================================
+Overhead-angled photograph of an architect's desk by a window: rolled and unrolled floor plans with thin technical lines (no readable text or numbers), a wooden architect's scale ruler, a mechanical pencil, a small cardboard site model of a gabled house, a cup of coffee, a terracotta-colored desk accessory. Soft overcast daylight, calm documentary photography, slightly desaturated natural colors, no people, no readable text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+09 · ablauf-baustelle.jpg · формат 4:3
+====================================================================
+Photograph of a quiet residential construction site in Germany on an overcast day: the raw brick shell of a two-storey house with a timber roof truss, wooden scaffolding on one side, stacks of building material, wet ground. A single person in a hard hat and high-visibility vest seen from behind in the distance is looking at the building (face not visible). Soft overcast daylight, calm and honest documentary photography, 35mm lens, slightly desaturated natural colors, no text, no logos, no signs on fences, no watermark. Realistic, sharp, high resolution.

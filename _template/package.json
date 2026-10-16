@@ -1,0 +1,15 @@
+{
+  "name": "__SLUG__",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --open",
+    "build": "astro build && node scripts/ki-hinweis.mjs && node scripts/htaccess.mjs",
+    "preview": "astro preview --open",
+    "publish": "npm run build && node scripts/publish.mjs"
+  },
+  "dependencies": {
+    "astro": "^7.3.5"
+  }
+}

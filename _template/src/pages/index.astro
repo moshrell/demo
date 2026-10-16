@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import OrderForm from '../components/OrderForm.astro';
+import site from '../data/site.json';
+---
+<Base>
+  <main id="inhalt">
+    <h1>{site.name}</h1>
+    <!-- Formular-Standard: Beispiel mit Preisen. Ohne Preise: items weglassen und options={['Leistung A', 'Leistung B']} nutzen. TODO: echte Positionen vom Kunden -->
+    <OrderForm
+      title="Vorbestellung"
+      submitLabel="Vorbestellen"
+      purpose="meiner Vorbestellung"
+      items={[{ id: 'a', name: 'TODO Artikel A', cents: 350 }, { id: 'b', name: 'TODO Artikel B', cents: 1290 }]}
+      options={['TODO Zeit 1', 'TODO Zeit 2']}
+      optionsLabel="Wann?"
+    />
+  </main>
+</Base>

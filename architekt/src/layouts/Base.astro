@@ -1,0 +1,76 @@
+---
+import '@fontsource-variable/newsreader/wght.css';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-600.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '../styles/global.css';
+import site from '../data/site.json';
+const { title = 'Architekt Hannover | Studio Wendt Architekten', description = 'Architekt in Hannover für Neubau, Umbau, Anbau und Bauantrag. Honorar-Orientierung online, kostenloses Erstgespräch.', home = false, jsonld = false } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const nav = [['leistungen', 'Leistungen'], ['projekte', 'Projekte'], ['ablauf', 'Ablauf'], ['honorar', 'Honorar'], ['buero', 'Büro'], ['kontakt', 'Kontakt']];
+const href = (id: string) => (home ? `#${id}` : `${base}#${id}`);
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Architect',
+  name: site.name,
+  description,
+  telephone: site.phone,
+  email: site.email,
+  address: { '@type': 'PostalAddress', streetAddress: site.address.street, postalCode: site.address.zip, addressLocality: site.address.city, addressCountry: 'DE' },
+  areaServed: ['Hannover', 'Gehrden', 'Barsinghausen', 'Springe', 'Isernhagen', 'Langenhagen'],
+  openingHours: 'Mo-Fr 09:00-17:00',
+};
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#f6f3ec" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <script is:inline>document.documentElement.classList.add('js')</script>
+    {jsonld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+  </head>
+  <body>
+    <a class="skip" href="#inhalt">Zum Inhalt springen</a>
+    <header class="top">
+      <div class="wrap top__in">
+        <a class="wordmark" href={home ? '#' : base} aria-label={`${site.name}, Startseite`}>{site.short}<span>Architekten</span></a>
+        <nav class="top__links" aria-label="Hauptmenü">
+          {nav.map(([id, label]) => <a href={href(id)}>{label}</a>)}
+        </nav>
+        <details class="menu" data-menu>
+          <summary aria-label="Menü">Menü</summary>
+          <ul class="menu__list">
+            {nav.map(([id, label]) => <li><a href={href(id)}>{label}</a></li>)}
+          </ul>
+        </details>
+      </div>
+    </header>
+
+    <slot />
+
+    <footer class="foot">
+      <div class="wrap foot__in">
+        <p class="foot__mark">{site.name}</p>
+        <p class="foot__demo">Demo-Seite, alle Angaben fiktiv.</p>
+        <nav class="foot__links" aria-label="Rechtliches">
+          <a href={`${base}impressum/`}>Impressum</a>
+          <a href={`${base}datenschutz/`}>Datenschutz</a>
+        </nav>
+      </div>
+    </footer>
+
+    <nav class="dock" aria-label="Schnellkontakt" data-dock>
+      <a href={`tel:${site.phoneHref}`}>Anrufen</a>
+      <a href={href('kontakt')}>Erstgespräch</a>
+    </nav>
+
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>

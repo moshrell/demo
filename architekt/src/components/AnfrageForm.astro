@@ -1,0 +1,238 @@
+---
+/**
+ * AnfrageForm: Formular-Standard (Kravets Webdesign), abgeleitet von OrderForm.astro für eine Anfrage ohne Warenkorb.
+ *  1. Jedes Feld: label, Platzhalter-Beispiel, autocomplete, type/inputmode.
+ *  2. Pflicht-Häkchen zur Einwilligung mit Zweck + Link auf datenschutz/ (neuer Tab), Fehlermeldung.
+ *  3. Orientierung aus dem Honorar-Rechner läuft mit (klebende Leiste unten) und steht in der Bestätigung. Keine erfundene Summe.
+ *  4. Eingaben gehen nie verloren (sessionStorage, ohne Einwilligungs-Häkchen), Löschen nach dem Absenden.
+ * Es wird nichts gesendet (Demo). Beim echten Kunden: Backend/Mail-Weg anschließen und Datenschutz anpassen.
+ */
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const projektarten = ['Neubau', 'Umbau & Sanierung', 'Anbau & Aufstockung', 'Nur Bauantrag', 'Weiß ich noch nicht'];
+const id = 'anfrage';
+---
+<section class="of" aria-labelledby={`${id}-h`}>
+  <h2 class="of__title" id={`${id}-h`}>Erstgespräch anfragen</h2>
+  <p class="of__lead">Antwort in der Regel innerhalb eines Werktags.</p>
+
+  <form class="of__form" id={id} novalidate data-of>
+    <fieldset class="of__group">
+      <legend>Ihr Vorhaben</legend>
+      <div class="of__field">
+        <label for={`${id}-art`}>Projektart</label>
+        <select id={`${id}-art`} name="art" autocomplete="off">
+          {projektarten.map((p, i) => <option value={p} selected={i === projektarten.length - 1}>{p}</option>)}
+        </select>
+      </div>
+      <div class="of__field">
+        <label for={`${id}-ort`}>Ort des Vorhabens <span class="of__opt">(optional)</span></label>
+        <input id={`${id}-ort`} name="ort" type="text" autocomplete="off" placeholder="z. B. Gehrden, Hauptstraße" />
+      </div>
+      <div class="of__calc" data-calc-box hidden>
+        <p><span class="of__calc-label">Aus der Honorar-Orientierung</span><br /><span data-calc-text></span></p>
+        <button type="button" class="of__linkbtn" data-calc-clear>Angabe entfernen</button>
+      </div>
+      <div class="of__field">
+        <label for={`${id}-note`}>Kurze Beschreibung <span class="of__opt">(optional)</span></label>
+        <textarea id={`${id}-note`} name="note" rows="3" autocomplete="off" placeholder="z. B. Altbau von 1960, Küche vergrößern"></textarea>
+      </div>
+    </fieldset>
+
+    <fieldset class="of__group">
+      <legend>Ihre Angaben</legend>
+      <div class="of__field">
+        <label for={`${id}-name`}>Name</label>
+        <input id={`${id}-name`} name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname, z. B. Max Mustermann" required aria-describedby={`${id}-err-name`} />
+        <p class="of__err" id={`${id}-err-name`} hidden>Bitte geben Sie Ihren Namen ein.</p>
+      </div>
+      <div class="of__field">
+        <label for={`${id}-tel`}>Telefon</label>
+        <input id={`${id}-tel`} name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 0511 1234567" required aria-describedby={`${id}-err-tel`} />
+        <p class="of__err" id={`${id}-err-tel`} hidden>Bitte prüfen Sie die Telefonnummer.</p>
+      </div>
+      <div class="of__field">
+        <label for={`${id}-mail`}>E-Mail <span class="of__opt">(optional)</span></label>
+        <input id={`${id}-mail`} name="email" type="email" autocomplete="email" inputmode="email" placeholder="z. B. max@beispiel.de" aria-describedby={`${id}-err-mail`} />
+        <p class="of__err" id={`${id}-err-mail`} hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@beispiel.de.</p>
+      </div>
+    </fieldset>
+
+    <div class="of__consent">
+      <label class="of__check">
+        <input type="checkbox" name="privacy" required aria-describedby={`${id}-err-privacy`} />
+        <span>Ich bin einverstanden, dass {site.name} meine Angaben (Name, Telefon, E-Mail, Ort, Beschreibung) zur Bearbeitung meiner Anfrage verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a></span>
+      </label>
+      <p class="of__err" id={`${id}-err-privacy`} hidden>Bitte stimmen Sie zu, sonst können wir Ihre Anfrage nicht bearbeiten.</p>
+    </div>
+
+    <div class="of__bar">
+      <p class="of__total">
+        <span data-bar-label>Es wird nichts gesendet (Demo).</span>
+        <strong data-bar-value hidden></strong>
+      </p>
+      <button class="btn btn--primary of__btn" type="submit">Anfrage senden</button>
+    </div>
+  </form>
+
+  <div class="of__done" data-done tabindex="-1" hidden>
+    <h3>Danke, Ihre Anfrage ist angekommen.</h3>
+    <p>Ich melde mich innerhalb eines Werktags bei Ihnen.</p>
+    <dl data-done-list></dl>
+    <p class="of__demo">Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.</p>
+  </div>
+</section>
+
+<style>
+  .of { max-width: 40rem; }
+  .of__title { margin: 0 0 var(--space-xs); }
+  .of__lead { margin: 0 0 var(--space-xl); color: var(--muted); }
+  .of__group { border: 0; padding: 0; margin: 0 0 var(--space-xl); min-width: 0; display: grid; gap: var(--space-md); }
+  .of__group legend { padding: 0; margin-bottom: var(--space-sm); font-weight: 600; }
+  .of__field { display: grid; gap: var(--space-2xs); min-width: 0; }
+  .of__field label { font-weight: 600; font-size: var(--text-sm); }
+  .of__opt { font-weight: 400; color: var(--muted); }
+  .of__field input, .of__field textarea, .of__field select { width: 100%; min-height: 3rem; padding: 0.7rem 0.85rem; border: 1px solid var(--ink); border-radius: var(--radius); background: var(--paper); color: var(--ink); font: inherit; }
+  .of__field select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%); background-position: calc(100% - 1.25rem) 50%, calc(100% - 0.9rem) 50%; background-size: 0.35rem 0.35rem; background-repeat: no-repeat; padding-right: 2.5rem; }
+  .of__field textarea { resize: vertical; }
+  .of__field input::placeholder, .of__field textarea::placeholder { color: var(--muted); opacity: 1; }
+  .of__field input:focus-visible, .of__field textarea:focus-visible, .of__field select:focus-visible, .of__btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+  .of__field input[aria-invalid='true'] { border-color: var(--alert); box-shadow: inset 0 0 0 1px var(--alert); }
+  .of__err { margin: 0; font-size: var(--text-sm); font-weight: 600; color: var(--alert); }
+  .of__err[hidden] { display: none; }
+  .of__calc { display: flex; justify-content: space-between; align-items: start; gap: var(--space-md); padding: var(--space-md); background: var(--color-paper-2); border-left: 2px solid var(--accent); font-size: var(--text-sm); }
+  .of__calc[hidden] { display: none; }
+  .of__calc p { margin: 0; }
+  .of__calc-label { font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  .of__linkbtn { min-height: 2.75rem; padding: 0 var(--space-xs); border: 0; background: none; color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 0.2em; cursor: pointer; font-size: var(--text-sm); white-space: nowrap; }
+  .of__consent { display: grid; gap: var(--space-2xs); margin-bottom: var(--space-lg); }
+  .of__check { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-sm); align-items: start; font-size: var(--text-sm); line-height: 1.5; cursor: pointer; }
+  .of__check input { width: 1.4rem; height: 1.4rem; margin: 0.1rem 0 0; accent-color: var(--accent); }
+  .of__check input:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+  .of__check.is-invalid span { color: var(--alert); }
+  .of__bar { position: sticky; bottom: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); padding: var(--space-sm) 0; padding-bottom: max(var(--space-sm), env(safe-area-inset-bottom)); background: var(--paper); border-top: 1px solid var(--ink); }
+  .of__total { display: grid; gap: 0.125rem; margin: 0; min-width: 0; font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+  .of__total strong { font-family: var(--font-display); font-weight: 400; font-size: var(--text-lg); }
+  .of__total strong[hidden] { display: none; }
+  .of__btn[disabled] { opacity: 0.6; cursor: wait; }
+  .of__done { padding: var(--space-lg); border: 1px solid var(--ink); border-radius: var(--radius); display: grid; gap: var(--space-md); }
+  .of__done:focus { outline: 3px solid var(--focus); outline-offset: 3px; }
+  .of__done h3 { margin: 0; }
+  .of__done p { margin: 0; }
+  .of__done dl { margin: 0; display: grid; }
+  .of__done dl > div { display: flex; justify-content: space-between; gap: var(--space-md); padding: var(--space-xs) 0; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
+  .of__done dt { color: var(--muted); }
+  .of__done dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+  .of__sum { font-weight: 600; }
+  .of__demo { font-size: var(--text-sm); color: var(--muted); }
+  @media (max-width: 30rem) { .of__bar { flex-wrap: wrap; } .of__btn { flex: 1 1 100%; } }
+</style>
+
+<script>
+  import { load, summaryText, compute, rangeText, KEY } from '../scripts/calc';
+
+  const form = document.querySelector<HTMLFormElement>('form[data-of]');
+  if (form) {
+    const done = form.parentElement!.querySelector<HTMLElement>('[data-done]')!;
+    const list = done.querySelector<HTMLElement>('[data-done-list]')!;
+    const box = form.querySelector<HTMLElement>('[data-calc-box]')!;
+    const boxText = form.querySelector<HTMLElement>('[data-calc-text]')!;
+    const barLabel = form.querySelector<HTMLElement>('[data-bar-label]')!;
+    const barValue = form.querySelector<HTMLElement>('[data-bar-value]')!;
+    const art = form.elements.namedItem('art') as HTMLSelectElement;
+    const field = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
+    const ARTMAP: Record<string, string> = { neubau: 'Neubau', umbau: 'Umbau & Sanierung', anbau: 'Anbau & Aufstockung', bauantrag: 'Nur Bauantrag' };
+    let useCalc = false;
+    const USE = 'anfrage:usecalc';
+
+    const err = (input: HTMLInputElement, show: boolean) => {
+      const e = document.getElementById(input.getAttribute('aria-describedby') || '');
+      if (e) e.hidden = !show;
+      input.setAttribute('aria-invalid', show ? 'true' : 'false');
+      input.closest('.of__check')?.classList.toggle('is-invalid', show);
+    };
+    ['name', 'tel', 'email'].forEach((n) => field(n).addEventListener('input', () => err(field(n), false)));
+    field('privacy').addEventListener('change', () => err(field('privacy'), false));
+
+    const showCalc = () => {
+      const s = useCalc ? load() : null;
+      box.hidden = !s;
+      if (s) {
+        boxText.textContent = summaryText(s);
+        barLabel.textContent = 'Orientierung Honorar';
+        barValue.textContent = rangeText(compute(s));
+        barValue.hidden = false;
+      } else {
+        barLabel.textContent = 'Es wird nichts gesendet (Demo).';
+        barValue.hidden = true;
+      }
+    };
+    const setUse = (v: boolean) => { useCalc = v; try { v ? sessionStorage.setItem(USE, '1') : sessionStorage.removeItem(USE); } catch {} showCalc(); };
+
+    // Übernahme aus dem Rechner
+    window.addEventListener('calc:use', () => {
+      const s = load();
+      if (s && ARTMAP[s.type]) { art.value = ARTMAP[s.type]; }
+      setUse(true);
+      saveForm();
+    });
+    form.querySelector('[data-calc-clear]')!.addEventListener('click', () => setUse(false));
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = field('name'), tel = field('tel'), mail = field('email'), priv = field('privacy');
+      const bad: HTMLInputElement[] = [];
+      const check = (i: HTMLInputElement, ok: boolean) => { err(i, !ok); if (!ok) bad.push(i); };
+      check(name, name.value.trim().length > 1);
+      check(tel, tel.value.replace(/\D/g, '').length >= 6);
+      check(mail, mail.value.trim() === '' || mail.checkValidity());
+      check(priv, priv.checked);
+      if (bad.length) { bad[0].focus(); return; }
+
+      const rows: [string, string, boolean?][] = [['Projektart', art.value]];
+      const ort = field('ort').value.trim();
+      if (ort) rows.push(['Ort', ort]);
+      const s = useCalc ? load() : null;
+      if (s) {
+        const r = compute(s);
+        rows.push(['Fläche, Niveau', `${s.area} m², ${r.levelLabel}`], ['Betreuung', r.scopeLabel], ['Orientierung Honorar', rangeText(r), true]);
+      }
+      rows.push(['Name', name.value.trim()], ['Telefon', tel.value.trim()]);
+      list.replaceChildren(...rows.map(([k, v, strong]) => {
+        const d = document.createElement('div');
+        const dt = document.createElement('dt'); dt.textContent = k;
+        const dd = document.createElement('dd'); dd.textContent = v;
+        if (strong) { dt.className = 'of__sum'; dd.className = 'of__sum'; }
+        d.append(dt, dd);
+        return d;
+      }));
+      form.hidden = true; done.hidden = false; done.focus();
+      try { sessionStorage.removeItem(FKEY); sessionStorage.removeItem(USE); sessionStorage.removeItem(KEY); } catch {}
+    });
+
+    // Eingaben nie verlieren: Zwischenspeicher in sessionStorage (nur dieser Tab, nichts wird gesendet).
+    // Das Einwilligungs-Häkchen wird bewusst nicht gespeichert und nicht wiederhergestellt.
+    const FKEY = `form:${location.pathname}:${form.id}`;
+    const saved = () => [...form.elements].filter((el): el is HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement =>
+      (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement) && !!el.name && el.name !== 'privacy');
+    function saveForm() {
+      try {
+        const d: Record<string, string> = {};
+        saved().forEach((el) => { d[el.name] = el.value; });
+        const untouched = !d.name && !d.tel && !d.email && !d.ort && !d.note && d.art === 'Weiß ich noch nicht';
+        if (untouched) sessionStorage.removeItem(FKEY); else sessionStorage.setItem(FKEY, JSON.stringify(d));
+      } catch {}
+    }
+    try {
+      const raw = sessionStorage.getItem(FKEY);
+      if (raw) {
+        const d = JSON.parse(raw);
+        saved().forEach((el) => { if (el.name in d) el.value = String(d[el.name]); });
+      }
+      useCalc = sessionStorage.getItem(USE) === '1';
+    } catch {}
+    form.addEventListener('input', saveForm);
+    form.addEventListener('change', saveForm);
+    showCalc();
+  }
+</script>

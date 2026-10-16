@@ -1,0 +1,7 @@
+[
+  { "title": "Erstgespräch", "bekommen": "Klare Einschätzung, ob und wie das Vorhaben machbar ist.", "brauche": "Grundstücksdaten oder Objektadresse, Budgetrahmen, Wünsche." },
+  { "title": "Vorentwurf", "bekommen": "Skizzen, Grundrisse, eine erste Kostenschätzung.", "brauche": "Rückmeldung zu den Skizzen, Entscheidungen zu Varianten." },
+  { "title": "Bauantrag", "bekommen": "Fertige Genehmigungsunterlagen, Einreichung bei der Behörde.", "brauche": "Unterschriften, Nachweise (z. B. Lageplan, Vermessung)." },
+  { "title": "Ausführungsplanung", "bekommen": "Detailpläne für die Firmen, Ausschreibung, Angebotsvergleich.", "brauche": "Auswahl der Materialien und Firmen, Freigaben." },
+  { "title": "Bauleitung", "bekommen": "Baustellenbesuche, Terminkontrolle, Abnahme.", "brauche": "Erreichbarkeit bei Entscheidungen, Zahlungsfreigaben." }
+]

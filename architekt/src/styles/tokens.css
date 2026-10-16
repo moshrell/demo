@@ -1,0 +1,58 @@
+/* Hallmark · macrostructure: Map / Diagram (Grundriss als Hero, darunter Dokument) · tone: austere · anchor hue: 40 (Terrakotta)
+   theme: custom (vibe: "Bauplan, Transparentpapier, Graphit, Terrakotta") · paper oklch(97.5% 0.008 85) · accent oklch(50% 0.135 40) terracotta
+   display: Newsreader (roman serif) · body: IBM Plex Sans · mono: IBM Plex Mono · axes: light / classical-serif / warm
+   Alle Farben und Schriften nur über diese Tokens. */
+:root {
+  --color-paper:   oklch(97.5% 0.008 85);
+  --color-paper-2: oklch(94.5% 0.010 85);
+  --color-rule:    oklch(83% 0.010 80);
+  --color-rule-strong: oklch(62% 0.012 75);
+  --color-muted:   oklch(42% 0.012 70);
+  --color-ink:     oklch(21% 0.012 65);
+  --color-accent:  oklch(50% 0.135 40);
+  --color-accent-ink: oklch(97.5% 0.008 85);
+  --color-alert:   oklch(45% 0.16 28);
+  --color-focus:   oklch(50% 0.135 40);
+
+  --font-display: 'Newsreader Variable', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: clamp(1.5rem, 1.1rem + 1.6vw, 2rem);
+  --text-2xl: clamp(1.875rem, 1.3rem + 2.6vw, 3rem);
+  --text-display: clamp(2.375rem, 1.2rem + 6vw, 5.25rem);
+
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: clamp(4.5rem, 3rem + 6vw, 8.5rem);
+
+  --gutter: clamp(1.25rem, 5vw, 4.5rem);
+  --measure: 62ch;
+  --maxw: 80rem;
+  --radius: 2px;
+  --header-h: 3.5rem;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 150ms;
+  --dur-base: 300ms;
+  --dur-draw: 1400ms;
+
+  /* Namen, die OrderForm/DatenschutzForm (Formular-Standard) erwarten */
+  --ink: var(--color-ink);
+  --paper: var(--color-paper);
+  --accent: var(--color-accent);
+  --muted: var(--color-muted);
+  --rule: var(--color-rule);
+  --alert: var(--color-alert);
+  --focus: var(--color-focus);
+}

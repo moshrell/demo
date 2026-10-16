@@ -1,0 +1,156 @@
+---
+import { existsSync } from 'node:fs';
+import Base from '../layouts/Base.astro';
+import Plan from '../components/Plan.astro';
+import Projekte from '../components/Projekte.astro';
+import Rechner from '../components/Rechner.astro';
+import AnfrageForm from '../components/AnfrageForm.astro';
+import site from '../data/site.json';
+import leistungen from '../data/leistungen.json';
+import ablauf from '../data/ablauf.json';
+import faq from '../data/faq.json';
+
+const base = import.meta.env.BASE_URL;
+const has = (f: string) => existsSync(new URL(`../../public/img/${f}`, import.meta.url));
+const photo = (f: string) => has(f);
+const portrait = photo('buero-portrait.jpg');
+const desk = photo('buero-schreibtisch.jpg');
+const baustelle = photo('ablauf-baustelle.jpg');
+---
+<Base home jsonld>
+  <main id="inhalt">
+    <section class="hero" aria-labelledby="hero-h">
+      <div class="wrap hero__grid">
+        <div class="hero__copy">
+          <h1 id="hero-h">{site.hero.title}</h1>
+          <p class="lead">{site.hero.lead}</p>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#kontakt">Erstgespräch anfragen</a>
+            <a class="btn" href={`tel:${site.phoneHref}`}>Anrufen</a>
+          </div>
+          <p class="hero__note">{site.hero.note}</p>
+        </div>
+        <Plan />
+      </div>
+    </section>
+
+    <section class="section" id="leistungen" aria-labelledby="leistungen-h">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="leistungen-h">Wobei ich Ihnen helfe</h2>
+        </div>
+        <div class="rows">
+          {leistungen.map((l) => (
+            <article class="row">
+              <h3>{l.title}</h3>
+              <p>{l.text}</p>
+              <a class="link-arrow" href="#honorar" data-calc-type={l.calc}>Honorar einschätzen</a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projekte" aria-labelledby="projekte-h">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="projekte-h">Gebaute Beispiele</h2>
+          <p class="sub">Vier Projekte, mit Zahlen.</p>
+        </div>
+        <Projekte />
+      </div>
+    </section>
+
+    <section class="section" id="ablauf" aria-labelledby="ablauf-h">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="ablauf-h">So läuft ein Projekt ab</h2>
+          <p class="sub">Fünf Schritte. Sie wissen immer, wo wir stehen.</p>
+        </div>
+        <div class={`ablauf__grid${baustelle ? ' has-photo' : ''}`}>
+          <div>
+            <ol class="steps">
+              {ablauf.map((s, i) => (
+                <li class="step">
+                  <span class="step__n">Schritt {i + 1} von {ablauf.length}</span>
+                  <h3>{s.title}</h3>
+                  <dl class="step__cols">
+                    <div><dt>Das bekommen Sie</dt><dd>{s.bekommen}</dd></div>
+                    <div><dt>Das brauche ich von Ihnen</dt><dd>{s.brauche}</dd></div>
+                  </dl>
+                </li>
+              ))}
+            </ol>
+            <p class="ablauf__note">Nicht jedes Projekt braucht alle fünf Schritte. Sie wählen den Umfang.</p>
+          </div>
+          {baustelle && (
+            <figure class="ablauf__photo">
+              <img src={`${base}img/ablauf-baustelle.jpg`} width="1200" height="900" alt="Rohbau eines Wohnhauses auf einer Baustelle an einem bewölkten Tag" loading="lazy" decoding="async" />
+            </figure>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <Rechner />
+
+    <section class="section" id="buero" aria-labelledby="buero-h">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="buero-h">Ein Büro, ein Ansprechpartner</h2>
+        </div>
+        <div class={`buero__grid${portrait || desk ? ' has-photo' : ''}`}>
+          <div class="buero__text">
+            <p>Ich bin {site.owner}, Architekt in Hannover. Sie sprechen von der ersten Skizze bis zur Schlüsselübergabe mit mir und nicht mit einem Callcenter.</p>
+            <p>Mir ist wichtig, dass Sie verstehen, was Sie bekommen und was es kostet, bevor Sie entscheiden.</p>
+            <blockquote class="quote">„Was ich nicht mache: Pläne, die Ihr Budget ignorieren."</blockquote>
+            <ul class="facts">
+              <li>Eingetragen in der {site.kammer}</li>
+              <li>Berufshaftpflicht vorhanden</li>
+              <li>Büro in Hannover-List</li>
+            </ul>
+          </div>
+          {(portrait || desk) && (
+            <div class="buero__imgs">
+              {portrait && <img src={`${base}img/buero-portrait.jpg`} width="900" height="1200" alt="Porträt des Architekten im Büro am Fenster" loading="lazy" decoding="async" />}
+              {desk && <img src={`${base}img/buero-schreibtisch.jpg`} width="1200" height="900" alt="Schreibtisch mit Grundrissen, Maßstab und einem Kartonmodell" loading="lazy" decoding="async" />}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq" aria-labelledby="faq-h">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="faq-h">Häufige Fragen</h2>
+        </div>
+        <div class="faq">
+          {faq.map((f) => (
+            <details><summary>{f.q}</summary><p>{f.a}</p></details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="kontakt" aria-label="Kontakt">
+      <div class="wrap kontakt__grid">
+        <AnfrageForm />
+        <aside class="kontakt__info" aria-label="Kontaktdaten">
+          <dl>
+            <dt>Telefon</dt>
+            <dd><a class="tel" href={`tel:${site.phoneHref}`}>{site.phone}</a></dd>
+            <dt>E-Mail</dt>
+            <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+            <dt>Büro</dt>
+            <dd><address>{site.name}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</address></dd>
+            <dt>Erreichbar</dt>
+            <dd>{site.hours}</dd>
+            <dt>Sprechstunde</dt>
+            <dd>Jeden 1. Donnerstag im Monat, 16–18 Uhr, ohne Anmeldung</dd>
+          </dl>
+        </aside>
+      </div>
+    </section>
+  </main>
+</Base>

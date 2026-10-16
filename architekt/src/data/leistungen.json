@@ -1,0 +1,6 @@
+[
+  { "id": "neubau", "title": "Neubau", "text": "Einfamilienhaus, Doppelhaushälfte oder Mehrfamilienhaus. Wir klären zuerst Grundstück, Budget und Alltag, dann zeichne ich.", "calc": "neubau" },
+  { "id": "umbau", "title": "Umbau & Sanierung", "text": "Altbau kaufen und nicht wissen, was drinsteckt? Ich prüfe den Bestand schon vor dem Kauf (Kaufberatung), nenne Risiken früh und plane Schritt für Schritt.", "calc": "umbau" },
+  { "id": "anbau", "title": "Anbau & Aufstockung", "text": "Mehr Platz auf dem eigenen Grundstück: Anbau, Dachausbau oder zusätzliches Geschoss, bauordnungsrechtlich sauber geplant.", "calc": "anbau" },
+  { "id": "bauantrag", "title": "Bauantrag", "text": "Sie haben schon einen Plan oder einen Entwurf? Ich bereite die Genehmigungsunterlagen vor und reiche sie ein.", "calc": "bauantrag" }
+]

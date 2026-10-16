@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Impressum | Studio Wendt Architekten">
+  <main id="inhalt" class="legal">
+    <div class="wrap">
+      <h1>Impressum</h1>
+      <p><strong>Demo-Seite.</strong> Beispielseite von Kravets Webdesign: Betrieb und Personen sind erfunden, die Bilder sind teils KI-erzeugt. Alle Angaben unten sind fiktiv.</p>
+
+      <h2>Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)</h2>
+      <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+
+      <h2>Kontakt</h2>
+      <p>Telefon: {site.phone}<br />E-Mail: {site.email}</p>
+
+      <h2>Berufsbezeichnung und Kammer</h2>
+      <p>Berufsbezeichnung: Architekt (verliehen in der Bundesrepublik Deutschland)<br />
+      Zuständige Kammer: {site.kammer}, Friedrichswall 5, 30159 Hannover<br />
+      {site.kammerNr}<br />
+      Es gelten die berufsrechtlichen Regelungen, insbesondere das Niedersächsische Architektengesetz (NArchtG), abrufbar über die Architektenkammer.</p>
+
+      <h2>Berufshaftpflichtversicherung</h2>
+      <p>{site.haftpflicht}</p>
+
+      <h2>Umsatzsteuer-Identifikationsnummer</h2>
+      <p>{site.ustid}</p>
+
+      <h2>Streitbeilegung</h2>
+      <p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+
+      <p><a href={base}>← Zurück zur Startseite</a></p>
+    </div>
+  </main>
+</Base>

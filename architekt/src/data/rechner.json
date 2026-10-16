@@ -1,0 +1,27 @@
+{
+  "types": [
+    { "id": "neubau", "label": "Neubau", "kind": "neu" },
+    { "id": "umbau", "label": "Umbau / Sanierung", "kind": "bestand" },
+    { "id": "anbau", "label": "Anbau / Aufstockung", "kind": "anbau" },
+    { "id": "bauantrag", "label": "Nur Bauantrag", "kind": "antrag" }
+  ],
+  "levels": [
+    { "id": "einfach", "label": "Einfach" },
+    { "id": "mittel", "label": "Mittel" },
+    { "id": "gehoben", "label": "Gehoben" }
+  ],
+  "scopes": [
+    { "id": "genehmigung", "label": "Genehmigung", "hint": "Planung bis Bauantrag", "lo": 8, "hi": 11 },
+    { "id": "planung", "label": "Planung komplett", "hint": "plus Ausführungsplanung", "lo": 13, "hi": 17 },
+    { "id": "rundum", "label": "Rundum", "hint": "plus Bauleitung", "lo": 16, "hi": 21 }
+  ],
+  "eurPerSqm": {
+    "neu": { "einfach": 2600, "mittel": 3200, "gehoben": 4000 },
+    "bestand": { "einfach": 1600, "mittel": 2200, "gehoben": 3000 },
+    "anbau": { "einfach": 2400, "mittel": 3000, "gehoben": 3800 }
+  },
+  "bestandAufschlag": 2,
+  "min": 20,
+  "max": 600,
+  "default": 140
+}

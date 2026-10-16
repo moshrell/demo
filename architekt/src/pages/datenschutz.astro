@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import DatenschutzForm from '../components/DatenschutzForm.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Datenschutz | Studio Wendt Architekten">
+  <main id="inhalt" class="legal">
+    <div class="wrap">
+      <h1>Datenschutz</h1>
+      <p><strong>Demo-Hinweis:</strong> Diese Seite ist eine Beispielseite. Die Angaben zeigen, was bei einem echten Betrieb hier stehen muss. Verantwortliche Stelle ist ein fiktives Büro: {site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}, {site.email}.</p>
+
+      <h2>Hosting und Server-Logfiles</h2>
+      <p>Die Demo wird über GitHub Pages ausgeliefert. Dabei verarbeitet der Hosting-Anbieter technisch notwendige Daten (z. B. IP-Adresse, Zeitpunkt, aufgerufene Seite), um die Seite auszuliefern. Bei einem echten Betrieb wird hier der tatsächliche Hosting-Anbieter mit Auftragsverarbeitungsvertrag genannt.</p>
+
+      <h2>Keine Cookies, keine Tracker, keine externen Schriften</h2>
+      <p>Diese Seite setzt keine Cookies, nutzt keine Analyse- oder Werbedienste und lädt keine Schriften oder Karten von fremden Servern. Daher ist kein Cookie-Banner nötig. Die Schriften liegen auf demselben Server.</p>
+
+      <DatenschutzForm formName="Anfrage-Formular und Honorar-Orientierung" data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Ort des Vorhabens (freiwillig), Kurzbeschreibung (freiwillig), Projektart und, wenn Sie die Honorar-Orientierung übernehmen, die dort gewählten Angaben (Art, Fläche, Niveau, Betreuung)" purpose="Wir bearbeiten Ihre Anfrage zum Erstgespräch und melden uns bei Rückfragen bei Ihnen." />
+
+      <h2>Honorar-Orientierung</h2>
+      <p>Die Berechnung läuft vollständig in Ihrem Browser. Ihre Auswahl wird nur temporär im Browser dieses Tabs (sessionStorage) gespeichert und nicht an uns übertragen.</p>
+
+      <p><a href={base}>← Zurück zur Startseite</a></p>
+    </div>
+  </main>
+</Base>

@@ -1,0 +1,21 @@
+{
+  "name": "Studio Wendt Architekten",
+  "short": "Wendt",
+  "legalName": "Studio Wendt Architekten, Inhaber Jonas Wendt (fiktiv)",
+  "owner": "Jonas Wendt",
+  "address": { "street": "Podbielskistraße 0", "zip": "30177", "city": "Hannover" },
+  "email": "kontakt@beispiel.de",
+  "phone": "0511 1234567",
+  "phoneHref": "+495111234567",
+  "hours": "Mo–Fr 9–17 Uhr",
+  "sprechstunde": "Offene Sprechstunde: jeden 1. Donnerstag im Monat, 16–18 Uhr, ohne Anmeldung",
+  "kammer": "Architektenkammer Niedersachsen",
+  "kammerNr": "Mitgliedsnummer 00000 (fiktiv)",
+  "haftpflicht": "Berufshaftpflichtversicherung: Beispiel Versicherung AG, Musterstraße 1, 00000 Musterstadt (fiktiv), Geltungsbereich: Deutschland",
+  "ustid": "DE000000000 (fiktiv)",
+  "hero": {
+    "title": "Architektur, die zu Ihrem Budget passt.",
+    "lead": "Neubau, Umbau und Bauantrag in Hannover und Umgebung. Persönlich betreut, von der ersten Skizze bis zum Einzug.",
+    "note": "Erstgespräch kostenlos und unverbindlich, 45 Minuten."
+  }
+}

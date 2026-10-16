@@ -1,6 +1,6 @@
 # Demo: Architekturbüro (сайт архитектора)
 
-Статус: **ТЗ и логика, кода ещё нет.** Тексты на немецком: `TEXTE.md`. Разведка по реальным сайтам: `RECON.md`.
+Статус: **сайт собран (Astro), ждёт фото и ревью Степана.** Живая версия: https://moshrell.github.io/demo/architekt/ (после включения Pages). Тексты на немецком: `TEXTE.md`. Разведка по реальным сайтам: `RECON.md`.
 Фиктивное бюро: **Studio Wendt Architekten**, Hannover-List (всё вымышлено, в Impressum демо-данные).
 
 ## Цель сайта
@@ -22,6 +22,24 @@
 - Разметка schema.org (`Architect`/`LocalBusiness`) в JSON-LD.
 - Просмотр с телефона: GitHub Pages, `https://moshrell.github.io/demo/architekt/` (workflow в `.github/workflows/pages.yml`, нужен один клик в Settings → Pages → Source: GitHub Actions).
 - Дизайн: перед кодом прогнать скилл `hallmark` (оригинал на ПК: `D:\Webdesign\.claude\skills\hallmark`, в репозитории его нет), токены цвета/шрифта лежат в `global.css`.
+
+## Дизайн (hallmark, зафиксировано)
+- Допущения (Степан делегировал): аудитория = частные застройщики региона Hannover; действие = запрос Erstgespräch; тон = austere (сдержанный).
+- Жанр: editorial. Макроструктура: **Map / Diagram** (Grundriss как hero-композиция, ниже документ). Тема: custom, «Bauplan, Transparentpapier, Graphit, Terrakotta» (бумага oklch 97.5% 0.008 85, акцент oklch 50% 0.135 40, контраст акцент/бумага 5.9:1).
+- Шрифты (локально, @fontsource): Newsreader (заголовки, roman), IBM Plex Sans (текст), IBM Plex Mono (цифры, факты).
+- Nav: меню `<details>` на телефоне, строка ссылок на ПК; снизу липкая панель «Anrufen / Erstgespräch» (на телефоне, скрывается в блоках Honorar и Kontakt). Футер: Mast-headed.
+- Токены: `src/styles/tokens.css`. Данные: `src/data/*.json`. Формулы калькулятора: `src/data/rechner.json` + `src/scripts/calc.ts`.
+- Форма: `src/components/AnfrageForm.astro` (производная от `_template/OrderForm.astro`: тот же стандарт, плюс select и связь с калькулятором).
+- Фото подключаются автоматически, если файл лежит в `public/img/` (имена из `PROMPTS.txt`). Без файла блока с фото на странице нет (не заглушка). После добавления фото нужен новый коммит.
+
+## Проверено (headless, без скриншотов)
+Ширины 320/375/390/414/768/1280: нет горизонтального скролла, нет ошибок консоли и битых ресурсов; формулы калькулятора (все 4 типа, границы 20–600 м²); форма: валидация, автосохранение после перезагрузки, согласие не восстанавливается, Datenschutz в новой вкладке не стирает данные; prefers-reduced-motion и отключённый JS; все внутренние ссылки и якоря под base-путём; JSON-LD валиден.
+
+## Известные недочёты
+- Визуальное качество hero-чертежа и верстки глазами не проверялось (Степан присылает замечания сам).
+- Формы ничего не отправляют (демо). Для живого клиента нужен backend/почтовый сервис и правка Datenschutz.
+- Значения калькулятора демонстрационные; перед показом настоящему архитектору сверить с HOAI и ценами региона.
+- Проценты и цены в калькуляторе и «Besonderheit» у проектов вымышлены.
 
 ## Логика пользователя (user flow)
 
@@ -70,7 +88,7 @@ Baukosten = Fläche (m²) × €/m² по типу и уровню:
 Процент от Baukosten по объёму:
 - **Genehmigung** (Leistungsphasen 1–4: Planung bis Bauantrag): 8–11 %
 - **Planung komplett** (Phasen 1–5: плюс Ausführungsplanung, рабочие чертежи): 13–17 %
-- **Rundum** (Phasen 1–8: плюс Ausschreibung и Bauleitung, ведение стройки): 18–24 %
+- **Rundum** (Phasen 1–8: плюс Ausschreibung и Bauleitung, ведение стройки): 16–21 %
 
 Для Umbau/Sanierung добавляется +2 процентных пункта к обеим границам (Bestand сложнее). Диапазон "от-до" = Baukosten × нижний/верхний процент, округление до 500 €. Рядом показывается и расчётный ориентир Baukosten. Минимальная площадь 20 m², максимум 600 m² (ползунок + число).
 
@@ -100,5 +118,6 @@ Baukosten = Fläche (m²) × €/m² по типу и уровню:
 - [x] Разведка сделана (`RECON.md`): в ТЗ добавлены Kaufberatung, Förderung (FAQ) и Offene Sprechstunde.
 - [x] `PROMPTS.txt` для Gemini готов (9 кадров). Степан генерирует и кладёт файлы в `D:\Webdesign\architekt\img\`, Claude забирает их оттуда в `architekt/public/img/`.
 - [ ] Утвердить структуру и тексты.
-- [ ] Прогнать `hallmark`, выбрать тему, создать проект из `_template` и собрать скелет, потом дизайн и анимации.
+- [x] Hallmark пройден, проект собран из `_template`.
+- [ ] Фото от Степана в `D:\\Webdesign\\architekt\\img\\`, затем Claude переносит их в `architekt/public/img/` и коммитит.
 - [ ] Включить GitHub Pages (Settings → Pages → Source: GitHub Actions).

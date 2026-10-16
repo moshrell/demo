@@ -1,0 +1,131 @@
+---
+/** Honorar-Orientierung: vier Angaben, eine ehrliche Spanne. Formeln in src/data/rechner.json und src/scripts/calc.ts. Unverbindlich. */
+import cfg from '../data/rechner.json';
+---
+<section class="section calc" id="honorar" aria-labelledby="honorar-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="honorar-h">Was kostet die Planung ungefähr?</h2>
+      <p class="sub">Vier Angaben, eine ehrliche Spanne. Das ist eine unverbindliche Orientierung, kein Angebot.</p>
+    </div>
+
+    <form class="calc__form" data-calc novalidate>
+      <fieldset>
+        <legend>Was haben Sie vor?</legend>
+        <div class="chips">
+          {cfg.types.map((t, i) => (
+            <label class="chip"><input type="radio" name="type" value={t.id} checked={i === 0} /><span>{t.label}</span></label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset data-objekt hidden>
+        <legend>Um welches Objekt geht es?</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="objekt" value="neu" checked /><span>Neubau</span></label>
+          <label class="chip"><input type="radio" name="objekt" value="bestand" /><span>Im Bestand</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend id="area-l">Wie groß? (Wohn- bzw. Nutzfläche)</legend>
+        <div class="area">
+          <input type="range" name="area-range" min={cfg.min} max={cfg.max} step="5" value={cfg.default} aria-labelledby="area-l" />
+          <label class="area__num"><span class="mono">m²</span>
+            <input type="number" name="area" min={cfg.min} max={cfg.max} step="1" value={cfg.default} inputmode="numeric" aria-label="Fläche in Quadratmetern" />
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Welches Niveau?</legend>
+        <div class="chips">
+          {cfg.levels.map((l) => (
+            <label class="chip"><input type="radio" name="level" value={l.id} checked={l.id === 'mittel'} /><span>{l.label}</span></label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset data-scope>
+        <legend>Wie viel Betreuung?</legend>
+        <div class="chips">
+          {cfg.scopes.map((s) => (
+            <label class="chip"><input type="radio" name="scope" value={s.id} checked={s.id === 'planung'} /><span>{s.label}<small>{s.hint}</small></span></label>
+          ))}
+        </div>
+      </fieldset>
+      <p class="calc__basis" data-antrag-note hidden>Beim Bauantrag rechnen wir die Genehmigungsplanung (Planung bis Bauantrag).</p>
+
+      <div class="calc__out" aria-live="polite">
+        <p class="calc__sum">
+          <span class="calc__label">Planungshonorar, Orientierung</span>
+          <strong class="calc__range" data-range>–</strong>
+          <span class="calc__basis" data-basis>–</span>
+        </p>
+        <button class="btn btn--primary" type="button" data-use>Mit diesen Angaben anfragen</button>
+      </div>
+    </form>
+
+    <p class="calc__fine">Orientierungswerte nach Erfahrung und HOAI-Logik (Honorarordnung für Architekten und Ingenieure). Das tatsächliche Honorar hängt vom Objekt ab und wird im Gespräch festgelegt. Netto-/Brutto-Angabe im Angebot.</p>
+  </div>
+</section>
+
+<script>
+  import cfg from '../data/rechner.json';
+  import { compute, rangeText, eur, load, save, defaults, type CalcState } from '../scripts/calc';
+
+  const form = document.querySelector<HTMLFormElement>('[data-calc]');
+  if (form) {
+    const q = <T extends Element>(s: string) => form.querySelector<T>(s)!;
+    const rangeEl = q<HTMLElement>('[data-range]');
+    const basisEl = q<HTMLElement>('[data-basis]');
+    const objektSet = q<HTMLElement>('[data-objekt]');
+    const scopeSet = q<HTMLElement>('[data-scope]');
+    const note = q<HTMLElement>('[data-antrag-note]');
+    const area = q<HTMLInputElement>('input[name=area]');
+    const slider = q<HTMLInputElement>('input[name=area-range]');
+    const radio = (n: string) => [...form.querySelectorAll<HTMLInputElement>(`input[name=${n}]`)];
+    const getRadio = (n: string) => radio(n).find((r) => r.checked)?.value ?? '';
+    const setRadio = (n: string, v: string) => radio(n).forEach((r) => { r.checked = r.value === v; });
+    const clamp = (n: number) => Math.min(cfg.max, Math.max(cfg.min, Math.round(n) || cfg.default));
+
+    const read = (): CalcState => ({
+      type: getRadio('type'), objekt: getRadio('objekt') as 'neu' | 'bestand',
+      area: clamp(Number(area.value)), level: getRadio('level'), scope: getRadio('scope'),
+    });
+    const write = (s: CalcState) => {
+      setRadio('type', s.type); setRadio('objekt', s.objekt); setRadio('level', s.level); setRadio('scope', s.scope);
+      area.value = String(s.area); slider.value = String(s.area);
+    };
+    const render = () => {
+      const s = read();
+      const antrag = s.type === 'bauantrag';
+      objektSet.hidden = !antrag; scopeSet.hidden = antrag; note.hidden = !antrag;
+      const r = compute(s);
+      rangeEl.textContent = rangeText(r);
+      basisEl.textContent = `bei Baukosten von ca. ${eur(r.baukosten)}`;
+      save(s);
+    };
+
+    write(load() ?? defaults());
+    render();
+
+    slider.addEventListener('input', () => { area.value = slider.value; render(); });
+    area.addEventListener('input', () => { if (area.value !== '') { slider.value = String(clamp(Number(area.value))); render(); } });
+    area.addEventListener('blur', () => { area.value = String(clamp(Number(area.value))); slider.value = area.value; render(); });
+    form.addEventListener('change', render);
+    form.addEventListener('submit', (e) => e.preventDefault());
+
+    // Aus der Leistungsliste: Typ vorwählen
+    const preset = (type: string) => { setRadio('type', type); render(); };
+    document.querySelectorAll<HTMLAnchorElement>('a[data-calc-type]').forEach((a) => a.addEventListener('click', () => preset(a.dataset.calcType!)));
+
+    // Übernahme in die Anfrage
+    q<HTMLButtonElement>('[data-use]').addEventListener('click', () => {
+      render();
+      window.dispatchEvent(new CustomEvent('calc:use'));
+      document.getElementById('kontakt')?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      history.replaceState(null, '', '#kontakt');
+    });
+  }
+</script>

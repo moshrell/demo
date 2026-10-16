@@ -1,0 +1,34 @@
+[
+  {
+    "id": "deister-haus", "title": "Haus am Deister", "type": "Neubau",
+    "facts": [["Fläche", "168 m²"], ["Budget", "mittel"], ["Bauzeit", "14 Monate"], ["Besonderheit", "Holz-Beton-Mischbau"]],
+    "ausgang": "Eine Familie mit Hanggrundstück und klarem Kostenrahmen.",
+    "loesung": "Wohnen auf einer Ebene zum Garten, Schlafräume oben, kompakte Hülle.",
+    "ergebnis": "Budget eingehalten, Einzug im geplanten Monat.",
+    "images": [["projekt-deister-haus.jpg", 1600, 900, "Außenansicht des Neubaus am Hang mit Holzfassade und großer Verglasung zum Garten"], ["projekt-deister-innen.jpg", 900, 1200, "Wohnraum mit bodentiefer Verglasung, Holzboden und Treppe"]]
+  },
+  {
+    "id": "linden-altbau", "title": "Altbau in Linden", "type": "Sanierung",
+    "facts": [["Fläche", "92 m²"], ["Baujahr", "1912"], ["Budget", "gehoben"], ["Bauzeit", "9 Monate"]],
+    "ausgang": "Wohnung im Gründerzeithaus mit feuchter Wand und alten Leitungen.",
+    "loesung": "Bestandsaufnahme vor dem ersten Strich, Grundriss geöffnet, Stuck erhalten.",
+    "ergebnis": "Heller Grundriss, der Charakter des Hauses bleibt.",
+    "images": [["projekt-linden-altbau.jpg", 1200, 900, "Sanierte Altbauwohnung mit Stuckdecke und Fischgrätparkett"], ["projekt-linden-detail.jpg", 1000, 1000, "Detail: historischer Stuck neben neuer weißer Wand"]]
+  },
+  {
+    "id": "isernhagen-anbau", "title": "Anbau in Isernhagen", "type": "Anbau",
+    "facts": [["Fläche", "28 m²"], ["Budget", "einfach"], ["Bauzeit", "5 Monate"], ["Ausrichtung", "Südseite"]],
+    "ausgang": "Reihenendhaus, die Küche ist zu klein für vier Personen.",
+    "loesung": "Eingeschossiger Anbau mit großer Fensterfront zum Garten.",
+    "ergebnis": "Wohnküche, mehr Licht, kein Umzug nötig.",
+    "images": [["projekt-isernhagen-anbau.jpg", 1200, 900, "Eingeschossiger Anbau mit Glasfront zum Garten"]]
+  },
+  {
+    "id": "list-dachausbau", "title": "Dachausbau in List", "type": "Ausbau",
+    "facts": [["Fläche", "64 m²"], ["Budget", "mittel"], ["Bauzeit", "6 Monate"], ["Besonderheit", "Dachgauben"]],
+    "ausgang": "Ungenutztes Dach über einer Altbauwohnung.",
+    "loesung": "Zwei Gauben, offene Galerie, Statik und Brandschutz früh geklärt.",
+    "ergebnis": "Eine zusätzliche Wohnebene, genehmigt ohne Nachforderungen.",
+    "images": [["projekt-list-dachausbau.jpg", 1200, 900, "Ausgebautes Dachgeschoss mit Gauben und Galerie"]]
+  }
+]

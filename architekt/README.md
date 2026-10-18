@@ -35,6 +35,10 @@
 ## Проверено (headless, без скриншотов)
 Ширины 320/375/390/414/768/1280: нет горизонтального скролла, нет ошибок консоли и битых ресурсов; формулы калькулятора (все 4 типа, границы 20–600 м²); форма: валидация, автосохранение после перезагрузки, согласие не восстанавливается, Datenschutz в новой вкладке не стирает данные; prefers-reduced-motion и отключённый JS; все внутренние ссылки и якоря под base-путём; JSON-LD валиден.
 
+## Публикация в портфолио
+- Демо собрано с base `/vorschau/dienstleistung/architekt/`, лежит в `D:\Webdesign\kravets-site\public\vorschau\dienstleistung\architekt\`, превью `public\works\architekt.webp` (скриншот hero 1280×800), в `src/config/works.ts` вкладка «Architekten» (категория `dienstleistung`). Коммит в kravets-site есть, **push делает Степан** (`D:\Webdesign\PUSH-SITE.bat`).
+- Исходники проекта живут в репозитории moshrell/demo (папка `architekt/`), на ПК в `D:\Webdesign\architekt\` только фото (`img\`). После любой правки сайта: пересобрать (`npm run build` в облаке), заново залить dist в kravets-site и обновить превью.
+
 ## К решению Степана
 - «Ablauf как история дома» отменено (на телефоне нет места).
 

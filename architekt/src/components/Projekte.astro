@@ -1,35 +1,48 @@
 ---
-/** Projekte: Foto sichtbar, Zahlen und Verlauf aufklappbar. Das erste Projekt ist breit, die übrigen stehen in einer Reihe. */
+/** Projekte: Foto sichtbar, Zahlen und Verlauf aufklappbar. Erstes Projekt breit; auf dem Handy wischt man durch die übrigen (Scroll-Snap), ab 48rem stehen sie in einer Reihe. */
 import projekte from '../data/projekte.json';
 const base = import.meta.env.BASE_URL;
+const [lead, ...rest] = projekte;
 ---
 <div class="proj">
-  {projekte.map((p, i) => {
-    const [main, ...more] = p.images;
-    return (
-      <article class={`proj__item${i === 0 ? ' proj__item--lead' : ''}`} id={p.id}>
-        <img class="proj__main" src={`${base}img/${main[0]}`} width={main[1] as number} height={main[2] as number} alt={main[3] as string} loading="lazy" decoding="async" />
+  {[lead].map((p) => (
+    <article class="proj__item proj__item--lead" id={p.id}>
+      <img class="proj__main" src={`${base}img/${p.images[0][0]}`} width={p.images[0][1] as number} height={p.images[0][2] as number} alt={p.images[0][3] as string} loading="lazy" decoding="async" />
+      <div class="proj__txt">
+        <p class="proj__type">{p.type} · {p.facts[0][1]}</p>
+        <h3>{p.title}</h3>
+        <p class="proj__res">{p.ergebnis}</p>
+        <details>
+          <summary>Zahlen und Verlauf</summary>
+          <dl class="proj__facts">{p.facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+          <div class="proj__story">
+            <p><strong>Ausgangslage</strong>{p.ausgang}</p>
+            <p><strong>Lösung</strong>{p.loesung}</p>
+          </div>
+          {p.images.length > 1 && <div class="proj__more">{p.images.slice(1).map(([f, w, h, alt]) => <img src={`${base}img/${f}`} width={w as number} height={h as number} alt={alt as string} loading="lazy" decoding="async" />)}</div>}
+        </details>
+      </div>
+    </article>
+  ))}
+  <div class="proj__rest" tabindex="0" role="region" aria-label="Weitere Projekte, seitlich wischen">
+    {rest.map((p) => (
+      <article class="proj__item" id={p.id}>
+        <img class="proj__main" src={`${base}img/${p.images[0][0]}`} width={p.images[0][1] as number} height={p.images[0][2] as number} alt={p.images[0][3] as string} loading="lazy" decoding="async" />
         <div class="proj__txt">
           <p class="proj__type">{p.type} · {p.facts[0][1]}</p>
           <h3>{p.title}</h3>
           <p class="proj__res">{p.ergebnis}</p>
           <details>
             <summary>Zahlen und Verlauf</summary>
-            <dl class="proj__facts">
-              {p.facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
-            </dl>
+            <dl class="proj__facts">{p.facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
             <div class="proj__story">
               <p><strong>Ausgangslage</strong>{p.ausgang}</p>
               <p><strong>Lösung</strong>{p.loesung}</p>
             </div>
-            {more.length > 0 && (
-              <div class="proj__more">
-                {more.map(([f, w, h, alt]) => <img src={`${base}img/${f}`} width={w as number} height={h as number} alt={alt as string} loading="lazy" decoding="async" />)}
-              </div>
-            )}
+            {p.images.length > 1 && <div class="proj__more">{p.images.slice(1).map(([f, w, h, alt]) => <img src={`${base}img/${f}`} width={w as number} height={h as number} alt={alt as string} loading="lazy" decoding="async" />)}</div>}
           </details>
         </div>
       </article>
-    );
-  })}
+    ))}
+  </div>
 </div>

@@ -9,6 +9,12 @@ import site from '../data/site.json';
 import leistungen from '../data/leistungen.json';
 import ablauf from '../data/ablauf.json';
 import faq from '../data/faq.json';
+const zahlen = [
+  { id: 'deister-haus', n: '168', u: 'm²', t: 'Neubau am Deister, 14 Monate Bauzeit' },
+  { id: 'linden-altbau', n: '1912', u: '', t: 'Altbau in Linden, saniert in 9 Monaten' },
+  { id: 'isernhagen-anbau', n: '28', u: 'm²', t: 'Anbau in Isernhagen, 5 Monate' },
+  { id: 'list-dachausbau', n: '64', u: 'm²', t: 'Dachausbau in List, 6 Monate' },
+];
 
 const base = import.meta.env.BASE_URL;
 const has = (f: string) => existsSync(new URL(`../../public/img/${f}`, import.meta.url));
@@ -59,6 +65,17 @@ const baustelle = photo('ablauf-baustelle.jpg');
           <p class="sub">Vier Projekte, jeweils mit Fläche, Budget und Bauzeit.</p>
         </div>
         <Projekte />
+      </div>
+    </section>
+
+    <section class="section section--l zahlen" id="zahlen" aria-labelledby="zahlen-h">
+      <div class="wrap">
+        <h2 id="zahlen-h">Vier Projekte, vier Größenordnungen</h2>
+        <ul class="zahlen__list">
+          {zahlen.map((z) => (
+            <li><a href={`#${z.id}`}><span class="zahlen__n">{z.n}<small>{z.u}</small></span><span class="zahlen__t">{z.t}</span></a></li>
+          ))}
+        </ul>
       </div>
     </section>
 

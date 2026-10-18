@@ -23,3 +23,19 @@ if (dock && hideOn.length && 'IntersectionObserver' in window) {
   }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
   hideOn.forEach((el) => io2.observe(el));
 }
+
+// Hero: Umschalter Grundriss/Foto
+const plan = document.querySelector<HTMLElement>('[data-plan]');
+if (plan) {
+  const btns = plan.querySelectorAll<HTMLButtonElement>('[data-set]');
+  btns.forEach((b) => b.addEventListener('click', () => {
+    plan.dataset.view = b.dataset.set;
+    btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  }));
+  plan.querySelector('.plan__toggle')?.removeAttribute('hidden');
+  const mq = window.matchMedia('(prefers-reduced-motion: no-preference)');
+  btns.forEach((x) => x.setAttribute('aria-pressed', String(!mq.matches && x.dataset.set === 'photo')));
+  if (mq.matches) { // Automatik läuft: Knopf „Grundriss“ während der Zeichnung nicht gedrückt, nach der Überblendung „Foto“
+    setTimeout(() => { if (plan.dataset.view === 'auto') btns.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.set === 'photo'))); }, 5700);
+  }
+}

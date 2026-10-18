@@ -1,41 +1,34 @@
 ---
-/** Grundriss-Zeichnung (Hero). Linien zeichnen sich beim Laden (CSS, stroke-dashoffset) und bleiben als Zeichnung stehen. */
+/** Hero: Grundriss (aus einer Referenzzeichnung vektorisiert, src/data/plan.json) zeichnet sich, dann blendet er in das Foto desselben Hauses (Ansicht von oben, ohne Dach) über. Umschalter Grundriss/Foto. */
+import plan from '../data/plan.json';
+const base = import.meta.env.BASE_URL;
+const { w, h } = plan;
+// Maße: Haus liegt im Ausschnitt von x 70..730, y 70..543 (12,00 m × 7,80 m)
+const L = 70, R = 730, T = 70, B = 543, o = 38;
+const cx = (L + R) / 2, cy = (T + B) / 2;
 ---
-<figure class="plan">
-  <svg viewBox="0 0 480 362" role="img" aria-labelledby="plan-t" focusable="false">
-    <title id="plan-t">Grundriss eines Einfamilienhauses, Erdgeschoss, 12,00 mal 7,80 Meter</title>
-    <path class="l l--wall d" pathLength="1" style="--d:0ms" d="M100 310 H40 V50 H440 V310 H140"/>
-    <path class="l l--thin d" pathLength="1" style="--d:350ms" d="M100 303 H47 V57 H433 V303 H140"/>
-    <path class="l l--wall d" pathLength="1" style="--d:700ms" d="M260 57 V170 M260 205 V255 M260 290 V303"/>
-    <path class="l l--wall d" pathLength="1" style="--d:800ms" d="M260 150 H395 M260 240 H433"/>
-    <path class="l l--wall d" pathLength="1" style="--d:900ms" d="M340 150 V240"/>
-    <path class="l l--thin d" pathLength="1" style="--d:1100ms" d="M100 310 A40 40 0 0 1 140 270 M140 310 V270"/>
-    <path class="l l--thin d" pathLength="1" style="--d:1160ms" d="M260 255 A35 35 0 0 1 295 290 M260 290 H295"/>
-    <path class="l l--thin d" pathLength="1" style="--d:1220ms" d="M260 170 A35 35 0 0 1 295 205 M260 205 H295"/>
-    <path class="l l--thin d" pathLength="1" style="--d:1280ms" d="M430 150 A35 35 0 0 0 395 115 M395 150 V115"/>
-    <path class="l l--win d" pathLength="1" style="--d:1200ms" d="M90 44 H190 V56 H90 Z M90 50 H190"/>
-    <path class="l l--win d" pathLength="1" style="--d:1260ms" d="M290 44 H400 V56 H290 Z M290 50 H400"/>
-    <path class="l l--win d" pathLength="1" style="--d:1320ms" d="M34 120 H46 V220 H34 Z M40 120 V220"/>
-    <path class="l l--win d" pathLength="1" style="--d:1380ms" d="M434 255 H446 V290 H434 Z M440 255 V290"/>
-    <path class="l l--win d" pathLength="1" style="--d:1440ms" d="M300 304 H400 V316 H300 Z M300 310 H400"/>
-    <path class="l l--thin d" pathLength="1" style="--d:1500ms" d="M72 66 H190 V86 H72 Z"/>
-    <path class="l l--thin d" pathLength="1" style="--d:1580ms" d="M118 168 H208 V212 H118 Z"/>
-    <path class="l l--thin d" pathLength="1" style="--d:1660ms" d="M270 244 H425 V258 H270 Z"/>
-    <path class="l l--thin d" pathLength="1" style="--d:1740ms" d="M266 154 H300 V216 H266 Z"/>
-    <path class="l l--thin d" pathLength="1" style="--d:1820ms" d="M350 172 H425 M350 184 H425 M350 196 H425 M350 208 H425 M350 220 H425"/>
-    <path class="l l--dim d" pathLength="1" style="--d:600ms" d="M40 26 H440 M34 32 L46 20 M434 32 L446 20 M40 22 V50 M440 22 V50"/>
-    <path class="l l--dim d" pathLength="1" style="--d:700ms" d="M16 50 H16 V310 M10 56 L22 44 M10 316 L22 304"/>
-    <g class="f" style="--d:1700ms" aria-hidden="true">
-      <text x="62" y="288">WOHNEN / ESSEN</text>
-      <text x="268" y="82">ZIMMER</text>
-      <text x="267" y="233">BAD</text>
-      <text x="348" y="165">FLUR</text>
-      <text x="304" y="287">KÜCHE</text>
-      <text class="t--dim" x="240" y="17" text-anchor="middle">12,00 m</text>
-      <text class="t--dim" x="8" y="180" text-anchor="middle" transform="rotate(-90 8 180)">7,80 m</text>
-      <path class="arrow" d="M120 322 L113 338 H127 Z"/>
-      <text x="120" y="356" text-anchor="middle">EINGANG</text>
-    </g>
-  </svg>
-  <figcaption>Zeichnung: Grundriss Erdgeschoss, Einfamilienhaus.</figcaption>
+<figure class="plan" data-plan data-view="auto">
+  <div class="plan__stage" style={`aspect-ratio:${w}/${h}`}>
+    <img class="plan__photo" src={`${base}img/aerial-haus.jpg`} width={w} height={h} alt="Das Haus von oben, Dach abgenommen: Wohnbereich, Schlafzimmer, Bad, Küche und Treppe im Erdgeschoss" fetchpriority="high" decoding="async" />
+    <svg class="plan__svg" viewBox={`0 0 ${w} ${h}`} role="img" aria-labelledby="plan-t" focusable="false">
+      <title id="plan-t">Grundriss eines Einfamilienhauses, Erdgeschoss, 12,00 mal 7,80 Meter</title>
+      <g class="plan__draw">
+        <path class="plan__fill" fill-rule="evenodd" d={plan.fill} />
+        {plan.paths.map((p) => <path class="plan__line" pathLength="1" style={`--d:${Math.round(((p.x - 70) / 660) * 1500)}ms`} d={p.d} />)}
+      </g>
+      <g class="plan__dims" aria-hidden="true">
+        <path d={`M${L} ${o} H${cx - 75} M${cx + 75} ${o} H${R} M${L} ${o - 10} V${o + 10} M${R} ${o - 10} V${o + 10}`} />
+        <path d={`M${o} ${T} V${cy - 75} M${o} ${cy + 75} V${B} M${o - 10} ${T} H${o + 10} M${o - 10} ${B} H${o + 10}`} />
+        <text x={cx} y={o + 11} text-anchor="middle">12,00 m</text>
+        <text x={o + 11} y={cy} text-anchor="middle" transform={`rotate(-90 ${o + 11} ${cy})`}>7,80 m</text>
+      </g>
+    </svg>
+  </div>
+  <div class="plan__bar">
+    <p class="plan__cap">Erdgeschoss, Einfamilienhaus (Beispiel)</p>
+    <div class="plan__toggle" role="group" aria-label="Ansicht wählen" hidden>
+      <button type="button" data-set="plan" aria-pressed="false">Grundriss</button>
+      <button type="button" data-set="photo" aria-pressed="true">Foto</button>
+    </div>
+  </div>
 </figure>

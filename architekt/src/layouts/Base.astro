@@ -5,12 +5,12 @@ import '@fontsource/ibm-plex-sans/latin-600.css';
 import '@fontsource/ibm-plex-mono/latin-400.css';
 import '../styles/global.css';
 import site from '../data/site.json';
-const { title = 'Architekt Hannover | Hallbach Architekten', description = 'Architekt in Hannover für Neubau, Umbau, Anbau und Bauantrag. Honorar-Orientierung online, kostenloses Erstgespräch.', home = false, jsonld = false } = Astro.props;
+const { title = 'Architekt Hannover | Hallbach Architekten', description = 'Architekt in Hannover für Neubau, Umbau, Anbau und Bauantrag. Honorar-Orientierung online, kostenloses Erstgespräch.', home = false, jsonld = false, faq = [] } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const base = import.meta.env.BASE_URL;
 const nav = [['leistungen', 'Leistungen'], ['projekte', 'Projekte'], ['ablauf', 'Ablauf'], ['honorar', 'Honorar'], ['buero', 'Büro'], ['kontakt', 'Kontakt']];
 const href = (id: string) => (home ? `#${id}` : `${base}#${id}`);
-const ld = {
-  '@context': 'https://schema.org',
+const business = {
   '@type': 'Architect',
   name: site.name,
   description,
@@ -20,6 +20,8 @@ const ld = {
   areaServed: ['Hannover', 'Gehrden', 'Barsinghausen', 'Springe', 'Isernhagen', 'Langenhagen'],
   openingHours: 'Mo-Fr 09:00-17:00',
 };
+const graph = [business, ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : [])];
+const ld = { '@context': 'https://schema.org', '@graph': graph };
 ---
 <!doctype html>
 <html lang="de">
@@ -29,6 +31,12 @@ const ld = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
     <meta name="theme-color" content="#f6f3ec" />
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     <script is:inline>document.documentElement.classList.add('js')</script>

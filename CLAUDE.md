@@ -41,7 +41,7 @@
 
 ## Формы и данные (всегда)
 Готовый блок: `_template/src/components/OrderForm.astro` + `DatenschutzForm.astro`.
-1. У каждого поля `label`, placeholder-пример (`Vor- und Nachname`, `z. B. 0511 1234567`, `name@beispiel.de`), `autocomplete`, `type`/`inputmode`.
+1. У каждого поля `label`, placeholder-пример (`Vor- und Nachname`, `z. B. 030 23125 123`, `name@example.com`), `autocomplete`, `type`/`inputmode`.
 2. Если собираются имя/телефон/e-mail: обязательный чекбокс согласия со ссылкой на `datenschutz/` этого же демо, сообщение об ошибке, раздел про форму на странице Datenschutz с пометкой «Demo: ничего не отправляется и не хранится».
 3. Где есть цены/выбор: «Summe» (итог) виден по ходу выбора (на мобильном липкая плашка) и повторяется в подтверждении.
 4. Данные не пропадают никогда: sessionStorage-автосохранение (уже в `OrderForm.astro`), ссылки на Datenschutz/Impressum открываются в новой вкладке, согласие не восстанавливается, очистка после отправки.

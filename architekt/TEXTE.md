@@ -165,8 +165,8 @@ RU: Да. При Kaufberatung я смотрю на состояние дома, 
 
 Поля формы (label · placeholder):
 - **Name** · Max Mustermann (имя)
-- **Telefon** · 0511 1234567 (телефон)
-- **E-Mail (optional)** · max@beispiel.de (почта, необязательно)
+- **Telefon** · 030 23125 123 (телефон)
+- **E-Mail (optional)** · max@example.com (почта, необязательно)
 - **Projektart** (тип проекта, список) — Neubau / Umbau & Sanierung / Anbau & Aufstockung / Nur Bauantrag / Weiß ich noch nicht (ещё не знаю)
 - **Ort des Vorhabens** (место проекта) · z. B. Gehrden, Hauptstraße
 - **Kurze Beschreibung (optional)** (короткое описание) · z. B. Altbau von 1960, Küche vergrößern
@@ -184,7 +184,7 @@ RU: Да. При Kaufberatung я смотрю на состояние дома, 
 - Telefon ungültig → **DE:** Bitte prüfen Sie die Telefonnummer. (Проверьте номер телефона.)
 - Einwilligung fehlt → **DE:** Bitte stimmen Sie der Datenverarbeitung zu. (Пожалуйста, подтвердите согласие.)
 
-Блок контактов: Hallbach Architekten · Podbielskistraße 0 · 30177 Hannover · 0511 1234567 · kontakt@beispiel.de · Mo–Fr 9–17 Uhr (пн–пт 9–17)
+Блок контактов: Hallbach Architekten · Podbielskistraße 0 · 30177 Hannover · 030 23125 123 · kontakt@example.com · Mo–Fr 9–17 Uhr (пн–пт 9–17)
 **Offene Sprechstunde** (открытая консультация): jeden 1. Donnerstag im Monat, 16–18 Uhr, ohne Anmeldung (каждый первый четверг месяца, 16–18, без записи)
 
 ---

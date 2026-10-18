@@ -75,7 +75,7 @@
 
 ### Форма запроса (Kontakt)
 Поля: Name, Telefon, E-Mail (необязательно), Projektart (select, предзаполняется из Rechner), Ort des Grundstücks/Objekts, Nachricht (необязательно), чекбокс согласия.
-- **Placeholders-примеры** во всех полях: "Max Mustermann", "0511 1234567", "max@beispiel.de", "z. B. Gehrden, Hauptstraße".
+- **Placeholders-примеры** во всех полях: "Max Mustermann", "030 23125 123", "max@example.com", "z. B. Gehrden, Hauptstraße".
 - Так как собирается телефон, обязательны: **чекбокс Einwilligung** (согласие на обработку данных) со ссылкой на Datenschutz + краткая Datenschutz-Hinweis-строка под кнопкой.
 - **Данные формы не теряются**: используем готовый блок `_template/src/components/OrderForm.astro` (sessionStorage-автосохранение уже встроено); ссылки на Datenschutz и Impressum открываются в **новой вкладке** (`target="_blank" rel="noopener"`), согласие не восстанавливается. Выбор в Rechner тоже сохраняется.
 - Демо: отправка показывает экран "Danke, wir melden uns" без реального бэкенда (в README клиента пометить: нужен Formular-Backend, например Formspree или собственный).

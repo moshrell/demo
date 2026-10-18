@@ -10,17 +10,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const base = import.meta.env.BASE_URL;
 const nav = [['leistungen', 'Leistungen'], ['projekte', 'Projekte'], ['ablauf', 'Ablauf'], ['honorar', 'Honorar'], ['buero', 'Büro'], ['kontakt', 'Kontakt']];
 const href = (id: string) => (home ? `#${id}` : `${base}#${id}`);
-const business = {
-  '@type': 'Architect',
-  name: site.name,
-  description,
-  telephone: site.phone,
-  email: site.email,
-  address: { '@type': 'PostalAddress', streetAddress: site.address.street, postalCode: site.address.zip, addressLocality: site.address.city, addressCountry: 'DE' },
-  areaServed: ['Hannover', 'Gehrden', 'Barsinghausen', 'Springe', 'Isernhagen', 'Langenhagen'],
-  openingHours: 'Mo-Fr 09:00-17:00',
-};
-const graph = [business, ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : [])];
+const graph = [...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : [])];
 const ld = { '@context': 'https://schema.org', '@graph': graph };
 ---
 <!doctype html>
@@ -40,7 +30,7 @@ const ld = { '@context': 'https://schema.org', '@graph': graph };
     <meta name="theme-color" content="#f6f3ec" />
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     <script is:inline>document.documentElement.classList.add('js')</script>
-    {jsonld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+    {jsonld && faq.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
   </head>
   <body>
     <a class="skip" href="#inhalt">Zum Inhalt springen</a>
@@ -62,7 +52,7 @@ const ld = { '@context': 'https://schema.org', '@graph': graph };
     <footer class="foot">
       <div class="wrap foot__in">
         <p class="foot__mark">{site.name}</p>
-        <p class="foot__demo">Demo-Seite, alle Angaben fiktiv.</p>
+        <p class="foot__demo">Demo-Seite, alle Angaben fiktiv. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihr Unternehmen? Jetzt anfragen</a></p>
         <nav class="foot__links" aria-label="Rechtliches">
           <a href={`${base}impressum/`}>Impressum</a>
           <a href={`${base}datenschutz/`}>Datenschutz</a>

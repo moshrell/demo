@@ -48,13 +48,13 @@ const id = 'anfrage';
       </div>
       <div class="of__field">
         <label for={`${id}-tel`}>Telefon</label>
-        <input id={`${id}-tel`} name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 0511 1234567" required aria-describedby={`${id}-err-tel`} />
+        <input id={`${id}-tel`} name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 030 23125 123" required aria-describedby={`${id}-err-tel`} />
         <p class="of__err" id={`${id}-err-tel`} hidden>Bitte prüfen Sie die Telefonnummer.</p>
       </div>
       <div class="of__field">
         <label for={`${id}-mail`}>E-Mail <span class="of__opt">(optional)</span></label>
-        <input id={`${id}-mail`} name="email" type="email" autocomplete="email" inputmode="email" placeholder="z. B. max@beispiel.de" aria-describedby={`${id}-err-mail`} />
-        <p class="of__err" id={`${id}-err-mail`} hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@beispiel.de.</p>
+        <input id={`${id}-mail`} name="email" type="email" autocomplete="email" inputmode="email" placeholder="z. B. max@example.com" aria-describedby={`${id}-err-mail`} />
+        <p class="of__err" id={`${id}-err-mail`} hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.</p>
       </div>
     </fieldset>
 

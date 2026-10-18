@@ -1,3 +1,21 @@
 [
-  { "date": "2026-10-16", "macrostructure": "Map / Diagram", "theme": "custom", "theme_axes": "light / classical-serif / warm", "vibe": "Bauplan, Transparentpapier, Graphit, Terrakotta", "enrichment": "E5 hand-built SVG (Grundriss)", "brief": "Studio Wendt Architekten · Architekt Hannover (Demo)" }
+  {
+    "date": "2026-10-16",
+    "macrostructure": "Map / Diagram",
+    "theme": "custom",
+    "theme_axes": "light / classical-serif / warm",
+    "vibe": "Bauplan, Transparentpapier, Graphit, Terrakotta",
+    "enrichment": "E5 hand-built SVG (Grundriss)",
+    "brief": "Hallbach Architekten · Architekt Hannover (Demo)"
+  },
+  {
+    "date": "2026-10-18",
+    "macrostructure": "Map / Diagram",
+    "theme": "custom",
+    "nav": "N9 edge-aligned",
+    "footer": "Ft1",
+    "enrichment": "E5 hand-built SVG (Grundriss, v1; v2 proposed)",
+    "note": "redo after review: plan first on mobile, rhythm bands, mono limited to 2 slots, slop-test 58 gates passed",
+    "brief": "Hallbach Architekten · Architekt Hannover (Demo)"
+  }
 ]

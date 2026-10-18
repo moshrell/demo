@@ -1,8 +1,8 @@
 {
-  "name": "Studio Wendt Architekten",
-  "short": "Wendt",
-  "legalName": "Studio Wendt Architekten, Inhaber Jonas Wendt (fiktiv)",
-  "owner": "Jonas Wendt",
+  "name": "Hallbach Architekten",
+  "short": "Hallbach",
+  "legalName": "Hallbach Architekten, Inhaber Tilman Hallbach (fiktiv)",
+  "owner": "Tilman Hallbach",
   "address": { "street": "Podbielskistraße 0", "zip": "30177", "city": "Hannover" },
   "email": "kontakt@beispiel.de",
   "phone": "0511 1234567",

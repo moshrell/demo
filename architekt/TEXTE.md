@@ -1,7 +1,7 @@
-# Texte: Studio Wendt Architekten (Demo, всё вымышлено)
+# Texte: Hallbach Architekten (Demo, всё вымышлено)
 
 Формат: немецкий текст, ниже перевод на русский (для Степана). На сайт идёт только немецкий.
-Архитектор: Jonas Wendt. Адрес (вымышленный): Podbielskistraße 0, 30177 Hannover-List.
+Архитектор: Tilman Hallbach. Адрес (вымышленный): Podbielskistraße 0, 30177 Hannover-List.
 
 ---
 
@@ -59,8 +59,8 @@ DE: *Ausgangslage:* Reihenendhaus, Küche zu klein für vier Personen. *Lösung:
 RU: *Исходная ситуация:* крайний дом в ряду, кухня мала для четверых. *Решение:* одноэтажная пристройка с большим остеклением в сад. *Результат:* кухня-гостиная, больше света, переезд не нужен.
 
 **Projekt 4: Dachausbau in List** (мансарда в Лист)
-Fakten: Ausbau · 64 m² · mittleres Budget · 6 Monate · Dachgauben
-DE: *Ausgangslage:* Ungenutztes Dach über einer Altbauwohnung. *Lösung:* Zwei Gauben, offene Galerie, Statik und Brandschutz früh geklärt. *Ergebnis:* Eine zusätzliche Wohnebene mit Genehmigung ohne Nachforderungen.
+Fakten: Ausbau · 64 m² · mittleres Budget · 6 Monate · Dachflächenfenster (окна в скате крыши)
+DE: *Ausgangslage:* Ungenutztes Dach über einer Altbauwohnung. *Lösung:* Große Dachflächenfenster, offene Galerie, Statik und Brandschutz früh geklärt. *Ergebnis:* Eine zusätzliche Wohnebene mit Genehmigung ohne Nachforderungen.
 RU: *Исходная ситуация:* неиспользуемая крыша над старой квартирой. *Решение:* два слуховых окна, открытая галерея, статика и пожарная безопасность решены рано. *Результат:* дополнительный жилой уровень, разрешение без доп. требований.
 
 ---
@@ -105,7 +105,7 @@ RU (кратко): 1) первичная консультация — оценк
 ## Büro
 Заголовок **DE:** Ein Büro, ein Ansprechpartner / **RU:** Бюро, одно контактное лицо
 
-**DE:** Ich bin Jonas Wendt, Architekt in Hannover. Sie sprechen von der ersten Skizze bis zur Schlüsselübergabe mit mir und nicht mit einem Callcenter.
+**DE:** Ich bin Tilman Hallbach, Architekt in Hannover. Sie sprechen von der ersten Skizze bis zur Schlüsselübergabe mit mir und nicht mit einem Callcenter.
 **RU:** Я Йонас Венд, архитектор в Ганновере. От первого наброска до передачи ключей вы разговариваете со мной, а не с колл-центром.
 
 **DE:** Mir ist wichtig, dass Sie verstehen, was Sie bekommen und was es kostet, bevor Sie entscheiden.
@@ -184,20 +184,20 @@ RU: Да. При Kaufberatung я смотрю на состояние дома, 
 - Telefon ungültig → **DE:** Bitte prüfen Sie die Telefonnummer. (Проверьте номер телефона.)
 - Einwilligung fehlt → **DE:** Bitte stimmen Sie der Datenverarbeitung zu. (Пожалуйста, подтвердите согласие.)
 
-Блок контактов: Studio Wendt Architekten · Podbielskistraße 0 · 30177 Hannover · 0511 1234567 · kontakt@beispiel.de · Mo–Fr 9–17 Uhr (пн–пт 9–17)
+Блок контактов: Hallbach Architekten · Podbielskistraße 0 · 30177 Hannover · 0511 1234567 · kontakt@beispiel.de · Mo–Fr 9–17 Uhr (пн–пт 9–17)
 **Offene Sprechstunde** (открытая консультация): jeden 1. Donnerstag im Monat, 16–18 Uhr, ohne Anmeldung (каждый первый четверг месяца, 16–18, без записи)
 
 ---
 
 ## Меню и футер
 Меню: Leistungen · Projekte · Ablauf · Honorar · Büro · Kontakt
-Футер: © 2026 Studio Wendt Architekten · Impressum (выходные данные) · Datenschutz (защита данных)
+Футер: © 2026 Hallbach Architekten · Impressum (выходные данные) · Datenschutz (защита данных)
 Пометка в футере для демо: „Demo-Seite, alle Angaben fiktiv." (Демо-страница, все данные вымышлены.)
 
 ---
 
 ## SEO (заготовка)
-- Title: Architekt Hannover | Studio Wendt Architekten
+- Title: Architekt Hannover | Hallbach Architekten
 - Description: Architekt in Hannover für Neubau, Umbau, Anbau und Bauantrag. Honorar-Orientierung online, kostenloses Erstgespräch.
 - H1: Architektur, die zu Ihrem Budget passt.
 - Ключевые фразы для страниц/FAQ: Architekt Hannover, Bauantrag Hannover, Sanierung Altbau Hannover, Anbau Einfamilienhaus, Architekt Gehrden.

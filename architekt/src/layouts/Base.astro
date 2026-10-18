@@ -5,7 +5,7 @@ import '@fontsource/ibm-plex-sans/latin-600.css';
 import '@fontsource/ibm-plex-mono/latin-400.css';
 import '../styles/global.css';
 import site from '../data/site.json';
-const { title = 'Architekt Hannover | Studio Wendt Architekten', description = 'Architekt in Hannover für Neubau, Umbau, Anbau und Bauantrag. Honorar-Orientierung online, kostenloses Erstgespräch.', home = false, jsonld = false } = Astro.props;
+const { title = 'Architekt Hannover | Hallbach Architekten', description = 'Architekt in Hannover für Neubau, Umbau, Anbau und Bauantrag. Honorar-Orientierung online, kostenloses Erstgespräch.', home = false, jsonld = false } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const nav = [['leistungen', 'Leistungen'], ['projekte', 'Projekte'], ['ablauf', 'Ablauf'], ['honorar', 'Honorar'], ['buero', 'Büro'], ['kontakt', 'Kontakt']];
 const href = (id: string) => (home ? `#${id}` : `${base}#${id}`);
@@ -39,9 +39,7 @@ const ld = {
     <header class="top">
       <div class="wrap top__in">
         <a class="wordmark" href={home ? '#' : base} aria-label={`${site.name}, Startseite`}>{site.short}<span>Architekten</span></a>
-        <nav class="top__links" aria-label="Hauptmenü">
-          {nav.map(([id, label]) => <a href={href(id)}>{label}</a>)}
-        </nav>
+        <a class="top__tel" href={`tel:${site.phoneHref}`}>{site.phone}</a>
         <details class="menu" data-menu>
           <summary aria-label="Menü">Menü</summary>
           <ul class="menu__list">

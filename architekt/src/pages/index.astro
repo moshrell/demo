@@ -21,6 +21,7 @@ const baustelle = photo('ablauf-baustelle.jpg');
   <main id="inhalt">
     <section class="hero" aria-labelledby="hero-h">
       <div class="wrap hero__grid">
+        <Plan />
         <div class="hero__copy">
           <h1 id="hero-h">{site.hero.title}</h1>
           <p class="lead">{site.hero.lead}</p>
@@ -30,38 +31,38 @@ const baustelle = photo('ablauf-baustelle.jpg');
           </div>
           <p class="hero__note">{site.hero.note}</p>
         </div>
-        <Plan />
       </div>
     </section>
 
-    <section class="section" id="leistungen" aria-labelledby="leistungen-h">
-      <div class="wrap">
-        <div class="section-head">
+    <section class="section section--m" id="leistungen" aria-labelledby="leistungen-h">
+      <div class="wrap leist">
+        <div class="leist__head">
           <h2 id="leistungen-h">Wobei ich Ihnen helfe</h2>
+          <p class="sub">Vier Aufgaben, bei denen ein früher Blick auf Bestand, Budget und Recht Monate spart.</p>
+          <a class="btn leist__cta" href="#honorar">Honorar einschätzen</a>
         </div>
-        <div class="rows">
+        <div class="leist__list">
           {leistungen.map((l) => (
-            <article class="row">
+            <article>
               <h3>{l.title}</h3>
               <p>{l.text}</p>
-              <a class="link-arrow" href="#honorar" data-calc-type={l.calc}>Honorar einschätzen</a>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="section" id="projekte" aria-labelledby="projekte-h">
+    <section class="section section--l band" id="projekte" aria-labelledby="projekte-h">
       <div class="wrap">
         <div class="section-head">
           <h2 id="projekte-h">Gebaute Beispiele</h2>
-          <p class="sub">Vier Projekte, mit Zahlen.</p>
+          <p class="sub">Vier Projekte, jeweils mit Fläche, Budget und Bauzeit.</p>
         </div>
         <Projekte />
       </div>
     </section>
 
-    <section class="section" id="ablauf" aria-labelledby="ablauf-h">
+    <section class="section section--l" id="ablauf" aria-labelledby="ablauf-h">
       <div class="wrap">
         <div class="section-head">
           <h2 id="ablauf-h">So läuft ein Projekt ab</h2>
@@ -85,7 +86,7 @@ const baustelle = photo('ablauf-baustelle.jpg');
           </div>
           {baustelle && (
             <figure class="ablauf__photo">
-              <img src={`${base}img/ablauf-baustelle.jpg`} width="1200" height="900" alt="Rohbau eines Wohnhauses auf einer Baustelle an einem bewölkten Tag" loading="lazy" decoding="async" />
+              <img src={`${base}img/ablauf-baustelle.jpg`} width="1200" height="896" alt="Rohbau eines Wohnhauses auf einer Baustelle an einem bewölkten Tag" loading="lazy" decoding="async" />
             </figure>
           )}
         </div>
@@ -94,7 +95,7 @@ const baustelle = photo('ablauf-baustelle.jpg');
 
     <Rechner />
 
-    <section class="section" id="buero" aria-labelledby="buero-h">
+    <section class="section section--l" id="buero" aria-labelledby="buero-h">
       <div class="wrap">
         <div class="section-head">
           <h2 id="buero-h">Ein Büro, ein Ansprechpartner</h2>
@@ -112,15 +113,15 @@ const baustelle = photo('ablauf-baustelle.jpg');
           </div>
           {(portrait || desk) && (
             <div class="buero__imgs">
-              {portrait && <img src={`${base}img/buero-portrait.jpg`} width="900" height="1200" alt="Porträt des Architekten im Büro am Fenster" loading="lazy" decoding="async" />}
-              {desk && <img src={`${base}img/buero-schreibtisch.jpg`} width="1200" height="900" alt="Schreibtisch mit Grundrissen, Maßstab und einem Kartonmodell" loading="lazy" decoding="async" />}
+              {portrait && <img src={`${base}img/buero-portrait.jpg`} width="896" height="1200" alt="Porträt des Architekten im Büro am Fenster" loading="lazy" decoding="async" />}
+              {desk && <img src={`${base}img/buero-schreibtisch.jpg`} width="1200" height="896" alt="Schreibtisch mit Grundrissen, Maßstab und einem Kartonmodell" loading="lazy" decoding="async" />}
             </div>
           )}
         </div>
       </div>
     </section>
 
-    <section class="section" id="faq" aria-labelledby="faq-h">
+    <section class="section section--m" id="faq" aria-labelledby="faq-h">
       <div class="wrap">
         <div class="section-head">
           <h2 id="faq-h">Häufige Fragen</h2>
@@ -133,7 +134,7 @@ const baustelle = photo('ablauf-baustelle.jpg');
       </div>
     </section>
 
-    <section class="section" id="kontakt" aria-label="Kontakt">
+    <section class="section section--l" id="kontakt" aria-label="Kontakt">
       <div class="wrap kontakt__grid">
         <AnfrageForm />
         <aside class="kontakt__info" aria-label="Kontaktdaten">

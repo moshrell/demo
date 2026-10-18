@@ -1,4 +1,4 @@
-PROMPTS ДЛЯ GEMINI: сайт архитектора (Studio Wendt Architekten, демо)
+PROMPTS ДЛЯ GEMINI: сайт архитектора (Hallbach Architekten, демо)
 
 Как работать:
 - Все 9 кадров делай в ОДНОМ чате Gemini, по порядку (единый свет и стиль).
@@ -25,7 +25,7 @@ Architectural photograph of a single-storey extension added to the garden side o
 ====================================================================
 04 · projekt-list-dachausbau.jpg · формат 4:3
 ====================================================================
-Interior architectural photograph of a newly converted attic apartment under a pitched roof in an old German apartment building. Two dormer windows bring in soft light, visible white-painted timber roof beams, a light open gallery with a slim steel railing above a living area, pale oak floor, white walls, one simple graphite-grey sofa. Soft overcast daylight, calm and honest documentary architecture photography, 35mm lens, slightly desaturated natural colors, no people, no text, no logos, no watermark. Realistic, sharp, high resolution.
+Interior architectural photograph of a newly converted attic apartment under a pitched roof in an old German apartment building. Large roof skylights bring in soft light, visible white-painted timber roof beams, a light open gallery with a slim steel railing above a living area, pale oak floor, white walls, one simple graphite-grey sofa. Soft overcast daylight, calm and honest documentary architecture photography, 35mm lens, slightly desaturated natural colors, no people, no text, no logos, no watermark. Realistic, sharp, high resolution.
 
 ====================================================================
 05 · projekt-deister-innen.jpg · формат 3:4

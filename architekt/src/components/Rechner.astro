@@ -2,7 +2,7 @@
 /** Honorar-Orientierung: vier Angaben, eine ehrliche Spanne. Formeln in src/data/rechner.json und src/scripts/calc.ts. Unverbindlich. */
 import cfg from '../data/rechner.json';
 ---
-<section class="section calc" id="honorar" aria-labelledby="honorar-h">
+<section class="section section--m calc" id="honorar" aria-labelledby="honorar-h">
   <div class="wrap">
     <div class="section-head">
       <h2 id="honorar-h">Was kostet die Planung ungefähr?</h2>
@@ -31,7 +31,7 @@ import cfg from '../data/rechner.json';
         <legend id="area-l">Wie groß? (Wohn- bzw. Nutzfläche)</legend>
         <div class="area">
           <input type="range" name="area-range" min={cfg.min} max={cfg.max} step="5" value={cfg.default} aria-labelledby="area-l" />
-          <label class="area__num"><span class="mono">m²</span>
+          <label class="area__num"><span>m²</span>
             <input type="number" name="area" min={cfg.min} max={cfg.max} step="1" value={cfg.default} inputmode="numeric" aria-label="Fläche in Quadratmetern" />
           </label>
         </div>

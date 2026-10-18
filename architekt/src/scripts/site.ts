@@ -6,7 +6,7 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu?.op
 const steps = document.querySelectorAll<HTMLElement>('.step');
 if ('IntersectionObserver' in window) {
   const io = new IntersectionObserver((entries) => {
-    entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
+    entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-in'); en.target.previousElementSibling?.classList.add('is-linked'); io.unobserve(en.target); } });
   }, { threshold: 0.25 });
   steps.forEach((s) => io.observe(s));
 } else {

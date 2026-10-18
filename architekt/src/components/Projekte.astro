@@ -1,35 +1,35 @@
 ---
-/** Projekte: aufklappbar. Fotos erscheinen automatisch, sobald die Datei in public/img/ liegt (siehe PROMPTS.txt). */
-import { existsSync } from 'node:fs';
+/** Projekte: Foto sichtbar, Zahlen und Verlauf aufklappbar. Das erste Projekt ist breit, die übrigen stehen in einer Reihe. */
 import projekte from '../data/projekte.json';
 const base = import.meta.env.BASE_URL;
-const has = (f: string) => existsSync(new URL(`../../public/img/${f}`, import.meta.url));
 ---
 <div class="proj">
-  {projekte.map((p) => {
-    const imgs = p.images.filter(([f]) => has(f as string));
+  {projekte.map((p, i) => {
+    const [main, ...more] = p.images;
     return (
-      <details name="projekte" id={p.id}>
-        <summary>
+      <article class={`proj__item${i === 0 ? ' proj__item--lead' : ''}`} id={p.id}>
+        <img class="proj__main" src={`${base}img/${main[0]}`} width={main[1] as number} height={main[2] as number} alt={main[3] as string} loading="lazy" decoding="async" />
+        <div class="proj__txt">
+          <p class="proj__type">{p.type} · {p.facts[0][1]}</p>
           <h3>{p.title}</h3>
-          <span class="proj__meta">{p.type} · {p.facts[0][1]}</span>
-        </summary>
-        <div class="proj__body">
-          <dl class="proj__facts">
-            {p.facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
-          </dl>
-          <div class="proj__story">
-            <p><strong>Ausgangslage</strong>{p.ausgang}</p>
-            <p><strong>Lösung</strong>{p.loesung}</p>
-            <p><strong>Ergebnis</strong>{p.ergebnis}</p>
-          </div>
-          {imgs.length > 0 && (
-            <div class="proj__imgs">
-              {imgs.map(([f, w, h, alt]) => <img src={`${base}img/${f}`} width={w as number} height={h as number} alt={alt as string} loading="lazy" decoding="async" />)}
+          <p class="proj__res">{p.ergebnis}</p>
+          <details>
+            <summary>Zahlen und Verlauf</summary>
+            <dl class="proj__facts">
+              {p.facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+            </dl>
+            <div class="proj__story">
+              <p><strong>Ausgangslage</strong>{p.ausgang}</p>
+              <p><strong>Lösung</strong>{p.loesung}</p>
             </div>
-          )}
+            {more.length > 0 && (
+              <div class="proj__more">
+                {more.map(([f, w, h, alt]) => <img src={`${base}img/${f}`} width={w as number} height={h as number} alt={alt as string} loading="lazy" decoding="async" />)}
+              </div>
+            )}
+          </details>
         </div>
-      </details>
+      </article>
     );
   })}
 </div>

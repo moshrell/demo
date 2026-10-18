@@ -1,4 +1,4 @@
-/* Hallmark · macrostructure: Map / Diagram (Grundriss als Hero, darunter Dokument) · tone: austere · anchor hue: 40 (Terrakotta)
+/* Hallmark · macrostructure: Map / Diagram (Grundriss als Hero, darunter Dokument) · nav N9 · footer Ft1 · tone: austere · anchor hue: 40 (Terrakotta)
    theme: custom (vibe: "Bauplan, Transparentpapier, Graphit, Terrakotta") · paper oklch(97.5% 0.008 85) · accent oklch(50% 0.135 40) terracotta
    display: Newsreader (roman serif) · body: IBM Plex Sans · mono: IBM Plex Mono · axes: light / classical-serif / warm
    Alle Farben und Schriften nur über diese Tokens. */
@@ -18,7 +18,7 @@
   --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
-  --text-xs: 0.8125rem;
+  --text-xs: 0.875rem;
   --text-sm: 0.9375rem;
   --text-base: 1.0625rem;
   --text-lg: 1.25rem;

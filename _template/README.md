@@ -16,3 +16,10 @@ Astro-Projekt (Demo). Адрес на портфолио: `/vorschau/__CATEGORY_
 3. Цены/выбор: итог «Summe» виден по ходу выбора (на мобильном липкая плашка внизу формы) и повторяется в подтверждении. Нет цен: итог не выдумывать, в подтверждении показать сводку выбора (услуга, дата/время).
 4. Стили только через токены (`--muted`, `--alert`, `--focus`, `--space-*` в `global.css`: подогнать под дизайн проекта), доступность (focus-visible, aria-invalid, aria-describedby), проверка на 390px.
 5. Введённые данные не должны пропадать никогда: sessionStorage-автосохранение (уже встроено в `OrderForm.astro`; ключ `form:<pathname>:<id>`, всё в try/catch), ссылки на Datenschutz/Impressum открываются в новой вкладке (`target="_blank" rel="noopener"`), чекбокс согласия не сохраняется и не восстанавливается, после успешной отправки хранилище очищается. В Datenschutz есть предложение про Zwischenspeicher (уже в `DatenschutzForm.astro`).
+
+## SEO & KI-Sichtbarkeit (AIO) — Standard in jedem Projekt
+`Base.astro` liefert: title, description, canonical, Open Graph, Schema.org-JSON-LD (`type`, Adresse, Öffnungszeiten, Preise als `prices`), FAQPage-Markup (`faq`). Checkliste pro Projekt:
+1. Ein `<h1>`, logische `<h2>`/`<h3>`, `alt` bei jedem Bild.
+2. `type` auf passenden Schema.org-Typ setzen; `site.json`: `openingHours`, `areaServed` füllen (Platzhalter `TODO` nie live).
+3. FAQ: dieselben Fragen/Antworten sichtbar auf der Seite UND als `faq`-Prop übergeben.
+4. Kundenseite live: `index` setzen (Demos bleiben noindex), sitemap.xml + robots.txt ergänzen, Google Business Profile mit identischen Name/Adresse/Telefon (NAP).

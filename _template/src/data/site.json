@@ -1,7 +1,15 @@
 {
   "name": "__NAME__",
   "legalName": "TODO vom Kunden",
-  "address": { "street": "TODO", "zip": "TODO", "city": "TODO" },
+  "address": {
+    "street": "TODO",
+    "zip": "TODO",
+    "city": "TODO"
+  },
   "email": "TODO",
-  "phone": "TODO"
+  "phone": "TODO",
+  "openingHours": "TODO z. B. Mo-Fr 09:00-17:00",
+  "areaServed": [
+    "TODO Ort"
+  ]
 }

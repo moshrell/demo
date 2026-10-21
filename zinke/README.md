@@ -5,7 +5,7 @@
 Документы: `RECON.md` (разведка), `TZ.txt` (ТЗ от лица владельца: персоны, флоу, механика), `PROMPTS.txt` (17 кадров для Gemini).
 
 ## Что внутри
-- **Главная** (`/`): шапка со статусом «offen/geschlossen» (по Europe/Berlin), hero, сцена «Möbel entsteht» (3D-сборка по скроллу → фото той же вещи + ab-цена + «im Konstruktor anpassen»), Leistungen und Preise, Werkstoffe (проба тапом), Ablauf, Referenzen, Планеры/Hausverwaltung, проверка PLZ, Über die Werkstatt («Was wir nicht machen»), FAQ, форма «Anfrage mit Foto». Снизу на телефоне липкая панель Anrufen · Konstruktor · Anfrage.
+- **Главная** (`/`): шапка со статусом «offen/geschlossen» (по Europe/Berlin), hero, сцена «Möbel entsteht» (3D-сборка по скроллу → фото той же вещи + ab-цена + «im Konstruktor anpassen»), Leistungen und Preise, Werkstoffe (проба тапом), Ablauf, Referenzen, Planer и Hausverwaltung, проверка PLZ, Über die Werkstatt («Was wir nicht machen»), FAQ, форма «Anfrage mit Foto». Снизу на телефоне липкая панель Anrufen · Konstruktor · Anfrage.
 - **Konstruktor** (`/konstruktor/`): Einbauschrank (со скосом) / Regal / Tisch (+ пресет Garderobe). Шаги +/−, инструмент + тап по полю, породы и поверхность, «Meister-Hinweise» (прогиб полки с кнопками-решениями), Richtpreis с разбивкой, Werkbuch (7 достижений), «Überrasch mich», ссылка-конфигурация в URL, Abnahme со штампом, форма со сводкой.
 - **Impressum / Datenschutz**: Handwerkskammer Hannover, Berufsbezeichnung, HwO; раздел про форму, конструктор (URL/sessionStorage/localStorage), PLZ-проверку.
 
@@ -16,7 +16,7 @@
 - Цены демонстрационные: `src/data/kalkulation.json` (netto-ставки + MwSt), `leistungen.json`. На реальном клиенте подставить его честные цифры.
 - PLZ-проверка: `plz.json` (GeoNames, CC BY 4.0, Luftlinie до мастерской, ≤60 км) + `zonen.json` (Zone 1 ≤12 км бесплатно, Zone 2 ≤30 км 45 €, Zone 3 ≤60 км по запросу 95 €).
 - Текстуры 3D: Poly Haven (CC0): oak_veneer_01, natural_walnut_veneer, white_maple_veneer, rough_pine_door; оттенок и контраст изменены под породу (`public/tex/*.jpg`, ~100–180 КБ).
-- Позиции из ТЗ, которые упрощены: Neigung шагом 5°, Höhe шагом 10 cm (не 20); Garderobe/Treppe/Türen в конструкторе — только Garderobe-пресет, остальное через форму; без Schlüsselpunkte-анимации интро (сцена и так под скроллом).
+- Позиции из ТЗ, которые упрощены: Neigung шагом 5°, Höhe шагом 10 cm (не 20); Garderobe/Treppe/Türen в конструкторе — только Garderobe-пресет, остальное через форму.
 
 ## Fallback
 - Без WebGL или слабое устройство (≤4 ядер/≤4 ГБ → pixelRatio ≤1,5; два раза подряд просадка кадров → pixelRatio 1, затем 2D): Konstruktor целиком в 2D-эскизе (тап по полю, цена, форма), главная — статичный блок «эскиз + фото».
@@ -31,7 +31,7 @@
 - Вид 3D глазами не проверялся (только числа: непустой кадр, позиции). Если форма какой-то детали выглядит странно, прислать скриншот.
 - Формы ничего не отправляют (демо). Для живого клиента: PHP-отправка на All-Inkl (письмо + сводка конфигурации + фото), правка Datenschutz, Hosting-абзац.
 - Impressum: `TODO vom Kunden` в номере Handwerksrolle, Berufshaftpflicht, Verbraucherschlichtung.
-- Цены, ставки, срок рückruf «2 Werktagen», количество людей и «seit 2006/2009» вымышлены.
+- Цены, ставки, срок обратного звонка «2 Werktagen», количество людей и «seit 2006/2009» вымышлены.
 - Кнопка «Teilen» использует Web Share API, на ПК копирует ссылку в буфер.
 
 ## Лицензии

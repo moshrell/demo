@@ -56,8 +56,9 @@ const kon = mode === 'konstruktor';
         </select>
       </div>
     </div>
-    <div class="af__field">
-      <span class="af__label" id={`${id}-foto-l`}>Fotos vom Ort <span class="af__opt">(optional, bis 4)</span></span>
+    <div class="af__field" hidden={kon}>
+      <span class="af__label" id={`${id}-foto-l`}>Foto vom Raum oder der Stelle <span class="af__opt">(optional, bis 4)</span></span>
+      <span class="af__hint">Zum Beispiel die Wand, die Schräge oder der Platz für den Tisch. Dann kann ich Maße und Aufwand vorab einschätzen.</span>
       <label class="af__file" for={`${id}-foto`}><span>Foto aufnehmen oder auswählen</span></label>
       <input class="sr-only" id={`${id}-foto`} type="file" accept="image/*" multiple aria-labelledby={`${id}-foto-l`} data-foto />
       <ul class="af__thumbs" data-thumbs aria-label="Ausgewählte Fotos"></ul>
@@ -156,6 +157,7 @@ const kon = mode === 'konstruktor';
   .af__field { display: grid; gap: var(--space-2xs); min-width: 0; }
   .af__field > label, .af__label { font-weight: 700; font-size: var(--text-sm); }
   .af__opt { font-weight: 400; color: var(--muted); }
+  .af__hint { display: block; margin-bottom: var(--space-xs); font-size: var(--text-sm); color: var(--muted); }
   .af__field input:not([type=file]), .af__field textarea, .af__field select { width: 100%; min-height: 48px; padding: 0.65rem 0.85rem; border: 1.5px solid var(--ink); border-radius: var(--radius); background: var(--sk-fill); color: var(--ink); font: inherit; }
   .af__field select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%); background-position: calc(100% - 18px) 55%, calc(100% - 12px) 55%; background-size: 6px 6px; background-repeat: no-repeat; padding-right: 2.2rem; }
   .af__field textarea { resize: vertical; }

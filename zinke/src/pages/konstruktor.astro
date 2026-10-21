@@ -92,7 +92,7 @@ const base = import.meta.env.BASE_URL;
   .kon__price summary::-webkit-details-marker { display: none; }
   .kon__plabel { font-size: var(--text-xs); color: var(--muted); }
   .kon__price strong { font-family: var(--font-display); font-size: 1.3rem; font-variant-numeric: tabular-nums; }
-  .kon__pop { position: absolute; z-index: 30; top: calc(100% - 4px); left: var(--gutter); width: min(22rem, calc(100vw - 2 * var(--gutter))); padding: var(--space-md); background: var(--paper); border: 1.5px solid var(--ink); border-radius: var(--radius); box-shadow: 0 8px 24px rgb(27 34 43 / 0.18); }
+  .kon__pop { position: absolute; z-index: 30; top: calc(100% - 4px); left: var(--gutter); width: min(22rem, calc(100vw - 2 * var(--gutter))); padding: var(--space-md); background: var(--paper); border: 1.5px solid var(--ink); border-radius: var(--radius); box-shadow: 0 8px 24px rgb(20 32 46 / 0.18); }
   .kon__pop dl, .kon__abn-price dl { margin: 0 0 var(--space-xs); display: grid; }
   .kon__pop dl > div, .kon__abn-price dl > div { display: flex; justify-content: space-between; gap: var(--space-md); padding: 0.3rem 0; border-bottom: 1px solid var(--rule); font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
   .kon__pop dd, .kon__abn-price dd { margin: 0; }
@@ -150,7 +150,7 @@ const base = import.meta.env.BASE_URL;
   .kon__step { padding: var(--space-lg) var(--gutter) var(--space-2xl); display: grid; gap: var(--space-lg); }
   .kon__step[hidden], .kon__app[hidden] { display: none; }
   .kon__abn { display: grid; gap: var(--space-lg); }
-  .kon__paper { position: relative; padding: var(--space-lg); background: var(--sk-fill); border: 1px solid var(--rule); box-shadow: 0 1px 0 var(--rule), 0 10px 24px rgb(27 34 43 / 0.08); }
+  .kon__paper { position: relative; padding: var(--space-lg); background: var(--sk-fill); border: 1px solid var(--rule); box-shadow: 0 1px 0 var(--rule), 0 10px 24px rgb(20 32 46 / 0.08); }
   .kon__list { margin: 0 0 var(--space-md); display: grid; }
   .kon__list > div { display: grid; grid-template-columns: minmax(0, 6rem) minmax(0, 1fr); gap: var(--space-sm); padding: 0.35rem 0; border-bottom: 1px solid var(--rule); font-size: var(--text-sm); }
   .kon__list dt { color: var(--muted); } .kon__list dd { margin: 0; }
@@ -161,7 +161,7 @@ const base = import.meta.env.BASE_URL;
   @media (prefers-reduced-motion: no-preference) { .stamp.is-in { animation: stempel 380ms var(--ease-out) both; } }
   @keyframes stempel { from { transform: rotate(-8deg) scale(1.9); opacity: 0; } to { transform: rotate(-8deg) scale(1); opacity: 1; } }
   .kon__dialog { max-width: 28rem; width: calc(100vw - 2rem); border: 1.5px solid var(--ink); border-radius: var(--radius); background: var(--paper); color: var(--ink); padding: var(--space-lg); }
-  .kon__dialog::backdrop { background: rgb(27 34 43 / 0.5); }
+  .kon__dialog::backdrop { background: rgb(20 32 46 / 0.5); }
   .kon__book { list-style: none; margin: var(--space-md) 0; padding: 0; display: grid; gap: 0.25rem; }
   .kon__book li { display: grid; padding: 0.45rem 0; border-bottom: 1px solid var(--rule); opacity: 0.55; }
   @media (max-width: 29.99rem) { .kon__ibt { display: none; } .kon__ib[data-open-book]::before { content: '★ '; } }

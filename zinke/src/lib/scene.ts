@@ -251,8 +251,8 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
   const content = new Group();
   root.add(content);
 
-  // Markierung: Rahmen wie mit dem roten Zimmermannsbleistift
-  const markMat = new LineBasicMaterial({ color: new Color('#c4342b'), transparent: true, opacity: 0 });
+  // Markierung: Rahmen wie mit blauer Tinte
+  const markMat = new LineBasicMaterial({ color: new Color('#1f4fa3'), transparent: true, opacity: 0 });
   let markLine: LineSegments | null = null, markT = 0;
 
   function setConfig(c: Cfg, animate: boolean) {

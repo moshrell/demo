@@ -1,7 +1,7 @@
 /**
  * 2D-Frontansicht aus denselben Bauteilen wie die 3D-Szene (SVG-String).
  * 'wood' = farbige Ansicht (Fallback ohne WebGL), 'pencil' = Skizze für die Abnahme.
- * Maßketten in Handschrift (Caveat) und roter Bleistiftfarbe.
+ * Maßketten in Handschrift (Caveat) und Tintenblau.
  */
 import { type Cfg, type Part, buildParts, width, feldSpan, plinth, hTop, kink, T, FARBEN } from './model';
 

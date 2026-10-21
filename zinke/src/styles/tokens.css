@@ -1,29 +1,31 @@
 /* Hallmark · macrostructure: bespoke "Werkbank" (Bretter mit Querleisten + Vollbild-Szene) · tone: tactile, ruhig
- * theme: custom · vibe: "Morgen in der Werkstatt, Öl, helles Holz, roter Zimmermannsbleistift"
+ * theme: custom · vibe: "Morgen in der Werkstatt, Öl, helles Holz, blaue Tinte der Zimmermannsmeister"
  * paper #f8f3e9 · accent #b52c22 red pencil · Alegreya + Alegreya Sans + Caveat (sparsam)
  * axes: light / humanist-serif / warm  · nav: wordmark + status + Menü-Brett · footer: Ft6 letter close
  */
 :root {
-  --paper: #f8f3e9;
-  --paper-2: #f1e7d9;
-  --paper-3: #e8dac7;
-  --wood: #dec2a1;
-  --wood-2: #c49c77;
-  --ink: #1e2227;
-  --ink-2: #393e43;
-  --muted: #50565d;
-  --rule: #c6bcaf;
-  --accent: #b52c22;
-  --accent-2: #9b2018;
-  --on-accent: #fcf8f1;
-  --alert: #a21a1b;
-  --ok: #2e663c;
-  --focus: #004b97;
-  --sk-fill: #fbf6ee;
-  --sk-back: #ece3d6;
+  --paper: #f6f2ea;
+  --paper-2: #ece6d9;
+  --paper-3: #dfd7c5;
+  --wood: #dcc29b;
+  --wood-2: #b98d5b;
+  --ink: #14202e;
+  --ink-2: #2b3a4c;
+  --muted: #4a5868;
+  --rule: #cdc5b3;
+  --accent: #1f4fa3;
+  --accent-2: #163b7c;
+  --accent-soft: #dce6f6;
+  --on-accent: #ffffff;
+  --alert: #a3282a;
+  --ok: #2c6a49;
+  --focus: #a35a0a;
+  --sk-fill: #faf7f1;
+  --sk-back: #e6dfd0;
 
   --font-display: 'Alegreya', 'Iowan Old Style', Georgia, serif;
   --font-body: 'Alegreya Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-pen: 'Mrs Saint Delafield', 'Snell Roundhand', cursive;
   --font-hand: 'Caveat', 'Bradley Hand', cursive;
 
   --text-xs: 0.8125rem;

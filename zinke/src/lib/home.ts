@@ -42,6 +42,13 @@ $$<HTMLImageElement>('img').forEach((i) => { if (i.complete && i.naturalWidth ==
 })();
 
 /* ---- Menü schließen bei Klick ---- */
+{
+  const menu = $<HTMLDetailsElement>('[data-menu]');
+  if (menu) {
+    document.addEventListener('click', (e) => { if (menu.open && !menu.contains(e.target as Node)) menu.removeAttribute('open'); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.open) { menu.removeAttribute('open'); menu.querySelector('summary')?.focus(); } });
+  }
+}
 $$('[data-menu] a').forEach((a) => a.addEventListener('click', () => $<HTMLDetailsElement>('[data-menu]')!.removeAttribute('open')));
 
 /* ---- klebende Leiste ausblenden, wenn Formular im Bild ---- */
@@ -128,7 +135,7 @@ if (sz) {
       }
     };
     const keep = !photoOk || mix < 0.3;
-    place(lbl.b, 'breite', asm > 0.97 && keep); place(lbl.h, 'hoehe', asm > 0.97 && keep); place(lbl.d, 'duebel', asm > 0.1 && asm < 0.6);
+    place(lbl.b, 'breite', asm > 0.97 && keep); place(lbl.h, 'hoehe', asm > 0.97 && keep); lbl.d.style.opacity = asm > 0.1 && asm < 0.6 ? '1' : '0';
   }
   const onScroll = () => {
     const r = track.getBoundingClientRect(), vh = innerHeight;

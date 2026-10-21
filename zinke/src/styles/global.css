@@ -40,7 +40,7 @@ button { font: inherit; color: inherit; }
 .sk-dim text { font-family: var(--font-hand); font-weight: 600; font-size: 9px; fill: var(--accent); }
 .sk-dim .sk-small { font-size: 7px; }
 .sk-pick { fill: transparent; cursor: pointer; }
-.sk-pick:hover { fill: rgb(181 44 34 / 0.06); }
+.sk-pick:hover { fill: rgb(31 79 163 / 0.10); }
 
 /* Fußzeile aus Base.astro */
 .site-foot { padding: var(--space-xl) var(--gutter) calc(var(--space-xl) + var(--bar-h)); background: var(--paper-2); font-size: var(--text-sm); color: var(--ink-2); }
@@ -54,3 +54,5 @@ button { font: inherit; color: inherit; }
 .hd__brand { min-height: 44px; }
 .af__thumbs button::after { content: ''; position: absolute; inset: -8px; }
 .af__check a { display: inline-block; padding: 0.35rem 0; }
+
+[hidden] { display: none !important; }

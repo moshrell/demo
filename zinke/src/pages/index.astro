@@ -64,13 +64,15 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
               {produkte.map((p, i) => <button type="button" class="sz__tab" data-prod={p.id} aria-pressed={i === 0}>{p.label}</button>)}
             </div>
             <div class="sz__stage" data-sz-stage>
-              <div class="sz__svg" data-sz-svg></div>
-              <canvas class="sz__canvas" data-sz-canvas aria-hidden="true"></canvas>
-              <img class="sz__photo" data-sz-photo src={img(produkte[0].photo)} alt={produkte[0].alt} width="900" height="1200" loading="lazy" decoding="async" />
-              <span class="sz__lbl hand" data-lbl-b aria-hidden="true"></span>
-              <span class="sz__lbl hand" data-lbl-h aria-hidden="true"></span>
-              <span class="sz__lbl hand" data-lbl-d aria-hidden="true">Dübel statt Schrauben</span>
-              <p class="sz__note hand" data-sz-note>Scrollen: ich baue es Ihnen zusammen ↓</p>
+              <div class="sz__view" data-sz-view>
+                <div class="sz__svg" data-sz-svg></div>
+                <canvas class="sz__canvas" data-sz-canvas aria-hidden="true"></canvas>
+                <img class="sz__photo" data-sz-photo src={img(produkte[0].photo)} alt={produkte[0].alt} width="900" height="1200" loading="lazy" decoding="async" />
+                <span class="sz__lbl hand" data-lbl-b aria-hidden="true"></span>
+                <span class="sz__lbl hand" data-lbl-h aria-hidden="true"></span>
+                <span class="sz__lbl sz__lbl--d hand" data-lbl-d aria-hidden="true">Dübel statt Schrauben</span>
+                <p class="sz__note hand" data-sz-note>Scrollen: ich baue es Ihnen zusammen ↓</p>
+              </div>
               <div class="sz__capt" data-sz-capt>
                 <h2 data-sz-name>{produkte[0].label}</h2>
                 <p class="sz__capt-p" data-sz-cap>{produkte[0].caption}</p>
@@ -262,7 +264,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   </div>
 
   <Fragment slot="foot">
-    <p class="letter">Auf bald in der Werkstatt,<br /><span class="hand">Jan Wendholm</span></p>
+    <p class="letter">Auf bald in der Werkstatt,<br /><span class="pen">Jan Wendholm</span></p>
     <p>{site.legalName}<br />{site.address.street}, {site.address.zip} {site.address.city}<br />{site.hours.map((h) => `${h.label} ${h.open}–${h.close}`).join(', ')} Uhr · <a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
   </Fragment>
 </Base>
@@ -271,7 +273,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .skip { position: absolute; left: -999px; top: 0; z-index: 100; padding: 0.6rem 1rem; background: var(--ink); color: var(--paper); }
   .skip:focus { left: 0; }
   /* Kopf */
-  .hd { position: sticky; top: 0; z-index: 40; height: var(--bar-h); display: flex; align-items: center; gap: var(--space-sm); padding: 0 var(--gutter); background: rgb(248 243 233 / 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); }
+  .hd { position: sticky; top: 0; z-index: 40; height: var(--bar-h); display: flex; align-items: center; gap: var(--space-sm); padding: 0 var(--gutter); background: rgb(246 242 234 / 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); }
   .hd__brand { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-weight: 700; font-size: 1.45rem; text-decoration: none; margin-right: auto; }
   .hd__mark { width: 22px; height: 22px; background: var(--ink); clip-path: polygon(0 100%, 0 30%, 22% 30%, 14% 100%, 36% 100%, 28% 0, 72% 0, 64% 100%, 86% 100%, 78% 30%, 100% 30%, 100% 100%); border-top: 3px solid var(--accent); }
   .hd__status { display: none; font-size: var(--text-sm); color: var(--ink-2); }
@@ -279,7 +281,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .hd__tel { display: none; font-weight: 700; text-decoration: none; }
   .hd__menu summary { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-md); border: 1.5px solid var(--ink); border-radius: var(--radius); font-weight: 700; cursor: pointer; list-style: none; }
   .hd__menu summary::-webkit-details-marker { display: none; }
-  .hd__nav { max-height: calc(100vh - var(--bar-h) * 2 - 1rem); max-height: calc(100dvh - var(--bar-h) * 2 - 1rem); overflow-y: auto; overscroll-behavior: contain; position: absolute; right: var(--gutter); top: calc(100% + 4px); width: min(20rem, calc(100vw - 2 * var(--gutter))); display: grid; padding: var(--space-xs); background: var(--paper); border: 1.5px solid var(--ink); border-radius: var(--radius); box-shadow: 0 10px 28px rgb(27 34 43 / 0.18); }
+  .hd__nav { max-height: calc(100vh - var(--bar-h) * 2 - 1rem); max-height: calc(100dvh - var(--bar-h) * 2 - 1rem); overflow-y: auto; overscroll-behavior: contain; position: absolute; right: var(--gutter); top: calc(100% + 4px); width: min(20rem, calc(100vw - 2 * var(--gutter))); display: grid; padding: var(--space-xs); background: var(--paper); border: 1.5px solid var(--ink); border-radius: var(--radius); box-shadow: 0 10px 28px rgb(20 32 46 / 0.18); }
   .hd__nav a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--space-sm); text-decoration: none; border-bottom: 1px solid var(--rule); }
   .hd__nav a:last-child { border-bottom: 0; }
   .hd__nav a:hover { background: var(--paper-2); }
@@ -297,7 +299,8 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .sz__tabs { display: flex; gap: var(--space-xs); padding: var(--space-xs) var(--gutter); overflow-x: auto; scrollbar-width: none; }
   .sz__tab { flex: 0 0 auto; min-height: 44px; padding: 0 var(--space-md); border: 1.5px solid var(--ink); border-radius: 999px; background: transparent; font-weight: 700; cursor: pointer; }
   .sz__tab[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
-  .sz__stage { position: relative; margin: 0 var(--gutter); overflow: hidden; background: linear-gradient(var(--paper-2), var(--paper)); border-radius: var(--radius-lg); max-width: 64rem; width: calc(100% - 2 * var(--gutter)); justify-self: center; min-height: 0; }
+  .sz__stage { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto; margin: 0 var(--gutter); overflow: hidden; background: linear-gradient(var(--paper-2), var(--paper)); border-radius: var(--radius-lg); max-width: 64rem; width: calc(100% - 2 * var(--gutter)); justify-self: center; min-height: 0; }
+  .sz__view { position: relative; min-height: 0; }
   .sz__svg, .sz__canvas, .sz__photo { position: absolute; inset: 0; width: 100%; height: 100%; }
   .sz__svg { display: grid; place-items: center; padding: var(--space-lg); transition: opacity var(--dur) var(--ease-out); }
   .sz__svg .sk { max-height: 100%; }
@@ -308,7 +311,8 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .sz__note.is-off { opacity: 0; }
   @media (prefers-reduced-motion: no-preference) { .sz__note:not(.is-off) { animation: sacken 1.6s var(--ease-in-out) 2; } }
   @keyframes sacken { 50% { transform: translate(-50%, 6px); } }
-  .sz__capt { position: absolute; inset: auto 0 0 0; padding: var(--space-lg) var(--space-md) var(--space-md); background: linear-gradient(transparent, rgb(248 243 233 / 0.96) 38%); display: grid; gap: 0.3rem; justify-items: start; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
+  .sz__lbl--d { left: var(--space-md); top: var(--space-md); transform: rotate(-3deg); }
+  .sz__capt { position: relative; padding: var(--space-sm) var(--space-md) var(--space-md); background: var(--paper); display: grid; gap: 0.3rem; justify-items: start; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
   .sz__capt.is-on { opacity: 1; transform: none; pointer-events: auto; }
   .sz__capt h2 { font-size: var(--text-xl); }
   .sz__capt-p { font-size: var(--text-sm); color: var(--ink-2); }
@@ -318,8 +322,10 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .sz--static .sz__stage { aspect-ratio: auto; display: grid; gap: var(--space-md); padding: var(--space-md); background: var(--paper-2); }
   .sz--static .sz__svg, .sz--static .sz__photo, .sz--static .sz__capt { position: static; opacity: 1; transform: none; height: auto; background: none; padding: 0; }
   .sz--static .sz__photo { aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius); }
+  .sz--static .sz__view { display: grid; gap: var(--space-md); }
   .sz--static .sz__canvas, .sz--static .sz__note, .sz--static .sz__lbl { display: none; }
   .is-missing { visibility: hidden; }
+  .abl img.is-missing, .ref > img.is-missing, .uber__img.is-missing { display: none; }
   /* Bretter */
   .brett { background: var(--paper); padding: var(--space-xl) 0 var(--space-2xl); }
   .brett--2 { background: var(--paper-2); } .brett--3 { background: var(--paper-3); }
@@ -340,7 +346,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .holz__n { font-family: var(--font-display); font-size: var(--text-xl); } .holz__s { font-size: var(--text-sm); color: var(--muted); }
   .holzd { width: min(30rem, calc(100vw - 2rem)); max-height: calc(100vh - 1.5rem); max-height: calc(100dvh - 1.5rem); margin: auto; padding: 0; border: 1.5px solid var(--ink); border-radius: var(--radius); background-color: #f8f3e9; background-color: var(--paper); color: #1e2227; color: var(--ink); overflow-y: auto; }
   .holzd[open] { display: grid; }
-  .holzd::backdrop { background: rgb(27 34 43 / 0.55); }
+  .holzd::backdrop { background: rgb(20 32 46 / 0.55); }
   .holzd img { display: block; width: 100%; height: auto; aspect-ratio: 1; max-height: 46vh; max-height: 46dvh; object-fit: cover; background: var(--paper-3); }
   .holzd__t { padding: var(--space-md); display: grid; gap: var(--space-xs); justify-items: start; }
   .holzd__f .hand { font-size: 1.25rem; }
@@ -364,7 +370,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .faq summary::-webkit-details-marker { display: none; } .faq summary::after { content: '+'; position: absolute; right: 0.25rem; top: 0.8rem; font-size: 1.5rem; color: var(--accent); } .faq details[open] summary::after { content: '−'; }
   .faq details p { padding-bottom: var(--space-md); max-width: var(--measure); color: var(--ink-2); }
   .brett#anfrage { padding-bottom: calc(var(--space-2xl) + 8px); }
-  .letter { font-family: var(--font-display); font-size: var(--text-lg); } .letter .hand { font-size: 2rem; }
+  .letter { font-family: var(--font-display); font-size: var(--text-lg); } .letter .pen { display: inline-block; margin-top: 0.2rem; font-family: var(--font-pen); font-size: 3.4rem; line-height: 1.1; color: var(--accent); transform: rotate(-2deg); transform-origin: left center; }
   /* klebende Leiste (Handy) */
   .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: grid; grid-template-columns: 1fr 1.2fr 1.2fr; height: calc(var(--bar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--paper); border-top: 1.5px solid var(--ink); transition: transform var(--dur) var(--ease-out); }
   .bar.is-off { transform: translateY(100%); }

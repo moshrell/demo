@@ -132,7 +132,7 @@ function renderPanel() {
   } else if (tab === 'holz') {
     h += `<div class="kr"><span class="ks__l">Holz</span><span class="kcs">${(Object.keys(HOLZ) as (keyof typeof HOLZ)[]).map((k) => `<button type="button" class="kc kc--tex${c.holz === k ? ' is-on' : ''}" data-act="h-${k}" aria-pressed="${c.holz === k}" data-tex="${k}"><i></i>${HOLZ[k]}</button>`).join('')}</span></div>`;
     h += `<div class="kr"><span class="ks__l">Oberfläche</span><span class="kcs">${(Object.keys(OBER) as (keyof typeof OBER)[]).map((k) => chip('o-' + k, OBER[k].replace(' lackiert', ''), c.ober === k)).join('')}</span></div>`;
-    if (c.ober === 'f') h += `<div class="kr"><span class="ks__l">Farbe</span><span class="kcs">${FARBEN.map((f, i) => `<button type="button" class="kc kc--col${c.farbe === i ? ' is-on' : ''}" data-act="c-${i}" aria-pressed="${c.farbe === i}"><i style="background:${f.hex}"></i>${f.name}</button>`).join('')}</span></div>`;
+    if (c.ober === 'f') h += `<div class="kr"><span class="ks__l">Farbe</span><span class="kcs">${FARBEN.map((f, i) => `<button type="button" class="kc kc--col${c.farbe === i ? ' is-on' : ''}" data-act="c-${i}" aria-pressed="${c.farbe === i}"><i data-col="${f.hex}"></i>${f.name}</button>`).join('')}</span></div>`;
     h += `<p class="kt">${c.holz === 'e' ? 'Eiche: hart, lebhaft, honigfarben mit den Jahren.' : c.holz === 'n' ? 'Nussbaum: dunkel, ruhig, edel.' : c.holz === 'a' ? 'Ahorn: fast weiß, fein, modern.' : 'Kiefer: warm, günstig, mit Ästen.'} ${c.ober === 'g' ? 'Geölt: fühlt sich nach Holz an, lässt sich ausbessern.' : c.ober === 'l' ? 'Lackiert: robust und pflegeleicht, etwas glatter.' : 'Farbig: nur Fronten und Türen, das Holz bleibt innen sichtbar.'}</p>`;
   } else {
     h += `<div class="kr"><span class="ks__l">Blick</span><span class="kcs">${(['front', 'links', 'rechts', 'detail'] as View[]).map((v) => chip('v-' + v, { front: 'Front', links: 'Links', rechts: 'Rechts', detail: 'Detail' }[v], view === v, useGL ? '' : 'disabled')).join('')}</span></div>`;
@@ -142,6 +142,7 @@ function renderPanel() {
   }
   panel.innerHTML = h;
   panel.setAttribute('aria-labelledby', 'tab-' + tab);
+  panel.querySelectorAll<HTMLElement>('[data-col]').forEach((i) => { i.style.background = i.dataset.col!; });
   panel.querySelectorAll<HTMLElement>('[data-tex]').forEach((b) => { b.style.setProperty('--tex', `url(${BASE}tex/${{ e: 'eiche', n: 'nussbaum', a: 'ahorn', k: 'kiefer' }[b.dataset.tex as 'e']}.jpg)`); });
   if (lastAct) panel.querySelector<HTMLElement>(`[data-act="${CSS.escape(lastAct)}"]`)?.focus({ preventScroll: true });
 }

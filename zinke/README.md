@@ -1,28 +1,38 @@
-# Tischlerei Holm
+# Demo «zinke»: Tischlerei Wendholm (столярная мастерская)
 
-Astro-Projekt (Demo). Адрес на портфолио: `/vorschau/handwerk/zinke/`
+Статус: **собрано, ждёт фото из `PROMPTS.txt` и ревью Степана.** Живая версия: https://moshrell.github.io/demo/zinke/ (после push в main). Категория в портфолио: handwerk → `/vorschau/handwerk/zinke/`.
+Фирма вымышленная: **Tischlerei Wendholm**, мастер Jan Wendholm, Hannover-Ricklingen. Имя «Tischlerei Holm» занято реальной фирмой (Nindorf), см. `RECON.md`; имя лежит в `src/data/site.json`.
+Документы: `RECON.md` (разведка), `TZ.txt` (ТЗ от лица владельца: персоны, флоу, механика), `PROMPTS.txt` (17 кадров для Gemini).
 
-    START.bat           # первый запуск ставит пакеты, дальше dev-сервер
-    npm run build       # сборка + dist/.htaccess (CSP с хэшами, noindex)
-    npm run publish     # сборка + копия в ..\kravets-site\public\vorschau\handwerk\zinke
+## Что внутри
+- **Главная** (`/`): шапка со статусом «offen/geschlossen» (по Europe/Berlin), hero, сцена «Möbel entsteht» (3D-сборка по скроллу → фото той же вещи + ab-цена + «im Konstruktor anpassen»), Leistungen und Preise, Werkstoffe (проба тапом), Ablauf, Referenzen, Планеры/Hausverwaltung, проверка PLZ, Über die Werkstatt («Was wir nicht machen»), FAQ, форма «Anfrage mit Foto». Снизу на телефоне липкая панель Anrufen · Konstruktor · Anfrage.
+- **Konstruktor** (`/konstruktor/`): Einbauschrank (со скосом) / Regal / Tisch (+ пресет Garderobe). Шаги +/−, инструмент + тап по полю, породы и поверхность, «Meister-Hinweise» (прогиб полки с кнопками-решениями), Richtpreis с разбивкой, Werkbuch (7 достижений), «Überrasch mich», ссылка-конфигурация в URL, Abnahme со штампом, форма со сводкой.
+- **Impressum / Datenschutz**: Handwerkskammer Hannover, Berufsbezeichnung, HwO; раздел про форму, конструктор (URL/sessionStorage/localStorage), PLZ-проверку.
 
-Данные клиента (тексты, цены, часы) — `src/data/site.json`.
-Что ещё нужно от клиента — искать `TODO` в проекте.
+## Решения
+- Стек: Astro + three.js (динамический импорт, только после первого кадра/при подходе к сцене). Шрифты локально (`@fontsource`: Alegreya, Alegreya Sans, Caveat только для размеров/пометок). Без внешних запросов.
+- Дизайн (hallmark): bespoke «Werkbank», кастомная тема, токены в `src/styles/tokens.css`. Зинкен-кромка между секциями (`Zinken.astro`) — геометрия, не рисунок.
+- **Модель мебели** `src/lib/model.ts`: одна конфигурация → список деталей (боксы/полигоны/цилиндры) → 3D (`scene.ts`), 2D-эскиз (`sketch.ts`), цена, проверки мастера. URL-формат: `?t=s&w=e&o=g&n=4&b=60&h=230&d=60&s=r&k=100&a=45&f=…`.
+- Цены демонстрационные: `src/data/kalkulation.json` (netto-ставки + MwSt), `leistungen.json`. На реальном клиенте подставить его честные цифры.
+- PLZ-проверка: `plz.json` (GeoNames, CC BY 4.0, Luftlinie до мастерской, ≤60 км) + `zonen.json` (Zone 1 ≤12 км бесплатно, Zone 2 ≤30 км 45 €, Zone 3 ≤60 км по запросу 95 €).
+- Текстуры 3D: Poly Haven (CC0): oak_veneer_01, natural_walnut_veneer, white_maple_veneer, rough_pine_door; оттенок и контраст изменены под породу (`public/tex/*.jpg`, ~100–180 КБ).
+- Позиции из ТЗ, которые упрощены: Neigung шагом 5°, Höhe шагом 10 cm (не 20); Garderobe/Treppe/Türen в конструкторе — только Garderobe-пресет, остальное через форму; без Schlüsselpunkte-анимации интро (сцена и так под скроллом).
 
-## Правило форм (всегда, для каждого демо)
-Готовый блок: `src/components/OrderForm.astro` (форма) + `src/components/DatenschutzForm.astro` (раздел для `datenschutz.astro`). Если на сайте есть любая форма — брать их, а не писать с нуля:
-1. Каждое поле: `label`, понятный placeholder-пример (`Vor- und Nachname`, `z. B. 030 23125 123`, `name@example.com`), `autocomplete`, `type`/`inputmode`.
-2. Если собираются имя/телефон/e-mail: обязательный чекбокс согласия (`required`) с целью + ссылка на `${base}datenschutz/`, сообщение об ошибке, если не отмечен. В `datenschutz.astro` раздел про эту форму (Verantwortlicher, Daten, Zweck, Art. 6 Abs. 1 lit. b DSGVO, Speicherdauer, Weitergabe, Rechte Art. 15–21, Beschwerderecht, Freiwilligkeit, Demo-Hinweis).
-3. Цены/выбор: итог «Summe» виден по ходу выбора (на мобильном липкая плашка внизу формы) и повторяется в подтверждении. Нет цен: итог не выдумывать, в подтверждении показать сводку выбора (услуга, дата/время).
-4. Стили только через токены (`--muted`, `--alert`, `--focus`, `--space-*` в `global.css`: подогнать под дизайн проекта), доступность (focus-visible, aria-invalid, aria-describedby), проверка на 390px.
-5. Введённые данные не должны пропадать никогда: sessionStorage-автосохранение (уже встроено в `OrderForm.astro`; ключ `form:<pathname>:<id>`, всё в try/catch), ссылки на Datenschutz/Impressum открываются в новой вкладке (`target="_blank" rel="noopener"`), чекбокс согласия не сохраняется и не восстанавливается, после успешной отправки хранилище очищается. В Datenschutz есть предложение про Zwischenspeicher (уже в `DatenschutzForm.astro`).
+## Fallback
+- Без WebGL или слабое устройство (≤4 ядер/≤4 ГБ → pixelRatio ≤1,5; два раза подряд просадка кадров → pixelRatio 1, затем 2D): Konstruktor целиком в 2D-эскизе (тап по полю, цена, форма), главная — статичный блок «эскиз + фото».
+- prefers-reduced-motion: без полёта деталей и стружки, главная без сборки по скроллу.
+- Без JS главная читается (цены, Ablauf, FAQ, телефон); интерактивные части не работают.
 
-## SEO & KI-Sichtbarkeit (AIO) — Standard in jedem Projekt
-`Base.astro` liefert: title, description, canonical, Open Graph, Schema.org-JSON-LD (`type`, Adresse, Öffnungszeiten, Preise als `prices`), FAQPage-Markup (`faq`). Checkliste pro Projekt:
-1. Ein `<h1>`, logische `<h2>`/`<h3>`, `alt` bei jedem Bild.
-2. `type` auf passenden Schema.org-Typ setzen; `site.json`: `openingHours`, `areaServed` füllen (Platzhalter `TODO` nie live).
-3. FAQ: dieselben Fragen/Antworten sichtbar auf der Seite UND als `faq`-Prop übergeben.
-4. Kundenseite live: `index` setzen (Demos bleiben noindex), sitemap.xml + robots.txt ergänzen, Google Business Profile mit identischen Name/Adresse/Telefon (NAP).
+## Проверено (headless, 390 px и 320/768/1280)
+Нет горизонтального скролла, нет ошибок консоли и нарушений CSP (проверено с настоящим CSP из `dist/.htaccess`); контраст токенов ≥5,1:1; флоу: Konstruktor (поля, инструменты, порода, прогиб → кнопка решения, 5× «Überrasch mich» без открытых предупреждений, Abnahme → форма → без согласия ошибка → Datenschutz в новой вкладке данные целы → перезагрузка: конфиг и данные целы, согласие не восстановлено → отправка); главная (сцена на 7 точках скролла, 4 изделия, PLZ: Hannover/Hildesheim/Braunschweig/München, проба дерева, B2B-ссылка включает «Gewerblich» и «Türen», загрузка фото, перезагрузка не теряет данные).
 
-## Demo-Kontaktdaten (fiktiv)
-Telefon nur aus den offiziellen «Drama Numbers» der Bundesnetzagentur (z. B. Berlin `030 23125 000–999`, Hamburg `040 66969 000–999`, Köln `0221 4710 000–999`, München `089 99998 000–999`, Frankfurt `069 90009 000–999`), E-Mail nur `@example.com`. Keine Geschäftsdaten-Markup (LocalBusiness) in Demos: `index = false` unterdrückt sie, FAQPage bleibt. Demos bleiben `noindex`.
+## Известные недочёты
+- **Фото ещё нет**: файлы из `PROMPTS.txt` класть в `public/img/` (имена как в промптах). Пока их нет, блоки без фото пустые (проба дерева берёт CC0-текстуру), финальный кроссфейд «модель → фото» не срабатывает, подпись и цена появляются сами.
+- Вид 3D глазами не проверялся (только числа: непустой кадр, позиции). Если форма какой-то детали выглядит странно, прислать скриншот.
+- Формы ничего не отправляют (демо). Для живого клиента: PHP-отправка на All-Inkl (письмо + сводка конфигурации + фото), правка Datenschutz, Hosting-абзац.
+- Impressum: `TODO vom Kunden` в номере Handwerksrolle, Berufshaftpflicht, Verbraucherschlichtung.
+- Цены, ставки, срок рückruf «2 Werktagen», количество людей и «seit 2006/2009» вымышлены.
+- Кнопка «Teilen» использует Web Share API, на ПК копирует ссылку в буфер.
+
+## Лицензии
+- Texturen: Poly Haven, CC0. PLZ-координаты: GeoNames, CC BY 4.0 (упомянуть при реальном запуске). Шрифты: OFL (fontsource). three.js: MIT.

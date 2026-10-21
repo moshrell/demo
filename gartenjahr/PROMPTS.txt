@@ -1,0 +1,101 @@
+PROMPTS ДЛЯ GEMINI: Grünhof Gartenbau (демо «Gartenjahr», садовый журнал)
+=========================================================================
+
+Как работать:
+- Всё в ОДНОМ чате Gemini, строго по порядку (единый свет, цвет и сад).
+- Перед каждым промптом нажми кнопку формата из заголовка (16:9, 9:16, 4:3, 3:4, 1:1).
+- Сохраняй файлы ТОЧНО под указанными именами (jpg) в папку D:\Webdesign\gartenjahr\public\img\
+  (из облака: эту папку я потом заберу в репозиторий, когда скажешь, что файлы на месте).
+- Кадры 01–08 — это ОДИН И ТОТ ЖЕ сад с одной точки в 4 сезона. Это главное на сайте: при скролле сезон перетекает на одном кадре.
+  Если Gemini сдвинул ракурс, поменял дом, дерево или скамейку — напиши в том же чате «keep the exact same composition, camera position
+  and all objects as in the summer image, change only the season» и сохрани новый вариант.
+- На кадрах нет текста, вывесок, логотипов и водяных знаков. Если появилась надпись — перегенерируй.
+- Люди только со спины или сбоку, одетые в рабочую одежду, лица не крупно.
+
+Единый стиль всех кадров: редакционная фотография садового журнала, естественный мягкий свет, слегка приглушённые плёночные цвета,
+кремовые светлые тона, мох и терракота, без перенасыщенного зелёного, без HDR.
+
+====================================================================
+01 · garten-sommer.jpg · формат 16:9
+====================================================================
+Editorial garden magazine photograph of a mature private garden behind a German family house in the Hannover region, photographed in high summer from the edge of a natural stone terrace at standing eye height, looking straight across the garden. Foreground: the last row of pale beige sandstone terrace slabs with a simple wooden bench on the right. Middle ground: a lush, freshly mown lawn with a gently curved edge, and on the left a deep perennial border with ornamental grasses, lavender, catmint and white phlox. Center-right in the middle ground: one multi-stem serviceberry tree (Amelanchier) with a light, airy green canopy, about four meters tall. Background: a clipped hornbeam hedge about 1.8 meters high running across the whole width, and behind it the tops of old trees. Late afternoon soft warm light, gentle shadows, slightly muted film colors like Kodak Portra, creamy highlights, moss green and terracotta tones, calm and quiet, no people, no animals, no garden furniture other than the bench, no text, no signs, no logos, no watermark. Realistic, sharp, high resolution, 35mm lens.
+
+====================================================================
+02 · garten-herbst.jpg · формат 16:9
+====================================================================
+Take the summer garden image from the beginning of this chat and show the exact same garden from the exact same camera position, same framing, same terrace, same bench, same serviceberry tree, same hornbeam hedge and same perennial border, but in mid October. Change only the season: the serviceberry canopy is glowing orange and deep red, a few fallen leaves lie on the lawn and on the terrace slabs, the hornbeam hedge is turning yellow-brown, the ornamental grasses are straw colored with seed heads, the perennials have faded to rust and brown tones, soft low golden autumn sunlight with a light morning haze. Slightly muted film colors like Kodak Portra, creamy highlights, no people, no text, no logos, no watermark. Realistic, sharp, high resolution, 35mm lens.
+
+====================================================================
+03 · garten-winter.jpg · формат 16:9
+====================================================================
+Take the summer garden image from the beginning of this chat and show the exact same garden from the exact same camera position, same framing, same terrace, same bench, same serviceberry tree, same hornbeam hedge and same perennial border, but in January after a fresh light snowfall. Change only the season: about five centimeters of clean snow covers the lawn, the terrace slabs and the bench; the serviceberry tree is bare with its fine multi-stem branch structure clearly visible and a thin line of snow on the branches; the hornbeam hedge keeps its dry copper-brown winter leaves with snow on top; the ornamental grasses stand upright, straw colored, with snow caps. Overcast soft winter daylight, pale grey-cream sky, quiet and calm, slightly muted film colors, no people, no footprints, no text, no logos, no watermark. Realistic, sharp, high resolution, 35mm lens.
+
+====================================================================
+04 · garten-fruehling.jpg · формат 16:9
+====================================================================
+Take the summer garden image from the beginning of this chat and show the exact same garden from the exact same camera position, same framing, same terrace, same bench, same serviceberry tree, same hornbeam hedge and same perennial border, but in late April. Change only the season: the serviceberry tree is in full white blossom with first bronze-green young leaves; the lawn is fresh light green; the hornbeam hedge shows fresh bright green new leaves; the perennial border has young green shoots, some white and pale yellow tulips and blue grape hyacinths; the ornamental grasses are cut back short. Fresh clear morning light, soft shadows, slightly muted film colors like Kodak Portra, creamy highlights, no people, no text, no logos, no watermark. Realistic, sharp, high resolution, 35mm lens.
+
+====================================================================
+05 · garten-sommer-hoch.jpg · формат 9:16
+====================================================================
+Recompose the summer garden image from the beginning of this chat as a vertical photograph for a phone screen. Same garden, same summer day and light, the same camera position at the edge of the stone terrace, but framed vertically: the multi-stem serviceberry tree with its airy green canopy sits in the center of the frame, the lawn and a few terrace slabs fill the lower third, the clipped hornbeam hedge runs across the middle, a calm pale sky at the top. The bench and the perennial border may be partly visible at the edges. Late afternoon soft warm light, slightly muted film colors like Kodak Portra, creamy highlights, no people, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+06 · garten-herbst-hoch.jpg · формат 9:16
+====================================================================
+Take the vertical summer garden image you just made and show it with the exact same vertical framing and camera position, but in mid October. Change only the season: the serviceberry canopy is glowing orange and deep red, a few fallen leaves on the lawn and on the terrace slabs, the hornbeam hedge turning yellow-brown, grasses straw colored, soft low golden autumn sunlight with a light morning haze. Slightly muted film colors, no people, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+07 · garten-winter-hoch.jpg · формат 9:16
+====================================================================
+Take the vertical summer garden image (the vertical one with the green tree) and show it with the exact same vertical framing and camera position, but in January after a fresh light snowfall. Change only the season: clean snow on the lawn and terrace slabs, the serviceberry tree bare with its fine multi-stem branches and a thin line of snow on them, the hornbeam hedge with dry copper-brown winter leaves and snow on top, overcast soft winter daylight, pale grey-cream sky. Slightly muted film colors, no people, no footprints, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+08 · garten-fruehling-hoch.jpg · формат 9:16
+====================================================================
+Take the vertical summer garden image (the vertical one with the green tree) and show it with the exact same vertical framing and camera position, but in late April. Change only the season: the serviceberry tree in full white blossom with first bronze-green young leaves, fresh light green lawn, the hornbeam hedge with bright green new leaves, a few white and pale yellow tulips at the edge of the frame, fresh clear morning light. Slightly muted film colors, no people, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+09 · ref-terrasse.jpg · формат 4:3
+====================================================================
+Editorial garden magazine photograph of a newly built garden terrace behind a modern white rendered family house in a new housing estate near Hannover, Germany. The terrace is about 25 square meters of large-format light grey-beige porcelain stone slabs laid with narrow joints, bordered by a low wall of natural limestone blocks that doubles as seating, with a new young lawn and a small multi-stem tree in a fresh planting bed next to it. One simple wooden outdoor table with four chairs. Soft late afternoon light, slightly muted film colors like Kodak Portra, creamy highlights, moss green and terracotta tones, no people, no text, no logos, no watermark. Realistic, sharp, high resolution, 35mm lens at eye level.
+
+====================================================================
+10 · ref-teich.jpg · формат 4:3
+====================================================================
+Editorial garden magazine photograph of a natural garden pond of about ten square meters in a private garden in Lower Saxony, Germany, in early summer. Irregular natural shape, edged with flat sandstone slabs on one side and a planted shallow-water zone with irises, rushes and water lilies on the other side, a narrow wooden deck plank reaching to the water, perennials and ornamental grasses around it, clear calm water reflecting the sky. Soft morning light, slightly muted film colors like Kodak Portra, creamy highlights, moss green tones, no people, no animals, no fountains, no text, no logos, no watermark. Realistic, sharp, high resolution, 35mm lens.
+
+====================================================================
+11 · ref-weg.jpg · формат 4:3
+====================================================================
+Editorial garden magazine photograph of a newly laid curved garden path through a lawn in a private garden near Hannover, Germany. The path is about one meter wide, made of warm grey clay pavers with a neat natural stone edging, leading from the terrace toward a garden shed painted dark green at the back of the garden, with low lavender and boxwood-like evergreen shrubs along one side. Overcast soft daylight, slightly muted film colors like Kodak Portra, creamy highlights, moss green and terracotta tones, no people, no text, no logos, no watermark. Realistic, sharp, high resolution, 35mm lens slightly above eye level looking along the path.
+
+====================================================================
+12 · ref-hecke.jpg · формат 4:3
+====================================================================
+Editorial garden magazine photograph of a freshly planted young hornbeam hedge in late October along the edge of a private garden near Hannover, Germany. About twenty young hornbeam plants, around 1.2 meters high, planted in one straight row in a strip of freshly worked dark soil covered with a thin layer of bark mulch, with yellow-brown autumn leaves, a neat lawn edge in front, a simple wooden fence and an old apple tree in the background. Low soft autumn sunlight with light haze, slightly muted film colors like Kodak Portra, creamy highlights, no people, no tools left lying around, no text, no logos, no watermark. Realistic, sharp, high resolution, 35mm lens.
+
+====================================================================
+13 · team-arbeit.jpg · формат 3:4
+====================================================================
+Editorial documentary photograph of two landscape gardeners at work in a private garden near Hannover, Germany, laying large natural stone terrace slabs on a prepared gravel bed. One kneels and taps a slab level with a rubber mallet, the other carries a slab with a lifting clamp. Seen from the side and slightly from behind, faces not visible or turned away, dark green work trousers and light grey work jackets without any logos or lettering, work gloves, knee pads. Soft overcast daylight, slightly muted film colors like Kodak Portra, creamy highlights, moss green and terracotta tones, honest and calm, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+14 · winterdienst.jpg · формат 4:3
+====================================================================
+Editorial documentary photograph of a winter service worker clearing snow at dawn in front of a modern three-storey office and apartment building in Hannover, Germany. The worker is seen from behind, wearing a dark green winter work jacket with reflective stripes but no logos or lettering, pushing a small walk-behind spreader along a freshly cleared paved footpath next to the entrance, a neat snow edge along the path, warm light from the building's entrance lamps, cold blue early morning light in the sky. Slightly muted film colors, calm and reliable mood, no other people, no cars with readable plates, no text, no signs, no logos, no house numbers, no watermark. Realistic, sharp, high resolution, 35mm lens.
+
+====================================================================
+15 · detail-erde.jpg · формат 1:1
+====================================================================
+Close-up editorial photograph of two hands in worn leather work gloves planting a young perennial with its root ball into dark crumbly garden soil, a small trowel lying next to it, a few other young perennials in pots slightly out of focus in the background. Soft natural daylight from the side, shallow depth of field, slightly muted film colors like Kodak Portra, creamy highlights, earthy brown and moss green tones, no faces, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+16 · detail-werkzeug.jpg · формат 1:1
+====================================================================
+Still life editorial photograph of well-used garden tools resting on the edge of an old wooden wheelbarrow in autumn: a spade with a wooden handle, a leaf rake, a pair of pruning shears and a pair of leather work gloves, a few orange autumn leaves around them, a lawn softly blurred in the background. Soft low autumn light, shallow depth of field, slightly muted film colors like Kodak Portra, creamy highlights, terracotta and moss tones, no people, no brand names, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+17 · inhaber.jpg · формат 3:4
+====================================================================
+Editorial portrait photograph of a fictional German master landscape gardener, a man in his early fifties with short grey hair and a short grey beard, wearing a dark green work jacket without any logos or lettering over a light grey sweater, standing calmly with his arms relaxed in a tree nursery yard with rows of young trees in pots behind him, slightly turned to the side, friendly but serious neutral expression. Half-body shot. Soft overcast daylight, slightly muted film colors like Kodak Portra, creamy highlights, moss green and terracotta tones, shallow depth of field, no text, no logos, no watermark. Realistic, natural, high resolution, 50mm lens.

@@ -1,0 +1,9 @@
+[
+  { "id": "einbauschrank", "name": "Einbauschrank unter der Schräge", "price": "ab 1.900 €", "unit": "pro Laufmeter, inkl. Montage", "note": "Kniestock, Gauben, krumme Wände: gemessen wird vor Ort." },
+  { "id": "regal", "name": "Bücherwand und Regal", "price": "ab 1.100 €", "unit": "pro Laufmeter", "note": "Mit Rückwand, auf Wunsch mit Türen unten." },
+  { "id": "tisch", "name": "Esstisch aus Massivholz", "price": "ab 2.400 €", "unit": "180 × 90 cm, Eiche geölt", "note": "Mit Gratleisten gegen Verziehen." },
+  { "id": "garderobe", "name": "Garderobe nach Maß", "price": "ab 1.600 €", "unit": "inkl. Montage", "note": "Bank, Haken, Schuhfächer, Spiegel nach Wunsch." },
+  { "id": "fronten", "name": "Küchenfronten aus Massivholz", "price": "ab 280 €", "unit": "pro Front", "note": "Auf Ihre bestehenden Korpusse." },
+  { "id": "treppe", "name": "Treppe aus Massivholz", "price": "ab 9.500 €", "unit": "gerade, inkl. Geländer", "note": "Nur nach Aufmaß und Plan." },
+  { "id": "aufmass", "name": "Aufmaß und Beratung vor Ort", "price": "89 €", "unit": "inkl. Anfahrt in Zone 1", "note": "Wird bei Auftrag voll verrechnet." }
+]

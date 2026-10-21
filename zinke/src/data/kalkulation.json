@@ -1,0 +1,51 @@
+{
+  "_hinweis": "Demo-Kalkulation (netto). Echte Sätze setzt die Werkstatt ein. Anzeige brutto inkl. MwSt.",
+  "mwst": 0.19,
+  "stundensatz": 78,
+  "montagesatz": 72,
+  "verschnitt": 1.25,
+  "minimum": 600,
+  "holzM2": {
+    "k": 48,
+    "a": 88,
+    "e": 98,
+    "n": 140
+  },
+  "oberM2": {
+    "g": 12,
+    "l": 18,
+    "f": 24
+  },
+  "rueckwandM2": 32,
+  "beschlag": {
+    "schublade": 34,
+    "tuer": 16,
+    "stahl": 22,
+    "haken": 6,
+    "kissen": 60
+  },
+  "std": {
+    "korpusBasis": 3,
+    "proFeld": 1.1,
+    "fach": 0.3,
+    "tuer": 1.4,
+    "schublade": 2.1,
+    "rueckwand": 0.4,
+    "schraegeBasis": 2.5,
+    "schraegeProBrett": 0.5,
+    "farbig": 3,
+    "montageSchrankBasis": 3,
+    "montageSchrankFeld": 0.8,
+    "montageRegal": 1.5,
+    "montageRegalFeld": 0.3,
+    "tischBasis": 9,
+    "tischProM2": 2,
+    "gestell": {
+      "v": 5,
+      "k": 7,
+      "w": 6
+    },
+    "tischLieferung": 1.5
+  },
+  "tischDicke": 2.2
+}

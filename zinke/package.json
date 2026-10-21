@@ -10,6 +10,14 @@
     "publish": "npm run build && node scripts/publish.mjs"
   },
   "dependencies": {
-    "astro": "^7.3.5"
+    "@fontsource/alegreya": "^5.3.0",
+    "@fontsource/alegreya-sans": "^5.3.0",
+    "@fontsource/caveat": "^5.3.0",
+    "astro": "^7.3.5",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.186.0",
+    "typescript": "^7.0.2"
   }
 }

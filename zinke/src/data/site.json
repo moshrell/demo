@@ -1,15 +1,21 @@
 {
-  "name": "Tischlerei Holm",
-  "legalName": "TODO vom Kunden",
-  "address": {
-    "street": "TODO",
-    "zip": "TODO",
-    "city": "TODO"
-  },
-  "email": "TODO",
-  "phone": "030 23125 123",
-  "openingHours": "TODO z. B. Mo-Fr 09:00-17:00",
-  "areaServed": [
-    "TODO Ort"
-  ]
+  "name": "Tischlerei Wendholm",
+  "short": "Wendholm",
+  "owner": "Jan Wendholm",
+  "title": "Tischlermeister",
+  "legalName": "Tischlerei Wendholm, Inhaber Jan Wendholm (fiktiv)",
+  "address": { "street": "Am Holzhof 7 (Demo)", "zip": "30459", "city": "Hannover-Ricklingen" },
+  "email": "werkstatt@example.com",
+  "phone": "030 23125 410",
+  "phoneHref": "+493023125410",
+  "hours": [
+    { "days": [1, 2, 3, 4], "label": "Mo–Do", "open": "07:00", "close": "16:30" },
+    { "days": [5], "label": "Fr", "open": "07:00", "close": "13:00" }
+  ],
+  "openingHours": "Mo-Th 07:00-16:30, Fr 07:00-13:00",
+  "areaServed": ["Hannover", "Region Hannover"],
+  "since": 2009,
+  "chamber": "Handwerkskammer Hannover, Berliner Allee 17, 30175 Hannover",
+  "vat": "DE000000000 (Demo)",
+  "replyDays": "2 Werktagen"
 }

@@ -1,0 +1,9 @@
+{
+  "werkstatt": "Hannover-Ricklingen",
+  "zones": [
+    { "max": 12, "label": "Zone 1", "anfahrt": 0, "text": "Ja, wir kommen zu Ihnen. Anfahrt kostenlos." },
+    { "max": 30, "label": "Zone 2", "anfahrt": 45, "text": "Ja, wir kommen zu Ihnen. Anfahrt pauschal 45 €." },
+    { "max": 60, "label": "Zone 3", "anfahrt": 95, "text": "Auf Anfrage: Montage ab 3.000 € Auftragswert, Anfahrt 95 €. Lieferung ohne Montage möglich." }
+  ],
+  "no": "Leider zu weit für unsere Monteure. Gern bauen wir Möbel, die Sie selbst abholen oder liefern lassen."
+}

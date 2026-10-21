@@ -1,0 +1,83 @@
+[
+  {
+    "id": "hausanschluss",
+    "label": "Hausanschluss",
+    "temp": "kalt",
+    "title": "Hier kommt das Wasser ins Haus.",
+    "lead": "Bevor wir über Bad oder Heizung reden: Liegt Ihr Haus an unserer Leitung? Wir fahren im Westen und Norden der Region Hannover – höchstens 35 km, damit Sie keine Stauzeit bezahlen.",
+    "tool": "plz",
+    "services": [
+      { "name": "Trinkwasserleitung erneuern (Abschnitt bis 10 m)", "price": "ab 1.450 €" },
+      { "name": "Hauswasserstation mit Filter und Druckminderer", "price": "ab 420 €" },
+      { "name": "Hauptabsperrventil tauschen", "price": "ab 260 €" }
+    ]
+  },
+  {
+    "id": "heizung",
+    "label": "Heizung",
+    "temp": "warm",
+    "title": "Ab hier wird das Wasser warm.",
+    "lead": "Wärmepumpe, Hybrid oder neuer Gaskessel: Was zu Ihrem Haus passt, hängt von Dämmung, Heizkörpern und Vorlauftemperatur ab – nicht von der Werbung. Der Heizungs-Check sortiert das in zwei Minuten vor.",
+    "cta": { "label": "Heizungs-Check starten", "href": "heizung/" },
+    "services": [
+      { "name": "Luft-Wasser-Wärmepumpe, Einfamilienhaus, komplett", "price": "ab 27.900 €", "note": "vor Förderung" },
+      { "name": "Hybridheizung (Wärmepumpe + Gas-Brennwert)", "price": "ab 21.500 €", "note": "vor Förderung" },
+      { "name": "Gas-Brennwertkessel tauschen", "price": "ab 11.900 €" },
+      { "name": "Hydraulischer Abgleich, Einfamilienhaus", "price": "ab 690 €" }
+    ],
+    "referenz": { "img": "station-heizung.jpg", "w": 1600, "h": 1200, "alt": "Aufgeräumter Heizungskeller mit Innengerät einer Wärmepumpe und Speicher", "ort": "Langenhagen", "facts": ["Baujahr Haus 1974", "Gaskessel 2003 → Luft-Wasser-Wärmepumpe", "4 Arbeitstage, Heizung nur 1 Tag aus"] }
+  },
+  {
+    "id": "warmwasser",
+    "label": "Warmwasser",
+    "temp": "warm",
+    "title": "Warmes Wasser, ohne Warten an der Dusche.",
+    "lead": "Lange Wartezeit am Hahn kostet Wasser und Energie. Oft reicht eine Zirkulation oder ein passender Speicher statt neuer Heizung.",
+    "services": [
+      { "name": "Elektronischer Durchlauferhitzer tauschen", "price": "ab 890 €" },
+      { "name": "Warmwasserspeicher 200–300 l", "price": "ab 2.400 €" },
+      { "name": "Zirkulationsleitung nachrüsten", "price": "ab 1.150 €" }
+    ]
+  },
+  {
+    "id": "bad",
+    "label": "Bad",
+    "temp": "warm",
+    "title": "Ein Bad, eine Mannschaft, ein Ansprechpartner.",
+    "lead": "Wir bauen Bäder komplett: Rückbau, Leitungen, Fliesen, Montage – ohne wechselnde Subunternehmer. Barrierefrei heißt bei uns: keine Stufe in die Dusche, Halt, wo man ihn braucht, und das WC auf richtiger Höhe.",
+    "cta": { "label": "Bad zusammenstellen", "href": "bad/" },
+    "services": [
+      { "name": "Badsanierung S (bis 5 m²)", "price": "ab 17.900 €" },
+      { "name": "Badsanierung M (5–8 m²)", "price": "ab 23.400 €" },
+      { "name": "Badsanierung L (8–12 m²)", "price": "ab 29.800 €" },
+      { "name": "Wanne raus, bodengleiche Dusche rein", "price": "ab 6.900 €" }
+    ],
+    "paar": { "img": "paar-bad.jpg", "w": 1200, "h": 1600, "alt": "Älteres Paar im hellen Bad mit bodengleicher Dusche und Haltegriff" },
+    "referenzen": [
+      { "img": "referenz-bad-hell.jpg", "w": 1600, "h": 1200, "alt": "Helles Bad mit bodengleicher Dusche, Glaswand und Holz-Waschtisch", "ort": "Seelze", "facts": ["7 m², M", "Wanne → bodengleiche Dusche", "3 Wochen"] },
+      { "img": "referenz-bad-stein.jpg", "w": 1600, "h": 1200, "alt": "Bad in warmem Steingrau mit freistehender Wanne", "ort": "Isernhagen", "facts": ["11 m², L", "Freistehende Wanne + Dusche", "4 Wochen"] },
+      { "img": "referenz-bad-klein.jpg", "w": 1600, "h": 1200, "alt": "Kleines Gäste-Bad mit wandhängendem WC und Eckwaschbecken", "ort": "Garbsen", "facts": ["3 m², Gäste-WC", "WC wandhängend", "8 Arbeitstage"] }
+    ]
+  },
+  {
+    "id": "abfluss",
+    "label": "Abfluss",
+    "temp": "warm",
+    "title": "Was rausgeht, muss auch gut rausgehen.",
+    "lead": "Verstopfung, Geruch, Rückstau bei Starkregen: Wir finden die Ursache mit der Kamera, statt nur zu spülen.",
+    "services": [
+      { "name": "Rohrreinigung im Haus", "price": "ab 129 €" },
+      { "name": "Kamera-Inspektion mit Protokoll", "price": "ab 249 €" },
+      { "name": "Rückstauklappe nachrüsten", "price": "ab 780 €" }
+    ]
+  },
+  {
+    "id": "wartung",
+    "label": "Wartung",
+    "temp": "warm",
+    "title": "Einmal im Jahr nachsehen. Damit es im Januar nicht ausfällt.",
+    "lead": "Mit Wartungsvertrag melden wir uns von selbst und reservieren ein Zeitfenster. Kleinteile wie Dichtungen sind enthalten; größere Ersatzteile sprechen wir vorher mit Ihnen ab.",
+    "tool": "wartung",
+    "img": { "img": "wartung.jpg", "w": 1600, "h": 1200, "alt": "Techniker prüft einen geöffneten Gas-Brennwertkessel mit Messgerät" }
+  }
+]

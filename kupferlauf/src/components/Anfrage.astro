@@ -1,0 +1,344 @@
+---
+/**
+ * Anfrage: Formular-Standard (abgeleitet von _template/OrderForm.astro), erweitert um
+ *  - plans:   Auswahl mit Preis (Radio), z. B. Wartungsvertrag pro Jahr → Summe läuft mit
+ *  - topics:  Thema (Chips)
+ *  - windows: Rückruf- oder Terminfenster (Chips)
+ *  - photo:   Foto-Feld (Demo: Datei bleibt im Browser, nur Vorschau)
+ *  - plz:     PLZ-Feld (geprüft gegen plz.json, Hinweis statt Sperre)
+ *  - external: Zusammenfassung + Summe kommen aus einem Konfigurator (Event „kl:summary“)
+ * Es wird nichts gesendet (Demo). Echter Betrieb: Versand per PHP (All-Inkl), Datenschutz anpassen.
+ */
+import site from '../data/site.json';
+const {
+  id = 'anfrage',
+  title = 'Anfrage',
+  intro = '',
+  submitLabel = 'Anfrage senden',
+  purpose = 'meiner Anfrage',
+  plans = [],
+  plansLabel = 'Auswahl',
+  plansSuffix = '',
+  topics = [],
+  topicsLabel = 'Worum geht es?',
+  windows = [],
+  windowsLabel = 'Wann passt ein Rückruf?',
+  photo = true,
+  photoLabel = 'Foto (optional)',
+  photoHint = 'z. B. das Problem, das Typenschild oder Ihr jetziges Bad',
+  plz = true,
+  external = false,
+  externalLabel = 'Ihre Auswahl',
+  notePlaceholder = 'z. B. Maße, Baujahr, was genau passiert ist',
+} = Astro.props;
+const base = import.meta.env.BASE_URL;
+const euro = (c: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(c / 100);
+const hasPrices = plans.length > 0 || external;
+---
+<section class="af" id={id} aria-labelledby={`${id}-h`}>
+  <h2 class="af__title" id={`${id}-h`}>{title}</h2>
+  {intro && <p class="af__intro">{intro}</p>}
+  <form class="af__form" id={`${id}-form`} novalidate data-af data-plans-label={plansLabel} data-plans-suffix={plansSuffix} data-topics-label={topicsLabel} data-windows-label={windowsLabel} data-external={external ? '1' : '0'} data-external-label={externalLabel} data-has-prices={hasPrices ? '1' : '0'}>
+    {external && (
+      <div class="af__group af__ext" data-ext>
+        <p class="af__legend">{externalLabel}</p>
+        <dl class="af__ext-list" data-ext-list><div><dt>Noch nichts gewählt</dt><dd></dd></div></dl>
+        <p class="err" data-ext-err role="alert" hidden>Bitte stellen Sie oben zuerst Ihre Auswahl zusammen.</p>
+      </div>
+    )}
+    {plans.length > 0 && (
+      <fieldset class="af__group">
+        <legend class="af__legend">{plansLabel}</legend>
+        <div class="af__plans">
+          {plans.map((p: any, i: number) => (
+            <label class="af__plan">
+              <input type="radio" name="plan" value={p.id} data-cents={p.cents} data-label={p.name} checked={i === 0} />
+              <span><strong>{p.name}</strong><span class="price">{euro(p.cents)}{plansSuffix}</span></span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    )}
+    {topics.length > 0 && (
+      <fieldset class="af__group">
+        <legend class="af__legend">{topicsLabel}</legend>
+        <div class="af__chips">
+          {topics.map((o: string, i: number) => (
+            <label class="af__chip"><input type="radio" name="topic" value={o} checked={i === 0} /><span>{o}</span></label>
+          ))}
+        </div>
+      </fieldset>
+    )}
+    {windows.length > 0 && (
+      <fieldset class="af__group">
+        <legend class="af__legend">{windowsLabel}</legend>
+        <div class="af__chips">
+          {windows.map((o: string, i: number) => (
+            <label class="af__chip"><input type="radio" name="window" value={o} checked={i === 0} /><span>{o}</span></label>
+          ))}
+        </div>
+      </fieldset>
+    )}
+
+    <fieldset class="af__group">
+      <legend class="af__legend">Ihre Angaben</legend>
+      <div class="field">
+        <label for={`${id}-name`}>Name</label>
+        <input id={`${id}-name`} name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname" required aria-describedby={`${id}-err-name`} />
+        <p class="err" id={`${id}-err-name`} hidden>Bitte geben Sie Ihren Namen an.</p>
+      </div>
+      <div class="field">
+        <label for={`${id}-tel`}>Telefon</label>
+        <input id={`${id}-tel`} name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 030 23125 123" required aria-describedby={`${id}-err-tel`} />
+        <p class="err" id={`${id}-err-tel`} hidden>Bitte geben Sie eine Telefonnummer an, unter der wir Sie erreichen.</p>
+      </div>
+      {plz && (
+        <div class="field">
+          <label for={`${id}-plz`}>PLZ des Objekts</label>
+          <input id={`${id}-plz`} name="plz" type="text" autocomplete="postal-code" inputmode="numeric" maxlength="5" pattern="[0-9]{5}" placeholder="z. B. 30823" required aria-describedby={`${id}-err-plz ${id}-plz-info`} data-plz-field />
+          <p class="af__hint" id={`${id}-plz-info`} data-plz-info aria-live="polite"></p>
+          <p class="err" id={`${id}-err-plz`} hidden>Bitte geben Sie eine fünfstellige PLZ an.</p>
+        </div>
+      )}
+      <div class="field">
+        <label for={`${id}-mail`}>E-Mail <span class="af__opt">(optional)</span></label>
+        <input id={`${id}-mail`} name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" aria-describedby={`${id}-err-mail`} />
+        <p class="err" id={`${id}-err-mail`} hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.</p>
+      </div>
+      <div class="field">
+        <label for={`${id}-note`}>Nachricht <span class="af__opt">(optional)</span></label>
+        <textarea id={`${id}-note`} name="note" rows="3" autocomplete="off" placeholder={notePlaceholder}></textarea>
+      </div>
+      {photo && (
+        <div class="field af__photo">
+          <label for={`${id}-foto`}>{photoLabel}</label>
+          <input id={`${id}-foto`} name="foto" type="file" accept="image/*" aria-describedby={`${id}-foto-hint`} data-photo />
+          <p class="af__hint" id={`${id}-foto-hint`}>{photoHint}. <strong>Demo:</strong> Das Foto bleibt in Ihrem Browser und wird nicht hochgeladen.</p>
+          <img class="af__preview" data-photo-preview alt="Vorschau Ihres Fotos" hidden width="160" height="120" />
+        </div>
+      )}
+    </fieldset>
+
+    <div class="af__consent">
+      <label class="af__check">
+        <input type="checkbox" name="privacy" required aria-describedby={`${id}-err-privacy`} />
+        <span>Ich bin einverstanden, dass {site.name} meine Angaben (Name, Telefon, PLZ, E-Mail, Nachricht{photo ? ', Foto' : ''}) zur Bearbeitung {purpose} verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a> (öffnet neuen Tab, Ihre Eingaben bleiben hier erhalten)</span>
+      </label>
+      <p class="err" id={`${id}-err-privacy`} hidden>Bitte stimmen Sie zu, sonst können wir Ihre Anfrage nicht bearbeiten.</p>
+    </div>
+
+    <div class="af__bar">
+      {hasPrices ? (
+        <p class="af__total"><span data-count>{external ? 'Richtwert' : 'Gewählt'}</span><span>{external ? 'Summe ab' : 'Summe'} <strong class="num" data-total>{plans.length ? euro(plans[0].cents) : '–'}</strong>{plansSuffix && <span class="af__suffix">{plansSuffix}</span>}</span></p>
+      ) : (
+        <p class="af__total af__total--plain"><span>Es wird nichts gesendet (Demo).</span></p>
+      )}
+      <button class="btn btn--copper af__btn" type="submit">{submitLabel}</button>
+    </div>
+  </form>
+
+  <div class="af__done" data-done tabindex="-1" hidden>
+    <h3>Danke, Ihre Anfrage ist angekommen.</h3>
+    <dl data-done-list></dl>
+    <p class="af__next"><strong>Wie es weitergeht:</strong> Wir rufen Sie in der Regel innerhalb von zwei Werktagen zurück, klären Fragen und vereinbaren bei Bedarf eine Besichtigung. Danach erhalten Sie ein schriftliches Angebot.</p>
+    <p class="af__demo">Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.</p>
+  </div>
+</section>
+
+<style>
+  .af { max-width: var(--measure); }
+  .af__title { margin-bottom: var(--space-sm); }
+  .af__intro { color: var(--color-ink-2); margin-bottom: var(--space-lg); }
+  .af__form { display: grid; gap: var(--space-lg); }
+  .af__group { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: var(--space-md); }
+  .af__legend { padding: 0; margin: 0 0 var(--space-2xs); font-weight: 700; }
+  .af__chips { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+  .af__chip input, .af__plan input { position: absolute; opacity: 0; pointer-events: none; }
+  .af__chip span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-md); border: 1.5px solid var(--color-ink-2); border-radius: var(--radius-pill); cursor: pointer; white-space: nowrap; font-size: var(--text-sm); }
+  .af__chip input:checked + span { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-paper); }
+  .af__chip input:focus-visible + span, .af__plan input:focus-visible + span { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+  .af__plans { display: grid; gap: var(--space-xs); }
+  .af__plan > span { display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); min-height: 52px; padding: var(--space-sm) var(--space-md); border: 1.5px solid var(--color-rule); border-radius: var(--radius); cursor: pointer; }
+  .af__plan input:checked + span { border-color: var(--color-copper); background: var(--color-copper-soft); }
+  .af__ext-list { margin: 0; border-top: 1px solid var(--color-rule); }
+  .af__ext-list > div, .af__done dl > div { display: flex; justify-content: space-between; gap: var(--space-md); padding: var(--space-xs) 0; border-bottom: 1px solid var(--color-rule); font-variant-numeric: tabular-nums; }
+  .af__ext-list dt, .af__done dt { color: var(--color-ink-2); }
+  .af__ext-list dd, .af__done dd { margin: 0; text-align: right; }
+  .af__opt { font-weight: 400; color: var(--color-ink-2); }
+  .af__hint { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .af__hint[data-zone='0'] { color: var(--color-alert); font-weight: 600; }
+  .af__hint[data-zone]:not([data-zone='0']) { color: var(--color-ok); font-weight: 600; }
+  .af__photo input[type='file'] { padding: 0.6rem; font-size: var(--text-sm); }
+  .af__preview { width: 160px; height: 120px; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--color-rule); }
+  .af__consent { display: grid; gap: var(--space-2xs); }
+  .af__check { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-sm); align-items: start; font-size: var(--text-sm); line-height: 1.45; cursor: pointer; }
+  .af__check input { width: 1.4rem; height: 1.4rem; margin: 0.1rem 0 0; accent-color: var(--color-copper-ink); }
+  .af__check.is-invalid > span { color: var(--color-alert); }
+  .af__bar { position: sticky; bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); z-index: 5; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-sm); padding: var(--space-sm) 0; background: var(--color-paper); border-top: 1.5px solid var(--color-ink); }
+  .af__total { display: grid; gap: 2px; margin: 0; min-width: 0; font-size: var(--text-sm); }
+  .af__total strong { font-size: 1.5rem; margin-left: var(--space-2xs); }
+  .af__suffix { font-size: var(--text-sm); }
+  .af__btn { flex: 1 1 100%; }
+  .af__done { padding: var(--space-lg); border: 1.5px solid var(--color-ink); border-radius: var(--radius); }
+  .af__done h3 { margin-bottom: var(--space-md); }
+  .af__done dl { margin: 0 0 var(--space-md); }
+  .af__done .af__sum { font-weight: 700; color: var(--color-ink); }
+  .af__next { margin-bottom: var(--space-sm); }
+  .af__demo { font-size: var(--text-sm); color: var(--color-ink-2); }
+  @media (min-width: 30rem) { .af__btn { flex: 0 0 auto; } }
+  @media (min-width: 64rem) { .af__bar { bottom: 0; } }
+</style>
+
+<script>
+  import plzData from '../data/plz.json';
+  const eur = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
+  type Row = [string, string];
+  const zoneText = (v: string): [string, string] => {
+    if (!/^\d{5}$/.test(v)) return ['', ''];
+    const hit = (plzData.plz as Record<string, [number, string]>)[v];
+    if (!hit) return ['0', 'Leider außerhalb unseres Einsatzgebiets. Sie können trotzdem senden, wir empfehlen Ihnen dann einen Betrieb in Ihrer Nähe.'];
+    const z = plzData.zones.find((x) => x.id === hit[0])!;
+    return [String(z.id), `${hit[1]}: Wir kommen zu Ihnen. ${z.text}`];
+  };
+
+  document.querySelectorAll<HTMLFormElement>('form[data-af]').forEach((form) => {
+    const section = form.closest('section')!;
+    const done = section.querySelector<HTMLElement>('[data-done]')!;
+    const doneList = done.querySelector<HTMLElement>('[data-done-list]')!;
+    const totalEl = form.querySelector<HTMLElement>('[data-total]');
+    const field = (n: string) => form.elements.namedItem(n) as HTMLInputElement | null;
+    const external = form.dataset.external === '1';
+    let ext: { rows: Row[]; cents: number } = { rows: [], cents: 0 };
+
+    const err = (input: HTMLInputElement, show: boolean) => {
+      (input.getAttribute('aria-describedby') || '').split(' ').forEach((id) => {
+        const e = document.getElementById(id);
+        if (e && e.classList.contains('err')) e.hidden = !show;
+      });
+      input.setAttribute('aria-invalid', show ? 'true' : 'false');
+      input.closest('.af__check')?.classList.toggle('is-invalid', show);
+    };
+    const plan = () => form.querySelector<HTMLInputElement>('input[name=plan]:checked');
+    const update = () => {
+      if (!totalEl) return;
+      if (external) totalEl.textContent = ext.cents ? eur.format(ext.cents / 100) : '–';
+      else if (plan()) totalEl.textContent = eur.format(Number(plan()!.dataset.cents) / 100);
+    };
+
+    // Zusammenfassung aus Konfigurator (Bad-Baukasten / Heizungs-Check)
+    if (external) {
+      const list = form.querySelector<HTMLElement>('[data-ext-list]')!;
+      const render = () => {
+        list.replaceChildren(...(ext.rows.length ? ext.rows : [['Noch nichts gewählt', ''] as Row]).map(([k, v]) => {
+          const d = document.createElement('div');
+          const dt = document.createElement('dt'); dt.textContent = k;
+          const dd = document.createElement('dd'); dd.textContent = v;
+          d.append(dt, dd); return d;
+        }));
+        update();
+      };
+      window.addEventListener('kl:summary', (e) => {
+        ext = (e as CustomEvent).detail;
+        form.querySelector<HTMLElement>('[data-ext-err]')!.hidden = true;
+        render();
+      });
+      render();
+    }
+
+    // PLZ: Hinweis live, keine Sperre
+    const plzIn = field('plz');
+    const plzInfo = form.querySelector<HTMLElement>('[data-plz-info]');
+    const plzUpdate = () => {
+      if (!plzIn || !plzInfo) return;
+      plzIn.value = plzIn.value.replace(/\D/g, '').slice(0, 5);
+      const [z, t] = zoneText(plzIn.value);
+      plzInfo.textContent = t;
+      if (z) plzInfo.dataset.zone = z; else delete plzInfo.dataset.zone;
+    };
+    plzIn?.addEventListener('input', plzUpdate);
+
+    // Foto: nur lokale Vorschau
+    const photo = form.querySelector<HTMLInputElement>('[data-photo]');
+    const prev = form.querySelector<HTMLImageElement>('[data-photo-preview]');
+    let photoUrl = '';
+    photo?.addEventListener('change', () => {
+      if (photoUrl) URL.revokeObjectURL(photoUrl);
+      const f = photo.files?.[0];
+      if (f && prev) { photoUrl = URL.createObjectURL(f); prev.src = photoUrl; prev.hidden = false; }
+      else if (prev) { prev.hidden = true; prev.removeAttribute('src'); }
+    });
+
+    ['name', 'tel', 'email', 'plz'].forEach((n) => field(n)?.addEventListener('input', () => err(field(n)!, false)));
+    field('privacy')!.addEventListener('change', () => err(field('privacy')!, false));
+    form.addEventListener('change', (e) => { if ((e.target as HTMLInputElement).name === 'plan') update(); });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = field('name')!, tel = field('tel')!, mail = field('email')!, priv = field('privacy')!;
+      const bad: HTMLInputElement[] = [];
+      const check = (i: HTMLInputElement | null, ok: boolean) => { if (!i) return; err(i, !ok); if (!ok) bad.push(i); };
+      if (external && !ext.rows.length) {
+        const ee = form.querySelector<HTMLElement>('[data-ext-err]')!;
+        ee.hidden = false;
+        ee.scrollIntoView({ block: 'center' });
+        return;
+      }
+      check(name, name.value.trim().length > 1);
+      check(tel, tel.value.replace(/\D/g, '').length >= 6);
+      check(plzIn, !plzIn || /^\d{5}$/.test(plzIn.value));
+      check(mail, mail.value.trim() === '' || mail.checkValidity());
+      check(priv, priv.checked);
+      if (bad.length) { bad[0].focus(); return; }
+
+      const rows: [string, string, boolean?][] = [];
+      if (external) { ext.rows.forEach((r) => rows.push(r)); if (ext.cents) rows.push(['Summe ab (Richtwert)', eur.format(ext.cents / 100), true]); }
+      const p = plan();
+      if (p) rows.push([form.dataset.plansLabel || 'Auswahl', p.dataset.label || p.value], ['Summe', eur.format(Number(p.dataset.cents) / 100) + (form.dataset.plansSuffix || ''), true]);
+      const tp = form.querySelector<HTMLInputElement>('input[name=topic]:checked');
+      if (tp) rows.push([form.dataset.topicsLabel || 'Thema', tp.value]);
+      const w = form.querySelector<HTMLInputElement>('input[name=window]:checked');
+      if (w) rows.push([form.dataset.windowsLabel || 'Wann', w.value]);
+      rows.push(['Name', name.value.trim()], ['Telefon', tel.value.trim()]);
+      if (plzIn) rows.push(['PLZ', plzIn.value]);
+      if (photo?.files?.[0]) rows.push(['Foto', photo.files[0].name]);
+      doneList.replaceChildren(...rows.map(([k, v, strong]) => {
+        const d = document.createElement('div');
+        const dt = document.createElement('dt'); dt.textContent = k;
+        const dd = document.createElement('dd'); dd.textContent = v;
+        if (strong) { dt.className = 'af__sum'; dd.className = 'af__sum'; }
+        d.append(dt, dd); return d;
+      }));
+      form.hidden = true;
+      done.hidden = false;
+      done.focus();
+      try { sessionStorage.removeItem(KEY); } catch {}
+      window.dispatchEvent(new CustomEvent('kl:sent', { detail: section.id }));
+    });
+
+    // Eingaben nie verlieren: sessionStorage (nur dieser Tab). Einwilligung und Foto werden nicht gespeichert.
+    const KEY = `form:${location.pathname}:${form.id}`;
+    const saved = () => [...form.elements].filter((el): el is HTMLInputElement => (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && !!el.name && el.name !== 'privacy' && (el as HTMLInputElement).type !== 'file');
+    const save = () => {
+      try {
+        const d: Record<string, string> = {};
+        saved().forEach((el) => { if (el.type === 'radio') { if (el.checked) d[el.name] = el.value; } else d[el.name] = el.value; });
+        const empty = ['name', 'tel', 'plz', 'email', 'note'].every((k) => !d[k]);
+        if (empty) sessionStorage.removeItem(KEY); else sessionStorage.setItem(KEY, JSON.stringify(d));
+      } catch {}
+    };
+    try {
+      const raw = sessionStorage.getItem(KEY);
+      if (raw) {
+        const d = JSON.parse(raw);
+        saved().forEach((el) => {
+          if (!(el.name in d)) return;
+          if (el.type === 'radio') el.checked = el.value === d[el.name]; else el.value = String(d[el.name]);
+        });
+      }
+    } catch {}
+    form.addEventListener('input', save);
+    form.addEventListener('change', save);
+    plzUpdate();
+    update();
+  });
+</script>

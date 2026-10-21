@@ -1,15 +1,18 @@
 ---
-// SEO + KI-Sichtbarkeit (AIO) by default. Demos: noindex (index = false). Beim Kundenstart: index = true setzen.
+// SEO + KI-Sichtbarkeit (AIO). Demo: noindex (index = false). Beim Kundenstart: index = true setzen.
 import '../styles/global.css';
 import site from '../data/site.json';
 const {
   title = site.name,
   description = '',
-  index = false,          // Demo = noindex. Echte Kundenseite: index
-  type = 'LocalBusiness', // Schema.org-Typ, z. B. 'Hairdresser', 'Architect', 'Dentist'
-  faq = [],               // [{ q, a }] -> sichtbarer FAQ-Block UND FAQPage-Markup (gleicher Text, sonst ignoriert Google es)
-  image = '',             // OG-Bild, relativ zu public/
-  prices = [],            // [{ name, price }] -> makesOffer
+  index = false,
+  type = 'Plumber',
+  faq = [],
+  image = '',
+  prices = [],
+  anfrageHref = '',
+  bar = 'default', // 'default' | 'notfall'
+  current = '',
 } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -17,31 +20,40 @@ const ogImage = image ? new URL(base + image.replace(/^\//, ''), Astro.site).hre
 const graph = [
   ...(index ? [{
     '@type': type,
-    '@id': new URL(base, Astro.site).href + '#business',
     name: site.name,
     url: new URL(base, Astro.site).href,
     description,
     telephone: site.phone,
     email: site.email,
     address: { '@type': 'PostalAddress', streetAddress: site.address.street, postalCode: site.address.zip, addressLocality: site.address.city, addressCountry: 'DE' },
-    ...(site.openingHours ? { openingHours: site.openingHours } : {}),
-    ...(site.areaServed ? { areaServed: site.areaServed } : {}),
-    ...(ogImage ? { image: ogImage } : {}),
+    openingHours: site.openingHours,
+    areaServed: site.areaServed,
     ...(prices.length ? { makesOffer: prices.map((p) => ({ '@type': 'Offer', priceCurrency: 'EUR', price: p.price, itemOffered: { '@type': 'Service', name: p.name } })) } : {}),
-  }] : []), // Demo (index = false): keine Geschäftsdaten-Markup mit erfundener Adresse/Telefon, nur FAQPage
+  }] : []),
   ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
 ];
 const ld = { '@context': 'https://schema.org', '@graph': graph };
+const anfrage = anfrageHref || `${base}#anfrage`;
+const nav = [
+  { href: `${base}#stationen`, label: 'Leistungen & Preise', id: 'home' },
+  { href: `${base}bad/`, label: 'Bad zusammenstellen', id: 'bad' },
+  { href: `${base}heizung/`, label: 'Heizungs-Check', id: 'heizung' },
+  { href: `${base}#wartung`, label: 'Wartungsvertrag', id: 'wartung' },
+  { href: `${base}notfall/`, label: 'Erste Hilfe bei Wasserschaden', id: 'notfall' },
+  { href: `${base}#anfrage`, label: 'Anfrage mit Foto', id: 'anfrage' },
+];
 ---
 <!doctype html>
 <html lang="de">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
+    <meta name="theme-color" content="#f6f9fa" />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="de_DE" />
     <meta property="og:title" content={title} />
@@ -49,13 +61,144 @@ const ld = { '@context': 'https://schema.org', '@graph': graph };
     <meta property="og:url" content={canonical} />
     {ogImage && <meta property="og:image" content={ogImage} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <slot name="head" />
     {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
   </head>
-  <body>
+  <body data-page={current}>
+    <a class="skip" href="#inhalt">Zum Inhalt</a>
+    <header class="hd">
+      <a class="hd__mark" href={base} aria-label={`${site.name}, Startseite`}>
+        <span class="hd__name">Kehlenbrink</span><span class="hd__sub">Bad &amp; Wärme</span>
+      </a>
+      <p class="hd__status" data-status aria-live="polite"><span class="hd__dot" aria-hidden="true"></span><span data-status-text>{site.hoursText}</span></p>
+      <a class="hd__tel" href={`tel:${site.phoneHref}`}>{site.phone}</a>
+      <details class="hd__menu">
+        <summary>Menü</summary>
+        <nav aria-label="Hauptnavigation">
+          <ul>
+            {nav.map((n) => <li><a href={n.href} aria-current={current === n.id ? 'page' : undefined}>{n.label}</a></li>)}
+          </ul>
+          <p class="hd__menu-tel">Büro <a href={`tel:${site.phoneHref}`}>{site.phone}</a><br />Notdienst <a href={`tel:${site.notdienstHref}`}>{site.notdienst}</a></p>
+        </nav>
+      </details>
+    </header>
+
     <slot />
-    <footer>
-      <a href={`${base}impressum/`}>Impressum</a> · <a href={`${base}datenschutz/`}>Datenschutz</a>
-      {!index && <p>Demo-Seite, alle Angaben fiktiv. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihr Unternehmen? Jetzt anfragen</a></p>}
+
+    <footer class="ft">
+      <div class="ft__in">
+        <p class="ft__statement">Ein Betrieb, eine Mannschaft, ein Ansprechpartner – vom Hausanschluss bis zum Abfluss.</p>
+        <div class="ft__cols">
+          <div>
+            <h2 class="ft__h">Büro</h2>
+            <p>{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+            <p><a href={`tel:${site.phoneHref}`}>{site.phone}</a><br /><a href={`mailto:${site.email}`}>{site.email}</a></p>
+            <p>{site.hoursText}</p>
+          </div>
+          <div>
+            <h2 class="ft__h">Notdienst</h2>
+            <p><a class="ft__nd" href={`tel:${site.notdienstHref}`}>{site.notdienst}</a></p>
+            <p>{site.notdienstText}</p>
+            <p><a href={`${base}notfall/`}>Erste Hilfe bei Wasserschaden</a></p>
+          </div>
+        </div>
+        <p class="ft__legal"><a href={`${base}impressum/`}>Impressum</a> · <a href={`${base}datenschutz/`}>Datenschutz</a></p>
+        {!index && <p class="ft__demo">Demo-Seite von Kravets Webdesign: Betrieb, Personen, Preise und Referenzen sind erfunden, Bilder teils KI-erzeugt. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihren Betrieb? Jetzt anfragen</a></p>}
+      </div>
     </footer>
+
+    <nav class={`bar bar--${bar}`} aria-label="Schnellzugriff">
+      {bar === 'notfall' ? (
+        <a class="bar__nd bar__nd--wide" href={`tel:${site.notdienstHref}`}><strong>Notdienst anrufen</strong><span>{site.notdienst}</span></a>
+      ) : (
+        <>
+          <a class="bar__nd" href={`tel:${site.notdienstHref}`}><strong>Notdienst</strong><span>rund um die Uhr</span></a>
+          <a class="bar__req" href={anfrage}><strong>Anfrage</strong><span>mit Foto</span></a>
+        </>
+      )}
+    </nav>
+
+    <script is:inline type="application/json" id="hours" set:html={JSON.stringify(site.hours)} />
   </body>
 </html>
+
+<style>
+  .hd {
+    position: sticky; top: 0; z-index: 30;
+    display: flex; align-items: center; gap: var(--space-sm);
+    min-height: 60px; padding: var(--space-xs) var(--gutter);
+    background: color-mix(in oklch, var(--color-paper) 92%, transparent);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-bottom: var(--rule-w) solid var(--color-rule);
+  }
+  .hd__mark { display: grid; text-decoration: none; color: var(--color-ink); line-height: 1; margin-right: auto; }
+  .hd__name { font: 600 1.25rem/1 var(--font-display); letter-spacing: 0.01em; }
+  .hd__sub { font: 500 var(--text-xs)/1.2 var(--font-display); color: var(--color-copper-ink); letter-spacing: 0.04em; }
+  .hd__status { display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-xs); line-height: 1.2; color: var(--color-ink-2); max-width: 11rem; }
+  .hd__dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--color-ink-2); }
+  :global([data-open='1']) .hd__dot { background: var(--color-ok); }
+  :global([data-open='0']) .hd__dot { background: var(--color-copper); }
+  .hd__tel { display: none; font-weight: 600; white-space: nowrap; color: var(--color-ink); text-decoration: none; }
+  .hd__menu { position: relative; }
+  .hd__menu summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-md); border: 1.5px solid var(--color-ink); border-radius: var(--radius-pill); font-weight: 600; font-size: var(--text-sm); }
+  .hd__menu summary::-webkit-details-marker { display: none; }
+  .hd__menu[open] summary { background: var(--color-ink); color: var(--color-paper); }
+  .hd__menu nav { position: absolute; right: 0; top: calc(100% + 8px); width: min(20rem, calc(100vw - 2 * var(--gutter))); background: var(--color-paper); border: var(--rule-w) solid var(--color-rule); border-radius: var(--radius); padding: var(--space-xs) 0; box-shadow: 0 12px 32px -12px oklch(24% 0.045 228 / 0.35); }
+  .hd__menu ul { list-style: none; margin: 0; padding: 0; }
+  .hd__menu li a { display: block; padding: 0.7rem var(--space-md); color: var(--color-ink); text-decoration: none; font-weight: 600; }
+  .hd__menu li a[aria-current='page'] { color: var(--color-copper-ink); }
+  .hd__menu-tel { margin: var(--space-xs) var(--space-md) var(--space-sm); padding-top: var(--space-sm); border-top: var(--rule-w) solid var(--color-rule); font-size: var(--text-sm); }
+  @media (hover: hover) { .hd__menu li a:hover { background: var(--color-paper-2); } }
+  @media (max-width: 22.5rem) { .hd__status { max-width: 7.5rem; } }
+  @media (min-width: 48rem) { .hd__tel { display: inline; } }
+
+  .ft { background: var(--color-deep); color: var(--color-on-deep); margin-top: var(--space-3xl); padding: var(--space-2xl) 0 var(--space-xl); position: relative; }
+  .ft__in::before { content: ''; position: absolute; left: var(--pipe-x); top: calc(-1 * var(--space-3xl) - var(--space-2xl)); width: var(--pipe-w); height: var(--space-3xl); transform: translateX(-50%); background: var(--color-copper); border-radius: 0 0 2px 2px; }
+  .ft__in { position: relative; max-width: 72rem; margin: 0 auto; padding: 0 var(--gutter) 0 var(--content-left); }
+  .ft a { color: var(--color-copper-glow); }
+  .ft__statement { font: 500 var(--text-xl)/1.25 var(--font-display); max-width: 30ch; margin-bottom: var(--space-xl); }
+  .ft__cols { display: grid; gap: var(--space-xl); grid-template-columns: minmax(0, 1fr); }
+  .ft__cols p { margin-top: var(--space-xs); color: var(--color-on-deep-2); }
+  .ft__h { font: 600 var(--text-sm)/1.2 var(--font-body); color: var(--color-on-deep); }
+  .ft__nd { font: 600 var(--text-xl)/1.2 var(--font-display); text-decoration: none; }
+  .ft__legal { margin-top: var(--space-xl); }
+  .ft__demo { margin-top: var(--space-sm); font-size: var(--text-xs); color: var(--color-on-deep-2); }
+  @media (min-width: 48rem) { .ft__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-xs) max(var(--space-xs), env(safe-area-inset-bottom));
+    background: var(--color-paper); border-top: var(--rule-w) solid var(--color-rule);
+  }
+  .bar a { display: grid; align-content: center; justify-items: center; min-height: 48px; border-radius: var(--radius); text-decoration: none; line-height: 1.15; }
+  .bar strong { font-size: var(--text-md); }
+  .bar span { font-size: var(--text-xs); }
+  .bar__nd { background: var(--color-copper); color: var(--color-ink); }
+  .bar__nd span { color: var(--color-ink); }
+  .bar__req { background: var(--color-ink); color: var(--color-paper); }
+  .bar--notfall { grid-template-columns: minmax(0, 1fr); }
+  .bar__nd--wide { min-height: 52px; }
+  :global(body.no-bar) .bar { display: none; }
+  @media (min-width: 64rem) { .bar { display: none; } }
+</style>
+
+<script>
+  // Status „offen/zu“ nach Uhrzeit in Berlin. Feiertage sind im Demo nicht berücksichtigt (README).
+  const el = document.querySelector<HTMLElement>('[data-status]');
+  const txt = document.querySelector<HTMLElement>('[data-status-text]');
+  const hours: { days: number[]; from: string; to: string }[] = JSON.parse(document.getElementById('hours')?.textContent || '[]');
+  const tick = () => {
+    if (!el || !txt) return;
+    const parts = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date()).map((p) => [p.type, p.value]));
+    const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(parts.weekday);
+    const now = Number(parts.hour) * 60 + Number(parts.minute);
+    const m = (s: string) => Number(s.slice(0, 2)) * 60 + Number(s.slice(3));
+    const today = hours.find((h) => h.days.includes(day));
+    const open = !!today && now >= m(today.from) && now < m(today.to);
+    document.documentElement.dataset.open = open ? '1' : '0';
+    txt.textContent = open ? `Büro offen bis ${today!.to.replace(/^0/, '')}` : 'Büro zu · Notdienst erreichbar';
+  };
+  tick();
+  setInterval(tick, 60_000);
+</script>

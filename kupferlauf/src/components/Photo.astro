@@ -1,0 +1,18 @@
+---
+// Foto aus public/img/<name>.jpg (von Степан, Gemini) → webp-Varianten (scripts/images.mjs).
+// Fehlt die Datei noch, wird nichts gerendert (kein Platzhalter); README listet fehlende Fotos.
+import { existsSync, readFileSync } from 'node:fs';
+const { name, alt, sizes = '100vw', eager = false, class: cls = '', ratio = '' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const key = name.replace(/\.(jpe?g|png|webp)$/i, '');
+const manPath = 'public/img/opt/manifest.json';
+const man = existsSync(manPath) ? JSON.parse(readFileSync(manPath, 'utf8')) : {};
+const m = man[key];
+const srcset = m ? m.variants.map((v: any) => `${base}img/opt/${v.file} ${v.w}w`).join(', ') : '';
+const src = m ? `${base}img/opt/${m.variants[Math.min(1, m.variants.length - 1)].file}` : '';
+---
+{m && (
+  <img class={cls} src={src} srcset={srcset} sizes={sizes} alt={alt} width={m.w} height={m.h}
+    loading={eager ? 'eager' : 'lazy'} decoding={eager ? 'sync' : 'async'} fetchpriority={eager ? 'high' : undefined}
+    style={ratio ? `aspect-ratio:${ratio}` : undefined} />
+)}

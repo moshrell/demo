@@ -1,23 +1,67 @@
-:root {
-  --ink: #111;
-  --paper: #fff;
-  --accent: #c8782a;
-  --gutter: clamp(20px, 5vw, 72px);
-  /* Formular-Standard (OrderForm.astro): beim Projektstart an das Design anpassen */
-  --muted: #55555a;
-  --rule: #d8d8dc;
-  --alert: #9b2c1d;
-  --focus: #1b5fd1;
-  --radius: 6px;
-  --text-sm: 0.875rem;
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-smd: 0.75rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 3rem;
-}
+@import '@fontsource/jost/500.css';
+@import '@fontsource/jost/600.css';
+@import '@fontsource/figtree/400.css';
+@import '@fontsource/figtree/600.css';
+@import '@fontsource/figtree/700.css';
+@import './tokens.css';
+
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.6 system-ui, sans-serif; }
-img { max-width: 100%; display: block; }
+html, body { overflow-x: clip; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 72px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font: 400 var(--text-md)/1.6 var(--font-body);
+  padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom));
+}
+@media (min-width: 64rem) { body { padding-bottom: 0; } }
+img { max-width: 100%; height: auto; display: block; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 500; font-style: normal; line-height: 1.12; letter-spacing: -0.01em; margin: 0; overflow-wrap: anywhere; min-width: 0; }
+h1 { font-size: var(--text-display); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-lg); font-weight: 600; }
+p { margin: 0; }
+a { color: var(--color-copper-ink); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.num, .price { font-variant-numeric: tabular-nums; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: var(--space-md); top: -100px; z-index: 50; background: var(--color-ink); color: var(--color-paper); padding: var(--space-xs) var(--space-md); border-radius: var(--radius-sm); }
+.skip:focus { top: var(--space-xs); }
+.wrap { width: 100%; max-width: 72rem; margin: 0 auto; padding: 0 var(--gutter); }
+
+/* Buttons: Verb + Objekt, nie zweizeilig */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs);
+  min-height: 48px; padding: 0 var(--space-lg);
+  border: 1.5px solid var(--color-ink); border-radius: var(--radius-pill);
+  background: var(--color-ink); color: var(--color-paper);
+  font: 600 var(--text-md)/1 var(--font-body); text-decoration: none; white-space: nowrap; cursor: pointer;
+}
+.btn--ghost { background: transparent; color: var(--color-ink); }
+.btn--copper { background: var(--color-copper); border-color: var(--color-copper); color: var(--color-ink); }
+.btn:active { transform: translateY(1px); }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+@media (hover: hover) {
+  .btn:hover { background: var(--color-deep-2); border-color: var(--color-deep-2); }
+  .btn--ghost:hover { background: var(--color-paper-2); border-color: var(--color-ink); }
+  .btn--copper:hover { background: var(--color-copper-glow); border-color: var(--color-copper-glow); }
+}
+@media (prefers-reduced-motion: no-preference) { .btn { transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); } }
+
+.price { font-weight: 700; white-space: nowrap; }
+.mwst { font-size: var(--text-xs); color: var(--color-ink-2); }
+
+/* Formular-Standard: Felder */
+.field { display: grid; gap: var(--space-2xs); min-width: 0; }
+.field label, .field .lbl { font-weight: 600; font-size: var(--text-sm); }
+.field input, .field textarea, .field select {
+  width: 100%; min-height: 48px; padding: 0.65rem 0.85rem;
+  border: 1.5px solid var(--color-ink-2); border-radius: var(--radius); background: var(--color-paper); color: var(--color-ink); font: inherit;
+}
+.field input::placeholder, .field textarea::placeholder { color: var(--color-ink-2); opacity: 1; }
+.field input[aria-invalid='true'] { border-color: var(--color-alert); box-shadow: inset 0 0 0 1px var(--color-alert); }
+.err { margin: 0; font-size: var(--text-sm); font-weight: 600; color: var(--color-alert); }
+.err[hidden] { display: none; }

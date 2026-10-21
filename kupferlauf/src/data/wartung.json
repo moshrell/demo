@@ -1,0 +1,11 @@
+{
+  "plans": [
+    { "id": "gas", "name": "Gas-Brennwert", "cents": 18900 },
+    { "id": "wp", "name": "Wärmepumpe", "cents": 22900 },
+    { "id": "oel", "name": "Öl-Brennwert", "cents": 24900 },
+    { "id": "hybrid", "name": "Hybrid (WP + Gas)", "cents": 27900 }
+  ],
+  "windows": ["März–April", "Mai–Juni", "Juli–August", "September–Oktober"],
+  "includes": ["Reinigung, Sichtprüfung, Abgas- bzw. Leistungsmessung", "Dichtungen und Kleinteile bis 25 €", "Protokoll für Ihre Unterlagen", "Wir melden uns von selbst zum gewählten Zeitfenster"],
+  "hint": "Preis pro Jahr inkl. 19 % MwSt., Anfahrt im Kerngebiet inklusive. Kündbar jährlich."
+}

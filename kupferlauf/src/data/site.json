@@ -1,15 +1,28 @@
 {
   "name": "Kehlenbrink Bad & Wärme",
-  "legalName": "TODO vom Kunden",
-  "address": {
-    "street": "TODO",
-    "zip": "TODO",
-    "city": "TODO"
-  },
-  "email": "TODO",
-  "phone": "030 23125 123",
-  "openingHours": "TODO z. B. Mo-Fr 09:00-17:00",
-  "areaServed": [
-    "TODO Ort"
-  ]
+  "short": "Kehlenbrink",
+  "owner": "Henning Kehlenbrink",
+  "legalName": "Kehlenbrink Bad & Wärme, Inhaber Henning Kehlenbrink (fiktiv)",
+  "address": { "street": "Havelser Straße 0", "zip": "30823", "city": "Garbsen" },
+  "email": "kontakt@example.com",
+  "phone": "030 23125 140",
+  "phoneHref": "+493023125140",
+  "notdienst": "030 23125 199",
+  "notdienstHref": "+493023125199",
+  "hours": [
+    { "days": [1, 2, 3, 4], "from": "07:00", "to": "16:30" },
+    { "days": [5], "from": "07:00", "to": "13:00" }
+  ],
+  "hoursText": "Mo–Do 7:00–16:30 · Fr 7:00–13:00",
+  "notdienstText": "Notdienst rund um die Uhr bei Wasserschaden und Heizungsausfall – für Haushalte in unserem Einsatzgebiet.",
+  "notdienstPreis": { "tag": 149, "nacht": 219, "hinweis": "Anfahrt und erste halbe Stunde, Material extra. Nachts (20–7 Uhr), am Wochenende und an Feiertagen gilt der zweite Preis." },
+  "besichtigung": "Besichtigung für Bad und Heizung: 89 €, wird bei Auftrag voll angerechnet.",
+  "berufsbezeichnung": "Installateur- und Heizungsbauermeister",
+  "kammer": "Handwerkskammer Hannover, Berliner Allee 17, 30175 Hannover",
+  "handwerksrolle": "Eingetragen in die Handwerksrolle der Handwerkskammer Hannover, Nr. 000000 (fiktiv)",
+  "ustid": "DE000000000 (fiktiv)",
+  "haftpflicht": "Betriebshaftpflichtversicherung: Beispiel Versicherung AG, Musterstraße 1, 00000 Musterstadt (fiktiv), Geltungsbereich: Deutschland",
+  "openingHours": "Mo-Th 07:00-16:30, Fr 07:00-13:00",
+  "areaServed": ["Garbsen", "Seelze", "Wunstorf", "Neustadt am Rübenberge", "Langenhagen", "Isernhagen", "Barsinghausen", "Ronnenberg", "Hannover"],
+  "foerderStand": "Oktober 2026"
 }

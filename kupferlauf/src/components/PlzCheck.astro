@@ -1,0 +1,51 @@
+---
+// PLZ-Prüfung „Kommen wir zu Ihnen?“ (plz.json). Ohne JS: Liste der Orte bleibt sichtbar.
+import plz from '../data/plz.json';
+const { id = 'plz', label = 'Ihre Postleitzahl', compact = false } = Astro.props;
+const orte = [...new Set(Object.values(plz.plz).map((v: any) => v[1].replace(/^Hannover-.*/, 'Hannover (Nord und West)')))];
+---
+<form class:list={['pc', { 'pc--compact': compact }]} data-plzcheck novalidate>
+  <div class="pc__row">
+    <div class="field pc__field">
+      <label for={`${id}-in`}>{label}</label>
+      <input id={`${id}-in`} type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="z. B. 30823" aria-describedby={`${id}-out`} />
+    </div>
+    <button class="btn pc__btn" type="submit">Prüfen</button>
+  </div>
+  <p class="pc__out" id={`${id}-out`} aria-live="polite" data-out></p>
+  {!compact && <p class="pc__list">Wir fahren nach: {orte.join(', ')}.</p>}
+</form>
+
+<style>
+  .pc { display: grid; gap: var(--space-sm); max-width: 30rem; }
+  .pc__row { display: flex; gap: var(--space-xs); align-items: end; }
+  .pc__field { flex: 1 1 auto; }
+  .pc__field input { font-size: 1.25rem; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
+  .pc__btn { flex: none; }
+  .pc__out { min-height: 1.6em; font-weight: 600; }
+  .pc__out[data-zone='0'] { color: var(--color-alert); }
+  .pc__out[data-zone]:not([data-zone='0']) { color: var(--color-ok); }
+  .pc__list { font-size: var(--text-sm); color: var(--color-ink-2); }
+</style>
+
+<script>
+  import plz from '../data/plz.json';
+  document.querySelectorAll<HTMLFormElement>('form[data-plzcheck]').forEach((f) => {
+    const input = f.querySelector('input')!;
+    const out = f.querySelector<HTMLElement>('[data-out]')!;
+    const run = () => {
+      const v = input.value.replace(/\D/g, '').slice(0, 5);
+      input.value = v;
+      if (v.length < 5) { out.textContent = v.length ? '' : ''; delete out.dataset.zone; return; }
+      const hit = (plz.plz as Record<string, [number, string]>)[v];
+      if (!hit) { out.dataset.zone = '0'; out.textContent = `${v}: Leider außerhalb unseres Gebiets. Im Notfall rufen Sie bitte einen Betrieb in Ihrer Nähe an.`; return; }
+      const z = plz.zones.find((x) => x.id === hit[0])!;
+      out.dataset.zone = String(z.id);
+      out.textContent = `Ja, ${hit[1]} liegt an unserer Leitung. ${z.text}`;
+      try { sessionStorage.setItem('kl:plz', v); } catch {}
+    };
+    f.addEventListener('submit', (e) => { e.preventDefault(); run(); if (input.value.length < 5) { out.textContent = 'Bitte fünf Ziffern eingeben.'; out.dataset.zone = '0'; } });
+    input.addEventListener('input', run);
+    try { const s = sessionStorage.getItem('kl:plz'); if (s && !input.value) { input.value = s; run(); } } catch {}
+  });
+</script>

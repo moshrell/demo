@@ -1,19 +1,334 @@
 ---
 import Base from '../layouts/Base.astro';
-import OrderForm from '../components/OrderForm.astro';
+import Anfrage from '../components/Anfrage.astro';
+import PlzCheck from '../components/PlzCheck.astro';
+import Photo from '../components/Photo.astro';
 import site from '../data/site.json';
+import stations from '../data/stations.json';
+import wartung from '../data/wartung.json';
+import faq from '../data/faq.json';
+import ablauf from '../data/ablauf.json';
+import { img } from '../lib/img';
+const base = import.meta.env.BASE_URL;
+const heroHoch = img('hero-kupfer-hoch');
+const heroBreit = img('hero-kupfer-breit');
+const prices = stations.flatMap((s: any) => (s.services || []).map((x: any) => ({ name: x.name, price: x.price.replace(/[^\d]/g, '') })));
 ---
-<Base>
+<Base
+  title="Kehlenbrink Bad & Wärme · Sanitär und Heizung in Garbsen und der Region Hannover (Demo)"
+  description="Meisterbetrieb für Bad, Heizung und Wasser im Westen der Region Hannover: Ab-Preise, PLZ-Check, Bad-Baukasten, Heizungs-Check und Erste Hilfe bei Wasserschaden. Demo-Seite."
+  faq={faq}
+  prices={prices}
+  current="home"
+>
   <main id="inhalt">
-    <h1>{site.name}</h1>
-    <!-- Formular-Standard: Beispiel mit Preisen. Ohne Preise: items weglassen und options={['Leistung A', 'Leistung B']} nutzen. TODO: echte Positionen vom Kunden -->
-    <OrderForm
-      title="Vorbestellung"
-      submitLabel="Vorbestellen"
-      purpose="meiner Vorbestellung"
-      items={[{ id: 'a', name: 'TODO Artikel A', cents: 350 }, { id: 'b', name: 'TODO Artikel B', cents: 1290 }]}
-      options={['TODO Zeit 1', 'TODO Zeit 2']}
-      optionsLabel="Wann?"
-    />
+    <section class="hero" data-hero aria-labelledby="hero-h">
+      <div class="hero__media">
+        {(heroHoch || heroBreit) && (
+          <picture>
+            {heroBreit && <source media="(min-width: 48rem)" srcset={heroBreit.srcset} sizes="100vw" width={heroBreit.w} height={heroBreit.h} />}
+            <img class="hero__img" src={(heroHoch || heroBreit)!.src} srcset={(heroHoch || heroBreit)!.srcset} sizes="100vw" width={(heroHoch || heroBreit)!.w} height={(heroHoch || heroBreit)!.h} alt="Neue Kupferrohre mit Pressfittings an einer weißen Wand, Wasserlicht spiegelt sich" fetchpriority="high" decoding="sync" />
+          </picture>
+        )}
+        <canvas class="hero__caustics" data-caustics aria-hidden="true"></canvas>
+      </div>
+      <div class="hero__text">
+        <a class="hero__sos" href={`${base}notfall/`}><span class="hero__sos-dot" aria-hidden="true"></span>Wasser läuft? Erste Hilfe in 4 Schritten</a>
+        <h1 id="hero-h">Bad und Heizung aus einer Hand.</h1>
+        <p class="hero__lead">Meisterbetrieb in Garbsen für den Westen und Norden der Region Hannover. Ab-Preise auf der Seite, ein fester Ansprechpartner, Notdienst bei Wasserschaden.</p>
+        <div class="hero__cta">
+          <a class="btn btn--copper" href={`${base}bad/`}>Bad planen</a>
+          <a class="btn btn--ghost" href={`${base}heizung/`}>Heizung prüfen</a>
+        </div>
+      </div>
+    </section>
+
+    <nav class="route" aria-label="Stationen auf dieser Seite">
+      <p class="route__h">Folgen Sie dem Wasser – oder springen Sie direkt:</p>
+      <ol class="route__list">
+        {stations.map((s: any) => <li><a href={`#${s.id}`} data-temp={s.temp}>{s.label}</a></li>)}
+      </ol>
+    </nav>
+
+    <div class="journey" id="stationen" data-journey>
+      <div class="pipe" aria-hidden="true">
+        <div class="pipe__fill" data-pipe-fill></div>
+        <div class="pipe__cover" data-pipe-cover></div>
+        <div class="pipe__drop" data-pipe-drop><span></span></div>
+      </div>
+
+      {stations.map((s: any, i: number) => (
+        <article class="st" id={s.id} data-station data-temp={s.temp} aria-labelledby={`${s.id}-h`}>
+          <svg class="st__fit" viewBox="0 0 64 40" aria-hidden="true">
+            <rect x="12" y="6" width="17" height="28" rx="3" class="st__fit-ring" />
+            <rect x="28" y="16.5" width="26" height="7" class="st__fit-branch" />
+            <rect x="50" y="12" width="9" height="16" rx="2" class="st__fit-ring" />
+          </svg>
+          <p class="st__label"><span class="num">{String(i + 1).padStart(2, '0')}</span> {s.label}</p>
+          <div class="st__body">
+            <div class="st__intro">
+              <h2 id={`${s.id}-h`}>{s.title}</h2>
+              <p class="st__lead">{s.lead}</p>
+              {s.cta && <a class="btn st__cta" href={`${base}${s.cta.href}`}>{s.cta.label}</a>}
+            </div>
+
+            {s.services && (
+              <div class="st__prices">
+                <ul>
+                  {s.services.map((x: any) => (
+                    <li><span>{x.name}{x.note && <small> · {x.note}</small>}</span><span class="price">{x.price}</span></li>
+                  ))}
+                </ul>
+                <p class="mwst">Richtpreise inkl. 19 % MwSt. Den genauen Preis nennen wir nach der Besichtigung schriftlich.</p>
+              </div>
+            )}
+
+            {s.tool === 'plz' && (
+              <div class="st__tool">
+                <h3>Liegt Ihr Haus an unserer Leitung?</h3>
+                <PlzCheck id="plz-home" />
+              </div>
+            )}
+
+            {s.referenz && (
+              <figure class="ref ref--wide">
+                <Photo name={s.referenz.img} alt={s.referenz.alt} sizes="(min-width: 64rem) 34rem, 92vw" />
+                <figcaption><strong>{s.referenz.ort}</strong><ul>{s.referenz.facts.map((f: string) => <li>{f}</li>)}</ul></figcaption>
+              </figure>
+            )}
+
+            {s.paar && (
+              <figure class="st__paar">
+                <Photo name={s.paar.img} alt={s.paar.alt} sizes="(min-width: 64rem) 24rem, 80vw" />
+                <figcaption>Barrierefrei: bodengleiche Dusche, Haltegriffe, WC auf Sitzhöhe. Ob es dafür Förderung gibt, <a href={`${base}bad/#foerderung`}>prüfen wir gemeinsam</a>.</figcaption>
+              </figure>
+            )}
+
+            {s.referenzen && (
+              <div class="refs">
+                <h3>Drei Bäder aus der Region</h3>
+                <ul class="refs__list">
+                  {s.referenzen.map((r: any) => (
+                    <li class="ref">
+                      <Photo name={r.img} alt={r.alt} sizes="(min-width: 64rem) 22rem, 78vw" />
+                      <p><strong>{r.ort}</strong></p>
+                      <ul>{r.facts.map((f: string) => <li>{f}</li>)}</ul>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {s.tool === 'wartung' && (
+              <div class="st__wartung">
+                {s.img && <Photo class="st__wimg" name={s.img.img} alt={s.img.alt} sizes="(min-width: 64rem) 30rem, 92vw" />}
+                <ul class="checks">{wartung.includes.map((x: string) => <li>{x}</li>)}</ul>
+                <Anfrage
+                  id="wartungsvertrag"
+                  title="Wartungsvertrag abschließen"
+                  intro={wartung.hint}
+                  submitLabel="Wartung anfragen"
+                  purpose="meiner Wartungsanfrage"
+                  plans={wartung.plans}
+                  plansLabel="Ihre Heizung"
+                  plansSuffix=" / Jahr"
+                  windows={wartung.windows}
+                  windowsLabel="Wunsch-Zeitfenster"
+                  photoLabel="Foto vom Typenschild (optional)"
+                  photoHint="Das Schild mit Hersteller und Baujahr, meist innen in der Verkleidung"
+                  notePlaceholder="z. B. Hersteller, Baujahr, Anzahl Wohnungen"
+                />
+              </div>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <section class="ablauf wrap" aria-labelledby="ablauf-h">
+      <div class="ablauf__in">
+        <h2 id="ablauf-h">So läuft es nach Ihrer Anfrage</h2>
+        <ol class="ablauf__list">
+          {ablauf.map((a: any) => <li><h3>{a.t}</h3><p>{a.d}</p></li>)}
+        </ol>
+        <Photo class="ablauf__img" name="monteur.jpg" alt="Hände eines Installateurs beim Verpressen eines Kupferfittings" sizes="(min-width: 64rem) 30rem, 92vw" />
+        <p class="ablauf__note">{site.besichtigung} Was wir nicht machen: Material montieren, das Sie selbst gekauft haben, und Klimaanlagen reparieren.</p>
+      </div>
+    </section>
+
+    <section class="faq wrap" aria-labelledby="faq-h">
+      <div class="faq__in">
+        <h2 id="faq-h">Was uns fast jeder fragt</h2>
+        {faq.map((f: any) => (
+          <details class="faq__item"><summary>{f.q}</summary><p>{f.a}</p></details>
+        ))}
+      </div>
+    </section>
+
+    <div class="wrap anfrage-wrap">
+      <Anfrage
+        id="anfrage"
+        title="Anfrage mit Foto"
+        intro="Ein Foto und Ihre PLZ sparen uns beiden einen Termin: Wir sehen vorab, worum es geht, und rufen Sie einmal an – mit konkreten Antworten."
+        topics={['Bad', 'Heizung', 'Warmwasser', 'Leitung oder Abfluss', 'Sonstiges']}
+        topicsLabel="Worum geht es?"
+        windows={['Vormittags', 'Nachmittags', 'Egal']}
+      />
+    </div>
   </main>
 </Base>
+
+<style>
+  .hero { position: relative; display: grid; }
+  .hero__media { position: relative; height: min(62svh, 34rem); background: radial-gradient(120% 90% at 70% 20%, var(--color-deep-2), var(--color-deep)); overflow: hidden; }
+  .hero__img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; }
+  .hero__caustics { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: screen; opacity: 0; }
+  .hero__caustics:global(.is-on) { opacity: 0.5; }
+  :global(.no-gl) .hero__media::after { content: ''; position: absolute; inset: 0; background: radial-gradient(60% 40% at 30% 30%, oklch(90% 0.06 200 / 0.35), transparent 70%), radial-gradient(50% 35% at 75% 65%, oklch(90% 0.06 200 / 0.25), transparent 70%); }
+  .hero__text { position: relative; padding: var(--space-lg) var(--gutter) var(--space-xl) var(--content-left); max-width: 72rem; width: 100%; margin: 0 auto; }
+  .hero__text::before { content: ''; position: absolute; left: var(--pipe-x); top: calc(-1 * min(62svh, 34rem)); bottom: 0; width: var(--pipe-w); transform: translateX(-50%); background: linear-gradient(to bottom, transparent, var(--color-water) 60%); }
+  .hero__sos { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 44px; margin-bottom: var(--space-md); font-weight: 700; color: var(--color-alert); text-decoration: none; }
+  .hero__sos-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-alert); box-shadow: 0 0 0 4px oklch(50% 0.17 28 / 0.18); }
+  .hero__lead { margin-top: var(--space-md); max-width: 34rem; color: var(--color-ink-2); }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-top: var(--space-lg); }
+  @media (min-width: 64rem) {
+    .hero { grid-template-columns: minmax(0, 1fr); }
+    .hero__media { height: min(70svh, 40rem); }
+    .hero__text { position: absolute; left: 0; right: 0; bottom: 0; color: var(--color-on-deep); padding-bottom: var(--space-2xl); }
+    .hero__text::before { top: auto; height: 100%; }
+    .hero__lead { color: var(--color-on-deep-2); }
+    .hero__media::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to right, oklch(24% 0.045 228 / 0.72), oklch(24% 0.045 228 / 0.15) 60%, transparent); pointer-events: none; }
+    .hero__sos { color: var(--color-copper-glow); }
+    .hero__cta .btn--ghost { color: var(--color-on-deep); border-color: var(--color-on-deep); }
+  }
+
+  .route { max-width: 72rem; margin: 0 auto; padding: var(--space-md) var(--gutter) var(--space-lg) var(--content-left); position: relative; }
+  .route::before { content: ''; position: absolute; left: var(--pipe-x); top: 0; bottom: 0; width: var(--pipe-w); transform: translateX(-50%); background: var(--color-water); }
+  .route__h { font-size: var(--text-sm); color: var(--color-ink-2); margin-bottom: var(--space-xs); }
+  .route__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+  .route__list a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--space-md); border-radius: var(--radius-pill); border: 1.5px solid var(--color-water); color: var(--color-ink); text-decoration: none; font-weight: 600; font-size: var(--text-sm); white-space: nowrap; }
+  .route__list a[data-temp='warm'] { border-color: var(--color-copper); }
+
+  .journey { position: relative; max-width: 72rem; margin: 0 auto; padding: 0 var(--gutter) 0 var(--content-left); }
+  .pipe { position: absolute; top: 0; bottom: 0; left: var(--pipe-x); width: 30px; transform: translateX(-50%); overflow: hidden; pointer-events: none; }
+  .pipe__fill { position: absolute; inset: 0 auto 0 50%; width: var(--pipe-w); transform: translateX(-50%); border-radius: 0 0 3px 3px;
+    background: linear-gradient(to bottom, var(--color-water) 0, var(--color-water) var(--warm-at, 30%), var(--color-copper) calc(var(--warm-at, 30%) + 160px), var(--color-copper) 100%); }
+  .pipe__fill::after { content: ''; position: absolute; top: 0; bottom: 0; left: 1.5px; width: 1.5px; background: oklch(100% 0 0 / 0.45); }
+  .pipe__cover { position: absolute; inset: 0; background: linear-gradient(to right, var(--color-paper) calc(50% - var(--pipe-w) / 2), var(--color-track) calc(50% - var(--pipe-w) / 2), var(--color-track) calc(50% + var(--pipe-w) / 2), var(--color-paper) calc(50% + var(--pipe-w) / 2)); will-change: transform; }
+  .pipe__drop { position: absolute; top: 0; left: 50%; width: 18px; height: 18px; margin: -22px 0 0 -9px; will-change: transform; }
+  .pipe__drop span { display: block; width: 100%; height: 100%; border-radius: 50% 0 50% 50%; transform: rotate(-45deg); background: var(--color-water); box-shadow: 0 0 0 3px var(--color-paper); }
+  .pipe__drop.is-warm span { background: var(--color-copper); box-shadow: 0 0 0 3px var(--color-paper), 0 0 14px 2px var(--color-copper-glow); }
+  @media (prefers-reduced-motion: no-preference) {
+    .pipe__drop span { animation: bob 2.4s var(--ease-in-out) infinite; }
+    .pipe__drop.is-moving span { animation: none; }
+  }
+  @keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 4px; } }
+
+  .st { position: relative; padding: var(--space-2xl) 0 var(--space-xl); scroll-margin-top: 64px; }
+  .st + .st { border-top: var(--rule-w) solid var(--color-rule); }
+  .st__fit { position: absolute; top: calc(var(--space-2xl) - 6px); left: calc(var(--pipe-x) - var(--content-left) - 20px); width: 64px; height: 40px; color: var(--color-track); }
+  .st__fit rect { fill: currentColor; }
+  .st__fit-ring { stroke: var(--color-paper); stroke-width: 2; }
+  .st:global(.is-reached) .st__fit { color: var(--color-water); }
+  .st:global(.is-reached)[data-temp='warm'] .st__fit { color: var(--color-copper); }
+  @media (prefers-reduced-motion: no-preference) { .st__fit { transition: color var(--dur-slow) var(--ease-out); } }
+  .st__label { font: 600 var(--text-sm)/1.2 var(--font-body); color: var(--color-ink-2); margin: 0 0 var(--space-sm) var(--space-md); min-height: 28px; display: flex; align-items: center; gap: var(--space-xs); }
+  .st__label .num { color: var(--color-copper-ink); }
+  .st[data-temp='kalt'] .st__label .num { color: var(--color-deep-2); }
+  .st__body { display: grid; gap: var(--space-xl); }
+  .st__lead { margin-top: var(--space-md); color: var(--color-ink-2); max-width: var(--measure); }
+  .st__cta { margin-top: var(--space-lg); }
+  .st__prices ul { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--color-ink); }
+  .st__prices li { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-md); padding: var(--space-sm) 0; border-bottom: var(--rule-w) solid var(--color-rule); }
+  .st__prices small { color: var(--color-ink-2); font-size: var(--text-xs); }
+  .st__prices .mwst { margin-top: var(--space-xs); }
+  .st__tool h3 { margin-bottom: var(--space-md); }
+  .st__paar { margin: 0; display: grid; gap: var(--space-sm); max-width: 24rem; }
+  .st__paar img, .ref img, .st__wimg, .ablauf__img { border-radius: var(--radius); width: 100%; object-fit: cover; }
+  .st__paar img { aspect-ratio: 3 / 4; }
+  .st__paar figcaption { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .ref { margin: 0; }
+  .ref img { aspect-ratio: 4 / 3; }
+  .ref ul, .ref figcaption ul { list-style: none; padding: 0; margin: var(--space-2xs) 0 0; font-size: var(--text-sm); color: var(--color-ink-2); }
+  .ref p, .ref figcaption strong { display: block; margin-top: var(--space-sm); }
+  .refs h3 { margin-bottom: var(--space-md); }
+  .refs__list { list-style: none; margin: 0 calc(-1 * var(--gutter)) 0 0; padding: 0 var(--gutter) var(--space-xs) 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(15rem, 78%); gap: var(--space-md); overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
+  .refs__list > li { scroll-snap-align: start; }
+  .st__wartung { display: grid; gap: var(--space-lg); }
+  .st__wimg { aspect-ratio: 4 / 3; max-width: 30rem; }
+  .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-xs); }
+  .checks li { padding-left: 1.6rem; position: relative; }
+  .checks li::before { content: ''; position: absolute; left: 0; top: 0.55em; width: 0.9rem; height: 0.5rem; border-left: 2.5px solid var(--color-copper); border-bottom: 2.5px solid var(--color-copper); transform: rotate(-45deg); }
+  @media (min-width: 64rem) {
+    .st__body { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--space-2xl); align-items: start; }
+    .refs, .st__wartung { grid-column: 1 / -1; }
+    .refs__list { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; margin-right: 0; padding-right: 0; }
+    .st__wartung { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--space-2xl); }
+    .st__wartung > :global(.af) { grid-column: 2; grid-row: 1 / span 3; }
+  }
+
+  .ablauf, .faq, .anfrage-wrap { padding-left: var(--content-left); }
+  .ablauf { margin-top: var(--space-2xl); }
+  .ablauf__in, .faq__in { max-width: 48rem; }
+  .ablauf__list { list-style: none; margin: var(--space-lg) 0; padding: 0; counter-reset: s; display: grid; gap: var(--space-lg); }
+  .ablauf__list li { counter-increment: s; display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); column-gap: var(--space-sm); }
+  .ablauf__list li::before { content: counter(s); grid-row: span 2; font: 500 var(--text-xl)/1 var(--font-display); color: var(--color-copper-ink); }
+  .ablauf__list p { color: var(--color-ink-2); margin-top: var(--space-2xs); }
+  .ablauf__img { aspect-ratio: 4 / 3; max-width: 34rem; }
+  .ablauf__note { margin-top: var(--space-md); font-size: var(--text-sm); color: var(--color-ink-2); }
+  .faq { margin-top: var(--space-3xl); }
+  .faq h2 { margin-bottom: var(--space-lg); }
+  .faq__item { border-top: var(--rule-w) solid var(--color-rule); }
+  .faq__item:last-child { border-bottom: var(--rule-w) solid var(--color-rule); }
+  .faq__item summary { cursor: pointer; padding: var(--space-md) 0; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: var(--space-md); }
+  .faq__item summary::-webkit-details-marker { display: none; }
+  .faq__item summary::after { content: '+'; font: 500 1.4rem/1 var(--font-display); color: var(--color-copper-ink); }
+  .faq__item[open] summary::after { content: '–'; }
+  .faq__item p { padding-bottom: var(--space-md); color: var(--color-ink-2); }
+  .anfrage-wrap { margin-top: var(--space-3xl); scroll-margin-top: 64px; }
+</style>
+
+<script>
+  import { startCaustics } from '../scripts/caustics';
+  const cv = document.querySelector<HTMLCanvasElement>('[data-caustics]');
+  if (cv) {
+    const go = () => startCaustics(cv);
+    ('requestIdleCallback' in window) ? (window as any).requestIdleCallback(go, { timeout: 800 }) : setTimeout(go, 200);
+  }
+
+  // Kupferrohr: gezeichnet bis zur aktuellen Scrollposition, Tropfen = Fortschritt.
+  const journey = document.querySelector<HTMLElement>('[data-journey]');
+  if (journey) {
+    const fill = journey.querySelector<HTMLElement>('[data-pipe-fill]')!;
+    const cover = journey.querySelector<HTMLElement>('[data-pipe-cover]')!;
+    const drop = journey.querySelector<HTMLElement>('[data-pipe-drop]')!;
+    const stations = [...journey.querySelectorAll<HTMLElement>('[data-station]')];
+    const warmSt = stations.find((s) => s.dataset.temp === 'warm');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let top = 0, height = 0, warmAt = 0, marks: number[] = [], raf = 0, idle = 0;
+    const measure = () => {
+      const r = journey.getBoundingClientRect();
+      top = r.top + scrollY; height = journey.offsetHeight;
+      warmAt = warmSt ? warmSt.offsetTop + 30 : height;
+      marks = stations.map((s) => s.offsetTop + 40);
+      fill.style.setProperty('--warm-at', `${warmAt}px`);
+      if (reduced) cover.style.display = 'none';
+      paint();
+    };
+    const paint = () => {
+      raf = 0;
+      const y = Math.max(0, Math.min(height, scrollY + innerHeight * 0.55 - top));
+      if (!reduced) cover.style.transform = `translateY(${y}px)`;
+      drop.style.transform = `translateY(${y}px)`;
+      drop.classList.toggle('is-warm', y > warmAt);
+      stations.forEach((s, i) => s.classList.toggle('is-reached', y >= marks[i]));
+      drop.classList.add('is-moving');
+      clearTimeout(idle);
+      idle = window.setTimeout(() => drop.classList.remove('is-moving'), 400);
+    };
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(paint); }, { passive: true });
+    new ResizeObserver(measure).observe(journey);
+    addEventListener('load', measure);
+    measure();
+  }
+</script>

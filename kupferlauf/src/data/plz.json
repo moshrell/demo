@@ -1,0 +1,17 @@
+{
+  "zones": [
+    { "id": 1, "label": "Kerngebiet", "fee": 0, "text": "Anfahrt inklusive." },
+    { "id": 2, "label": "Nahbereich", "fee": 29, "text": "Anfahrtspauschale 29 €." },
+    { "id": 3, "label": "Randbereich", "fee": 49, "text": "Anfahrtspauschale 49 €." }
+  ],
+  "plz": {
+    "30823": [1, "Garbsen"], "30826": [1, "Garbsen"], "30827": [1, "Garbsen"],
+    "30926": [1, "Seelze"],
+    "30419": [2, "Hannover-Herrenhausen/Ledeburg"], "30451": [2, "Hannover-Linden-Nord"], "30453": [2, "Hannover-Linden/Limmer"],
+    "30455": [2, "Hannover-Badenstedt/Davenstedt"], "30457": [2, "Hannover-Wettbergen/Mühlenberg"],
+    "30165": [2, "Hannover-Vahrenwald/Hainholz"], "30167": [2, "Hannover-Nordstadt"], "30169": [2, "Hannover-Calenberger Neustadt"], "30179": [2, "Hannover-Vahrenheide/Sahlkamp"],
+    "30851": [2, "Langenhagen"], "30853": [2, "Langenhagen"], "30855": [2, "Langenhagen"],
+    "31515": [2, "Wunstorf"], "30890": [2, "Barsinghausen"], "30952": [2, "Ronnenberg"],
+    "31535": [3, "Neustadt am Rübenberge"], "30916": [3, "Isernhagen"]
+  }
+}

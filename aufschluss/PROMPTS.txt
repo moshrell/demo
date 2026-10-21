@@ -1,0 +1,57 @@
+PROMPTS ДЛЯ GEMINI: Aufschluss Schlüsseldienst (демо)
+
+Как работать:
+- Все 9 кадров делай в ОДНОМ чате Gemini, по порядку (единый свет и стиль).
+- Перед каждым промптом нажми кнопку формата из заголовка.
+- Сохраняй ТОЧНО под указанными именами (jpg) в папку проекта:
+  репозиторий moshrell/demo → aufschluss/src/assets/img/   (на ПК: D:\Webdesign\aufschluss\src\assets\img\)
+  Сжимать не нужно: сборка сама делает лёгкие WebP нужного размера.
+- Кадр 01 (ключ) должен быть на ЧИСТО ЧЁРНОМ фоне: сайт сам «убирает» чёрный, вырезать фон не надо. Если фон получился серым или с тенью, попроси в том же чате «pure black background #000000, no shadow».
+- На кадрах нет текста, цифр, логотипов. Если Gemini нарисовал надпись, перегенерируй.
+- Если кадр не понравился: «сделай другой вариант», сохрани под тем же именем.
+- Сайт работает и без фото (спокойные плашки на их месте), так что можно добавлять по одному.
+
+====================================================================
+01 · schluessel.jpg · формат 3:4
+====================================================================
+Studio product photograph of a single polished brass cylinder lock key, standing perfectly vertical in the center of the frame: the round key head (bow) at the top, the flat serrated key blade pointing straight down. The key fills about 70 percent of the frame height. Pure solid black background (#000000), completely even, no gradient, no floor, no reflection, no cast shadow. Warm soft studio light from the upper left that makes the brass glow golden with a gentle highlight along the edge of the blade. Front view, perfectly flat to the camera, no perspective tilt. Sharp macro detail of the brass texture and the cut teeth. No text, no numbers, no engraving, no logo, no keyring, no hand. Realistic, high resolution.
+
+====================================================================
+02 · zylinder-nah.jpg · формат 4:3
+====================================================================
+Close-up photograph of a modern brass-colored profile lock cylinder in a matte off-white apartment front door in Germany, with a simple dark security door plate around it. The keyhole is in the center-left of the frame, the rest of the frame is the calm off-white door surface. Soft warm evening light from the side, shallow depth of field, honest documentary style, slightly desaturated natural colors with warm white, ink black and brass as the only tones. No key inserted, no hands, no text, no numbers, no brand names, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+03 · montage-schloss.jpg · формат 4:3
+====================================================================
+Documentary photograph of a locksmith's hands installing a new security door fitting (a solid dark protective door handle plate with cylinder guard) on the inside of an off-white apartment front door in a German apartment building. The craftsman wears a dark work jacket with plain sleeves; only his hands and forearms are visible, no face. A cordless screwdriver and a few brass screws lie on a small dark cloth on the floor. Soft warm daylight from a hallway window, calm and honest documentary style, slightly desaturated natural colors with warm white, ink black and brass accents. No text, no brand names, no logos on tools or clothing, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+04 · schliessanlage-schluessel.jpg · формат 4:3
+====================================================================
+Overhead still-life photograph of a neatly arranged set of identical new brass system keys for a building master key system, laid out in tidy rows on a matte warm off-white surface. Each key has a small blank round brass tag on a thin ring. Two keys in the corner are slightly separated as if for the main entrance. Soft even daylight from the top left, gentle soft shadows, calm and precise documentary product photography, slightly desaturated natural colors with warm white, ink black and brass as the only tones. No text, no numbers, no engraving, no labels, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+05 · hauseingang-mfh.jpg · формат 3:4
+====================================================================
+Vertical architectural photograph of the entrance of a well-kept 1950s apartment building in Hannover, Germany: a plain light plaster facade, a dark modern glass and steel entrance door with a vertical handle, a row of matte dark mailboxes beside it, two low steps and a simple wall lamp. Overcast late afternoon light, calm and honest documentary architecture photography, 35mm lens at eye level, slightly desaturated natural colors with warm white, ink black and brass accents. No people, no house numbers, no name plates, no text, no signs, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+06 · meister-werkzeug.jpg · формат 4:3
+====================================================================
+Documentary photograph of a locksmith master craftsman in his small workshop, seen from the side at chest height: we see his dark work jacket, his forearms and his hands carefully filing a brass key held in a small bench vise. His face is out of frame or turned away and not recognizable. On the wooden workbench lie key blanks, a few brass lock cylinders and simple hand tools; behind him a wall of warm off-white with a dark pegboard. Warm soft light from a workshop lamp, calm and honest documentary style, slightly desaturated natural colors with warm white, ink black and brass as the main tones. No text, no brand names, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+07 · haustuer-zusatzschloss.jpg · формат 4:3
+====================================================================
+Documentary photograph of the inside of the front door of a detached family house in Germany, an off-white wooden door with a newly installed solid dark additional surface-mounted security lock with a horizontal steel locking bar across the door, mounted at chest height. Hallway with light wooden floor and a calm warm white wall beside the door. Soft warm daylight, calm and honest documentary style, slightly desaturated natural colors with warm white, ink black and brass accents. No people, no text, no brand names, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+08 · tresor.jpg · формат 4:3
+====================================================================
+Documentary photograph of a compact dark graphite home safe with a brass-colored key lock and a simple handle, installed and anchored in the lower part of a built-in white wardrobe in a calm German home. The safe door is closed. Soft warm daylight from the side, calm and honest documentary style, slightly desaturated natural colors with warm white, ink black and brass accents. No people, no digital keypad, no numbers, no text, no brand names, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+09 · briefkasten.jpg · формат 4:3
+====================================================================
+Close-up documentary photograph of a matte dark metal wall mailbox next to a house entrance in Germany, with a small brass mailbox lock and a key just inserted into it. Light plaster wall around it, soft overcast daylight, shallow depth of field, calm and honest documentary style, slightly desaturated natural colors with warm white, ink black and brass accents. No hands, no name plate, no text, no numbers, no logos, no watermark. Realistic, sharp, high resolution.

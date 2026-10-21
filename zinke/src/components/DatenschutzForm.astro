@@ -1,0 +1,15 @@
+---
+/** Datenschutz-Abschnitt zum Formular (Muster). Texte pro Kunde anpassen: Zweck, Speicherdauer, Dienstleister. */
+import site from '../data/site.json';
+const { formName = 'Anfrage-Formular', data = 'Name, Telefonnummer, E-Mail-Adresse (freiwillig), Nachricht (freiwillig) und Ihre Auswahl', purpose = 'Wir bearbeiten Ihre Anfrage und melden uns bei Rückfragen bei Ihnen.', retention = 'Wir löschen Ihre Angaben, sobald die Anfrage erledigt ist, spätestens nach 30 Tagen, sofern keine gesetzliche Aufbewahrungspflicht besteht.' } = Astro.props;
+---
+<h2>{formName}</h2>
+<p><strong>Demo-Hinweis:</strong> In dieser Beispielseite wird nichts gesendet oder gespeichert. Die folgenden Angaben zeigen, was bei einem echten Betrieb hier stehen muss.</p>
+<p><strong>Verantwortlicher:</strong> {site.name}, {site.address.street}, {site.address.zip} {site.address.city} (fiktiv). Kontakt: {site.email}</p>
+<p><strong>Welche Daten:</strong> {data}.</p>
+<p><strong>Wozu:</strong> {purpose} Sie erteilen dafür vor dem Absenden Ihre Einwilligung per Häkchen. Rechtsgrundlage ist die Vertragsanbahnung und -erfüllung (Art. 6 Abs. 1 lit. b DSGVO, die europäische Datenschutz-Grundverordnung).</p>
+<p><strong>Wie lange:</strong> {retention}</p>
+<p><strong>Weitergabe:</strong> Keine Weitergabe an Dritte. Die Daten werden nicht für Werbung genutzt.</p>
+<p><strong>Ihre Rechte:</strong> Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch und Datenübertragbarkeit (Art. 15 bis 21 DSGVO). Sie können die Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen und sich bei der Datenschutzaufsichtsbehörde Ihres Bundeslandes beschweren.</p>
+<p><strong>Zwischenspeicher:</strong> Ihre Eingaben werden zur Sicherheit nur temporär im Browser dieses Tabs (sessionStorage) zwischengespeichert und nach dem Absenden oder Schließen des Tabs gelöscht; sie werden nicht an uns übertragen. Das Häkchen zur Einwilligung wird nie gespeichert.</p>
+<p><strong>Freiwilligkeit:</strong> Die Angabe der Daten ist freiwillig. Ohne Name und Telefonnummer können wir die Anfrage aber nicht bearbeiten.</p>

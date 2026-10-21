@@ -1,20 +1,16 @@
 ---
 // Foto aus src/assets/img/<name>.jpg (Gemini, siehe PROMPTS.txt). Astro macht daraus beim Build WebP in passenden Größen.
-// Fehlt die Datei noch, steht eine ruhige Fläche im gleichen Format da (kein Stockfoto, kein Platzhalterbild).
+// Fehlt die Datei noch, wird nichts gerendert (kein Platzhalter): Layout funktioniert auch ohne Bild.
 import { Picture } from 'astro:assets';
 const { name, alt, ratio = '4 / 3', sizes = '(min-width: 46rem) 44rem, 100vw', widths = [360, 560, 800, 1100], class: cls = '', eager = false } = Astro.props;
 const files = import.meta.glob<{ default: ImageMetadata }>('../assets/img/*.{jpg,jpeg,png,webp}', { eager: true });
 const hit = Object.entries(files).find(([p]) => p.split('/').pop()!.replace(/\.\w+$/, '') === name);
 const img = hit?.[1].default;
 ---
-{img ? (
+{img && (
   <Picture src={img} alt={alt} widths={widths.filter((w) => w <= img.width)} sizes={sizes} formats={['webp']} quality={72} loading={eager ? 'eager' : 'lazy'} decoding="async" class={`foto ${cls}`} style={`aspect-ratio:${ratio}`} />
-) : (
-  <div class={`foto foto--leer ${cls}`} style={`aspect-ratio:${ratio}`} role="img" aria-label={alt}><span>Bild folgt</span></div>
 )}
 <style>
   .foto { width: 100%; object-fit: cover; border-radius: var(--radius); background: var(--color-paper-3); }
   :global(picture) { display: block; }
-  .foto--leer { display: grid; place-items: end start; padding: var(--space-sm); background: repeating-linear-gradient(135deg, var(--color-paper-2) 0 12px, var(--color-paper-3) 12px 13px); }
-  .foto--leer span { font-size: var(--text-sm); color: var(--color-ink-2); }
 </style>

@@ -8,7 +8,7 @@ const ANGLE: Record<Mode, number> = { notfall: 0, vorsorge: 90 };
 const mode = (): Mode => (root.dataset.mode === 'vorsorge' ? 'vorsorge' : 'notfall');
 const rot = (deg: number) => kern && (kern.style.setProperty('--rot', `${deg}deg`));
 
-function setMode(m: Mode, opts: { scrollTo?: Element | null; push?: boolean } = {}) {
+function setMode(m: Mode, opts: { scrollTo?: Element | null; keepHash?: boolean } = {}) {
   const changed = m !== mode();
   root.dataset.mode = m;
   document.querySelectorAll<HTMLButtonElement>('[data-mode-btn]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.modeBtn === m)));
@@ -18,15 +18,16 @@ function setMode(m: Mode, opts: { scrollTo?: Element | null; push?: boolean } = 
   if (changed && 'vibrate' in navigator) try { navigator.vibrate(10); } catch {}
   const target = opts.scrollTo;
   const hash = target && target.id && target.id !== 'notfall' ? `#${target.id}` : m === 'vorsorge' ? '#vorsorge' : '';
-  try { history.replaceState(null, '', hash || location.pathname); } catch {}
+  if (!opts.keepHash) try { history.replaceState(null, '', hash || location.pathname); } catch {}
   if (target && target.id !== 'notfall' && target.id !== 'vorsorge') target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   else if (changed) scrollTo({ top: 0, behavior: 'auto' });
 }
 
 // Startzustand (Inline-Skript im <head> hat data-mode schon gesetzt)
 rot(ANGLE[mode()]);
-setMode(mode());
-if (location.hash.length > 1) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+setMode(mode(), { keepHash: true });
+// Sprung-Link (z. B. QR auf #b2b): nach dem Aufbau zum Ziel scrollen
+if (location.hash.length > 1) requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView({ behavior: 'instant' as ScrollBehavior }));
 
 document.querySelectorAll<HTMLButtonElement>('[data-mode-btn]').forEach((b) => b.addEventListener('click', () => setMode(b.dataset.modeBtn as Mode)));
 
@@ -77,3 +78,9 @@ function hint() {
 }
 if (root.classList.contains('intro')) root.addEventListener('intro:done', () => setTimeout(hint, 200), { once: true });
 else setTimeout(hint, 600);
+
+// Tastatur offen? Beim Fokus in Textfeldern die untere Leiste ausblenden (CSS: html.tippt, nur Touch-Geräte)
+const TEXT = 'input:not([type=radio]):not([type=checkbox]):not([type=file]), textarea';
+let tOut: number | undefined;
+document.addEventListener('focusin', (e) => { if ((e.target as Element).matches?.(TEXT)) { clearTimeout(tOut); root.classList.add('tippt'); } });
+document.addEventListener('focusout', (e) => { if ((e.target as Element).matches?.(TEXT)) tOut = window.setTimeout(() => root.classList.remove('tippt'), 120); });

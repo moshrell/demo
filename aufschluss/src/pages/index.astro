@@ -26,11 +26,11 @@ AUF.T=${JSON.stringify(preise.tarife)};AUF.W=${JSON.stringify(site.werkstatt)};`
   <script slot="head" is:inline set:html={headScript} />
   <Intro />
   <Kopf />
-  <script is:inline>window.AUF && window.AUF.fill();</script>
   <main id="inhalt">
     <Notfall />
     <Vorsorge />
   </main>
+  <script is:inline>window.AUF && window.AUF.fill();</script>
   <Leiste />
 </Base>
 <script>

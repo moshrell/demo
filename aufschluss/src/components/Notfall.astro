@@ -6,88 +6,66 @@ import preise from '../data/preise.json';
 import einsaetze from '../data/einsaetze.json';
 import faq from '../data/faq.json';
 import Icon from './Icon.astro';
-const tag = preise.tarife[0];
 const min = (k: 'zugefallen' | 'abgeschlossen') => Math.min(...preise.tarife.map((t) => t[k]));
 const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent('Hallo, ich habe mich ausgesperrt. PLZ: , Adresse: ')}`;
 const vz = 'https://www.verbraucherzentrale.de/wissen/vertraege-reklamation/abzocke/schluesseldienste-so-schuetzen-sie-sich-vor-ueberzogen-hohen-rechnungen-6687';
 ---
 <section class="bereich notfall" id="notfall" data-mode-panel="notfall" aria-labelledby="nf-h">
-  <div class="wrap hero">
+  <div class="wrap wrap--hero hero">
+    <p class="hero__live"><span class="hero__dot" aria-hidden="true"></span><span data-live-jetzt>Notdienst rund um die Uhr</span></p>
     <h1 id="nf-h" class="hero__h">Tür zu?<br />Wir öffnen.<span class="sr-only"> Schlüsseldienst in Hannover zum Festpreis.</span></h1>
 
-    <div class="live" aria-live="polite">
-      <p class="live__jetzt" data-live-jetzt>Festpreise je nach Uhrzeit</p>
-      <dl class="live__preise">
-        <div><dt>Zugefallen</dt><dd class="num" data-live-zu>ab {min('zugefallen')} €</dd></div>
-        <div><dt>Abgeschlossen</dt><dd class="num" data-live-ab>ab {min('abgeschlossen')} €</dd></div>
-      </dl>
-      <p class="live__plus">+ Anfahrt 0–25 € je nach PLZ · {preise.mwst}</p>
+    <div class="preis" data-rechner role="group" aria-label="Festpreis und Anruf">
+      <fieldset class="preis__arten">
+        <legend>Wie ist die Tür zu?</legend>
+        <label class="kachel"><input type="radio" name="art" value="zugefallen" checked /><span class="kachel__in"><span class="kachel__name">Zugefallen</span><span class="kachel__preis num" data-live-zu>ab {min('zugefallen')} €</span></span></label>
+        <label class="kachel"><input type="radio" name="art" value="abgeschlossen" /><span class="kachel__in"><span class="kachel__name">Abgeschlossen</span><span class="kachel__preis num" data-live-ab>ab {min('abgeschlossen')} €</span></span></label>
+      </fieldset>
+      <p class="preis__erkl" data-erkl>{preise.arten.zugefallen.kurz}</p>
+      <div class="hero__cta">
+        <a class="anruf" href={`tel:${site.phoneHref}`} data-call>
+          <Icon name="phone" class="icon anruf__i" />
+          <span class="anruf__t"><span>Jetzt anrufen</span><span class="anruf__nr num">{site.phone}</span></span>
+        </a>
+        <a class="wa" href={wa} target="_blank" rel="noopener" data-wa><Icon name="message-circle" /><span>oder per WhatsApp schreiben</span></a>
+      </div>
+      <div class="preis__plz">
+        <div class="preis__feld">
+          <label for="r-plz">Ihre PLZ: Preis mit Anfahrt</label>
+          <input id="r-plz" name="plz" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="z. B. 30451" maxlength="5" aria-describedby="r-zone" />
+        </div>
+        <p class="preis__summe" aria-live="polite"><span class="preis__slabel">Summe</span><strong class="num" data-s-total>–</strong><span class="preis__ssub" data-s-sub>+ Anfahrt 0–25 €</span></p>
+      </div>
+      <p class="preis__zone" id="r-zone" data-zone>Stadt Hannover 0 €, Nachbarorte 15 €, Region 25 €.</p>
     </div>
 
-    <a class="anruf" href={`tel:${site.phoneHref}`} data-call>
-      <Icon name="phone" class="icon anruf__i" />
-      <span class="anruf__t"><span>Jetzt anrufen</span><span class="anruf__nr num">{site.phone}</span></span>
-    </a>
-    <a class="wa" href={wa} target="_blank" rel="noopener" data-wa>
-      <Icon name="message-circle" /><span>Lieber schreiben: WhatsApp</span>
-    </a>
-    <p class="hero__note">Schlüsseldienst in Hannover. Den Gesamtpreis nennen wir am Telefon, bevor wir losfahren. Zahlung mit Karte oder bar, mit Rechnung.</p>
+    <p class="hero__note">Festpreise {preise.mwst}. Den Gesamtpreis sagen wir Ihnen am Telefon, bevor wir losfahren. Zahlung mit Karte oder bar, immer mit Rechnung.</p>
   </div>
   <script is:inline>window.AUF && window.AUF.fill();</script>
-
-  <div class="block block--2" id="rechner">
-    <div class="wrap">
-      <h2>Was kostet es bei Ihnen?</h2>
-      <form class="rechner" data-rechner novalidate>
-        <div class="feld">
-          <label for="r-plz">Ihre Postleitzahl</label>
-          <input id="r-plz" name="plz" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="z. B. 30451" maxlength="5" pattern="[0-9]{5}" aria-describedby="r-zone" />
-          <p class="feld__info" id="r-zone" data-zone aria-live="polite">Fünf Ziffern, dann sehen Sie die Anfahrt.</p>
-        </div>
-        <fieldset class="seg">
-          <legend>Wie ist die Tür zu?</legend>
-          <label><input type="radio" name="art" value="zugefallen" checked /><span>Zugefallen</span></label>
-          <label><input type="radio" name="art" value="abgeschlossen" /><span>Abgeschlossen</span></label>
-        </fieldset>
-        <p class="rechner__erkl" data-erkl>{preise.arten.zugefallen.erklaerung}</p>
-        <fieldset class="seg seg--klein">
-          <legend>Wann?</legend>
-          <label><input type="radio" name="wann" value="jetzt" checked /><span>Jetzt</span></label>
-          {preise.tarife.map((t) => <label><input type="radio" name="wann" value={t.id} /><span>{t.name.replace(' und ', '/')}</span></label>)}
-        </fieldset>
-        <dl class="summe num" data-summe>
-          <div><dt data-s-tarif>Festpreis Türöffnung</dt><dd data-s-preis>{tag.zugefallen} €</dd></div>
-          <div><dt data-s-zone>Anfahrt (PLZ fehlt)</dt><dd data-s-anfahrt>0–25 €</dd></div>
-          <div class="summe__total"><dt>Summe</dt><dd data-s-total>–</dd></div>
-        </dl>
-        <p class="rechner__out" data-ausserhalb hidden></p>
-        <p class="rechner__note">{preise.mwst}. Diesen Preis nennen wir Ihnen auch am Telefon, bevor wir losfahren.</p>
-        <a class="anruf anruf--klein" href={`tel:${site.phoneHref}`} data-call>
-          <Icon name="phone" class="icon anruf__i" /><span class="anruf__t"><span data-call-label>Zu diesem Preis anrufen</span></span>
-        </a>
-      </form>
-    </div>
-  </div>
 
   <div class="block" id="preise">
     <div class="wrap">
       <h2>Alle Preise</h2>
-      <p class="block__lead">Festpreise für die Türöffnung, {preise.mwst}. Die Zeile „jetzt“ gilt gerade.</p>
-      <div class="tabelle" role="table" aria-label="Festpreise Türöffnung">
-        <div class="tabelle__kopf" role="row"><span role="columnheader">Wann</span><span role="columnheader">Zugefallen</span><span role="columnheader">Abgeschl.</span></div>
+      <p class="block__lead">Festpreise für die Türöffnung, {preise.mwst}. Markiert ist, was gerade gilt.</p>
+      <ul class="tarife">
         {preise.tarife.map((t) => (
-          <div class="tabelle__zeile" role="row" data-tarif-row={t.id}>
-            <span role="cell" class="tabelle__wann"><strong>{t.name}</strong><span>{t.wann}</span><span class="tabelle__jetzt">jetzt</span></span>
-            <span role="cell" class="num">{t.zugefallen} €</span>
-            <span role="cell" class="num">{t.abgeschlossen} €</span>
-          </div>
+          <li class="tarif" data-tarif-row={t.id}>
+            <p class="tarif__kopf"><strong>{t.name}</strong><span>{t.wann}</span><span class="tarif__jetzt">gilt jetzt</span></p>
+            <dl class="tarif__preise num">
+              <div><dt>zugefallen</dt><dd>{t.zugefallen} €</dd></div>
+              <div><dt>abgeschlossen</dt><dd>{t.abgeschlossen} €</dd></div>
+            </dl>
+          </li>
         ))}
-      </div>
+      </ul>
       <dl class="extras">
         <div><dt>Anfahrt</dt><dd>Stadt Hannover 0 € · Nachbarorte 15 € · Region 25 €</dd></div>
         {preise.extras.map((e) => <div><dt>{e.name}</dt><dd><strong class="num">{e.preis}</strong> {e.text}</dd></div>)}
       </dl>
-      <p class="block__lead">Zugefallen oder abgeschlossen? <strong>Zugefallen:</strong> {preise.arten.zugefallen.erklaerung} <strong>Abgeschlossen:</strong> {preise.arten.abgeschlossen.erklaerung}</p>
+      <dl class="extras extras--arten">
+        <div><dt>Zugefallen</dt><dd>{preise.arten.zugefallen.erklaerung}</dd></div>
+        <div><dt>Abgeschlossen</dt><dd>{preise.arten.abgeschlossen.erklaerung}</dd></div>
+      </dl>
     </div>
   </div>
   <script is:inline>window.AUF && window.AUF.fill();</script>
@@ -135,63 +113,72 @@ const vz = 'https://www.verbraucherzentrale.de/wissen/vertraege-reklamation/abzo
 <style>
   .bereich { padding-bottom: var(--space-md); }
   .hero { padding-top: var(--space-md); padding-bottom: var(--space-xl); display: grid; gap: var(--space-sm); }
-  .hero__h { font-size: var(--text-display); line-height: 0.98; letter-spacing: -0.02em; }
-  .live { border-top: var(--rule-ink); border-bottom: var(--rule-ink); padding: var(--space-sm) 0; display: grid; gap: var(--space-xs); }
-  .live__jetzt { font-weight: 700; font-size: var(--text-sm); display: flex; align-items: center; gap: var(--space-xs); }
-  .live__jetzt::before { content: ''; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--color-brass); box-shadow: 0 0 0 3px var(--color-ink); flex: none; }
-  .live__preise { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-md); margin: 0; }
-  .live__preise dt { font-size: var(--text-sm); font-weight: 700; color: var(--color-ink-2); }
-  .live__preise dd { margin: 0; font-family: var(--font-display); font-size: var(--text-price); line-height: 1; white-space: nowrap; }
-  .live__plus { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .hero__live { display: flex; align-items: center; gap: var(--space-xs); font-weight: 700; font-size: var(--text-sm); }
+  .hero__dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--color-ok); box-shadow: 0 0 0 3px oklch(52% 0.13 150 / 0.2); flex: none; }
+  .hero__h { font-size: clamp(2.5rem, min(12.5vw, 11svh), 5.5rem); line-height: 0.98; letter-spacing: -0.02em; margin-bottom: var(--space-xs); }
   .hero__note { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .hero__cta { display: grid; gap: 0; margin-top: var(--space-2xs); }
+  .preis__plz { margin-top: var(--space-xs); }
 
-  .anruf { display: flex; align-items: center; gap: var(--space-md); min-height: 4.5rem; padding: var(--space-sm) var(--space-lg); background: var(--color-ink); color: var(--color-paper); border-radius: var(--radius-lg); text-decoration: none; box-shadow: inset 0 -4px 0 var(--color-brass); }
+  .preis { display: grid; gap: var(--space-xs); }
+  .preis__arten { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-xs); }
+  .preis__arten legend { padding: 0; margin-bottom: var(--space-xs); font-weight: 700; font-size: var(--text-sm); }
+  .kachel { position: relative; min-width: 0; }
+  .kachel input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+  .kachel__in { display: grid; gap: 0.15rem; height: 100%; padding: var(--space-sm) var(--space-sm) var(--space-xs); border: var(--rule-ink); border-radius: var(--radius); background: var(--color-paper); }
+  .kachel__name { font-weight: 700; font-size: var(--text-sm); hyphens: auto; }
+  .kachel__preis { font-family: var(--font-display); font-size: clamp(2rem, min(10vw, 8svh), 3.25rem); line-height: 1; white-space: nowrap; }
+  .kachel input:checked + .kachel__in { background: var(--color-ink); color: var(--color-paper); box-shadow: inset 0 -4px 0 var(--color-brass); }
+  .kachel input:checked + .kachel__in .kachel__preis { color: var(--color-brass-light); }
+  .kachel input:focus-visible + .kachel__in { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+  .preis__erkl { font-size: var(--text-sm); min-height: 2lh; }
+  .preis__plz { display: grid; grid-template-columns: minmax(0, 9rem) minmax(0, 1fr); gap: var(--space-sm); align-items: end; }
+  .preis__feld { display: grid; gap: var(--space-2xs); min-width: 0; }
+  .preis__feld label { font-weight: 700; font-size: var(--text-sm); line-height: 1.2; }
+  .preis__feld input { width: 100%; min-width: 0; min-height: 3rem; padding: 0.5rem 0.75rem; border: var(--rule-ink); border-radius: var(--radius); background: var(--color-paper); color: var(--color-ink); font: 700 1.375rem/1 var(--font-body); letter-spacing: 0.06em; font-variant-numeric: tabular-nums; }
+  .preis__feld input::placeholder { color: var(--color-ink-2); opacity: 0.8; font-weight: 400; font-size: 1rem; letter-spacing: 0; }
+  .preis__summe { display: grid; align-content: end; min-height: 3rem; padding: var(--space-2xs) var(--space-sm); border-radius: var(--radius); background: var(--color-paper-2); min-width: 0; }
+  .preis__slabel { font-size: 0.875rem; font-weight: 700; color: var(--color-ink-2); }
+  .preis__summe strong { font-family: var(--font-display); font-size: var(--text-xl); line-height: 1.05; }
+  .preis__ssub { font-size: 0.875rem; color: var(--color-ink-2); }
+  .preis__zone { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .preis__zone.is-ok { color: var(--color-ink); font-weight: 700; }
+  .preis__zone.is-nein { color: var(--color-alert); font-weight: 700; }
+  :global(html:not(.js)) .preis__plz, :global(html:not(.js)) .preis__zone { display: none; }
+
+  .anruf { display: flex; align-items: center; gap: var(--space-md); min-height: 4.25rem; padding: var(--space-sm) var(--space-lg); background: var(--color-ink); color: var(--color-paper); border-radius: var(--radius-lg); text-decoration: none; box-shadow: inset 0 -4px 0 var(--color-brass); }
   .anruf__i { width: 2rem; height: 2rem; color: var(--color-brass); }
   .anruf__t { display: grid; font-family: var(--font-display); font-size: var(--text-lg); line-height: 1.1; min-width: 0; }
   .anruf__nr { font-family: var(--font-body); font-weight: 700; font-size: var(--text-md); color: var(--color-brass-light); white-space: nowrap; }
   .anruf:focus-visible { outline-offset: 3px; }
-  .anruf--klein { min-height: 3.5rem; margin-top: var(--space-xs); }
-  .anruf--klein .anruf__t { font-size: var(--text-md); }
-  .wa { display: flex; align-items: center; justify-content: center; gap: var(--space-xs); min-height: 3rem; border: var(--rule-ink); border-radius: var(--radius-lg); text-decoration: none; font-weight: 700; }
+  .wa { display: flex; align-items: center; justify-content: center; gap: var(--space-xs); min-height: 2.75rem; font-weight: 700; text-underline-offset: 0.2em; }
+  .wa :global(.icon) { width: 1.2em; height: 1.2em; }
 
+  @media (max-width: 22.5rem) { .kachel__in { padding-inline: var(--space-xs); } .hero__live { font-size: 0.875rem; } }
+  /* Niedrige Telefone: enger, damit „Jetzt anrufen“ in den ersten Bildschirm passt (WhatsApp bleibt in der Leiste unten) */
+  @media (max-height: 36rem) and (max-width: 40rem) { .hero { gap: var(--space-xs); padding-top: var(--space-sm); } .kachel__in { padding-block: var(--space-xs); } .preis__erkl { min-height: 0; } .hero__cta .wa { display: none; } }
+  /* Telefon quer: zwei Spalten, damit Preis und „Jetzt anrufen“ ohne Scrollen sichtbar sind */
+  @media (orientation: landscape) and (max-height: 30rem) and (min-width: 34rem) {
+    .hero { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr); grid-template-areas: 'live form' 'h form' 'note form'; column-gap: var(--space-lg); align-items: start; padding-top: var(--space-sm); }
+    .hero__live { grid-area: live; } .hero__h { grid-area: h; font-size: clamp(2.2rem, 7vw, 3.5rem); } .preis { grid-area: form; } .hero__note { grid-area: note; }
+    .preis__erkl { min-height: 0; } .kachel__in { padding-block: var(--space-xs); } .kachel__preis { font-size: 2rem; } .hero__cta .wa { display: none; } .preis__arten legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  }
+  @media (min-width: 60rem) {
+    .hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); grid-template-areas: 'live form' 'h form' 'note form'; column-gap: var(--space-2xl); align-items: start; padding-top: var(--space-xl); padding-bottom: var(--space-2xl); }
+    .hero__live { grid-area: live; } .hero__h { grid-area: h; } .preis { grid-area: form; } .hero__note { grid-area: note; align-self: start; }
+  }
 
-  .rechner { display: grid; gap: var(--space-md); }
-  .feld { display: grid; gap: var(--space-2xs); }
-  .feld label, .seg legend { font-weight: 700; font-size: var(--text-sm); }
-  .feld input { width: 100%; min-height: 3.25rem; padding: 0.6rem 0.9rem; border: var(--rule-ink); border-radius: var(--radius); background: var(--color-paper); font: 700 1.5rem/1 var(--font-body); letter-spacing: 0.12em; font-variant-numeric: tabular-nums; }
-  .feld input::placeholder { color: var(--color-ink-2); opacity: 0.75; letter-spacing: 0.02em; font-weight: 400; font-size: 1.125rem; }
-  .feld__info { font-size: var(--text-sm); color: var(--color-ink-2); }
-  .feld__info.is-ok { color: var(--color-ink); font-weight: 700; }
-  .feld__info.is-nein { color: var(--color-alert); font-weight: 700; }
-  .seg { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xs); min-width: 0; }
-  .seg legend { padding: 0; margin-bottom: var(--space-xs); }
-  .seg--klein { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .seg label { position: relative; }
-  .seg input { position: absolute; opacity: 0; inset: 0; margin: 0; }
-  .seg span { display: flex; align-items: center; justify-content: center; min-height: 3rem; padding: var(--space-xs); border: var(--rule-ink); border-radius: var(--radius); text-align: center; font-weight: 700; line-height: 1.15; cursor: pointer; background: var(--color-paper); }
-  .seg--klein span { min-height: 2.75rem; font-size: var(--text-sm); }
-  .seg input:checked + span { background: var(--color-ink); color: var(--color-paper); }
-  .seg input:focus-visible + span { outline: 3px solid var(--color-focus); outline-offset: 2px; }
-  .rechner__erkl { font-size: var(--text-sm); }
-  .summe { margin: 0; border: var(--rule-ink); border-radius: var(--radius); background: var(--color-paper); }
-  .summe div { display: flex; justify-content: space-between; gap: var(--space-md); padding: var(--space-sm) var(--space-md); border-bottom: var(--rule); }
-  .summe dd { margin: 0; font-weight: 700; white-space: nowrap; }
-  .summe__total { border-bottom: 0 !important; background: var(--color-ink); color: var(--color-paper); }
-  .summe__total dt { font-weight: 700; }
-  .summe__total dd { font-family: var(--font-display); font-size: var(--text-xl); color: var(--color-brass-light); }
-  .rechner__out { font-weight: 700; color: var(--color-alert); }
-  .rechner__note { font-size: var(--text-sm); color: var(--color-ink-2); }
-
-  .tabelle { border-top: var(--rule-ink); margin-bottom: var(--space-lg); }
-  .tabelle__kopf, .tabelle__zeile { display: grid; grid-template-columns: minmax(0, 1fr) 5.2rem 5.2rem; gap: var(--space-xs); align-items: center; padding: var(--space-sm) var(--space-xs); border-bottom: var(--rule); }
-  .tabelle__kopf { font-size: 0.875rem; font-weight: 700; color: var(--color-ink-2); }
-  .tabelle__kopf span:not(:first-child), .tabelle__zeile .num { text-align: right; }
-  .tabelle__zeile .num { font-family: var(--font-display); font-size: var(--text-lg); }
-  .tabelle__wann { display: grid; font-size: var(--text-sm); line-height: 1.3; min-width: 0; }
-  .tabelle__wann span { color: var(--color-ink-2); }
-  .tabelle__jetzt { display: none; justify-self: start; margin-top: var(--space-2xs); padding: 0 var(--space-xs); border-radius: var(--radius); background: var(--color-ink); color: var(--color-brass-light) !important; font-weight: 700; }
-  .tabelle__zeile.is-jetzt { background: var(--color-brass-light); box-shadow: inset 4px 0 0 var(--color-ink); }
-  .tabelle__zeile.is-jetzt .tabelle__jetzt { display: inline-block; }
+  .tarife { list-style: none; margin: 0 0 var(--space-lg); padding: 0; border-top: var(--rule-ink); }
+  .tarif { display: grid; gap: var(--space-xs); padding: var(--space-sm) var(--space-xs); border-bottom: var(--rule); }
+  .tarif__kopf { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-sm); }
+  .tarif__kopf span { color: var(--color-ink-2); font-size: var(--text-sm); }
+  .tarif__kopf .tarif__jetzt { display: none; padding: 0 var(--space-xs); border-radius: var(--radius); background: var(--color-ink); color: var(--color-brass-light); font-weight: 700; }
+  .tarif__preise { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-sm); margin: 0; }
+  .tarif__preise dt { font-size: 0.875rem; color: var(--color-ink-2); }
+  .tarif__preise dd { margin: 0; font-family: var(--font-display); font-size: var(--text-lg); }
+  .tarif.is-jetzt { background: var(--color-brass-light); box-shadow: inset 4px 0 0 var(--color-ink); padding-left: var(--space-md); }
+  .tarif.is-jetzt .tarif__jetzt { display: inline-block; }
+  .tarif.is-jetzt .tarif__kopf span:not(.tarif__jetzt), .tarif.is-jetzt dt { color: var(--color-ink); }
   .extras { margin: 0 0 var(--space-lg); display: grid; gap: var(--space-sm); }
   .extras div { display: grid; gap: var(--space-2xs); padding-bottom: var(--space-sm); border-bottom: var(--rule); }
   .extras dt { font-weight: 700; }
@@ -220,7 +207,6 @@ const vz = 'https://www.verbraucherzentrale.de/wissen/vertraege-reklamation/abzo
   .faq summary::after { content: '+'; font-family: var(--font-display); font-size: var(--text-lg); flex: none; }
   .faq details[open] summary::after { content: '–'; }
   .faq details p { padding-bottom: var(--space-md); color: var(--color-ink-2); }
-  @media (min-width: 40rem) { .seg--klein { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 </style>
 
 <script>
@@ -228,68 +214,52 @@ const vz = 'https://www.verbraucherzentrale.de/wissen/vertraege-reklamation/abzo
   import preise from '../data/preise.json';
   import site from '../data/site.json';
   type Art = 'zugefallen' | 'abgeschlossen';
-  const form = document.querySelector<HTMLFormElement>('[data-rechner]');
+  const form = document.querySelector<HTMLElement>('[data-rechner]');
   if (form) {
     const $ = <T extends HTMLElement>(s: string) => form.querySelector<T>(s)!;
     const plz = $<HTMLInputElement>('#r-plz');
     const KEY = 'rechner';
-    const restore = () => {
-      try {
-        const d = JSON.parse(sessionStorage.getItem(KEY) || '{}');
-        if (d.plz) plz.value = d.plz;
-        if (d.art) (form.querySelector<HTMLInputElement>(`input[name=art][value=${d.art}]`)!).checked = true;
-        if (d.wann) (form.querySelector<HTMLInputElement>(`input[name=wann][value=${d.wann}]`)!).checked = true;
-      } catch {}
-    };
+    try {
+      const d = JSON.parse(sessionStorage.getItem(KEY) || '{}');
+      if (d.plz) plz.value = d.plz;
+      if (d.art) form.querySelector<HTMLInputElement>(`input[name=art][value=${d.art}]`)!.checked = true;
+    } catch {}
     const update = () => {
-      const art = (form.querySelector<HTMLInputElement>('input[name=art]:checked')!.value) as Art;
-      const wann = form.querySelector<HTMLInputElement>('input[name=wann]:checked')!.value;
-      const tid = wann === 'jetzt' ? (window as any).AUF?.now?.tarif ?? 'tag' : wann;
-      const t = preise.tarife.find((x) => x.id === tid)!;
+      const art = form.querySelector<HTMLInputElement>('input[name=art]:checked')!.value as Art;
+      const t = preise.tarife.find((x) => x.id === ((window as any).AUF?.now?.tarif ?? 'tag'))!;
       const z = zoneFuer(plz.value);
-      const zoneEl = $('[data-zone]');
-      const aus = $('[data-ausserhalb]');
-      $('[data-erkl]').textContent = preise.arten[art].erklaerung;
-      $('[data-s-tarif]').textContent = `${preise.arten[art].label}, ${t.kurz}`;
-      $('[data-s-preis]').textContent = euro(t[art]);
-      zoneEl.classList.remove('is-ok', 'is-nein');
-      aus.hidden = true;
-      let total: number | null = null;
+      const zone = $('[data-zone]');
+      $('[data-erkl]').textContent = preise.arten[art].kurz;
+      zone.classList.remove('is-ok', 'is-nein');
+      plz.removeAttribute('aria-invalid');
+      const total = $('[data-s-total]'), sub = $('[data-s-sub]');
       if (!z) {
-        zoneEl.textContent = plz.value ? 'Bitte fünf Ziffern eingeben.' : 'Fünf Ziffern, dann sehen Sie die Anfahrt.';
-        $('[data-s-zone]').textContent = 'Anfahrt (PLZ fehlt)';
-        $('[data-s-anfahrt]').textContent = '0–25 €';
+        zone.textContent = plz.value ? 'Bitte fünf Ziffern eingeben.' : 'Stadt Hannover 0 €, Nachbarorte 15 €, Region 25 €.';
+        total.textContent = euro(t[art]);
+        sub.textContent = '+ Anfahrt 0–25 €';
       } else if (!z.ok) {
-        zoneEl.textContent = 'Außerhalb unseres Gebiets.';
-        zoneEl.classList.add('is-nein');
-        aus.textContent = z.text;
-        aus.hidden = false;
-        $('[data-s-zone]').textContent = 'Anfahrt';
-        $('[data-s-anfahrt]').textContent = '–';
+        zone.textContent = z.text;
+        zone.classList.add('is-nein');
+        plz.setAttribute('aria-invalid', 'true');
+        total.textContent = '–';
+        sub.textContent = 'nicht in unserem Gebiet';
       } else {
-        zoneEl.textContent = `Ja, wir kommen: ${z.text}`;
-        zoneEl.classList.add('is-ok');
-        $('[data-s-zone]').textContent = `Anfahrt Zone ${z.zone} (${z.ort})`;
-        $('[data-s-anfahrt]').textContent = euro(z.anfahrt!);
-        total = t[art] + z.anfahrt!;
+        zone.textContent = `Ja, wir kommen: ${z.text}`;
+        zone.classList.add('is-ok');
+        total.textContent = euro(t[art] + z.anfahrt!);
+        sub.textContent = `inkl. Anfahrt ${euro(z.anfahrt!)}`;
       }
-      $('[data-s-total]').textContent = total === null ? (z && !z.ok ? '–' : `${euro(t[art])} + Anfahrt`) : euro(total);
-      $('[data-call-label]').textContent = total === null ? 'Jetzt anrufen' : `Für ${euro(total)} anrufen`;
       // WhatsApp-Text mit Angaben füllen (überall auf der Seite)
-      const txt = `Hallo, Tür ${art}${z?.ok ? `, PLZ ${plz.value.replace(/\D/g, '')}` : ''}. Adresse: `;
+      const txt = `Hallo, Tür ${art}${z?.ok ? `, PLZ ${plz.value}` : ''}. Adresse: `;
       document.querySelectorAll<HTMLAnchorElement>('a[data-wa]').forEach((a) => { a.href = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(txt)}`; });
-      try { sessionStorage.setItem(KEY, JSON.stringify({ plz: plz.value, art, wann })); } catch {}
+      try { sessionStorage.setItem(KEY, JSON.stringify({ plz: plz.value, art })); } catch {}
     };
     plz.addEventListener('input', () => { plz.value = plz.value.replace(/\D/g, '').slice(0, 5); update(); if (plz.value.length === 5) plz.blur(); });
     form.addEventListener('change', update);
-    form.addEventListener('submit', (e) => e.preventDefault());
+    plz.addEventListener('keydown', (e) => { if (e.key === 'Enter') plz.blur(); });
     document.addEventListener('auf:tick', update);
-    restore();
     update();
   }
   // Uhrzeit-Anzeige alle 30 s auffrischen
   setInterval(() => (window as any).AUF?.fill(), 30000);
 </script>
-<style>
-  @media (max-width: 22rem) { .live__preise dt { font-size: 0.875rem; } .hero { gap: var(--space-xs); } }
-</style>

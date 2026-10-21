@@ -93,8 +93,8 @@ const steppers = [
     </div>
 
     <div class="fm__bar">
-      <p class="fm__total"><span data-o-zeile>28 Türen</span><span>Richtwert <strong data-o-summe>–</strong></span></p>
-      <button class="fm__btn" type="submit">Begehung anfragen</button>
+      <p class="fm__total" aria-live="polite"><span data-o-zeile>Richtwert, 28 Türen</span><strong data-o-summe>–</strong></p>
+      <button class="fm__btn" type="submit">Anfrage senden</button>
     </div>
     <p class="fm__demo">Richtwert ab {b.proTuer} € pro Tür (Zylinder, Montage, {b.inklSchluessel} Schlüssel), weitere Schlüssel ab {b.extraSchluessel} €, {preise.mwst}. Kein Angebot: Das schriftliche Angebot kommt nach der Begehung. Demo: Es wird nichts gesendet.</p>
   </form>
@@ -122,7 +122,7 @@ const steppers = [
       const w = zahl('wohnungen'), a = zahl('allgemein'), s = zahl('schluessel');
       const tueren = w + a;
       richtwert = tueren * b.proTuer + Math.max(0, s - b.inklSchluessel) * w * b.extraSchluessel;
-      form.querySelector('[data-o-zeile]')!.textContent = `${tueren} ${tueren === 1 ? 'Tür' : 'Türen'}, ${w * s} Wohnungsschlüssel`;
+      form.querySelector('[data-o-zeile]')!.textContent = `Richtwert: ${tueren} ${tueren === 1 ? 'Tür' : 'Türen'}, ${w * s} Schlüssel`;
       form.querySelector('[data-o-summe]')!.textContent = tueren ? `ab ${euro(richtwert)}` : '–';
       form.querySelectorAll<HTMLButtonElement>('button[data-step="-1"]').forEach((btn) => { btn.disabled = Number(btn.nextElementSibling && (btn.nextElementSibling as HTMLInputElement).value) <= 0; });
       plz.value = plz.value.replace(/\D/g, '').slice(0, 5);

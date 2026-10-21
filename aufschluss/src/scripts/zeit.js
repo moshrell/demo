@@ -41,7 +41,7 @@
     for (var i = 0; i < A.T.length; i++) if (A.T[i].id === j.tarif) t = A.T[i];
     A.now = j; A.tarif = t;
     document.documentElement.setAttribute('data-tarif', j.tarif);
-    each('[data-live-jetzt]', function (el) { el.textContent = 'Jetzt ' + j.wtKurz + ' ' + j.uhr + ' · ' + t.kurz + (j.feiertag ? ' (' + j.feiertag + ')' : ''); });
+    each('[data-live-jetzt]', function (el) { el.textContent = 'Erreichbar · ' + j.wtKurz + ' ' + j.uhr + ' · ' + (j.tarif === 'abend' && j.stunde < 7 ? 'Nachttarif' : t.kurz) + (j.feiertag ? ' (' + j.feiertag + ')' : ''); });
     each('[data-live-zu]', function (el) { el.textContent = t.zugefallen + ' €'; });
     each('[data-live-ab]', function (el) { el.textContent = t.abgeschlossen + ' €'; });
     each('[data-tarif-row]', function (el) { var on = el.getAttribute('data-tarif-row') === j.tarif; el.classList.toggle('is-jetzt', on); if (on) el.setAttribute('aria-current', 'true'); else el.removeAttribute('aria-current'); });

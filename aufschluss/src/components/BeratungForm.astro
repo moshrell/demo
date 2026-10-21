@@ -70,8 +70,8 @@ const id = 'beratung-form';
     </div>
 
     <div class="fm__bar">
-      <p class="fm__total"><span data-b-zeile>Beratung {preise.beratung} € + Anfahrt</span><span>Summe <strong data-b-summe>{preise.beratung} €</strong></span></p>
-      <button class="fm__btn" type="submit">Beratung anfragen</button>
+      <p class="fm__total" aria-live="polite"><span data-b-zeile>Summe ohne Anfahrt</span><strong data-b-summe>{preise.beratung} €</strong></p>
+      <button class="fm__btn" type="submit">Anfrage senden</button>
     </div>
     <p class="fm__demo">Die Beratung wird bei Auftrag voll angerechnet. {preise.mwst}. Demo: Es wird nichts gesendet.</p>
   </form>
@@ -98,11 +98,11 @@ const id = 'beratung-form';
       plz.value = plz.value.replace(/\D/g, '').slice(0, 5);
       const z = zoneFuer(plz.value);
       info.classList.remove('is-ok', 'is-nein');
-      if (!z) { info.textContent = 'Für die Anfahrt in der Summe.'; zeile.textContent = `Beratung ${preise.beratung} € + Anfahrt`; total = preise.beratung; summe.textContent = `${euro(total)} + Anfahrt`; return; }
+      if (!z) { info.textContent = 'Für die Anfahrt in der Summe.'; zeile.textContent = 'Summe ohne Anfahrt'; total = preise.beratung; summe.textContent = euro(total); return; }
       if (!z.ok) { info.textContent = z.text; info.classList.add('is-nein'); zeile.textContent = 'Außerhalb unseres Gebiets'; summe.textContent = '–'; return; }
       info.textContent = `Ja, wir kommen: ${z.text}`; info.classList.add('is-ok');
       total = preise.beratung + z.anfahrt!;
-      zeile.textContent = `Beratung ${preise.beratung} € + Anfahrt ${euro(z.anfahrt!)}`;
+      zeile.textContent = `Summe: Beratung ${preise.beratung} € + Anfahrt ${euro(z.anfahrt!)}`;
       summe.textContent = euro(total);
     };
     const store = merken(form, update);

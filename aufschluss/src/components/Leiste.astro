@@ -30,6 +30,8 @@ const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent('Hallo, ich
   .leiste__a--call:focus-visible { outline-color: var(--color-ink); }
   .leiste__a:active { filter: brightness(1.15); }
   .leiste__swap { display: contents; }
+  /* Beim Tippen (Tastatur offen) ausblenden: sonst verdeckt die Leiste das Feld */
+  @media (pointer: coarse) { :global(html.tippt) .leiste { display: none; } }
   :global(html[data-mode='notfall']) .leiste__swap[data-show='vorsorge'],
   :global(html[data-mode='vorsorge']) .leiste__swap[data-show='notfall'] { display: none; }
   :global(html:not([data-mode])) .leiste__swap[data-show='vorsorge'] { display: none; }

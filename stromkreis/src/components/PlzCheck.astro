@@ -1,0 +1,48 @@
+---
+/** Einsatzgebiet-Prüfung per PLZ (eigenständig). Ergebnis wird in sessionStorage gemerkt und ins Formular übernommen. */
+import data from '../data/plz.json';
+const { id = 'plz' } = Astro.props;
+const orte = [...new Set(data.zones.flatMap((z) => Object.values(z.plz)))];
+---
+<div class="plz" data-plz-check>
+  <label class="plz__label" for={`${id}-in`}>Kommen Sie zu mir? <span>Postleitzahl eingeben</span></label>
+  <div class="plz__row">
+    <input id={`${id}-in`} class="plz__in num" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="z. B. 30989" aria-describedby={`${id}-out`} />
+  </div>
+  <p class="plz__out" id={`${id}-out`} data-plz-out aria-live="polite"></p>
+  <p class="plz__list">Unser Gebiet: {orte.join(', ')}.</p>
+</div>
+
+<style>
+  .plz { display: grid; gap: var(--space-sm); padding: var(--space-md); border: 1px solid var(--color-rule); border-radius: var(--radius-lg); background: var(--color-paper-2); }
+  .plz__label { font-weight: 700; display: grid; gap: var(--space-2xs); }
+  .plz__label span { font-weight: 400; font-size: var(--text-sm); color: var(--color-ink-2); }
+  .plz__in { width: 9rem; min-height: 3rem; padding: 0.6rem 0.8rem; font-size: 1.25rem; letter-spacing: 0.08em; background: var(--color-paper); color: var(--color-ink); border: 1px solid var(--color-ink-2); border-radius: var(--radius); }
+  .plz__out { min-height: 1.5em; font-size: var(--text-sm); font-weight: 600; }
+  .plz__out[data-state='in'] { color: var(--color-amber-hi); }
+  .plz__out[data-state='out'] { color: var(--color-alert); }
+  .plz__out a { color: inherit; }
+  .plz__list { font-size: var(--text-xs); color: var(--color-ink-2); }
+</style>
+
+<script>
+  import { checkPlz, outsideLink } from '../scripts/plz';
+  document.querySelectorAll<HTMLElement>('[data-plz-check]').forEach((box) => {
+    const input = box.querySelector('input')!;
+    const out = box.querySelector<HTMLElement>('[data-plz-out]')!;
+    const run = () => {
+      const r = checkPlz(input.value);
+      out.dataset.state = r.state;
+      out.textContent = r.text;
+      if (r.state === 'out') {
+        const a = document.createElement('a');
+        a.href = outsideLink; a.target = '_blank'; a.rel = 'noopener'; a.textContent = ' Zur Suche';
+        out.append(a);
+      }
+      try { if (r.state === 'in' || r.state === 'out') sessionStorage.setItem('plz', input.value.replace(/\D/g, '')); } catch {}
+    };
+    try { const s = sessionStorage.getItem('plz'); if (s) { input.value = s; } } catch {}
+    input.addEventListener('input', run);
+    run();
+  });
+</script>

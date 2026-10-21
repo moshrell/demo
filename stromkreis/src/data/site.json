@@ -1,0 +1,22 @@
+{
+  "name": "Elektro Brakhage",
+  "legalName": "Elektro Brakhage, Inh. Tobias Brakhage (fiktiv)",
+  "owner": "Tobias Brakhage",
+  "title": "Elektrotechnikermeister",
+  "address": { "street": "Werkstattweg 4", "zip": "30989", "city": "Gehrden" },
+  "email": "kontakt@example.com",
+  "phone": "030 23125 410",
+  "phoneHref": "+493023125410",
+  "notdienst": "030 23125 411",
+  "notdienstHref": "+493023125411",
+  "hours": [
+    { "days": [1, 2, 3, 4], "label": "Mo–Do", "open": "07:00", "close": "16:30" },
+    { "days": [5], "label": "Fr", "open": "07:00", "close": "13:00" }
+  ],
+  "hoursText": "Mo–Do 7:00–16:30 · Fr 7:00–13:00",
+  "openingHours": ["Mo-Th 07:00-16:30", "Fr 07:00-13:00"],
+  "areaServed": ["Gehrden", "Ronnenberg", "Barsinghausen", "Wennigsen", "Seelze", "Hemmingen", "Hannover-West"],
+  "kammer": "Handwerkskammer Hannover",
+  "handwerksrolle": "Eintragung in die Handwerksrolle der Handwerkskammer Hannover, Nr. 000000 (fiktiv)",
+  "ustid": "DE000000000 (fiktiv)"
+}

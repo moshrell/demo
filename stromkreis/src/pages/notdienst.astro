@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import PlzCheck from '../components/PlzCheck.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const faq = [
+  { q: 'Was kostet der Notdienst?', a: 'Werktags bis 20 Uhr Anfahrt 89 € plus Arbeitszeit, nachts, am Wochenende und an Feiertagen Anfahrt 149 € plus Arbeitszeit, jeweils inkl. MwSt. Den Preis sagen wir Ihnen am Telefon, bevor wir losfahren.' },
+  { q: 'In welchen Orten gibt es den Notdienst?', a: 'In Gehrden, Ronnenberg, Barsinghausen und Wennigsen. Prüfen Sie Ihre Postleitzahl unten.' },
+];
+---
+<Base title="Notdienst · Elektro Brakhage" description="Elektro-Notdienst in Gehrden, Ronnenberg, Barsinghausen und Wennigsen: was ein Notfall ist, was Sie bis zu unserer Ankunft tun und was es kostet." faq={faq}>
+  <main id="inhalt" class="page">
+    <div class="wrap page__in">
+      <header class="page__head">
+        <a class="back" href={base}>← Zum Haus</a>
+        <p><span class="strip nd-strip"><b>Notdienst</b>rund um die Uhr</span></p>
+        <h1>Strom weg, Brandgeruch, Funken?</h1>
+        <p class="page__lead" data-status-long>Unser Notdienst ist rund um die Uhr erreichbar.</p>
+        <a class="btn btn--amber nd-call" href={`tel:${site.notdienstHref}`}>Notdienst anrufen <span class="num">{site.notdienst}</span></a>
+      </header>
+
+      <section class="block" aria-labelledby="sofort-h">
+        <h2 id="sofort-h">Was Sie jetzt tun</h2>
+        <ol class="ablauf">
+          <li><strong>Brandgeruch oder Rauch?</strong><span>Wenn es brennt: 112. Sonst Hauptschalter bzw. alle Sicherungen ausschalten, wenn das gefahrlos geht.</span></li>
+          <li><strong>Nichts anfassen, was nass ist</strong><span>Wasser im Zählerschrank oder an Steckdosen: Raum nicht betreten, Notdienst anrufen.</span></li>
+          <li><strong>Nur ein Raum ohne Strom?</strong><span>Sicherung und FI-Schalter (breiter Schalter mit „T“-Taste) prüfen. Springt er sofort wieder raus: Geräte im Raum ausstecken, dann noch einmal.</span></li>
+          <li><strong>Ganze Straße dunkel?</strong><span>Dann liegt die Störung meist beim Netzbetreiber. Dessen Störungsnummer steht auf Ihrer Stromrechnung.</span></li>
+        </ol>
+      </section>
+
+      <section class="block" aria-labelledby="was-h">
+        <h2 id="was-h">Notfall oder nicht?</h2>
+        <dl class="prices nd-list">
+          <div><dt>Notfall</dt><dd>Stromausfall im ganzen Haus, Brandgeruch, Funken, Wasser an der Elektrik, Heizung ohne Strom im Winter</dd></div>
+          <div><dt>Kein Notfall</dt><dd>Einzelne Steckdose oder Lampe defekt, Wallbox lädt nicht, Wunsch nach neuer Leitung: gern zu den normalen Zeiten ({site.hoursText})</dd></div>
+        </dl>
+      </section>
+
+      <PlzCheck id="plz-nd" />
+
+      <section class="block" aria-labelledby="faq-h">
+        <h2 id="faq-h">Kosten und Gebiet</h2>
+        <div>{faq.map((f) => (<details class="faq" open><summary>{f.q}</summary><p>{f.a}</p></details>))}</div>
+      </section>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .nd-strip { background: var(--color-alert); }
+  .nd-call { justify-content: space-between; font-size: var(--text-lg); min-height: 3.5rem; }
+  .nd-list dd { text-align: left; white-space: normal; font-family: var(--font-body); color: var(--color-ink-2); }
+  .nd-list > div { grid-template-columns: 1fr; }
+  .nd-list dt { font-weight: 700; }
+</style>

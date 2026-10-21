@@ -1,0 +1,135 @@
+---
+/** E-Check-Rechner für Betriebe: Arbeitsplätze → geschätzte Geräte (änderbar) → Summe netto, MwSt., brutto. */
+import ec from '../data/echeck.json';
+const { form = 'anfrage' } = Astro.props;
+const eur = (n: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(n);
+const start = { ap: 10, geraete: 10 * ec.geraeteProPlatz, verteiler: 1 };
+const net0 = ec.grund + start.geraete * ec.geraet + start.verteiler * ec.verteiler;
+---
+<div class="tool ec" data-ec data-form={form}>
+  <script type="application/json" data-ec-data set:html={JSON.stringify(ec)} />
+  <p class="strip"><b>E-Check-Rechner</b> DGUV V3</p>
+
+  <div class="ec__row">
+    <label for="ec-ap" class="ec__lab">Arbeitsplätze <span>mit PC, Monitor, Lampe usw.</span></label>
+    <div class="ec__stepper">
+      <button type="button" class="ec__b" data-ec-step="ap" data-d="-1" aria-label="Arbeitsplätze: einer weniger">−</button>
+      <input id="ec-ap" class="num" type="number" inputmode="numeric" min="1" max="500" value={start.ap} data-ec-in="ap" />
+      <button type="button" class="ec__b" data-ec-step="ap" data-d="1" aria-label="Arbeitsplätze: einer mehr">+</button>
+    </div>
+  </div>
+
+  <div class="ec__row">
+    <label for="ec-ger" class="ec__lab">Ortsveränderliche Geräte <span data-ec-auto>geschätzt: {ec.geraeteProPlatz} pro Arbeitsplatz, plus Küche und Drucker. Ändern Sie die Zahl, wenn Sie es genauer wissen.</span></label>
+    <div class="ec__stepper">
+      <button type="button" class="ec__b" data-ec-step="geraete" data-d="-5" aria-label="Geräte: fünf weniger">−5</button>
+      <input id="ec-ger" class="num" type="number" inputmode="numeric" min="0" max="5000" value={start.geraete} data-ec-in="geraete" />
+      <button type="button" class="ec__b" data-ec-step="geraete" data-d="5" aria-label="Geräte: fünf mehr">+5</button>
+    </div>
+  </div>
+
+  <div class="ec__row">
+    <label for="ec-vt" class="ec__lab">Verteiler / Sicherungskästen <span>meist einer pro Etage oder Mieteinheit</span></label>
+    <div class="ec__stepper">
+      <button type="button" class="ec__b" data-ec-step="verteiler" data-d="-1" aria-label="Verteiler: einer weniger">−</button>
+      <input id="ec-vt" class="num" type="number" inputmode="numeric" min="0" max="50" value={start.verteiler} data-ec-in="verteiler" />
+      <button type="button" class="ec__b" data-ec-step="verteiler" data-d="1" aria-label="Verteiler: einer mehr">+</button>
+    </div>
+  </div>
+
+  <label class="tool__own">
+    <input type="checkbox" data-ec-in="feierabend" />
+    <span>Prüfung nach Feierabend (ab 16:30), Aufpreis {eur(ec.feierabend)} netto</span>
+  </label>
+
+  <dl class="tool__lines ec__lines" data-ec-lines>
+    <div><dt>Grundpauschale inkl. Anfahrt und Protokoll</dt><dd>{eur(ec.grund)}</dd></div>
+  </dl>
+
+  <div class="ec__sum" aria-live="polite">
+    <div class="ec__net"><span>Summe netto</span><strong class="num" data-ec-net>{eur(net0)}</strong></div>
+    <div class="ec__vat"><span>zzgl. 19 % MwSt.</span><span class="num" data-ec-vat>{eur(net0 * ec.mwst)}</span></div>
+    <div class="ec__gross"><span>Summe brutto</span><span class="num" data-ec-gross>{eur(net0 * (1 + ec.mwst))}</span></div>
+  </div>
+  <p class="tool__note">Abgerechnet wird nach tatsächlich geprüften Geräten. Die Summe ist ein Richtwert für Ihre Planung, das schriftliche Angebot folgt.</p>
+  <a class="btn btn--amber" href={`#${form}`}>Angebot anfordern</a>
+
+  <div class="tool__bar">
+    <p class="tool__run"><span>netto · brutto</span><strong class="num" data-ec-run>{eur(net0)}</strong></p>
+    <p class="tool__run ec__runb"><span>&nbsp;</span><span class="num" data-ec-runb>{eur(net0 * (1 + ec.mwst))}</span></p>
+  </div>
+</div>
+
+<style>
+  .ec__row { display: grid; gap: var(--space-sm); padding-bottom: var(--space-smd); border-bottom: 1px solid var(--color-rule); }
+  .ec__lab { display: grid; gap: var(--space-2xs); font-weight: 700; }
+  .ec__lab span { font-weight: 400; font-size: var(--text-sm); color: var(--color-ink-2); }
+  .ec__stepper { display: inline-flex; align-items: center; gap: var(--space-xs); }
+  .ec__b { min-width: 3rem; height: 3rem; border: 1px solid var(--color-ink-2); border-radius: var(--radius); background: var(--color-paper); font: 700 1.1rem/1 var(--font-mono); cursor: pointer; }
+  .ec__b:active { transform: translateY(1px); }
+  .ec__stepper input { width: 5.5rem; height: 3rem; text-align: center; font-size: 1.25rem; background: var(--color-paper); color: var(--color-ink); border: 1px solid var(--color-rule); border-radius: var(--radius); -moz-appearance: textfield; appearance: textfield; }
+  .ec__stepper input::-webkit-outer-spin-button, .ec__stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .ec__sum { display: grid; gap: var(--space-xs); padding: var(--space-md); border-radius: var(--radius); background: var(--color-paper); }
+  .ec__sum > div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-md); }
+  .ec__net strong { font-size: var(--text-2xl); color: var(--color-amber-hi); }
+  .ec__vat { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .ec__gross { font-weight: 700; }
+  .ec__runb { text-align: right; }
+  .ec__runb span:last-child { font-size: var(--text-md); color: var(--color-ink); }
+</style>
+
+<script>
+  const fmt = (n: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(n);
+  const w = window as any; w.__sum = w.__sum || {};
+  document.querySelectorAll<HTMLElement>('[data-ec]').forEach((root) => {
+    const ec = JSON.parse(root.querySelector('[data-ec-data]')!.textContent!);
+    const form = root.dataset.form!;
+    const inp = (k: string) => root.querySelector<HTMLInputElement>(`[data-ec-in="${k}"]`)!;
+    const KEY = 'tool:echeck';
+    let touched = false; // Geräte von Hand geändert?
+    const clamp = (el: HTMLInputElement) => { const v = Math.round(Number(el.value) || 0); el.value = String(Math.min(Number(el.max), Math.max(Number(el.min), v))); };
+    try {
+      const s = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+      if (s) { inp('ap').value = s.ap; inp('geraete').value = s.geraete; inp('verteiler').value = s.verteiler; inp('feierabend').checked = !!s.feierabend; touched = !!s.touched; }
+    } catch {}
+    const render = (publish = true) => {
+      const ap = Number(inp('ap').value) || 0, ger = Number(inp('geraete').value) || 0, vt = Number(inp('verteiler').value) || 0, fa = inp('feierabend').checked;
+      const rows: [string, number][] = [['Grundpauschale inkl. Anfahrt und Protokoll', ec.grund], [`${ger} Geräte × ${fmt(ec.geraet)}`, ger * ec.geraet], [`${vt} Verteiler × ${fmt(ec.verteiler)}`, vt * ec.verteiler]];
+      if (fa) rows.push(['Prüfung nach Feierabend', ec.feierabend]);
+      const net = rows.reduce((s, r) => s + r[1], 0);
+      const vat = Math.round(net * ec.mwst * 100) / 100;
+      const gross = net + vat;
+      root.querySelector('[data-ec-lines]')!.replaceChildren(...rows.map(([k, v]) => { const d = document.createElement('div'); const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = fmt(v); d.append(dt, dd); return d; }));
+      root.querySelector('[data-ec-net]')!.textContent = fmt(net);
+      root.querySelector('[data-ec-vat]')!.textContent = fmt(vat);
+      root.querySelector('[data-ec-gross]')!.textContent = fmt(gross);
+      root.querySelector('[data-ec-run]')!.textContent = fmt(net);
+      root.querySelector('[data-ec-runb]')!.textContent = fmt(gross);
+      try { sessionStorage.setItem(KEY, JSON.stringify({ ap, geraete: ger, verteiler: vt, feierabend: fa, touched })); } catch {}
+      if (!publish) return;
+      const summary = {
+        title: 'Aus dem E-Check-Rechner',
+        lines: [['Arbeitsplätze', String(ap)], ['Geräte (ca.)', String(ger)], ['Verteiler', String(vt)], ...(fa ? [['Zeit', 'nach Feierabend']] : []), ['Summe netto', fmt(net)], ['zzgl. 19 % MwSt.', fmt(vat)]],
+        total: fmt(gross), totalLabel: 'Summe brutto',
+        note: 'Richtwert. Abgerechnet wird nach tatsächlich geprüften Geräten.',
+      };
+      w.__sum[form] = summary;
+      window.dispatchEvent(new CustomEvent('anfrage:summary', { detail: { form, summary } }));
+    };
+    const syncAuto = () => { if (!touched) inp('geraete').value = String((Number(inp('ap').value) || 0) * ec.geraeteProPlatz); };
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-ec-step]');
+      if (!b) return;
+      const k = b.dataset.ecStep!; const el = inp(k);
+      el.value = String((Number(el.value) || 0) + Number(b.dataset.d)); clamp(el);
+      if (k === 'geraete') touched = true; else if (k === 'ap') syncAuto();
+      render();
+    });
+    inp('ap').addEventListener('input', () => { syncAuto(); render(); });
+    inp('geraete').addEventListener('input', () => { touched = true; render(); });
+    inp('verteiler').addEventListener('input', () => render());
+    ['ap', 'geraete', 'verteiler'].forEach((k) => inp(k).addEventListener('blur', () => { clamp(inp(k)); render(); }));
+    inp('feierabend').addEventListener('change', () => render());
+    render();
+  });
+</script>

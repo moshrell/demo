@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import DatenschutzForm from '../components/DatenschutzForm.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Datenschutz · Elektro Brakhage">
+  <main id="inhalt" class="page">
+    <div class="wrap page__in legal">
+      <header class="page__head">
+        <a class="back" href={base}>← Zum Haus</a>
+        <h1>Datenschutz</h1>
+        <p class="page__lead">Demo: In dieser Beispielseite wird nichts gesendet und nichts dauerhaft gespeichert.</p>
+      </header>
+      <div>
+        <h2>Verantwortlicher</h2>
+        <p>{site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}. E-Mail: {site.email}</p>
+        <h2>Keine Cookies, kein Tracking</h2>
+        <p>Diese Website setzt keine Cookies, nutzt keine Analyse- oder Werbedienste und lädt keine Inhalte von fremden Servern (Schriften liegen auf unserem Server). Beim Aufruf speichert der Webserver technisch notwendige Zugriffsdaten (IP-Adresse, Zeitpunkt, aufgerufene Seite) für höchstens 7 Tage zur Sicherheit des Betriebs (Art. 6 Abs. 1 lit. f DSGVO).</p>
+        <h2>Speicher im Browser</h2>
+        <p>Damit Ihre Eingaben beim Wechsel zwischen den Seiten nicht verloren gehen, merkt sich die Seite im Browser dieses Tabs (sessionStorage): welche Räume im Haus eingeschaltet sind, Ihre Antworten im Wallbox-Check, im E-Check-Rechner und im Altbau-Check sowie Ihre Postleitzahl. Diese Daten verlassen Ihr Gerät nicht und werden beim Schließen des Tabs gelöscht.</p>
+        <DatenschutzForm formName="Anfrage-Formular" data="Name, Telefonnummer, E-Mail-Adresse (bei Betrieben Pflicht, sonst freiwillig), Firma (bei Betrieben), Postleitzahl des Objekts, Nachricht (freiwillig), Fotos vom Zählerschrank (freiwillig), gewünschte Rückrufzeit sowie Ihre Angaben aus Wallbox-Check, E-Check-Rechner oder Altbau-Check" purpose="Wir bearbeiten Ihre Anfrage, rufen Sie zurück und erstellen ggf. ein Angebot." retention="Wir löschen Ihre Angaben und Fotos, sobald die Anfrage erledigt ist, spätestens nach 6 Monaten. Kommt ein Auftrag zustande, gelten die gesetzlichen Aufbewahrungsfristen für Geschäftsunterlagen." />
+        <p><strong>Fotos:</strong> In dieser Demo werden ausgewählte Fotos nur in Ihrem Browser als Vorschau angezeigt und nirgendwohin übertragen.</p>
+      </div>
+    </div>
+  </main>
+</Base>

@@ -1,0 +1,184 @@
+---
+// SEO + KI-Sichtbarkeit (AIO). Demos: noindex (index = false). Beim Kundenstart: index = true.
+import '@fontsource-variable/sofia-sans-condensed';
+import '@fontsource-variable/sofia-sans';
+import '@fontsource-variable/martian-mono';
+import '../styles/global.css';
+import site from '../data/site.json';
+const {
+  title = `${site.name} · Elektromeister in Gehrden`,
+  description = 'Elektro Brakhage (Demo): Altbau-Elektrik, Zählerschrank, Wallbox, PV und Speicher, E-Check nach DGUV V3 in Gehrden, Ronnenberg und Barsinghausen.',
+  index = false,
+  type = 'Electrician',
+  faq = [],
+  image = '',
+  prices = [],
+  bar = true,
+  bodyClass = '',
+} = Astro.props;
+const base = import.meta.env.BASE_URL;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = image ? new URL(base + image.replace(/^\//, ''), Astro.site).href : undefined;
+const graph = [
+  ...(index ? [{
+    '@type': type,
+    '@id': new URL(base, Astro.site).href + '#business',
+    name: site.name, url: new URL(base, Astro.site).href, description,
+    telephone: site.phone, email: site.email,
+    address: { '@type': 'PostalAddress', streetAddress: site.address.street, postalCode: site.address.zip, addressLocality: site.address.city, addressCountry: 'DE' },
+    openingHours: site.openingHours, areaServed: site.areaServed,
+    ...(prices.length ? { makesOffer: prices.map((p) => ({ '@type': 'Offer', priceCurrency: 'EUR', price: p.price, itemOffered: { '@type': 'Service', name: p.name } })) } : {}),
+  }] : []),
+  ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
+];
+const ld = { '@context': 'https://schema.org', '@graph': graph };
+const path = Astro.url.pathname;
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#141210" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+  </head>
+  <body class={bodyClass}>
+    <a class="skip" href="#inhalt">Zum Inhalt</a>
+    <header class="head">
+      <a class="head__mark" href={base} aria-label={`${site.name}, Startseite`}>
+        <span class="head__name">Brakhage</span><span class="head__sub">Elektro</span>
+      </a>
+      <p class="status" data-status aria-live="polite">
+        <span class="status__dot" aria-hidden="true"></span>
+        <span data-status-text>{site.hoursText}</span>
+      </p>
+      <details class="menu">
+        <summary>Menü</summary>
+        <nav aria-label="Hauptmenü">
+          <ul>
+            <li><a href={`${base}#schnellzugriff`}>Alle Leistungen</a></li>
+            <li><a href={`${base}altbau/`}>Altbau & Zählerschrank</a></li>
+            <li><a href={`${base}wallbox/`}>Wallbox</a></li>
+            <li><a href={`${base}pv-speicher/`}>PV & Speicher</a></li>
+            <li><a href={`${base}smart-home/`}>Küche & Smart Home</a></li>
+            <li><a href={`${base}e-check/`}>E-Check für Betriebe</a></li>
+            <li><a href={`${base}beleuchtung/`}>Außenbeleuchtung</a></li>
+            <li><a href={`${base}notdienst/`}>Notdienst</a></li>
+            <li><a href={`${base}team/`}>Über uns</a></li>
+            <li><a href={`${base}anfrage/`}>Anfrage</a></li>
+          </ul>
+        </nav>
+      </details>
+    </header>
+
+    <slot />
+
+    <footer class="foot">
+      <div class="foot__in">
+        <p class="foot__name">{site.name} · {site.title}</p>
+        <p>{site.address.street}, {site.address.zip} {site.address.city} · <a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+        <p>{site.hoursText} · Notdienst: <a href={`tel:${site.notdienstHref}`}>{site.notdienst}</a></p>
+        <p class="foot__links"><a href={`${base}impressum/`}>Impressum</a> <a href={`${base}datenschutz/`}>Datenschutz</a> <a href={`${base}team/`}>Über uns</a></p>
+        {!index && <p class="foot__demo">Demo-Seite, alle Angaben fiktiv. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihren Betrieb? Jetzt anfragen</a></p>}
+      </div>
+    </footer>
+
+    {bar && (
+      <nav class="bar" aria-label="Schnellaktionen">
+        <a class="bar__a" href={`tel:${site.phoneHref}`}><span class="bar__ico" aria-hidden="true">☏</span>Anrufen</a>
+        <a class="bar__a bar__a--nd" href={`${base}notdienst/`} aria-current={path.endsWith('/notdienst/') ? 'page' : undefined}><span class="bar__ico bar__ico--nd" aria-hidden="true"></span>Notdienst</a>
+        <a class="bar__a bar__a--main" href={`${base}anfrage/`} aria-current={path.endsWith('/anfrage/') ? 'page' : undefined}>Anfrage</a>
+      </nav>
+    )}
+
+    <script type="application/json" id="hours-data" set:html={JSON.stringify(site.hours)} />
+  </body>
+</html>
+
+<style is:global>
+  .skip { position: absolute; left: var(--space-sm); top: -4rem; z-index: 100; background: var(--color-cream); color: var(--color-cream-ink); padding: var(--space-sm) var(--space-md); border-radius: var(--radius); }
+  .skip:focus { top: var(--space-sm); }
+
+  .head {
+    position: sticky; top: 0; z-index: 40; height: var(--head-h);
+    display: flex; align-items: center; gap: var(--space-smd);
+    padding: 0 var(--gutter);
+    background: oklch(16% 0.006 70 / 0.92);
+    border-bottom: 1px solid var(--color-rule);
+  }
+  @supports (backdrop-filter: blur(6px)) { .head { backdrop-filter: blur(6px); background: oklch(16% 0.006 70 / 0.78); } }
+  .head__mark { display: inline-flex; align-items: baseline; gap: var(--space-xs); text-decoration: none; color: var(--color-ink); flex: none; }
+  .head__name { font: 800 1.35rem/1 var(--font-display); letter-spacing: 0.01em; text-transform: uppercase; }
+  .head__sub { font: 500 0.625rem/1 var(--font-mono); color: var(--color-amber); text-transform: uppercase; letter-spacing: 0.06em; }
+  .status { display: inline-flex; align-items: center; gap: var(--space-xs); margin: 0 0 0 auto; min-width: 0; font: 500 0.6875rem/1.2 var(--font-mono); font-stretch: 87.5%; color: var(--color-ink-2); }
+  .status [data-status-text] { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .status__dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--color-led-off); flex: none; }
+  .status.is-open .status__dot { background: var(--color-amber); box-shadow: 0 0 0.5rem var(--color-amber-glow); }
+  .status.is-open { color: var(--color-ink); }
+
+  .menu { position: relative; flex: none; }
+  .menu summary { list-style: none; cursor: pointer; min-height: 2.75rem; display: inline-flex; align-items: center; padding: 0 var(--space-smd); border: 1px solid var(--color-rule); border-radius: var(--radius); font: 600 var(--text-sm)/1 var(--font-body); }
+  .menu summary::-webkit-details-marker { display: none; }
+  .menu[open] summary { background: var(--color-paper-3); }
+  .menu nav { position: absolute; right: 0; top: calc(100% + var(--space-sm)); width: min(18rem, calc(100vw - 2 * var(--gutter))); background: var(--color-paper-2); border: 1px solid var(--color-rule); border-radius: var(--radius-lg); padding: var(--space-sm); box-shadow: 0 1rem 2rem oklch(0% 0 0 / 0.5); }
+  .menu ul { list-style: none; margin: 0; padding: 0; }
+  .menu a { display: block; padding: 0.7rem var(--space-smd); color: var(--color-ink); text-decoration: none; border-radius: var(--radius); white-space: nowrap; }
+  .menu a:hover { background: var(--color-paper-3); }
+
+  .foot { border-top: 1px solid var(--color-rule); background: var(--color-paper-2); color: var(--color-ink-2); font-size: var(--text-sm); }
+  .foot__in { width: min(100% - 2 * var(--gutter), 46rem); margin-inline: auto; padding: var(--space-xl) 0; display: grid; gap: var(--space-sm); }
+  .foot__name { color: var(--color-ink); font-weight: 700; }
+  .foot__links { display: flex; flex-wrap: wrap; gap: var(--space-md); }
+  .foot__links a { display: inline-block; padding: var(--space-xs) 0; white-space: nowrap; }
+  .foot__demo { font-size: var(--text-xs); }
+
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: var(--space-sm);
+    padding: var(--space-sm) var(--gutter); padding-bottom: max(var(--space-sm), env(safe-area-inset-bottom));
+    background: oklch(13% 0.006 70 / 0.96); border-top: 1px solid var(--color-rule);
+  }
+  .bar__a { min-height: 3rem; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs); border-radius: var(--radius); font: 700 0.9375rem/1 var(--font-body); color: var(--color-ink); text-decoration: none; border: 1px solid var(--color-rule); white-space: nowrap; }
+  .bar__a:hover { color: var(--color-ink); background: var(--color-paper-3); }
+  .bar__a--main { background: var(--color-amber); color: var(--color-cream-ink); border-color: var(--color-amber); }
+  .bar__a--main:hover { background: var(--color-amber-hi); color: var(--color-cream-ink); }
+  .bar__a[aria-current='page'] { outline: 2px solid var(--color-cream); outline-offset: -4px; }
+  .bar__ico { font-size: 1.05rem; }
+  .bar__ico--nd { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--color-alert); }
+  @media (min-width: 60rem) {
+    .bar { left: auto; right: var(--gutter); bottom: var(--space-md); width: 26rem; border: 1px solid var(--color-rule); border-radius: var(--radius-lg); padding: var(--space-sm); }
+  }
+</style>
+
+<script>
+  // Status "jetzt geöffnet" nach Zeit in Europe/Berlin
+  import { berlinStatus } from '../scripts/hours';
+  const el = document.querySelector<HTMLElement>('[data-status]');
+  const data = document.getElementById('hours-data');
+  if (el && data) {
+    const hours = JSON.parse(data.textContent || '[]');
+    const run = () => {
+      const s = berlinStatus(hours);
+      el.classList.toggle('is-open', s.open);
+      el.querySelector('[data-status-text]')!.textContent = s.text;
+      document.querySelectorAll<HTMLElement>('[data-status-long]').forEach((n) => (n.textContent = s.long));
+      document.documentElement.dataset.open = s.open ? '1' : '0';
+    };
+    run();
+    setInterval(run, 60000);
+  }
+  // Menü schließen bei Klick außerhalb / Esc
+  const menu = document.querySelector<HTMLDetailsElement>('.menu');
+  document.addEventListener('click', (e) => { if (menu?.open && !menu.contains(e.target as Node)) menu.open = false; });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu?.open) { menu.open = false; menu.querySelector('summary')?.focus(); } });
+</script>

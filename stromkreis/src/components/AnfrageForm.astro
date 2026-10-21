@@ -1,0 +1,330 @@
+---
+/**
+ * AnfrageForm: abgeleitet von _template/OrderForm.astro (gleicher Standard), angepasst für Handwerk:
+ *  - Leistung (fest oder Auswahl), PLZ mit Live-Prüfung, Foto vom Zählerschrank (Demo, wird nicht gesendet)
+ *  - Zusammenfassung + Summe aus einem Rechner/Check (Event 'anfrage:summary'), läuft in der klebenden Leiste mit
+ *  - Variante Betrieb (firma): Firma, Ansprechpartner, E-Mail Pflicht, Wunschzeitraum
+ *  - Einwilligung Pflicht, Link Datenschutz in neuem Tab, Zwischenspeicher sessionStorage (ohne Häkchen und Foto)
+ * Es wird nichts gesendet (Demo). Echter Kunde: Versand per PHP-Mailer auf All-Inkl (Fotos als Anhang).
+ */
+import site from '../data/site.json';
+import leistungen from '../data/leistungen.json';
+const {
+  id = 'anfrage',
+  title = 'Anfrage',
+  intro = '',
+  service = '',
+  choose = false,
+  firma = false,
+  photo = true,
+  submitLabel = 'Anfrage senden',
+} = Astro.props;
+const base = import.meta.env.BASE_URL;
+const svc = leistungen.find((l) => l.slug === service);
+const options = [...leistungen.map((l) => l.nav), 'Kleinauftrag (Freitags-Runde)', 'Etwas anderes'];
+---
+<section class="af" id={id} aria-labelledby={`${id}-h`}>
+  <h2 class="af__title" id={`${id}-h`}>{title}</h2>
+  {intro && <p class="af__intro">{intro}</p>}
+
+  <form class="af__form" id={`${id}-form`} novalidate data-af data-form-id={id} data-firma={firma ? '1' : '0'}>
+    <div class="af__sum" data-summary hidden>
+      <p class="af__sumhead"><span class="strip" data-summary-title>Ihre Angaben</span></p>
+      <dl data-summary-list></dl>
+      <p class="af__sumnote" data-summary-note></p>
+    </div>
+
+    <fieldset class="af__group">
+      <legend>Worum geht es?</legend>
+      {choose ? (
+        <div class="af__field">
+          <label for={`${id}-svc`}>Leistung</label>
+          <select id={`${id}-svc`} name="leistung" autocomplete="off">
+            {options.map((o) => <option value={o} selected={svc?.nav === o}>{o}</option>)}
+          </select>
+        </div>
+      ) : (
+        <input type="hidden" name="leistung" value={svc?.nav ?? 'Anfrage'} />
+      )}
+      <div class="af__field">
+        <label for={`${id}-plz`}>Postleitzahl des Objekts</label>
+        <input id={`${id}-plz`} class="num" name="plz" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="z. B. 30989" required aria-describedby={`${id}-plz-out`} />
+        <p class="af__plz" id={`${id}-plz-out`} data-plz-out aria-live="polite"></p>
+      </div>
+      {photo && (
+        <div class="af__field">
+          <label for={`${id}-foto`}>Foto vom Zählerschrank <span class="af__opt">(optional, bis 3 Bilder)</span></label>
+          <input id={`${id}-foto`} class="af__file" name="foto" type="file" accept="image/*" multiple aria-describedby={`${id}-foto-hint`} />
+          <p class="af__hint" id={`${id}-foto-hint`}>Tür vom Zählerschrank öffnen, alles im Bild, von vorn. So sehen wir Baujahr und freie Plätze und können meist schon ohne Besichtigung ein Angebot machen. <strong>Demo: Fotos werden nicht gesendet.</strong></p>
+          <div class="af__thumbs" data-thumbs></div>
+        </div>
+      )}
+      <div class="af__field">
+        <label for={`${id}-note`}>Nachricht <span class="af__opt">(optional)</span></label>
+        <textarea id={`${id}-note`} name="note" rows="3" autocomplete="off" placeholder={firma ? 'z. B. zwei Standorte, Prüfung lieber nach Feierabend' : 'z. B. Baujahr 1965, Einzug im März, Steckdosen im Bad ohne FI'}></textarea>
+      </div>
+    </fieldset>
+
+    <fieldset class="af__group">
+      <legend>{firma ? 'Ihr Betrieb' : 'Ihre Angaben'}</legend>
+      {firma && (
+        <div class="af__field">
+          <label for={`${id}-firma`}>Firma</label>
+          <input id={`${id}-firma`} name="firma" type="text" autocomplete="organization" placeholder="z. B. Steuerbüro Muster GmbH" required aria-describedby={`${id}-err-firma`} />
+          <p class="af__err" id={`${id}-err-firma`} hidden>Bitte geben Sie den Namen Ihres Betriebs an.</p>
+        </div>
+      )}
+      <div class="af__field">
+        <label for={`${id}-name`}>{firma ? 'Ansprechpartner' : 'Name'}</label>
+        <input id={`${id}-name`} name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname" required aria-describedby={`${id}-err-name`} />
+        <p class="af__err" id={`${id}-err-name`} hidden>Bitte geben Sie Ihren Namen an.</p>
+      </div>
+      <div class="af__field">
+        <label for={`${id}-tel`}>Telefon</label>
+        <input id={`${id}-tel`} name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 030 23125 123" required aria-describedby={`${id}-err-tel`} />
+        <p class="af__err" id={`${id}-err-tel`} hidden>Bitte geben Sie eine Telefonnummer an, unter der wir Sie erreichen.</p>
+      </div>
+      <div class="af__field">
+        <label for={`${id}-mail`}>E-Mail {!firma && <span class="af__opt">(optional)</span>}</label>
+        <input id={`${id}-mail`} name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" required={firma} aria-describedby={`${id}-err-mail`} />
+        <p class="af__err" id={`${id}-err-mail`} hidden>{firma ? 'Bitte geben Sie eine E-Mail-Adresse für das schriftliche Angebot an, z. B. name@example.com.' : 'Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.'}</p>
+      </div>
+      <div class="af__field">
+        <span class="af__lab" id={`${id}-when-l`}>{firma ? 'Wunschzeitraum' : 'Wann dürfen wir anrufen?'}</span>
+        <div class="af__chips" role="radiogroup" aria-labelledby={`${id}-when-l`}>
+          {(firma ? ['nächster Monat', 'in 2–3 Monaten', 'flexibel'] : ['vormittags', 'nachmittags', 'egal']).map((o, i) => (
+            <label class="af__chip"><input type="radio" name="wann" value={o} checked={i === 2} /><span>{o}</span></label>
+          ))}
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="af__consent">
+      <label class="af__check">
+        <input type="checkbox" name="privacy" required aria-describedby={`${id}-err-privacy`} />
+        <span>Ich bin einverstanden, dass {site.name} meine Angaben {firma ? '(Firma, Ansprechpartner, Telefon, E-Mail, PLZ, Nachricht)' : '(Name, Telefon, E-Mail, PLZ, Nachricht, Fotos)'} zur Bearbeitung meiner Anfrage verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a></span>
+      </label>
+      <p class="af__err" id={`${id}-err-privacy`} hidden>Bitte stimmen Sie zu, sonst können wir Ihre Anfrage nicht bearbeiten.</p>
+    </div>
+
+    <div class="af__bar">
+      <p class="af__total" data-bar-total hidden><span data-bar-label>Richtpreis</span><strong class="num" data-bar-value></strong></p>
+      <p class="af__total af__total--plain" data-bar-plain>Es wird nichts gesendet (Demo).</p>
+      <button class="btn btn--amber af__btn" type="submit">{submitLabel}</button>
+    </div>
+  </form>
+
+  <div class="af__done" data-done tabindex="-1" hidden>
+    <h3>Danke, Ihre Anfrage ist angekommen.</h3>
+    <p class="af__next">So geht es weiter: Wir rufen Sie {firma ? 'innerhalb von 2 Arbeitstagen' : 'in der Regel am nächsten Arbeitstag'} an, klären offene Fragen und vereinbaren bei Bedarf eine Besichtigung. Danach bekommen Sie ein schriftliches Angebot.</p>
+    <dl data-done-list></dl>
+    <p class="af__demo">Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.</p>
+  </div>
+</section>
+
+<style>
+  .af { display: grid; gap: var(--space-md); }
+  .af__intro { color: var(--color-ink-2); }
+  .af__form { display: grid; gap: var(--space-lg); }
+  .af__group { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: var(--space-md); }
+  .af__group legend { padding: 0; margin-bottom: var(--space-sm); font: 700 var(--text-lg)/1.2 var(--font-display); text-transform: uppercase; letter-spacing: 0.02em; }
+  .af__field { display: grid; gap: var(--space-xs); min-width: 0; }
+  .af__field > label, .af__lab { font-weight: 600; font-size: var(--text-sm); }
+  .af__opt { font-weight: 400; color: var(--color-ink-2); }
+  .af__field input:not([type='radio']):not([type='file']), .af__field textarea, .af__field select {
+    width: 100%; min-height: 3rem; padding: 0.65rem 0.85rem; border: 1px solid var(--color-ink-2); border-radius: var(--radius);
+    background: var(--color-paper); color: var(--color-ink); font: inherit; font-size: 1rem;
+  }
+  .af__field input[name='plz'] { width: 9rem; letter-spacing: 0.08em; }
+  .af__field textarea { resize: vertical; }
+  .af__field ::placeholder { color: var(--color-ink-2); opacity: 0.8; }
+  .af__field input[aria-invalid='true'] { border-color: var(--color-alert); box-shadow: inset 0 0 0 1px var(--color-alert); }
+  .af__file { font-size: var(--text-sm); color: var(--color-ink-2); max-width: 100%; }
+  .af__file::file-selector-button { min-height: 2.75rem; margin-right: var(--space-smd); padding: 0 var(--space-md); border: 1px solid var(--color-cream); background: var(--color-cream); color: var(--color-cream-ink); border-radius: var(--radius); font: 700 var(--text-sm) var(--font-body); cursor: pointer; }
+  .af__hint { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .af__hint strong { color: var(--color-ink); }
+  .af__thumbs { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+  .af__thumbs img { width: 4.5rem; height: 4.5rem; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--color-rule); }
+  .af__plz { min-height: 1.4em; font-size: var(--text-sm); font-weight: 600; }
+  .af__plz[data-state='in'] { color: var(--color-amber-hi); }
+  .af__plz[data-state='out'], .af__plz[data-state='bad'] { color: var(--color-alert); }
+  .af__plz a { color: inherit; }
+  .af__chips { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+  .af__chip { position: relative; }
+  .af__chip input { position: absolute; opacity: 0; inset: 0; }
+  .af__chip span { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1rem; border: 1px solid var(--color-ink-2); border-radius: 999px; cursor: pointer; white-space: nowrap; }
+  .af__chip input:checked + span { background: var(--color-cream); color: var(--color-cream-ink); border-color: var(--color-cream); }
+  .af__chip input:focus-visible + span { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+  .af__err { font-size: var(--text-sm); font-weight: 600; color: var(--color-alert); }
+  .af__err[hidden] { display: none; }
+  .af__consent { display: grid; gap: var(--space-xs); }
+  .af__check { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-smd); align-items: start; font-size: var(--text-sm); line-height: 1.45; cursor: pointer; }
+  .af__check input { width: 1.4rem; height: 1.4rem; margin: 0.1rem 0 0; accent-color: var(--color-amber); }
+  .af__check.is-invalid span { color: var(--color-alert); }
+  .af__bar {
+    position: sticky; bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); z-index: 10;
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-sm) var(--space-md);
+    padding: var(--space-smd) 0; background: var(--color-paper); border-top: 1px solid var(--color-ink-2);
+  }
+  .af__total { display: grid; gap: 0.125rem; margin: 0; min-width: 0; font-size: var(--text-sm); color: var(--color-ink-2); }
+  .af__total strong { font-size: 1.375rem; color: var(--color-amber-hi); }
+  .af__total[hidden] { display: none; }
+  .af__total--plain { font-size: var(--text-xs); }
+  .af__btn { flex: 1 1 100%; }
+  @media (min-width: 30rem) { .af__btn { flex: 0 0 auto; } }
+  @media (min-width: 60rem) { .af__bar { bottom: 0; } }
+  .af__sum { padding: var(--space-md); border: 1px solid var(--color-amber-deep); border-radius: var(--radius-lg); background: var(--color-paper-2); display: grid; gap: var(--space-sm); }
+  .af__sum[hidden] { display: none; }
+  .af__sum dl, .af__done dl { margin: 0; display: grid; }
+  .af__sum dl > div, .af__done dl > div { display: flex; justify-content: space-between; gap: var(--space-md); padding: var(--space-xs) 0; border-bottom: 1px solid var(--color-rule); font-size: var(--text-sm); }
+  .af__sum dt, .af__done dt { color: var(--color-ink-2); }
+  .af__sum dd, .af__done dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+  .af__sumnote { font-size: var(--text-xs); color: var(--color-ink-2); }
+  .af__strong dt, .af__strong dd { color: var(--color-amber-hi); font-weight: 700; }
+  .af__done { padding: var(--space-lg); border: 1px solid var(--color-amber-deep); border-radius: var(--radius-lg); display: grid; gap: var(--space-md); }
+  .af__done:focus { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+  .af__next { color: var(--color-ink-2); }
+  .af__demo { font-size: var(--text-sm); color: var(--color-ink-2); }
+</style>
+
+<script>
+  import { checkPlz, outsideLink } from '../scripts/plz';
+  type Summary = { title?: string; lines: [string, string][]; total?: string; totalLabel?: string; note?: string; extra?: [string, string][] };
+  const w = window as any;
+  w.__sum = w.__sum || {};
+
+  document.querySelectorAll<HTMLFormElement>('form[data-af]').forEach((form) => {
+    const fid = form.dataset.formId!;
+    const root = form.parentElement!;
+    const done = root.querySelector<HTMLElement>('[data-done]')!;
+    const doneList = done.querySelector<HTMLElement>('[data-done-list]')!;
+    const firma = form.dataset.firma === '1';
+    const field = (n: string) => form.elements.namedItem(n) as HTMLInputElement | null;
+    const err = (input: HTMLInputElement, show: boolean) => {
+      const e = document.getElementById(input.getAttribute('aria-describedby') || '');
+      if (e && e.classList.contains('af__err')) e.hidden = !show;
+      input.setAttribute('aria-invalid', show ? 'true' : 'false');
+      input.closest('.af__check')?.classList.toggle('is-invalid', show);
+    };
+    const dl = (rows: [string, string, boolean?][]) => rows.map(([k, v, strong]) => {
+      const d = document.createElement('div');
+      if (strong) d.className = 'af__strong';
+      const dt = document.createElement('dt'); dt.textContent = k;
+      const dd = document.createElement('dd'); dd.textContent = v;
+      d.append(dt, dd); return d;
+    });
+
+    // Zusammenfassung aus Rechner/Check
+    const sumBox = form.querySelector<HTMLElement>('[data-summary]')!;
+    const barTotal = form.querySelector<HTMLElement>('[data-bar-total]')!;
+    const barPlain = form.querySelector<HTMLElement>('[data-bar-plain]')!;
+    let summary: Summary | null = null;
+    const showSummary = (s: Summary | null) => {
+      summary = s && s.lines.length ? s : null;
+      sumBox.hidden = !summary;
+      barTotal.hidden = !summary?.total;
+      barPlain.hidden = !!summary?.total;
+      if (!summary) return;
+      sumBox.querySelector('[data-summary-title]')!.textContent = summary.title || 'Ihre Angaben';
+      const rows: [string, string, boolean?][] = [...summary.lines];
+      if (summary.total) rows.push([summary.totalLabel || 'Richtpreis', summary.total, true]);
+      sumBox.querySelector('[data-summary-list]')!.replaceChildren(...dl(rows));
+      sumBox.querySelector('[data-summary-note]')!.textContent = summary.note || '';
+      if (summary.total) {
+        barTotal.querySelector('[data-bar-label]')!.textContent = summary.totalLabel || 'Richtpreis';
+        barTotal.querySelector('[data-bar-value]')!.textContent = summary.total;
+      }
+    };
+    if (w.__sum[fid]) showSummary(w.__sum[fid]);
+    window.addEventListener('anfrage:summary', (e: Event) => {
+      const d = (e as CustomEvent).detail;
+      if (d.form === fid) showSummary(d.summary);
+    });
+
+    // PLZ live
+    const plz = field('plz')!;
+    const plzOut = form.querySelector<HTMLElement>('[data-plz-out]')!;
+    const plzRun = () => {
+      const r = checkPlz(plz.value);
+      plzOut.dataset.state = r.state;
+      plzOut.textContent = r.text;
+      if (r.state === 'out') { const a = document.createElement('a'); a.href = outsideLink; a.target = '_blank'; a.rel = 'noopener'; a.textContent = ' Zur Suche'; plzOut.append(a); }
+      if (r.state === 'in' || r.state === 'out') { plz.setAttribute('aria-invalid', 'false'); try { sessionStorage.setItem('plz', plz.value.replace(/\D/g, '')); } catch {} }
+      return r;
+    };
+    plz.addEventListener('input', plzRun);
+
+    // Fotos (Vorschau lokal, nichts wird hochgeladen)
+    const foto = field('foto');
+    const thumbs = form.querySelector<HTMLElement>('[data-thumbs]');
+    let urls: string[] = [];
+    foto?.addEventListener('change', () => {
+      urls.forEach((u) => URL.revokeObjectURL(u));
+      const files = [...(foto.files || [])].slice(0, 3);
+      urls = files.map((f) => URL.createObjectURL(f));
+      thumbs?.replaceChildren(...urls.map((u, i) => { const im = document.createElement('img'); im.src = u; im.alt = `Ihr Foto ${i + 1}`; im.width = 72; im.height = 72; return im; }));
+    });
+
+    ['name', 'tel', 'email', 'firma'].forEach((n) => field(n)?.addEventListener('input', () => err(field(n)!, false)));
+    field('privacy')!.addEventListener('change', () => err(field('privacy')!, false));
+
+    // Zwischenspeicher (ohne Häkchen und Fotos)
+    const KEY = `form:${location.pathname}:${fid}`;
+    const els = () => [...form.elements].filter((el): el is HTMLInputElement => (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement) && !!(el as HTMLInputElement).name)
+      .filter((el) => !['privacy', 'foto'].includes(el.name) && el.type !== 'hidden');
+    const save = () => {
+      try {
+        const d: Record<string, string> = {};
+        els().forEach((el) => { if (el.type === 'radio') { if (el.checked) d[el.name] = el.value; } else d[el.name] = el.value; });
+        const filled = Object.entries(d).some(([k, v]) => v && !['wann', 'leistung'].includes(k));
+        if (filled) sessionStorage.setItem(KEY, JSON.stringify(d)); else sessionStorage.removeItem(KEY);
+      } catch {}
+    };
+    try {
+      const raw = sessionStorage.getItem(KEY);
+      if (raw) {
+        const d = JSON.parse(raw);
+        els().forEach((el) => { if (!(el.name in d)) return; if (el.type === 'radio') el.checked = el.value === d[el.name]; else el.value = String(d[el.name]); });
+      }
+      if (!plz.value) { const p = sessionStorage.getItem('plz'); if (p) plz.value = p; }
+    } catch {}
+    plzRun();
+    form.addEventListener('input', save);
+    form.addEventListener('change', save);
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const bad: HTMLInputElement[] = [];
+      const check = (i: HTMLInputElement | null, ok: boolean) => { if (!i) return; err(i, !ok); if (!ok) bad.push(i); };
+      const firmaF = field('firma'), name = field('name')!, tel = field('tel')!, mail = field('email')!, priv = field('privacy')!;
+      const r = plzRun();
+      const plzOk = r.state === 'in' || r.state === 'out';
+      if (!plzOk) { plzOut.dataset.state = 'bad'; plzOut.textContent = 'Bitte geben Sie die 5-stellige Postleitzahl an, z. B. 30989.'; }
+      plz.setAttribute('aria-invalid', plzOk ? 'false' : 'true');
+      if (!plzOk) bad.push(plz);
+      check(firmaF, !firmaF || firmaF.value.trim().length > 1);
+      check(name, name.value.trim().length > 1);
+      check(tel, tel.value.replace(/\D/g, '').length >= 6);
+      check(mail, firma ? mail.value.trim() !== '' && mail.checkValidity() : mail.value.trim() === '' || mail.checkValidity());
+      check(priv, priv.checked);
+      if (bad.length) { bad[0].focus(); return; }
+
+      const rows: [string, string, boolean?][] = [];
+      rows.push(['Leistung', (field('leistung') as HTMLInputElement).value]);
+      if (summary) { rows.push(...summary.lines); if (summary.total) rows.push([summary.totalLabel || 'Richtpreis', summary.total, true]); }
+      rows.push(['Ort', r.ort ? `${plz.value} ${r.ort} · Anfahrt ${r.anfahrt} €` : `${plz.value} (außerhalb, wir melden uns trotzdem)`]);
+      const nFoto = foto?.files?.length || 0;
+      if (foto) rows.push(['Fotos', nFoto ? `${Math.min(nFoto, 3)} ausgewählt (Demo: nicht gesendet)` : 'keine']);
+      if (firmaF) rows.push(['Firma', firmaF.value.trim()]);
+      rows.push([firma ? 'Ansprechpartner' : 'Name', name.value.trim()], ['Telefon', tel.value.trim()]);
+      if (mail.value.trim()) rows.push(['E-Mail', mail.value.trim()]);
+      const wann = form.querySelector<HTMLInputElement>('input[name=wann]:checked');
+      if (wann) rows.push([firma ? 'Zeitraum' : 'Rückruf', wann.value]);
+      doneList.replaceChildren(...dl(rows));
+      form.hidden = true;
+      done.hidden = false;
+      done.focus();
+      try { sessionStorage.removeItem(KEY); } catch {}
+    });
+  });
+</script>

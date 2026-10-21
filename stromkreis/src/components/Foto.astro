@@ -1,0 +1,19 @@
+---
+/** Foto aus public/img/ mit echten Maßen; fehlt die Datei, eine neutrale Fläche im gleichen Format (bis Gemini-Fotos da sind). */
+import { img } from '../scripts/img';
+const { name, alt, ratio = '4 / 3', eager = false, class: cls = '' } = Astro.props;
+const i = img(name);
+---
+{i ? (
+  <img class={`foto ${cls}`} src={i.src} width={i.width} height={i.height} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+) : (
+  <div class={`foto foto--leer ${cls}`} role="img" aria-label={alt} data-ratio={ratio}><span class="strip">Foto folgt</span></div>
+)}
+
+<style>
+  .foto { width: 100%; height: auto; border-radius: var(--radius-lg); background: var(--color-paper-3); object-fit: cover; }
+  .foto--leer { display: grid; place-items: center; aspect-ratio: 4 / 3; background: repeating-linear-gradient(135deg, var(--color-paper-2) 0 12px, var(--color-paper-3) 12px 13px); border: 1px solid var(--color-rule); }
+  .foto--leer[data-ratio='1 / 1'] { aspect-ratio: 1 / 1; }
+  .foto--leer[data-ratio='3 / 4'] { aspect-ratio: 3 / 4; }
+  .foto--leer[data-ratio='16 / 9'] { aspect-ratio: 16 / 9; }
+</style>

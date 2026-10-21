@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import AnfrageForm from '../components/AnfrageForm.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Anfrage · Elektro Brakhage" description="Anfrage an Elektro Brakhage: Leistung wählen, Postleitzahl, Foto vom Zählerschrank, Rückruf.">
+  <main id="inhalt" class="page">
+    <div class="wrap page__in">
+      <header class="page__head">
+        <a class="back" href={base}>← Zum Haus</a>
+        <h1>Anfrage</h1>
+        <p class="page__lead">Sagen Sie uns, worum es geht, und schicken Sie ein Foto vom Zählerschrank mit. Dann können wir beim ersten Rückruf schon konkret werden.</p>
+        <p class="tip">Für eine Wallbox oder den E-Check im Betrieb geht es schneller über den <a href={`${base}wallbox/`}>Wallbox-Check</a> bzw. den <a href={`${base}e-check/`}>E-Check-Rechner</a>: dort sehen Sie sofort einen Richtpreis.</p>
+      </header>
+      <AnfrageForm id="anfrage" choose title="Ihre Anfrage" />
+      <p class="tip">Lieber telefonieren? <a href={`tel:${site.phoneHref}`}>{site.phone}</a>, {site.hoursText}.</p>
+    </div>
+  </main>
+</Base>
+<style>
+  .tip { font-size: var(--text-sm); color: var(--color-ink-2); }
+</style>

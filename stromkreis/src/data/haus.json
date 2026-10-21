@@ -1,0 +1,17 @@
+{
+  "_note": "Koordinaten in % des Bildes (3:4). Bis die Gemini-Bilder da sind (images=false), zeigt die Seite das Haus als Schema aus denselben Flächen. Nach dem Eintreffen: scripts/masken.mjs berechnet die Räume aus der Differenz dunkel/hell neu.",
+  "images": false,
+  "dark": "haus-dunkel.jpg",
+  "lit": "haus-hell.jpg",
+  "panel": "sicherungskasten.jpg",
+  "rails": [33, 50, 67],
+  "rooms": [
+    { "id": "keller", "circuit": "F1", "breaker": "Keller", "service": "altbau", "anchor": "", "name": "Keller", "line": "Zählerschrank", "poly": [[26,74],[94,74],[94,93],[26,93]], "lamp": [60,76], "pin": [80,86], "ref": true },
+    { "id": "bad", "circuit": "F2", "breaker": "Bad", "service": "altbau", "anchor": "bad", "name": "Bad", "line": "FI-Schutz", "poly": [[26,31],[60,31],[60,50],[26,50]], "lamp": [43,33] },
+    { "id": "kueche", "circuit": "F3", "breaker": "Küche", "service": "smart-home", "anchor": "", "name": "Küche", "line": "Installation & Smart Home", "poly": [[26,51],[60,51],[60,71],[26,71]], "lamp": [43,53] },
+    { "id": "buero", "circuit": "F4", "breaker": "Büro", "service": "e-check", "anchor": "", "name": "Büro", "line": "E-Check für Betriebe", "poly": [[60,31],[94,31],[94,50],[60,50]], "lamp": [77,33], "pin": [86,44], "ref": true },
+    { "id": "garage", "circuit": "F5", "breaker": "Garage", "service": "wallbox", "anchor": "", "name": "Garage", "line": "Wallbox", "poly": [[60,51],[94,51],[94,71],[60,71]], "lamp": [77,53], "pin": [86,65], "ref": true },
+    { "id": "dach", "circuit": "F6", "breaker": "Dach", "service": "pv-speicher", "anchor": "", "name": "Dach", "line": "PV & Speicher", "poly": [[60,9],[94,30],[26,30]], "lamp": [60,22] },
+    { "id": "garten", "circuit": "F7", "breaker": "Garten", "service": "beleuchtung", "anchor": "", "name": "Garten", "line": "Außenlicht", "poly": [[2,46],[25,46],[25,72],[2,72]], "lamp": [13,66] }
+  ]
+}

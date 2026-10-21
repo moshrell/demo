@@ -1,0 +1,173 @@
+[
+  {
+    "slug": "altbau",
+    "nav": "Altbau & Zählerschrank",
+    "title": "Altbau-Elektrik und Zählerschrank",
+    "lead": "Sie haben ein Haus von 1950 bis 1985 gekauft oder geerbt? Wir prüfen, was bleiben kann, und erneuern nur, was erneuert werden muss: Zählerschrank, Leitungen, FI-Schutz.",
+    "card": "Alte Leitungen, Schraubsicherungen, voller Zählerschrank? Erst prüfen, dann sanieren.",
+    "from": "89 €",
+    "fromLabel": "Besichtigung ab",
+    "vat": "Alle Preise inkl. 19 % MwSt. Genauer Preis nach Fotos oder Besichtigung.",
+    "prices": [
+      { "name": "Besichtigung Altbau mit kurzem Protokoll", "price": "89 €", "note": "wird bei Auftrag angerechnet" },
+      { "name": "Zählerschrank erneuern nach aktueller TAB, Einfamilienhaus", "price": "ab 2.900 €" },
+      { "name": "FI-Schutzschalter nachrüsten, je Gruppe", "price": "ab 290 €" },
+      { "name": "Bad-Elektrik bei Badsanierung", "price": "ab 1.400 €" },
+      { "name": "Komplette Elektrik-Sanierung, je m² Wohnfläche", "price": "ab 95 €" }
+    ],
+    "tool": "altbau",
+    "image": "leistung-altbau.jpg",
+    "imageAlt": "Wand in einem Altbau mit frisch geschlitzten Kanälen und neuen grauen Leitungen neben einer alten Steckdose",
+    "bad": {
+      "title": "Bad: FI-Schutz zuerst",
+      "text": "Im Bad treffen Wasser und Strom zusammen. Fehlt ein FI-Schutzschalter (er schaltet bei einem Fehlerstrom in Sekundenbruchteilen ab), rüsten wir ihn nach, auch ohne große Sanierung. Bei einer Badsanierung planen wir Steckdosen, Licht und Lüfter gleich mit."
+    },
+    "faq": [
+      { "q": "Muss bei einer Sanierung die ganze Wand aufgestemmt werden?", "a": "Nicht immer. Wo möglich, nutzen wir vorhandene Leerrohre oder verlegen Leitungen in Sockelleisten-Kanälen. Was nötig ist, sehen wir bei der Besichtigung." },
+      { "q": "Warum kostet die Besichtigung etwas?", "a": "Weil wir uns Zeit nehmen: Zählerschrank, Leitungen und Stromkreise werden geprüft, Sie bekommen ein kurzes Protokoll. Beauftragen Sie uns danach, rechnen wir die 89 € an." },
+      { "q": "Können wir während der Sanierung im Haus wohnen?", "a": "Meist ja. Wir arbeiten raumweise und sorgen abends für Strom in Küche und Bad. Bei einer kompletten Sanierung vor dem Einzug geht es am schnellsten." },
+      { "q": "Wann muss der Zählerschrank neu?", "a": "Spätestens, wenn eine Wallbox, PV-Anlage oder Wärmepumpe dazukommt und der alte Schrank nicht den aktuellen technischen Bedingungen des Netzbetreibers (TAB) entspricht. Ein Foto vom Schrank reicht uns für eine erste Einschätzung." }
+    ],
+    "referenz": {
+      "ort": "Ronnenberg-Everloh",
+      "baujahr": "1965",
+      "was": "Zählerschrank nach TAB erneuert, 9 Stromkreise neu aufgeteilt, FI-Schutz für das ganze Haus",
+      "dauer": "2 Arbeitstage, Strom am Abend wieder da",
+      "vorher": "referenz-vorher.jpg",
+      "nachher": "referenz-nachher.jpg"
+    }
+  },
+  {
+    "slug": "wallbox",
+    "nav": "Wallbox",
+    "title": "Wallbox für Ihr E-Auto",
+    "lead": "Laden in der eigenen Garage: Wir prüfen Ihren Zählerschrank, melden die Wallbox beim Netzbetreiber an und montieren sie sauber. Den Richtpreis sehen Sie nach fünf Fragen.",
+    "card": "Fünf Fragen, dann sehen Sie Ihren Richtpreis. Anmeldung beim Netzbetreiber übernehmen wir.",
+    "from": "1.380 €",
+    "fromLabel": "inkl. Gerät ab",
+    "vat": "Alle Preise inkl. 19 % MwSt. Genauer Preis nach Fotos oder Besichtigung.",
+    "prices": [
+      { "name": "Wallbox 11 kW (Gerät, von uns geliefert)", "price": "ab 590 €" },
+      { "name": "Montage und Anschluss, Leitung bis 10 m", "price": "ab 790 €" },
+      { "name": "Anmeldung beim Netzbetreiber (11 kW)", "price": "inklusive" },
+      { "name": "Zählerschrank erweitern, falls nötig", "price": "ab 390 €" }
+    ],
+    "tool": "wallbox",
+    "image": "leistung-wallbox.jpg",
+    "imageAlt": "Wallbox an der Garagenwand, Ladekabel steckt in einem kleinen Elektroauto",
+    "faq": [
+      { "q": "11 kW oder 22 kW?", "a": "Für fast alle Autos reichen 11 kW: über Nacht ist der Akku voll. Eine 11-kW-Wallbox muss beim Netzbetreiber nur angemeldet werden, eine 22-kW-Wallbox braucht seine Genehmigung, das dauert in der Regel einige Wochen." },
+      { "q": "Kann ich mit Strom von meiner PV-Anlage laden?", "a": "Ja. Mit einer Wallbox, die Überschuss erkennt, lädt das Auto bevorzugt dann, wenn die Anlage mehr erzeugt, als das Haus verbraucht." },
+      { "q": "Ich habe schon eine Wallbox gekauft. Montieren Sie die?", "a": "Ja, wenn sie für Deutschland zugelassen ist. Im Check können Sie das Gerät aus dem Preis herausnehmen." },
+      { "q": "Wie schnell geht es?", "a": "Mit Foto vom Zählerschrank bekommen Sie das Angebot in der Regel innerhalb von 5 Arbeitstagen. Die Montage selbst dauert meist einen Tag." }
+    ],
+    "referenz": {
+      "ort": "Barsinghausen",
+      "baujahr": "1998",
+      "was": "Wallbox 11 kW in der Garage, 14 m Leitung im Kanal, Überschussladen mit der vorhandenen PV-Anlage",
+      "dauer": "1 Arbeitstag"
+    }
+  },
+  {
+    "slug": "pv-speicher",
+    "nav": "PV & Speicher",
+    "title": "PV-Anlage und Stromspeicher",
+    "lead": "Wir übernehmen die Elektrik Ihrer Solaranlage: Wechselrichter, Speicher, Zählerschrank und Anmeldung. Die Module montiert unser Partner-Dachdecker, Sie bekommen ein Angebot aus einer Hand.",
+    "card": "Wechselrichter, Speicher, Zählerschrank und Anmeldung aus einer Hand. Module montiert unser Partner-Dachdecker.",
+    "from": "1.490 €",
+    "fromLabel": "Anschluss ab",
+    "vat": "Für PV-Anlagen und Speicher an Wohngebäuden bis 30 kWp gilt der Nullsteuersatz (0 % MwSt.). Ob der Umbau des Zählerschranks dazu zählt, klären wir im Angebot.",
+    "prices": [
+      { "name": "PV-Anlage elektrisch anschließen und anmelden, bis 10 kWp", "price": "ab 1.490 €" },
+      { "name": "Speicher nachrüsten, Montage und Anschluss (ohne Gerät)", "price": "ab 990 €" },
+      { "name": "Zählerschrank für PV umbauen", "price": "ab 1.200 €" },
+      { "name": "Steckdose für Balkonkraftwerk", "price": "ab 190 €" }
+    ],
+    "tool": null,
+    "image": "leistung-pv.jpg",
+    "imageAlt": "Heller Hauswirtschaftsraum mit Wechselrichter und Stromspeicher an der Wand",
+    "faq": [
+      { "q": "Montieren Sie auch die Module auf dem Dach?", "a": "Die Module montiert unser Partnerbetrieb aus dem Dachdeckerhandwerk. Sie haben trotzdem einen Ansprechpartner und ein gemeinsames Angebot." },
+      { "q": "Lohnt sich ein Speicher nachträglich?", "a": "Das hängt von Ihrem Verbrauch am Abend ab. Wir rechnen es mit Ihren Zählerständen durch, bevor Sie etwas kaufen." },
+      { "q": "Wer meldet die Anlage an?", "a": "Wir: beim Netzbetreiber und im Marktstammdatenregister der Bundesnetzagentur. Sie unterschreiben nur." }
+    ]
+  },
+  {
+    "slug": "smart-home",
+    "nav": "Küche & Smart Home",
+    "title": "Küche, Installation und Smart Home",
+    "lead": "Neue Küche, mehr Steckdosen, Licht per App oder Rollläden auf Knopfdruck: Wir planen die Leitungen so, dass später nichts aufgestemmt werden muss.",
+    "card": "Herdanschluss, Arbeitssteckdosen, Licht und Rollläden, auch smart nachgerüstet ohne Wände zu öffnen.",
+    "from": "690 €",
+    "fromLabel": "Küchenanschluss ab",
+    "vat": "Alle Preise inkl. 19 % MwSt. Genauer Preis nach Fotos oder Besichtigung.",
+    "prices": [
+      { "name": "Küchenanschluss komplett (Herd 400 V, Spüle, Kühlschrank, Arbeitssteckdosen)", "price": "ab 690 €" },
+      { "name": "Smarte Schalter oder Rollladensteuerung, je Raum", "price": "ab 290 €" },
+      { "name": "Smart-Home-Grundinstallation Einfamilienhaus (Funk)", "price": "ab 1.900 €" },
+      { "name": "Netzwerkdose (LAN), je Anschluss", "price": "ab 160 €" }
+    ],
+    "tool": null,
+    "image": "leistung-smarthome.jpg",
+    "imageAlt": "Abendliche Küche mit warmen Pendelleuchten über der Kochinsel",
+    "faq": [
+      { "q": "Schließen Sie nur den Herd an?", "a": "Einen einzelnen Herd schließen wir in unserer Kleinauftrags-Runde am Freitag an. Eine komplette Küche planen wir als eigenen Termin, am besten bevor die Schränke stehen." },
+      { "q": "Funk oder Kabel?", "a": "Im Bestand meist Funk: keine Schlitze, kein Dreck. Im Neubau oder bei einer Sanierung empfehlen wir Kabel, das ist störungsfreier." },
+      { "q": "Brauche ich dafür einen Server oder ein Abo?", "a": "Nein. Wir setzen auf Systeme, die auch ohne Cloud und ohne monatliche Kosten funktionieren." }
+    ]
+  },
+  {
+    "slug": "e-check",
+    "nav": "E-Check für Betriebe",
+    "title": "E-Check und DGUV V3 für Betriebe",
+    "lead": "Die Prüfung elektrischer Geräte und Anlagen nach DGUV Vorschrift 3 ist für Arbeitgeber Pflicht. Wir prüfen ohne Betriebsstillstand und liefern Protokoll und Prüfplaketten. Den Preis rechnen Sie selbst aus.",
+    "card": "Pflichtprüfung nach DGUV V3 mit Protokoll. Preis netto und brutto sofort im Rechner.",
+    "from": "79 €",
+    "fromLabel": "netto, Grundpauschale",
+    "vat": "Preise für Betriebe netto, zzgl. 19 % MwSt. Im Rechner sehen Sie beides.",
+    "prices": [
+      { "name": "Grundpauschale inkl. Anfahrt und Prüfprotokoll", "price": "79 € netto" },
+      { "name": "Ortsveränderliches Gerät inkl. Prüfplakette", "price": "4,90 € netto" },
+      { "name": "Verteiler bzw. ortsfeste Anlage", "price": "189 € netto" },
+      { "name": "E-Check für Wohnung oder Haus (privat)", "price": "ab 149 € inkl. MwSt." }
+    ],
+    "tool": "echeck",
+    "image": "leistung-echeck.jpg",
+    "imageAlt": "Hände eines Elektrikers prüfen das Netzkabel eines Bürocomputers mit einem Gerätetester",
+    "faq": [
+      { "q": "Wie oft muss geprüft werden?", "a": "Im Büro gilt für ortsveränderliche Geräte als Richtwert alle 6 Monate, bei nachweislich wenig Fehlern (unter 2 %) bis zu 24 Monate. Ortsfeste Anlagen in der Regel alle 4 Jahre. Wir sagen Ihnen nach der ersten Prüfung, welcher Rhythmus für Sie gilt." },
+      { "q": "Steht unser Büro während der Prüfung still?", "a": "Nein. Wir prüfen Arbeitsplatz für Arbeitsplatz, jedes Gerät ist nur wenige Minuten aus. Auf Wunsch nach Feierabend." },
+      { "q": "Was bekommen wir am Ende?", "a": "Ein Prüfprotokoll für Ihre Unterlagen und die Berufsgenossenschaft, Prüfplaketten an jedem Gerät und eine Liste mit Mängeln, falls es welche gibt." },
+      { "q": "Wir wissen nicht, wie viele Geräte wir haben.", "a": "Kein Problem. Der Rechner schätzt aus der Zahl der Arbeitsplätze. Abgerechnet wird nach tatsächlich geprüften Geräten." }
+    ],
+    "referenz": {
+      "ort": "Gehrden",
+      "baujahr": "Steuerbüro, 14 Arbeitsplätze",
+      "was": "92 Geräte und 1 Unterverteilung geprüft, 3 defekte Mehrfachstecker ersetzt, Protokoll für die Berufsgenossenschaft",
+      "dauer": "1 Tag, ohne Betriebsunterbrechung"
+    }
+  },
+  {
+    "slug": "beleuchtung",
+    "nav": "Außenbeleuchtung",
+    "title": "Außen- und Gartenbeleuchtung",
+    "lead": "Sicher nach Hause kommen und den Garten am Abend sehen: Wegeleuchten, Bewegungsmelder und Außensteckdosen, fachgerecht mit Erdkabel verlegt.",
+    "card": "Wegeleuchten, Bewegungsmelder und Außensteckdosen, sauber mit Erdkabel.",
+    "from": "140 €",
+    "fromLabel": "Außenleuchte ab",
+    "vat": "Alle Preise inkl. 19 % MwSt. Genauer Preis nach Fotos oder Besichtigung.",
+    "prices": [
+      { "name": "Außenleuchte am Haus setzen (Leitung vorhanden)", "price": "ab 140 €" },
+      { "name": "Bewegungsmelder oder Dämmerungsschalter", "price": "ab 120 €" },
+      { "name": "Außensteckdose, spritzwassergeschützt", "price": "ab 220 €" },
+      { "name": "Gartenbeleuchtung, 3 Leuchten, Erdkabel bis 15 m", "price": "ab 990 €" }
+    ],
+    "tool": null,
+    "image": "leistung-beleuchtung.jpg",
+    "imageAlt": "Gartenweg zur Haustür, gesäumt von warm leuchtenden Pollerleuchten zur blauen Stunde",
+    "faq": [
+      { "q": "Muss ich den Graben selbst ausheben?", "a": "Das können Sie, dann wird es günstiger. Wir sagen Ihnen vorher, wie tief und wo. Oder wir bringen einen Minibagger mit." },
+      { "q": "Geht das auch mit Solarleuchten?", "a": "Für Deko ja. Für Wege und Treppen empfehlen wir fest angeschlossenes Licht: es ist auch im Winter zuverlässig hell." }
+    ]
+  }
+]

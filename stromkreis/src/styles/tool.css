@@ -1,0 +1,39 @@
+/* Gemeinsame Stile der Werkzeuge (Wallbox-Check, E-Check-Rechner, Altbau-Check) */
+  .tool { display: grid; gap: var(--space-md); padding: var(--space-md); border: 1px solid var(--color-rule); border-radius: var(--radius-lg); background: var(--color-paper-2); }
+  .tool__head { display: grid; gap: var(--space-sm); }
+  .tool__meter { height: 3px; background: var(--color-paper-4); border-radius: 2px; overflow: hidden; }
+  .tool__meter span { display: block; height: 100%; width: 100%; background: var(--color-amber); transform-origin: left; transform: scaleX(0); }
+  .tool__step { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: var(--space-smd); }
+  .tool__step[hidden] { display: none; }
+  .tool__q { padding: 0; font: 750 var(--text-xl)/1.1 var(--font-display); margin-bottom: var(--space-xs); }
+  .tool__n { font-size: var(--text-xs); color: var(--color-amber); vertical-align: 0.3em; margin-right: var(--space-xs); }
+  .tool__hint { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .tool__opts { display: grid; gap: var(--space-sm); }
+  .tool__opt { position: relative; display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); min-height: 3.25rem; padding: 0.6rem var(--space-md); border: 1px solid var(--color-ink-2); border-radius: var(--radius); cursor: pointer; }
+  .tool__opt input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .tool__lab { font-weight: 600; }
+  .tool__eur { font-size: var(--text-xs); color: var(--color-ink-2); white-space: nowrap; }
+  .tool__opt:has(input:checked) { border-color: var(--color-amber); background: var(--color-paper-3); box-shadow: inset 4px 0 0 var(--color-amber); }
+  .tool__opt:has(input:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+  .tool__rh { font-size: var(--text-xl); }
+  .tool__lines { margin: 0; display: grid; }
+  .tool__lines > div { display: flex; justify-content: space-between; gap: var(--space-md); padding: var(--space-xs) 0; border-bottom: 1px solid var(--color-rule); font-size: var(--text-sm); }
+  .tool__lines dt { color: var(--color-ink-2); }
+  .tool__lines dd { margin: 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .tool__own { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-sm); font-size: var(--text-sm); cursor: pointer; align-items: start; }
+  .tool__own input { width: 1.3rem; height: 1.3rem; margin: 0.1rem 0 0; accent-color: var(--color-amber); }
+  .tool__total { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-md); flex-wrap: wrap; }
+  .tool__total strong { font-size: var(--text-2xl); color: var(--color-amber-hi); }
+  .tool__note { font-size: var(--text-xs); color: var(--color-ink-2); }
+  .tool__actions { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+  .tool__actions .btn { flex: 1 1 auto; }
+  .tool__bar { position: sticky; bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); margin: 0 calc(-1 * var(--space-md)) calc(-1 * var(--space-md)); padding: var(--space-sm) var(--space-md); background: var(--color-paper-3); border-top: 1px solid var(--color-rule); border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+  .tool__run { display: grid; font-size: var(--text-xs); color: var(--color-ink-2); }
+  .tool__run strong { font-size: var(--text-xl); color: var(--color-amber-hi); }
+  .tool__back { min-height: 2.75rem; }
+  @media (min-width: 60rem) { .tool__bar { bottom: 0; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .tool__meter span { transition: transform var(--dur-mid) var(--ease-out); }
+    .tool__step:not([hidden]) { animation: tool-in var(--dur-mid) var(--ease-out); }
+  }
+  @keyframes tool-in { from { opacity: 0; transform: translateY(6px); } }

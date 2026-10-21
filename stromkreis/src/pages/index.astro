@@ -1,0 +1,79 @@
+---
+import Base from '../layouts/Base.astro';
+import Hub from '../components/Hub.astro';
+import PlzCheck from '../components/PlzCheck.astro';
+import leistungen from '../data/leistungen.json';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const ablauf = [
+  ['Anfrage oder Anruf', 'Mit Foto vom Zählerschrank können wir oft schon am Telefon sagen, was nötig ist.'],
+  ['Besichtigung', 'Wenn nötig, kommen wir vorbei: 89 €, bei Auftrag angerechnet. Bei Wallbox und E-Check reicht oft ein Foto.'],
+  ['Schriftliches Angebot', 'In der Regel innerhalb von 5 Arbeitstagen, mit Festpreisen pro Position.'],
+  ['Ausführung', 'Termin nach Absprache, saubere Baustelle, Protokoll und Fotos zum Schluss.'],
+];
+const faq = [
+  { q: 'Wechseln Sie auch nur eine Steckdose?', a: 'Kleine Arbeiten sammeln wir und erledigen sie in unserer Kleinauftrags-Runde am Freitag. Rufen Sie an oder schreiben Sie eine Anfrage, dann bekommen Sie einen Freitagstermin.' },
+  { q: 'Kostet die Besichtigung etwas?', a: 'Ja, 89 € inkl. MwSt. mit kurzem Protokoll. Wenn Sie uns danach beauftragen, rechnen wir den Betrag vollständig an.' },
+  { q: 'In welchen Orten arbeiten Sie?', a: 'Gehrden, Ronnenberg, Barsinghausen und Wennigsen, gegen Aufpreis auch Seelze, Hemmingen und den Westen von Hannover. Prüfen Sie Ihre Postleitzahl oben.' },
+];
+---
+<Base faq={faq} prices={leistungen.map((l) => ({ name: l.nav, price: l.from }))}>
+  <main id="inhalt">
+    <Hub />
+
+    <section class="sz" id="schnellzugriff" aria-labelledby="sz-h">
+      <div class="wrap sz__in">
+        <h2 id="sz-h">Alle Leistungen</h2>
+        <p class="sz__vat">Richtpreise inkl. 19 % MwSt., Betriebe netto. Genauer Preis nach Foto oder Besichtigung.</p>
+        <ul class="sz__list">
+          {leistungen.map((l) => (
+            <li>
+              <a class="sz__row" href={`${base}${l.slug}/`}>
+                <span class="sz__name">{l.nav}</span>
+                <span class="sz__from"><span>{l.fromLabel}</span> <strong class="num">{l.from}</strong></span>
+                <span class="sz__txt">{l.card}</span>
+              </a>
+            </li>
+          ))}
+          <li>
+            <a class="sz__row sz__row--nd" href={`${base}notdienst/`}>
+              <span class="sz__name">Notdienst</span>
+              <span class="sz__from"><span>rund um die Uhr</span> <strong class="num">{site.notdienst}</strong></span>
+              <span class="sz__txt">Stromausfall im ganzen Haus, Brandgeruch, Wasser im Sicherungskasten.</span>
+            </a>
+          </li>
+        </ul>
+
+        <PlzCheck id="plz-home" />
+
+        <div class="sz__ablauf">
+          <h2>So läuft es ab</h2>
+          <ol class="ablauf">
+            {ablauf.map(([t, d]) => (<li><strong>{t}</strong><span>{d}</span></li>))}
+          </ol>
+        </div>
+
+        <div class="sz__faq">
+          <h2>Kurz gefragt</h2>
+          {faq.map((f) => (<details class="faq"><summary>{f.q}</summary><p>{f.a}</p></details>))}
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .sz { padding: var(--space-xl) 0; border-top: 1px solid var(--color-rule); background: var(--color-paper); }
+  .sz__in { display: grid; gap: var(--space-lg); }
+  .sz__vat { font-size: var(--text-sm); color: var(--color-ink-2); margin-top: calc(-1 * var(--space-md)); }
+  .sz__list { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--color-rule); }
+  .sz__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2xs) var(--space-md); padding: var(--space-md) 0; border-bottom: 1px solid var(--color-rule); color: var(--color-ink); text-decoration: none; }
+  .sz__row:hover { color: var(--color-ink); background: var(--color-paper-2); }
+  .sz__name { font: 750 var(--text-lg)/1.15 var(--font-display); text-transform: uppercase; letter-spacing: 0.01em; }
+  .sz__from { text-align: right; font-size: var(--text-xs); color: var(--color-ink-2); white-space: nowrap; }
+  .sz__from strong { display: block; font-size: var(--text-md); color: var(--color-amber-hi); }
+  .sz__txt { grid-column: 1 / -1; font-size: var(--text-sm); color: var(--color-ink-2); }
+  .sz__row--nd .sz__from strong { color: var(--color-alert); }
+  :global(#schnellzugriff.is-hint) .sz__list { outline: 1px solid var(--color-amber-deep); outline-offset: 4px; }
+  .sz__ablauf, .sz__faq { display: grid; gap: var(--space-md); }
+</style>

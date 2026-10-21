@@ -1,0 +1,72 @@
+/* Hallmark · macrostructure: bespoke "Spatial hub" (Sicherungskasten → Hausschnitt, kein langer Scroll) · genre: atmospheric
+ * theme: custom · vibe: "Abend, Graphit, Glühlampe 2700K, Beschriftungsstreifen"
+ * paper oklch(16% 0.006 70) · accent oklch(80% 0.145 70) amber · Sofia Sans Condensed + Sofia Sans + Martian Mono
+ * axes: dark / condensed-grotesk + mono / warm · nav: wordmark + Statuschip, unten klebende Aktionsleiste · footer: kompakt (Ft6-artig)
+ * pre-emit critique: P5 H4 E4 S5 R4 V5
+ */
+:root {
+  /* Farbe: Graphit-Schwarz, Licht nur warm (2700K), Beschriftung creme */
+  --color-paper: oklch(16% 0.006 70);
+  --color-paper-2: oklch(20.5% 0.008 70);
+  --color-paper-3: oklch(26% 0.01 70);
+  --color-paper-4: oklch(33% 0.012 70);
+  --color-ink: oklch(93% 0.012 85);
+  --color-ink-2: oklch(76% 0.014 80);
+  --color-rule: oklch(34% 0.012 70);
+  --color-amber: oklch(80% 0.145 70);
+  --color-amber-hi: oklch(88% 0.11 80);
+  --color-amber-deep: oklch(64% 0.15 58);
+  --color-amber-glow: oklch(80% 0.145 70 / 0.38);
+  --color-cream: oklch(91% 0.035 92);
+  --color-cream-ink: oklch(24% 0.012 70);
+  --color-alert: oklch(72% 0.16 32);
+  --color-focus: oklch(95% 0.07 95);
+  --color-schema-dark: oklch(22% 0.012 255);
+  --color-schema-lit: oklch(74% 0.12 72);
+  --color-sky: oklch(19% 0.02 260);
+  --color-soil: oklch(23% 0.02 55);
+  --color-plastic: oklch(94% 0.006 90);
+  --color-plastic-2: oklch(84% 0.008 90);
+  --color-led-off: oklch(30% 0.01 70);
+
+  /* Schrift */
+  --font-display: 'Sofia Sans Condensed Variable', 'Arial Narrow', sans-serif;
+  --font-body: 'Sofia Sans Variable', system-ui, sans-serif;
+  --font-mono: 'Martian Mono Variable', ui-monospace, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.1875rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-display: clamp(2.25rem, 9vw, 4rem);
+
+  /* Raum (4-pt) */
+  --space-2xs: 0.125rem;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-smd: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --gutter: 1rem;
+
+  --radius: 4px;
+  --radius-lg: 10px;
+  --rule-w: 1px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 150ms;
+  --dur-mid: 300ms;
+  --dur-slow: 600ms;
+
+  --bar-h: 4rem;
+  --head-h: 3.25rem;
+}
+@media (min-width: 48rem) {
+  :root { --gutter: 2rem; }
+}

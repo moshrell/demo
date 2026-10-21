@@ -1,0 +1,36 @@
+{
+  "base": [
+    { "name": "Wallbox 11 kW (Gerät)", "eur": 590, "id": "geraet" },
+    { "name": "Montage, Anschluss, Leitung bis 10 m", "eur": 790 },
+    { "name": "Anmeldung beim Netzbetreiber", "eur": 0 }
+  ],
+  "steps": [
+    { "id": "platz", "q": "Wo steht das Auto?", "opts": [
+      { "label": "Garage", "eur": 0 },
+      { "label": "Carport", "eur": 90, "line": "Wetterfeste Montage am Carport" },
+      { "label": "Stellplatz im Freien", "eur": 490, "line": "Standsäule mit Fundament" }
+    ]},
+    { "id": "abstand", "q": "Wie weit ist es vom Zählerschrank bis zur Wallbox?", "hint": "Schätzen reicht: ein großer Schritt ist etwa 1 m. Zählen Sie den Weg, den ein Kabel an Wänden entlang nehmen würde.", "opts": [
+      { "label": "bis 10 m", "eur": 0 },
+      { "label": "10 bis 20 m", "eur": 390, "line": "Leitung 10–20 m, 1–2 Wanddurchbrüche" },
+      { "label": "20 bis 30 m", "eur": 790, "line": "Leitung 20–30 m, Wanddurchbrüche" },
+      { "label": "über 30 m oder durch den Garten", "eur": 1490, "line": "Lange Leitung bzw. Erdkabel", "ab": true }
+    ]},
+    { "id": "baujahr", "q": "Wann wurde das Haus gebaut?", "hint": "Davon hängt ab, ob im Zählerschrank Platz ist. Ein Foto vom Schrank klärt das endgültig.", "opts": [
+      { "label": "nach 2000", "eur": 0 },
+      { "label": "1980 bis 2000", "eur": 390, "line": "Zählerschrank erweitern (falls nötig)" },
+      { "label": "vor 1980", "eur": 2900, "line": "Zählerschrank erneuern (falls nötig)", "maybe": true },
+      { "label": "weiß ich nicht", "eur": 390, "line": "Zählerschrank prüfen/erweitern (falls nötig)" }
+    ]},
+    { "id": "kw", "q": "Welche Ladeleistung?", "hint": "11 kW reichen für fast jedes Auto: über Nacht voll. 22 kW braucht eine Genehmigung des Netzbetreibers, das dauert in der Regel einige Wochen.", "opts": [
+      { "label": "11 kW (empfohlen)", "eur": 0 },
+      { "label": "22 kW", "eur": 190, "line": "Genehmigungsantrag 22 kW" },
+      { "label": "weiß ich nicht", "eur": 0 }
+    ]},
+    { "id": "pv", "q": "Soll die Wallbox mit Solarstrom laden?", "hint": "Überschussladen: Das Auto lädt bevorzugt, wenn Ihre PV-Anlage mehr erzeugt, als das Haus braucht.", "opts": [
+      { "label": "Nein", "eur": 0 },
+      { "label": "Ja, PV-Anlage ist vorhanden", "eur": 190, "line": "Energiezähler und Einrichtung Überschussladen" },
+      { "label": "PV ist geplant", "eur": 0, "line": "Leitung für späteres Überschussladen vorbereitet" }
+    ]}
+  ]
+}

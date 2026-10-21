@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Impressum · Elektro Brakhage">
+  <main id="inhalt" class="page">
+    <div class="wrap page__in legal">
+      <header class="page__head">
+        <a class="back" href={base}>← Zum Haus</a>
+        <h1>Impressum</h1>
+        <p class="page__lead">Demo: Betrieb und Angaben sind erfunden. So sieht ein Impressum für einen zulassungspflichtigen Handwerksbetrieb aus.</p>
+      </header>
+      <div>
+        <h2>Angaben gemäß § 5 DDG</h2>
+        <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+        <h2>Kontakt</h2>
+        <p>Telefon: {site.phone}<br />E-Mail: {site.email}</p>
+        <h2>Berufsrechtliche Angaben</h2>
+        <p><strong>Berufsbezeichnung:</strong> Elektrotechnikermeister (verliehen in der Bundesrepublik Deutschland)</p>
+        <p><strong>Zuständige Kammer:</strong> {site.kammer}, Berliner Allee 17, 30175 Hannover</p>
+        <p><strong>Eintragung:</strong> {site.handwerksrolle}</p>
+        <p><strong>Berufsrechtliche Regelungen:</strong> Gesetz zur Ordnung des Handwerks (Handwerksordnung), einsehbar unter <a href="https://www.gesetze-im-internet.de/hwo/" target="_blank" rel="noopener">gesetze-im-internet.de/hwo</a></p>
+        <h2>Umsatzsteuer</h2>
+        <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: {site.ustid}</p>
+        <h2>Berufshaftpflichtversicherung</h2>
+        <p>TODO vom Kunden: Name und Anschrift des Versicherers, räumlicher Geltungsbereich (Pflicht, wenn eine Versicherung für die Tätigkeit vorgeschrieben ist oder freiwillig angegeben wird).</p>
+        <h2>Verbraucherstreitbeilegung</h2>
+        <p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+      </div>
+    </div>
+  </main>
+</Base>

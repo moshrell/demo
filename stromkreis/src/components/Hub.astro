@@ -1,0 +1,427 @@
+---
+/**
+ * Hub „Sicherungskasten → Hausschnitt“ (Startseite).
+ * Zustand: off (Kasten groß) → on (Haus + Schiene). Räume per Sicherung oder Tipp schalten, Karte fährt hoch,
+ * Tipp auf hellen Raum = Kamerafahrt auf festen Punkt → Leistungsseite. Zustand in sessionStorage ('hub').
+ * Ohne Bilder (haus.json images:false oder Dateien fehlen): Schema aus denselben Flächen.
+ */
+import haus from '../data/haus.json';
+import leistungen from '../data/leistungen.json';
+import { img } from '../scripts/img';
+const base = import.meta.env.BASE_URL;
+const dark = img(haus.dark);
+const lit = img(haus.lit);
+const panel = img(haus.panel);
+const photos = !!(dark && lit);
+const svc = Object.fromEntries(leistungen.map((l) => [l.slug, l]));
+const pts = (p: number[][]) => p.map(([x, y]) => `${x},${y}`).join(' ');
+const clip = (p: number[][]) => `polygon(${p.map(([x, y]) => `${x}% ${y}%`).join(', ')})`;
+const center = (p: number[][]) => [p.reduce((s, q) => s + q[0], 0) / p.length, p.reduce((s, q) => s + q[1], 0) / p.length];
+const rooms = haus.rooms.map((r) => {
+  const s = svc[r.service];
+  const [cx, cy] = center(r.poly);
+  return { ...r, cx, cy, href: `${base}${r.service}/${r.anchor ? '#' + r.anchor : ''}`, s };
+});
+const rowA = rooms.slice(0, 4);
+const rowB = rooms.slice(4);
+const cards = rooms.map((r) => ({
+  id: r.id, name: r.name, circuit: r.circuit, title: r.s.nav, text: r.id === 'bad' ? 'FI-Schutzschalter nachrüsten, Bad-Elektrik bei der Sanierung gleich mitplanen.' : r.s.card,
+  from: r.id === 'bad' ? '290 €' : r.s.from, fromLabel: r.id === 'bad' ? 'FI-Schutz ab' : r.s.fromLabel,
+  href: r.href, tool: r.s.tool, ref: r.ref ? r.s.referenz : null, refHref: `${base}${r.service}/#referenz`,
+}));
+const toolLabel: Record<string, string> = { altbau: 'Ist meine Elektrik alt?', wallbox: 'Wallbox-Check starten', echeck: 'Preis ausrechnen' };
+---
+<section class="hub" data-hub data-state="on" data-photos={photos ? '1' : '0'} aria-labelledby="hub-h">
+  <script is:inline>(function(){var h=document.currentScript.parentElement;try{var s=JSON.parse(sessionStorage.getItem('hub')||'null');h.dataset.state=s&&s.power?'on':'off';}catch(e){h.dataset.state='off';}h.classList.add('is-js');})();</script>
+
+  <div class="hub__intro">
+    <h1 id="hub-h" class="hub__h">Elektromeister für Gehrden, Ronnenberg und Barsinghausen</h1>
+    <p class="hub__sub">Altbau, Zählerschrank, Wallbox, PV, E-Check. <span class="hub__sub-off">Schalten Sie das Licht ein.</span><span class="hub__sub-on">Schalten Sie einen Raum ein.</span></p>
+  </div>
+
+  <!-- Zustand AUS: der Sicherungskasten -->
+  <div class="kasten" data-kasten>
+    <div class="kasten__box" data-has-photo={panel ? '1' : '0'}>
+      {panel && <img class="kasten__foto" src={panel.src} width={panel.width} height={panel.height} alt="" fetchpriority="high" decoding="async" />}
+      <div class="kasten__rail kasten__rail--1" style={`top:${haus.rails[0]}%`}>
+        <button class="brk brk--main" type="button" data-main aria-pressed="false" aria-label="Hauptschalter einschalten">
+          <span class="brk__body"><span class="brk__lever" aria-hidden="true"></span><span class="brk__led" aria-hidden="true"></span></span>
+          <span class="strip brk__lab"><b>Haupt</b>schalter</span>
+          <span class="brk__tap" aria-hidden="true"></span>
+        </button>
+      </div>
+      {[rowA, rowB].map((row, ri) => (
+        <div class={`kasten__rail kasten__rail--${ri + 2}`} style={`top:${haus.rails[ri + 1]}%`}>
+          {row.map((r) => (
+            <button class="brk" type="button" data-brk={r.id} aria-pressed="false" aria-label={`${r.circuit} ${r.name}: ${r.line}`} tabindex="-1">
+              <span class="brk__body"><span class="brk__lever" aria-hidden="true"></span><span class="brk__led" aria-hidden="true"></span></span>
+              <span class="strip brk__lab"><b>{r.circuit}</b>{r.breaker}</span>
+            </button>
+          ))}
+        </div>
+      ))}
+    </div>
+    <p class="kasten__hint">Hauptschalter antippen</p>
+  </div>
+
+  <!-- Zustand AN: Hausschnitt + Schiene -->
+  <div class="haus" data-haus>
+    <div class="haus__stage" data-stage>
+      <div class="haus__tilt" data-tilt>
+        <div class="haus__frame" data-frame>
+          {photos ? (
+            <>
+              <img class="haus__img" src={dark!.src} width={dark!.width} height={dark!.height} alt="Hausschnitt bei Nacht: Dach mit Solarmodulen, Bad, Büro, Küche, Garage mit E-Auto, Keller mit Zählerschrank, Garten" decoding="async" />
+              {rooms.map((r) => (
+                <img class="haus__lit" data-lit={r.id} src={lit!.src} width={lit!.width} height={lit!.height} alt="" decoding="async" style={`clip-path:${clip(r.poly)}`} />
+              ))}
+            </>
+          ) : (
+            <svg class="haus__schema" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <rect x="0" y="0" width="100" height="73" class="sch__sky" />
+              <rect x="0" y="72" width="100" height="28" class="sch__soil" />
+              <polyline points="0,72 100,72" class="sch__line" />
+              {rooms.map((r) => (
+                <polygon points={pts(r.poly)} class="sch__room" data-lit={r.id} />
+              ))}
+            </svg>
+          )}
+          {rooms.map((r) => (
+            <span class="haus__glow" data-glow={r.id} style={`left:${r.lamp[0]}%;top:${r.lamp[1]}%`} aria-hidden="true"></span>
+          ))}
+          <svg class="haus__hit" viewBox="0 0 100 100" preserveAspectRatio="none">
+            {rooms.map((r) => (
+              <a href={r.href} data-room={r.id} aria-label={`${r.name}: ${r.s.nav}`}>
+                <polygon points={pts(r.poly)} />
+              </a>
+            ))}
+          </svg>
+          {rooms.map((r) => (
+            <span class="haus__name" data-name={r.id} style={`left:${r.cx}%;top:${r.cy}%`} aria-hidden="true">{r.name}</span>
+          ))}
+          {rooms.filter((r) => r.ref).map((r) => (
+            <button class="haus__pin" type="button" data-pin={r.id} style={`left:${r.pin![0]}%;top:${r.pin![1]}%`} aria-label={`Referenz ${r.name}: ${r.s.referenz?.ort}`}><span aria-hidden="true">R</span></button>
+          ))}
+        </div>
+      </div>
+
+      <div class="karte" data-karte hidden aria-live="polite">
+        {cards.map((c) => (
+          <article class="karte__in" data-card={c.id} hidden>
+            <p class="karte__top"><span class="strip"><b>{c.circuit}</b>{c.name}</span><button class="karte__x" type="button" data-close aria-label="Karte schließen">×</button></p>
+            <h2 class="karte__h">{c.title}</h2>
+            <p class="karte__t">{c.text}</p>
+            <p class="karte__p"><span>{c.fromLabel}</span> <strong class="num">{c.from}</strong></p>
+            <div class="karte__a">
+              <a class="btn btn--amber" href={c.href}>{c.tool ? toolLabel[c.tool] : 'Preise und Anfrage'}</a>
+            </div>
+          </article>
+        ))}
+        {cards.filter((c) => c.ref).map((c) => (
+          <article class="karte__in" data-refcard={c.id} hidden>
+            <p class="karte__top"><span class="strip"><b>Referenz</b>{c.ref!.ort}</span><button class="karte__x" type="button" data-close aria-label="Karte schließen">×</button></p>
+            <h2 class="karte__h">{c.ref!.baujahr}</h2>
+            <p class="karte__t">{c.ref!.was}.</p>
+            <p class="karte__p"><span>Dauer</span> <strong>{c.ref!.dauer}</strong></p>
+            <div class="karte__a"><a class="btn btn--line" href={c.refHref}>Ganze Referenz</a></div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <div class="schiene">
+      <div class="schiene__tools">
+        <button class="schiene__t" type="button" data-all aria-pressed="false">Alles an</button>
+        <button class="schiene__t" type="button" data-off>Licht aus</button>
+        <a class="schiene__t schiene__list" href="#schnellzugriff">Liste aller Leistungen ↓</a>
+      </div>
+      <div class="schiene__rail" role="group" aria-label="Sicherungen: Räume einschalten">
+        {rooms.map((r) => (
+          <button class="brk brk--s" type="button" data-brk={r.id} aria-pressed="false" aria-label={`${r.circuit} ${r.name}: ${r.line}`}>
+            <span class="brk__body"><span class="brk__lever" aria-hidden="true"></span><span class="brk__led" aria-hidden="true"></span></span>
+            <span class="strip brk__lab">{r.breaker}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <a class="hub__skip" href="#schnellzugriff">Ohne Licht direkt zu den Leistungen</a>
+</section>
+
+<style>
+  .hub { position: relative; height: calc(100svh - var(--head-h) - var(--bar-h) - env(safe-area-inset-bottom)); min-height: 34rem; max-height: 60rem; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; padding: var(--space-smd) var(--gutter) var(--space-sm); gap: var(--space-sm); overflow: hidden; background: radial-gradient(120% 70% at 50% 40%, var(--color-paper-2), var(--color-paper) 70%); }
+  .hub__intro { display: grid; gap: var(--space-xs); text-align: center; }
+  .hub__h { font-size: clamp(1.375rem, 6.4vw, 2.25rem); line-height: 1.02; text-transform: uppercase; letter-spacing: 0.01em; text-wrap: balance; }
+  .hub__sub { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .hub__sub-on { display: none; }
+  .hub[data-state='on'] .hub__sub-on { display: inline; }
+  .hub[data-state='on'] .hub__sub-off { display: none; }
+  .hub__skip { justify-self: center; font-size: var(--text-sm); padding: var(--space-xs) var(--space-sm); min-height: 2.75rem; display: inline-flex; align-items: center; white-space: nowrap; }
+
+  /* Ein Zustand sichtbar, der andere aus dem Layout */
+  .kasten, .haus { grid-row: 2; grid-column: 1; min-height: 0; }
+  .hub[data-state='off'] .haus { visibility: hidden; opacity: 0; pointer-events: none; }
+  .hub[data-state='on'] .kasten { visibility: hidden; opacity: 0; pointer-events: none; }
+  .hub[data-state='on'] .hub__skip { display: none; }
+
+  /* ---------- Kasten ---------- */
+  .kasten { display: grid; place-items: center; align-content: center; gap: var(--space-sm); }
+  .kasten__box { position: relative; height: min(100%, calc((100vw - 2 * var(--gutter)) * 4 / 3)); max-height: 34rem; aspect-ratio: 3 / 4; border-radius: var(--radius-lg); overflow: hidden; background: var(--color-paper-2); box-shadow: inset 0 0 0 0.5rem var(--color-plastic-2), inset 0 0 0 0.6rem var(--color-paper-4), 0 2rem 4rem oklch(0% 0 0 / 0.55); }
+  .kasten__box[data-has-photo='1'] { box-shadow: 0 2rem 4rem oklch(0% 0 0 / 0.55); }
+  .kasten__foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.75); }
+  .kasten__box[data-has-photo='0'] .kasten__rail::before { content: ''; position: absolute; left: 6%; right: 6%; top: 50%; height: 0.55rem; transform: translateY(-50%); background: linear-gradient(var(--color-plastic-2), var(--color-paper-4)); }
+  .kasten__rail { position: absolute; left: 0; right: 0; height: 0; display: flex; justify-content: center; gap: 2px; }
+  .kasten__rail > .brk { transform: translateY(-50%); }
+  .kasten__hint { font: 500 var(--text-xs)/1 var(--font-mono); text-transform: uppercase; color: var(--color-amber); letter-spacing: 0.06em; }
+  .kasten__box .brk { --mod: clamp(2.75rem, 12.5vw, 3.6rem); }
+
+  /* ---------- Sicherung (HTML-Schalter) ---------- */
+  .brk { --mod: 2.9rem; position: relative; display: grid; justify-items: center; gap: 0.3rem; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  .brk__body { position: relative; width: var(--mod); height: calc(var(--mod) * 1.9); border-radius: 3px; background: linear-gradient(90deg, var(--color-plastic-2), var(--color-plastic) 30%, var(--color-plastic) 70%, var(--color-plastic-2)); box-shadow: 0 2px 0 oklch(0% 0 0 / 0.5), inset 0 0 0 1px oklch(0% 0 0 / 0.12); }
+  .brk__lever { position: absolute; left: 30%; right: 30%; top: 22%; height: 32%; border-radius: 2px; background: var(--color-paper-4); box-shadow: inset 0 -3px 0 oklch(0% 0 0 / 0.35); transform: translateY(70%); }
+  .brk__led { position: absolute; left: 50%; bottom: 10%; width: 0.4rem; height: 0.4rem; margin-left: -0.2rem; border-radius: 50%; background: var(--color-led-off); }
+  .brk[aria-pressed='true'] .brk__lever { transform: translateY(0); background: var(--color-amber-deep); }
+  .brk[aria-pressed='true'] .brk__led { background: var(--color-amber); box-shadow: 0 0 0.5rem var(--color-amber); }
+  .brk__lab { font-size: 0.5625rem; padding: 0.3rem 0.25rem; gap: 0.2rem; max-width: calc(var(--mod) + 1.6rem); }
+  .brk--main { --mod: clamp(4rem, 19vw, 5rem); }
+  .brk--main .brk__body { width: calc(var(--mod) * 1.6); height: calc(var(--mod) * 1.45); }
+  .brk--main .brk__lever { left: 20%; right: 20%; background: var(--color-alert); }
+  .brk--main[aria-pressed='true'] .brk__lever { background: var(--color-alert); }
+  .brk--main .brk__lab { font-size: 0.625rem; max-width: none; }
+  .brk__tap { position: absolute; left: 50%; top: 28%; width: 3.5rem; height: 3.5rem; margin: -1.75rem 0 0 -1.75rem; border-radius: 50%; border: 2px solid var(--color-amber); opacity: 0; pointer-events: none; }
+  .kasten__box .brk:not(.brk--main) { pointer-events: auto; }
+  .brk:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; border-radius: 4px; }
+
+  /* ---------- Haus ---------- */
+  .haus { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: var(--space-sm); }
+  .haus__stage { position: relative; min-height: 0; display: grid; place-items: center; perspective: 900px; }
+  .haus__tilt { height: 100%; max-width: 100%; aspect-ratio: 3 / 4; transform-style: preserve-3d; will-change: transform; }
+  .haus__frame { position: relative; width: 100%; height: 100%; border-radius: var(--radius-lg); overflow: hidden; transform-origin: 50% 50%; background: var(--color-sky); }
+  .haus__img, .haus__lit { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .haus__lit { opacity: 0; }
+  .haus__schema { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sch__sky { fill: var(--color-sky); }
+  .sch__soil { fill: var(--color-soil); }
+  .sch__line { stroke: var(--color-paper-4); stroke-width: 1; vector-effect: non-scaling-stroke; fill: none; }
+  .sch__room { fill: var(--color-schema-dark); stroke: var(--color-cream); stroke-opacity: 0.35; stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .sch__room.is-on { fill: var(--color-schema-lit); stroke: var(--color-amber-hi); stroke-opacity: 0.9; }
+  .haus__glow { position: absolute; width: 46%; aspect-ratio: 1; margin: -23% 0 0 -23%; border-radius: 50%; background: radial-gradient(closest-side, var(--color-amber-glow), transparent); opacity: 0; transform: scale(0.3); pointer-events: none; mix-blend-mode: screen; }
+  .haus__hit { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .haus__hit polygon { fill: transparent; cursor: pointer; }
+  .haus__hit a:focus-visible polygon { stroke: var(--color-focus); stroke-width: 3; vector-effect: non-scaling-stroke; }
+  .haus__name { position: absolute; transform: translate(-50%, -50%); font: 600 0.625rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-ink-2); pointer-events: none; white-space: nowrap; }
+  .hub[data-photos='1'] .haus__name { opacity: 0; }
+  .hub[data-photos='1'] .haus__name.is-on { opacity: 1; color: var(--color-cream-ink); background: var(--color-cream); padding: 0.2rem 0.3rem; border-radius: 2px; }
+  .hub[data-photos='0'] .haus__name.is-on { color: var(--color-cream-ink); }
+  .haus__pin { position: absolute; width: 2.75rem; height: 2.75rem; margin: -1.375rem 0 0 -1.375rem; display: grid; place-items: center; padding: 0; border: 0; background: none; cursor: pointer; opacity: 0; pointer-events: none; }
+  .haus__pin span { width: 1.5rem; height: 1.5rem; display: grid; place-items: center; border-radius: 50%; background: var(--color-cream); color: var(--color-cream-ink); font: 700 0.6875rem/1 var(--font-mono); box-shadow: 0 0 0 3px oklch(0% 0 0 / 0.35); }
+  .haus__pin.is-on { opacity: 1; pointer-events: auto; }
+
+  /* Karte (Bottom-Sheet über dem Haus) */
+  .karte { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; }
+  .karte[hidden] { display: none; }
+  .karte__in { display: grid; gap: var(--space-sm); padding: var(--space-md); border-radius: var(--radius-lg); background: oklch(20.5% 0.008 70 / 0.97); border: 1px solid var(--color-amber-deep); box-shadow: 0 -1rem 2rem oklch(0% 0 0 / 0.5); }
+  .karte__in[hidden] { display: none; }
+  .karte__top { display: flex; justify-content: space-between; align-items: center; }
+  .karte__x { width: 2.75rem; height: 2.75rem; margin: -0.5rem -0.5rem -0.5rem 0; border: 0; background: none; font-size: 1.5rem; line-height: 1; cursor: pointer; color: var(--color-ink-2); }
+  .karte__h { font-size: var(--text-xl); text-transform: uppercase; }
+  .karte__t { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .karte__p { display: flex; align-items: baseline; gap: var(--space-sm); font-size: var(--text-sm); color: var(--color-ink-2); }
+  .karte__p strong { font-size: var(--text-xl); color: var(--color-amber-hi); }
+  .karte__a { display: flex; gap: var(--space-sm); }
+  .karte__a .btn { flex: 1; }
+
+  /* Schiene */
+  .schiene { display: grid; gap: var(--space-sm); }
+  .schiene__tools { display: flex; gap: var(--space-sm); align-items: center; overflow-x: auto; scrollbar-width: none; }
+  .schiene__tools::-webkit-scrollbar { display: none; }
+  .schiene__t { flex: none; min-height: 2.5rem; padding: 0 var(--space-smd); display: inline-flex; align-items: center; border: 1px solid var(--color-rule); border-radius: 999px; background: transparent; font: 600 var(--text-sm)/1 var(--font-body); color: var(--color-ink); text-decoration: none; cursor: pointer; white-space: nowrap; }
+  .schiene__t[aria-pressed='true'] { background: var(--color-cream); color: var(--color-cream-ink); border-color: var(--color-cream); }
+  .schiene__list { margin-left: auto; border-color: transparent; color: var(--color-amber-hi); padding-right: 0; }
+  .schiene__t.is-nudge { border-color: var(--color-amber); box-shadow: 0 0 0 3px var(--color-amber-glow); }
+  .schiene__rail { position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; padding: var(--space-sm) var(--space-xs) var(--space-xs); border-radius: var(--radius); background: var(--color-paper-2); box-shadow: inset 0 0 0 1px var(--color-rule); }
+  .schiene__rail::before { content: ''; position: absolute; left: var(--space-xs); right: var(--space-xs); top: calc(var(--space-sm) + 1.55rem); height: 0.4rem; background: var(--color-paper-4); }
+  .brk--s { --mod: min(2.6rem, 100%); }
+  .brk--s .brk__body { width: 100%; max-width: 2.6rem; height: 3.1rem; }
+  .brk--s .brk__lab { font-size: 0.5rem; padding: 0.25rem 0.15rem; letter-spacing: 0; max-width: 100%; overflow: hidden; }
+
+  @media (min-width: 48rem) {
+    .hub { max-height: none; }
+    .haus { grid-template-columns: minmax(0, 1fr) 20rem; grid-template-rows: minmax(0, 1fr); align-items: center; }
+    .karte { left: auto; right: -21rem; width: 20rem; bottom: auto; top: 0; }
+    .schiene { align-self: end; }
+    .brk--s { --mod: 2.4rem; }
+  }
+  @media (min-width: 48rem) and (min-height: 40rem) {
+    .haus { grid-template-columns: minmax(0, 1fr) 20rem; }
+  }
+
+  /* ---------- Bewegung ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .kasten, .haus { transition: opacity var(--dur-slow) var(--ease-out), visibility 0s linear var(--dur-slow); }
+    .hub[data-state='off'] .kasten, .hub[data-state='on'] .haus { transition: opacity var(--dur-slow) var(--ease-out), visibility 0s; }
+    .brk__lever { transition: transform var(--dur-fast) var(--ease-out), background-color var(--dur-fast); }
+    .brk__led { transition: background-color var(--dur-fast), box-shadow var(--dur-fast); }
+    .hub[data-state='off'] .brk__tap { animation: tap 2.4s var(--ease-out) 1s infinite; }
+    .haus__lit, .sch__room, .haus__name { transition: opacity 520ms var(--ease-out), fill 520ms var(--ease-out); }
+    .haus__lit.is-on { animation: flicker 520ms linear; }
+    .haus__glow { transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-out); }
+    .karte__in:not([hidden]) { animation: sheet var(--dur-mid) var(--ease-out); }
+    .haus__frame { transition: transform 450ms var(--ease-in-out); }
+    .haus__pin { transition: opacity var(--dur-mid) var(--ease-out) 300ms; }
+    .hub.is-powering .brk__led { transition-delay: calc(var(--i, 0) * 110ms); }
+    .hub.is-powering .kasten__box { animation: hum 1.1s linear; }
+  }
+  .haus__lit.is-on { opacity: 1; }
+  .haus__glow.is-on { opacity: 1; transform: scale(1); }
+  @keyframes tap { 0% { opacity: 0; transform: scale(0.6); } 20% { opacity: 1; } 60% { opacity: 0; transform: scale(1.6); } 100% { opacity: 0; } }
+  @keyframes flicker { 0% { opacity: 0; } 12% { opacity: 0.7; } 20% { opacity: 0.2; } 34% { opacity: 0.9; } 44% { opacity: 0.6; } 100% { opacity: 1; } }
+  @keyframes sheet { from { opacity: 0; transform: translateY(1rem); } }
+  @keyframes hum { 0%, 100% { transform: none; } 10% { transform: translateX(0.5px); } 20% { transform: translateX(-0.5px); } 30% { transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .karte__in:not([hidden]) { animation: fade 150ms linear; }
+    @keyframes fade { from { opacity: 0; } }
+  }
+
+  /* Ohne JS: Haus hell, alle Räume Links, Schiene/Werkzeuge aus */
+  .hub:not(.is-js) .kasten, .hub:not(.is-js) .schiene__tools button, .hub:not(.is-js) .schiene__rail, .hub:not(.is-js) .haus__pin { display: none; }
+  .hub:not(.is-js) .haus__lit, .hub:not(.is-js) .haus__name { opacity: 1; }
+  .hub:not(.is-js) .sch__room { fill: var(--color-schema-lit); }
+</style>
+
+<script>
+  type St = { power: boolean; on: string[]; intro: boolean };
+  const hub = document.querySelector<HTMLElement>('[data-hub]');
+  if (hub) {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    const ids = [...new Set([...hub.querySelectorAll<HTMLElement>('[data-brk]')].map((b) => b.dataset.brk!))];
+    let st: St = { power: false, on: [], intro: false };
+    try { const s = JSON.parse(sessionStorage.getItem('hub') || 'null'); if (s) st = { ...st, ...s }; } catch {}
+    const save = () => { try { sessionStorage.setItem('hub', JSON.stringify(st)); } catch {} };
+    const $$ = <T extends Element>(sel: string) => [...hub.querySelectorAll<T>(sel)];
+    const karte = hub.querySelector<HTMLElement>('[data-karte]')!;
+    const frame = hub.querySelector<HTMLElement>('[data-frame]')!;
+    let shown: string | null = null;
+
+    const showCard = (sel: string | null) => {
+      shown = sel;
+      $$<HTMLElement>('.karte__in').forEach((c) => (c.hidden = !sel || !c.matches(sel)));
+      karte.hidden = !sel;
+    };
+    const render = () => {
+      hub.dataset.state = st.power ? 'on' : 'off';
+      const main = hub.querySelector<HTMLButtonElement>('[data-main]')!;
+      main.setAttribute('aria-pressed', String(st.power));
+      main.setAttribute('aria-label', st.power ? 'Hauptschalter ist an' : 'Hauptschalter einschalten');
+      $$<HTMLButtonElement>('[data-brk]').forEach((b) => {
+        const on = st.power && st.on.includes(b.dataset.brk!);
+        b.setAttribute('aria-pressed', String(on));
+        // im Kasten zählen die LEDs „Strom da“ (alle an), in der Schiene der Raum
+        if (b.closest('.kasten')) b.setAttribute('aria-pressed', String(st.power));
+      });
+      ids.forEach((id) => {
+        const on = st.power && st.on.includes(id);
+        $$(`[data-lit="${id}"], [data-glow="${id}"], [data-name="${id}"], [data-pin="${id}"]`).forEach((el) => el.classList.toggle('is-on', on));
+      });
+      const all = ids.every((id) => st.on.includes(id));
+      hub.querySelector('[data-all]')!.setAttribute('aria-pressed', String(all));
+    };
+
+    // Hauptschalter: kurze Stromzufuhr (LEDs nacheinander), dann Haus
+    const powerOn = () => {
+      if (st.power) return;
+      const kastenBrk = $$<HTMLElement>('.kasten [data-brk]');
+      if (!reduce.matches && !st.intro) {
+        hub.classList.add('is-powering');
+        hub.querySelector('[data-main]')!.setAttribute('aria-pressed', 'true');
+        kastenBrk.forEach((b, i) => { b.style.setProperty('--i', String(i + 1)); b.setAttribute('aria-pressed', 'true'); });
+        if ('vibrate' in navigator) try { navigator.vibrate(12); } catch {}
+        setTimeout(() => { hub.classList.remove('is-powering'); st.power = true; st.intro = true; save(); render(); nudge(); }, 1150);
+      } else { st.power = true; st.intro = true; save(); render(); nudge(); }
+    };
+    // Nach 10 s ohne Schalten: „Alles an“ hervorheben
+    let nudgeT = 0;
+    const nudge = () => {
+      clearTimeout(nudgeT);
+      const allBtn = hub.querySelector<HTMLElement>('[data-all]')!;
+      allBtn.classList.remove('is-nudge');
+      nudgeT = window.setTimeout(() => { if (st.power && st.on.length === 0) allBtn.classList.add('is-nudge'); }, 10000);
+    };
+    const toggle = (id: string, force?: boolean) => {
+      if (!st.power) { powerOn(); return; }
+      const on = force ?? !st.on.includes(id);
+      st.on = on ? [...new Set([...st.on, id])] : st.on.filter((x) => x !== id);
+      save(); render();
+      showCard(on ? `[data-card="${id}"]` : shown === `[data-card="${id}"]` ? null : shown);
+      hub.querySelector('[data-all]')!.classList.remove('is-nudge');
+      if (on && 'vibrate' in navigator) try { navigator.vibrate(8); } catch {}
+    };
+
+    hub.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      if (t.closest('[data-main]')) { st.power ? null : powerOn(); return; }
+      const b = t.closest<HTMLElement>('[data-brk]');
+      if (b) { toggle(b.dataset.brk!); return; }
+      const pin = t.closest<HTMLElement>('[data-pin]');
+      if (pin) { showCard(`[data-refcard="${pin.dataset.pin}"]`); return; }
+      if (t.closest('[data-close]')) { showCard(null); return; }
+      if (t.closest('[data-all]')) {
+        const all = ids.every((id) => st.on.includes(id));
+        st.on = all ? [] : [...ids]; save(); render(); showCard(null);
+        if (!all) document.getElementById('schnellzugriff')?.classList.add('is-hint');
+        return;
+      }
+      if (t.closest('[data-off]')) { st.power = false; st.on = []; save(); render(); showCard(null); return; }
+      const room = t.closest<SVGAElement>('[data-room]');
+      if (room) {
+        const id = room.dataset.room!;
+        if (!st.on.includes(id)) { e.preventDefault(); toggle(id, true); return; }
+        // heller Raum: Kamerafahrt auf festen Punkt, dann Seite öffnen
+        const href = room.getAttribute('href')!;
+        if (reduce.matches || e.metaKey || e.ctrlKey) return;
+        e.preventDefault();
+        const n = hub.querySelector<HTMLElement>(`[data-name="${id}"]`)!;
+        const x = parseFloat(n.style.left), y = parseFloat(n.style.top);
+        frame.style.transformOrigin = `${x}% ${y}%`;
+        frame.style.transform = 'scale(2.4)';
+        showCard(null);
+        setTimeout(() => (location.href = href), 430);
+      }
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && shown) showCard(null); });
+    // Zurück-Navigation aus dem bfcache: Kamera zurücksetzen
+    window.addEventListener('pageshow', () => { frame.style.transform = ''; });
+
+    // Leichte Neigung (±4°): horizontales Ziehen bzw. Maus, Android zusätzlich Lage des Telefons. Scrollen bleibt frei.
+    const tilt = hub.querySelector<HTMLElement>('[data-tilt]')!;
+    if (!reduce.matches) {
+      let rx = 0, ry = 0, raf = 0, startX = 0, baseRy = 0, dragging = false;
+      const apply = () => { raf = 0; tilt.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`; };
+      const set = (x: number, y: number) => { ry = Math.max(-4, Math.min(4, x)); rx = Math.max(-3, Math.min(3, y)); if (!raf) raf = requestAnimationFrame(apply); };
+      const stage = hub.querySelector<HTMLElement>('[data-stage]')!;
+      stage.style.touchAction = 'pan-y';
+      stage.addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse') return; dragging = true; startX = e.clientX; baseRy = ry; });
+      stage.addEventListener('pointermove', (e) => {
+        const r = stage.getBoundingClientRect();
+        if (e.pointerType === 'mouse') set(((e.clientX - r.left) / r.width - 0.5) * 8, -((e.clientY - r.top) / r.height - 0.5) * 6);
+        else if (dragging) set(baseRy + (e.clientX - startX) / 20, rx);
+      });
+      const end = () => { dragging = false; };
+      stage.addEventListener('pointerup', end); stage.addEventListener('pointercancel', end);
+      stage.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') set(0, 0); });
+      const DOE = (window as any).DeviceOrientationEvent;
+      if (DOE && typeof DOE.requestPermission !== 'function') {
+        let b0: number | null = null, g0: number | null = null;
+        window.addEventListener('deviceorientation', (e) => {
+          if (e.beta == null || e.gamma == null || hub.dataset.state !== 'on') return;
+          if (b0 == null) { b0 = e.beta; g0 = e.gamma; }
+          set((e.gamma - g0!) / 4, -(e.beta - b0) / 6);
+        });
+      }
+    }
+
+    render();
+    if (st.power) nudge();
+  }
+</script>

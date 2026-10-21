@@ -1,0 +1,142 @@
+---
+/** Wallbox-Check: 5 Fragen, eine pro Schritt, Richtpreis läuft mit. Ergebnis geht ins Anfrageformular (Event 'anfrage:summary'). */
+import wb from '../data/wallbox.json';
+const { form = 'anfrage' } = Astro.props;
+const eur = (n: number) => new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 }).format(n) + ' €';
+const baseSum = wb.base.reduce((s, b) => s + b.eur, 0);
+---
+<div class="tool" data-wb data-form={form}>
+  <script type="application/json" data-wb-data set:html={JSON.stringify(wb)} />
+  <div class="tool__head">
+    <p class="strip"><b>Wallbox-Check</b> <span data-wb-progress>5 Fragen</span></p>
+    <div class="tool__meter" aria-hidden="true"><span data-wb-meter></span></div>
+  </div>
+
+  {wb.steps.map((s, i) => (
+    <fieldset class="tool__step" data-wb-step={i}>
+      <legend class="tool__q"><span class="num tool__n">{i + 1}/5</span> {s.q}</legend>
+      {s.hint && <p class="tool__hint">{s.hint}</p>}
+      <div class="tool__opts">
+        {s.opts.map((o, j) => (
+          <label class="tool__opt">
+            <input type="radio" name={`wb-${s.id}`} value={j} />
+            <span class="tool__lab">{o.label}</span>
+            <span class="tool__eur num">{o.eur ? `+ ${eur(o.eur)}${o.ab ? ' ab' : ''}` : '±0 €'}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  ))}
+
+  <div class="tool__step tool__result" data-wb-result hidden tabindex="-1">
+    <h3 class="tool__rh">Ihr Richtpreis</h3>
+    <dl class="tool__lines" data-wb-lines></dl>
+    <label class="tool__own">
+      <input type="checkbox" data-wb-own />
+      <span>Ich habe die Wallbox schon gekauft (Gerät aus dem Preis nehmen)</span>
+    </label>
+    <p class="tool__total"><span>Richtpreis inkl. 19 % MwSt.</span><strong class="num" data-wb-total>ab {eur(baseSum)}</strong></p>
+    <p class="tool__note">Ein Richtwert, kein Angebot. Den genauen Preis bekommen Sie nach einem Foto vom Zählerschrank oder einer Besichtigung, schriftlich.</p>
+    <div class="tool__actions">
+      <a class="btn btn--amber" href={`#${form}`} data-wb-go>Mit diesen Angaben anfragen</a>
+      <button class="btn btn--line" type="button" data-wb-restart>Ändern</button>
+    </div>
+  </div>
+
+  <div class="tool__bar" data-wb-bar>
+    <p class="tool__run"><span>Richtpreis</span><strong class="num" data-wb-run>ab {eur(baseSum)}</strong></p>
+    <button class="btn btn--line tool__back" type="button" data-wb-back hidden>Zurück</button>
+  </div>
+</div>
+
+
+<script>
+  type Opt = { label: string; eur: number; line?: string; ab?: boolean; maybe?: boolean };
+  type Data = { base: { name: string; eur: number; id?: string }[]; steps: { id: string; q: string; opts: Opt[] }[] };
+  const eur = (n: number) => new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 }).format(n) + ' €';
+  const w = window as any; w.__sum = w.__sum || {};
+
+  document.querySelectorAll<HTMLElement>('[data-wb]').forEach((root) => {
+    const data: Data = JSON.parse(root.querySelector('[data-wb-data]')!.textContent!);
+    const form = root.dataset.form!;
+    const steps = [...root.querySelectorAll<HTMLElement>('[data-wb-step]')];
+    const result = root.querySelector<HTMLElement>('[data-wb-result]')!;
+    const back = root.querySelector<HTMLButtonElement>('[data-wb-back]')!;
+    const own = root.querySelector<HTMLInputElement>('[data-wb-own]')!;
+    const KEY = 'tool:wallbox';
+    let st: { a: (number | null)[]; step: number; own: boolean } = { a: data.steps.map(() => null), step: 0, own: false };
+    try { const s = JSON.parse(sessionStorage.getItem(KEY) || 'null'); if (s && Array.isArray(s.a) && s.a.length === data.steps.length) st = s; } catch {}
+
+    const calc = () => {
+      const lines: [string, string][] = [];
+      let total = 0;
+      data.base.forEach((b) => {
+        if (b.id === 'geraet' && st.own) { lines.push(['Wallbox (Gerät)', 'vorhanden']); return; }
+        lines.push([b.name, b.eur ? eur(b.eur) : 'inklusive']); total += b.eur;
+      });
+      const answers: [string, string][] = [];
+      let ab = false;
+      data.steps.forEach((s, i) => {
+        const j = st.a[i]; if (j == null) return;
+        const o = s.opts[j];
+        answers.push([s.q.replace(/\?$/, ''), o.label]);
+        if (o.line) lines.push([o.line, o.eur ? (o.ab ? 'ab ' : '') + eur(o.eur) : 'inklusive']);
+        total += o.eur; if (o.ab) ab = true;
+      });
+      return { lines, total, answers, ab };
+    };
+    const save = () => { try { sessionStorage.setItem(KEY, JSON.stringify(st)); } catch {} };
+    const publish = () => {
+      const c = calc();
+      const complete = st.a.every((x) => x != null);
+      const summary = complete ? {
+        title: 'Aus Ihrem Wallbox-Check',
+        lines: [...c.answers, ...(st.own ? [['Gerät', 'schon vorhanden'] as [string, string]] : [])],
+        total: `ab ${eur(c.total)}`, totalLabel: 'Richtpreis inkl. MwSt.',
+        note: 'Richtwert. Der genaue Preis folgt nach Foto oder Besichtigung.',
+      } : null;
+      w.__sum[form] = summary;
+      window.dispatchEvent(new CustomEvent('anfrage:summary', { detail: { form, summary } }));
+    };
+    const render = (focus = false) => {
+      const c = calc();
+      const done = st.step >= steps.length;
+      steps.forEach((el, i) => {
+        el.hidden = i !== st.step;
+        el.querySelectorAll<HTMLInputElement>('input').forEach((inp) => (inp.checked = Number(inp.value) === st.a[i]));
+      });
+      result.hidden = !done;
+      back.hidden = st.step === 0;
+      root.querySelector('[data-wb-progress]')!.textContent = done ? 'fertig' : `Frage ${st.step + 1} von ${steps.length}`;
+      (root.querySelector('[data-wb-meter]') as HTMLElement).style.transform = `scaleX(${Math.min(st.step, steps.length) / steps.length})`;
+      root.querySelector('[data-wb-run]')!.textContent = `ab ${eur(c.total)}`;
+      root.querySelector('[data-wb-total]')!.textContent = `ab ${eur(c.total)}`;
+      own.checked = st.own;
+      if (done) {
+        root.querySelector('[data-wb-lines]')!.replaceChildren(...c.lines.map(([k, v]) => {
+          const d = document.createElement('div'); const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); return d;
+        }));
+      }
+      if (focus) (done ? result : steps[st.step].querySelector<HTMLElement>('input'))?.focus({ preventScroll: true });
+      publish();
+    };
+
+    // Tipp/Klick wählt und geht nach kurzer Bestätigung weiter; Pfeiltasten wechseln nur die Auswahl, Enter geht weiter
+    let arrowNav = false;
+    steps.forEach((el, i) => el.addEventListener('change', (e) => {
+      st.a[i] = Number((e.target as HTMLInputElement).value);
+      save();
+      render();
+      if (arrowNav) return;
+      setTimeout(() => { if (st.step === i) { st.step = i + 1; save(); render(true); } }, 220);
+    }));
+    steps.forEach((el, i) => el.addEventListener('keydown', (e) => {
+      if (e.key.startsWith('Arrow')) { arrowNav = true; setTimeout(() => (arrowNav = false), 60); }
+      if (e.key === 'Enter') { e.preventDefault(); if (st.a[i] != null) { st.step = i + 1; save(); render(true); } }
+    }));
+    back.addEventListener('click', () => { st.step = Math.max(0, st.step - 1); save(); render(true); });
+    own.addEventListener('change', () => { st.own = own.checked; save(); render(); });
+    root.querySelector('[data-wb-restart]')!.addEventListener('click', () => { st.step = 0; save(); render(true); });
+    render();
+  });
+</script>

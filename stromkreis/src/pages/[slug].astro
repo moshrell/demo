@@ -1,0 +1,100 @@
+---
+import Base from '../layouts/Base.astro';
+import Foto from '../components/Foto.astro';
+import AnfrageForm from '../components/AnfrageForm.astro';
+import WallboxCheck from '../components/WallboxCheck.astro';
+import EcheckRechner from '../components/EcheckRechner.astro';
+import AltbauCheck from '../components/AltbauCheck.astro';
+import leistungen from '../data/leistungen.json';
+import haus from '../data/haus.json';
+
+export function getStaticPaths() {
+  return leistungen.map((l) => ({ params: { slug: l.slug }, props: { l } }));
+}
+const { l } = Astro.props as { l: (typeof leistungen)[number] };
+const base = import.meta.env.BASE_URL;
+const room = haus.rooms.find((r) => r.service === l.slug && !r.anchor)!;
+const firma = l.slug === 'e-check';
+const ref = (l as any).referenz;
+const bad = (l as any).bad;
+const ablauf = firma
+  ? [['Rechner und Anfrage', 'Sie schicken uns die Eckdaten, wir melden uns innerhalb von 2 Arbeitstagen.'], ['Schriftliches Angebot', 'Mit Festpreis je Gerät und Verteiler, für Ihre Unterlagen.'], ['Prüfung vor Ort', 'Arbeitsplatz für Arbeitsplatz, ohne Stillstand, auf Wunsch nach Feierabend.'], ['Protokoll', 'Prüfprotokoll, Plaketten, Mängelliste und Erinnerung an den nächsten Termin.']]
+  : [['Anfrage mit Foto', 'Foto vom Zählerschrank genügt oft für eine erste Einschätzung.'], ['Besichtigung, wenn nötig', '89 €, bei Auftrag angerechnet.'], ['Schriftliches Angebot', 'In der Regel innerhalb von 5 Arbeitstagen.'], ['Ausführung', 'Termin nach Absprache, Protokoll und Fotos zum Schluss.']];
+const formTitle = firma ? 'Angebot anfordern' : l.slug === 'altbau' ? 'Besichtigung anfragen' : 'Anfrage';
+const formIntro = firma ? 'Ihre Angaben aus dem Rechner werden übernommen. Sie bekommen ein schriftliches Angebot für Ihre Unterlagen.' : l.tool ? 'Ihre Angaben aus dem Check werden übernommen.' : '';
+---
+<Base title={`${l.title} · Elektro Brakhage`} description={l.lead} faq={l.faq} prices={l.prices.map((p) => ({ name: p.name, price: p.price }))}>
+  <main id="inhalt" class="page">
+    <div class="wrap page__in">
+      <header class="page__head">
+        <a class="back" href={base} data-back>← Zum Haus</a>
+        <p><span class="strip"><b>{room.circuit}</b>{room.name}</span></p>
+        <h1>{l.title}</h1>
+        <p class="page__lead">{l.lead}</p>
+        <p class="lp-from"><span>{l.fromLabel}</span> <strong class="num">{l.from}</strong></p>
+        <Foto name={l.image} alt={l.imageAlt} eager />
+      </header>
+
+      {l.tool === 'wallbox' && <section class="block" aria-label="Wallbox-Check"><WallboxCheck /></section>}
+      {l.tool === 'echeck' && <section class="block" aria-label="E-Check-Rechner"><EcheckRechner /></section>}
+      {l.tool === 'altbau' && <section class="block" aria-label="Ist meine Elektrik alt?"><AltbauCheck /></section>}
+
+      {bad && (
+        <section class="block" id="bad" aria-labelledby="bad-h">
+          <p><span class="strip"><b>F2</b>Bad</span></p>
+          <h2 id="bad-h">{bad.title}</h2>
+          <p>{bad.text}</p>
+        </section>
+      )}
+
+      <section class="block" aria-labelledby="preise-h">
+        <h2 id="preise-h">Richtpreise</h2>
+        <dl class="prices">
+          {l.prices.map((p) => (
+            <div><dt>{p.name}{(p as any).note && <small>{(p as any).note}</small>}</dt><dd>{p.price}</dd></div>
+          ))}
+        </dl>
+        <p class="vat">{l.vat}</p>
+      </section>
+
+      {ref && (
+        <section class="block ref" id="referenz" aria-labelledby="ref-h">
+          <p><span class="strip"><b>Referenz</b>{ref.ort}</span></p>
+          <h2 id="ref-h">{ref.baujahr}{/^\d{4}$/.test(ref.baujahr) ? ', Baujahr' : ''}</h2>
+          {ref.vorher && (
+            <div class="ref__pair">
+              <figure><Foto name={ref.vorher} alt="Vorher: alter Zählerplatz auf Holzbrett mit Schraubsicherungen" ratio="3 / 4" /><figcaption>vorher</figcaption></figure>
+              <figure><Foto name={ref.nachher} alt="Nachher: neuer, geschlossener Zählerschrank an frisch verputzter Wand" ratio="3 / 4" /><figcaption>nachher</figcaption></figure>
+            </div>
+          )}
+          <dl class="prices">
+            <div><dt>Was wir gemacht haben</dt><dd class="ref__dd">{ref.was}</dd></div>
+            <div><dt>Dauer</dt><dd class="ref__dd">{ref.dauer}</dd></div>
+          </dl>
+        </section>
+      )}
+
+      <section class="block" aria-labelledby="ablauf-h">
+        <h2 id="ablauf-h">So läuft es ab</h2>
+        <ol class="ablauf">{ablauf.map(([t, d]) => (<li><strong>{t}</strong><span>{d}</span></li>))}</ol>
+      </section>
+
+      <section class="block" aria-labelledby="faq-h">
+        <h2 id="faq-h">Häufige Fragen</h2>
+        <div>{l.faq.map((f) => (<details class="faq"><summary>{f.q}</summary><p>{f.a}</p></details>))}</div>
+      </section>
+
+      <AnfrageForm service={l.slug} firma={firma} photo={!firma} title={formTitle} intro={formIntro} submitLabel={firma ? 'Angebot anfordern' : 'Anfrage senden'} />
+    </div>
+  </main>
+</Base>
+
+<style>
+  .lp-from { display: flex; align-items: baseline; gap: var(--space-sm); font-size: var(--text-sm); color: var(--color-ink-2); }
+  .lp-from strong { font-size: var(--text-2xl); color: var(--color-amber-hi); }
+  .ref__pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-sm); }
+  .ref__pair figure { margin: 0; display: grid; gap: var(--space-xs); }
+  .ref__pair figcaption { font: 500 var(--text-xs)/1 var(--font-mono); text-transform: uppercase; color: var(--color-ink-2); }
+  .ref .prices > div { grid-template-columns: 1fr; }
+  .ref__dd { text-align: left !important; white-space: normal !important; font-family: var(--font-body) !important; color: var(--color-ink) !important; }
+</style>

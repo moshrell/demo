@@ -1,0 +1,7 @@
+{
+  "zones": [
+    { "id": 1, "anfahrt": 29, "notdienst": true, "plz": { "30989": "Gehrden", "30952": "Ronnenberg", "30890": "Barsinghausen", "30974": "Wennigsen" } },
+    { "id": 2, "anfahrt": 49, "notdienst": false, "plz": { "30926": "Seelze", "30966": "Hemmingen", "30453": "Hannover-Limmer/Linden", "30455": "Hannover-Badenstedt", "30457": "Hannover-Wettbergen", "30459": "Hannover-Ricklingen" } }
+  ],
+  "outsideLink": "https://www.eh-nb.de/fachbetriebsuche.html"
+}

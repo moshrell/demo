@@ -1,0 +1,79 @@
+---
+/** „Ist meine Elektrik alt?“: Anzeichen mit Foto-Beispielen ankreuzen → Einschätzung → Besichtigung anfragen. */
+import zeichen from '../data/altbau.json';
+import Foto from './Foto.astro';
+const { form = 'anfrage' } = Astro.props;
+---
+<div class="tool ab" data-ab data-form={form}>
+  <p class="strip"><b>Ist meine Elektrik alt?</b> 7 Anzeichen</p>
+  <p class="tool__hint">Tippen Sie an, was Sie bei sich sehen. Es geht nicht um Panik, sondern darum, ob sich eine Besichtigung lohnt.</p>
+  <ul class="ab__list">
+    {zeichen.map((z) => (
+      <li>
+        <label class="ab__item">
+          <input type="checkbox" value={z.id} data-label={z.label} />
+          {z.image ? <Foto name={z.image} alt={z.alt} ratio="1 / 1" class="ab__img" /> : <span class="ab__mark" aria-hidden="true">?</span>}
+          <span class="ab__txt"><strong>{z.label}</strong><span>{z.text}</span></span>
+        </label>
+      </li>
+    ))}
+  </ul>
+  <div class="ab__verdict" data-ab-verdict aria-live="polite">
+    <p class="ab__count"><span class="num" data-ab-n>0</span> von {zeichen.length} Anzeichen</p>
+    <p class="ab__text" data-ab-text>Noch nichts angekreuzt.</p>
+  </div>
+  <p class="ab__warn"><strong>Brandgeruch, heiße Steckdose, Funken?</strong> Sicherung aus und den <a href={`${import.meta.env.BASE_URL}notdienst/`}>Notdienst</a> rufen.</p>
+  <a class="btn btn--amber" href={`#${form}`}>Besichtigung anfragen</a>
+</div>
+
+<style>
+  .ab__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-sm); }
+  .ab__item { position: relative; display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: var(--space-smd); align-items: center; padding: var(--space-sm); border: 1px solid var(--color-rule); border-radius: var(--radius); cursor: pointer; }
+  .ab__item input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .ab__item:has(input:checked) { border-color: var(--color-amber); background: var(--color-paper-3); box-shadow: inset 4px 0 0 var(--color-amber); }
+  .ab__item:has(input:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+  .ab__item :global(.ab__img) { width: 4.5rem; height: 4.5rem; object-fit: cover; border-radius: var(--radius); }
+  .ab__item :global(.foto--leer.ab__img) .strip { display: none; }
+  .ab__mark { width: 4.5rem; height: 4.5rem; display: grid; place-items: center; border-radius: var(--radius); background: var(--color-paper); font: 700 1.5rem var(--font-mono); color: var(--color-ink-2); }
+  .ab__item:has(input:checked) .ab__mark { background: var(--color-amber); color: var(--color-cream-ink); }
+  .ab__txt { display: grid; gap: var(--space-2xs); font-size: var(--text-sm); }
+  .ab__txt strong { font-size: var(--text-md); }
+  .ab__txt span { color: var(--color-ink-2); }
+  .ab__verdict { padding: var(--space-md); border-radius: var(--radius); background: var(--color-paper); display: grid; gap: var(--space-xs); }
+  .ab__count { font: 750 var(--text-xl)/1.1 var(--font-display); }
+  .ab__count .num { color: var(--color-amber-hi); }
+  .ab__warn { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .ab__warn strong { color: var(--color-alert); }
+</style>
+
+<script>
+  const w = window as any; w.__sum = w.__sum || {};
+  const TEXTS = [
+    'Keine typischen Anzeichen. Für Gewissheit, etwa nach dem Kauf: E-Check fürs Haus ab 149 €.',
+    'Ein oder zwei Anzeichen: Eine Besichtigung ist sinnvoll, bevor Sie renovieren. Oft reicht eine Teilsanierung.',
+    'Mehrere Anzeichen: Wir empfehlen eine Besichtigung, bevor Wände gestrichen und Böden verlegt werden. Dann ist eine Sanierung am günstigsten.',
+  ];
+  document.querySelectorAll<HTMLElement>('[data-ab]').forEach((root) => {
+    const form = root.dataset.form!;
+    const boxes = [...root.querySelectorAll<HTMLInputElement>('input[type=checkbox]')];
+    const KEY = 'tool:altbau';
+    try { const s: string[] = JSON.parse(sessionStorage.getItem(KEY) || '[]'); boxes.forEach((b) => (b.checked = s.includes(b.value))); } catch {}
+    const render = () => {
+      const on = boxes.filter((b) => b.checked);
+      const n = on.length;
+      root.querySelector('[data-ab-n]')!.textContent = String(n);
+      root.querySelector('[data-ab-text]')!.textContent = n === 0 ? TEXTS[0] : n <= 2 ? TEXTS[1] : TEXTS[2];
+      try { sessionStorage.setItem(KEY, JSON.stringify(on.map((b) => b.value))); } catch {}
+      const summary = n ? {
+        title: 'Aus „Ist meine Elektrik alt?“',
+        lines: [['Anzeichen', `${n} von ${boxes.length}`] as [string, string], ...on.map((b) => ['✓', b.dataset.label!] as [string, string])],
+        total: '89 €', totalLabel: 'Besichtigung (wird angerechnet)',
+        note: 'Die Besichtigung wird bei Auftrag vollständig angerechnet.',
+      } : null;
+      w.__sum[form] = summary;
+      window.dispatchEvent(new CustomEvent('anfrage:summary', { detail: { form, summary } }));
+    };
+    boxes.forEach((b) => b.addEventListener('change', render));
+    render();
+  });
+</script>

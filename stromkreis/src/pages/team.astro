@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import Foto from '../components/Foto.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Über uns · Elektro Brakhage" description="Elektro Brakhage: Elektromeister-Betrieb in Gehrden mit vier Monteuren und einem Auszubildenden.">
+  <main id="inhalt" class="page">
+    <div class="wrap page__in">
+      <header class="page__head">
+        <a class="back" href={base}>← Zum Haus</a>
+        <h1>Sechs Leute, ein Gebiet</h1>
+        <p class="page__lead">{site.owner}, {site.title}, vier Monteure und ein Auszubildender. Wir arbeiten in Gehrden, Ronnenberg, Barsinghausen und Wennigsen, weil wir dort kurze Wege haben und schnell wieder vor Ort sind, wenn etwas ist.</p>
+        <Foto name="team.jpg" alt="Drei Elektriker bei der Arbeit in einem Treppenhaus: Deckenleuchte, Leitung im Wandschlitz, Kabeltrommel" ratio="16 / 9" eager />
+      </header>
+
+      <section class="block" aria-labelledby="gut-h">
+        <h2 id="gut-h">Was wir gut können</h2>
+        <ol class="ablauf">
+          <li><strong>Altbau verstehen</strong><span>Häuser von 1950 bis 1985 sind unser Alltag. Wir erneuern, was nötig ist, und lassen, was noch gut ist.</span></li>
+          <li><strong>Vorbereitet kommen</strong><span>Mit Foto vom Zählerschrank wissen wir vorher, welches Material wir brauchen. Ein Termin statt zwei.</span></li>
+          <li><strong>Alles dokumentieren</strong><span>Protokoll, Fotos vorher und nachher, Prüfwerte. Wichtig für Versicherung, Verkauf und den nächsten Elektriker.</span></li>
+        </ol>
+      </section>
+
+      <section class="block" aria-labelledby="nicht-h">
+        <h2 id="nicht-h">Was wir nicht machen</h2>
+        <ul class="no">
+          <li><strong>Einzelne Kleinigkeiten mit eigener Anfahrt.</strong> Dafür gibt es die Kleinauftrags-Runde am Freitag: Steckdose, Lampe, Herd anschließen, alles an einem Tag in der Gegend.</li>
+          <li><strong>Kostenlose Besichtigungen.</strong> Eine Besichtigung kostet 89 € und wird bei Auftrag angerechnet. Dafür nehmen wir uns Zeit und Sie bekommen ein Protokoll.</li>
+          <li><strong>Reparatur von Haushaltsgeräten.</strong> Waschmaschine und Kaffeevollautomat gehören zum Kundendienst des Herstellers.</li>
+        </ul>
+      </section>
+
+      <section class="block" aria-labelledby="ausb-h">
+        <h2 id="ausb-h">Ausbildung</h2>
+        <p>Wir bilden jedes Jahr aus: Elektroniker/in für Energie- und Gebäudetechnik. Praktikum in den Ferien ist möglich, schreiben Sie uns über die <a href={`${base}anfrage/`}>Anfrage</a>.</p>
+      </section>
+    </div>
+  </main>
+</Base>
+<style>
+  .no { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--space-md); }
+  .no li { padding-left: var(--space-md); border-left: 2px solid var(--color-alert); color: var(--color-ink-2); }
+  .no strong { color: var(--color-ink); display: block; }
+</style>

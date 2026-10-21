@@ -18,8 +18,9 @@
 5. **Фото без подписей.** У нас Referenzen с фактами: что, порода, размер, срок, «ab»-цена класса.
 6. **Смешение с монтажниками.** Позиционирование в первом экране: «мы делаем, а не собираем».
 
-## Проверка названия «Tischlerei Holm»
-Поиск «Tischlerei Holm», «Tischlerei Holm Hannover», «… Niedersachsen», «… Schleswig-Holstein»: в регионе Hannover совпадений нет. Найдена «Tischlerei Holm Dutschke» в Bernstadt (Sachsen): там Holm — имя владельца, другая земля. Конфликт считаю минимальным; в демо имя мастера — Jan Holm (вымышленный), пометка «Demo» везде.
+## Проверка названия
+- «Tischlerei Holm»: **точное совпадение** — «Tischlerei Holm Inh. Matthias Holm», Nindorf (Шлезвиг-Гольштейн), плюс «Tischlerei Holm Dutschke» (Bernstadt, Sachsen). В регионе Hannover совпадений нет.
+- Поэтому рабочее имя **Tischlerei Wendholm** (мастер Jan Wendholm): поиск «Tischlerei Wendholm» — совпадений нет. Имя меняется в одном месте: `src/data/site.json`.
 
 ## Источники
 - [Tischlerei Oelze Manufactur — hannover.de](https://www.hannover.de/Service/Werbung-Firmenverzeichnis/Haus-und-Garten/Tischlereien/Tischlerei-Oelze-Manufactur)
@@ -29,3 +30,4 @@
 - [Hornbach Schrank nach Maß](https://www.hornbach.de/conf/schrank-nach-mass/12060511/)
 - [meister-job.de — Kosten Schreiner/Tischler](https://meister-job.de/schreinern-tischlern/)
 - [sellwerk — Tischlerei Holm Dutschke](https://sellwerk.de/firmenprofil/tischlerei-holm-dutschke)
+- [Das Örtliche — Tischler Puls (Tischlerei Holm, Nindorf)](https://www.dasoertliche.de/Themen/Tischler/Puls.html)

@@ -1,0 +1,53 @@
+PROMPTS — Kehlenbrink Bad & Wärme (демо kupferlauf)
+10 кадров. Все в ОДНОМ чате Gemini, по порядку (единый свет и цвет). Готовые файлы положить в D:\Webdesign\kupferlauf\public\img\ под указанными именами (в облаке: kupferlauf/public/img/).
+Единый стиль: документальная интерьерная фотография, мягкий северный дневной свет, холодно-белые стены, медь как тёплый акцент, вода бирюзовая, спокойные тона, без текста, логотипов и марок на технике.
+
+────────────────────────────────────────
+01 · hero-kupfer-hoch.jpg · формат 3:4
+────────────────────────────────────────
+Close-up documentary photograph of new polished copper water pipes running vertically along a cool white plastered wall, with two press fittings and a short horizontal branch, tiny beads of condensation and a thin trickle of clear water running down one pipe, soft north-facing daylight from the left, a subtle turquoise reflection of water light on the wall, shallow depth of field, 50mm lens, calm and premium mood, muted cool whites with warm copper as the only saturated colour, generous empty wall space in the upper third for a headline, no text, no logos, no brand marks, no people.
+
+────────────────────────────────────────
+02 · hero-kupfer-breit.jpg · формат 16:9
+────────────────────────────────────────
+Same scene and same light as the previous image, now as a wide horizontal frame: new polished copper water pipes running vertically along a cool white plastered wall, two press fittings and a horizontal branch towards the right, tiny beads of condensation and a thin trickle of clear water on one pipe, soft north-facing daylight from the left, a subtle turquoise reflection of water light on the wall, shallow depth of field, the pipes placed in the right third of the frame and calm empty white wall on the left half for a headline, muted cool whites with warm copper as the only saturated colour, documentary interior photography, no text, no logos, no brand marks, no people.
+
+────────────────────────────────────────
+03 · station-heizung.jpg · формат 4:3
+────────────────────────────────────────
+Documentary photograph of a tidy modern boiler room in the basement of a 1970s German detached house after renovation: a white indoor unit of an air-to-water heat pump on the wall next to a tall white hot-water and buffer tank, neatly insulated pipes with short visible copper sections and press fittings, a pressure gauge, light grey painted floor, cool white walls, soft daylight from a small basement window plus warm practical light, calm and orderly, eye-level view, 35mm lens, muted cool tones with warm copper accents, no text, no logos, no brand names on devices, no people.
+
+────────────────────────────────────────
+04 · referenz-bad-hell.jpg · формат 4:3
+────────────────────────────────────────
+Documentary interior photograph of a renovated bright bathroom in a German family house: a walk-in floor-level shower with a single clear glass panel and a linear floor drain, large-format warm white wall surfaces, a light oak vanity with a white washbasin, a wall-hung white toilet, brushed copper-coloured taps and shower head, a white towel radiator, soft morning daylight from a window, calm and airy, eye-level view, 28mm lens, muted whites with copper accents and a hint of turquoise in a folded towel, no text, no logos, no people.
+
+────────────────────────────────────────
+05 · referenz-bad-stein.jpg · формат 4:3
+────────────────────────────────────────
+Documentary interior photograph of a renovated bathroom in a German townhouse in a warmer, darker style: a freestanding white oval bathtub in front of a wall in warm stone-grey plaster, a floor-mounted copper-coloured bath tap, a dark walnut vanity with a white basin, a round mirror, a slim black towel radiator, soft evening daylight from a side window with warm lamp light, calm and premium, eye-level view, 35mm lens, muted stone and white tones with copper as the only bright metal, no text, no logos, no people.
+
+────────────────────────────────────────
+06 · referenz-bad-klein.jpg · формат 4:3
+────────────────────────────────────────
+Documentary interior photograph of a small renovated guest bathroom in a German semi-detached house, about 3 square metres: a compact wall-hung white toilet, a small white corner washbasin with a copper-coloured tap, pale sage-grey walls, a narrow mirror cabinet, a small window with soft daylight, a white heated towel rail, clever and tidy use of space, slightly elevated eye-level view, 24mm lens without visible distortion, muted cool tones with copper accent, no text, no logos, no people.
+
+────────────────────────────────────────
+07 · monteur.jpg · формат 4:3
+────────────────────────────────────────
+Close-up documentary photograph of a plumber's hands in dark grey work clothes and thin work gloves pressing a copper press fitting onto a copper pipe with a cordless pressing tool, in a bathroom under renovation with bare grey plaster walls, soft daylight, shallow depth of field focused on the fitting, the person's face not visible, only hands, forearms and torso partly in frame, calm and precise craftsmanship mood, muted greys with warm copper, no text, no logos, no brand marks on the tool or clothing.
+
+────────────────────────────────────────
+08 · paar-bad.jpg · формат 3:4
+────────────────────────────────────────
+Warm documentary photograph of a friendly retired couple in their sixties, fully and casually dressed in light knitwear, standing relaxed and smiling at each other in their newly renovated bright barrier-free bathroom: a walk-in floor-level shower without any step, a white grab bar on the wall, a fold-down shower seat, a wall-hung toilet at comfortable height, warm white walls and copper-coloured taps, soft daylight, natural neutral pose, faces seen at an angle and not dominating the frame, calm and reassuring mood, muted whites with copper accents, no text, no logos.
+
+────────────────────────────────────────
+09 · wartung.jpg · формат 4:3
+────────────────────────────────────────
+Documentary photograph of a heating technician in dark grey work clothes kneeling in front of an opened white wall-mounted gas condensing boiler in a clean utility room, checking a measuring device connected by a thin hose, a small open tool case on the floor, soft daylight plus warm work lamp, the technician seen from the side and slightly behind so the face is not visible, calm and careful mood, muted cool tones with copper pipe details under the boiler, no text, no logos, no brand names on the boiler, tool case or clothing.
+
+────────────────────────────────────────
+10 · hauptwasserhahn.jpg · формат 4:3
+────────────────────────────────────────
+Clear documentary photograph of the main water shut-off valve in a German house basement: a water meter on a white wall with a red-handled ball valve on the incoming pipe just before the meter, a hand in a casual sweater sleeve turning the handle across the pipe to close it, bright even light so the valve is easy to recognise, shallow depth of field, eye-level view, simple and instructive composition, muted cool tones with the red handle and copper pipe as the only colours, no text, no numbers readable on the meter, no logos.

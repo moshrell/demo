@@ -13,8 +13,7 @@ const vz = 'https://www.verbraucherzentrale.de/wissen/vertraege-reklamation/abzo
 ---
 <section class="bereich notfall" id="notfall" data-mode-panel="notfall" aria-labelledby="nf-h">
   <div class="wrap hero">
-    <h1 id="nf-h" class="hero__h">Tür zu?<br />Wir machen auf.</h1>
-    <p class="hero__sub">Schlüsseldienst in Hannover. Der Preis steht hier, bevor Sie anrufen.</p>
+    <h1 id="nf-h" class="hero__h">Tür zu?<br />Wir öffnen.<span class="sr-only"> Schlüsseldienst in Hannover zum Festpreis.</span></h1>
 
     <div class="live" aria-live="polite">
       <p class="live__jetzt" data-live-jetzt>Festpreise je nach Uhrzeit</p>
@@ -32,7 +31,7 @@ const vz = 'https://www.verbraucherzentrale.de/wissen/vertraege-reklamation/abzo
     <a class="wa" href={wa} target="_blank" rel="noopener" data-wa>
       <Icon name="message-circle" /><span>Lieber schreiben: WhatsApp</span>
     </a>
-    <p class="hero__note">Wir nennen den Gesamtpreis am Telefon, bevor wir losfahren. Zahlung mit Karte oder bar, mit Rechnung.</p>
+    <p class="hero__note">Schlüsseldienst in Hannover. Den Gesamtpreis nennen wir am Telefon, bevor wir losfahren. Zahlung mit Karte oder bar, mit Rechnung.</p>
   </div>
   <script is:inline>window.AUF && window.AUF.fill();</script>
 
@@ -135,9 +134,8 @@ const vz = 'https://www.verbraucherzentrale.de/wissen/vertraege-reklamation/abzo
 
 <style>
   .bereich { padding-bottom: var(--space-md); }
-  .hero { padding-top: var(--space-lg); padding-bottom: var(--space-xl); display: grid; gap: var(--space-md); }
+  .hero { padding-top: var(--space-md); padding-bottom: var(--space-xl); display: grid; gap: var(--space-sm); }
   .hero__h { font-size: var(--text-display); line-height: 0.98; letter-spacing: -0.02em; }
-  .hero__sub { font-size: var(--text-md); color: var(--color-ink-2); max-width: 32rem; }
   .live { border-top: var(--rule-ink); border-bottom: var(--rule-ink); padding: var(--space-sm) 0; display: grid; gap: var(--space-xs); }
   .live__jetzt { font-weight: 700; font-size: var(--text-sm); display: flex; align-items: center; gap: var(--space-xs); }
   .live__jetzt::before { content: ''; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--color-brass); box-shadow: 0 0 0 3px var(--color-ink); flex: none; }
@@ -292,3 +290,6 @@ const vz = 'https://www.verbraucherzentrale.de/wissen/vertraege-reklamation/abzo
   // Uhrzeit-Anzeige alle 30 s auffrischen
   setInterval(() => (window as any).AUF?.fill(), 30000);
 </script>
+<style>
+  @media (max-width: 22rem) { .live__preise dt { font-size: 0.875rem; } .hero { gap: var(--space-xs); } }
+</style>

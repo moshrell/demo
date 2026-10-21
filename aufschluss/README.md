@@ -1,28 +1,43 @@
-# Aufschluss Schlüsseldienst
+# Demo: Aufschluss Schlüsseldienst (служба вскрытия замков)
 
-Astro-Projekt (Demo). Адрес на портфолио: `/vorschau/handwerk/aufschluss/`
+Статус: **сайт собран и проверен по коду, ждёт фото из Gemini** (`PROMPTS.txt`, 9 кадров). Живая версия: https://moshrell.github.io/demo/aufschluss/
+Фирма вымышленная: Aufschluss Schlüsseldienst, Inhaber Arne Voßkamp, Metallbauermeister (мастер-металлостроитель), Hannover-Linden. Название и имя проверены поиском: совпадений нет.
+ТЗ от лица владельца, разведка и персоны: `TZ.txt`.
 
-    START.bat           # первый запуск ставит пакеты, дальше dev-сервер
-    npm run build       # сборка + dist/.htaccess (CSP с хэшами, noindex)
-    npm run publish     # сборка + копия в ..\kravets-site\public\vorschau\handwerk\aufschluss
+## Фото (что сделать Степану)
+Сгенерировать по `PROMPTS.txt` и положить в `aufschluss/src/assets/img/` под точными именами (jpg). Сжимать не нужно: Astro при сборке делает WebP нужных размеров. Пока файла нет, на его месте спокойная плашка «Bild folgt», ключ в интро заменяется чистой геометрией. Ключ (`schluessel.jpg`) — строго на чёрном фоне: накладывается через `mix-blend-mode: screen`, вырезать фон (rembg) не нужно.
 
-Данные клиента (тексты, цены, часы) — `src/data/site.json`.
-Что ещё нужно от клиента — искать `TODO` в проекте.
+## Структура (одна страница-приложение)
+- Режим **Notfall** (по умолчанию): огромный заголовок, живой Festpreis по времени Hannover (Europe/Berlin, праздники Niedersachsen), кнопка звонка + WhatsApp, калькулятор PLZ → зона → Anfahrt → Summe, таблица всех тарифов (текущая строка подсвечена), «Was Sie vorher wissen sollten» + ссылка на Verbraucherzentrale, журнал «Gesagt. Gezahlt.», FAQ.
+- Режим **Vorsorge**: фото-hero, связка ключей (бирки, scroll-snap свайп), форма Beratung vor Ort (49 € + Anfahrt, засчитывается), блок Hausverwaltungen с формой Schließanlage (Richtwert по ходу), «Wer kommt» + Ablauf + адрес мастерской.
+- Переключатель: цилиндр замка (геометрия), тянуть вправо = Vorsorge, влево = Notfall, тап = переключить; рядом кнопки-подписи; нижняя панель тоже переключает. Подсказка: цилиндр один раз качается после интро.
+- Ссылки с якорем открывают нужный режим без интро: `#vorsorge`, `#beratung`, `#b2b` (для QR управляющим), `#preise`.
+- Нижняя панель: Anrufen · WhatsApp · Preise · Vorsorge/Notfall. Она поверх интро: звонок в 1 касание с первой миллисекунды.
+- Интро ≤ 1,6 с (с ключом), 0,7 с без фото, раз за сессию, тап = пропуск, нет при reduced-motion и при переходе по якорю; если фото ключа не загрузилось за 350 мс — не ждём.
 
-## Правило форм (всегда, для каждого демо)
-Готовый блок: `src/components/OrderForm.astro` (форма) + `src/components/DatenschutzForm.astro` (раздел для `datenschutz.astro`). Если на сайте есть любая форма — брать их, а не писать с нуля:
-1. Каждое поле: `label`, понятный placeholder-пример (`Vor- und Nachname`, `z. B. 030 23125 123`, `name@example.com`), `autocomplete`, `type`/`inputmode`.
-2. Если собираются имя/телефон/e-mail: обязательный чекбокс согласия (`required`) с целью + ссылка на `${base}datenschutz/`, сообщение об ошибке, если не отмечен. В `datenschutz.astro` раздел про эту форму (Verantwortlicher, Daten, Zweck, Art. 6 Abs. 1 lit. b DSGVO, Speicherdauer, Weitergabe, Rechte Art. 15–21, Beschwerderecht, Freiwilligkeit, Demo-Hinweis).
-3. Цены/выбор: итог «Summe» виден по ходу выбора (на мобильном липкая плашка внизу формы) и повторяется в подтверждении. Нет цен: итог не выдумывать, в подтверждении показать сводку выбора (услуга, дата/время).
-4. Стили только через токены (`--muted`, `--alert`, `--focus`, `--space-*` в `global.css`: подогнать под дизайн проекта), доступность (focus-visible, aria-invalid, aria-describedby), проверка на 390px.
-5. Введённые данные не должны пропадать никогда: sessionStorage-автосохранение (уже встроено в `OrderForm.astro`; ключ `form:<pathname>:<id>`, всё в try/catch), ссылки на Datenschutz/Impressum открываются в новой вкладке (`target="_blank" rel="noopener"`), чекбокс согласия не сохраняется и не восстанавливается, после успешной отправки хранилище очищается. В Datenschutz есть предложение про Zwischenspeicher (уже в `DatenschutzForm.astro`).
+## Данные
+`src/data/`: `site.json` (контакты, Kammer), `preise.json` (тарифы, Extras, Beratung), `zonen.json` (PLZ → зона 0/15/25 €), `vorsorge.json` (карточки, Ablauf, B2B-формула), `einsaetze.json` (журнал, помечен как демо), `faq.json` (видимый FAQ = FAQPage-разметка).
+Логика времени: `src/scripts/zeit.js` вставляется inline в `<head>` (цены верны с первого кадра даже при слабой сети), калькулятор `zone.ts`, формы `formular.ts`, режимы `modus.ts`.
 
-## SEO & KI-Sichtbarkeit (AIO) — Standard in jedem Projekt
-`Base.astro` liefert: title, description, canonical, Open Graph, Schema.org-JSON-LD (`type`, Adresse, Öffnungszeiten, Preise als `prices`), FAQPage-Markup (`faq`). Checkliste pro Projekt:
-1. Ein `<h1>`, logische `<h2>`/`<h3>`, `alt` bei jedem Bild.
-2. `type` auf passenden Schema.org-Typ setzen; `site.json`: `openingHours`, `areaServed` füllen (Platzhalter `TODO` nie live).
-3. FAQ: dieselben Fragen/Antworten sichtbar auf der Seite UND als `faq`-Prop übergeben.
-4. Kundenseite live: `index` setzen (Demos bleiben noindex), sitemap.xml + robots.txt ergänzen, Google Business Profile mit identischen Name/Adresse/Telefon (NAP).
+## Дизайн (hallmark, зафиксировано)
+- Тон: utilitarian/austere. Тема custom: тёплый белый oklch(97.4% 0.012 85), чернила oklch(18% 0.012 70), латунь oklch(74% 0.125 80) только акцентом. Структура bespoke «App-Screen».
+- Шрифты: Archivo (ширина 125, вес 800) для заголовков и цен + Atkinson Hyperlegible Next 400–700 (шрифт для плохого зрения). Урезаны скриптом `scripts/fonts.py` до нужных символов: 10,5 + 17,5 КБ, лежат в `src/fonts/` (OFL). Иконки: Lucide (ISC), вставляются inline при сборке.
+- Контраст: основной текст 17,5:1, вторичный 10–11:1, латунь на чёрном 8:1 (всё выше AAA, кроме декоративных иконок 5,8:1).
 
-## Demo-Kontaktdaten (fiktiv)
-Telefon nur aus den offiziellen «Drama Numbers» der Bundesnetzagentur (z. B. Berlin `030 23125 000–999`, Hamburg `040 66969 000–999`, Köln `0221 4710 000–999`, München `089 99998 000–999`, Frankfurt `069 90009 000–999`), E-Mail nur `@example.com`. Keine Geschäftsdaten-Markup (LocalBusiness) in Demos: `index = false` unterdrückt sie, FAQPage bleibt. Demos bleiben `noindex`.
+## Проверено (headless Chromium, без скриншотов)
+- 320/360/375/390/414/768/1280, оба режима: нет горизонтального скролла, нет ошибок консоли и 404.
+- 390×664: кнопка звонка целиком на первом экране (низ 495 px, панель с 595 px); 320×568 тоже помещается.
+- Звонок нажимается во время интро; интро уходит за ~1,55 с, тап пропускает за ~70 мс; медленные шрифты/фото не задерживают кнопку.
+- Тарифы: вт 22:04 → Abend 89/139; ср 10:00 → Werktag; сб, 03.10., Karfreitag → Wochenende; ср 06:59 → Nacht. Статус мастерской по времени.
+- Калькулятор: 30451 → 89 €, 30989 abgeschlossen → 154 €, 12345 → честный отказ, неполный PLZ → подсказка. WhatsApp-текст заполняется (дверь + PLZ).
+- Формы: ошибки и фокус на первом поле, автосохранение после перезагрузки, согласие не восстанавливается, Datenschutz в новой вкладке, подтверждение со сводкой и суммой. B2B: 24+4 двери → ab 1.792 €.
+- Без JS: оба режима видны друг под другом, цены «ab», звонок — обычная ссылка. reduced-motion: без интро и анимаций.
+- Вес первого захода без фото: ~129 КБ несжатыми (HTML 53, CSS 30, шрифты 28, JS 18).
+
+## Известные недочёты
+- Фото ещё нет: плашки «Bild folgt» в Vorsorge.
+- Формы ничего не отправляют (демо). Для живого клиента: отправка через PHP на All-Inkl, правка Datenschutz; поле фото тогда реально загружает файл.
+- Телефон — демо-номер Berlin (030 23125 …, Drama Numbers), т.к. для Hannover таких нет; адрес «Fössestraße 0» вымышлен.
+- Цены, зоны и журнал «Gesagt. Gezahlt.» — правдоподобные примеры; для реального клиента подставить его честные цифры в `src/data/`.
+- Праздники только Niedersachsen; статус «Werkstatt öffnet …» не учитывает праздник на следующий день.
+- Публикация в портфолио (kravets-site, `/vorschau/handwerk/aufschluss/`) делается на ПК: `npm run publish` + запись в `works.ts`.

@@ -46,7 +46,7 @@
     each('[data-live-ab]', function (el) { el.textContent = t.abgeschlossen + ' €'; });
     each('[data-tarif-row]', function (el) { var on = el.getAttribute('data-tarif-row') === j.tarif; el.classList.toggle('is-jetzt', on); if (on) el.setAttribute('aria-current', 'true'); else el.removeAttribute('aria-current'); });
     var w = werkstatt(j, A.W.days, A.W.open, A.W.close);
-    each('[data-werkstatt]', function (el) { el.textContent = ' · ' + w.text; });
+    each('[data-werkstatt]', function (el) { el.textContent = w.text; });
     document.dispatchEvent(new CustomEvent('auf:tick'));
   }
   window.AUF = { jetzt: jetzt, werkstatt: werkstatt, feiertag: feiertag, fill: fill, T: [], W: { days: [], open: 0, close: 0 } };

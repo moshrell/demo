@@ -71,8 +71,6 @@ if (zyl && kern) {
 // Hinweis-Animation einmal pro Sitzung: Kern wackelt nach rechts und zurück
 function hint() {
   try { if (sessionStorage.getItem('hint')) return; sessionStorage.setItem('hint', '1'); } catch {}
-  const h = document.querySelector<HTMLElement>('[data-hint]');
-  if (h) { h.hidden = false; setTimeout(() => (h.hidden = true), 4000); }
   if (reduce || !kern || mode() !== 'notfall') return;
   root.classList.remove('drehen');
   kern.animate([{ rotate: '0deg' }, { rotate: '28deg', offset: 0.35 }, { rotate: '0deg', offset: 0.7 }, { rotate: '10deg', offset: 0.85 }, { rotate: '0deg' }], { duration: 900, delay: 300, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' });

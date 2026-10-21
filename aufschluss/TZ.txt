@@ -81,8 +81,8 @@ Arne Voßkamp (вымышлен, проверено поиском: совпад
 
 П1 Lena (Notfall):
 1. Открывает ссылку. Интро (ключ → скважина) идёт ≤1,6 с, но нижняя панель «Anrufen · WhatsApp» уже поверх интро и нажимается. Тап в любое место = пропустить интро.
-2. Первый экран: «Tür zu? Wir öffnen.» (Дверь закрыта? Откроем.) Под ним живая строка: «Jetzt Di 22:04 · Abendtarif» (сейчас вт 22:04 · вечерний тариф) и две цены: zugefallen 89 € / abgeschlossen 139 €, «+ Anfahrt 0–25 € je nach PLZ» (+ выезд 0–25 € в зависимости от индекса). Кнопка «Jetzt anrufen» (позвонить сейчас) с номером.
-3. Если хочет уверенности — вводит PLZ (поле прямо под ценой, цифровая клавиатура), выбирает «zugefallen / abgeschlossen» → «Summe 89 € + 0 € = 89 €» (итог) и строка «Diesen Preis nennen wir Ihnen am Telefon» (эту цену назовём по телефону).
+2. Первый экран (одна карточка): живая строка «Erreichbar · Di 22:04 · Abendtarif» (на связи · вт 22:04 · вечерний тариф), «Tür zu? Wir öffnen.» (Дверь закрыта? Откроем.), две плитки-цены «Zugefallen 89 € / Abgeschlossen 139 €» (захлопнулась / заперта), одна строка пояснения, сразу под ними кнопка «Jetzt anrufen» (позвонить сейчас) с номером. На любом телефоне в вертикальном положении всё это на первом экране.
+3. Если хочет уверенности — под кнопкой вводит PLZ (индекс, цифровая клавиатура) → «Summe 89 €, inkl. Anfahrt 0 €» (итог с выездом). Время не спрашиваем: сайт его знает.
 4. Звонит. Или WhatsApp: текст уже заполнен «Hallo, Tür zugefallen, PLZ 30451, Adresse: …».
 Цель: звонок за 1 касание; за 3 касания — звонок с известной ценой.
 
@@ -104,19 +104,17 @@ Arne Voßkamp (вымышлен, проверено поиском: совпад
 / (одна страница-приложение, два режима):
   Верх (всегда): словесный знак, статус «Notdienst: jetzt erreichbar» + «Werkstatt geöffnet/geschlossen» (мастерская открыта/закрыта), переключатель-замок.
   Режим NOTFALL (по умолчанию):
-   1. Hero: огромный текст, живой тариф, кнопка звонка + WhatsApp.
-   2. Preisrechner (калькулятор цены): PLZ → зона → Anfahrt; zugefallen/abgeschlossen; Summe.
-   3. Zugefallen oder abgeschlossen? (одна строка на каждое).
-   4. Alle Preise (все тарифы таблицей: будни днём / вечер и ночь / выходные и праздники) + Zylinder (личинка) если надо сверлить, Storno (отмена вызова).
-   5. Was Sie vorher wissen sollten (что знать заранее) + ссылка на Verbraucherzentrale.
-   6. Gesagt. Gezahlt. — журнал последних вызовов: «сказали по телефону / заплатили» (демо-примеры, помечены).
-   7. Häufige Fragen (частые вопросы).
+   1. Карточка: живой тариф, огромный текст, плитки-цены zugefallen/abgeschlossen (одна строка пояснения), звонок + WhatsApp, PLZ → Summe.
+   2. Alle Preise (все тарифы карточками: будни днём / вечер и ночь / выходные и праздники, текущий подсвечен) + Anfahrt, Zylinder (личинка) если надо сверлить, Storno (отмена вызова), подробно zugefallen/abgeschlossen.
+   3. Was Sie vorher wissen sollten (что знать заранее) + ссылка на Verbraucherzentrale.
+   4. Gesagt. Gezahlt. — журнал вызовов: «сказали по телефону / заплатили» (демо-примеры, помечены).
+   5. Häufige Fragen (частые вопросы).
   Режим VORSORGE:
    1. Hero спокойный + фото цилиндра.
-   2. Связка ключей-карточек (5 шт.).
-   3. Для частных: форма Beratung vor Ort.
-   4. Für Hausverwaltungen: что входит + форма Schließanlage.
-   5. Über uns (о нас): мастер, мастерская, Ablauf (как идёт работа).
+   2. Связка ключей-карточек (5 шт.; на ПК сеткой).
+   3. Для частных: Ablauf (как идёт работа) + форма Beratung vor Ort.
+   4. Für Hausverwaltungen: что входит, ориентир за дверь, форма Schließanlage за кнопкой «Objekt anfragen» (по QR #b2b открыта сразу).
+   5. Wer kommt (кто приедет): мастер, мастерская, статус «Werkstatt offen/zu» (мастерская открыта/закрыта).
   Низ: нижняя липкая панель Anrufen · WhatsApp · Preise · Vorsorge/Notfall.
 /impressum/ — с Handwerkskammer Hannover, Berufsbezeichnung Metallbauermeister (Deutschland), Handwerksordnung.
 /datenschutz/ — разделы про обе формы, Demo-пометка.

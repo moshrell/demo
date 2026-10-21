@@ -1,0 +1,133 @@
+---
+// Anfrage „Beratung vor Ort“ (Privatkunden). Summe: Beratung 49 € + Anfahrt nach PLZ, bei Auftrag angerechnet.
+import '../styles/formular.css';
+import site from '../data/site.json';
+import preise from '../data/preise.json';
+import vorsorge from '../data/vorsorge.json';
+const base = import.meta.env.BASE_URL;
+const id = 'beratung-form';
+---
+<div class="fm-wrap">
+  <form class="fm" id={id} novalidate data-beratung>
+    <fieldset class="fm__group">
+      <legend>Worum geht es?</legend>
+      <div class="fm__chips">
+        {vorsorge.karten.map((k) => (
+          <label class="fm__chip"><input type="checkbox" name="thema" value={k.id} data-label={k.titel} /><span>{k.titel}</span></label>
+        ))}
+      </div>
+    </fieldset>
+
+    <fieldset class="fm__group">
+      <legend>Wo und wann?</legend>
+      <div class="fm__field">
+        <label for="b-plz">Postleitzahl</label>
+        <input id="b-plz" name="plz" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="z. B. 30989" maxlength="5" data-check="plz" aria-describedby="b-plz-info b-plz-err" />
+        <p class="fm__hint" id="b-plz-info" data-zone aria-live="polite">Für die Anfahrt in der Summe.</p>
+        <p class="fm__err" id="b-plz-err" hidden>Bitte eine Postleitzahl in unserem Gebiet angeben.</p>
+      </div>
+      <div class="fm__chips" role="radiogroup" aria-label="Wann passt es Ihnen?">
+        <label class="fm__chip"><input type="radio" name="zeit" value="Vormittags" checked /><span>Vormittags</span></label>
+        <label class="fm__chip"><input type="radio" name="zeit" value="Nachmittags" /><span>Nachmittags</span></label>
+        <label class="fm__chip"><input type="radio" name="zeit" value="Egal" /><span>Ist mir egal</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset class="fm__group">
+      <legend>Ihre Angaben</legend>
+      <div class="fm__field">
+        <label for="b-name">Name</label>
+        <input id="b-name" name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname" data-check="name" aria-describedby="b-name-err" />
+        <p class="fm__err" id="b-name-err" hidden>Bitte geben Sie Ihren Namen an.</p>
+      </div>
+      <div class="fm__field">
+        <label for="b-tel">Telefon</label>
+        <input id="b-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 030 23125 123" data-check="tel" aria-describedby="b-tel-err" />
+        <p class="fm__err" id="b-tel-err" hidden>Bitte eine Telefonnummer, unter der wir Sie erreichen.</p>
+      </div>
+      <div class="fm__field">
+        <label for="b-mail">E-Mail <span class="fm__opt">(optional)</span></label>
+        <input id="b-mail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" data-check="mail-opt" aria-describedby="b-mail-err" />
+        <p class="fm__err" id="b-mail-err" hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.</p>
+      </div>
+      <div class="fm__field">
+        <label for="b-note">Nachricht <span class="fm__opt">(optional)</span></label>
+        <textarea id="b-note" name="note" rows="3" autocomplete="off" placeholder="z. B. Altbau, Wohnungstür aus Holz, 2. OG"></textarea>
+      </div>
+      <div class="fm__field">
+        <label for="b-foto">Foto der Tür <span class="fm__opt">(optional)</span></label>
+        <input id="b-foto" name="foto" type="file" accept="image/*" />
+        <p class="fm__hint">Demo: Das Foto wird nicht hochgeladen.</p>
+      </div>
+    </fieldset>
+
+    <div class="fm__field">
+      <label class="fm__check">
+        <input type="checkbox" name="privacy" data-check="consent" aria-describedby="b-priv-err" />
+        <span>Ich bin einverstanden, dass {site.name} meine Angaben (Name, Telefon, E-Mail, PLZ, Nachricht, Foto) zur Bearbeitung meiner Beratungsanfrage verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a></span>
+      </label>
+      <p class="fm__err" id="b-priv-err" hidden>Bitte stimmen Sie zu, sonst können wir Ihre Anfrage nicht bearbeiten.</p>
+    </div>
+
+    <div class="fm__bar">
+      <p class="fm__total"><span data-b-zeile>Beratung {preise.beratung} € + Anfahrt</span><span>Summe <strong data-b-summe>{preise.beratung} €</strong></span></p>
+      <button class="fm__btn" type="submit">Beratung anfragen</button>
+    </div>
+    <p class="fm__demo">Die Beratung wird bei Auftrag voll angerechnet. {preise.mwst}. Demo: Es wird nichts gesendet.</p>
+  </form>
+
+  <div class="fm__done" data-done tabindex="-1" hidden>
+    <h3>Danke. Wir rufen Sie an, um einen Termin zu finden.</h3>
+    <dl data-done-list></dl>
+    <p class="fm__demo">Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.</p>
+  </div>
+</div>
+
+<script>
+  import { pruefen, merken, fertig, wert, gewaehlt } from '../scripts/formular';
+  import { zoneFuer, euro } from '../scripts/zone';
+  import preise from '../data/preise.json';
+  const form = document.querySelector<HTMLFormElement>('form[data-beratung]');
+  if (form) {
+    const plz = form.querySelector<HTMLInputElement>('#b-plz')!;
+    const info = form.querySelector<HTMLElement>('[data-zone]')!;
+    const zeile = form.querySelector<HTMLElement>('[data-b-zeile]')!;
+    const summe = form.querySelector<HTMLElement>('[data-b-summe]')!;
+    let total = preise.beratung;
+    const update = () => {
+      plz.value = plz.value.replace(/\D/g, '').slice(0, 5);
+      const z = zoneFuer(plz.value);
+      info.classList.remove('is-ok', 'is-nein');
+      if (!z) { info.textContent = 'Für die Anfahrt in der Summe.'; zeile.textContent = `Beratung ${preise.beratung} € + Anfahrt`; total = preise.beratung; summe.textContent = `${euro(total)} + Anfahrt`; return; }
+      if (!z.ok) { info.textContent = z.text; info.classList.add('is-nein'); zeile.textContent = 'Außerhalb unseres Gebiets'; summe.textContent = '–'; return; }
+      info.textContent = `Ja, wir kommen: ${z.text}`; info.classList.add('is-ok');
+      total = preise.beratung + z.anfahrt!;
+      zeile.textContent = `Beratung ${preise.beratung} € + Anfahrt ${euro(z.anfahrt!)}`;
+      summe.textContent = euro(total);
+    };
+    const store = merken(form, update);
+    form.addEventListener('input', (e) => { if (e.target === plz) update(); });
+    // Karte „Beratung anfragen“ im Schlüsselbund wählt das Thema vor
+    document.addEventListener('vorsorge:thema', (e) => {
+      const cb = form.querySelector<HTMLInputElement>(`input[name=thema][value="${(e as CustomEvent).detail}"]`);
+      if (cb && !cb.checked) { cb.checked = true; store.save(); }
+    });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const ok = pruefen(form, (bad) => { const z = zoneFuer(plz.value); if (z && !z.ok && !bad.includes(plz)) { plz.setAttribute('aria-invalid', 'true'); document.getElementById('b-plz-err')!.hidden = false; bad.unshift(plz); } });
+      if (!ok) return;
+      const z = zoneFuer(plz.value)!;
+      fertig(form, [
+        ['Thema', gewaehlt(form, 'thema').join(', ') || 'Allgemeine Beratung'],
+        ['Ort', `${plz.value} ${z.ort}`],
+        ['Zeit', wert(form, 'zeit') || (form.querySelector<HTMLInputElement>('input[name=zeit]:checked')?.value ?? '')],
+        ['Beratung', euro(preise.beratung)],
+        ['Anfahrt', euro(z.anfahrt!)],
+        ['Summe (bei Auftrag angerechnet)', euro(total), true],
+        ['Name', wert(form, 'name')],
+        ['Telefon', wert(form, 'tel')],
+      ]);
+      store.clear();
+    });
+  }
+</script>

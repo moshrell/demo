@@ -1,0 +1,8 @@
+[
+  { "q": "Wann sind Sie da?", "a": "Das sagen wir Ihnen am Telefon, ehrlich und mit Uhrzeit. Hängt davon ab, wo unsere zwei Wagen gerade sind. Wenn es länger dauert, rufen wir Sie an." },
+  { "q": "Kann ich mit Karte zahlen?", "a": "Ja: Girocard, Kreditkarte oder bar. Sie bekommen immer eine Rechnung mit ausgewiesener Mehrwertsteuer. Zum Geldautomaten fahren wir mit niemandem." },
+  { "q": "Warum muss ich mich ausweisen?", "a": "Wir öffnen nur, wenn klar ist, dass Sie dort wohnen: Ausweis mit Adresse, Mietvertrag oder ein Nachbar bestätigt es. Das schützt Sie vor Einbrechern, die uns sonst rufen könnten." },
+  { "q": "Steckt der Schlüssel innen: ist das teurer?", "a": "Nein. Ob zugefallen mit Schlüssel innen oder ohne: derselbe Festpreis." },
+  { "q": "Zahlt das meine Versicherung?", "a": "Manche Hausrat-Versicherungen übernehmen Schlüsseldienst-Kosten. Wir stellen die Rechnung so aus, dass Sie sie einreichen können. Bezahlen müssen Sie zuerst selbst." },
+  { "q": "Warum sind Sie teurer als „ab 49,90 €“?", "a": "Bei uns steht der ganze Preis da, auch nachts und am Wochenende. Sie zahlen, was wir am Telefon sagen. Vergleichen Sie Gesamtpreise, nicht Lockpreise." }
+]

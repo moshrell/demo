@@ -1,0 +1,10 @@
+{
+  "hinweis": "Beispiele für diese Demo-Seite. Im echten Betrieb: echte Einsätze, ohne Namen und Hausnummern.",
+  "liste": [
+    { "wann": "Di, 21:40", "wo": "Linden-Nord", "art": "zugefallen", "tarif": "Abend", "gesagt": "89 € + 0 €", "gezahlt": "89 €", "notiz": "Tür ohne Schaden offen" },
+    { "wann": "Sa, 09:15", "wo": "Gehrden", "art": "abgeschlossen", "tarif": "Wochenende", "gesagt": "149 € + 15 € + Zylinder 39 €", "gezahlt": "203 €", "notiz": "Zylinder musste raus, vorher am Telefon angesagt" },
+    { "wann": "Mi, 13:05", "wo": "List", "art": "zugefallen", "tarif": "Werktag", "gesagt": "69 € + 0 €", "gezahlt": "69 €", "notiz": "Schlüssel steckte innen" },
+    { "wann": "So, 02:30", "wo": "Laatzen", "art": "zugefallen", "tarif": "Wochenende", "gesagt": "99 € + 15 €", "gezahlt": "114 €", "notiz": "Tür ohne Schaden offen" },
+    { "wann": "Do, 18:50", "wo": "Südstadt", "art": "abgeschlossen", "tarif": "Abend", "gesagt": "139 € + 0 €", "gezahlt": "0 €", "notiz": "Abgesagt, bevor wir losfuhren" }
+  ]
+}

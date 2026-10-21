@@ -1,0 +1,18 @@
+{
+  "mwst": "inkl. 19 % MwSt.",
+  "tarife": [
+    { "id": "tag",   "name": "Werktag tagsüber",        "kurz": "Werktagstarif",  "wann": "Mo–Fr, 7–18 Uhr",                  "zugefallen": 69, "abgeschlossen": 109 },
+    { "id": "abend", "name": "Abend und Nacht",         "kurz": "Abend-/Nachttarif", "wann": "Mo–Fr, 18–7 Uhr",              "zugefallen": 89, "abgeschlossen": 139 },
+    { "id": "we",    "name": "Wochenende und Feiertag", "kurz": "Wochenendtarif", "wann": "Sa, So und Feiertage, rund um die Uhr", "zugefallen": 99, "abgeschlossen": 149 }
+  ],
+  "arten": {
+    "zugefallen": { "label": "Zugefallen", "erklaerung": "Die Tür ist nur ins Schloss gefallen, nicht abgeschlossen. Wir öffnen fast immer ohne Schaden, in wenigen Minuten." },
+    "abgeschlossen": { "label": "Abgeschlossen", "erklaerung": "Der Schlüssel wurde umgedreht. Das dauert länger, manchmal muss der Zylinder raus. Das sagen wir vorher." }
+  },
+  "extras": [
+    { "name": "Neuer Sicherheitszylinder, nur falls nötig", "preis": "ab 39 €", "text": "inkl. 3 Schlüssel, Einbau inklusive. Wird vor der Arbeit angesagt." },
+    { "name": "Absage, bevor wir losfahren", "preis": "0 €", "text": "Schlüssel doch gefunden? Kurz anrufen, kostet nichts." },
+    { "name": "Absage, wenn wir schon unterwegs sind", "preis": "nur Anfahrt", "text": "Sie zahlen nur die Anfahrt Ihrer Zone, sonst nichts." }
+  ],
+  "beratung": 49
+}

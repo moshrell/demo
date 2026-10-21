@@ -2,14 +2,17 @@
 // SEO + KI-Sichtbarkeit (AIO) by default. Demos: noindex (index = false). Beim Kundenstart: index = true setzen.
 import '../styles/global.css';
 import site from '../data/site.json';
+import fontDisplay from '../fonts/archivo-wide-800.woff2?url';
+import fontBody from '../fonts/atkinson-400-700.woff2?url';
 const {
   title = site.name,
   description = '',
-  index = false,          // Demo = noindex. Echte Kundenseite: index
-  type = 'LocalBusiness', // Schema.org-Typ, z. B. 'Hairdresser', 'Architect', 'Dentist'
-  faq = [],               // [{ q, a }] -> sichtbarer FAQ-Block UND FAQPage-Markup (gleicher Text, sonst ignoriert Google es)
-  image = '',             // OG-Bild, relativ zu public/
-  prices = [],            // [{ name, price }] -> makesOffer
+  index = false,
+  type = 'Locksmith',
+  faq = [],
+  image = '',
+  prices = [],
+  bodyClass = '',
 } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -28,7 +31,7 @@ const graph = [
     ...(site.areaServed ? { areaServed: site.areaServed } : {}),
     ...(ogImage ? { image: ogImage } : {}),
     ...(prices.length ? { makesOffer: prices.map((p) => ({ '@type': 'Offer', priceCurrency: 'EUR', price: p.price, itemOffered: { '@type': 'Service', name: p.name } })) } : {}),
-  }] : []), // Demo (index = false): keine Geschäftsdaten-Markup mit erfundener Adresse/Telefon, nur FAQPage
+  }] : []),
   ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
 ];
 const ld = { '@context': 'https://schema.org', '@graph': graph };
@@ -37,11 +40,15 @@ const ld = { '@context': 'https://schema.org', '@graph': graph };
 <html lang="de">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f8f5ef" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="preload" href={fontDisplay} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fontBody} as="font" type="font/woff2" crossorigin />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="de_DE" />
     <meta property="og:title" content={title} />
@@ -50,12 +57,27 @@ const ld = { '@context': 'https://schema.org', '@graph': graph };
     {ogImage && <meta property="og:image" content={ogImage} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+    <slot name="head" />
   </head>
-  <body>
+  <body class={bodyClass}>
     <slot />
-    <footer>
-      <a href={`${base}impressum/`}>Impressum</a> · <a href={`${base}datenschutz/`}>Datenschutz</a>
-      {!index && <p>Demo-Seite, alle Angaben fiktiv. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihr Unternehmen? Jetzt anfragen</a></p>}
+    <footer class="foot">
+      <div class="wrap">
+        <p class="foot__name">{site.name}</p>
+        <p>{site.address.street}, {site.address.zip} {site.address.city} · <a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+        <p class="foot__links"><a href={`${base}impressum/`}>Impressum</a> · <a href={`${base}datenschutz/`}>Datenschutz</a></p>
+        {!index && <p class="foot__demo">Demo-Seite: Betrieb und Personen sind erfunden, Bilder teils KI-erzeugt. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihren Betrieb? Jetzt anfragen</a></p>}
+      </div>
     </footer>
   </body>
 </html>
+<style>
+  .foot { background: var(--color-ink); color: var(--color-paper); padding: var(--space-xl) 0 calc(var(--space-xl) + var(--bar-h) + env(safe-area-inset-bottom)); font-size: var(--text-sm); }
+  .foot .wrap { display: grid; gap: var(--space-sm); }
+  .foot__name { font-family: var(--font-display); font-size: var(--text-md); }
+  .foot a { color: var(--color-paper); }
+  .foot a:focus-visible { outline-color: var(--color-focus-dark); }
+  .foot__links a { display: inline-block; padding-block: var(--space-xs); }
+  .foot__demo { color: var(--color-paper-3); }
+  :global(body.legal) .foot { padding-bottom: var(--space-xl); }
+</style>

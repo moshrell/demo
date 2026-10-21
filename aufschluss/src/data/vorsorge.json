@@ -1,0 +1,27 @@
+{
+  "karten": [
+    { "id": "wohnung", "titel": "Wohnungstür sichern", "text": "Schutzbeschlag mit Ziehschutz und neuer Sicherheitszylinder. Die häufigste Einbruchsmethode, das Abbrechen des Zylinders, ist damit vorbei.", "preis": "ab 189 €", "img": "montage-schloss", "alt": "Monteur befestigt einen dunklen Schutzbeschlag an einer hellen Wohnungstür" },
+    { "id": "haus", "titel": "Haustür und Nebeneingang", "text": "Zusatzschloss mit Querriegel, Fenster- und Kellertürsicherung. Wir schauen uns das ganze Haus an, nicht nur die Vordertür.", "preis": "ab 349 €", "img": "haustuer-zusatzschloss", "alt": "Haustür von innen mit dunklem Zusatzschloss und Querriegel" },
+    { "id": "anlage", "titel": "Schließanlage", "text": "Ein Schlüssel für Haustür, Garage und Gartentor. Für Hausverwaltungen und Büros mit Sicherungskarte gegen Nachschlüssel.", "preis": "ab 64 € pro Tür", "img": "schliessanlage-schluessel", "alt": "Neue Systemschlüssel aus Messing in Reihen auf hellem Grund" },
+    { "id": "tresor", "titel": "Tresor", "text": "Beratung, Lieferung und Verankerung im Boden oder in der Wand. Öffnung nur mit Eigentumsnachweis.", "preis": "ab 129 € Montage", "img": "tresor", "alt": "Dunkler Tresor mit Messingschloss im Kleiderschrank" },
+    { "id": "briefkasten", "titel": "Briefkastenschloss", "text": "Schlüssel verloren oder neue Mieter? Wir tauschen das Schloss, meist in einer Viertelstunde.", "preis": "ab 39 €", "img": "briefkasten", "alt": "Dunkler Briefkasten mit kleinem Messingschloss und Schlüssel" }
+  ],
+  "ablauf": [
+    { "t": "Anruf oder Anfrage", "d": "Sie sagen, was Sie brauchen. Wir nennen einen ersten Preisrahmen." },
+    { "t": "Besichtigung vor Ort", "d": "49 € plus Anfahrt, bei Auftrag angerechnet. Wir messen aus und zeigen Muster." },
+    { "t": "Schriftliches Angebot", "d": "Innerhalb von drei Werktagen, mit Festpreis pro Position." },
+    { "t": "Einbau", "d": "Termin nach Ihrem Kalender. Alte Teile nehmen wir mit." }
+  ],
+  "b2b": {
+    "proTuer": 64,
+    "extraSchluessel": 12,
+    "inklSchluessel": 3,
+    "punkte": [
+      "Planung der Schließberechtigungen: wer welche Tür öffnet",
+      "Sicherungskarte: Nachschlüssel nur mit Karte, nur bei uns",
+      "Montage im bewohnten Haus, Tür für Tür, ohne Leerstand",
+      "Rechnung auf die Verwaltung oder Eigentümergemeinschaft",
+      "Fester Ansprechpartner: der Meister selbst"
+    ]
+  }
+}

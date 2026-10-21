@@ -1,0 +1,34 @@
+{
+  "zonen": [
+    { "zone": 1, "anfahrt": 0,  "label": "Stadt Hannover" },
+    { "zone": 2, "anfahrt": 15, "label": "direkte Nachbarorte" },
+    { "zone": 3, "anfahrt": 25, "label": "Region Hannover" }
+  ],
+  "stadtBereiche": [[30159, 30179], [30419, 30459], [30519, 30559], [30625, 30669]],
+  "orte": [
+    { "plz": "30823", "ort": "Garbsen", "zone": 2 },
+    { "plz": "30826", "ort": "Garbsen", "zone": 2 },
+    { "plz": "30827", "ort": "Garbsen", "zone": 2 },
+    { "plz": "30851", "ort": "Langenhagen", "zone": 2 },
+    { "plz": "30853", "ort": "Langenhagen", "zone": 2 },
+    { "plz": "30855", "ort": "Langenhagen", "zone": 2 },
+    { "plz": "30880", "ort": "Laatzen", "zone": 2 },
+    { "plz": "30916", "ort": "Isernhagen", "zone": 2 },
+    { "plz": "30926", "ort": "Seelze", "zone": 2 },
+    { "plz": "30952", "ort": "Ronnenberg", "zone": 2 },
+    { "plz": "30966", "ort": "Hemmingen", "zone": 2 },
+    { "plz": "30989", "ort": "Gehrden", "zone": 2 },
+    { "plz": "31275", "ort": "Lehrte", "zone": 2 },
+    { "plz": "30890", "ort": "Barsinghausen", "zone": 3 },
+    { "plz": "30900", "ort": "Wedemark", "zone": 3 },
+    { "plz": "30938", "ort": "Burgwedel", "zone": 3 },
+    { "plz": "30974", "ort": "Wennigsen", "zone": 3 },
+    { "plz": "30982", "ort": "Pattensen", "zone": 3 },
+    { "plz": "31303", "ort": "Burgdorf", "zone": 3 },
+    { "plz": "31319", "ort": "Sehnde", "zone": 3 },
+    { "plz": "31515", "ort": "Wunstorf", "zone": 3 },
+    { "plz": "31535", "ort": "Neustadt am Rübenberge", "zone": 3 },
+    { "plz": "31832", "ort": "Springe", "zone": 3 }
+  ],
+  "ausserhalb": "Da kommen wir leider nicht hin. Die Anfahrt wäre teurer als die Arbeit. Rufen Sie einen Betrieb vor Ort an und fragen Sie vorher nach dem Gesamtpreis."
+}

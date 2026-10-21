@@ -1,0 +1,37 @@
+---
+// Aktionsleiste unten: immer sichtbar, auch während des Intros (z-index über dem Intro).
+import site from '../data/site.json';
+import Icon from './Icon.astro';
+const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent('Hallo, ich brauche einen Schlüsseldienst. PLZ: , Adresse: ')}`;
+---
+<nav class="leiste" aria-label="Schnellzugriff">
+  <a class="leiste__a leiste__a--call" href={`tel:${site.phoneHref}`} data-call>
+    <Icon name="phone" /><span>Anrufen</span>
+  </a>
+  <a class="leiste__a" href={wa} data-wa target="_blank" rel="noopener">
+    <Icon name="message-circle" /><span>WhatsApp</span>
+  </a>
+  <a class="leiste__a" href="#preise" data-goto="notfall">
+    <Icon name="receipt" /><span>Preise</span>
+  </a>
+  <a class="leiste__a" href="#vorsorge" data-mode-link>
+    <span class="leiste__swap" data-show="notfall"><Icon name="shield" /><span>Vorsorge</span></span>
+    <span class="leiste__swap" data-show="vorsorge"><Icon name="siren" /><span>Notfall</span></span>
+  </a>
+</nav>
+
+<style>
+  .leiste { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 1px; background: var(--color-ink); padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--color-ink); }
+  .leiste__a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.15rem; min-height: var(--bar-h); padding: var(--space-xs) var(--space-2xs); background: var(--color-ink); color: var(--color-paper); text-decoration: none; font-size: 0.875rem; font-weight: 700; line-height: 1.1; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+  .leiste__a :global(.icon) { width: 1.5rem; height: 1.5rem; }
+  .leiste__a--call { background: var(--color-brass); color: var(--color-ink); font-size: 1rem; }
+  .leiste__a--call :global(.icon) { width: 1.75rem; height: 1.75rem; }
+  .leiste__a:focus-visible { outline: 3px solid var(--color-focus-dark); outline-offset: -5px; }
+  .leiste__a--call:focus-visible { outline-color: var(--color-ink); }
+  .leiste__a:active { filter: brightness(1.15); }
+  .leiste__swap { display: contents; }
+  :global(html[data-mode='notfall']) .leiste__swap[data-show='vorsorge'],
+  :global(html[data-mode='vorsorge']) .leiste__swap[data-show='notfall'] { display: none; }
+  :global(html:not([data-mode])) .leiste__swap[data-show='vorsorge'] { display: none; }
+  @media (min-width: 48rem) { .leiste { left: 50%; right: auto; width: 40rem; translate: -50% 0; bottom: var(--space-md); border-radius: var(--radius-lg); overflow: hidden; padding-bottom: 0; border: 0; box-shadow: 0 10px 30px oklch(18% 0.012 70 / 0.25); } }
+</style>

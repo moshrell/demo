@@ -1,15 +1,20 @@
 {
   "name": "Aufschluss Schlüsseldienst",
-  "legalName": "TODO vom Kunden",
-  "address": {
-    "street": "TODO",
-    "zip": "TODO",
-    "city": "TODO"
-  },
-  "email": "TODO",
-  "phone": "030 23125 123",
-  "openingHours": "TODO z. B. Mo-Fr 09:00-17:00",
-  "areaServed": [
-    "TODO Ort"
-  ]
+  "short": "Aufschluss",
+  "owner": "Arne Voßkamp",
+  "legalName": "Aufschluss Schlüsseldienst, Inhaber Arne Voßkamp (fiktiv)",
+  "beruf": "Metallbauermeister",
+  "address": { "street": "Fössestraße 0", "zip": "30451", "city": "Hannover", "district": "Linden-Nord" },
+  "mapLink": "https://www.openstreetmap.org/search?query=F%C3%B6ssestra%C3%9Fe%2C%2030451%20Hannover",
+  "email": "kontakt@example.com",
+  "phone": "030 23125 471",
+  "phoneHref": "+493023125471",
+  "whatsapp": "493023125471",
+  "werkstatt": { "label": "Mo–Fr 8–17 Uhr", "days": [1, 2, 3, 4, 5], "open": 8, "close": 17 },
+  "kammer": "Handwerkskammer Hannover, Berliner Allee 17, 30175 Hannover",
+  "betriebsnummer": "Eintragung in die Handwerksrolle, Betriebsnummer 000000 (fiktiv)",
+  "ustid": "DE000000000 (fiktiv)",
+  "haftpflicht": "Betriebshaftpflichtversicherung: Beispiel Versicherung AG, Musterstraße 1, 00000 Musterstadt (fiktiv), Geltungsbereich: Deutschland",
+  "openingHours": "Mo-Fr 08:00-17:00",
+  "areaServed": ["Hannover", "Region Hannover"]
 }

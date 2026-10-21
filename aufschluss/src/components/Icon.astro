@@ -1,0 +1,16 @@
+---
+// Lucide-Icons (ISC-Lizenz, lucide-static), beim Build inline eingesetzt: keine externen Requests.
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+const { name, class: cls = 'icon', label } = Astro.props;
+const require = createRequire(import.meta.url);
+const file = require.resolve(`lucide-static/icons/${name}.svg`);
+const svg = readFileSync(file, 'utf8')
+  .replace(/<!--[\s\S]*?-->/g, '')
+  .replace(/\s+/g, ' ')
+  .replace(/class="[^"]*"/, `class="${cls}"`)
+  .replace(/ width="24" height="24"/, '')
+  .replace('<svg', label ? `<svg role="img" aria-label="${label}"` : '<svg aria-hidden="true" focusable="false"')
+  .trim();
+---
+<Fragment set:html={svg} />

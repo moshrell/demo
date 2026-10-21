@@ -1,0 +1,88 @@
+---
+// Intro „Schlüssel ins Schloss“ (≤ 1,6 s). Nur wenn <html> die Klasse .intro hat (Inline-Skript im <head>:
+// einmal pro Sitzung, nicht bei reduced-motion, nicht bei Sprung-Links). Tippen = überspringen.
+// Die Aktionsleiste (Anrufen) liegt ÜBER dem Intro und ist sofort bedienbar.
+// Schlüssel: Foto auf Schwarz (PROMPTS 01), mix-blend-mode: screen statt Freistellen. Fehlt es, nur das Schlüsselloch.
+import { getImage } from 'astro:assets';
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/img/schluessel.{jpg,jpeg,png,webp}', { eager: true });
+const src = Object.values(files)[0]?.default;
+const key = src ? await getImage({ src, width: 320, format: 'webp', quality: 74 }) : null;
+// Schlüsselloch: Kreis r=5 um (0,0) + Trapez bis y=15, als ein Umriss (Loch in der schwarzen Fläche, evenodd)
+const hole = 'M2,4.583 A5,5 0 1 0 -2,4.583 L-4,15 L4,15 Z';
+---
+<div class="intro" data-intro aria-hidden="true">
+  <svg class="intro__plate" viewBox="-100 -100 200 200" preserveAspectRatio="xMidYMid meet">
+    <path fill-rule="evenodd" d={`M-100,-100 H100 V100 H-100 Z ${hole}`} />
+    <path class="intro__fill" d={hole} />
+    <path class="intro__rim" d={hole} />
+  </svg>
+  {key && <img class="intro__key" src={key.src} width={key.attributes.width} height={key.attributes.height} alt="" decoding="async" fetchpriority="high" />}
+  <p class="intro__skip">Tippen zum Überspringen</p>
+</div>
+
+<style>
+  .intro { display: none; }
+  :global(html.intro) .intro { display: block; position: fixed; inset: 0; z-index: 40; isolation: isolate; cursor: pointer; overflow: hidden; }
+  .intro__plate { position: absolute; left: 50%; top: 50%; width: 100vmax; height: 100vmax; translate: -50% -50%; fill: var(--color-ink); transform-origin: 50% 50%; will-change: transform; }
+  .intro__fill { fill: var(--color-ink-3); }
+  .intro__rim { fill: none; stroke: var(--color-brass); stroke-width: 0.5; }
+  .intro__key { position: absolute; left: 50%; top: 50%; height: 34vmin; width: auto; translate: -50% -78%; transform-origin: 50% 78%; mix-blend-mode: screen; opacity: 0; will-change: transform, opacity; }
+  .intro__skip { position: absolute; top: max(var(--space-md), env(safe-area-inset-top)); left: 0; right: 0; text-align: center; color: var(--color-paper-3); font-size: var(--text-sm); }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const el = document.querySelector<HTMLElement>('[data-intro]');
+  if (el && root.classList.contains('intro')) {
+    const plate = el.querySelector<SVGElement>('.intro__plate')!;
+    const fill = el.querySelector<SVGPathElement>('.intro__fill')!;
+    const rim = el.querySelector<SVGPathElement>('.intro__rim')!;
+    const key = el.querySelector<HTMLImageElement>('.intro__key');
+    const anims: Animation[] = [];
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      anims.forEach((a) => a.cancel());
+      root.classList.remove('intro');
+      root.dispatchEvent(new CustomEvent('intro:done'));
+    };
+    el.addEventListener('pointerdown', finish);
+    addEventListener('keydown', finish, { once: true });
+    setTimeout(finish, 2600); // Sicherheitsnetz: nie länger als nötig
+
+    const reveal = (delay: number) => {
+      const ease = 'cubic-bezier(0.55, 0, 0.2, 1)';
+      const a = plate.animate([{ transform: 'scale(1)' }, { transform: 'scale(26)' }], { duration: 560, delay, easing: ease, fill: 'forwards' });
+      anims.push(a,
+        fill.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, delay, fill: 'forwards' }),
+        rim.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, delay: delay + 80, fill: 'forwards' }),
+        el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 120, delay: delay + 480, fill: 'forwards' }));
+      a.finished.then(finish).catch(() => {});
+    };
+
+    const play = () => {
+      if (done) return;
+      if (!key) return reveal(200);
+      const k = key.animate([
+        { opacity: 0, transform: 'translateY(55vh) scale(1.5) rotate(-14deg)' },
+        { opacity: 1, transform: 'translateY(6vh) scale(1.08) rotate(-3deg)', offset: 0.55 },
+        { opacity: 1, transform: 'translateY(0) scale(1) rotate(0deg)' },
+      ], { duration: 520, delay: 80, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' });
+      const turn = key.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(90deg)' }], { duration: 330, delay: 620, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', fill: 'forwards' });
+      const out = key.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 110, delay: 950, fill: 'forwards' });
+      anims.push(k, turn, out);
+      reveal(960); // Ende ≈ 1,52 s
+    };
+
+    if (!key) play();
+    else if (key.complete && key.naturalWidth) play();
+    else {
+      // Schlüssel kommt nicht schnell genug (schwaches Netz): nicht warten, nur Schlüsselloch öffnen
+      const t = setTimeout(() => { key.remove(); play2(); }, 350);
+      const play2 = () => reveal(120);
+      key.addEventListener('load', () => { clearTimeout(t); play(); }, { once: true });
+      key.addEventListener('error', () => { clearTimeout(t); key.remove(); play2(); }, { once: true });
+    }
+  }
+</script>

@@ -1,0 +1,203 @@
+---
+// Heizungs-Check: 5 Fragen, Einschätzung aus Regeln (heizcheck.json), nur offizielle Links, keine Rechts- oder Förderberatung.
+import Base from '../../layouts/Base.astro';
+import Anfrage from '../../components/Anfrage.astro';
+import Photo from '../../components/Photo.astro';
+import site from '../../data/site.json';
+import hc from '../../data/heizcheck.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base
+  title="Heizungs-Check in 2 Minuten · Kehlenbrink Bad & Wärme (Demo)"
+  description="Fünf Fragen zu Kessel, Haus und Heizkörpern: eine erste neutrale Einschätzung, ob Wärmepumpe, Hybrid oder Kesseltausch passen kann, mit Links zu GModG, KfW und BAFA. Demo-Seite."
+  anfrageHref={`${base}heizung/#beratung`}
+  current="heizung"
+>
+  <main id="inhalt" class="hc wrap">
+    <header class="hc__head">
+      <h1>Heizungs-Check</h1>
+      <p class="hc__lead">Fünf Fragen, zwei Minuten. Sie bekommen eine erste, ehrliche Einschätzung, was technisch zu Ihrem Haus passen kann – und die offiziellen Stellen zu Gesetz und Förderung. Keine Werbung für ein bestimmtes System.</p>
+    </header>
+
+    <form class="hc__form" data-check novalidate>
+      <div class="hc__progress" aria-hidden="true">
+        {hc.questions.map(() => <span class="hc__seg"></span>)}
+      </div>
+      <p class="hc__count" data-count aria-live="polite"></p>
+      {hc.questions.map((q: any, i: number) => (
+        <fieldset class="hc__q" data-q={q.id}>
+          <legend><span class="sr-only">Frage {i + 1} von {hc.questions.length}: </span>{q.q}</legend>
+          {q.hint && <p class="hc__hint">{q.hint}</p>}
+          <div class="hc__opts">
+            {q.options.map((o: any) => (
+              <label class="hc__opt">
+                <input type="radio" name={q.id} value={o.v} data-label={o.l} />
+                <span><strong>{o.l}</strong>{o.s && <small>{o.s}</small>}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      ))}
+      <div class="hc__nav">
+        <button class="btn btn--ghost" type="button" data-back>Zurück</button>
+        <button class="btn" type="submit" data-show>Einschätzung zeigen</button>
+      </div>
+      <noscript><p class="hc__hint">Ohne JavaScript zeigen wir keine Einschätzung. Rufen Sie uns gern an: {site.phone}.</p></noscript>
+    </form>
+
+    <section class="hc__res" data-result hidden tabindex="-1" aria-labelledby="hc-res-h">
+      <p class="hc__badge" data-badge></p>
+      <h2 id="hc-res-h">Ihre erste Einschätzung</h2>
+      <dl class="hc__sum" data-sum></dl>
+      <h3>Ihre Anlage</h3>
+      <p data-anlage></p>
+      <h3>Was technisch passen kann</h3>
+      <div data-technik></div>
+      <div class="hc__law" id="recht">
+        <h3>Gesetz und Förderung</h3>
+        <p>Seit dem 29. Juli 2026 heißt das Gebäudeenergiegesetz <strong>Gebäudemodernisierungsgesetz (GModG)</strong>, und die Heizungsförderung wurde im Juli 2026 angepasst. Was für Sie gilt, steht bei den offiziellen Stellen. Förderung prüfen wir gemeinsam mit Ihnen vor dem Auftrag.</p>
+        <ul>
+          {hc.links.map((l: any) => <li><a href={l.href} target="_blank" rel="noopener">{l.t}</a></li>)}
+        </ul>
+        <p class="hc__stand">Keine Rechts- oder Förderberatung. Stand der Links: {site.foerderStand}.</p>
+      </div>
+      <div class="hc__resnav">
+        <a class="btn btn--copper" href="#beratung">Beratung vereinbaren</a>
+        <button class="btn btn--ghost" type="button" data-edit>Antworten ändern</button>
+      </div>
+    </section>
+
+    <div class="hc__form-wrap">
+      <Photo class="hc__img" name="station-heizung.jpg" alt="Heizungskeller mit Wärmepumpen-Innengerät und Speicher" sizes="(min-width: 64rem) 30rem, 92vw" />
+      <Anfrage
+        id="beratung"
+        title="Beratung vereinbaren"
+        intro={`Wir rufen Sie an, gehen Ihre Antworten durch und schlagen bei Bedarf eine Besichtigung vor. ${site.besichtigung}`}
+        submitLabel="Beratung anfragen"
+        purpose="meiner Beratungsanfrage"
+        external
+        priced={false}
+        externalLabel="Ihr Heizungs-Check"
+        windows={['Mo–Do vormittags', 'Mo–Do nachmittags', 'Freitag vormittags']}
+        photoLabel="Foto vom Typenschild (optional)"
+        photoHint="Das Schild mit Hersteller und Baujahr am Kessel"
+        notePlaceholder="z. B. Wohnfläche, Verbrauch pro Jahr, Pläne für Dach oder Fenster"
+      />
+    </div>
+  </main>
+  <script is:inline type="application/json" id="hc-data" set:html={JSON.stringify(hc)} />
+</Base>
+
+<style>
+  .hc { padding-top: var(--space-xl); }
+  .hc__head { max-width: var(--measure); }
+  .hc__lead { margin-top: var(--space-md); color: var(--color-ink-2); }
+  .hc__form { margin-top: var(--space-xl); max-width: 40rem; display: grid; gap: var(--space-lg); }
+  .hc__progress { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+  .hc__seg { height: 7px; border-radius: 2px; background: var(--color-track); }
+  .hc__seg.is-on { background: var(--color-copper); }
+  .hc__seg:first-child.is-on { background: var(--color-water); }
+  .hc__count { font-size: var(--text-sm); color: var(--color-ink-2); min-height: 1.4em; }
+  .hc__q { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: var(--space-sm); }
+  .hc__q legend { font: 500 var(--text-xl)/1.2 var(--font-display); padding: 0; margin-bottom: var(--space-xs); }
+  .hc__hint { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .hc__opts { display: grid; gap: var(--space-xs); }
+  .hc__opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .hc__opt > span { display: grid; gap: 2px; min-height: 56px; align-content: center; padding: var(--space-sm) var(--space-md); border: 1.5px solid var(--color-rule); border-radius: var(--radius); cursor: pointer; }
+  .hc__opt small { color: var(--color-ink-2); font-size: var(--text-xs); }
+  .hc__opt input:checked + span { border-color: var(--color-copper); background: var(--color-copper-soft); }
+  .hc__opt input:focus-visible + span { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+  @media (hover: hover) { .hc__opt > span:hover { border-color: var(--color-ink-2); } }
+  .hc__nav { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
+  :global(.js) .hc__q:not(.is-active) { display: none; }
+  :global(.js) .hc__nav [data-show]:not(.is-ready) { display: none; }
+  .hc__res { margin-top: var(--space-xl); max-width: 40rem; display: grid; gap: var(--space-sm); padding: var(--space-lg); border: 1.5px solid var(--color-ink); border-radius: var(--radius); }
+  .hc__res h3 { margin-top: var(--space-md); }
+  .hc__res p { color: var(--color-ink-2); }
+  .hc__badge { justify-self: start; padding: 4px 12px; border-radius: var(--radius-pill); background: var(--color-copper-soft); color: var(--color-copper-ink) !important; font-weight: 700; font-size: var(--text-sm); }
+  .hc__sum { margin: var(--space-xs) 0 0; font-size: var(--text-sm); }
+  .hc__sum > div { display: flex; justify-content: space-between; gap: var(--space-md); padding: 6px 0; border-bottom: 1px solid var(--color-rule); }
+  .hc__sum dt { color: var(--color-ink-2); }
+  .hc__sum dd { margin: 0; text-align: right; font-weight: 600; }
+  .hc__law { margin-top: var(--space-md); padding: var(--space-md); background: var(--color-paper-2); border-radius: var(--radius); }
+  .hc__law ul { margin: var(--space-sm) 0; padding-left: 1.2rem; display: grid; gap: var(--space-xs); }
+  .hc__stand { font-size: var(--text-xs); }
+  .hc__resnav { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-top: var(--space-md); }
+  .hc__form-wrap { margin-top: var(--space-3xl); display: grid; gap: var(--space-xl); }
+  .hc__img { border-radius: var(--radius); aspect-ratio: 4 / 3; object-fit: cover; width: 100%; max-width: 30rem; }
+  @media (min-width: 64rem) { .hc__form-wrap { grid-template-columns: minmax(0, 30rem) minmax(0, 1fr); align-items: start; column-gap: var(--space-2xl); } }
+</style>
+
+<script>
+  type Q = { id: string; q: string; options: { v: string; l: string }[] };
+  const hc = JSON.parse(document.getElementById('hc-data')!.textContent!) as { questions: Q[]; anlage: Record<string, { badge: string; t: string }>; technik: Record<string, string> };
+  const form = document.querySelector<HTMLFormElement>('[data-check]')!;
+  const qs = [...form.querySelectorAll<HTMLFieldSetElement>('[data-q]')];
+  const segs = [...form.querySelectorAll<HTMLElement>('.hc__seg')];
+  const count = form.querySelector<HTMLElement>('[data-count]')!;
+  const back = form.querySelector<HTMLButtonElement>('[data-back]')!;
+  const show = form.querySelector<HTMLButtonElement>('[data-show]')!;
+  const res = document.querySelector<HTMLElement>('[data-result]')!;
+  const KEY = 'kl:check';
+  let cur = 0;
+
+  const answers = () => Object.fromEntries(qs.map((f) => [f.dataset.q!, f.querySelector<HTMLInputElement>('input:checked')]));
+  const go = (i: number, focus = true) => {
+    cur = Math.max(0, Math.min(qs.length - 1, i));
+    qs.forEach((f, k) => f.classList.toggle('is-active', k === cur));
+    const a = answers();
+    segs.forEach((s, k) => s.classList.toggle('is-on', !!a[qs[k].dataset.q!]));
+    count.textContent = `Frage ${cur + 1} von ${qs.length}`;
+    back.hidden = cur === 0;
+    show.classList.toggle('is-ready', Object.values(a).every(Boolean));
+    if (focus) (qs[cur].querySelector('input:checked') || qs[cur].querySelector('input'))?.focus({ preventScroll: true });
+  };
+  const save = () => { try { const a = answers(); sessionStorage.setItem(KEY, JSON.stringify(Object.fromEntries(Object.entries(a).filter(([, v]) => v).map(([k, v]) => [k, v!.value])))); } catch {} };
+
+  form.addEventListener('change', (e) => {
+    const t = e.target as HTMLInputElement;
+    save();
+    const idx = qs.findIndex((f) => f.contains(t));
+    const all = Object.values(answers()).every(Boolean);
+    if (idx < qs.length - 1) window.setTimeout(() => go(idx + 1), 180);
+    else if (all) result();
+    else go(qs.findIndex((f) => !f.querySelector('input:checked')));
+  });
+  back.addEventListener('click', () => go(cur - 1));
+  form.addEventListener('submit', (e) => { e.preventDefault(); if (Object.values(answers()).every(Boolean)) result(); });
+
+  function result(scroll = true) {
+    const a = answers() as Record<string, HTMLInputElement>;
+    const v = (k: string) => a[k].value;
+    const an = hc.anlage[v('alter')];
+    const score = ({ fbh: 2, gross: 1, gemischt: 0, klein: -1 } as Record<string, number>)[v('flaechen')] + ({ gut: 2, teil: 1, kaum: -1 } as Record<string, number>)[v('daemmung')];
+    const tech: string[] = [];
+    if (v('traeger') === 'strom') tech.push(hc.technik.strom);
+    else if (v('traeger') === 'fern') tech.push(hc.technik.fern);
+    else tech.push(score >= 3 ? hc.technik.hoch : score >= 1 ? hc.technik.mittel : hc.technik.niedrig);
+    if (v('haus') === 'mfh') tech.push(hc.technik.mfh);
+
+    res.querySelector('[data-badge]')!.textContent = an.badge;
+    res.querySelector('[data-anlage]')!.textContent = an.t;
+    res.querySelector('[data-technik]')!.replaceChildren(...tech.map((t) => { const p = document.createElement('p'); p.textContent = t; return p; }));
+    const rows: [string, string][] = [['Alter', a.alter.dataset.label!], ['Heizt mit', a.traeger.dataset.label!], ['Haus', a.haus.dataset.label!], ['Dämmung', a.daemmung.dataset.label!], ['Heizflächen', a.flaechen.dataset.label!]];
+    res.querySelector('[data-sum]')!.replaceChildren(...rows.map(([k, val]) => { const d = document.createElement('div'); const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = val; d.append(dt, dd); return d; }));
+    const detail = { rows: [...rows, ['Einschätzung', an.badge]], cents: 0 };
+    (window as any).__klSummary = detail;
+    window.dispatchEvent(new CustomEvent('kl:summary', { detail }));
+    form.hidden = true;
+    res.hidden = false;
+    if (!scroll) return;
+    res.focus({ preventScroll: true });
+    res.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
+  res.querySelector('[data-edit]')!.addEventListener('click', () => { res.hidden = true; form.hidden = false; go(0); form.scrollIntoView({ block: 'start' }); });
+
+  // Antworten wiederherstellen (Daten gehen nie verloren)
+  try {
+    const d = JSON.parse(sessionStorage.getItem(KEY) || '{}');
+    Object.entries(d).forEach(([k, val]) => { const i = form.querySelector<HTMLInputElement>(`input[name="${k}"][value="${val}"]`); if (i) i.checked = true; });
+    const firstOpen = qs.findIndex((f) => !f.querySelector('input:checked'));
+    if (firstOpen === -1) { go(qs.length - 1, false); result(false); } else go(firstOpen, false);
+  } catch { go(0, false); }
+</script>

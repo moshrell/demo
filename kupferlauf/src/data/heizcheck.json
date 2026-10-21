@@ -1,0 +1,54 @@
+{
+  "questions": [
+    { "id": "alter", "q": "Wie alt ist Ihr Kessel oder Ihre Heizung?", "hint": "Steht auf dem Typenschild, oft innen in der Verkleidung.", "options": [
+      { "v": "a30", "l": "Über 30 Jahre", "s": "vor 1996" },
+      { "v": "a20", "l": "20 bis 30 Jahre", "s": "1996–2005" },
+      { "v": "a10", "l": "10 bis 20 Jahre", "s": "2006–2015" },
+      { "v": "a0", "l": "Jünger als 10 Jahre", "s": "ab 2016" },
+      { "v": "unb", "l": "Weiß ich nicht", "s": "" }
+    ] },
+    { "id": "traeger", "q": "Womit heizen Sie heute?", "hint": "", "options": [
+      { "v": "gas", "l": "Gas", "s": "" },
+      { "v": "oel", "l": "Öl", "s": "" },
+      { "v": "strom", "l": "Nachtspeicher / Strom", "s": "" },
+      { "v": "fern", "l": "Fernwärme", "s": "" },
+      { "v": "andere", "l": "Etwas anderes", "s": "Holz, Pellets, …" }
+    ] },
+    { "id": "haus", "q": "Was für ein Haus ist es?", "hint": "", "options": [
+      { "v": "efh", "l": "Einfamilienhaus", "s": "" },
+      { "v": "dhh", "l": "Doppel- oder Reihenhaus", "s": "" },
+      { "v": "mfh", "l": "Mehrfamilienhaus", "s": "bis 6 Wohnungen" }
+    ] },
+    { "id": "daemmung", "q": "Wie gut ist das Haus gedämmt?", "hint": "Grob reicht. Genau rechnen wir bei der Beratung.", "options": [
+      { "v": "gut", "l": "Gut", "s": "ab 2000 gebaut oder Dach, Fassade und Fenster saniert" },
+      { "v": "teil", "l": "Teilweise", "s": "z. B. neue Fenster oder Dach gedämmt" },
+      { "v": "kaum", "l": "Kaum", "s": "weitgehend Originalzustand vor 1980" }
+    ] },
+    { "id": "flaechen", "q": "Wie wird es in den Räumen warm?", "hint": "Große Heizflächen brauchen weniger heißes Wasser – wichtig für Wärmepumpen.", "options": [
+      { "v": "fbh", "l": "Fußbodenheizung", "s": "" },
+      { "v": "gross", "l": "Große Heizkörper", "s": "flach, breit, mehrlagig" },
+      { "v": "gemischt", "l": "Gemischt", "s": "" },
+      { "v": "klein", "l": "Kleine, alte Heizkörper", "s": "z. B. Rippenheizkörper unterm Fenster" }
+    ] }
+  ],
+  "anlage": {
+    "a30": { "badge": "Jetzt planen", "t": "Ihre Anlage ist über 30 Jahre alt. Ersatzteile werden knapp, und ein Ausfall im Winter lässt wenig Zeit zum Vergleichen. Ob für Ihren Kessel gesetzliche Pflichten gelten, hängt vom Kesseltyp und Ihrer Situation ab – die offiziellen Informationen sind unten verlinkt." },
+    "a20": { "badge": "Jetzt planen", "t": "Mit 20 bis 30 Jahren hat Ihre Anlage die übliche Lebensdauer erreicht. Wer jetzt plant, kann in Ruhe vergleichen und den Tausch in den Sommer legen." },
+    "a10": { "badge": "In Ruhe beobachten", "t": "Ihre Anlage ist mitten im Leben. Eine Wartung und ein hydraulischer Abgleich bringen häufig mehr als ein Tausch." },
+    "a0": { "badge": "Kein Handlungsbedarf erkennbar", "t": "Ihre Anlage ist jung. Regelmäßige Wartung hält sie effizient." },
+    "unb": { "badge": "Typenschild ansehen", "t": "Ohne Baujahr lässt sich wenig sagen. Ein Foto vom Typenschild in Ihrer Anfrage reicht uns für eine erste Einschätzung." }
+  },
+  "technik": {
+    "hoch": "Eine Wärmepumpe ist in Häusern wie Ihrem häufig gut machbar. Ob es passt, zeigt eine Heizlastberechnung vor Ort.",
+    "mittel": "Eine Wärmepumpe ist oft möglich, wenn die nötige Vorlauftemperatur passt – das prüfen wir mit einer Heizlastberechnung. Eine Alternative kann eine Hybridheizung sein.",
+    "niedrig": "Vor einer Wärmepumpe lohnt der Blick auf Heizkörper und Dämmung. Häufig sind ein Hybrid oder ein Weg in Schritten sinnvoll, z. B. erst einzelne Heizkörper tauschen.",
+    "strom": "Bei Nachtspeicherheizung fehlt meist ein Heizungsnetz mit Heizkörpern. Das ist ein größerer Umbau, den wir gern vor Ort einschätzen.",
+    "fern": "Bei Fernwärme ist zuerst Ihr Versorger zuständig. Wir helfen bei Übergabestation, Heizkörpern und Warmwasser.",
+    "mfh": "Bei Mehrfamilienhäusern planen wir immer mit einer Heizlastberechnung pro Wohnung."
+  },
+  "links": [
+    { "t": "Gebäudemodernisierungsgesetz (GModG, früher GEG): Informationsportal des Bundes", "href": "https://gmodg.bund.de/" },
+    { "t": "KfW: Heizungsförderung für Privatpersonen, Wohngebäude (458)", "href": "https://www.kfw.de/inlandsfoerderung/Privatpersonen/Bestehende-Immobilie/F%C3%B6rderprodukte/Heizungsf%C3%B6rderung-f%C3%BCr-Privatpersonen-Wohngeb%C3%A4ude-(458)/" },
+    { "t": "BAFA: Bundesförderung für effiziente Gebäude (BEG)", "href": "https://www.bafa.de/DE/Energie/Effiziente_Gebaeude/effiziente_gebaeude_node.html" }
+  ]
+}

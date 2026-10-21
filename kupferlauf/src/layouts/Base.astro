@@ -61,6 +61,7 @@ const nav = [
     <meta property="og:url" content={canonical} />
     {ogImage && <meta property="og:image" content={ogImage} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <script is:inline>document.documentElement.classList.add('js')</script>
     <slot name="head" />
     {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
   </head>

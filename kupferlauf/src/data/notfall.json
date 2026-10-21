@@ -1,0 +1,9 @@
+{
+  "steps": [
+    { "icon": "droplet-off", "t": "Hauptwasserhahn zudrehen", "d": "Meist im Keller oder Hauswirtschaftsraum, direkt vor der Wasseruhr. Hebel quer zum Rohr heißt: zu. In der Wohnung gibt es oft zusätzlich ein Absperrventil im Bad oder unter der Spüle.", "img": "hauptwasserhahn.jpg", "alt": "Hand dreht den roten Hebel des Hauptabsperrhahns vor der Wasseruhr quer zum Rohr" },
+    { "icon": "zap-off", "t": "Strom im nassen Bereich aus", "d": "Kommt Wasser an Steckdosen, Geräte oder Lampen: die Sicherung für diesen Raum im Sicherungskasten ausschalten. Nicht ins Wasser greifen, solange dort Strom sein kann." },
+    { "icon": "camera", "t": "Fotos machen, dann aufwischen", "d": "Schaden, Wasserstand und die Stelle, aus der es kommt – das hilft später bei der Versicherung. Danach Wasser mit Handtüchern und Eimer aufnehmen, Möbel und Elektrogeräte hochstellen." },
+    { "icon": "phone-call", "t": "Anrufen", "d": "Sagen Sie uns PLZ, was passiert ist und ob das Wasser jetzt steht. Sie hören den Preis, bevor wir losfahren. Mieter informieren bitte auch Vermieter oder Hausverwaltung." }
+  ],
+  "gas": "Riecht es nach Gas? Kein Licht, keine Schalter, kein Handy im Haus. Fenster auf, Haus verlassen und von draußen die Störungsnummer Ihres Gasversorgers oder die 112 anrufen."
+}

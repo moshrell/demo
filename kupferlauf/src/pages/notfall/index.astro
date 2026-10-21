@@ -1,0 +1,106 @@
+---
+// Erste Hilfe bei Wasserschaden: bewusst leicht (kein WebGL, ein Foto, lazy). Anruf zuerst.
+import { readFileSync } from 'node:fs';
+import Base from '../../layouts/Base.astro';
+import PlzCheck from '../../components/PlzCheck.astro';
+import Photo from '../../components/Photo.astro';
+import site from '../../data/site.json';
+import nf from '../../data/notfall.json';
+const base = import.meta.env.BASE_URL;
+const icon = (n: string) => readFileSync(`node_modules/lucide-static/icons/${n}.svg`, 'utf8')
+  .replace(/<!--[\s\S]*?-->/g, '').replace(/class="[^"]*"/, 'class="nf-ic" aria-hidden="true" focusable="false"').replace(/width="24"/, 'width="32"').replace(/height="24"/, 'height="32"');
+const p = site.notdienstPreis;
+---
+<Base
+  title="Wasserschaden? Erste Hilfe in 4 Schritten · Kehlenbrink Bad & Wärme (Demo)"
+  description="Was Sie bei einem Wasserschaden sofort tun: Hauptwasserhahn zu, Strom aus, Fotos, anrufen. Notdienst im Westen und Norden der Region Hannover. Demo-Seite."
+  bar="notfall"
+  current="notfall"
+>
+  <main id="inhalt" class="nf">
+    <div class="nf__top">
+      <h1>Wasser läuft? <span class="nf__h-sub">So stoppen Sie es.</span></h1>
+      <a class="nf__call" href={`tel:${site.notdienstHref}`}>
+        <strong>Notdienst anrufen</strong>
+        <span class="num">{site.notdienst}</span>
+      </a>
+      <p class="nf__price">Einsatz ab <strong class="num">{p.tag} €</strong>, nachts und am Wochenende ab <strong class="num">{p.nacht} €</strong>, inkl. 19 % MwSt. {p.hinweis}</p>
+      <p class="nf__gas" role="note"><strong>Gasgeruch?</strong> {nf.gas.replace(/^Riecht es nach Gas\? /, '')}</p>
+    </div>
+
+    <ol class="nf__steps" data-steps>
+      {nf.steps.map((s: any, i: number) => (
+        <li class="nf__step" data-step>
+          <div class="nf__head">
+            <span class="nf__no num" aria-hidden="true">{i + 1}</span>
+            <Fragment set:html={icon(s.icon)} />
+          </div>
+          <h2>{s.t}</h2>
+          <p>{s.d}</p>
+          {s.img && <Photo class="nf__img" name={s.img} alt={s.alt} sizes="(min-width: 48rem) 34rem, 88vw" />}
+          {i === 3 ? (
+            <a class="btn btn--copper nf__stepcall" href={`tel:${site.notdienstHref}`}>Jetzt anrufen: {site.notdienst}</a>
+          ) : (
+            <button class="btn btn--ghost nf__done" type="button" data-done aria-pressed="false">Erledigt</button>
+          )}
+        </li>
+      ))}
+    </ol>
+
+    <section class="nf__plz" aria-labelledby="nf-plz-h">
+      <h2 id="nf-plz-h">Kommen wir zu Ihnen?</h2>
+      <PlzCheck id="plz-nf" compact />
+    </section>
+
+    <p class="nf__other">Kein Notfall, aber es tropft? <a href={`${base}#anfrage`}>Schicken Sie uns ein Foto</a>, wir melden uns am nächsten Werktag.</p>
+  </main>
+</Base>
+
+<style>
+  .nf { max-width: 40rem; margin: 0 auto; padding: var(--space-lg) var(--gutter) 0; }
+  .nf h1 { font-size: clamp(2rem, 1.5rem + 3vw, 3rem); }
+  .nf__h-sub { display: block; color: var(--color-ink-2); }
+  .nf__call { display: grid; justify-items: center; gap: 2px; margin-top: var(--space-lg); padding: var(--space-md); border-radius: var(--radius); background: var(--color-copper); color: var(--color-ink); text-decoration: none; }
+  .nf__call strong { font: 600 var(--text-xl)/1.1 var(--font-display); }
+  .nf__call span { font-size: var(--text-lg); font-weight: 700; }
+  .nf__price { margin-top: var(--space-sm); font-size: var(--text-sm); color: var(--color-ink-2); }
+  .nf__gas { margin-top: var(--space-md); padding: var(--space-sm) var(--space-md); border: 1.5px solid var(--color-alert); border-radius: var(--radius); font-size: var(--text-sm); }
+  .nf__gas strong { color: var(--color-alert); }
+  .nf__steps { list-style: none; margin: var(--space-xl) 0 0; padding: 0; display: grid; gap: var(--space-md); }
+  .nf__step { padding: var(--space-lg); border: 1.5px solid var(--color-rule); border-radius: var(--radius); display: grid; gap: var(--space-sm); scroll-margin-top: 72px; }
+  .nf__step.is-done { border-color: var(--color-ok); background: oklch(97% 0.02 160); }
+  .nf__step.is-current { border-color: var(--color-ink); }
+  .nf__head { display: flex; align-items: center; gap: var(--space-md); color: var(--color-deep-2); }
+  .nf__no { font: 500 3rem/1 var(--font-display); color: var(--color-copper-ink); }
+  .nf__step h2 { font-size: var(--text-xl); }
+  .nf__step p { color: var(--color-ink-2); }
+  .nf__img { border-radius: var(--radius); aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+  .nf__done { justify-self: start; }
+  .nf__done[aria-pressed='true'] { background: var(--color-ok); border-color: var(--color-ok); color: var(--color-paper); }
+  .nf__stepcall { width: 100%; }
+  .nf__plz { margin-top: var(--space-2xl); }
+  .nf__plz h2 { font-size: var(--text-xl); margin-bottom: var(--space-md); }
+  .nf__other { margin-top: var(--space-xl); color: var(--color-ink-2); }
+  :global(.nf-ic) { flex: none; }
+</style>
+
+<script>
+  const steps = [...document.querySelectorAll<HTMLElement>('[data-step]')];
+  steps[0]?.classList.add('is-current');
+  steps.forEach((s, i) => {
+    const b = s.querySelector<HTMLButtonElement>('[data-done]');
+    b?.addEventListener('click', () => {
+      const on = b.getAttribute('aria-pressed') !== 'true';
+      b.setAttribute('aria-pressed', String(on));
+      b.textContent = on ? 'Erledigt ✓' : 'Erledigt';
+      s.classList.toggle('is-done', on);
+      s.classList.remove('is-current');
+      try { navigator.vibrate?.(30); } catch {}
+      if (on && steps[i + 1]) {
+        steps[i + 1].classList.add('is-current');
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        steps[i + 1].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>

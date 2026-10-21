@@ -28,17 +28,18 @@ const {
   photoHint = 'z. B. das Problem, das Typenschild oder Ihr jetziges Bad',
   plz = true,
   external = false,
+  priced = true, // external ohne Preis (Heizungs-Check): keine Summe erfinden
   externalLabel = 'Ihre Auswahl',
   notePlaceholder = 'z. B. Maße, Baujahr, was genau passiert ist',
 } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const euro = (c: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(c / 100);
-const hasPrices = plans.length > 0 || external;
+const hasPrices = plans.length > 0 || (external && priced);
 ---
 <section class="af" id={id} aria-labelledby={`${id}-h`}>
   <h2 class="af__title" id={`${id}-h`}>{title}</h2>
   {intro && <p class="af__intro">{intro}</p>}
-  <form class="af__form" id={`${id}-form`} novalidate data-af data-plans-label={plansLabel} data-plans-suffix={plansSuffix} data-topics-label={topicsLabel} data-windows-label={windowsLabel} data-external={external ? '1' : '0'} data-external-label={externalLabel} data-has-prices={hasPrices ? '1' : '0'}>
+  <form class="af__form" id={`${id}-form`} novalidate data-af data-plans-label={plansLabel} data-plans-suffix={plansSuffix} data-topics-label={topicsLabel} data-windows-label={windowsLabel} data-external={external ? '1' : '0'} data-external-label={externalLabel} data-has-prices={hasPrices ? '1' : '0'} data-priced={priced ? '1' : '0'}>
     {external && (
       <div class="af__group af__ext" data-ext>
         <p class="af__legend">{externalLabel}</p>
@@ -237,6 +238,7 @@ const hasPrices = plans.length > 0 || external;
         }));
         update();
       };
+      if ((window as any).__klSummary) ext = (window as any).__klSummary;
       window.addEventListener('kl:summary', (e) => {
         ext = (e as CustomEvent).detail;
         form.querySelector<HTMLElement>('[data-ext-err]')!.hidden = true;
@@ -291,7 +293,7 @@ const hasPrices = plans.length > 0 || external;
       if (bad.length) { bad[0].focus(); return; }
 
       const rows: [string, string, boolean?][] = [];
-      if (external) { ext.rows.forEach((r) => rows.push(r)); if (ext.cents) rows.push(['Summe ab (Richtwert)', eur.format(ext.cents / 100), true]); }
+      if (external) { ext.rows.forEach((r) => rows.push(r)); if (ext.cents && form.dataset.priced === '1') rows.push(['Summe ab (Richtwert)', eur.format(ext.cents / 100), true]); }
       const p = plan();
       if (p) rows.push([form.dataset.plansLabel || 'Auswahl', p.dataset.label || p.value], ['Summe', eur.format(Number(p.dataset.cents) / 100) + (form.dataset.plansSuffix || ''), true]);
       const tp = form.querySelector<HTMLInputElement>('input[name=topic]:checked');

@@ -1,0 +1,130 @@
+{
+  "order": ["fruehling", "sommer", "herbst", "winter"],
+  "seasons": {
+    "fruehling": {
+      "name": "Frühling",
+      "months": "März bis Mai",
+      "monthNames": "April",
+      "img": "garten-fruehling",
+      "alt": "Derselbe Garten im April: die Felsenbirne blüht weiß, der Rasen ist frisch grün, an der Hainbuchenhecke treiben die ersten Blätter.",
+      "hero": {
+        "title": "Jetzt wird gebaut.",
+        "lead": "Rasen, Beete, Terrasse, Wege: Im Frühling entstehen die Gärten, die im Winter geplant wurden. Wir bauen sie mit eigener Kolonne und eigenem Gerät, von der Erdarbeit bis zur letzten Staude."
+      },
+      "intro": "Der Boden ist abgetrocknet, die Baumschulen sind voll, und jeder will gleichzeitig anfangen. Darum vergeben wir Frühjahrstermine im Winter. Wer jetzt anfragt, bekommt einen ehrlichen Termin, keinen versprochenen.",
+      "detail": { "img": "detail-erde", "alt": "Zwei Hände in Arbeitshandschuhen setzen eine junge Staude in dunkle Gartenerde." },
+      "services": [
+        { "name": "Neuer Garten (Neuanlage)", "text": "Erdarbeiten, Rasen, Beete, Terrasse und Wege aus einer Hand. Den Kostenrahmen Ihres Gartens sehen Sie im Gartenplaner.", "price": "Planer", "link": "gartenplaner/" },
+        { "name": "Rollrasen", "text": "inklusive Bodenvorbereitung, Planum und Startdünger. Rasenansaat ab 9 € je m².", "price": "ab 19 € je m²" },
+        { "name": "Staudenbeet", "text": "Boden lockern, Kompost, Pflanzen nach Plan für Sonne oder Schatten, Mulch.", "price": "ab 55 € je m²" },
+        { "name": "Terrasse im Garten", "text": "Naturstein oder Feinsteinzeug auf frostsicherem Unterbau, mit Gefälle vom Haus weg.", "price": "ab 175 € je m²" },
+        { "name": "Gartenwege und Pflaster im Garten", "text": "Betonstein, Klinker oder Kies mit Einfassung, immer als Teil der Gartenanlage.", "price": "ab 115 € je m²" }
+      ],
+      "refs": [
+        {
+          "img": "ref-terrasse",
+          "alt": "Neue Terrasse aus hellem Feinsteinzeug hinter einem weißen Neubau, eingefasst von einer niedrigen Kalksteinmauer, daneben junger Rasen.",
+          "title": "Terrasse und Rasen für einen Neubau",
+          "place": "Gehrden, Neubaugebiet",
+          "story": "Ein Haus, rundherum Baustellenboden. Die Familie wollte zuerst nur Rasen, damit das Kind draußen spielen kann. Wir haben den Boden tiefgelockert, die Terrasse gleich mitgeplant und die Mauer so gesetzt, dass sie als Bank dient. Den Rest des Gartens baut die Familie in zwei Jahren weiter, der Plan liegt schon in der Schublade.",
+          "facts": [["Fläche", "280 m² Garten, 26 m² Terrasse"], ["Bauzeit", "9 Arbeitstage"], ["Rahmen", "ab 14.000 € (Demo-Wert)"]]
+        },
+        {
+          "img": "ref-weg",
+          "alt": "Geschwungener Gartenweg aus grauem Klinker durch einen Rasen, entlang niedriger Lavendelbüsche zu einem dunkelgrünen Gartenhaus.",
+          "title": "Ein Weg zum Gartenhaus",
+          "place": "Ronnenberg",
+          "story": "Vorher ein Trampelpfad durch nassen Rasen. Jetzt ein Klinkerweg mit Einfassung, der dem alten Bogen folgt, den alle sowieso gelaufen sind.",
+          "facts": [["Länge", "22 m, 1 m breit"], ["Bauzeit", "3 Arbeitstage"], ["Rahmen", "ab 3.200 € (Demo-Wert)"]]
+        }
+      ]
+    },
+    "sommer": {
+      "name": "Sommer",
+      "months": "Juni bis August",
+      "monthNames": "Juli",
+      "img": "garten-sommer",
+      "alt": "Derselbe Garten im Juli: dichter Rasen, die Felsenbirne in sattem Grün, im Beet blühen Lavendel und Phlox.",
+      "hero": {
+        "title": "Im Sommer zeigt sich, was trägt.",
+        "lead": "Wasser, Schatten und ein Platz zum Sitzen: Wir bauen Bewässerung, Teiche und Sitzplätze und gießen, wenn Sie im Urlaub sind."
+      },
+      "intro": "Ein Garten, der im Juli gut aussieht, wurde im März richtig gebaut und im Mai richtig gepflegt. Im Sommer bauen wir trotzdem, vor allem Wasser: eine Tropfbewässerung spart in trockenen Jahren mehr Arbeit als jede Maschine.",
+      "services": [
+        { "name": "Bewässerung", "text": "Tropfrohr in Beeten, Versenkregner im Rasen, Anschluss an Zisterne oder Hauswasser, Steuerung per Zeitschaltuhr.", "price": "ab 14 € je m²" },
+        { "name": "Gartenteich", "text": "Folienteich mit Flachwasserzone und Pflanzen, Rand aus Naturstein oder Holz.", "price": "ab 220 € je m²" },
+        { "name": "Sitzplatz", "text": "Kies- oder Splittfläche mit Stahlkante, Platz für Bank oder Tisch.", "price": "ab 590 € je Sitzplatz" },
+        { "name": "Urlaubsbewässerung", "text": "Wir gießen Kübel und Beete, während Sie verreist sind, inklusive Kontrollfoto.", "price": "ab 35 € je Einsatz" },
+        { "name": "Gartenpflege im Vertrag", "text": "Rasen, Hecke, Beete in festem Rhythmus. Den Monatspreis rechnen Sie selbst aus.", "price": "Rechner", "link": "pflege/" }
+      ],
+      "refs": [
+        {
+          "img": "ref-teich",
+          "alt": "Naturnaher Gartenteich mit Sandsteinrand, Schwertlilien, Binsen und Seerosen, ein schmaler Holzsteg reicht ins Wasser.",
+          "title": "Ein Teich für die Libellen",
+          "place": "Wennigsen-Bredenbeck",
+          "story": "Das Ehepaar wollte Wasser im Garten, aber keinen Pflegefall. Wir haben den Teich tief genug gebaut, dass er im Sommer nicht kippt, eine breite Flachwasserzone für Pflanzen angelegt und auf Pumpe und Filter verzichtet. Im zweiten Sommer kamen die Libellen von allein.",
+          "facts": [["Fläche", "10 m² Wasser, 1,2 m tief"], ["Bauzeit", "6 Arbeitstage"], ["Rahmen", "ab 4.800 € (Demo-Wert)"]]
+        }
+      ]
+    },
+    "herbst": {
+      "name": "Herbst",
+      "months": "September bis November",
+      "monthNames": "Oktober",
+      "img": "garten-herbst",
+      "alt": "Derselbe Garten im Oktober: die Felsenbirne leuchtet orange und rot, Laub liegt auf Rasen und Terrasse, die Gräser sind strohfarben.",
+      "hero": {
+        "title": "Im Herbst beginnt das Gartenjahr.",
+        "lead": "Hecken und Bäume pflanzen, Laub räumen, den neuen Garten planen: Grünhof Gartenbau baut und pflegt Gärten im Südwesten der Region Hannover."
+      },
+      "intro": "Für mich fängt das Jahr im Oktober an. Jetzt ist die beste Pflanzzeit für Hecken und Bäume, jetzt wird geräumt, und jetzt planen wir die Gärten, die im März gebaut werden. Wer bis Weihnachten unterschreibt, bekommt einen Frühjahrstermin.",
+      "detail": { "img": "detail-werkzeug", "alt": "Spaten, Laubrechen, Gartenschere und Handschuhe auf einer alten Holzschubkarre, dazwischen orangefarbenes Herbstlaub." },
+      "services": [
+        { "name": "Heckenpflanzung", "text": "Hainbuche, Liguster, Eibe. Wurzelnackte Ware gibt es nur im Herbst und kostet weniger als Topfware.", "price": "ab 39 € je Meter" },
+        { "name": "Baumpflanzung", "text": "Hochstamm mit Pflanzgrube, Bodenverbesserung, Pfahl und Gießrand.", "price": "ab 420 € je Baum" },
+        { "name": "Laub und Herbstpflege", "text": "Laub von Rasen und Wegen, Beete abräumen, letzter Rasenschnitt. Grüngut entsorgen wir ab 25 € je m³.", "price": "ab 58 € je Stunde" },
+        { "name": "Gehölzschnitt", "text": "Sträucher und kleine Bäume bis 4 m. Größere Rückschnitte sind erst ab 1. Oktober erlaubt (§ 39 BNatSchG).", "price": "ab 58 € je Stunde" },
+        { "name": "Gartenplanung für das Frühjahr", "text": "Aufmaß, Entwurf, Pflanzplan und Kostenrahmen. Bei Auftrag ab 10.000 € angerechnet.", "price": "ab 390 €" }
+      ],
+      "refs": [
+        {
+          "img": "ref-hecke",
+          "alt": "Frisch gepflanzte junge Hainbuchenhecke mit gelbbraunem Herbstlaub in einem gemulchten Erdstreifen am Rand eines Gartens.",
+          "title": "Eine Hecke statt Zaun",
+          "place": "Ronnenberg-Empelde",
+          "story": "Der alte Jägerzaun war morsch, ein neuer hätte genauso viel gekostet wie eine Hecke. Wir haben im Oktober wurzelnackte Hainbuchen gepflanzt, zwei Pflanzen je Meter. In drei Jahren ist sie blickdicht, und sie behält ihr braunes Laub über den Winter.",
+          "facts": [["Länge", "46 m Hainbuche"], ["Bauzeit", "2 Arbeitstage"], ["Rahmen", "ab 1.800 € (Demo-Wert)"]]
+        }
+      ]
+    },
+    "winter": {
+      "name": "Winter",
+      "months": "Dezember bis Februar",
+      "monthNames": "Januar",
+      "img": "garten-winter",
+      "alt": "Derselbe Garten im Januar unter frischem Schnee: die Felsenbirne steht kahl, die Hainbuchenhecke trägt braunes Winterlaub.",
+      "hero": {
+        "title": "Im Winter wird geplant.",
+        "lead": "Wir räumen Schnee für Hausverwaltungen und Betriebe, schneiden Obstbäume und planen mit Ihnen den Garten, den wir im Frühjahr bauen."
+      },
+      "intro": "Im Winter ist der Garten ehrlich. Ohne Laub sieht man, wo Licht fehlt, wo Wasser steht und welcher Baum zu groß geworden ist. Für mich die beste Zeit, um mit Ihnen durch den Garten zu gehen und zu planen.",
+      "services": [
+        { "name": "Winterdienst für Hausverwaltungen und Betriebe", "text": "Räumen und Streuen im Vertrag, mit Protokoll je Einsatz (Uhrzeit und Foto). Preise netto.", "price": "Rechner", "link": "pflege/#gewerbe" },
+        { "name": "Obstbaum-Winterschnitt", "text": "Erziehungs- und Erhaltungsschnitt für Apfel, Birne und Quitte, Schnittgut nehmen wir mit.", "price": "ab 58 € je Stunde" },
+        { "name": "Baumfällung bis 8 m", "text": "Nur von Oktober bis Februar. Größere Bäume übernimmt ein Partnerbetrieb mit Hubsteiger.", "price": "ab 180 €" },
+        { "name": "Gartenplanung", "text": "Aufmaß, Entwurf, Pflanzplan und Kostenrahmen, damit im März sofort gebaut werden kann.", "price": "ab 390 €" }
+      ],
+      "refs": [
+        {
+          "img": "winterdienst",
+          "alt": "Ein Mitarbeiter im Winterdienst schiebt in der Morgendämmerung einen Streuwagen über einen frisch geräumten Weg vor einem Bürohaus.",
+          "title": "14 Hauseingänge vor sieben Uhr",
+          "place": "Hannover-Linden, Wohnanlage einer Hausverwaltung",
+          "story": "Die Hausverwaltung brauchte zum 1. November einen neuen Vertragspartner. Wir räumen drei Wohnanlagen mit zusammen 14 Eingängen. Jeder Einsatz wird mit Uhrzeit und Foto protokolliert, die Verwaltung bekommt das Protokoll monatlich als PDF.",
+          "facts": [["Fläche", "1.150 m² Wege und Zufahrten"], ["Saison", "1. November bis 31. März"], ["Rahmen", "ab 2.710 € netto je Saison (Demo-Wert)"]]
+        }
+      ]
+    }
+  }
+}

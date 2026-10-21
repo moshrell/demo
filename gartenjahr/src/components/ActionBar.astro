@@ -1,0 +1,36 @@
+---
+// Mobile Leiste: Anrufen oder Anfrage in einem Tippen, von überall. Verschwindet, solange ein Formular im Bild ist (das hat seine eigene Leiste).
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const { href: h, label = 'Anfrage' } = Astro.props;
+const href = h ?? `${base}#anfrage`;
+---
+<nav class="actionbar ui" aria-label="Schnellkontakt">
+  <a class="actionbar__call" href={`tel:${site.phoneHref}`}><span class="actionbar__k">Anrufen</span><span class="actionbar__v num">{site.phone}</span></a>
+  <a class="actionbar__go" href={href} data-actionbar-go>{label}</a>
+</nav>
+
+<style>
+  .actionbar { position: fixed; z-index: 40; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--space-sm); padding: var(--space-sm) var(--gutter); padding-bottom: max(var(--space-sm), env(safe-area-inset-bottom)); background: var(--color-paper); border-top: var(--rule-hair) solid var(--color-ink); transition: transform var(--dur-mid) var(--ease-out); }
+  .actionbar a { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 2.75rem; border-radius: var(--radius); text-decoration: none; font-weight: 600; font-size: var(--text-sm); line-height: 1.15; white-space: nowrap; }
+  .actionbar__call { border: 1px solid var(--color-ink); }
+  .actionbar__k { font-size: var(--text-sm); }
+  .actionbar__v { font-weight: 500; font-size: var(--text-xs); color: var(--color-muted); }
+  .actionbar__go { background: var(--color-moss); color: var(--color-on-moss); }
+  .actionbar__go:active, .actionbar__call:active { transform: translateY(1px); }
+  :global(body.form-in-view) .actionbar { transform: translateY(110%); }
+  @media (min-width: 48rem) { .actionbar { display: none; } }
+</style>
+
+<script>
+  // Leiste ausblenden, solange ein Formular (mit eigener Summenleiste) sichtbar ist.
+  const forms = document.querySelectorAll('[data-hide-actionbar]');
+  if (forms.length && 'IntersectionObserver' in window) {
+    const seen = new Set<Element>();
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => (e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)));
+      document.body.classList.toggle('form-in-view', seen.size > 0);
+    }, { rootMargin: '0px 0px -30% 0px' });
+    forms.forEach((f) => io.observe(f));
+  }
+</script>

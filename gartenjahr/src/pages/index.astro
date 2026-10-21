@@ -1,19 +1,330 @@
 ---
 import Base from '../layouts/Base.astro';
-import OrderForm from '../components/OrderForm.astro';
+import Photo from '../components/Photo.astro';
+import Chapter from '../components/Chapter.astro';
+import Status from '../components/Status.astro';
+import PlzCheck from '../components/PlzCheck.astro';
+import AnfrageForm from '../components/AnfrageForm.astro';
 import site from '../data/site.json';
+import data from '../data/seasons.json';
+const base = import.meta.env.BASE_URL;
+const keys = data.order; // Kalenderfolge
+const S = data.seasons;
+const mm = Number(new Intl.DateTimeFormat('en', { timeZone: 'Europe/Berlin', month: 'numeric' }).format(new Date()));
+const buildSeason = mm >= 3 && mm <= 5 ? 'fruehling' : mm >= 6 && mm <= 8 ? 'sommer' : mm >= 9 && mm <= 11 ? 'herbst' : 'winter';
+const prev = (k) => keys[(keys.indexOf(k) + 3) % 4];
+// Reihenfolge der Kapitel: ab der aktuellen Jahreszeit im Kreis (per CSS order, vor dem ersten Bild gesetzt)
+const orderCss = keys.map((cur) => keys.map((k) => `html[data-season='${cur}'] #${k}{order:${(keys.indexOf(k) - keys.indexOf(cur) + 4) % 4 + 1}}`).join('') +
+  `html[data-season='${cur}'] #${cur} .plate{display:none}` +
+  `html[data-season='${cur}'] .s-${cur}{display:block}html[data-season='${cur}'] .si-${cur}{display:inline}` +
+  `html[data-season='${cur}'] .seasonbar a[href='#${cur}-h']::after{content:' · jetzt'}`).join('');
+const faq = [
+  { q: 'Was kostet ein neuer Garten?', a: 'Das hängt an Fläche, Boden und dem, was hinein soll. Ein Neubaugarten mit 300 m², Rasen, Terrasse, Beeten und Hecke liegt bei uns meist zwischen 15.000 und 30.000 € inklusive MwSt. Im Gartenplaner sehen Sie für Ihren eigenen Plan einen Richtpreis, verbindlich wird es nach dem Aufmaß.' },
+  { q: 'Kommen Sie kostenlos zur Besichtigung?', a: 'Für Pflegeverträge und Winterdienst ja. Für neue Gärten und Umbauten berechnen wir die Beratung vor Ort mit 89 € und rechnen sie beim Auftrag voll an. So haben wir Zeit für Sie statt für Gratis-Termine, aus denen nie etwas wird.' },
+  { q: 'Wann ist die beste Zeit, einen Garten anzulegen?', a: 'Planen im Herbst und Winter, bauen von März bis Mai oder im September und Oktober. Rasen braucht Bodenwärme ab etwa April, wurzelnackte Hecken und Bäume pflanzt man von Oktober bis März.' },
+  { q: 'Fällen Sie auch Bäume?', a: 'Bäume bis etwa 8 m, und nur von Oktober bis Februar, weil größere Schnitte und Fällungen von März bis September nach § 39 Bundesnaturschutzgesetz nicht erlaubt sind. Ob Ihre Gemeinde eine Baumschutzsatzung hat, klären wir vorher. Große Bäume übernimmt ein Partnerbetrieb mit Hubsteiger.' },
+  { q: 'Wie lange läuft ein Pflegevertrag?', a: '12 Monate, danach ist er monatlich kündbar. Der Betrag ist jeden Monat gleich, auch im Winter, damit Sie keine schwankenden Rechnungen bekommen.' },
+  { q: 'Pflastern Sie auch Einfahrten?', a: 'Ja, Zufahrten, Terrassen und Wege auf Wohngrundstücken, immer als Teil der Gartenanlage. Öffentliche Straßen und Gehwege machen wir nicht, das ist Sache eines Straßenbaubetriebs.' },
+  { q: 'Kann ich die Kosten von der Steuer absetzen?', a: 'Für Arbeiten an Ihrem selbst genutzten Garten können Sie in der Regel 20 % der Lohnkosten absetzen, höchstens 1.200 € im Jahr (§ 35a EStG). Wir weisen den Lohnanteil auf der Rechnung getrennt aus. Den Einzelfall klärt Ihr Steuerberater.' },
+  { q: 'Übernehmen Sie beim Winterdienst die Haftung?', a: 'Auf Wunsch übernehmen wir die Verkehrssicherungspflicht für die vereinbarten Flächen schriftlich im Vertrag. Jeder Einsatz wird mit Uhrzeit und Foto protokolliert.' },
+];
 ---
-<Base>
+<Base title="Grünhof Gartenbau · Garten- und Landschaftsbau in Wennigsen am Deister (Demo)" description="Gärten anlegen, pflegen und Winterdienst im Südwesten der Region Hannover: Richtpreise, Einsatzgebiet nach PLZ, Gartenplaner und Pflege-Rechner. Demo-Seite." faq={faq}>
+  <style slot="head" set:html={orderCss}></style>
+
+  <header class="mast">
+    <p class="mast__line ui">Ausgabe <span class="sxi si-fruehling">Frühling</span><span class="sxi si-sommer">Sommer</span><span class="sxi si-herbst">Herbst</span><span class="sxi si-winter">Winter</span> {new Date().getFullYear()} · Wennigsen am Deister</p>
+    <h1 class="mast__name">Grünhof<span class="mast__sub">Garten- und Landschaftsbau</span></h1>
+    <nav class="mast__nav ui" aria-label="Hauptnavigation">
+      <a href={`${base}gartenplaner/`}>Gartenplaner</a>
+      <a href={`${base}pflege/`}>Pflege &amp; Winterdienst</a>
+      <a href="#anfrage">Kontakt</a>
+    </nav>
+    <p class="mast__status ui"><Status /> · <a href={`tel:${site.phoneHref}`} class="num">{site.phone}</a></p>
+  </header>
+
+  <nav class="seasonbar ui" aria-label="Jahreszeiten">
+    {keys.map((k) => <a href={`#${k}-h`} data-season-link={k}>{S[k].name}</a>)}
+  </nav>
+
   <main id="inhalt">
-    <h1>{site.name}</h1>
-    <!-- Formular-Standard: Beispiel mit Preisen. Ohne Preise: items weglassen und options={['Leistung A', 'Leistung B']} nutzen. TODO: echte Positionen vom Kunden -->
-    <OrderForm
-      title="Vorbestellung"
-      submitLabel="Vorbestellen"
-      purpose="meiner Vorbestellung"
-      items={[{ id: 'a', name: 'TODO Artikel A', cents: 350 }, { id: 'b', name: 'TODO Artikel B', cents: 1290 }]}
-      options={['TODO Zeit 1', 'TODO Zeit 2']}
-      optionsLabel="Wann?"
-    />
+    <section class="hero" aria-label="Aktuelle Jahreszeit">
+      <figure class="hero__fig">
+        {keys.map((k) => (
+          <div class={`hero__img sx s-${k}`}>
+            <Photo name={S[k].img} mobile={`${S[k].img}-hoch`} alt={S[k].alt} w={16} h={9} eager={k === buildSeason} />
+          </div>
+        ))}
+        <figcaption class="hero__cap ui">{keys.map((k) => <span class={`sxi si-${k}`}>Unser Mustergarten, {S[k].monthNames}.</span>)}</figcaption>
+      </figure>
+      <div class="hero__text wrap">
+        {keys.map((k) => (
+          <div class={`sx s-${k}`}>
+            <p class="hero__title">{S[k].hero.title}</p>
+            <p class="hero__lead">{S[k].hero.lead}</p>
+            <p class="hero__book ui"><span>Termine</span> {site.booking[k]}</p>
+          </div>
+        ))}
+        <div class="hero__cta">
+          <a class="btn" href={`${base}gartenplaner/`}>Garten planen</a>
+          <a class="btn btn--ghost" href={`${base}pflege/`}>Pflege berechnen</a>
+        </div>
+        <p class="hero__quick ui">Keine Zeit für Planer und Rechner? <a href={`tel:${site.phoneHref}`}>Anrufen</a> oder <a href="#anfrage">Fotos schicken</a>, wir melden uns.</p>
+      </div>
+    </section>
+
+    <div class="journal">
+      {keys.map((k) => <Chapter key={k} s={S[k]} prev={S[prev(k)]} />)}
+    </div>
+
+    <section class="ablauf" aria-labelledby="ablauf-h">
+      <figure class="ablauf__fig">
+        <Photo name="team-arbeit" alt="Zwei Landschaftsgärtner verlegen Natursteinplatten für eine Terrasse, einer klopft eine Platte mit dem Gummihammer fest." w={3} h={4} sizes="(min-width: 64rem) 34vw, 100vw" />
+      </figure>
+      <div class="ablauf__text wrap">
+        <h2 id="ablauf-h">So läuft ein Auftrag</h2>
+        <ol class="steps">
+          <li><h3>Anruf oder Anfrage</h3><p>Sie schreiben oder rufen an, gern mit zwei, drei Fotos. Wir melden uns in der Regel am nächsten Werktag und sagen ehrlich, ob es passt.</p></li>
+          <li><h3>Termin vor Ort</h3><p>Wir messen auf und hören zu. Für Pflege und Winterdienst kostenlos, für neue Gärten 89 €, die wir beim Auftrag anrechnen.</p></li>
+          <li><h3>Schriftliches Angebot</h3><p>Jede Position einzeln, mit Mengen und Lohnanteil. Gültig acht Wochen, kein Pauschalpaket.</p></li>
+          <li><h3>Bau oder Pflege</h3><p>Ein fester Vorarbeiter vom ersten Spatenstich bis zur Abnahme. Danach bekommen Sie Pflegehinweise für das erste Jahr.</p></li>
+        </ol>
+        <p class="ablauf__team ui">{site.team}. Eigener Minibagger und Rüttelplatte, darum ohne Subunternehmer.</p>
+      </div>
+    </section>
+
+    <section class="gebiet wrap" aria-labelledby="gebiet-h">
+      <h2 id="gebiet-h">Kommen wir zu Ihnen?</h2>
+      <p class="gebiet__lead">Wir fahren höchstens 25 km um Wennigsen. Geben Sie Ihre Postleitzahl ein, dann wissen Sie es sofort.</p>
+      <PlzCheck id="plz-gebiet" />
+      <p class="gebiet__list ui">Kerngebiet ohne Anfahrtskosten: Wennigsen, Gehrden, Ronnenberg, Barsinghausen.</p>
+    </section>
+
+    <section class="b2" aria-label="Pflege und Winterdienst">
+      <a class="b2__card" href={`${base}pflege/`}>
+        <p class="b2__who ui">Für Gartenbesitzer</p>
+        <p class="b2__what">Ihr Garten in festen Händen. Pflegevertrag ab 69 € im Monat, Laufzeit 12 Monate, dann monatlich kündbar.</p>
+        <span class="link-arrow">Monatspreis ausrechnen</span>
+      </a>
+      <a class="b2__card" href={`${base}pflege/#gewerbe`}>
+        <p class="b2__who ui">Für Hausverwaltungen und Betriebe</p>
+        <p class="b2__what">Winterdienst mit Protokoll je Einsatz, auf Wunsch mit Übernahme der Verkehrssicherungspflicht. Preise netto je Saison.</p>
+        <span class="link-arrow">Saisonpreis ausrechnen</span>
+      </a>
+    </section>
+
+    <section class="kontakt wrap" id="anfrage" aria-label="Anfrage">
+      <AnfrageForm id="anfrage-form" title="Schreiben Sie uns" purpose="meiner Anfrage" photo={true}>
+        <p slot="intro" class="kontakt__intro">Am schnellsten geht es mit Postleitzahl und ein paar Handyfotos. Lieber reden? <a href={`tel:${site.phoneHref}`} class="num">{site.phone}</a>, <Status /></p>
+        <fieldset>
+          <legend>Worum geht es?</legend>
+          <div class="af__chips">
+            {['Neuer Garten', 'Umbau / Terrasse', 'Pflege', 'Baum / Hecke', 'Winterdienst', 'Etwas anderes'].map((o, i) => (
+              <label class="af__chip"><input type="radio" name="thema" value={o} checked={i === 0} data-confirm="Thema" /><span>{o}</span></label>
+            ))}
+          </div>
+          <PlzCheck id="plz-anfrage" inForm={true} required={true} />
+        </fieldset>
+      </AnfrageForm>
+    </section>
+
+    <section class="faq wrap" aria-labelledby="faq-h">
+      <h2 id="faq-h">Was man uns am Telefon fragt</h2>
+      {faq.map((f) => (
+        <details class="faq__item">
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </section>
   </main>
+
+  <div slot="footer" class="letter wrap">
+    <figure class="letter__fig">
+      <Photo name="inhaber" alt="Henrik Lamprecht, Gärtnermeister, im Hof einer Baumschule." w={3} h={4} sizes="10rem" />
+    </figure>
+    <div class="letter__text">
+      <p class="letter__body">Ein Garten wird nie fertig, und das ist das Schöne an ihm. Wenn Sie bis hier gelesen haben, kennen Sie unser Jahr. Rufen Sie an, dann gehen wir gemeinsam durch Ihres.</p>
+      <p class="letter__close">Bis bald im Garten,<br /><span class="letter__sign">Henrik Lamprecht</span></p>
+      <p class="letter__ps ui">P.S. Im Winter erreichen Sie mich am besten morgens, dann bin ich im Büro statt auf der Baustelle.</p>
+    </div>
+  </div>
 </Base>
+
+<style>
+  /* Sichtbarkeit je Jahreszeit (Regeln dazu im <head>, aus orderCss) */
+  .sx, .sxi { display: none; }
+
+  /* N6 Masthead */
+  .mast { display: grid; justify-items: center; gap: var(--space-xs); padding: var(--space-lg) var(--gutter) var(--space-md); text-align: center; border-bottom: 4px double var(--color-ink); }
+  .mast__line { font-size: var(--text-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-muted); }
+  .mast__name { font-size: clamp(3.4rem, 2rem + 8vw, 7.5rem); font-weight: 500; line-height: 0.88; letter-spacing: -0.02em; display: grid; justify-items: center; }
+  .mast__sub { font-family: var(--font-ui); font-size: var(--text-xs); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 500; margin-top: var(--space-sm); color: var(--color-ink-2); }
+  .mast__nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 var(--space-lg); margin-top: var(--space-xs); font-size: var(--text-sm); font-weight: 600; }
+  .mast__nav a { display: inline-flex; min-height: 2.75rem; align-items: center; text-decoration: none; white-space: nowrap; }
+  .mast__nav a:hover { text-decoration: underline; text-decoration-color: var(--color-terra); }
+  .mast__status { font-size: var(--text-xs); color: var(--color-muted); display: flex; flex-wrap: wrap; justify-content: center; gap: 0 0.4em; }
+  .mast__status a { color: var(--color-ink); font-weight: 600; }
+
+  /* Jahreszeiten-Leiste */
+  .seasonbar { position: sticky; top: 0; z-index: 30; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--color-paper); border-bottom: var(--rule-hair) solid var(--color-rule); }
+  .seasonbar a { display: flex; align-items: center; justify-content: center; min-height: 2.75rem; font-size: var(--text-sm); font-weight: 500; text-decoration: none; color: var(--color-muted); white-space: nowrap; border-bottom: 2px solid transparent; }
+  .seasonbar a::after { font-size: var(--text-xs); color: var(--color-terra); font-weight: 600; margin-left: 0.15em; }
+  .seasonbar a[aria-current='true'] { color: var(--color-ink); border-bottom-color: var(--color-terra); font-weight: 600; }
+  @media (max-width: 23.5rem) { .seasonbar a::after { content: none !important; } }
+
+  /* Hero: Photographic, Bild zuerst */
+  .hero__fig { position: relative; margin: 0; height: min(64svh, 38rem); background: var(--color-paper-3); overflow: hidden; }
+  .hero__img { position: absolute; inset: 0; }
+  .hero__img :global(picture), .hero__img :global(img), .hero__img :global(.frame-missing) { width: 100%; height: 100%; object-fit: cover; aspect-ratio: auto !important; }
+  .hero__cap { position: absolute; left: var(--gutter); bottom: var(--space-smd); font-size: var(--text-xs); color: var(--color-paper); letter-spacing: 0.04em; text-shadow: 0 1px 6px oklch(15% 0.02 140 / 0.6); }
+  .hero__text { display: grid; gap: var(--space-md); padding-top: var(--space-xl); padding-bottom: var(--space-2xl); max-width: 52rem; }
+  .hero__title { font-family: var(--font-display); font-size: var(--text-display); line-height: 0.92; letter-spacing: -0.02em; font-weight: 500; overflow-wrap: anywhere; }
+  .hero__lead { font-size: var(--text-lg); line-height: 1.5; max-width: 34rem; margin-top: var(--space-md); }
+  .hero__book, .kap__book { font-size: var(--text-sm); margin-top: var(--space-md); }
+  .hero__book span, .kap__book span { display: inline-block; font-weight: 700; color: var(--color-terra); margin-right: 0.4em; }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-sm); }
+  .hero__quick { font-size: var(--text-sm); color: var(--color-muted); }
+  .hero__quick a { color: var(--color-ink); font-weight: 600; }
+
+  /* Kapitel */
+  .journal { display: flex; flex-direction: column; }
+  .journal :global(.kap) { border-top: var(--rule-hair) solid var(--color-rule); }
+  .journal :global(.plate) { position: relative; height: 210svh; background: var(--color-paper-3); }
+  .journal :global(.plate__sticky) { position: sticky; top: 2.75rem; height: calc(100svh - 2.75rem); overflow: hidden; }
+  .journal :global(.plate__img), .journal :global(.plate__to) { position: absolute; inset: 0; }
+  .journal :global(.plate__sticky picture), .journal :global(.plate__sticky img), .journal :global(.plate__sticky .frame-missing) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; aspect-ratio: auto !important; }
+  .journal :global(.plate__to) { will-change: opacity; }
+  :global(html.js-scrub) .journal :global(.plate__to) { opacity: 0; }
+  .journal :global(.plate__cap) { position: absolute; left: var(--gutter); bottom: calc(var(--bar-h) + var(--space-lg) + env(safe-area-inset-bottom)); font-size: var(--text-sm); color: var(--color-paper); letter-spacing: 0.03em; text-shadow: 0 1px 8px oklch(15% 0.02 140 / 0.65); }
+  @media (min-width: 48rem) { .journal :global(.plate__cap) { bottom: var(--space-lg); } }
+
+  .journal :global(.kap__body) { display: grid; gap: var(--space-xl); padding-top: var(--space-2xl); padding-bottom: var(--space-2xl); }
+  .journal :global(.kap__head h2) { scroll-margin-top: 3.5rem; font-size: var(--text-display); line-height: 0.9; letter-spacing: -0.025em; }
+  .journal :global(.kap__months) { margin-top: var(--space-sm); font-size: var(--text-xs); letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-muted); }
+  .journal :global(.kap__intro) { max-width: var(--measure); }
+  .journal :global(.kap__lead) { font-size: var(--text-lg); line-height: 1.55; }
+  .journal :global(.kap__lead::first-letter) { font-family: var(--font-display); float: left; font-size: 3.6em; line-height: 0.8; padding: 0.06em 0.08em 0 0; color: var(--color-terra); }
+  .journal :global(.kap__sign) { margin-top: var(--space-md); font-style: italic; color: var(--color-muted); }
+  .journal :global(.kap__detail) { margin: 0; width: 72%; justify-self: end; }
+  .journal :global(.kap__services h3) { font-size: var(--text-xl); margin-bottom: var(--space-md); }
+  .journal :global(.svc) { list-style: none; margin: 0; padding: 0; border-top: var(--rule-hair) solid var(--color-ink); }
+  .journal :global(.svc__row) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2xs) var(--space-md); padding: var(--space-md) 0; border-bottom: var(--rule-hair) solid var(--color-rule); }
+  .journal :global(.svc__name) { font-weight: 600; font-size: var(--text-base); line-height: 1.3; }
+  .journal :global(.svc__price) { font-weight: 600; color: var(--color-terra); font-size: var(--text-sm); text-align: right; white-space: nowrap; line-height: 1.6; }
+  .journal :global(.svc__text) { grid-column: 1 / -1; font-size: var(--text-sm); line-height: 1.5; color: var(--color-ink-2); max-width: 34rem; }
+  .journal :global(.svc a) { color: inherit; }
+  .journal :global(.kap__note) { margin-top: var(--space-md); font-size: var(--text-xs); color: var(--color-muted); }
+
+  .journal :global(.ref) { display: grid; padding-bottom: var(--space-2xl); }
+  .journal :global(.ref__fig) { position: relative; margin: 0; }
+  .journal :global(.ref__cap) { position: absolute; right: var(--gutter); bottom: var(--space-smd); font-size: var(--text-xs); color: var(--color-paper); letter-spacing: 0.04em; text-shadow: 0 1px 6px oklch(15% 0.02 140 / 0.6); }
+  .journal :global(.ref__text) { display: grid; gap: var(--space-md); padding-top: var(--space-lg); max-width: 40rem; }
+  .journal :global(.ref h3) { font-size: var(--text-3xl); line-height: 0.95; }
+  .journal :global(.ref__story) { font-size: var(--text-base); }
+  .journal :global(.ref__facts) { display: grid; margin: 0; font-size: var(--text-sm); border-top: var(--rule-hair) solid var(--color-ink); }
+  .journal :global(.ref__facts div) { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: var(--space-md); padding: var(--space-sm) 0; border-bottom: var(--rule-hair) solid var(--color-rule); }
+  .journal :global(.ref__facts dt) { color: var(--color-muted); }
+  .journal :global(.ref__facts dd) { margin: 0; }
+
+  @media (min-width: 64rem) {
+    .journal :global(.kap__body) { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--space-3xl); align-items: start; }
+    .journal :global(.kap__head) { grid-column: 1 / -1; }
+    .journal :global(.kap__detail) { grid-column: 1; grid-row: 3; width: 70%; justify-self: start; }
+    .journal :global(.kap__services) { grid-column: 2; grid-row: 2 / span 2; }
+    .journal :global(.ref) { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); align-items: end; column-gap: var(--space-xl); padding-right: var(--gutter); }
+    .journal :global(.ref--flip) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); padding-right: 0; padding-left: var(--gutter); }
+    .journal :global(.ref--flip .ref__fig) { order: 2; }
+    .journal :global(.ref__text) { padding: 0 0 var(--space-md); }
+  }
+
+  /* Ablauf */
+  .ablauf { display: grid; background: var(--color-paper-2); }
+  .ablauf__fig { margin: 0; }
+  .ablauf__text { display: grid; gap: var(--space-lg); padding-top: var(--space-xl); padding-bottom: var(--space-2xl); }
+  .ablauf h2, .gebiet h2, .faq h2 { font-size: var(--text-2xl); }
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; display: grid; gap: var(--space-lg); }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: var(--space-2xs) var(--space-md); }
+  .steps li::before { content: counter(s); grid-row: span 2; font-family: var(--font-display); font-size: 2.6rem; line-height: 0.8; color: var(--color-terra); }
+  .steps h3 { font-family: var(--font-ui); font-size: var(--text-base); font-weight: 600; line-height: 1.3; }
+  .steps p { font-size: var(--text-sm); line-height: 1.55; }
+  .ablauf__team { font-size: var(--text-sm); color: var(--color-muted); }
+  @media (min-width: 64rem) { .ablauf { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); align-items: center; } .ablauf__text { max-width: 44rem; } }
+
+  .gebiet { display: grid; gap: var(--space-md); padding-top: var(--space-2xl); padding-bottom: var(--space-2xl); max-width: 48rem; }
+  .gebiet__lead { max-width: var(--measure); }
+  .gebiet__list { font-size: var(--text-sm); color: var(--color-muted); }
+
+  .b2 { display: grid; gap: var(--rule-hair); background: var(--color-rule); border-block: var(--rule-hair) solid var(--color-rule); }
+  .b2__card { display: grid; gap: var(--space-sm); padding: var(--space-xl) var(--gutter); background: var(--color-paper); text-decoration: none; }
+  .b2__card:hover { background: var(--color-paper-2); }
+  .b2__who { font-size: var(--text-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-terra); font-weight: 600; }
+  .b2__what { font-family: var(--font-display); font-size: var(--text-xl); line-height: 1.2; max-width: 30rem; }
+  @media (min-width: 48rem) { .b2 { grid-template-columns: 1fr 1fr; } }
+
+  .kontakt { padding-top: var(--space-2xl); padding-bottom: var(--space-2xl); }
+  .kontakt__intro { max-width: var(--measure); }
+  .kontakt__intro a { font-weight: 600; }
+
+  .faq { display: grid; padding-top: var(--space-xl); padding-bottom: var(--space-2xl); max-width: 48rem; }
+  .faq h2 { margin-bottom: var(--space-lg); }
+  .faq__item { border-top: var(--rule-hair) solid var(--color-rule); }
+  .faq__item:last-child { border-bottom: var(--rule-hair) solid var(--color-rule); }
+  .faq__item summary { display: flex; justify-content: space-between; gap: var(--space-md); align-items: center; min-height: 3.25rem; padding: var(--space-sm) 0; font: 600 var(--text-base)/1.35 var(--font-ui); cursor: pointer; list-style: none; }
+  .faq__item summary::-webkit-details-marker { display: none; }
+  .faq__item summary::after { content: '+'; font-family: var(--font-display); font-size: 1.6rem; line-height: 1; color: var(--color-terra); flex: none; }
+  .faq__item[open] summary::after { content: '−'; }
+  .faq__item p { padding-bottom: var(--space-md); max-width: var(--measure); font-size: var(--text-base); }
+
+  /* Ft6 Brief */
+  .letter { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: var(--space-lg); align-items: start; padding-top: var(--space-2xl); padding-bottom: var(--space-xl); max-width: 48rem; }
+  .letter__fig { margin: 0; }
+  .letter__text { display: grid; gap: var(--space-md); }
+  .letter__body { font-size: var(--text-lg); line-height: 1.5; }
+  .letter__close { font-family: var(--font-body); font-style: italic; font-size: var(--text-lg); }
+  .letter__sign { font-family: var(--font-display); font-style: normal; font-size: var(--text-2xl); line-height: 1.1; }
+  .letter__ps { font-size: var(--text-sm); color: var(--color-muted); }
+  @media (max-width: 26rem) { .letter { grid-template-columns: 1fr; } .letter__fig { width: 7rem; } }
+</style>
+
+<script>
+  // Platten: die neue Jahreszeit erscheint beim Scrollen über die alte (nur opacity, rAF, nur wenn sichtbar)
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const plates = [...document.querySelectorAll<HTMLElement>('[data-plate]')];
+  if (!reduce.matches && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('js-scrub');
+    const active = new Set<HTMLElement>();
+    let raf = 0;
+    const tick = () => {
+      raf = 0;
+      const vh = innerHeight;
+      active.forEach((p) => {
+        const r = p.getBoundingClientRect();
+        const total = r.height - vh;
+        const t = Math.min(1, Math.max(0, -r.top / Math.max(1, total)));
+        const o = Math.min(1, Math.max(0, (t - 0.18) / 0.55));
+        (p.querySelector('[data-plate-to]') as HTMLElement).style.opacity = String(o * o * (3 - 2 * o));
+      });
+    };
+    const req = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    const io = new IntersectionObserver((es) => { es.forEach((e) => (e.isIntersecting ? active.add(e.target as HTMLElement) : active.delete(e.target as HTMLElement))); req(); });
+    plates.forEach((p) => io.observe(p));
+    addEventListener('scroll', req, { passive: true });
+    addEventListener('resize', req);
+  }
+
+  // Jahreszeiten-Leiste: aktuelles Kapitel markieren
+  const links = new Map([...document.querySelectorAll<HTMLAnchorElement>('[data-season-link]')].map((a) => [a.dataset.seasonLink!, a]));
+  const kaps = document.querySelectorAll<HTMLElement>('[data-kap]');
+  const mark = (k: string | null) => links.forEach((a, key) => a.setAttribute('aria-current', String(key === k)));
+  if ('IntersectionObserver' in window) {
+    const vis = new Map<string, number>();
+    const io2 = new IntersectionObserver((es) => {
+      es.forEach((e) => vis.set((e.target as HTMLElement).dataset.kap!, e.isIntersecting ? e.intersectionRect.height : 0));
+      let best: string | null = null, h = 0;
+      vis.forEach((v, k) => { if (v > h) { h = v; best = k; } });
+      mark(h > 0 ? best : null);
+    }, { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] });
+    kaps.forEach((k) => io2.observe(k));
+  }
+</script>

@@ -1,0 +1,49 @@
+---
+// "Büro jetzt besetzt / geschlossen" nach Uhrzeit in Berlin. Ohne JS steht die Bürozeit da.
+import site from '../data/site.json';
+const { class: cls = '' } = Astro.props;
+---
+<span class:list={['status', cls]} data-status data-hours={JSON.stringify(site.hours)}><span class="status__dot" aria-hidden="true"></span><span data-status-text>{site.hoursText}</span></span>
+
+<style>
+  .status { display: inline-flex; align-items: center; gap: 0.45em; }
+  .status__dot { width: 0.5em; height: 0.5em; border-radius: 50%; background: var(--color-muted); flex: none; }
+  .status.is-open .status__dot { background: var(--color-ok); box-shadow: 0 0 0 3px var(--color-moss-soft); }
+</style>
+
+<script>
+  type H = { days: number[]; from: string; to: string };
+  const DAY = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+  function berlinNow() {
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23', month: 'numeric' }).formatToParts(new Date()).map((x) => [x.type, x.value]));
+    const wd = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(p.weekday);
+    return { wd, min: Number(p.hour) * 60 + Number(p.minute), month: Number(p.month) };
+  }
+  const toMin = (t: string) => Number(t.slice(0, 2)) * 60 + Number(t.slice(3));
+  document.querySelectorAll<HTMLElement>('[data-status]').forEach((el) => {
+    try {
+      const hours: H[] = JSON.parse(el.dataset.hours || '[]');
+      const { wd, min, month } = berlinNow();
+      const today = hours.find((h) => h.days.includes(wd));
+      const open = !!today && min >= toMin(today.from) && min < toMin(today.to);
+      let text: string;
+      if (open) text = `Büro jetzt besetzt, bis ${today!.to} Uhr`;
+      else {
+        // nächste Öffnung suchen
+        let next = '';
+        for (let i = 0; i < 8 && !next; i++) {
+          const d = (wd + i) % 7;
+          const h = hours.find((x) => x.days.includes(d));
+          if (!h) continue;
+          if (i === 0 && min >= toMin(h.from)) continue;
+          next = i === 0 ? `heute ${h.from}` : i === 1 ? `morgen ${h.from}` : `${DAY[d]} ${h.from}`;
+        }
+        text = `Büro geschlossen, wieder ${next} Uhr`;
+      }
+      const winter = month >= 11 || month <= 3;
+      if (!open && winter) text += ' · Winterdienst: Bereitschaft für Vertragskunden';
+      el.classList.toggle('is-open', open);
+      el.querySelector('[data-status-text]')!.textContent = text;
+    } catch {}
+  });
+</script>

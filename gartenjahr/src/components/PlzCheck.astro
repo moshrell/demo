@@ -1,0 +1,66 @@
+---
+// Einsatzgebiet nach PLZ: "Ja, wir kommen, Anfahrt X €" oder ehrlich "leider nicht". Auch als Feld in Formularen (inForm).
+import gebiet from '../data/gebiet.json';
+const { id = 'plz', inForm = false, required = false, label = 'Ihre Postleitzahl', pflege = false } = Astro.props;
+const data = JSON.stringify({ zones: gebiet.zones, plz: gebiet.plz, ranges: gebiet.ranges, outside: gebiet.outside });
+---
+<div class="plz af__field" data-plzcheck data-gebiet={data} data-pflege={pflege ? '1' : '0'}>
+  <label for={id}>{label}{!required && inForm && <span class="af__opt"> (optional)</span>}</label>
+  <div class="plz__row">
+    <input id={id} name="plz" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" autocomplete="postal-code" placeholder="z. B. 30974" data-plz required={required} data-confirm={inForm ? 'PLZ' : undefined} aria-describedby={`${id}-out ${id}-err`} />
+  </div>
+  <p class="plz__out" id={`${id}-out`} aria-live="polite" data-out></p>
+  {inForm && <input type="hidden" name="gebiet" data-confirm="Einsatzgebiet" data-zone-field />}
+  <p class="af__err" id={`${id}-err`} hidden>Bitte geben Sie eine fünfstellige Postleitzahl ein.</p>
+</div>
+
+<style>
+  .plz { display: grid; gap: var(--space-xs); font-family: var(--font-ui); }
+  .plz label { font-weight: 600; font-size: var(--text-sm); }
+  .plz input { width: 9ch; min-width: 8.5rem; min-height: 2.875rem; padding: 0.6rem 0.85rem; border: 1px solid var(--color-ink-2); border-radius: var(--radius); background: var(--color-paper); font-size: 1.15rem; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
+  .plz__out { font-size: var(--text-sm); line-height: 1.45; min-height: 1.45em; max-width: 34rem; }
+  .plz__out:empty { min-height: 0; }
+  .plz__out[data-state='yes'] { color: var(--color-ok); }
+  .plz__out[data-state='no'] { color: var(--color-alert); }
+  .plz__out strong { color: var(--color-ink); }
+  .plz__out a { color: inherit; }
+</style>
+
+<script>
+  type Zone = { label: string; anfahrt: number; text: string; pflege: boolean };
+  type G = { zones: Record<string, Zone>; plz: Record<string, [string, string]>; ranges: { from: number; to: number; name: string; zone: string }[]; outside: string };
+  document.querySelectorAll<HTMLElement>('[data-plzcheck]').forEach((box) => {
+    const g: G = JSON.parse(box.dataset.gebiet || '{}');
+    const input = box.querySelector<HTMLInputElement>('input[data-plz]')!;
+    const out = box.querySelector<HTMLElement>('[data-out]')!;
+    const zf = box.querySelector<HTMLInputElement>('[data-zone-field]');
+    const pflege = box.dataset.pflege === '1';
+    const run = () => {
+      const v = input.value.replace(/\D/g, '').slice(0, 5);
+      if (v !== input.value) input.value = v;
+      out.textContent = ''; out.removeAttribute('data-state');
+      if (zf) zf.value = '';
+      if (v.length < 5) { box.dispatchEvent(new CustomEvent('gj:zone', { bubbles: true, detail: null })); return; }
+      let hit: [string, string] | undefined = g.plz[v];
+      if (!hit) { const r = g.ranges.find((x) => +v >= x.from && +v <= x.to); if (r) hit = [r.name, r.zone]; }
+      if (!hit) {
+        out.dataset.state = 'no';
+        out.textContent = g.outside;
+        if (zf) zf.value = `${v}: außerhalb`;
+        box.dispatchEvent(new CustomEvent('gj:zone', { bubbles: true, detail: { zone: null, plz: v } }));
+        return;
+      }
+      const z = g.zones[hit[1]];
+      const notForCare = pflege && !z.pflege;
+      out.dataset.state = notForCare ? 'no' : 'yes';
+      const b = document.createElement('strong');
+      b.textContent = `${hit[0]} (${z.label}). `;
+      out.append(b, document.createTextNode(z.text));
+      if (zf) zf.value = `${hit[0]}, ${z.label}, Anfahrt ${z.anfahrt ? z.anfahrt + ' €' : 'kostenlos'}`;
+      box.dispatchEvent(new CustomEvent('gj:zone', { bubbles: true, detail: { zone: hit[1], anfahrt: z.anfahrt, name: hit[0], plz: v } }));
+    };
+    input.addEventListener('input', run);
+    input.form?.addEventListener('gj:restored', run);
+    if (input.value) run();
+  });
+</script>

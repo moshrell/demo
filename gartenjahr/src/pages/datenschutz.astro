@@ -1,14 +1,23 @@
 ---
 import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
 import DatenschutzForm from '../components/DatenschutzForm.astro';
+import site from '../data/site.json';
 const base = import.meta.env.BASE_URL;
 ---
-<Base title="Datenschutz">
-  <main style="padding:120px var(--gutter);max-width:760px;margin:auto">
+<Base title="Datenschutz · Grünhof Gartenbau (Demo)" description="Datenschutzhinweise der Demo-Seite Grünhof Gartenbau.">
+  <PageHead />
+  <main id="inhalt" class="legal wrap">
     <h1>Datenschutz</h1>
-    <!-- Formular-Standard: Abschnitt zum Formular (Pflicht, sobald es ein Formular gibt) -->
-    <DatenschutzForm formName="Vorbestell-Formular" />
-    <!-- TODO: Pflichtangaben vom Kunden (Name, Anschrift, E-Mail, USt-IdNr., Register) bzw. Datenschutzerklärung -->
-    <p><a href={base}>← Zurück</a></p>
+    <p class="legal__demo ui">Demo: Auf dieser Beispielseite wird nichts gesendet und nichts gespeichert. Die Texte zeigen, was bei einem echten Betrieb hier stehen muss.</p>
+    <h2>Verantwortlicher</h2>
+    <p>{site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}, {site.email}</p>
+    <h2>Hosting und Server-Logfiles</h2>
+    <p>Beim Aufruf der Seite verarbeitet der Hoster technisch notwendige Daten (IP-Adresse, Zeitpunkt, aufgerufene Seite) für den sicheren Betrieb (Art. 6 Abs. 1 lit. f DSGVO). Wir setzen keine Cookies, keine Analyse- und keine Werbedienste ein und laden keine Schriften oder Karten von fremden Servern.</p>
+    <DatenschutzForm formName="Anfrage-Formular (Journal)" data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Postleitzahl, Thema, Nachricht und Fotos (freiwillig)" />
+    <DatenschutzForm formName="Gartenplaner: Plan senden" data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Postleitzahl, Ihr Gartenplan (Größe, Elemente, Richtpreis), gewünschter Baubeginn, Nachricht und Fotos (freiwillig)" purpose="Wir prüfen Ihren Plan, rufen Sie an und vereinbaren einen Termin vor Ort." />
+    <p><strong>Gartenplaner ohne Absenden:</strong> Ihr Plan wird nur in Ihrem Browser (sessionStorage) und in der Adresse der Seite gehalten, damit er beim Neuladen nicht verloren geht. Er wird erst übertragen, wenn Sie ihn senden.</p>
+    <DatenschutzForm formName="Pflegevertrag und Winterdienst" data="Name, Telefonnummer, E-Mail-Adresse, Firma (bei Gewerbe), Postleitzahl, Objektadressen, Ihre Angaben im Rechner und gewünschte Rückrufzeit" purpose="Wir erstellen Ihnen ein Angebot für Pflege oder Winterdienst und melden uns dazu." />
+    <p><a class="link-arrow" href={base}>Zurück zum Journal</a></p>
   </main>
 </Base>

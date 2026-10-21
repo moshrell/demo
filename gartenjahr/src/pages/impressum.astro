@@ -1,11 +1,28 @@
 ---
 import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import site from '../data/site.json';
 const base = import.meta.env.BASE_URL;
 ---
-<Base title="Impressum">
-  <main style="padding:120px var(--gutter);max-width:760px;margin:auto">
+<Base title="Impressum · Grünhof Gartenbau (Demo)" description="Impressum der Demo-Seite Grünhof Gartenbau.">
+  <PageHead />
+  <main id="inhalt" class="legal wrap">
     <h1>Impressum</h1>
-    <!-- TODO: Pflichtangaben vom Kunden (Name, Anschrift, E-Mail, USt-IdNr., Register) bzw. Datenschutzerklärung -->
-    <p><a href={base}>← Zurück</a></p>
+    <p class="legal__demo ui">Beispielseite von Kravets Webdesign: Betrieb und Personen sind erfunden. Die Bilder dieser Beispielseite sind teils KI-erzeugt. Alle Angaben unten sind Platzhalter.</p>
+    <h2>Angaben gemäß § 5 DDG</h2>
+    <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+    <h2>Kontakt</h2>
+    <p>Telefon: {site.phone}<br />E-Mail: {site.email}</p>
+    <h2>Umsatzsteuer</h2>
+    <p>Umsatzsteuer-Identifikationsnummer nach § 27a UStG: {site.ustid}</p>
+    <h2>Kammer und Berufsangaben</h2>
+    <p>Zuständige Kammer: {site.kammer}.<br />Der Garten- und Landschaftsbau ist kein Handwerk im Sinne der Handwerksordnung; eine Eintragung in die Handwerksrolle besteht daher nicht. Pflasterarbeiten führen wir ausschließlich im Zusammenhang mit Garten- und Landschaftsflächen aus.</p>
+    <p>Inhaber: {site.owner}, {site.meister}.</p>
+    <p>{site.verband}</p>
+    <h2>Berufshaftpflicht</h2>
+    <p>{site.haftpflicht}</p>
+    <h2>Verbraucherstreitbeilegung</h2>
+    <p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+    <p><a class="link-arrow" href={base}>Zurück zum Journal</a></p>
   </main>
 </Base>

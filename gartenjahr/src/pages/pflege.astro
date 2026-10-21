@@ -1,0 +1,270 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Photo from '../components/Photo.astro';
+import PlzCheck from '../components/PlzCheck.astro';
+import AnfrageForm from '../components/AnfrageForm.astro';
+import site from '../data/site.json';
+import pflege from '../data/pflege.json';
+const P = pflege.privat, G = pflege.gewerbe;
+const cfg = JSON.stringify({ privat: P, gewerbe: G });
+const rows = [
+  { id: 'rasen', label: 'Rasenfläche', unit: 'm²', min: 0, max: 2000, step: 10, val: P.defaults.rasen, hint: 'Ein Tennisplatz hat etwa 260 m².' },
+  { id: 'hecke', label: 'Hecke', unit: 'Meter', min: 0, max: 200, step: 1, val: P.defaults.hecke, hint: 'Länge aller Hecken zusammen, bis 2 m Höhe.' },
+  { id: 'baeume', label: 'Bäume und große Sträucher', unit: 'Stück', min: 0, max: 30, step: 1, val: P.defaults.baeume, hint: 'Einmal im Jahr Schnitt bis 4 m Höhe.' },
+  { id: 'beete', label: 'Beete', unit: 'm²', min: 0, max: 400, step: 5, val: P.defaults.beete, hint: 'Unkraut, Rückschnitt, Mulch.' },
+];
+---
+<Base title="Gartenpflege und Winterdienst · Grünhof Gartenbau (Demo)" description="Pflegevertrag mit Monatspreis zum Selbstrechnen und Winterdienst für Hausverwaltungen mit Protokoll, im Südwesten der Region Hannover. Demo-Seite." barHref="#pflege-form">
+  <PageHead current="pflege" />
+  <main id="inhalt" data-pflege-cfg={cfg}>
+    <section class="pintro wrap">
+      <h1>Pflege und Winterdienst</h1>
+      <p class="pintro__lead">Für Gärten, die jemand in festen Händen halten soll, und für Wege, die um sieben Uhr frei sein müssen.</p>
+      <nav class="pintro__jump ui" aria-label="Bereiche">
+        <a href="#privat"><strong>Für Gartenbesitzer</strong><span>Pflegevertrag, Monatspreis</span></a>
+        <a href="#gewerbe"><strong>Für Hausverwaltungen und Betriebe</strong><span>Winterdienst, Preis je Saison</span></a>
+      </nav>
+    </section>
+
+    <section class="calc" id="privat" aria-labelledby="privat-h">
+      <div class="calc__inner wrap">
+        <h2 id="privat-h">Ihr Pflegevertrag</h2>
+        <p class="calc__lead">Vier Angaben, dann sehen Sie den Monatspreis. Schätzen genügt, beim Termin messen wir nach.</p>
+        <form class="rech ui" data-rechner="privat" aria-describedby="privat-out">
+          {rows.map((r) => (
+            <div class="rech__row">
+              <label for={`r-${r.id}`}>{r.label}</label>
+              <div class="rech__ctl">
+                <input type="range" min={r.min} max={r.max} step={r.step} value={r.val} data-link={r.id} aria-label={`${r.label} (Schieberegler)`} />
+                <span class="rech__num"><input id={`r-${r.id}`} name={r.id} type="number" inputmode="numeric" min={r.min} max={r.max} step={r.step} value={r.val} /><span>{r.unit}</span></span>
+              </div>
+              <p class="rech__hint">{r.hint}</p>
+            </div>
+          ))}
+          <fieldset class="rech__row">
+            <legend>Rasen mähen</legend>
+            <div class="af__chips">
+              <label class="af__chip"><input type="radio" name="takt" value="woche" checked /><span>jede Woche</span></label>
+              <label class="af__chip"><input type="radio" name="takt" value="14" /><span>alle 14 Tage</span></label>
+            </div>
+          </fieldset>
+          <label class="rech__check"><input type="checkbox" name="laub" checked /> <span>Laub im Herbst (drei Einsätze)</span></label>
+        </form>
+
+        <div class="erg" id="privat-out" aria-live="polite">
+          <p class="erg__k ui">Ihr Pflegevertrag</p>
+          <p class="erg__v num"><span class="erg__ab">ab</span> <strong data-out="monat">–</strong> <span class="erg__u">im Monat</span></p>
+          <p class="erg__sub ui num" data-out="jahr"></p>
+          <dl class="erg__list ui num" data-out="list"></dl>
+          <p class="erg__note ui">Richtpreis inkl. 19 % MwSt., Grüngut-Entsorgung enthalten. Verbindlich nach einem kostenlosen Termin vor Ort.</p>
+          <ul class="erg__terms">
+            {P.terms.map((t) => <li>{t}</li>)}
+          </ul>
+        </div>
+
+        <div class="calc__form" id="pflege-form">
+          <AnfrageForm id="pflege-anfrage" title="Pflege anfragen" purpose="meiner Anfrage zum Pflegevertrag" submitLabel="Rückruf anfordern" callback={true} barLabel="Pflegevertrag ab" barValue="–" noteLabel="Noch etwas?" notePlaceholder="z. B. Garten am Hang, Hund im Garten, Schlüssel beim Nachbarn">
+            <fieldset>
+              <legend>Wo ist der Garten?</legend>
+              <PlzCheck id="plz-pflege" inForm={true} required={true} pflege={true} />
+              <input type="hidden" name="pflegeplan" data-confirm="Ihre Angaben" data-sum-privat-text />
+              <input type="hidden" name="pflegepreis" data-confirm="Pflegevertrag ab" data-strong data-sum-privat />
+            </fieldset>
+          </AnfrageForm>
+        </div>
+      </div>
+    </section>
+
+    <section class="calc calc--b2b" id="gewerbe" aria-labelledby="gewerbe-h">
+      <figure class="calc__fig">
+        <Photo name="winterdienst" alt="Ein Mitarbeiter im Winterdienst schiebt in der Morgendämmerung einen Streuwagen über einen frisch geräumten Weg vor einem Wohn- und Bürohaus." w={4} h={3} sizes="(min-width: 64rem) 50vw, 100vw" />
+      </figure>
+      <div class="calc__inner wrap">
+        <h2 id="gewerbe-h">Winterdienst für Hausverwaltungen und Betriebe</h2>
+        <p class="calc__lead">Saison {G.season}. Alle Preise netto zuzüglich 19 % MwSt.</p>
+        <dl class="facts">
+          {G.facts.map(([k, v]) => (<div><dt class="ui">{k}</dt><dd>{v}</dd></div>))}
+        </dl>
+        <form class="rech ui" data-rechner="gewerbe" aria-describedby="gewerbe-out">
+          <div class="rech__row">
+            <label for="g-flaeche">Zu räumende Fläche, alle Objekte</label>
+            <div class="rech__ctl">
+              <input type="range" min="50" max="5000" step="10" value={G.defaults.flaeche} data-link="flaeche" aria-label="Fläche (Schieberegler)" />
+              <span class="rech__num"><input id="g-flaeche" name="flaeche" type="number" inputmode="numeric" min="50" max="5000" step="10" value={G.defaults.flaeche} /><span>m²</span></span>
+            </div>
+            <p class="rech__hint">Gehwege, Zugänge, Zufahrten, Stellplätze.</p>
+          </div>
+          <div class="rech__row">
+            <label for="g-objekte">Anzahl Objekte</label>
+            <div class="rech__ctl">
+              <input type="range" min="1" max="20" step="1" value={G.defaults.objekte} data-link="objekte" aria-label="Objekte (Schieberegler)" />
+              <span class="rech__num"><input id="g-objekte" name="objekte" type="number" inputmode="numeric" min="1" max="20" step="1" value={G.defaults.objekte} /><span>Stück</span></span>
+            </div>
+          </div>
+          <label class="rech__check"><input type="checkbox" name="haftung" /> <span>Verkehrssicherungspflicht an uns übertragen (+30 %)</span></label>
+        </form>
+
+        <div class="erg" id="gewerbe-out" aria-live="polite">
+          <p class="erg__k ui">Winterdienst je Saison</p>
+          <p class="erg__v num"><span class="erg__ab">ab</span> <strong data-out="saison">–</strong> <span class="erg__u">netto</span></p>
+          <p class="erg__sub ui num" data-out="detail"></p>
+          <p class="erg__note ui">Richtpreis für normale Lagen. Steile Zufahrten, Treppen und Handarbeit prüfen wir bei der Begehung, die kostenlos ist.</p>
+        </div>
+
+        <div class="calc__form">
+          <AnfrageForm id="winter-anfrage" title="Angebot anfordern" purpose="meiner Anfrage zum Winterdienst" submitLabel="Angebot anfordern" company={true} emailRequired={true} barLabel="Saison ab (netto)" barValue="–" noteLabel="Objektadressen" noteOptional={false} notePlaceholder={'z. B. Musterstraße 1–5, 30449 Hannover\nMusterweg 12, 30453 Hannover'}>
+            <fieldset>
+              <legend>Objekt und Start</legend>
+              <PlzCheck id="plz-winter" inForm={true} required={true} pflege={true} label="Postleitzahl des (ersten) Objekts" />
+              <div class="af__chips" role="group" aria-label="Start">
+                {['zum 1. November', 'so bald wie möglich', 'nächste Saison'].map((o, i) => (
+                  <label class="af__chip"><input type="radio" name="start" value={o} checked={i === 0} data-confirm="Start" /><span>{o}</span></label>
+                ))}
+              </div>
+              <input type="hidden" name="winterplan" data-confirm="Ihre Angaben" data-sum-gewerbe-text />
+              <input type="hidden" name="winterpreis" data-confirm="Saison ab (netto)" data-strong data-sum-gewerbe />
+            </fieldset>
+          </AnfrageForm>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .pintro { display: grid; gap: var(--space-md); padding-top: var(--space-xl); padding-bottom: var(--space-xl); max-width: 52rem; }
+  .pintro h1 { font-size: var(--text-display); line-height: 0.92; letter-spacing: -0.02em; }
+  .pintro__lead { font-size: var(--text-lg); max-width: var(--measure); }
+  .pintro__jump { display: grid; gap: var(--space-sm); margin-top: var(--space-sm); }
+  .pintro__jump a { display: grid; gap: 0.1rem; padding: var(--space-smd) var(--space-md); border: 1px solid var(--color-ink); border-radius: var(--radius); text-decoration: none; }
+  .pintro__jump a:hover { background: var(--color-paper-2); }
+  .pintro__jump span { font-size: var(--text-sm); color: var(--color-muted); }
+  @media (min-width: 40rem) { .pintro__jump { grid-template-columns: 1fr 1fr; } }
+
+  .calc { border-top: 4px double var(--color-ink); scroll-margin-top: 0; }
+  .calc--b2b { background: var(--color-paper-2); }
+  .calc__fig { margin: 0; }
+  .calc__inner { display: grid; gap: var(--space-lg); padding-top: var(--space-xl); padding-bottom: var(--space-2xl); max-width: 48rem; }
+  .calc h2 { font-size: var(--text-2xl); }
+  .calc__lead { max-width: var(--measure); }
+
+  .rech { display: grid; gap: var(--space-lg); }
+  .rech__row { display: grid; gap: var(--space-xs); border: 0; padding: 0; margin: 0; min-width: 0; }
+  .rech__row > label, .rech__row legend { font-weight: 600; font-size: var(--text-sm); padding: 0; margin-bottom: var(--space-xs); }
+  .rech__ctl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-md); align-items: center; }
+  .rech__ctl input[type=range] { width: 100%; min-height: 2.75rem; accent-color: var(--color-moss); }
+  .rech__num { display: inline-flex; align-items: center; gap: var(--space-xs); font-size: var(--text-sm); color: var(--color-muted); }
+  .rech__num input { width: 5.5rem; min-height: 2.75rem; padding: 0.4rem 0.6rem; border: 1px solid var(--color-ink-2); border-radius: var(--radius); background: var(--color-paper); font-size: 1rem; text-align: right; color: var(--color-ink); font-variant-numeric: tabular-nums; }
+  .rech__hint { font-size: var(--text-xs); color: var(--color-muted); }
+  .rech__check { display: flex; gap: var(--space-sm); align-items: center; min-height: 2.75rem; font-size: var(--text-sm); font-weight: 600; cursor: pointer; }
+  .rech__check input { width: 1.3rem; height: 1.3rem; accent-color: var(--color-moss); }
+  .rech :global(.af__chips) { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+  .rech :global(.af__chip) { position: relative; }
+  .rech :global(.af__chip input) { position: absolute; opacity: 0; inset: 0; margin: 0; }
+  .rech :global(.af__chip span) { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.5rem 1rem; border: 1px solid var(--color-ink-2); border-radius: var(--radius-pill); cursor: pointer; font-size: var(--text-sm); }
+  .rech :global(.af__chip input:checked + span) { background: var(--color-ink); color: var(--color-paper); }
+  .rech :global(.af__chip input:focus-visible + span) { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+
+  .erg { display: grid; gap: var(--space-sm); padding: var(--space-lg); background: var(--color-paper); border: 1px solid var(--color-ink); border-radius: var(--radius); }
+  .erg__k { font-size: var(--text-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-terra); font-weight: 600; }
+  .erg__v { font-family: var(--font-display); line-height: 1; display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 0.35em; }
+  .erg__v strong { font-size: clamp(3rem, 2rem + 6vw, 4.5rem); font-weight: 500; letter-spacing: -0.02em; }
+  .erg__ab, .erg__u { font-size: var(--text-xl); color: var(--color-ink-2); }
+  .erg__sub { font-size: var(--text-sm); color: var(--color-muted); }
+  .erg__list { margin: var(--space-sm) 0 0; font-size: var(--text-sm); border-top: var(--rule-hair) solid var(--color-rule); }
+  .erg__list :global(div) { display: flex; justify-content: space-between; gap: var(--space-md); padding: var(--space-xs) 0; border-bottom: var(--rule-hair) solid var(--color-rule); }
+  .erg__list :global(dd) { margin: 0; white-space: nowrap; }
+  .erg__note { font-size: var(--text-xs); color: var(--color-muted); }
+  .erg__terms { margin: var(--space-sm) 0 0; padding-left: 1.1rem; display: grid; gap: var(--space-xs); font-size: var(--text-sm); }
+
+  .facts { margin: 0; display: grid; border-top: var(--rule-hair) solid var(--color-ink); }
+  .facts div { display: grid; gap: var(--space-2xs); padding: var(--space-smd) 0; border-bottom: var(--rule-hair) solid var(--color-rule); }
+  .facts dt { font-weight: 600; font-size: var(--text-sm); }
+  .facts dd { margin: 0; font-size: var(--text-sm); line-height: 1.5; }
+  .calc__form { padding-top: var(--space-lg); }
+  @media (min-width: 64rem) {
+    .calc--b2b { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+    .calc__fig { position: sticky; top: 0; }
+    .facts div { grid-template-columns: 12rem minmax(0, 1fr); }
+  }
+</style>
+
+<script>
+  const eur = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+  const cfg = JSON.parse(document.querySelector<HTMLElement>('[data-pflege-cfg]')!.dataset.pflegeCfg!);
+  const P = cfg.privat, G = cfg.gewerbe;
+  const KEY = 'gj:pflege-rechner';
+
+  document.querySelectorAll('[data-rechner]').forEach((f) => f.addEventListener('submit', (e) => e.preventDefault()));
+  // Schieberegler und Zahlenfeld koppeln
+  document.querySelectorAll<HTMLFormElement>('[data-rechner]').forEach((f) => {
+    f.querySelectorAll<HTMLInputElement>('input[type=range][data-link]').forEach((r) => {
+      const n = f.elements.namedItem(r.dataset.link!) as HTMLInputElement;
+      r.addEventListener('input', () => { n.value = r.value; f.dispatchEvent(new Event('change')); });
+      n.addEventListener('input', () => { r.value = n.value; });
+      n.addEventListener('change', () => { const v = Math.min(+n.max, Math.max(+n.min, Math.round(+n.value || 0))); n.value = String(v); r.value = String(v); });
+    });
+  });
+
+  const fp = document.querySelector<HTMLFormElement>('[data-rechner=privat]')!;
+  const fg = document.querySelector<HTMLFormElement>('[data-rechner=gewerbe]')!;
+  const num = (f: HTMLFormElement, n: string) => Math.max(0, Number((f.elements.namedItem(n) as HTMLInputElement).value) || 0);
+  const set = (sel: string, v: string) => document.querySelectorAll<HTMLInputElement>(sel).forEach((i) => (i.value = v));
+  const total = (id: string, label: string, value: string) => document.getElementById(id)?.dispatchEvent(new CustomEvent('gj:total', { detail: { label, value } }));
+
+  function calcPrivat() {
+    const rasen = num(fp, 'rasen'), hecke = num(fp, 'hecke'), baeume = num(fp, 'baeume'), beete = num(fp, 'beete');
+    const woche = (fp.querySelector('input[name=takt]:checked') as HTMLInputElement).value === 'woche';
+    const laub = (fp.elements.namedItem('laub') as HTMLInputElement).checked;
+    const cuts = woche ? P.mowWeeks : Math.round(P.mowWeeks / 2);
+    const parts: [string, number, string][] = [];
+    if (rasen) parts.push([`Rasen mähen, ${cuts}×`, cuts * Math.max(P.mowMin, rasen * P.mowPerM2), '']);
+    if (hecke) parts.push([`Hecke schneiden, ${P.hedgeCuts}×`, P.hedgeCuts * hecke * P.hedgePerM, '']);
+    if (baeume) parts.push([`Gehölzschnitt, ${baeume} Stück`, baeume * P.treePerYear, '']);
+    if (beete) parts.push([`Beetpflege, ${P.bedVisits}×`, P.bedVisits * beete * P.bedPerM2, '']);
+    if (laub && (rasen || beete)) parts.push([`Laub, ${P.leafVisits}×`, P.leafVisits * Math.max(P.leafMin, (rasen + beete) * P.leafPerM2), '']);
+    const sub = parts.reduce((s, p) => s + p[1], 0);
+    const year = sub * (1 + P.greenWaste);
+    const month = sub ? Math.max(P.minMonth, Math.ceil(year / 12)) : 0;
+    const visits = (rasen ? cuts : 0) + (hecke ? P.hedgeCuts : 0) + (beete ? P.bedVisits : 0) + (laub ? P.leafVisits : 0);
+    const mEl = document.querySelector('[data-out=monat]')!;
+    mEl.textContent = month ? eur.format(month) : '–';
+    document.querySelector('[data-out=jahr]')!.textContent = month ? `${eur.format(month * 12)} im Jahr · etwa ${visits} Einsätze ${P.season}` : 'Bitte mindestens eine Fläche angeben.';
+    const list = document.querySelector<HTMLElement>('[data-out=list]')!;
+    list.replaceChildren(...parts.map(([k, v]) => { const d = document.createElement('div'); const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = `${eur.format(v * (1 + P.greenWaste))} / Jahr`; d.append(dt, dd); return d; }));
+    const text = [rasen && `Rasen ${rasen} m² (${woche ? 'wöchentlich' : '14-täglich'})`, hecke && `Hecke ${hecke} m`, baeume && `${baeume} Bäume/Sträucher`, beete && `Beete ${beete} m²`, laub && 'Laub im Herbst'].filter(Boolean).join(', ');
+    set('[data-sum-privat-text]', text);
+    set('[data-sum-privat]', month ? `${eur.format(month)} im Monat (inkl. MwSt.)` : '');
+    total('pflege-anfrage', 'Pflegevertrag ab', month ? `${eur.format(month)} / Monat` : '–');
+    return { rasen, hecke, baeume, beete, takt: woche ? 'woche' : '14', laub };
+  }
+  function calcGewerbe() {
+    const fl = Math.max(50, num(fg, 'flaeche')), ob = Math.max(1, num(fg, 'objekte'));
+    const haft = (fg.elements.namedItem('haftung') as HTMLInputElement).checked;
+    const net = Math.ceil((G.basePerObject * ob + G.perM2 * fl) * (haft ? G.liabilityFactor : 1) / 10) * 10;
+    document.querySelector('[data-out=saison]')!.textContent = eur.format(net);
+    document.querySelector('[data-out=detail]')!.textContent = `${eur.format(net * 1.19)} brutto · ${eur.format(Math.ceil(net / 5))} netto je Monat (5 Monate) · ${ob} ${ob === 1 ? 'Objekt' : 'Objekte'}, ${fl} m²${haft ? ', mit Übernahme der Verkehrssicherungspflicht' : ''}`;
+    set('[data-sum-gewerbe-text]', `${fl} m², ${ob} ${ob === 1 ? 'Objekt' : 'Objekte'}${haft ? ', Verkehrssicherungspflicht an Grünhof' : ''}`);
+    set('[data-sum-gewerbe]', `${eur.format(net)} netto je Saison`);
+    total('winter-anfrage', 'Saison ab (netto)', eur.format(net));
+    return { flaeche: fl, objekte: ob, haftung: haft };
+  }
+  // Rechner-Stand behalten (Datenschutz im neuen Tab, Neuladen)
+  try {
+    const s = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+    if (s) {
+      const put = (f: HTMLFormElement, k: string, v: unknown) => {
+        const el = f.elements.namedItem(k);
+        if (el instanceof RadioNodeList) { [...el].forEach((r) => ((r as HTMLInputElement).checked = (r as HTMLInputElement).value === v)); return; }
+        if (!(el instanceof HTMLInputElement)) return;
+        if (el.type === 'checkbox') el.checked = !!v; else { el.value = String(v); const r = f.querySelector<HTMLInputElement>(`input[type=range][data-link="${k}"]`); if (r) r.value = String(v); }
+      };
+      Object.entries(s.p || {}).forEach(([k, v]) => put(fp, k, v));
+      Object.entries(s.g || {}).forEach(([k, v]) => put(fg, k, v));
+    }
+  } catch {}
+  const run = () => { const p = calcPrivat(), g = calcGewerbe(); try { sessionStorage.setItem(KEY, JSON.stringify({ p, g })); } catch {} };
+  [fp, fg].forEach((f) => { f.addEventListener('input', run); f.addEventListener('change', run); });
+  run();
+</script>

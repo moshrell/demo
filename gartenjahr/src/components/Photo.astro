@@ -1,0 +1,37 @@
+---
+/**
+ * Foto aus public/img/. Gibt es zu <name> verkleinerte Varianten (<name>-800.webp, -1400.webp, -2000.webp, von scripts/img.mjs),
+ * kommen sie ins srcset. Fehlt das Foto noch (Степан generiert es in Gemini), steht ein leerer Rahmen im richtigen Format.
+ * Props: name, alt, w, h (Seitenverhältnis), sizes, eager, mobile (Name der Hochformat-Variante für <48rem), mw, mh, class
+ */
+import { existsSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+const { name, alt, w, h, sizes = '100vw', eager = false, mobile, mw = 9, mh = 16, class: cls = '' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const dir = join(process.cwd(), 'public', 'img');
+const files = existsSync(dir) ? readdirSync(dir) : [];
+const variants = (n: string) => files
+  .map((f) => f.match(new RegExp(`^${n}-(\\d+)\\.webp$`)))
+  .filter(Boolean)
+  .map((m) => Number(m![1]))
+  .sort((a, b) => a - b);
+const has = (n: string) => files.includes(`${n}.jpg`) || variants(n).length > 0;
+const srcset = (n: string) => variants(n).map((v) => `${base}img/${n}-${v}.webp ${v}w`).join(', ');
+const src = (n: string) => {
+  const v = variants(n);
+  return v.length ? `${base}img/${n}-${v[Math.min(1, v.length - 1)]}.webp` : `${base}img/${n}.jpg`;
+};
+const ok = has(name);
+const okMobile = mobile ? has(mobile) : false;
+---
+{ok ? (
+  <picture class={cls}>
+    {okMobile && <source media="(max-width: 47.99rem)" srcset={srcset(mobile) || src(mobile)} sizes={sizes} width={mw * 100} height={mh * 100} />}
+    {variants(name).length > 0 && <source type="image/webp" srcset={srcset(name)} sizes={sizes} />}
+    <img src={src(name)} alt={alt} width={w * 100} height={h * 100} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : 'auto'} />
+  </picture>
+) : (
+  <div class:list={[cls, 'frame-missing']} role="img" aria-label={alt} style={`aspect-ratio:${w}/${h}`} data-missing={name}>
+    <span>Foto folgt: {name}.jpg</span>
+  </div>
+)}

@@ -1,0 +1,33 @@
+{
+  "note": "Demo-Einsatzgebiet rund um Wennigsen (Deister). Zonen nach Fahrzeit vom Betriebshof, beim echten Kunden anpassen.",
+  "zones": {
+    "1": { "label": "Kerngebiet", "anfahrt": 0, "text": "Ja, hier sind wir jeden Tag. Keine Anfahrtskosten.", "pflege": true },
+    "2": { "label": "Zone 2", "anfahrt": 25, "text": "Ja, wir kommen. Bei Projekten berechnen wir 25 € Anfahrt je Termin, Pflege und Winterdienst ohne Aufschlag.", "pflege": true },
+    "3": { "label": "Zone 3", "anfahrt": 45, "text": "Ja, für Projekte ab 5.000 €, Anfahrt 45 € je Termin. Regelmäßige Pflege und Winterdienst leider nicht, die Wege sind zu weit.", "pflege": false }
+  },
+  "plz": {
+    "30974": ["Wennigsen", "1"],
+    "30989": ["Gehrden", "1"],
+    "30952": ["Ronnenberg", "1"],
+    "30890": ["Barsinghausen", "1"],
+    "30966": ["Hemmingen", "2"],
+    "30982": ["Pattensen", "2"],
+    "31832": ["Springe", "2"],
+    "31848": ["Bad Münder", "2"],
+    "30926": ["Seelze", "2"],
+    "30449": ["Hannover-Linden-Mitte", "2"],
+    "30451": ["Hannover-Linden-Nord", "2"],
+    "30453": ["Hannover-Linden-Süd, Bornum", "2"],
+    "30455": ["Hannover-Badenstedt, Davenstedt", "2"],
+    "30457": ["Hannover-Wettbergen, Mühlenberg", "2"],
+    "30459": ["Hannover-Ricklingen", "2"],
+    "30880": ["Laatzen", "3"],
+    "30823": ["Garbsen", "3"],
+    "30826": ["Garbsen", "3"],
+    "30827": ["Garbsen", "3"]
+  },
+  "ranges": [
+    { "from": 30159, "to": 30669, "name": "Hannover", "zone": "3" }
+  ],
+  "outside": "Leider außerhalb unseres Gebiets. Wir fahren höchstens 25 km um Wennigsen, sonst bezahlen Sie die Fahrt statt den Garten. Einen Betrieb in Ihrer Nähe finden Sie über den Fachverband."
+}

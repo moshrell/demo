@@ -1,0 +1,40 @@
+{
+  "note": "Demo-Formeln. Preise inkl. 19 % MwSt. (privat), Winterdienst netto (gewerblich). Beim echten Kunden mit seinem Stundensatz und seiner Kalkulation abgleichen.",
+  "privat": {
+    "season": "April bis Oktober",
+    "mowWeeks": 30,
+    "mowPerM2": 0.12,
+    "mowMin": 35,
+    "hedgeCuts": 2,
+    "hedgePerM": 4.9,
+    "treePerYear": 95,
+    "bedVisits": 8,
+    "bedPerM2": 0.9,
+    "leafVisits": 3,
+    "leafPerM2": 0.08,
+    "leafMin": 60,
+    "greenWaste": 0.12,
+    "minMonth": 69,
+    "defaults": { "rasen": 300, "takt": "woche", "hecke": 20, "baeume": 2, "beete": 20, "laub": true },
+    "terms": [
+      "Laufzeit 12 Monate, danach monatlich kündbar.",
+      "Fester Ansprechpartner und, so weit es geht, immer dieselben zwei Gärtner.",
+      "Gleicher Betrag jeden Monat, auch im Winter. Ausfälle durch Wetter holen wir nach.",
+      "Grüngut nehmen wir mit, die Entsorgung ist im Preis."
+    ]
+  },
+  "gewerbe": {
+    "season": "1. November bis 31. März",
+    "basePerObject": 290,
+    "perM2": 1.6,
+    "liabilityFactor": 1.3,
+    "defaults": { "flaeche": 400, "objekte": 1, "haftung": false },
+    "facts": [
+      ["Räumen und Streuen", "zu den Zeiten der Ortssatzung, im Vertrag je Objekt festgelegt. Abstumpfendes Streugut (Splitt, Granulat), Salz nur wo die Satzung es erlaubt."],
+      ["Protokoll", "jeder Einsatz mit Uhrzeit, Wetterlage und Foto, monatlich als PDF an die Verwaltung."],
+      ["Verkehrssicherungspflicht", "auf Wunsch übernehmen wir sie vertraglich. Das kostet einen Aufschlag, entlastet aber Sie als Verwaltung."],
+      ["Erreichbarkeit", "Bereitschaftsnummer für Vertragskunden, ab 4 Uhr morgens bei angesagter Glätte."],
+      ["Versicherung", "Betriebshaftpflicht mit Deckung für Winterdienst, Nachweis liegt dem Angebot bei."]
+    ]
+  }
+}

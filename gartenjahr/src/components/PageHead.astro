@@ -1,0 +1,28 @@
+---
+// Kopf der Unterseiten: kleiner Masthead in derselben Sprache wie das Journal.
+import Status from './Status.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const { current = '' } = Astro.props;
+---
+<header class="ph">
+  <a class="ph__name" href={base}>Grünhof<span class="ph__sub ui">Gartenbau</span></a>
+  <nav class="ph__nav ui" aria-label="Hauptnavigation">
+    <a href={base} aria-current={current === 'journal' ? 'page' : undefined}>Journal</a>
+    <a href={`${base}gartenplaner/`} aria-current={current === 'planer' ? 'page' : undefined}>Gartenplaner</a>
+    <a href={`${base}pflege/`} aria-current={current === 'pflege' ? 'page' : undefined}>Pflege &amp; Winterdienst</a>
+  </nav>
+  <p class="ph__status ui"><Status /> · <a class="num" href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+</header>
+
+<style>
+  .ph { display: grid; gap: var(--space-2xs) var(--space-lg); grid-template-columns: auto minmax(0, 1fr); align-items: center; padding: var(--space-md) var(--gutter) var(--space-sm); border-bottom: 4px double var(--color-ink); }
+  .ph__name { font-family: var(--font-display); font-size: 2.1rem; font-weight: 500; line-height: 1; text-decoration: none; display: inline-flex; align-items: baseline; gap: 0.4rem; }
+  .ph__sub { font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; color: var(--color-ink-2); }
+  .ph__nav { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0 var(--space-lg); font-size: var(--text-sm); font-weight: 600; }
+  .ph__nav a { min-height: 2.75rem; display: inline-flex; align-items: center; text-decoration: none; white-space: nowrap; }
+  .ph__nav a[aria-current='page'] { text-decoration: underline; text-decoration-color: var(--color-terra); text-decoration-thickness: 2px; text-underline-offset: 0.35em; }
+  .ph__status { grid-column: 1 / -1; font-size: var(--text-xs); color: var(--color-muted); }
+  .ph__status a { color: var(--color-ink); font-weight: 600; }
+  @media (min-width: 64rem) { .ph { grid-template-columns: auto minmax(0, 1fr) auto; } .ph__nav { grid-column: 2; justify-content: center; } .ph__status { grid-column: 3; } }
+</style>

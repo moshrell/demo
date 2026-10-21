@@ -1,0 +1,69 @@
+---
+// Ein Kapitel des Gartenjahrs. Vorne die "Platte": derselbe Garten, die vorige Jahreszeit geht beim Scrollen in diese über.
+import Photo from './Photo.astro';
+import site from '../data/site.json';
+const { key, s, prev } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const href = (l: string) => `${base}${l}`;
+---
+<section class={`kap kap--${key}`} id={key} aria-labelledby={`${key}-h`} data-kap={key}>
+  <div class="plate" data-plate aria-hidden="true">
+    <div class="plate__sticky">
+      <Photo class="plate__img plate__from" name={prev.img} mobile={`${prev.img}-hoch`} alt="" w={16} h={9} />
+      <div class="plate__to" data-plate-to>
+        <Photo class="plate__img" name={s.img} mobile={`${s.img}-hoch`} alt="" w={16} h={9} />
+      </div>
+      <p class="plate__cap ui">Derselbe Garten, {s.monthNames}.</p>
+    </div>
+  </div>
+
+  <div class="kap__body wrap">
+    <header class="kap__head">
+      <h2 id={`${key}-h`}>{s.name}</h2>
+      <p class="kap__months ui">{s.months}</p>
+    </header>
+
+    <div class="kap__intro">
+      <p class="kap__lead">{s.intro}</p>
+      <p class="kap__sign">Henrik Lamprecht, Gärtnermeister</p>
+    </div>
+
+    {s.detail && (
+      <figure class="kap__detail">
+        <Photo name={s.detail.img} alt={s.detail.alt} w={1} h={1} sizes="(min-width: 64rem) 30vw, 70vw" />
+      </figure>
+    )}
+
+    <div class="kap__services">
+      <h3>Was wir {key === 'winter' ? 'im Winter' : key === 'sommer' ? 'im Sommer' : key === 'herbst' ? 'im Herbst' : 'im Frühling'} machen</h3>
+      <ul class="svc">
+        {s.services.map((x) => (
+          <li class="svc__row">
+            <p class="svc__name ui">{x.link ? <a href={href(x.link)}>{x.name}</a> : x.name}</p>
+            <p class="svc__price ui num">{x.link ? <a href={href(x.link)}>{x.price === 'Planer' ? 'Kosten im Gartenplaner' : 'Preis im Rechner'}</a> : x.price}</p>
+            <p class="svc__text">{x.text}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="kap__note ui">Richtpreise inkl. 19 % MwSt. Verbindlich wird es nach dem Aufmaß vor Ort, im schriftlichen Angebot.</p>
+      <p class="kap__book ui"><span>Termine</span> {site.booking[key]}</p>
+    </div>
+  </div>
+
+  {s.refs.map((r, i) => (
+    <article class:list={['ref', { 'ref--flip': i % 2 === 1 }]} aria-labelledby={`${key}-ref-${i}`}>
+      <figure class="ref__fig">
+        <Photo name={r.img} alt={r.alt} w={4} h={3} sizes="(min-width: 64rem) 62vw, 100vw" />
+        <figcaption class="ref__cap ui">{r.place}</figcaption>
+      </figure>
+      <div class="ref__text wrap">
+        <h3 id={`${key}-ref-${i}`}>{r.title}</h3>
+        <p class="ref__story">{r.story}</p>
+        <dl class="ref__facts ui">
+          {r.facts.map(([k, v]) => (<div><dt>{k}</dt><dd class="num">{v}</dd></div>))}
+        </dl>
+        <a class="link-arrow" href={href(key === 'winter' && i === 0 ? 'pflege/#gewerbe' : 'gartenplaner/')}>{key === 'winter' && i === 0 ? 'Winterdienst berechnen' : 'So etwas selbst planen'}</a>
+      </div>
+    </article>
+  ))}
+</section>

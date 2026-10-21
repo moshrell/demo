@@ -1,0 +1,77 @@
+/* Hallmark · macrostructure: Photographic · tone: editorial-quiet (Gartenjournal) · anchor hue: moss 135 + terracotta 42
+ * theme: custom · vibe: "Gartenjournal, Papiercreme, Moos, Terrakotta, viel Luft"
+ * paper oklch(96.6% 0.016 88) · accent oklch(44% 0.075 138) moss · second oklch(51% 0.125 42) terracotta
+ * display: Cormorant Garamond (roman) · body: Source Serif 4 · ui: Instrument Sans
+ * axes: light / high-contrast-serif / chromatic-other (green) · differs from architekt (light / classical-serif / warm) on display + accent
+ * nav: N6 newspaper masthead · footer: Ft6 letter close
+ */
+:root {
+  /* Farbe */
+  --color-paper: oklch(96.6% 0.016 88);
+  --color-paper-2: oklch(93.4% 0.022 86);
+  --color-paper-3: oklch(89.5% 0.026 84);
+  --color-ink: oklch(24% 0.022 140);
+  --color-ink-2: oklch(34% 0.02 135);
+  --color-muted: oklch(45% 0.018 120);
+  --color-rule: oklch(84% 0.022 90);
+  --color-moss: oklch(44% 0.075 138);
+  --color-moss-deep: oklch(36% 0.06 140);
+  --color-moss-soft: oklch(88% 0.035 130);
+  --color-terra: oklch(51% 0.125 42);
+  --color-terra-soft: oklch(90% 0.04 55);
+  --color-on-moss: oklch(97% 0.015 90);
+  --color-alert: oklch(47% 0.15 28);
+  --color-focus: oklch(48% 0.15 255);
+  --color-ok: oklch(42% 0.09 145);
+  --color-scrim: oklch(20% 0.02 140 / 0.55);
+  --color-wood: oklch(62% 0.06 60);
+
+  /* Schrift */
+  --font-display: 'Cormorant Garamond Variable', 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Source Serif 4 Variable', 'Source Serif 4', Georgia, serif;
+  --font-ui: 'Instrument Sans Variable', 'Instrument Sans', system-ui, sans-serif;
+
+  --text-xs: 0.78rem;
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.6rem;
+  --text-2xl: clamp(2rem, 1.4rem + 3vw, 3rem);
+  --text-3xl: clamp(2.6rem, 1.6rem + 5vw, 4.6rem);
+  --text-display: clamp(3.1rem, 1.6rem + 7.5vw, 7rem);
+
+  /* Raum (4-pt) */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.375rem;
+  --space-sm: 0.5rem;
+  --space-smd: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6.5rem;
+  --gutter: clamp(1.125rem, 4.5vw, 4rem);
+  --measure: 36rem;
+
+  --rule-hair: 1px;
+  --radius: 4px;
+  --radius-pill: 999px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 150ms;
+  --dur-mid: 300ms;
+  --dur-slow: 600ms;
+
+  --bar-h: 3.5rem;
+
+  /* Kompatibilität mit OrderForm-Standard */
+  --ink: var(--color-ink);
+  --paper: var(--color-paper);
+  --accent: var(--color-moss);
+  --muted: var(--color-muted);
+  --rule: var(--color-rule);
+  --alert: var(--color-alert);
+  --focus: var(--color-focus);
+}

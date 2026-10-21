@@ -1,15 +1,19 @@
 ---
-// SEO + KI-Sichtbarkeit (AIO) by default. Demos: noindex (index = false). Beim Kundenstart: index = true setzen.
+// SEO + KI-Sichtbarkeit (AIO). Demos: noindex (index = false). Beim Kundenstart: index = true setzen.
 import '../styles/global.css';
 import site from '../data/site.json';
+import ActionBar from '../components/ActionBar.astro';
 const {
   title = site.name,
   description = '',
-  index = false,          // Demo = noindex. Echte Kundenseite: index
-  type = 'LocalBusiness', // Schema.org-Typ, z. B. 'Hairdresser', 'Architect', 'Dentist'
-  faq = [],               // [{ q, a }] -> sichtbarer FAQ-Block UND FAQPage-Markup (gleicher Text, sonst ignoriert Google es)
-  image = '',             // OG-Bild, relativ zu public/
-  prices = [],            // [{ name, price }] -> makesOffer
+  index = false,
+  type = 'LocalBusiness',
+  faq = [],
+  image = 'img/garten-herbst-1400.webp',
+  prices = [],
+  bar = true,          // mobile Leiste Anrufen / Anfrage
+  app = false,         // Werkzeug-Seite ohne Fußzeile (Gartenplaner)
+  barHref = undefined, // Ziel der Anfrage-Taste in der mobilen Leiste
 } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -24,23 +28,28 @@ const graph = [
     telephone: site.phone,
     email: site.email,
     address: { '@type': 'PostalAddress', streetAddress: site.address.street, postalCode: site.address.zip, addressLocality: site.address.city, addressCountry: 'DE' },
-    ...(site.openingHours ? { openingHours: site.openingHours } : {}),
-    ...(site.areaServed ? { areaServed: site.areaServed } : {}),
+    openingHours: site.openingHours,
+    areaServed: site.areaServed,
     ...(ogImage ? { image: ogImage } : {}),
     ...(prices.length ? { makesOffer: prices.map((p) => ({ '@type': 'Offer', priceCurrency: 'EUR', price: p.price, itemOffered: { '@type': 'Service', name: p.name } })) } : {}),
-  }] : []), // Demo (index = false): keine Geschäftsdaten-Markup mit erfundener Adresse/Telefon, nur FAQPage
+  }] : []),
   ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
 ];
 const ld = { '@context': 'https://schema.org', '@graph': graph };
+// Jahreszeit zur Bauzeit als Vorgabe; das Skript im <head> setzt sie vor dem ersten Bild nach dem Datum in Berlin neu.
+const m = Number(new Intl.DateTimeFormat('en', { timeZone: 'Europe/Berlin', month: 'numeric' }).format(new Date()));
+const buildSeason = m >= 3 && m <= 5 ? 'fruehling' : m >= 6 && m <= 8 ? 'sommer' : m >= 9 && m <= 11 ? 'herbst' : 'winter';
 ---
 <!doctype html>
-<html lang="de">
+<html lang="de" data-season={buildSeason}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
+    <meta name="theme-color" content="#f5f1e8" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="de_DE" />
@@ -49,13 +58,33 @@ const ld = { '@context': 'https://schema.org', '@graph': graph };
     <meta property="og:url" content={canonical} />
     {ogImage && <meta property="og:image" content={ogImage} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <script is:inline>(function(){try{var m=+new Intl.DateTimeFormat('en',{timeZone:'Europe/Berlin',month:'numeric'}).format(new Date());document.documentElement.dataset.season=m>=3&&m<=5?'fruehling':m>=6&&m<=8?'sommer':m>=9&&m<=11?'herbst':'winter';}catch(e){}})();</script>
     {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+    <slot name="head" />
   </head>
-  <body>
+  <body class:list={[{ 'is-app': app, 'has-bar': bar }]}>
+    <a class="skip" href="#inhalt">Zum Inhalt</a>
     <slot />
-    <footer>
-      <a href={`${base}impressum/`}>Impressum</a> · <a href={`${base}datenschutz/`}>Datenschutz</a>
-      {!index && <p>Demo-Seite, alle Angaben fiktiv. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihr Unternehmen? Jetzt anfragen</a></p>}
-    </footer>
+    {!app && (
+      <footer class="foot">
+        <slot name="footer" />
+        <div class="foot__legal wrap ui">
+          <p><strong>{site.name}</strong> · {site.address.street}, {site.address.zip} {site.address.city} · <a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+          <p><a href={`${base}impressum/`}>Impressum</a> · <a href={`${base}datenschutz/`}>Datenschutz</a> · <a href={`${base}pflege/`}>Pflege &amp; Winterdienst</a> · <a href={`${base}gartenplaner/`}>Gartenplaner</a></p>
+          {!index && <p class="muted">Demo-Seite, Betrieb und Personen sind erfunden. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihren Betrieb? Jetzt anfragen</a></p>}
+        </div>
+      </footer>
+    )}
+    {bar && <ActionBar href={barHref} />}
   </body>
 </html>
+
+<style is:global>
+  .skip { position: absolute; left: var(--space-sm); top: -4rem; z-index: 100; padding: var(--space-sm) var(--space-md); background: var(--color-ink); color: var(--color-paper); font: 600 var(--text-sm) var(--font-ui); }
+  .skip:focus { top: var(--space-sm); }
+  .foot { background: var(--color-paper-2); padding-bottom: var(--space-xl); }
+  .foot__legal { display: grid; gap: var(--space-sm); padding-top: var(--space-lg); font-size: var(--text-sm); line-height: 1.5; border-top: var(--rule-hair) solid var(--color-rule); }
+  .foot__legal a { white-space: nowrap; }
+  body.has-bar .foot { padding-bottom: calc(var(--space-xl) + var(--bar-h) + env(safe-area-inset-bottom)); }
+  @media (min-width: 48rem) { body.has-bar .foot { padding-bottom: var(--space-xl); } }
+</style>

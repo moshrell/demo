@@ -1,15 +1,31 @@
 {
   "name": "Grünhof Gartenbau",
-  "legalName": "TODO vom Kunden",
-  "address": {
-    "street": "TODO",
-    "zip": "TODO",
-    "city": "TODO"
-  },
-  "email": "TODO",
-  "phone": "030 23125 123",
-  "openingHours": "TODO z. B. Mo-Fr 09:00-17:00",
-  "areaServed": [
-    "TODO Ort"
-  ]
+  "short": "Grünhof",
+  "legalName": "Grünhof Gartenbau, Inhaber Henrik Lamprecht (fiktiv)",
+  "owner": "Henrik Lamprecht",
+  "ownerTitle": "Gärtnermeister, Fachrichtung Garten- und Landschaftsbau",
+  "tagline": "Garten- und Landschaftsbau · Wennigsen am Deister",
+  "address": { "street": "Am Bröhn 0", "zip": "30974", "city": "Wennigsen (Deister)" },
+  "email": "kontakt@example.com",
+  "phone": "030 23125 470",
+  "phoneHref": "+493023125470",
+  "hoursText": "Büro Mo–Do 7–16:30 Uhr, Fr 7–13 Uhr",
+  "hours": [
+    { "days": [1, 2, 3, 4], "from": "07:00", "to": "16:30" },
+    { "days": [5], "from": "07:00", "to": "13:00" }
+  ],
+  "openingHours": ["Mo-Th 07:00-16:30", "Fr 07:00-13:00"],
+  "areaServed": ["Wennigsen", "Gehrden", "Ronnenberg", "Barsinghausen", "Hemmingen", "Pattensen", "Springe", "Seelze", "Hannover-Linden", "Hannover-Ricklingen", "Hannover-Badenstedt"],
+  "kammer": "IHK Hannover (Gewerbebetrieb, kein zulassungspflichtiges Handwerk)",
+  "meister": "Meisterprüfung Gärtner, Fachrichtung Garten- und Landschaftsbau, abgelegt vor der Landwirtschaftskammer Niedersachsen (fiktiv), Deutschland",
+  "verband": "Mitglied im Verband Garten-, Landschafts- und Sportplatzbau Niedersachsen-Bremen e. V. (fiktiv, im Demo nur Platzhalter)",
+  "haftpflicht": "Betriebshaftpflichtversicherung: Beispiel Versicherung AG, Musterstraße 1, 00000 Musterstadt (fiktiv), Geltungsbereich: Deutschland",
+  "ustid": "DE000000000 (fiktiv)",
+  "team": "6 Leute: 2 Landschaftsgärtner-Gesellen, 2 Gärtner, 1 Azubi, Büro",
+  "booking": {
+    "herbst": "Pflanzungen bis Ende November · Neuanlagen ab März 2027",
+    "winter": "Winterdienst-Verträge laufend · Neuanlagen ab März 2027",
+    "fruehling": "Neuanlagen ab Juni · Pflege sofort",
+    "sommer": "Neuanlagen ab September · Pflege sofort"
+  }
 }

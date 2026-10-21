@@ -1,0 +1,277 @@
+---
+/**
+ * AnfrageForm: abgeleitet von _template/OrderForm.astro (gleicher Standard: label, Platzhalter-Beispiel, autocomplete,
+ * Einwilligung mit Link auf datenschutz/ in neuem Tab, Summe sichtbar und in der Bestätigung, Zwischenspeicher in sessionStorage).
+ * Zusätzlich: Slot für eigene Felder (PLZ, Fotos, Firma …), Zusammenfassung aus Werkzeugen (Planer, Pflege-Rechner).
+ *
+ * Werkzeuge schreiben ihre Zusammenfassung in versteckte Felder mit data-confirm="Beschriftung" (data-strong = fett)
+ * und melden die laufende Summe per Event:  form.dispatchEvent(new CustomEvent('gj:total', { detail: { label, value } }))
+ * Nichts wird gesendet (Demo). Beim echten Kunden: PHP-Mailer auf All-Inkl anschließen und Datenschutz anpassen.
+ */
+import site from '../data/site.json';
+const {
+  id = 'anfrage',
+  title = 'Anfrage',
+  purpose = 'meiner Anfrage',
+  submitLabel = 'Anfrage senden',
+  emailRequired = false,
+  noteLabel = 'Worum geht es?',
+  notePlaceholder = 'z. B. Rasen erneuern, ca. 150 m², Hanglage, ab März',
+  noteOptional = true,
+  barLabel = '',
+  barValue = '',
+  callback = false,
+  company = false,
+  photo = false,
+} = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+<section class="af" aria-labelledby={`${id}-h`} data-hide-actionbar>
+  <h2 class="af__title" id={`${id}-h`}>{title}</h2>
+  <slot name="intro" />
+  <form class="af__form" id={id} novalidate data-af>
+    <slot />
+
+    <fieldset class="af__group">
+      <legend>Ihre Angaben</legend>
+      {company && (
+        <div class="af__field">
+          <label for={`${id}-firma`}>Firma / Hausverwaltung</label>
+          <input id={`${id}-firma`} name="firma" type="text" autocomplete="organization" placeholder="z. B. Muster Hausverwaltung GmbH" required data-confirm="Firma" aria-describedby={`${id}-err-firma`} />
+          <p class="af__err" id={`${id}-err-firma`} hidden>Bitte geben Sie die Firma an.</p>
+        </div>
+      )}
+      <div class="af__field">
+        <label for={`${id}-name`}>{company ? 'Ansprechpartner' : 'Name'}</label>
+        <input id={`${id}-name`} name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname" required data-confirm="Name" aria-describedby={`${id}-err-name`} />
+        <p class="af__err" id={`${id}-err-name`} hidden>Bitte geben Sie Ihren Namen an.</p>
+      </div>
+      <div class="af__field">
+        <label for={`${id}-tel`}>Telefon</label>
+        <input id={`${id}-tel`} name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 030 23125 123" required data-confirm="Telefon" aria-describedby={`${id}-err-tel`} />
+        <p class="af__err" id={`${id}-err-tel`} hidden>Bitte geben Sie eine Telefonnummer an, unter der wir Sie erreichen.</p>
+      </div>
+      <div class="af__field">
+        <label for={`${id}-mail`}>E-Mail {!emailRequired && <span class="af__opt">(optional)</span>}</label>
+        <input id={`${id}-mail`} name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" required={emailRequired} data-confirm="E-Mail" aria-describedby={`${id}-err-mail`} />
+        <p class="af__err" id={`${id}-err-mail`} hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.</p>
+      </div>
+      {callback && (
+        <fieldset class="af__sub">
+          <legend>Wann erreichen wir Sie am besten?</legend>
+          <div class="af__chips">
+            {['vormittags', 'mittags', 'nachmittags', 'egal'].map((o, i) => (
+              <label class="af__chip"><input type="radio" name="rueckruf" value={o} checked={i === 3} data-confirm="Rückruf" /><span>{o}</span></label>
+            ))}
+          </div>
+        </fieldset>
+      )}
+      {photo && (
+        <div class="af__field">
+          <label for={`${id}-foto`}>Fotos vom Garten oder Problem <span class="af__opt">(optional)</span></label>
+          <input id={`${id}-foto`} name="fotos" type="file" accept="image/*" multiple data-confirm="Fotos" class="af__file" />
+          <p class="af__hint">Zwei, drei Handyfotos ersparen oft einen Termin. <strong>Demo:</strong> Die Fotos werden nur hier angezeigt, nicht hochgeladen.</p>
+          <ul class="af__thumbs" data-thumbs aria-live="polite"></ul>
+        </div>
+      )}
+      <div class="af__field">
+        <label for={`${id}-note`}>{noteLabel} {noteOptional && <span class="af__opt">(optional)</span>}</label>
+        <textarea id={`${id}-note`} name="note" rows="3" autocomplete="off" placeholder={notePlaceholder} required={!noteOptional} data-confirm="Nachricht" aria-describedby={`${id}-err-note`}></textarea>
+        <p class="af__err" id={`${id}-err-note`} hidden>Bitte schreiben Sie kurz, worum es geht.</p>
+      </div>
+    </fieldset>
+
+    <div class="af__consent">
+      <label class="af__check">
+        <input type="checkbox" name="privacy" required aria-describedby={`${id}-err-privacy`} />
+        <span>Ich bin einverstanden, dass {site.name} meine Angaben zur Bearbeitung {purpose} verwendet und mich dazu anruft oder anschreibt. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a> (neuer Tab, Ihre Eingaben bleiben erhalten)</span>
+      </label>
+      <p class="af__err" id={`${id}-err-privacy`} hidden>Bitte stimmen Sie zu, sonst dürfen wir Ihre Anfrage nicht bearbeiten.</p>
+    </div>
+
+    <div class="af__bar">
+      <p class="af__total num" aria-live="polite">
+        {barLabel ? (<><span data-bar-label>{barLabel}</span><strong data-bar-value>{barValue}</strong></>) : (<span>Demo: Es wird nichts gesendet.</span>)}
+      </p>
+      <button class="btn af__btn" type="submit">{submitLabel}</button>
+    </div>
+  </form>
+
+  <div class="af__done" data-done tabindex="-1" hidden>
+    <h3>Danke, Ihre Anfrage ist angekommen.</h3>
+    <p>Wir melden uns in der Regel am nächsten Werktag. Das haben Sie uns geschickt:</p>
+    <dl data-done-list></dl>
+    <p class="af__demo">Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.</p>
+    <button type="button" class="link-arrow af__again" data-again>Neue Anfrage</button>
+  </div>
+</section>
+
+<style>
+  .af { max-width: 40rem; display: grid; gap: var(--space-lg); }
+  .af__title { font-size: var(--text-2xl); }
+  .af__form { display: grid; gap: var(--space-lg); font-family: var(--font-ui); }
+  .af :global(fieldset) { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: var(--space-md); }
+  .af :global(legend) { padding: 0; margin-bottom: var(--space-sm); font: 600 var(--text-base)/1.3 var(--font-ui); }
+  .af__sub legend { font-size: var(--text-sm); }
+  .af :global(.af__field) { display: grid; gap: var(--space-xs); min-width: 0; }
+  .af :global(.af__field > label) { font-weight: 600; font-size: var(--text-sm); }
+  .af :global(.af__opt) { font-weight: 400; color: var(--color-muted); }
+  .af :global(.af__field input:not([type=file]):not([type=radio]):not([type=checkbox])),
+  .af :global(.af__field textarea),
+  .af :global(.af__field select) { width: 100%; min-height: 2.875rem; padding: 0.65rem 0.85rem; border: 1px solid var(--color-ink-2); border-radius: var(--radius); background: var(--color-paper); font-size: 1rem; }
+  .af :global(.af__field textarea) { resize: vertical; font-family: var(--font-ui); }
+  .af :global(input::placeholder), .af :global(textarea::placeholder) { color: var(--color-muted); opacity: 1; }
+  .af :global([aria-invalid='true']) { border-color: var(--color-alert) !important; box-shadow: inset 0 0 0 1px var(--color-alert); }
+  .af :global(.af__err) { margin: 0; font-size: var(--text-sm); font-weight: 600; color: var(--color-alert); }
+  .af :global(.af__err[hidden]) { display: none; }
+  .af :global(.af__hint) { font-size: var(--text-sm); color: var(--color-muted); line-height: 1.45; }
+  .af__file { font-size: var(--text-sm); max-width: 100%; }
+  .af__file::file-selector-button { margin-right: var(--space-smd); min-height: 2.75rem; padding: 0.5rem 0.9rem; border: 1px solid var(--color-ink); border-radius: var(--radius); background: var(--color-paper); font: 600 var(--text-sm) var(--font-ui); cursor: pointer; }
+  .af__thumbs { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+  .af__thumbs :global(img) { width: 4.5rem; height: 4.5rem; object-fit: cover; border-radius: var(--radius); }
+  .af :global(.af__chips) { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+  .af :global(.af__chip) { position: relative; }
+  .af :global(.af__chip input) { position: absolute; opacity: 0; inset: 0; margin: 0; }
+  .af :global(.af__chip span) { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.5rem 1rem; border: 1px solid var(--color-ink-2); border-radius: var(--radius-pill); cursor: pointer; font-size: var(--text-sm); }
+  .af :global(.af__chip input:checked + span) { background: var(--color-ink); color: var(--color-paper); border-color: var(--color-ink); }
+  .af :global(.af__chip input:focus-visible + span) { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+  .af__consent { display: grid; gap: var(--space-xs); }
+  .af__check { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-smd); align-items: start; font-size: var(--text-sm); line-height: 1.45; cursor: pointer; }
+  .af__check input { width: 1.4rem; height: 1.4rem; margin: 0.1rem 0 0; accent-color: var(--color-moss); }
+  .af__check.is-invalid span { color: var(--color-alert); }
+  .af__bar { position: sticky; bottom: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); padding: var(--space-smd) 0; padding-bottom: max(var(--space-smd), env(safe-area-inset-bottom)); background: var(--color-paper); border-top: 1px solid var(--color-ink); }
+  .af__total { display: grid; gap: 0.1rem; margin: 0; min-width: 0; font-size: var(--text-sm); color: var(--color-muted); }
+  .af__total strong { font-size: 1.35rem; color: var(--color-ink); font-weight: 600; }
+  .af__done { padding: var(--space-lg); border: 1px solid var(--color-ink); border-radius: var(--radius); display: grid; gap: var(--space-md); font-family: var(--font-ui); }
+  .af__done h3 { font-size: var(--text-xl); }
+  .af__done dl { margin: 0; display: grid; }
+  .af__done :global(dl > div) { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--space-md); padding: var(--space-sm) 0; border-bottom: 1px solid var(--color-rule); font-size: var(--text-sm); }
+  .af__done :global(dt) { color: var(--color-muted); }
+  .af__done :global(dd) { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
+  .af__done :global(.is-strong) { font-weight: 700; color: var(--color-ink); }
+  .af__demo { font-size: var(--text-sm); color: var(--color-muted); }
+  .af__again { justify-self: start; background: none; border: 0; padding: 0; color: inherit; cursor: pointer; }
+  @media (max-width: 30rem) { .af__bar { flex-wrap: wrap; } .af__btn { flex: 1 1 100%; } }
+</style>
+
+<script>
+  const ERR_ID = (el: Element) => el.getAttribute('aria-describedby') || '';
+  document.querySelectorAll<HTMLFormElement>('form[data-af]').forEach((form) => {
+    const root = form.parentElement!;
+    const done = root.querySelector<HTMLElement>('[data-done]')!;
+    const list = done.querySelector<HTMLElement>('[data-done-list]')!;
+    const barLabel = form.querySelector<HTMLElement>('[data-bar-label]');
+    const barValue = form.querySelector<HTMLElement>('[data-bar-value]');
+    const thumbs = form.querySelector<HTMLElement>('[data-thumbs]');
+    const file = form.querySelector<HTMLInputElement>('input[type=file]');
+    const err = (input: HTMLInputElement, show: boolean) => {
+      const e = document.getElementById(ERR_ID(input));
+      if (e) e.hidden = !show;
+      input.setAttribute('aria-invalid', show ? 'true' : 'false');
+      input.closest('.af__check')?.classList.toggle('is-invalid', show);
+    };
+
+    form.addEventListener('gj:total', ((e: CustomEvent) => {
+      if (barLabel && e.detail.label) barLabel.textContent = e.detail.label;
+      if (barValue) barValue.textContent = e.detail.value;
+    }) as EventListener);
+
+    // Foto-Vorschau (bleibt im Browser, blob:-URLs)
+    let urls: string[] = [];
+    file?.addEventListener('change', () => {
+      urls.forEach((u) => URL.revokeObjectURL(u));
+      urls = [];
+      thumbs!.replaceChildren(...[...(file.files || [])].slice(0, 6).map((f) => {
+        const li = document.createElement('li');
+        const img = document.createElement('img');
+        const u = URL.createObjectURL(f);
+        urls.push(u);
+        img.src = u; img.alt = f.name;
+        li.append(img);
+        return li;
+      }));
+    });
+
+    form.querySelectorAll<HTMLInputElement>('input, textarea, select').forEach((i) => i.addEventListener('input', () => err(i, false)));
+    form.addEventListener('change', (e) => { const t = e.target as HTMLInputElement; if (t.name === 'privacy') err(t, false); });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const bad: HTMLInputElement[] = [];
+      const check = (i: HTMLInputElement, ok: boolean) => { err(i, !ok); if (!ok) bad.push(i); };
+      form.querySelectorAll<HTMLInputElement>('input[required], textarea[required], select[required]').forEach((i) => {
+        if (i.type === 'checkbox') return check(i, i.checked);
+        if (i.type === 'tel') return check(i, i.value.replace(/\D/g, '').length >= 6);
+        if (i.type === 'email') return check(i, i.value.trim() !== '' && i.checkValidity());
+        if (i.dataset.plz !== undefined) return check(i, /^\d{5}$/.test(i.value.trim()));
+        check(i, i.value.trim().length > 1);
+      });
+      const mail = form.querySelector<HTMLInputElement>('input[type=email]:not([required])');
+      if (mail && mail.value.trim() && !mail.checkValidity()) check(mail, false);
+      const plz = form.querySelector<HTMLInputElement>('input[data-plz]:not([required])');
+      if (plz && plz.value.trim() && !/^\d{5}$/.test(plz.value.trim())) check(plz, false);
+      // Werkzeug kann die Absendung blockieren (z. B. leerer Plan)
+      const guard = new CustomEvent('gj:validate', { cancelable: true });
+      if (!form.dispatchEvent(guard)) return;
+      if (bad.length) { bad[0].focus(); return; }
+
+      const rows: [string, string, boolean][] = [];
+      const seenRadio = new Set<string>();
+      form.querySelectorAll<HTMLInputElement>('[data-confirm]').forEach((el) => {
+        const label = el.dataset.confirm!;
+        let v = '';
+        if (el.type === 'radio') { if (seenRadio.has(el.name)) return; seenRadio.add(el.name); v = form.querySelector<HTMLInputElement>(`input[name="${el.name}"]:checked`)?.value || ''; }
+        else if (el.type === 'checkbox') v = el.checked ? 'ja' : '';
+        else if (el.type === 'file') { const n = el.files?.length || 0; v = n ? `${n} ${n === 1 ? 'Foto' : 'Fotos'} (Demo: nicht hochgeladen)` : ''; }
+        else v = el.value.trim();
+        if (v) rows.push([label, v, el.dataset.strong !== undefined]);
+      });
+      list.replaceChildren(...rows.map(([k, v, strong]) => {
+        const d = document.createElement('div');
+        const dt = document.createElement('dt'); dt.textContent = k;
+        const dd = document.createElement('dd'); dd.textContent = v;
+        if (strong) { dt.className = 'is-strong'; dd.className = 'is-strong'; }
+        d.append(dt, dd);
+        return d;
+      }));
+      form.hidden = true;
+      done.hidden = false;
+      done.focus();
+      try { sessionStorage.removeItem(KEY); } catch {}
+      form.dispatchEvent(new CustomEvent('gj:sent'));
+    });
+
+    done.querySelector('[data-again]')?.addEventListener('click', () => {
+      form.reset();
+      thumbs?.replaceChildren();
+      form.hidden = false;
+      done.hidden = true;
+      form.querySelector<HTMLElement>('input:not([type=hidden])')?.focus();
+    });
+
+    // Eingaben nie verlieren: Zwischenspeicher in sessionStorage (nur dieser Tab). Einwilligung und Fotos werden nicht gespeichert.
+    const KEY = `form:${location.pathname}:${form.id}`;
+    const fields = () => [...form.elements].filter((el): el is HTMLInputElement => (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement) as boolean)
+      .filter((el) => el.name && el.name !== 'privacy' && el.type !== 'file' && el.type !== 'hidden' && el.dataset.nosave === undefined);
+    const save = () => {
+      try {
+        const d: Record<string, string> = {};
+        fields().forEach((el) => { if (el.type === 'radio' || el.type === 'checkbox') { if (el.checked) d[el.name] = el.value; } else if (el.value) d[el.name] = el.value; });
+        if (Object.keys(d).length) sessionStorage.setItem(KEY, JSON.stringify(d)); else sessionStorage.removeItem(KEY);
+      } catch {}
+    };
+    try {
+      const raw = sessionStorage.getItem(KEY);
+      if (raw) {
+        const d = JSON.parse(raw);
+        fields().forEach((el) => {
+          if (!(el.name in d)) { if (el.type === 'checkbox') el.checked = false; return; }
+          if (el.type === 'radio' || el.type === 'checkbox') el.checked = el.value === d[el.name]; else el.value = String(d[el.name]);
+        });
+        form.dispatchEvent(new CustomEvent('gj:restored'));
+      }
+    } catch {}
+    form.addEventListener('input', save);
+    form.addEventListener('change', save);
+  });
+</script>

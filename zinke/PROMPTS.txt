@@ -1,0 +1,94 @@
+PROMPTS ДЛЯ GEMINI: сайт столярной мастерской (Tischlerei Wendholm, демо «zinke»)
+
+Как работать:
+- Все 17 кадров делай в ОДНОМ чате Gemini, по порядку (единый свет и стиль).
+- Перед каждым промптом нажми кнопку формата из заголовка.
+- Сохраняй файлы ТОЧНО под указанными именами (jpg) в папку D:\Webdesign\zinke\img\ (или пришли их сюда в чат — я сожму и подключу).
+- Не понравился кадр: в том же чате «сделай другой вариант», сохрани под тем же именем.
+- На кадрах нет текста, цифр и логотипов. Если Gemini нарисовал надпись — перегенерируй.
+- Кадры 01–04 — та же мебель, что собирается на сайте в 3D из досок. Важно, чтобы форма совпадала с описанием (число секций, где скос, где ящики): сайт делает переход «модель → фото».
+
+====================================================================
+01 · haus-einbauschrank.jpg · формат 3:4
+====================================================================
+Vertical interior photograph of a custom-made built-in wardrobe under a sloped attic ceiling in a renovated German house from the 1930s. The wardrobe is made of light European oak with a natural oiled matte finish and fills the whole wall: four equal sections side by side, about 240 cm wide in total. The ceiling slopes down on the RIGHT side, so the right-hand section is lower and its top follows the slope at about 40 degrees; the left three sections are full height up to about 230 cm. Section 1 and section 2 have tall plain flat oak doors with small round oak knobs, section 3 has three wide drawers at the bottom and open shelves above, section 4 under the slope has open shelves with a few folded linen towels. Visible fine oak grain, precise thin gaps between doors. Cream-white plastered walls, white-painted sloped ceiling with one roof window letting in soft morning daylight, pale oak floorboards, a small woven rug. Photographed straight-on from the front, centered, camera at about 120 cm height, the whole wardrobe visible with a little floor and wall around it, 35mm lens. Calm, honest documentary interior photography, natural slightly warm colors, clean and tidy, no people, no text, no logos, no labels, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+02 · haus-regal.jpg · формат 3:4
+====================================================================
+Vertical interior photograph of a custom-made solid maple bookshelf in a bright living room of a German apartment. The shelf is light, almost creamy maple with a natural oiled finish: three equal sections side by side, about 180 cm wide and 200 cm high, with a thin solid back panel, five shelves per section; the lowest section row has two plain flat maple doors in the middle section only. Neatly arranged books with plain unprinted spines in muted colors, a few ceramic bowls, a small green plant. Cream-white wall, pale oak floor, soft morning daylight from a window on the left. Photographed straight-on from the front, centered, camera at about 120 cm height, the whole shelf visible with a little floor and wall around it, 35mm lens. Calm, honest documentary interior photography, natural slightly warm colors, no people, no readable text on books, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+03 · haus-tisch.jpg · формат 3:4
+====================================================================
+Vertical interior photograph of a large custom-made solid oak dining table, about 220 cm long and 100 cm wide, in a bright dining room of an old German apartment with high ceilings. The tabletop is 4 cm thick, glued from several wide oak boards with visible lively grain, natural oiled matte finish, slightly softened edges. Four straight square solid oak legs set a little inward from the corners, no apron visible from the front. Simple wooden chairs pushed in, a linen runner, one ceramic jug with a few branches. Cream-white walls, tall window with soft morning daylight from the left, pale herringbone parquet. Photographed from the long side of the table, straight-on and centered, camera at about 120 cm height looking slightly down, the whole table visible, 35mm lens. Calm, honest documentary interior photography, natural slightly warm colors, no people, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+04 · haus-garderobe.jpg · формат 3:4
+====================================================================
+Vertical interior photograph of a custom-made hallway wardrobe (Garderobe) in solid walnut with a natural oiled finish in a German apartment entrance hall. Two sections side by side, about 160 cm wide in total: on the left an open section with a walnut back panel, a row of simple round walnut coat pegs, one coat and a scarf hanging, a low walnut bench with a cushion; on the right a tall section with a plain flat walnut door. A shelf runs across the top over both sections. Cream-white walls, pale stone floor tiles, soft daylight from an open doorway on the left. Photographed straight-on from the front, centered, camera at about 120 cm height, the whole piece visible with a little floor and wall around it, 35mm lens. Calm, honest documentary interior photography, natural slightly warm colors, no people, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+05 · holz-eiche.jpg · формат 1:1
+====================================================================
+Top-down macro photograph of a freshly planed and oiled European oak board filling the whole square frame. Lively straight grain running from top to bottom with the typical silvery oak ray flecks, warm light honey color, matte oiled surface, very even soft diffuse daylight from above without shadows or reflections. Flat lay, perfectly perpendicular camera, sharp from edge to edge, no tools, no hands, no text, no logos, no watermark. Realistic, high resolution wood texture photograph.
+
+====================================================================
+06 · holz-nussbaum.jpg · формат 1:1
+====================================================================
+Top-down macro photograph of a freshly planed and oiled walnut board filling the whole square frame. Rich chocolate-brown color with lighter and darker streaks, grain running from top to bottom, matte oiled surface, very even soft diffuse daylight from above without shadows or reflections. Flat lay, perfectly perpendicular camera, sharp from edge to edge, no tools, no hands, no text, no logos, no watermark. Realistic, high resolution wood texture photograph.
+
+====================================================================
+07 · holz-ahorn.jpg · формат 1:1
+====================================================================
+Top-down macro photograph of a freshly planed and oiled maple board filling the whole square frame. Very light, creamy almost white color with a fine, calm, tight grain running from top to bottom and a soft silky shimmer, matte oiled surface, very even soft diffuse daylight from above without shadows or reflections. Flat lay, perfectly perpendicular camera, sharp from edge to edge, no tools, no hands, no text, no logos, no watermark. Realistic, high resolution wood texture photograph.
+
+====================================================================
+08 · holz-kiefer.jpg · формат 1:1
+====================================================================
+Top-down macro photograph of a freshly planed and oiled pine board filling the whole square frame. Warm yellowish-honey color with clearly visible darker growth rings running from top to bottom and two small healthy dark knots, matte oiled surface, very even soft diffuse daylight from above without shadows or reflections. Flat lay, perfectly perpendicular camera, sharp from edge to edge, no tools, no hands, no text, no logos, no watermark. Realistic, high resolution wood texture photograph.
+
+====================================================================
+09 · werkstatt.jpg · формат 4:3
+====================================================================
+Interior photograph of a small, clean, bright carpentry workshop in an old brick factory courtyard building in Germany in the early morning. Large steel-framed windows let in soft daylight, a long solid beech workbench with a wooden vise in the foreground, neatly hung hand tools on a wall board (chisels, hand planes, saws), a few stacked light oak and walnut boards leaning against the wall, a stationary table saw in the background, a fine layer of wood shavings on the bench. Clean, orderly, light and calm, not rustic, no Edison bulbs. No people. Calm, honest documentary photography, 35mm lens, natural slightly warm colors, no text, no logos, no brand names on machines, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+10 · werkstatt-haende.jpg · формат 3:4
+====================================================================
+Vertical close-up photograph of a carpenter's hands cutting dovetail joints by hand in a light oak board clamped in a wooden bench vise, using a wooden-handled chisel and a wooden mallet. Only forearms and hands are visible (no face), sleeves of a plain dark grey work shirt rolled up. A flat red carpenter's pencil and a steel square lie on the bench, fine wood shavings around. Soft morning daylight from a window on the left, shallow depth of field, calm documentary photography, natural slightly warm colors, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+11 · zinken-detail.jpg · формат 1:1
+====================================================================
+Square close-up photograph of the corner of a finished solid oak drawer with hand-cut dovetail joints, oiled matte finish, the end grain of the pins slightly darker than the face grain, crisp tight joint lines. The drawer stands on a light workbench, soft diffuse morning daylight from the left, shallow depth of field. Calm documentary product photography, natural slightly warm colors, no people, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+12 · aufmass.jpg · формат 4:3
+====================================================================
+Photograph of a carpenter measuring a sloped attic wall in an empty bright room under the roof of an old German house: only the hands and forearms are visible (no face), holding a folding wooden carpenter's rule against the sloped ceiling. A clipboard with a simple hand-drawn pencil sketch of a wall with a slope and lines (no readable text, no numbers) and a flat red carpenter's pencil rest on the floor. White plaster walls, bare pale floorboards, soft daylight from a roof window. Calm documentary photography, 35mm lens, natural slightly warm colors, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+13 · ref-dachschrank.jpg · формат 4:3
+====================================================================
+Interior photograph of a child's bedroom under a sloped attic roof in a German house with a custom-made built-in cabinet along the low knee wall: a long low row of five drawers and two small doors with fronts painted in a calm muted sage green, the top surface and the edge strips in light oiled maple, the cabinet runs under the slope for about 3 meters. A simple bed with linen bedding on the other side, a roof window with soft daylight, pale floorboards, white walls. Photographed slightly from the side at about 120 cm height, 35mm lens. Calm, honest documentary interior photography, natural slightly warm colors, no people, no text, no toys with writing, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+14 · ref-esstisch.jpg · формат 4:3
+====================================================================
+Interior photograph of a long custom-made solid walnut dining table, about 260 cm long, standing on a sled base of two walnut skid frames (two closed rectangular frames as legs), in a bright open kitchen-dining room of a renovated German apartment. Oiled matte walnut with lively grain, a bench on one side and simple chairs on the other, a bowl of apples, soft daylight from large windows, cream walls, pale oak floor. Photographed at a slight angle from the end of the table at about 120 cm height, 35mm lens. Calm, honest documentary interior photography, natural slightly warm colors, no people, no text, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+15 · ref-treppe.jpg · формат 3:4
+====================================================================
+Vertical interior photograph of a newly built straight solid oak staircase with open risers and a simple oak handrail on slim vertical oak balusters, in the renovated stairwell of an old German apartment building from around 1910. White plaster walls, a tall window on the landing with soft daylight, the old terrazzo floor at the bottom. Oiled light oak, clean precise joints. Photographed from the bottom of the stairs looking up slightly, 28mm lens. Calm, honest documentary architecture photography, natural slightly warm colors, no people, no text, no signs, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+16 · ref-tueren.jpg · формат 3:4
+====================================================================
+Vertical interior photograph of a long corridor in a renovated old German apartment building where a series of new identical interior doors has been installed: classic panelled wooden doors painted in soft off-white with simple brass-colored lever handles (plain, no brand), solid oak door frames and oak thresholds, four doors visible along the right wall in perspective. High ceilings, cream walls, restored oak floorboards, soft daylight from a window at the end of the corridor. Photographed down the corridor at about 140 cm height, 28mm lens. Calm, honest documentary architecture photography, natural slightly warm colors, no people, no door numbers, no text, no signs, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+17 · montage.jpg · формат 4:3
+====================================================================
+Photograph of a carpenter installing a custom-made light oak built-in wardrobe in an attic room: the person is seen from behind and the side (face not visible), wearing a plain dark grey work shirt and dark work trousers, adjusting a door hinge with a screwdriver. The floor is protected with a clean light grey drop cloth, a neat tool case and a small hand vacuum stand next to it, everything tidy. White sloped ceiling, roof window with soft daylight. Calm documentary photography, 35mm lens, natural slightly warm colors, no text, no logos, no brand names on tools, no watermark. Realistic, sharp, high resolution.

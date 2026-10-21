@@ -16,7 +16,7 @@ Every project lives in its own folder directly in `D:\Webdesign`. Never inside a
 ## 2. Design process (do not skip, this is where quality comes from)
 - Read `frontend-design` and `hallmark` skills BEFORE touching layout. Decide concept first: emotion the visitor buys → structure → visuals → only then code.
 - Each demo must differ from the others in page STRUCTURE, not only colours (see existing: Mittwoch = 3D chair intro, Nelke = SVG shop window, Kamm = booking app, Nuance = floating paint blobs, Artisanal = scroll-baked croissant).
-- Premium bar: custom type pairing, one big idea, real micro-detail, mobile first (375 px), WCAG AA contrast, no stock-template feel. Do not ship a first draft; critique it against the brief and fix before showing.
+- Premium bar: custom type pairing, one big idea, real micro-detail, phone is the primary screen, every other screen must also look right, WCAG AA contrast, no stock-template feel. Do not ship a first draft; critique it against the brief and fix before showing.
 - KI-Kennzeichnung (Pflicht, automatisch): `npm run build` ruft `scripts/ki-hinweis.mjs` auf — es hängt jeder Seite des Demos die Plakette „Beispielseite von Kravets Webdesign · Betrieb und Personen erfunden · Bilder teils KI-erzeugt“ an (+ `ki-hinweis.css`). Schritt nicht aus dem build-Skript entfernen. Für schon veröffentlichte Demos: `node scripts/ki-hinweis.mjs <Ordner>` (idempotent). Echte Kunden: KI-Bilder/-Texte nur mit seinem Wissen, dann kennzeichnen (Text anpassen). Texte für kravets-site: `site.ts` → `ai`.
 - Content: data lives in `src/data/*.json`, never hard-coded in markup. Fonts via `@fontsource*` (local, no external requests, DSGVO). No external CDNs, no trackers, no embedded Google Maps (use a link).
 
@@ -25,8 +25,8 @@ Every project lives in its own folder directly in `D:\Webdesign`. Never inside a
 - `npm run publish` builds and copies `dist` to `..\kravets-site\public\vorschau\<category>\<slug>`.
 - Then in `kravets-site`: add entry in `src/config/works.ts` (+ preview `public/works/<slug>.webp`, 16:10), commit right away. `git push` is done by Степан (cloud session has no GitHub credentials) — give him the exact command.
 
-## 4. Checks (no screenshots unless Степан asks)
-- `npx astro build` must pass. Headless numeric checks are fine: Playwright with `--use-gl=swiftshader --use-angle=swiftshader --enable-unsafe-swiftshader`, read console errors, horizontal overflow, computed contrast, pixel means. Do not open or send images.
+## 4. Checks (you own the result)
+- `npx astro build` must pass. Headless numeric checks are fine: Playwright with `--use-gl=swiftshader --use-angle=swiftshader --enable-unsafe-swiftshader`, read console errors, horizontal overflow, computed contrast, pixel means. Screenshots are off by default (token cost), but if how it looks decides quality and numbers cannot show it (3D, animation, complex layout), stop, say exactly why, and ask Степан for one specific screenshot. Never write "checked" for something you did not see or measure; list unverified parts in the README. Find the obvious defects yourself (transparent or unreadable backgrounds on expanding blocks, clipped forms, overlaps, low contrast, broken animation, rotation, any screen size); the lists here are examples, not the full set.
 - Before saying "done": grep for leftover `TODO`/placeholder, check all links under base path, check reduced-motion and no-WebGL fallbacks.
 
 ## 5. Working on Степан's PC (remote-devices tools)

@@ -1,0 +1,145 @@
+---
+// Bereich VORSORGE: ruhig, mit Fotos (lazy, erst beim Öffnen geladen). Schlüsselbund-Karten (Swipe, scroll-snap),
+// Beratung vor Ort, Hausverwaltungen mit Schließanlagen-Formular, Über uns und Ablauf.
+import site from '../data/site.json';
+import vorsorge from '../data/vorsorge.json';
+import preise from '../data/preise.json';
+import Foto from './Foto.astro';
+import Icon from './Icon.astro';
+import BeratungForm from './BeratungForm.astro';
+import B2BForm from './B2BForm.astro';
+---
+<section class="bereich vorsorge" id="vorsorge" data-mode-panel="vorsorge" aria-labelledby="vs-h">
+  <div class="wrap vs-hero">
+    <h2 id="vs-h" class="vs-hero__h">In Ruhe sicherer wohnen.</h2>
+    <p class="vs-hero__lead">Nach einem Einbruch in der Nachbarschaft fragen sich viele: Was hilft wirklich? Wir kommen vorbei, zeigen es an Ihrer Tür und nennen den Preis schriftlich.</p>
+    <Foto name="zylinder-nah" alt="Sicherheitszylinder aus Messing in einer hellen Wohnungstür" ratio="4 / 3" />
+  </div>
+
+  <div class="bund" aria-labelledby="bund-h">
+    <div class="wrap">
+      <h2 id="bund-h">Was wir einbauen</h2>
+      <p class="bund__lead">Wischen Sie durch den Schlüsselbund. Preise {preise.mwst}, mit Montage, ohne Anfahrt. Der genaue Preis kommt nach der Besichtigung.</p>
+    </div>
+    <div class="bund__ring" aria-hidden="true"></div>
+    <ul class="bund__liste" data-bund tabindex="0" aria-label="Leistungen, seitlich wischen">
+      {vorsorge.karten.map((k, i) => (
+        <li class="anh" data-anh={i} id={`karte-${k.id}`}>
+          <article class="anh__in">
+            <Foto name={k.img} alt={k.alt} ratio="4 / 3" sizes="(min-width: 46rem) 22rem, 78vw" widths={[320, 480, 700]} />
+            <h3>{k.titel}</h3>
+            <p class="anh__text">{k.text}</p>
+            <p class="anh__preis num">{k.preis}</p>
+            {k.id === 'anlage'
+              ? <a class="anh__btn" href="#b2b">Für Hausverwaltungen <Icon name="arrow-right" /></a>
+              : <a class="anh__btn" href="#beratung" data-thema={k.id}>Beratung vor Ort anfragen <Icon name="arrow-right" /></a>}
+          </article>
+        </li>
+      ))}
+    </ul>
+    <p class="bund__dots" aria-hidden="true">{vorsorge.karten.map((_, i) => <span data-dot={i}></span>)}</p>
+  </div>
+
+  <div class="block block--2" id="beratung">
+    <div class="wrap">
+      <h2>Beratung vor Ort</h2>
+      <p class="block__lead">{preise.beratung} € plus Anfahrt, bei Auftrag voll angerechnet. So kommen nur Termine zustande, die Ihnen wirklich etwas bringen.</p>
+      <BeratungForm />
+    </div>
+  </div>
+
+  <div class="block" id="b2b">
+    <div class="wrap">
+      <h2>Für Hausverwaltungen</h2>
+      <p class="block__lead">Schließanlagen für Mehrfamilienhäuser und Büros. Sie bekommen den Meister als festen Ansprechpartner.</p>
+      <div class="b2b__grid">
+        <Foto name="hauseingang-mfh" alt="Eingang eines hellen Mehrfamilienhauses mit dunkler Glastür und Briefkästen" ratio="3 / 4" sizes="(min-width: 46rem) 18rem, 100vw" widths={[360, 560, 800]} class="b2b__foto" />
+        <ul class="haken">
+          {vorsorge.b2b.punkte.map((p) => <li><Icon name="check" />{p}</li>)}
+        </ul>
+      </div>
+      <h3 class="b2b__formh">Objekt anfragen</h3>
+      <B2BForm />
+    </div>
+  </div>
+
+  <div class="block block--2" id="ueber">
+    <div class="wrap">
+      <h2>Wer kommt</h2>
+      <div class="ueber">
+        <Foto name="meister-werkzeug" alt="Hände eines Schlossers feilen einen Messingschlüssel im Schraubstock" ratio="4 / 3" />
+        <p>{site.owner}, {site.beruf}. Seit neun Jahren mit eigener Werkstatt in {site.address.district}, zu zweit mit zwei Wagen. Wir öffnen Türen, bauen Schlösser ein und planen Schließanlagen. Autos öffnen wir nicht.</p>
+      </div>
+      <h3 class="ablauf__h">So läuft es ab</h3>
+      <ol class="ablauf">
+        {vorsorge.ablauf.map((s) => <li><strong>{s.t}</strong><span>{s.d}</span></li>)}
+      </ol>
+      <p class="werkstatt"><Icon name="map-pin" /><span>Werkstatt: {site.address.street}, {site.address.zip} {site.address.city} · {site.werkstatt.label} · <a href={site.mapLink} target="_blank" rel="noopener">Auf der Karte</a></span></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .vs-hero { padding-top: var(--space-lg); padding-bottom: var(--space-xl); display: grid; gap: var(--space-md); }
+  .vs-hero__h { font-size: clamp(2.2rem, 10vw, 4.5rem); line-height: 1; }
+  .vs-hero__lead { color: var(--color-ink-2); max-width: 34rem; }
+
+  .bund { padding: var(--space-xl) 0 var(--space-2xl); background: var(--color-paper-2); position: relative; }
+  .bund h2 { margin-bottom: var(--space-sm); }
+  .bund__lead { color: var(--color-ink-2); margin-bottom: var(--space-lg); }
+  .bund__ring { height: 0; margin: 0 var(--gutter); border-top: 3px solid var(--color-brass); border-radius: 50%; position: relative; top: 1.2rem; }
+  .bund__liste { list-style: none; margin: 0; padding: var(--space-md) var(--gutter) var(--space-md); display: grid; grid-auto-flow: column; grid-auto-columns: min(78%, 22rem); gap: var(--space-md); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); overscroll-behavior-x: contain; scrollbar-width: none; }
+  .bund__liste::-webkit-scrollbar { display: none; }
+  .bund__liste:focus-visible { outline-offset: -3px; }
+  .anh { scroll-snap-align: start; padding-top: 1.1rem; transform-origin: 50% 0; }
+  .anh__in { position: relative; display: grid; gap: var(--space-sm); height: 100%; padding: 2.2rem var(--space-md) var(--space-md); border: var(--rule-ink); border-radius: var(--radius-lg) var(--radius-lg) var(--radius) var(--radius); background: var(--color-paper); align-content: start; }
+  /* Loch des Schlüsselanhängers: reine Geometrie */
+  .anh__in::before { content: ''; position: absolute; top: 0.7rem; left: 50%; width: 1rem; height: 1rem; translate: -50% 0; border-radius: 50%; background: var(--color-paper-2); box-shadow: inset 0 0 0 2px var(--color-ink), 0 -1.4rem 0 -0.35rem var(--color-brass); }
+  .anh__text { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .anh__preis { font-family: var(--font-display); font-size: var(--text-xl); margin-top: auto; }
+  .anh__btn { display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-xs); min-height: 3rem; padding: 0 var(--space-md); border-radius: var(--radius); background: var(--color-ink); color: var(--color-paper); text-decoration: none; font-weight: 700; }
+  .anh__btn :global(.icon) { color: var(--color-brass); }
+  .anh__btn:focus-visible { outline-offset: 2px; }
+  .bund__dots { display: flex; justify-content: center; gap: var(--space-xs); margin: 0; }
+  .bund__dots span { width: 0.6rem; height: 0.6rem; border-radius: 50%; border: 2px solid var(--color-ink); }
+  .bund__dots span.is-an { background: var(--color-ink); }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .anh { transition: rotate var(--dur-slow) var(--ease-out); rotate: 3deg; }
+    :global(html.js) .anh.is-an { rotate: 0deg; }
+  }
+
+  .b2b__grid { display: grid; gap: var(--space-lg); margin-bottom: var(--space-xl); }
+  .haken { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-sm); }
+  .haken li { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr); gap: var(--space-sm); }
+  .haken :global(.icon) { width: 1.4rem; height: 1.4rem; color: var(--color-brass-deep); margin-top: 0.1rem; }
+  .b2b__formh { margin-bottom: var(--space-md); }
+  @media (min-width: 40rem) { .b2b__grid { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); align-items: start; } }
+
+  .ueber { display: grid; gap: var(--space-md); margin-bottom: var(--space-xl); }
+  .ablauf__h { margin-bottom: var(--space-md); }
+  .ablauf { list-style: none; margin: 0 0 var(--space-xl); padding: 0; counter-reset: a; display: grid; gap: 0; border-left: 3px solid var(--color-brass); }
+  .ablauf li { counter-increment: a; display: grid; gap: var(--space-2xs); padding: 0 0 var(--space-lg) var(--space-lg); position: relative; }
+  .ablauf li::before { content: counter(a); position: absolute; left: -1.05rem; top: 0; width: 1.8rem; height: 1.8rem; display: grid; place-items: center; border-radius: 50%; background: var(--color-ink); color: var(--color-paper); font-family: var(--font-display); font-size: 0.875rem; }
+  .ablauf span { color: var(--color-ink-2); }
+  .werkstatt { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr); gap: var(--space-sm); }
+  .werkstatt a { display: inline-block; padding-block: var(--space-2xs); }
+</style>
+
+<script>
+  // Schlüsselbund: aktive Karte erkennen (gerade hängen, Punkte), „Beratung anfragen“ wählt das Thema vor
+  const liste = document.querySelector<HTMLElement>('[data-bund]');
+  if (liste) {
+    const karten = [...liste.querySelectorAll<HTMLElement>('[data-anh]')];
+    const dots = [...document.querySelectorAll<HTMLElement>('[data-dot]')];
+    const setAn = (i: number) => { karten.forEach((k, j) => k.classList.toggle('is-an', i === j)); dots.forEach((d, j) => d.classList.toggle('is-an', i === j)); };
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => { if (e.isIntersecting && e.intersectionRatio > 0.6) setAn(Number((e.target as HTMLElement).dataset.anh)); });
+    }, { root: liste, threshold: [0.6] });
+    karten.forEach((k) => io.observe(k));
+    setAn(0);
+  }
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[data-thema]');
+    if (a) document.dispatchEvent(new CustomEvent('vorsorge:thema', { detail: a.dataset.thema }));
+  });
+</script>

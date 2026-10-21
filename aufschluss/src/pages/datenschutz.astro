@@ -1,14 +1,32 @@
 ---
 import Base from '../layouts/Base.astro';
 import DatenschutzForm from '../components/DatenschutzForm.astro';
+import site from '../data/site.json';
 const base = import.meta.env.BASE_URL;
 ---
-<Base title="Datenschutz">
-  <main style="padding:120px var(--gutter);max-width:760px;margin:auto">
-    <h1>Datenschutz</h1>
-    <!-- Formular-Standard: Abschnitt zum Formular (Pflicht, sobald es ein Formular gibt) -->
-    <DatenschutzForm formName="Vorbestell-Formular" />
-    <!-- TODO: Pflichtangaben vom Kunden (Name, Anschrift, E-Mail, USt-IdNr., Register) bzw. Datenschutzerklärung -->
-    <p><a href={base}>← Zurück</a></p>
+<Base title="Datenschutz | Aufschluss Schlüsseldienst" bodyClass="legal">
+  <main id="inhalt" class="legal-main">
+    <div class="wrap">
+      <p><a href={base}>← Zurück</a></p>
+      <h1>Datenschutz</h1>
+      <p><strong>Demo-Seite:</strong> Betrieb und Personen sind erfunden. Auf dieser Seite wird nichts gesendet oder gespeichert, es gibt keine Cookies, keine Analyse und keine externen Schriften oder Karten.</p>
+      <h2>Verantwortlicher</h2>
+      <p>{site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}. E-Mail: {site.email}</p>
+      <h2>Aufruf der Website</h2>
+      <p>Beim Aufruf verarbeitet unser Hosting-Anbieter technisch notwendige Daten (IP-Adresse, Zeitpunkt, aufgerufene Seite) in Server-Protokollen, um die Seite sicher auszuliefern (Art. 6 Abs. 1 lit. f DSGVO, berechtigtes Interesse). Die Protokolle werden nach spätestens 7 Tagen gelöscht.</p>
+      <h2>Anruf und WhatsApp</h2>
+      <p>Wenn Sie uns anrufen, verarbeiten wir Ihre Nummer und Ihre Angaben zur Durchführung des Einsatzes (Art. 6 Abs. 1 lit. b DSGVO). Bei WhatsApp verarbeitet zusätzlich die WhatsApp Ireland Ltd. Daten nach eigenen Bedingungen; der Link öffnet WhatsApp erst, wenn Sie ihn antippen. Wenn Sie das nicht möchten, rufen Sie bitte an.</p>
+      <h2>Preisrechner</h2>
+      <p>Postleitzahl und Auswahl bleiben in Ihrem Browser (sessionStorage dieses Tabs) und werden nicht übertragen.</p>
+      <DatenschutzForm formName="Anfrage „Beratung vor Ort“" data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Postleitzahl, Themen, Wunschzeit, Nachricht und Foto (beides freiwillig)" purpose="Wir rufen Sie an und vereinbaren einen Besichtigungstermin." />
+      <DatenschutzForm formName="Anfrage Schließanlage (Hausverwaltungen)" data="Objektadresse, Umfang (Türen, Schlüssel), Firma, Name, Telefonnummer, E-Mail-Adresse und Nachricht (freiwillig)" purpose="Wir melden uns für einen Begehungstermin und senden danach ein schriftliches Angebot." retention="Wir löschen Ihre Angaben, sobald die Anfrage erledigt ist, spätestens nach 6 Monaten, wenn kein Auftrag zustande kommt. Bei Auftrag gelten die gesetzlichen Aufbewahrungsfristen für Geschäftsunterlagen." />
+    </div>
   </main>
 </Base>
+<style is:global>
+  .legal-main { padding: var(--space-xl) 0 var(--space-2xl); }
+  .legal-main .wrap { display: grid; gap: var(--space-md); }
+  .legal-main h1 { font-size: var(--text-2xl); }
+  .legal-main h2 { font-size: var(--text-lg); margin-top: var(--space-md); }
+  .legal-main a { display: inline-block; padding-block: var(--space-2xs); }
+</style>

@@ -1,11 +1,36 @@
 ---
 import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
 const base = import.meta.env.BASE_URL;
 ---
-<Base title="Impressum">
-  <main style="padding:120px var(--gutter);max-width:760px;margin:auto">
-    <h1>Impressum</h1>
-    <!-- TODO: Pflichtangaben vom Kunden (Name, Anschrift, E-Mail, USt-IdNr., Register) bzw. Datenschutzerklärung -->
-    <p><a href={base}>← Zurück</a></p>
+<Base title="Impressum | Aufschluss Schlüsseldienst" bodyClass="legal">
+  <main id="inhalt" class="legal-main">
+    <div class="wrap">
+      <p><a href={base}>← Zurück</a></p>
+      <h1>Impressum</h1>
+      <p><strong>Demo-Seite.</strong> Beispielseite von Kravets Webdesign: Betrieb und Personen sind erfunden, die Bilder sind teils KI-erzeugt. Alle Angaben unten sind fiktiv.</p>
+      <h2>Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)</h2>
+      <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+      <h2>Kontakt</h2>
+      <p>Telefon: {site.phone}<br />E-Mail: {site.email}</p>
+      <h2>Berufsbezeichnung und Kammer</h2>
+      <p>Berufsbezeichnung: {site.beruf} (verliehen in der Bundesrepublik Deutschland)<br />
+      Zuständige Kammer: {site.kammer}<br />
+      {site.betriebsnummer}<br />
+      Berufsrechtliche Regelung: Gesetz zur Ordnung des Handwerks (Handwerksordnung), abrufbar unter <a href="https://www.gesetze-im-internet.de/hwo/" target="_blank" rel="noopener">gesetze-im-internet.de/hwo</a></p>
+      <h2>Betriebshaftpflichtversicherung</h2>
+      <p>{site.haftpflicht}</p>
+      <h2>Umsatzsteuer-Identifikationsnummer</h2>
+      <p>{site.ustid}</p>
+      <h2>Verbraucherstreitbeilegung</h2>
+      <p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+    </div>
   </main>
 </Base>
+<style is:global>
+  .legal-main { padding: var(--space-xl) 0 var(--space-2xl); }
+  .legal-main .wrap { display: grid; gap: var(--space-md); }
+  .legal-main h1 { font-size: var(--text-2xl); }
+  .legal-main h2 { font-size: var(--text-lg); margin-top: var(--space-md); }
+  .legal-main a { display: inline-block; padding-block: var(--space-2xs); }
+</style>

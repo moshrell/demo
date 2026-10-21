@@ -1,19 +1,38 @@
 ---
 import Base from '../layouts/Base.astro';
-import OrderForm from '../components/OrderForm.astro';
+import Intro from '../components/Intro.astro';
+import Kopf from '../components/Kopf.astro';
+import Notfall from '../components/Notfall.astro';
+import Vorsorge from '../components/Vorsorge.astro';
+import Leiste from '../components/Leiste.astro';
 import site from '../data/site.json';
+import preise from '../data/preise.json';
+import faq from '../data/faq.json';
+import zeit from '../scripts/zeit.js?raw';
+// Vor dem ersten Zeichnen: JS-Klasse, Bereich aus dem Link (#vorsorge …), Intro ja/nein, Uhrzeit-Logik + Preise
+const VORSORGE_IDS = ['vorsorge', 'bund', 'beratung', 'b2b', 'ueber', 'karte-'];
+const headScript = `(function(){var d=document.documentElement;d.classList.add('js');var h=location.hash.slice(1);
+var v=${JSON.stringify(VORSORGE_IDS)}.some(function(x){return h.indexOf(x)===0});d.setAttribute('data-mode',v?'vorsorge':'notfall');
+try{var r=matchMedia('(prefers-reduced-motion: reduce)').matches;if(!r&&!h&&!sessionStorage.getItem('intro')){d.classList.add('intro');sessionStorage.setItem('intro','1')}}catch(e){}})();
+${zeit}
+AUF.T=${JSON.stringify(preise.tarife)};AUF.W=${JSON.stringify(site.werkstatt)};`;
 ---
-<Base>
+<Base
+  title="Schlüsseldienst Hannover zum Festpreis | Aufschluss"
+  description="Tür zugefallen oder abgeschlossen? Festpreise nach Uhrzeit, Anfahrt nach PLZ, alles vorab. Dazu Einbruchschutz und Schließanlagen für Hausverwaltungen in Hannover."
+  faq={faq}
+  prices={preise.tarife.map((t) => ({ name: `Türöffnung zugefallen, ${t.name}`, price: t.zugefallen }))}
+>
+  <script slot="head" is:inline set:html={headScript} />
+  <Intro />
+  <Kopf />
+  <script is:inline>window.AUF && window.AUF.fill();</script>
   <main id="inhalt">
-    <h1>{site.name}</h1>
-    <!-- Formular-Standard: Beispiel mit Preisen. Ohne Preise: items weglassen und options={['Leistung A', 'Leistung B']} nutzen. TODO: echte Positionen vom Kunden -->
-    <OrderForm
-      title="Vorbestellung"
-      submitLabel="Vorbestellen"
-      purpose="meiner Vorbestellung"
-      items={[{ id: 'a', name: 'TODO Artikel A', cents: 350 }, { id: 'b', name: 'TODO Artikel B', cents: 1290 }]}
-      options={['TODO Zeit 1', 'TODO Zeit 2']}
-      optionsLabel="Wann?"
-    />
+    <Notfall />
+    <Vorsorge />
   </main>
+  <Leiste />
 </Base>
+<script>
+  import '../scripts/modus';
+</script>

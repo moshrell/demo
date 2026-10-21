@@ -1,0 +1,343 @@
+---
+/**
+ * AnfrageForm: Formular-Standard (abgeleitet von _template OrderForm.astro) für die Tischlerei.
+ * + Was / Maße / PLZ mit Zonen-Prüfung / Budget / Zeitraum / Fotos (Demo) / Gewerblich (B2B).
+ * Konstruktor-Modus: Zusammenfassung + Richtpreis als "Summe" (kommt per Event 'zinke:cfg').
+ * Es wird nichts gesendet (Demo). Echter Kunde: Versand per PHP-Mailer auf All-Inkl, siehe README.
+ */
+import site from '../data/site.json';
+const { id = 'anfrage', mode = 'quick', title = 'Anfrage an die Werkstatt' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const was = ['Einbauschrank', 'Regal', 'Esstisch', 'Garderobe', 'Küchenfronten', 'Treppe', 'Türen', 'Etwas anderes'];
+const kon = mode === 'konstruktor';
+---
+<section class="af" aria-labelledby={`${id}-h`} data-af-wrap>
+  <h2 class="af__title" id={`${id}-h`}>{title}</h2>
+  {!kon && <p class="af__lead">Kein Konstruktor nötig: ein Foto und ein paar Maße reichen. Ich rufe Sie einmal an und frage nach, was fehlt.</p>}
+  <form class="af__form" id={id} novalidate data-af data-mode={mode}>
+    {kon && (
+      <div class="af__cfg" data-cfg-box>
+        <h3 class="af__h3">Ihr Entwurf</h3>
+        <dl data-cfg-list></dl>
+        <p class="af__note">Die Skizze und alle Maße gehen mit. Den Festpreis bekommen Sie nach dem Aufmaß.</p>
+      </div>
+    )}
+    <fieldset class="af__group" hidden={kon}>
+      <legend>Was soll ich bauen?</legend>
+      <div class="af__chips">
+        {was.map((w, i) => (
+          <label class="af__chip"><input type="radio" name="was" value={w} checked={i === 0} /><span>{w}</span></label>
+        ))}
+      </div>
+    </fieldset>
+    {!kon && (
+      <div class="af__field">
+        <label for={`${id}-masse`}>Maße <span class="af__opt">(ungefähr reicht)</span></label>
+        <input id={`${id}-masse`} name="masse" type="text" autocomplete="off" placeholder="z. B. Nische 240 × 230 cm, Kniestock 100 cm" />
+      </div>
+    )}
+    <div class="af__field">
+      <label for={`${id}-plz`}>Postleitzahl des Einbauorts</label>
+      <input id={`${id}-plz`} name="plz" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" pattern="[0-9]{5}" placeholder="z. B. 30459" aria-describedby={`${id}-plz-out ${id}-err-plz`} required />
+      <p class="af__zone" id={`${id}-plz-out`} aria-live="polite" data-plz-out></p>
+      <p class="af__err" id={`${id}-err-plz`} hidden>Bitte geben Sie eine fünfstellige Postleitzahl an.</p>
+    </div>
+    <div class="af__row2">
+      <div class="af__field">
+        <label for={`${id}-budget`}>Budgetrahmen</label>
+        <select id={`${id}-budget`} name="budget" autocomplete="off">
+          <option>weiß ich noch nicht</option><option>bis 2.000 €</option><option>2.000–5.000 €</option><option>5.000–10.000 €</option><option>über 10.000 €</option>
+        </select>
+      </div>
+      <div class="af__field">
+        <label for={`${id}-wann`}>Wann?</label>
+        <select id={`${id}-wann`} name="wann" autocomplete="off">
+          <option>so bald wie möglich</option><option>in 1–3 Monaten</option><option>später, ich plane</option>
+        </select>
+      </div>
+    </div>
+    <div class="af__field">
+      <span class="af__label" id={`${id}-foto-l`}>Fotos vom Ort <span class="af__opt">(optional, bis 4)</span></span>
+      <label class="af__file" for={`${id}-foto`}><span>Foto aufnehmen oder auswählen</span></label>
+      <input class="sr-only" id={`${id}-foto`} type="file" accept="image/*" multiple aria-labelledby={`${id}-foto-l`} data-foto />
+      <ul class="af__thumbs" data-thumbs aria-label="Ausgewählte Fotos"></ul>
+      <p class="af__note">Demo: Fotos bleiben nur in diesem Browser-Tab, nichts wird hochgeladen.</p>
+    </div>
+
+    <label class="af__check af__check--b2b"><input type="checkbox" name="b2b" data-b2b /><span>Ich frage für eine Firma, ein Planungsbüro oder eine Hausverwaltung an</span></label>
+    <fieldset class="af__group af__b2b" data-b2b-box hidden>
+      <legend>Objekt</legend>
+      <div class="af__field">
+        <label for={`${id}-firma`}>Firma</label>
+        <input id={`${id}-firma`} name="firma" type="text" autocomplete="organization" placeholder="z. B. Muster Architekten GmbH" />
+      </div>
+      <div class="af__row2">
+        <div class="af__field">
+          <label for={`${id}-stueck`}>Stückzahl</label>
+          <input id={`${id}-stueck`} name="stueck" type="number" inputmode="numeric" min="1" max="500" autocomplete="off" placeholder="z. B. 24" />
+        </div>
+        <div class="af__field">
+          <label for={`${id}-termin`}>Fertig bis</label>
+          <input id={`${id}-termin`} name="termin" type="month" autocomplete="off" placeholder="z. B. 2027-03" />
+        </div>
+      </div>
+      <p class="af__note">Pläne (PDF, DWG) und Leistungsverzeichnis schicken Sie nach dem Rückruf per E-Mail. Preise für Firmen netto.</p>
+    </fieldset>
+
+    <fieldset class="af__group">
+      <legend>Ihre Angaben</legend>
+      <div class="af__field">
+        <label for={`${id}-name`}>Name</label>
+        <input id={`${id}-name`} name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname" required aria-describedby={`${id}-err-name`} />
+        <p class="af__err" id={`${id}-err-name`} hidden>Bitte geben Sie Ihren Namen an.</p>
+      </div>
+      <div class="af__field">
+        <label for={`${id}-tel`}>Telefon</label>
+        <input id={`${id}-tel`} name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 030 23125 123" required aria-describedby={`${id}-err-tel`} />
+        <p class="af__err" id={`${id}-err-tel`} hidden>Bitte geben Sie eine Telefonnummer an, unter der ich Sie erreiche.</p>
+      </div>
+      <div class="af__field">
+        <label for={`${id}-mail`}>E-Mail <span class="af__opt">(optional)</span></label>
+        <input id={`${id}-mail`} name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" aria-describedby={`${id}-err-mail`} />
+        <p class="af__err" id={`${id}-err-mail`} hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.</p>
+      </div>
+      <div class="af__field">
+        <label for={`${id}-zeit`}>Wann darf ich anrufen?</label>
+        <select id={`${id}-zeit`} name="zeit" autocomplete="off"><option>egal</option><option>vormittags</option><option>nachmittags</option><option>ab 17 Uhr</option></select>
+      </div>
+      <div class="af__field">
+        <label for={`${id}-note`}>Nachricht <span class="af__opt">(optional)</span></label>
+        <textarea id={`${id}-note`} name="note" rows="3" autocomplete="off" placeholder="z. B. Steckdose links in der Nische, Altbau mit schiefen Wänden"></textarea>
+      </div>
+    </fieldset>
+
+    <div class="af__consent">
+      <label class="af__check">
+        <input type="checkbox" name="privacy" required aria-describedby={`${id}-err-privacy`} />
+        <span>Ich bin einverstanden, dass die {site.name} meine Angaben (Name, Telefon, E-Mail, PLZ, Maße, Fotos, Nachricht) zur Bearbeitung meiner Anfrage verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a></span>
+      </label>
+      <p class="af__err" id={`${id}-err-privacy`} hidden>Bitte stimmen Sie zu, sonst kann ich Ihre Anfrage nicht bearbeiten.</p>
+    </div>
+
+    <div class="af__bar">
+      {kon ? (
+        <p class="af__total"><span>Richtpreis inkl. MwSt.</span><span>Summe <strong data-total>–</strong></span></p>
+      ) : (
+        <p class="af__total af__total--plain"><span>Demo: Es wird nichts gesendet.</span></p>
+      )}
+      <button class="btn btn--red af__btn" type="submit">An die Werkstatt senden</button>
+    </div>
+  </form>
+
+  <div class="af__done" data-done tabindex="-1" hidden>
+    <slot name="done" />
+    <h3>Danke. Ihre Anfrage liegt auf meiner Werkbank.</h3>
+    <p>Ich melde mich innerhalb von {site.replyDays} telefonisch bei Ihnen.</p>
+    <dl data-done-list></dl>
+    <p class="af__note">Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.</p>
+  </div>
+</section>
+
+<style>
+  .af { max-width: 40rem; margin: 0 auto; }
+  .af__title { margin: 0 0 var(--space-sm); }
+  .af__lead { color: var(--ink-2); margin-bottom: var(--space-lg); max-width: var(--measure); }
+  .af__h3 { font-size: var(--text-lg); margin-bottom: var(--space-sm); }
+  .af__form { display: grid; gap: var(--space-lg); }
+  .af__group { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: var(--space-md); }
+  .af__group[hidden] { display: none; }
+  .af__group legend { padding: 0; margin-bottom: var(--space-sm); font-weight: 700; }
+  .af__chips { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+  .af__chip { position: relative; }
+  .af__chip input { position: absolute; opacity: 0; inset: 0; }
+  .af__chip span { display: inline-flex; align-items: center; min-height: 44px; padding: 0.5rem 0.9rem; border: 1.5px solid var(--ink); border-radius: 999px; cursor: pointer; white-space: nowrap; }
+  .af__chip input:checked + span { background: var(--ink); color: var(--paper); }
+  .af__chip input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .af__field { display: grid; gap: var(--space-2xs); min-width: 0; }
+  .af__field > label, .af__label { font-weight: 700; font-size: var(--text-sm); }
+  .af__opt { font-weight: 400; color: var(--muted); }
+  .af__field input:not([type=file]), .af__field textarea, .af__field select { width: 100%; min-height: 48px; padding: 0.65rem 0.85rem; border: 1.5px solid var(--ink); border-radius: var(--radius); background: var(--sk-fill); color: var(--ink); font: inherit; }
+  .af__field select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%); background-position: calc(100% - 18px) 55%, calc(100% - 12px) 55%; background-size: 6px 6px; background-repeat: no-repeat; padding-right: 2.2rem; }
+  .af__field textarea { resize: vertical; }
+  .af__field ::placeholder { color: var(--muted); opacity: 1; }
+  .af__field [aria-invalid='true'] { border-color: var(--alert); box-shadow: inset 0 0 0 1px var(--alert); }
+  .af__row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-sm); }
+  .af__zone { font-size: var(--text-sm); min-height: 1.3em; }
+  .af__zone[data-z='ok'] { color: var(--ok); font-weight: 700; }
+  .af__zone[data-z='maybe'] { color: var(--ink); font-weight: 700; }
+  .af__zone[data-z='no'] { color: var(--alert); font-weight: 700; }
+  .af__file { display: flex; align-items: center; justify-content: center; min-height: 56px; padding: var(--space-sm); border: 1.5px dashed var(--ink-2); border-radius: var(--radius); background: var(--paper-2); font-weight: 700; cursor: pointer; text-align: center; }
+  .af__file:hover { background: var(--paper-3); }
+  input[data-foto]:focus-visible + .af__thumbs, .af__file:focus-within { outline: 3px solid var(--focus); }
+  .af__thumbs { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--space-xs); flex-wrap: wrap; }
+  .af__thumbs li { position: relative; width: 72px; height: 72px; }
+  .af__thumbs img { width: 72px; height: 72px; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--rule); }
+  .af__thumbs button { position: absolute; top: -8px; right: -8px; width: 28px; height: 28px; border-radius: 50%; border: 0; background: var(--ink); color: var(--paper); font-size: 16px; line-height: 1; cursor: pointer; }
+  .af__note { font-size: var(--text-xs); color: var(--muted); }
+  .af__err { font-size: var(--text-sm); font-weight: 700; color: var(--alert); }
+  .af__err[hidden] { display: none; }
+  .af__check { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-sm); align-items: start; font-size: var(--text-sm); line-height: 1.45; cursor: pointer; }
+  .af__check input { width: 1.4rem; height: 1.4rem; margin: 0.1rem 0 0; accent-color: var(--accent); }
+  .af__check.is-invalid span { color: var(--alert); }
+  .af__check--b2b { font-weight: 700; font-size: var(--text-md); }
+  .af__consent { display: grid; gap: var(--space-2xs); }
+  .af__cfg { padding: var(--space-md); background: var(--paper-2); border-radius: var(--radius); }
+  .af__cfg dl, .af__done dl { margin: 0 0 var(--space-xs); display: grid; }
+  .af__cfg dl > div, .af__done dl > div { display: grid; grid-template-columns: minmax(0, 7rem) minmax(0, 1fr); gap: var(--space-sm); padding: 0.35rem 0; border-bottom: 1px solid var(--rule); font-size: var(--text-sm); }
+  .af__cfg dt, .af__done dt { color: var(--muted); }
+  .af__cfg dd, .af__done dd { margin: 0; font-variant-numeric: tabular-nums; }
+  .af__sum { font-weight: 700; }
+  .af__bar { position: sticky; bottom: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); padding: var(--space-sm) 0; padding-bottom: max(var(--space-sm), env(safe-area-inset-bottom)); background: var(--paper); border-top: 1.5px solid var(--ink); }
+  .af__total { display: grid; gap: 0.1rem; min-width: 0; font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+  .af__total strong { font-size: 1.45rem; margin-left: var(--space-2xs); font-family: var(--font-display); }
+  .af__total--plain { color: var(--muted); }
+  .af__done { padding: var(--space-lg); border: 1.5px solid var(--ink); border-radius: var(--radius); background: var(--sk-fill); display: grid; gap: var(--space-sm); }
+  .af__done:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
+  @media (max-width: 30rem) { .af__bar { flex-wrap: wrap; } .af__btn { flex: 1 1 100%; } }
+</style>
+
+<script>
+  import { zoneFor } from '../lib/zone';
+  const eur = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+  document.querySelectorAll<HTMLFormElement>('form[data-af]').forEach((form) => {
+    const wrap = form.closest<HTMLElement>('[data-af-wrap]')!;
+    const done = wrap.querySelector<HTMLElement>('[data-done]')!;
+    const list = done.querySelector<HTMLElement>('[data-done-list]')!;
+    const kon = form.dataset.mode === 'konstruktor';
+    const field = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
+    const err = (input: HTMLInputElement, show: boolean) => {
+      (input.getAttribute('aria-describedby') || '').split(' ').forEach((id) => { const e = document.getElementById(id); if (e && e.classList.contains('af__err')) e.hidden = !show; });
+      input.setAttribute('aria-invalid', show ? 'true' : 'false');
+      input.closest('.af__check')?.classList.toggle('is-invalid', show);
+    };
+    const KEY = `form:${location.pathname}:${form.id}`;
+    const FKEY = KEY + ':fotos';
+
+    // PLZ-Prüfung direkt im Formular
+    const plzIn = field('plz'), plzOut = form.querySelector<HTMLElement>('[data-plz-out]')!;
+    const showZone = () => {
+      const z = zoneFor(plzIn.value.trim());
+      plzOut.textContent = z ? z.text : '';
+      if (z) plzOut.dataset.z = z.z; else delete plzOut.dataset.z;
+    };
+    plzIn.addEventListener('input', () => { plzIn.value = plzIn.value.replace(/\D/g, '').slice(0, 5); err(plzIn, false); showZone(); });
+
+    // B2B
+    const b2b = form.querySelector<HTMLInputElement>('[data-b2b]')!, b2bBox = form.querySelector<HTMLElement>('[data-b2b-box]')!;
+    const syncB2b = () => { b2bBox.hidden = !b2b.checked; };
+    b2b.addEventListener('change', syncB2b);
+
+    // Fotos: verkleinert in sessionStorage, damit nichts verloren geht
+    let fotos: string[] = [];
+    const thumbs = form.querySelector<HTMLElement>('[data-thumbs]')!;
+    const fotoIn = form.querySelector<HTMLInputElement>('[data-foto]')!;
+    const drawThumbs = () => {
+      thumbs.replaceChildren(...fotos.map((src, i) => {
+        const li = document.createElement('li');
+        const img = document.createElement('img'); img.src = src; img.alt = `Foto ${i + 1}`; img.width = 72; img.height = 72;
+        const b = document.createElement('button'); b.type = 'button'; b.textContent = '×'; b.setAttribute('aria-label', `Foto ${i + 1} entfernen`);
+        b.addEventListener('click', () => { fotos.splice(i, 1); saveFotos(); drawThumbs(); });
+        li.append(img, b); return li;
+      }));
+    };
+    const saveFotos = () => { try { if (fotos.length) sessionStorage.setItem(FKEY, JSON.stringify(fotos)); else sessionStorage.removeItem(FKEY); } catch { /* Speicher voll: Vorschau bleibt im Tab */ } };
+    const shrink = (file: File) => new Promise<string>((res, rej) => {
+      const url = URL.createObjectURL(file); const img = new Image();
+      img.onload = () => {
+        const s = Math.min(1, 900 / Math.max(img.width, img.height));
+        const c = document.createElement('canvas'); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+        c.getContext('2d')!.drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+        res(c.toDataURL('image/jpeg', 0.72));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); rej(); };
+      img.src = url;
+    });
+    fotoIn.addEventListener('change', async () => {
+      for (const f of [...(fotoIn.files || [])].slice(0, 4 - fotos.length)) { try { fotos.push(await shrink(f)); } catch { /* kein Bild */ } }
+      fotoIn.value = ''; saveFotos(); drawThumbs();
+    });
+
+    // Konfiguration aus dem Konstruktor
+    let cfgRows: [string, string][] = [], total = 0;
+    const cfgList = form.querySelector<HTMLElement>('[data-cfg-list]'), totalEl = form.querySelector<HTMLElement>('[data-total]');
+    const row = (k: string, v: string, strong = false) => {
+      const d = document.createElement('div'); const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v;
+      if (strong) { dt.className = 'af__sum'; dd.className = 'af__sum'; } d.append(dt, dd); return d;
+    };
+    window.addEventListener('zinke:cfg', ((e: CustomEvent) => {
+      cfgRows = e.detail.rows; total = e.detail.total;
+      if (cfgList) cfgList.replaceChildren(...cfgRows.map(([k, v]) => row(k, v)), row('Richtpreis', 'ab ' + eur.format(total), true));
+      if (totalEl) totalEl.textContent = 'ab ' + eur.format(total);
+      const w = form.querySelector<HTMLInputElement>(`input[name=was][value="${e.detail.was}"]`); if (w) w.checked = true;
+    }) as EventListener);
+
+    // Links auf der Seite können "Was" und B2B vorbelegen
+    document.addEventListener('click', (e) => {
+      const a = (e.target as HTMLElement).closest<HTMLElement>('[data-was], [data-b2b-link]');
+      if (!a) return;
+      if (a.dataset.was) { const w = form.querySelector<HTMLInputElement>(`input[name=was][value="${a.dataset.was}"]`); if (w) w.checked = true; }
+      if (a.hasAttribute('data-b2b-link')) { b2b.checked = true; syncB2b(); }
+      save();
+    });
+
+    ['name', 'tel', 'email'].forEach((n) => field(n).addEventListener('input', () => err(field(n), false)));
+    field('privacy').addEventListener('change', () => err(field('privacy'), false));
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = field('name'), tel = field('tel'), mail = field('email'), priv = field('privacy');
+      const bad: HTMLInputElement[] = [];
+      const check = (i: HTMLInputElement, ok: boolean) => { err(i, !ok); if (!ok) bad.push(i); };
+      check(plzIn, /^\d{5}$/.test(plzIn.value.trim()));
+      check(name, name.value.trim().length > 1);
+      check(tel, tel.value.replace(/\D/g, '').length >= 6);
+      check(mail, mail.value.trim() === '' || mail.checkValidity());
+      check(priv, priv.checked);
+      if (bad.length) { bad[0].focus(); return; }
+      const rows: [string, string, boolean?][] = [];
+      if (kon) { cfgRows.forEach(([k, v]) => rows.push([k, v])); rows.push(['Summe (Richtpreis)', 'ab ' + eur.format(total), true]); }
+      else {
+        rows.push(['Was', (form.querySelector<HTMLInputElement>('input[name=was]:checked') || { value: '' }).value]);
+        const m = field('masse'); if (m && m.value.trim()) rows.push(['Maße', m.value.trim()]);
+      }
+      const z = zoneFor(plzIn.value.trim());
+      rows.push(['PLZ', plzIn.value.trim() + (z && z.ort ? ` (${z.ort})` : '')]);
+      rows.push(['Budget', (form.elements.namedItem('budget') as HTMLSelectElement).value], ['Wann', (form.elements.namedItem('wann') as HTMLSelectElement).value]);
+      if (fotos.length) rows.push(['Fotos', String(fotos.length)]);
+      if (b2b.checked) { rows.push(['Firma', field('firma').value.trim() || '–']); if (field('stueck').value) rows.push(['Stückzahl', field('stueck').value]); }
+      rows.push(['Name', name.value.trim()], ['Telefon', tel.value.trim()], ['Rückruf', (form.elements.namedItem('zeit') as HTMLSelectElement).value]);
+      list.replaceChildren(...rows.map(([k, v, s]) => row(k, v, !!s)));
+      form.hidden = true; done.hidden = false; done.focus();
+      try { sessionStorage.removeItem(KEY); sessionStorage.removeItem(FKEY); } catch { /* egal */ }
+      wrap.dispatchEvent(new CustomEvent('zinke:sent', { bubbles: true }));
+    });
+
+    // Eingaben nie verlieren: Zwischenspeicher (nur dieser Tab). Einwilligung wird nie gespeichert.
+    const els = () => [...form.elements].filter((el): el is HTMLInputElement => (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement) && !!(el as HTMLInputElement).name && (el as HTMLInputElement).name !== 'privacy') as HTMLInputElement[];
+    function save() {
+      try {
+        const d: Record<string, string | boolean> = {};
+        els().forEach((el) => { if (el.type === 'radio') { if (el.checked) d[el.name] = el.value; } else if (el.type === 'checkbox') d[el.name] = el.checked; else d[el.name] = el.value; });
+        sessionStorage.setItem(KEY, JSON.stringify(d));
+      } catch { /* privat-Modus */ }
+    }
+    try {
+      const raw = sessionStorage.getItem(KEY);
+      if (raw) {
+        const d = JSON.parse(raw);
+        els().forEach((el) => {
+          if (!(el.name in d)) return;
+          if (el.type === 'radio') el.checked = el.value === d[el.name];
+          else if (el.type === 'checkbox') el.checked = !!d[el.name];
+          else el.value = String(d[el.name]);
+        });
+      }
+      const f = sessionStorage.getItem(FKEY); if (f) fotos = JSON.parse(f);
+    } catch { /* nichts */ }
+    if (location.hash.includes('b2b')) b2b.checked = true;
+    syncB2b(); showZone(); drawThumbs();
+    form.addEventListener('input', save);
+    form.addEventListener('change', save);
+  });
+</script>

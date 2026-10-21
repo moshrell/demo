@@ -1,0 +1,59 @@
+/* Hallmark · macrostructure: bespoke "Werkbank" (Bretter mit Querleisten + Vollbild-Szene) · tone: tactile, ruhig
+ * theme: custom · vibe: "Morgen in der Werkstatt, Öl, helles Holz, roter Zimmermannsbleistift"
+ * paper oklch(96.5% 0.014 82) · accent oklch(51% 0.175 29) red pencil · Alegreya + Alegreya Sans + Caveat (sparsam)
+ * axes: light / humanist-serif / warm  · nav: wordmark + status + Menü-Brett · footer: Ft6 letter close
+ */
+:root {
+  --paper: oklch(96.5% 0.014 82);
+  --paper-2: oklch(93.2% 0.022 78);
+  --paper-3: oklch(89.5% 0.03 76);
+  --wood: oklch(83% 0.055 72);
+  --wood-2: oklch(72% 0.07 64);
+  --ink: oklch(25% 0.012 255);
+  --ink-2: oklch(36% 0.012 255);
+  --muted: oklch(45% 0.014 255);
+  --rule: oklch(80% 0.022 75);
+  --accent: oklch(51% 0.175 29);
+  --accent-2: oklch(45% 0.16 29);
+  --on-accent: oklch(98% 0.01 82);
+  --alert: oklch(46% 0.17 27);
+  --ok: oklch(46% 0.09 150);
+  --focus: oklch(42% 0.14 255);
+  --sk-fill: oklch(97.5% 0.012 82);
+  --sk-back: oklch(92% 0.02 78);
+
+  --font-display: 'Alegreya', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Alegreya Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-hand: 'Caveat', 'Bradley Hand', cursive;
+
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
+  --text-2xl: clamp(1.9rem, 1.4rem + 2.6vw, 2.9rem);
+  --text-display: clamp(2.4rem, 1.6rem + 4.6vw, 4.6rem);
+
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-smd: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --gutter: clamp(16px, 5vw, 56px);
+  --measure: 38rem;
+  --radius: 4px;
+  --radius-lg: 10px;
+  --rule-w: 1px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur: 240ms;
+  --dur-slow: 420ms;
+
+  --bar-h: 64px;
+}

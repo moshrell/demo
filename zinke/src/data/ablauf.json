@@ -1,0 +1,7 @@
+[
+  { "n": 1, "title": "Anruf oder Anfrage", "time": "Rückruf in 2 Werktagen", "text": "Sie schicken Maße, ein Foto vom Ort oder Ihre Skizze aus dem Konstruktor. Ich rufe einmal an und frage nach, was fehlt.", "img": null },
+  { "n": 2, "title": "Aufmaß vor Ort", "time": "45–90 Minuten", "text": "Ich messe Schräge, Kniestock, Wände und Steckdosen aus. 89 € inkl. Anfahrt, bei Auftrag voll verrechnet.", "img": "aufmass.jpg", "alt": "Hände messen mit einem Zollstock eine Dachschräge aus" },
+  { "n": 3, "title": "Entwurf und Angebot", "time": "1–2 Wochen", "text": "Sie bekommen eine Zeichnung mit allen Maßen und einen schriftlichen Festpreis. Änderungen vor dem Auftrag kosten nichts.", "img": "zinken-detail.jpg", "alt": "Ecke einer Eichenschublade mit handgeschnittenen Zinken" },
+  { "n": 4, "title": "Werkstatt", "time": "3–6 Wochen", "text": "Zuschnitt, Zinken, Ölen: in unserer Werkstatt in Ricklingen. Sie dürfen gern vorbeikommen und Ihr Möbel ansehen.", "img": "werkstatt-haende.jpg", "alt": "Hände schneiden mit Stechbeitel Zinken in ein Eichenbrett" },
+  { "n": 5, "title": "Montage", "time": "meist 1 Tag", "text": "Wir decken den Boden ab, bauen ein, saugen hinterher. Sie bekommen eine Pflegeanleitung für Öl oder Lack.", "img": "montage.jpg", "alt": "Tischler stellt die Tür eines Einbauschranks ein, der Boden ist mit Vlies abgedeckt" }
+]

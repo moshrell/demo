@@ -1,11 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
 const base = import.meta.env.BASE_URL;
 ---
-<Base title="Impressum">
-  <main style="padding:120px var(--gutter);max-width:760px;margin:auto">
+<Base title={`Impressum | ${site.name}`} description="Impressum der Tischlerei Wendholm (Demo)">
+  <main class="legal">
     <h1>Impressum</h1>
-    <!-- TODO: Pflichtangaben vom Kunden (Name, Anschrift, E-Mail, USt-IdNr., Register) bzw. Datenschutzerklärung -->
-    <p><a href={base}>← Zurück</a></p>
+    <p><strong>Demo-Hinweis:</strong> Diese Seite ist eine Beispielseite von Kravets Webdesign. Betrieb, Personen, Adresse, Telefonnummer und Preise sind erfunden. Bei einem echten Betrieb stehen hier dessen Pflichtangaben.</p>
+    <h2>Angaben nach § 5 DDG</h2>
+    <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+    <p>Telefon: {site.phone}<br />E-Mail: {site.email}</p>
+    <p>Umsatzsteuer-Identifikationsnummer nach § 27a UStG: {site.vat}</p>
+    <h2>Berufsrechtliche Angaben (zulassungspflichtiges Handwerk)</h2>
+    <p><strong>Berufsbezeichnung:</strong> Tischlermeister (verliehen in der Bundesrepublik Deutschland)</p>
+    <p><strong>Zuständige Handwerkskammer:</strong> {site.chamber}</p>
+    <p><strong>Berufsrechtliche Regelungen:</strong> Handwerksordnung (HwO), abrufbar unter <a href="https://www.gesetze-im-internet.de/hwo/" target="_blank" rel="noopener">gesetze-im-internet.de/hwo</a>.</p>
+    <p><strong>Eintragung:</strong> Handwerksrolle der Handwerkskammer Hannover, Nummer: TODO vom Kunden</p>
+    <p><strong>Berufshaftpflichtversicherung:</strong> TODO vom Kunden (Name und Anschrift des Versicherers, Geltungsbereich)</p>
+    <h2>Verbraucherstreitbeilegung</h2>
+    <p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen. (TODO vom Kunden: Angabe prüfen)</p>
+    <h2>Bildnachweis</h2>
+    <p>Bilder: teils KI-erzeugt (Beispielseite). Holztexturen der 3D-Ansicht: Poly Haven (CC0), Farbton angepasst.</p>
+    <p><a href={base}>← Zurück zur Startseite</a></p>
   </main>
 </Base>
+<style is:global>
+  .legal { max-width: 46rem; margin: 0 auto; padding: var(--space-xl) var(--gutter) var(--space-2xl); display: grid; gap: var(--space-sm); }
+  .legal h1 { font-size: var(--text-2xl); margin-bottom: var(--space-sm); }
+  .legal h2 { font-size: var(--text-xl); margin-top: var(--space-md); }
+</style>

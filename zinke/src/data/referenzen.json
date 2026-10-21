@@ -1,0 +1,10 @@
+[
+  { "id": "kniestock", "title": "Kniestockschrank im Kinderzimmer", "ort": "Hannover-Kirchrode", "img": "ref-dachschrank.jpg", "alt": "Lange, niedrige Kommode unter der Dachschräge mit salbeigrünen Fronten und Ahornplatte",
+    "fakten": [["Holz", "Ahorn, Fronten farbig lackiert"], ["Maß", "300 × 80 × 50 cm"], ["Werkstatt", "3 Wochen"], ["Montage", "1 Tag"]], "preset": "kniestock", "b2b": false },
+  { "id": "langtisch", "title": "Langer Esstisch auf Kufen", "ort": "Hannover-Linden", "img": "ref-esstisch.jpg", "alt": "Langer Esstisch aus Nussbaum auf zwei Kufengestellen mit Bank",
+    "fakten": [["Holz", "Nussbaum geölt"], ["Maß", "260 × 100 cm, Platte 4 cm"], ["Werkstatt", "4 Wochen"], ["Plätze", "10"]], "preset": "langtisch", "b2b": false },
+  { "id": "treppe", "title": "Treppe im Altbau-Treppenhaus", "ort": "Hannover-List, für ein Planungsbüro", "img": "ref-treppe.jpg", "alt": "Gerade Eichentreppe mit offenen Stufen und schlankem Geländer in einem Altbau",
+    "fakten": [["Holz", "Eiche geölt"], ["Stufen", "15, offen"], ["Werkstatt", "5 Wochen"], ["Montage", "2 Tage"]], "was": "Treppe", "b2b": true },
+  { "id": "tueren", "title": "24 Innentüren für eine Sanierung", "ort": "Hannover-Südstadt, für eine Hausverwaltung", "img": "ref-tueren.jpg", "alt": "Flur mit einer Reihe neuer weißer Kassettentüren mit Eichenzargen",
+    "fakten": [["Türen", "24 Stück, Kassette"], ["Zargen", "Eiche massiv"], ["Bauzeit", "8 Wochen"], ["Montage", "nach Bauzeitenplan"]], "was": "Türen", "b2b": true }
+]

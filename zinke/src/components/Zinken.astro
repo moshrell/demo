@@ -1,0 +1,17 @@
+---
+/** Schwalbenschwanz-Kante zwischen zwei Brettern (rein geometrisch, kein Bild). from = Farbe oben, to = Farbe unten */
+const { from = 'var(--paper)', to = 'var(--paper-2)' } = Astro.props;
+const n = 14, pts: string[] = ['0% 0%'];
+for (let i = 0; i < n; i++) {
+  const x = (i / n) * 100, w = 100 / n;
+  // Zinken: unten breiter als oben (Schwalbenschwanz)
+  pts.push(`${(x + w * 0.2).toFixed(2)}% 0%`, `${(x + w * 0.1).toFixed(2)}% 100%`, `${(x + w * 0.62).toFixed(2)}% 100%`, `${(x + w * 0.52).toFixed(2)}% 0%`);
+}
+pts.push('100% 0%', '100% 100%', '0% 100%');
+const poly = `polygon(${pts.join(',')})`;
+---
+<div class="zk" aria-hidden="true" style={`--zf:${from};--zt:${to};clip-path:none`}><i style={`clip-path:${poly}`}></i></div>
+<style>
+  .zk { height: 14px; background: var(--zf); }
+  .zk i { display: block; height: 100%; background: var(--zt); }
+</style>

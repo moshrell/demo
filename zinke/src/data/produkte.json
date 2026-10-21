@@ -1,0 +1,10 @@
+[
+  { "id": "schrank", "label": "Einbauschrank", "preset": "schrank", "photo": "haus-einbauschrank.jpg", "alt": "Einbauschrank aus Eiche unter einer Dachschräge, vier Felder mit Türen, Schubladen und offenen Fächern",
+    "caption": "Eiche geölt, 240 cm, unter 45° Schräge", "price": "ab 1.900 € pro Laufmeter, inkl. Montage" },
+  { "id": "tisch", "label": "Tisch", "preset": "tisch", "photo": "haus-tisch.jpg", "alt": "Esstisch aus Eiche, 220 mal 100 Zentimeter, mit vier Beinen in einem hellen Altbau-Esszimmer",
+    "caption": "Eiche geölt, 220 × 100 cm, Platte 4 cm", "price": "ab 2.400 € (180 × 90 cm)" },
+  { "id": "regal", "label": "Regal", "preset": "regal", "photo": "haus-regal.jpg", "alt": "Bücherregal aus Ahorn mit drei Feldern, Rückwand und zwei Schubladen in der Mitte",
+    "caption": "Ahorn geölt, 180 × 200 cm, mit Rückwand", "price": "ab 1.100 € pro Laufmeter" },
+  { "id": "garderobe", "label": "Garderobe", "preset": "garderobe", "photo": "haus-garderobe.jpg", "alt": "Garderobe aus Nussbaum mit Bank, Haken und einem Schrankfeld im Flur",
+    "caption": "Nussbaum geölt, 160 cm, Bank mit Kissen", "price": "ab 1.600 €" }
+]

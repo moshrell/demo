@@ -1,0 +1,6 @@
+[
+  { "id": "e", "name": "Eiche", "photo": "holz-eiche.jpg", "tex": "eiche.jpg", "stufe": "€€", "art": "Hart, lebhafte Maserung, verzeiht Gebrauchsspuren. Dunkelt mit den Jahren honigfarben nach.", "fuer": "Esstische, Treppen, Einbauschränke" },
+  { "id": "n", "name": "Nussbaum", "photo": "holz-nussbaum.jpg", "tex": "nussbaum.jpg", "stufe": "€€€", "art": "Schokoladenbraun mit hellen Streifen, ruhig und edel. Hellt im Licht leicht auf.", "fuer": "Tische, Garderoben, einzelne Fronten" },
+  { "id": "a", "name": "Ahorn", "photo": "holz-ahorn.jpg", "tex": "ahorn.jpg", "stufe": "€€", "art": "Fast weiß, feine Struktur, seidiger Glanz. Wirkt hell und modern, vergilbt leicht.", "fuer": "Regale, Kinderzimmer, helle Räume" },
+  { "id": "k", "name": "Kiefer", "photo": "holz-kiefer.jpg", "tex": "kiefer.jpg", "stufe": "€", "art": "Weich, warm, mit Ästen. Günstig und ehrlich, bekommt mit der Zeit Charakter (und Dellen).", "fuer": "Regale, Werkräume, Ferienhaus" }
+]

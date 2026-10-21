@@ -1,14 +1,25 @@
 ---
 import Base from '../layouts/Base.astro';
 import DatenschutzForm from '../components/DatenschutzForm.astro';
+import site from '../data/site.json';
 const base = import.meta.env.BASE_URL;
 ---
-<Base title="Datenschutz">
-  <main style="padding:120px var(--gutter);max-width:760px;margin:auto">
+<Base title={`Datenschutz | ${site.name}`} description="Datenschutzerklärung der Tischlerei Wendholm (Demo)">
+  <main class="legal">
     <h1>Datenschutz</h1>
-    <!-- Formular-Standard: Abschnitt zum Formular (Pflicht, sobald es ein Formular gibt) -->
-    <DatenschutzForm formName="Vorbestell-Formular" />
-    <!-- TODO: Pflichtangaben vom Kunden (Name, Anschrift, E-Mail, USt-IdNr., Register) bzw. Datenschutzerklärung -->
-    <p><a href={base}>← Zurück</a></p>
+    <p><strong>Demo-Hinweis:</strong> Diese Beispielseite sammelt, sendet und speichert nichts. Der Text zeigt, was bei einem echten Betrieb stehen muss.</p>
+    <h2>Anfrage-Formular und Konstruktor</h2>
+    <DatenschutzForm
+      formName="Anfrage an die Werkstatt"
+      data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Postleitzahl, Maße, Fotos vom Einbauort (freiwillig), Angaben zu Budget und Zeitraum, bei Firmenanfragen Firma, Stückzahl und Termin, Nachricht (freiwillig) sowie die im Konstruktor zusammengestellte Konfiguration"
+      purpose="Wir bearbeiten Ihre Anfrage, rufen Sie zurück und erstellen auf Wunsch ein Angebot."
+    />
+    <h2>Konstruktor: Konfiguration im Link</h2>
+    <p>Die Konfiguration Ihres Möbels steht in der Adresszeile (Link zum Teilen). Sie wird nicht an uns übertragen. Beim Teilen entscheiden Sie, wer den Link bekommt. Im Browser-Tab merken wir uns Ihre Konfiguration zur Sicherheit im sessionStorage; sie verschwindet, wenn Sie den Tab schließen. Das Werkbuch (kleine Meilensteine) speichern wir im localStorage Ihres Browsers, es bleibt auf Ihrem Gerät.</p>
+    <h2>Postleitzahl-Prüfung</h2>
+    <p>Die Prüfung, ob wir bei Ihnen montieren, läuft vollständig in Ihrem Browser mit einer fest eingebauten Tabelle. Es wird keine Postleitzahl an einen Server gesendet.</p>
+    <h2>Hosting, Schriften, 3D-Ansicht</h2>
+    <p>Alle Schriften, Bilder, Holztexturen und Programmteile werden von dieser Website selbst ausgeliefert. Es gibt keine Verbindung zu Google Fonts, keine Karten, keine Tracker und keine Cookies. Beim Aufruf speichert der Server technisch notwendige Zugriffsdaten (IP-Adresse, Zeitpunkt, aufgerufene Seite) kurzzeitig in Protokolldateien. TODO vom Kunden: Hosting-Anbieter, Auftragsverarbeitung und Speicherdauer nennen.</p>
+    <p><a href={base}>← Zurück zur Startseite</a></p>
   </main>
 </Base>

@@ -1,19 +1,385 @@
 ---
 import Base from '../layouts/Base.astro';
-import OrderForm from '../components/OrderForm.astro';
+import AnfrageForm from '../components/AnfrageForm.astro';
+import Zinken from '../components/Zinken.astro';
 import site from '../data/site.json';
+import produkte from '../data/produkte.json';
+import leistungen from '../data/leistungen.json';
+import holz from '../data/holz.json';
+import ablauf from '../data/ablauf.json';
+import referenzen from '../data/referenzen.json';
+import faq from '../data/faq.json';
+const base = import.meta.env.BASE_URL;
+const img = (n: string) => `${base}img/${n}`;
+const was: Record<string, string> = { fronten: 'Küchenfronten', treppe: 'Treppe', einbauschrank: 'Einbauschrank', regal: 'Regal', tisch: 'Esstisch', garderobe: 'Garderobe' };
+const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal', tisch: 'tisch', garderobe: 'garderobe' };
 ---
-<Base>
-  <main id="inhalt">
-    <h1>{site.name}</h1>
-    <!-- Formular-Standard: Beispiel mit Preisen. Ohne Preise: items weglassen und options={['Leistung A', 'Leistung B']} nutzen. TODO: echte Positionen vom Kunden -->
-    <OrderForm
-      title="Vorbestellung"
-      submitLabel="Vorbestellen"
-      purpose="meiner Vorbestellung"
-      items={[{ id: 'a', name: 'TODO Artikel A', cents: 350 }, { id: 'b', name: 'TODO Artikel B', cents: 1290 }]}
-      options={['TODO Zeit 1', 'TODO Zeit 2']}
-      optionsLabel="Wann?"
-    />
-  </main>
+<Base
+  title={`${site.name}: Möbel nach Maß aus Massivholz, Hannover`}
+  description="Tischlermeister in Hannover: Einbauschränke unter der Dachschräge, Esstische, Regale und Treppen aus Massivholz. Mit Konstruktor, ab-Preisen und Aufmaß vor Ort."
+  faq={faq}
+  prices={leistungen.filter((l) => l.id !== 'aufmass').map((l) => ({ name: l.name, price: l.price }))}
+>
+  <a class="skip" href="#inhalt">Zum Inhalt</a>
+  <div data-base={base}>
+    <header class="hd">
+      <a class="hd__brand" href={base} aria-label={`${site.name}, Startseite`}><span class="hd__mark" aria-hidden="true"></span>Wendholm</a>
+      <p class="hd__status" data-status>{site.hours.map((h) => `${h.label} ${h.open}–${h.close}`).join(', ')} Uhr</p>
+      <a class="hd__tel" href={`tel:${site.phoneHref}`}>{site.phone}</a>
+      <details class="hd__menu" data-menu>
+        <summary>Menü</summary>
+        <nav class="hd__nav" aria-label="Hauptmenü">
+          <a href={`${base}konstruktor/`}>Konstruktor</a>
+          <a href="#leistungen">Leistungen und Preise</a>
+          <a href="#werkstoffe">Werkstoffe</a>
+          <a href="#ablauf">Ablauf</a>
+          <a href="#referenzen">Referenzen</a>
+          <a href="#planer">Für Planer und Hausverwaltungen</a>
+          <a href="#einsatzgebiet">Einsatzgebiet</a>
+          <a href="#werkstatt">Über die Werkstatt</a>
+          <a href="#anfrage">Anfrage</a>
+        </nav>
+      </details>
+    </header>
+
+    <main id="inhalt">
+      <!-- 1. Hero -->
+      <section class="hero">
+        <p class="hero__status" data-status-m aria-hidden="true"></p>
+        <h1>Möbel, die genau passen.</h1>
+        <p class="hero__lead">Tischlermeister Jan Wendholm baut Einbauschränke, Tische und Regale aus Massivholz, in Hannover und Umgebung. Aufmaß, Bau und Montage aus einer Hand.</p>
+        <div class="hero__acts">
+          <a class="btn btn--red" href={`${base}konstruktor/`}>Möbel selbst zusammenstellen</a>
+          <a class="btn" href="#anfrage">Anfrage mit Foto</a>
+        </div>
+        <p class="hero__no">Nicht im Angebot: Aufbau von Möbeln aus dem Handel und Reparatur von Spanplattenmöbeln.</p>
+        <p class="hero__hand hand" aria-hidden="true">Zinken statt Schrauben ↓</p>
+      </section>
+
+      <!-- 2. Szene: Möbel entsteht beim Scrollen -->
+      <section class="sz" data-sz data-prods={JSON.stringify(produkte)} aria-label="Ein Möbel entsteht">
+        <div class="sz__track" data-track>
+          <div class="sz__sticky">
+            <div class="sz__tabs" role="group" aria-label="Möbel wählen">
+              {produkte.map((p, i) => <button type="button" class="sz__tab" data-prod={p.id} aria-pressed={i === 0}>{p.label}</button>)}
+            </div>
+            <div class="sz__stage" data-sz-stage>
+              <div class="sz__svg" data-sz-svg></div>
+              <canvas class="sz__canvas" data-sz-canvas aria-hidden="true"></canvas>
+              <img class="sz__photo" data-sz-photo src={img(produkte[0].photo)} alt={produkte[0].alt} width="900" height="1200" loading="lazy" decoding="async" />
+              <span class="sz__lbl hand" data-lbl-b aria-hidden="true"></span>
+              <span class="sz__lbl hand" data-lbl-h aria-hidden="true"></span>
+              <span class="sz__lbl hand" data-lbl-d aria-hidden="true">Dübel statt Schrauben</span>
+              <p class="sz__note hand" data-sz-note>Scrollen: ich baue es Ihnen zusammen ↓</p>
+              <div class="sz__capt" data-sz-capt>
+                <h2 data-sz-name>{produkte[0].label}</h2>
+                <p class="sz__capt-p" data-sz-cap>{produkte[0].caption}</p>
+                <p class="sz__capt-price" data-sz-price>{produkte[0].price}</p>
+                <a class="btn btn--red btn--sm" data-sz-link href={`${base}konstruktor/?v=${produkte[0].preset}`}>Im Konstruktor anpassen</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Leistungen und Preise -->
+      <Zinken from="var(--paper)" to="var(--paper-2)" />
+      <section class="brett brett--2" id="leistungen" aria-labelledby="h-leist">
+        <div class="brett__in">
+          <h2 id="h-leist">Leistungen und Preise</h2>
+          <p class="brett__lead">Alle Preise für Privatkunden brutto, inkl. 19 % MwSt. Der Festpreis steht nach dem Aufmaß schriftlich im Angebot.</p>
+          <ul class="lst">
+            {leistungen.map((l) => (
+              <li class="lst__row">
+                <div class="lst__t"><h3>{l.name}</h3><p>{l.note}</p></div>
+                <p class="lst__p"><strong>{l.price}</strong><span>{l.unit}</span></p>
+                {preset[l.id]
+                  ? <a class="lst__a" href={`${base}konstruktor/?v=${preset[l.id]}`} aria-label={`${l.name} im Konstruktor planen`}>Konstruktor →</a>
+                  : l.id === 'aufmass' ? <a class="lst__a" href="#anfrage">Termin anfragen →</a>
+                  : <a class="lst__a" href="#anfrage" data-was={was[l.id]}>Anfragen →</a>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <!-- 4. Werkstoffe -->
+      <Zinken from="var(--paper-2)" to="var(--paper)" />
+      <section class="brett" id="werkstoffe" aria-labelledby="h-holz">
+        <div class="brett__in">
+          <h2 id="h-holz">Werkstoffe</h2>
+          <p class="brett__lead">Vier Hölzer, die wir verarbeiten. Tippen Sie auf eine Probe: das Brett wird groß.</p>
+        </div>
+        <ul class="lane lane--4">
+          {holz.map((h) => (
+            <li>
+              <button type="button" class="holz" data-holz data-name={h.name} data-art={h.art} data-fuer={h.fuer} data-photo={h.photo} data-tex={h.tex} aria-label={`${h.name}: Probe ansehen`}>
+                <span class="holz__img"><img src={img(h.photo)} data-fb={`tex/${h.tex}`} alt="" width="400" height="400" loading="lazy" decoding="async" /></span>
+                <span class="holz__n">{h.name}</span>
+                <span class="holz__s">Preisstufe {h.stufe}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <dialog class="holzd" data-holz-dialog aria-labelledby="holzd-n">
+        <img src="" alt="" width="800" height="800" decoding="async" />
+        <div class="holzd__t">
+          <h3 id="holzd-n" data-h-name></h3>
+          <p data-h-art></p>
+          <p class="holzd__f"><span class="hand">Geeignet für:</span> <span data-h-fuer></span></p>
+          <button type="button" class="btn btn--sm" data-holz-close>Schließen</button>
+        </div>
+      </dialog>
+
+      <!-- 5. Ablauf -->
+      <Zinken from="var(--paper)" to="var(--paper-2)" />
+      <section class="brett brett--2" id="ablauf" aria-labelledby="h-abl">
+        <div class="brett__in">
+          <h2 id="h-abl">Wie wir arbeiten</h2>
+          <p class="brett__lead">Fünf Schritte, damit Sie immer wissen, was als Nächstes kommt. Die Zeiten sind Richtwerte und hängen von Auftrag und Auslastung ab.</p>
+        </div>
+        <ol class="lane lane--5">
+          {ablauf.map((s) => (
+            <li class="abl">
+              <p class="abl__n hand" aria-hidden="true">{s.n}</p>
+              <h3>{s.title}</h3>
+              <p class="abl__t">{s.time}</p>
+              <p>{s.text}</p>
+              {s.img && <img src={img(s.img)} alt={s.alt} width="600" height="450" loading="lazy" decoding="async" />}
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <!-- 6. Referenzen -->
+      <Zinken from="var(--paper-2)" to="var(--paper)" />
+      <section class="brett" id="referenzen" aria-labelledby="h-ref">
+        <div class="brett__in">
+          <h2 id="h-ref">Referenzen</h2>
+          <p class="brett__lead">Was wir gebaut haben, mit den Fakten. Bei den ersten beiden können Sie die Konfiguration im Konstruktor öffnen und selbst abwandeln.</p>
+        </div>
+        <ul class="lane lane--4">
+          {referenzen.map((r) => (
+            <li class="ref">
+              <img src={img(r.img)} alt={r.alt} width="800" height="600" loading="lazy" decoding="async" />
+              <h3>{r.title}</h3>
+              <p class="ref__o">{r.ort}</p>
+              <dl>{r.fakten.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+              {r.preset
+                ? <a class="btn btn--sm" href={`${base}konstruktor/?v=${r.preset}`}>So gebaut: im Konstruktor öffnen</a>
+                : <a class="btn btn--sm" href="#anfrage" data-b2b-link data-was={r.was}>Ähnliches anfragen</a>}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- 7. Planer / Hausverwaltung -->
+      <Zinken from="var(--paper)" to="var(--paper-3)" />
+      <section class="brett brett--3" id="planer" aria-labelledby="h-b2b">
+        <div class="brett__in brett__in--2">
+          <div>
+            <h2 id="h-b2b">Für Planer und Hausverwaltungen</h2>
+            <p class="brett__lead">Türen, Zargen und Treppen in Serie, nach Ihren Plänen und zu Ihrem Bauzeitenplan.</p>
+          </div>
+          <ul class="b2b">
+            <li><strong>Nach Ihren Unterlagen.</strong> Pläne als PDF oder DWG, Leistungsverzeichnis, Aufmaß am Objekt.</li>
+            <li><strong>Ein Ansprechpartner.</strong> Sie sprechen mit dem Meister, nicht mit einer Zentrale.</li>
+            <li><strong>Termine schriftlich.</strong> Bauzeitenplan und Montagefenster stehen im Angebot.</li>
+            <li><strong>Meisterbetrieb.</strong> Eingetragen in der Handwerksrolle der Handwerkskammer Hannover. Versicherungsnachweise auf Anfrage (Demo).</li>
+          </ul>
+          <div class="hero__acts">
+            <a class="btn btn--red" href="#anfrage" data-b2b-link data-was="Türen">Objektanfrage stellen</a>
+            <a class="btn" href={`tel:${site.phoneHref}`}>{site.phone}</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Einsatzgebiet -->
+      <Zinken from="var(--paper-3)" to="var(--paper)" />
+      <section class="brett" id="einsatzgebiet" aria-labelledby="h-gebiet">
+        <div class="brett__in brett__in--2">
+          <div>
+            <h2 id="h-gebiet">Kommen wir zu Ihnen?</h2>
+            <p class="brett__lead">Die Werkstatt liegt in {site.address.city}. Geben Sie Ihre Postleitzahl ein: Sie sehen sofort, ob wir montieren und was die Anfahrt kostet.</p>
+          </div>
+          <form class="plz" data-plz-form novalidate>
+            <label for="plz-in">Postleitzahl</label>
+            <div class="plz__row">
+              <input id="plz-in" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="z. B. 30159" />
+              <button class="btn btn--ink" type="submit">Prüfen</button>
+            </div>
+            <p class="plz__a" data-plz-answer aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <!-- 9. Über die Werkstatt -->
+      <Zinken from="var(--paper)" to="var(--paper-2)" />
+      <section class="brett brett--2" id="werkstatt" aria-labelledby="h-uber">
+        <div class="brett__in brett__in--2">
+          <img class="uber__img" src={img('werkstatt.jpg')} alt="Helle Tischlerei-Werkstatt mit Hobelbank, Handwerkzeug an der Wand und Eichenbrettern" width="800" height="600" loading="lazy" decoding="async" />
+          <div>
+            <h2 id="h-uber">Über die Werkstatt</h2>
+            <p>Ich bin Jan Wendholm, Tischlermeister seit 2006. Seit {site.since} baue ich mit zwei Kollegen und einer Auszubildenden Möbel in Ricklingen, im Hof einer ehemaligen Möbelfabrik.</p>
+            <p>Ich messe selbst, zeichne selbst und stehe bei der Montage dabei. Verbunden wird mit Zinken und Dübeln, nicht mit Konfirmatschrauben. Das dauert länger und hält länger.</p>
+            <h3 class="uber__h3">Was wir nicht machen</h3>
+            <ul class="nein">
+              <li>Aufbau von Möbeln aus dem Handel</li>
+              <li>Reparatur von Spanplattenmöbeln</li>
+              <li>Aufträge unter 600 €</li>
+              <li>Unverbindliche Gratis-Besichtigung (das Aufmaß kostet 89 € und wird bei Auftrag verrechnet)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10. FAQ -->
+      <Zinken from="var(--paper-2)" to="var(--paper)" />
+      <section class="brett" id="fragen" aria-labelledby="h-faq">
+        <div class="brett__in">
+          <h2 id="h-faq">Häufige Fragen</h2>
+          <div class="faq">
+            {faq.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+          </div>
+        </div>
+      </section>
+
+      <!-- 11. Anfrage -->
+      <Zinken from="var(--paper)" to="var(--paper-2)" />
+      <section class="brett brett--2" id="anfrage">
+        <div class="brett__in">
+          <AnfrageForm id="quick" mode="quick" title="Anfrage mit Foto" />
+        </div>
+      </section>
+    </main>
+
+    <nav class="bar" data-bar aria-label="Schnellzugriff">
+      <a class="bar__a" href={`tel:${site.phoneHref}`}>Anrufen</a>
+      <a class="bar__a" href={`${base}konstruktor/`}>Konstruktor</a>
+      <a class="bar__a bar__a--red" href="#anfrage">Anfrage</a>
+    </nav>
+  </div>
+
+  <Fragment slot="foot">
+    <p class="letter">Auf bald in der Werkstatt,<br /><span class="hand">Jan Wendholm</span></p>
+    <p>{site.legalName}<br />{site.address.street}, {site.address.zip} {site.address.city}<br />{site.hours.map((h) => `${h.label} ${h.open}–${h.close}`).join(', ')} Uhr · <a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+  </Fragment>
 </Base>
+
+<style is:global>
+  .skip { position: absolute; left: -999px; top: 0; z-index: 100; padding: 0.6rem 1rem; background: var(--ink); color: var(--paper); }
+  .skip:focus { left: 0; }
+  /* Kopf */
+  .hd { position: sticky; top: 0; z-index: 40; height: var(--bar-h); display: flex; align-items: center; gap: var(--space-sm); padding: 0 var(--gutter); background: oklch(96.5% 0.014 82 / 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); }
+  .hd__brand { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-weight: 700; font-size: 1.45rem; text-decoration: none; margin-right: auto; }
+  .hd__mark { width: 22px; height: 22px; background: var(--ink); clip-path: polygon(0 100%, 0 30%, 22% 30%, 14% 100%, 36% 100%, 28% 0, 72% 0, 64% 100%, 86% 100%, 78% 30%, 100% 30%, 100% 100%); border-top: 3px solid var(--accent); }
+  .hd__status { display: none; font-size: var(--text-sm); color: var(--ink-2); }
+  .hd__status[data-open='1']::before, .hero__status[data-open='1']::before { background: var(--ok); }
+  .hd__tel { display: none; font-weight: 700; text-decoration: none; }
+  .hd__menu summary { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-md); border: 1.5px solid var(--ink); border-radius: var(--radius); font-weight: 700; cursor: pointer; list-style: none; }
+  .hd__menu summary::-webkit-details-marker { display: none; }
+  .hd__nav { position: absolute; right: var(--gutter); top: calc(100% + 4px); width: min(20rem, calc(100vw - 2 * var(--gutter))); display: grid; padding: var(--space-xs); background: var(--paper); border: 1.5px solid var(--ink); border-radius: var(--radius); box-shadow: 0 10px 28px oklch(25% 0.02 255 / 0.18); }
+  .hd__nav a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--space-sm); text-decoration: none; border-bottom: 1px solid var(--rule); }
+  .hd__nav a:last-child { border-bottom: 0; }
+  .hd__nav a:hover { background: var(--paper-2); }
+  /* Hero */
+  .hero { padding: var(--space-xl) var(--gutter) var(--space-lg); max-width: 64rem; margin: 0 auto; display: grid; gap: var(--space-md); }
+  .hero__status { font-size: var(--text-sm); color: var(--ink-2); display: flex; align-items: center; gap: 0.45rem; }
+  .hero__status::before, .hd__status::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--muted); display: inline-block; margin-right: 0.35rem; }
+  .hero__lead { font-size: var(--text-lg); max-width: 34rem; color: var(--ink-2); }
+  .hero__acts { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+  .hero__no { font-size: var(--text-sm); color: var(--muted); max-width: 32rem; }
+  .hero__hand { font-size: 1.5rem; transform: rotate(-3deg); }
+  /* Szene */
+  .sz__track { height: 330dvh; }
+  .sz__sticky { position: sticky; top: var(--bar-h); height: calc(100dvh - var(--bar-h)); display: grid; grid-template-rows: auto minmax(0, 1fr); padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); background: var(--paper); }
+  .sz__tabs { display: flex; gap: var(--space-xs); padding: var(--space-xs) var(--gutter); overflow-x: auto; scrollbar-width: none; }
+  .sz__tab { flex: 0 0 auto; min-height: 44px; padding: 0 var(--space-md); border: 1.5px solid var(--ink); border-radius: 999px; background: transparent; font-weight: 700; cursor: pointer; }
+  .sz__tab[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
+  .sz__stage { position: relative; margin: 0 var(--gutter); overflow: hidden; background: linear-gradient(var(--paper-2), var(--paper)); border-radius: var(--radius-lg); max-width: 64rem; width: calc(100% - 2 * var(--gutter)); justify-self: center; min-height: 0; }
+  .sz__svg, .sz__canvas, .sz__photo { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sz__svg { display: grid; place-items: center; padding: var(--space-lg); transition: opacity var(--dur) var(--ease-out); }
+  .sz__svg .sk { max-height: 100%; }
+  .sz__canvas { opacity: 0; touch-action: pan-y; }
+  .sz__photo { object-fit: cover; opacity: 0; }
+  .sz__lbl { position: absolute; left: 0; top: 0; font-size: 1.7rem; opacity: 0; pointer-events: none; white-space: nowrap; transition: opacity var(--dur) var(--ease-out); }
+  .sz__note { position: absolute; left: 50%; bottom: var(--space-lg); transform: translateX(-50%); font-size: 1.5rem; white-space: nowrap; transition: opacity var(--dur-slow) var(--ease-out); }
+  .sz__note.is-off { opacity: 0; }
+  @media (prefers-reduced-motion: no-preference) { .sz__note:not(.is-off) { animation: sacken 1.6s var(--ease-in-out) 2; } }
+  @keyframes sacken { 50% { transform: translate(-50%, 6px); } }
+  .sz__capt { position: absolute; inset: auto 0 0 0; padding: var(--space-lg) var(--space-md) var(--space-md); background: linear-gradient(transparent, oklch(96.5% 0.014 82 / 0.96) 38%); display: grid; gap: 0.3rem; justify-items: start; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
+  .sz__capt.is-on { opacity: 1; transform: none; pointer-events: auto; }
+  .sz__capt h2 { font-size: var(--text-xl); }
+  .sz__capt-p { font-size: var(--text-sm); color: var(--ink-2); }
+  .sz__capt-price { font-weight: 700; }
+  .sz--static .sz__track { height: auto; }
+  .sz--static .sz__sticky { position: static; height: auto; display: block; padding-bottom: 0; }
+  .sz--static .sz__stage { aspect-ratio: auto; display: grid; gap: var(--space-md); padding: var(--space-md); background: var(--paper-2); }
+  .sz--static .sz__svg, .sz--static .sz__photo, .sz--static .sz__capt { position: static; opacity: 1; transform: none; height: auto; background: none; padding: 0; }
+  .sz--static .sz__photo { aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius); }
+  .sz--static .sz__canvas, .sz--static .sz__note, .sz--static .sz__lbl { display: none; }
+  .is-missing { visibility: hidden; }
+  /* Bretter */
+  .brett { background: var(--paper); padding: var(--space-xl) 0 var(--space-2xl); }
+  .brett--2 { background: var(--paper-2); } .brett--3 { background: var(--paper-3); }
+  .brett__in { max-width: 64rem; margin: 0 auto; padding: 0 var(--gutter); display: grid; gap: var(--space-md); align-content: start; }
+  .brett__in--2 { gap: var(--space-lg); }
+  .brett__lead { max-width: var(--measure); color: var(--ink-2); }
+  .brett p + p { margin-top: var(--space-sm); }
+  .lane { list-style: none; margin: var(--space-lg) 0 0; padding: 0 var(--gutter) var(--space-xs); display: grid; grid-auto-flow: column; grid-auto-columns: min(78vw, 20rem); gap: var(--space-md); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); scrollbar-width: thin; }
+  .lane > li { scroll-snap-align: start; min-width: 0; }
+  .lst { list-style: none; margin: var(--space-md) 0 0; padding: 0; display: grid; }
+  .lst__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-xs) var(--space-md); padding: var(--space-md) 0; border-top: 1.5px solid var(--ink); align-items: baseline; }
+  .lst__t h3 { font-size: var(--text-lg); } .lst__t p { font-size: var(--text-sm); color: var(--ink-2); }
+  .lst__p { display: grid; text-align: right; font-variant-numeric: tabular-nums; } .lst__p strong { font-family: var(--font-display); font-size: var(--text-xl); white-space: nowrap; } .lst__p span { font-size: var(--text-xs); color: var(--muted); }
+  .lst__a { grid-column: 1 / -1; font-weight: 700; display: inline-flex; align-items: center; min-height: 44px; }
+  .holz { width: 100%; display: grid; gap: 0.3rem; text-align: left; border: 0; padding: 0; background: transparent; cursor: pointer; }
+  .holz__img { display: block; aspect-ratio: 1; background: var(--paper-3); border-radius: var(--radius); overflow: hidden; }
+  .holz__img img { width: 100%; height: 100%; object-fit: cover; }
+  .holz__n { font-family: var(--font-display); font-size: var(--text-xl); } .holz__s { font-size: var(--text-sm); color: var(--muted); }
+  .holzd { width: min(30rem, calc(100vw - 2rem)); padding: 0; border: 1.5px solid var(--ink); border-radius: var(--radius); background: var(--paper); color: var(--ink); overflow: hidden; }
+  .holzd::backdrop { background: oklch(25% 0.02 255 / 0.55); }
+  .holzd img { width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--paper-3); }
+  .holzd__t { padding: var(--space-md); display: grid; gap: var(--space-xs); justify-items: start; }
+  .holzd__f .hand { font-size: 1.25rem; }
+  .abl { display: grid; gap: var(--space-xs); align-content: start; padding: var(--space-md); background: var(--paper); border: 1.5px solid var(--ink); border-radius: var(--radius); }
+  .abl__n { font-size: 2.4rem; line-height: 1; } .abl__t { font-weight: 700; color: var(--accent-2); font-size: var(--text-sm); }
+  .abl img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); background: var(--paper-3); margin-top: var(--space-xs); }
+  .ref { display: grid; gap: var(--space-xs); align-content: start; }
+  .ref > img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); background: var(--paper-3); }
+  .ref__o { font-size: var(--text-sm); color: var(--muted); }
+  .ref dl { margin: 0 0 var(--space-xs); display: grid; } .ref dl > div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--space-xs); padding: 0.25rem 0; border-bottom: 1px solid var(--rule); font-size: var(--text-sm); } .ref dt { color: var(--muted); } .ref dd { margin: 0; }
+  .ref .btn { justify-self: start; white-space: normal; text-align: left; }
+  .b2b { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-sm); max-width: var(--measure); } .b2b li { padding-bottom: var(--space-sm); border-bottom: 1px solid var(--rule); }
+  .plz { display: grid; gap: var(--space-xs); max-width: 24rem; } .plz label { font-weight: 700; }
+  .plz__row { display: flex; gap: var(--space-xs); } .plz__row input { flex: 1; min-width: 0; min-height: 48px; padding: 0 0.85rem; border: 1.5px solid var(--ink); border-radius: var(--radius); background: var(--sk-fill); font: inherit; }
+  .plz__a { min-height: 3em; font-weight: 700; } .plz__a[data-z='ok'] { color: var(--ok); } .plz__a[data-z='no'] { color: var(--alert); }
+  .uber__img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); background: var(--paper-3); }
+  .uber__h3 { font-size: var(--text-lg); margin-top: var(--space-md); }
+  .nein { margin: var(--space-xs) 0 0; padding-left: 1.1rem; display: grid; gap: 0.25rem; }
+  .faq { display: grid; max-width: 44rem; } .faq details { border-top: 1.5px solid var(--ink); } .faq details:last-child { border-bottom: 1.5px solid var(--ink); }
+  .faq summary { padding: var(--space-md) 2rem var(--space-md) 0; font-family: var(--font-display); font-size: var(--text-lg); cursor: pointer; list-style: none; position: relative; min-height: 48px; }
+  .faq summary::-webkit-details-marker { display: none; } .faq summary::after { content: '+'; position: absolute; right: 0.25rem; top: 0.8rem; font-size: 1.5rem; color: var(--accent); } .faq details[open] summary::after { content: '−'; }
+  .faq details p { padding-bottom: var(--space-md); max-width: var(--measure); color: var(--ink-2); }
+  .brett#anfrage { padding-bottom: calc(var(--space-2xl) + 8px); }
+  .letter { font-family: var(--font-display); font-size: var(--text-lg); } .letter .hand { font-size: 2rem; }
+  /* klebende Leiste (Handy) */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: grid; grid-template-columns: 1fr 1.2fr 1.2fr; height: calc(var(--bar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--paper); border-top: 1.5px solid var(--ink); transition: transform var(--dur) var(--ease-out); }
+  .bar.is-off { transform: translateY(100%); }
+  .bar__a { display: flex; align-items: center; justify-content: center; font-weight: 700; text-decoration: none; border-right: 1px solid var(--rule); } .bar__a--red { background: var(--accent); color: var(--on-accent); border: 0; }
+  @media (min-width: 40rem) { .hd__status { display: flex; align-items: center; } .hero__status { display: none; } .lane--5 { grid-auto-columns: 17rem; } }
+  @media (min-width: 60rem) {
+    .bar { display: none; } .hd__tel { display: inline; } .site-foot { padding-bottom: var(--space-xl); }
+    .sz__sticky { padding-bottom: var(--space-md); }
+    .brett__in--2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+    .lane { overflow: visible; grid-auto-flow: row; grid-auto-columns: auto; max-width: 64rem; margin-left: auto; margin-right: auto; }
+    .lane--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } .lane--5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .lst__row { grid-template-columns: minmax(0, 1fr) 14rem 9rem; } .lst__a { grid-column: auto; justify-content: flex-end; }
+    .hd__nav { right: var(--gutter); }
+  }
+</style>
+
+<script>
+  import '../lib/home';
+</script>

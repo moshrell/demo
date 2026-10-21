@@ -6,6 +6,7 @@ html { -webkit-text-size-adjust: 100%; scroll-padding-top: 72px; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 body { margin: 0; background: var(--paper); color: var(--ink); font: 400 var(--text-md)/1.55 var(--font-body); -webkit-font-smoothing: antialiased; }
 img, svg, canvas { max-width: 100%; display: block; }
+img { height: auto; }
 h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; font-style: normal; line-height: 1.08; margin: 0; letter-spacing: -0.005em; overflow-wrap: anywhere; min-width: 0; }
 h1 { font-size: var(--text-display); }
 h2 { font-size: var(--text-2xl); }
@@ -32,14 +33,14 @@ button { font: inherit; color: inherit; }
 /* Skizze (sketch.ts) */
 .sk { width: 100%; height: auto; overflow: visible; }
 .sk-p { stroke: var(--ink); stroke-width: 0.35; stroke-linejoin: round; }
-.sk--wood .sk-p { stroke: oklch(30% 0.03 60 / 0.55); }
+.sk--wood .sk-p { stroke: rgb(57 42 30 / 0.55); }
 .sk--pencil .sk-p { stroke-width: 0.6; }
 .sk-floor { stroke: var(--wood-2); stroke-width: 0.6; }
 .sk-dim path { stroke: var(--accent); stroke-width: 0.7; fill: none; }
 .sk-dim text { font-family: var(--font-hand); font-weight: 600; font-size: 9px; fill: var(--accent); }
 .sk-dim .sk-small { font-size: 7px; }
 .sk-pick { fill: transparent; cursor: pointer; }
-.sk-pick:hover { fill: oklch(51% 0.175 29 / 0.06); }
+.sk-pick:hover { fill: rgb(181 44 34 / 0.06); }
 
 /* Fußzeile aus Base.astro */
 .site-foot { padding: var(--space-xl) var(--gutter) calc(var(--space-xl) + var(--bar-h)); background: var(--paper-2); font-size: var(--text-sm); color: var(--ink-2); }

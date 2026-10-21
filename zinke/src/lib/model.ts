@@ -390,7 +390,8 @@ export function summary(c: Cfg): [string, string][] {
   if (c.sch !== '0') w.push(['Schräge', `${c.sch === 'r' ? 'rechts' : 'links'}, Kniestock ${c.k} cm, ${c.a}°`]);
   w.push(['Felder', `${c.n} × ${c.fb} cm`]);
   const cnt = (k: keyof Feld) => c.felder.reduce((s, fd) => s + Number(fd[k] || 0), 0);
-  w.push(['Inhalt', [`${cnt('s')} Fachböden`, `${c.felder.filter((x) => x.t).length} Türen`, `${cnt('d')} Schubladen`, `${c.felder.filter((x) => x.b).length} Rückwände`].join(', ')]);
+  const pl = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+  w.push(['Inhalt', [pl(cnt('s'), 'Fachboden', 'Fachböden'), pl(c.felder.filter((x) => x.t).length, 'Tür', 'Türen'), pl(cnt('d'), 'Schublade', 'Schubladen'), pl(c.felder.filter((x) => x.b).length, 'Rückwand', 'Rückwände')].join(', ')]);
   if (c.x) w.push(['Extra', 'Stahlschienen in breiten Fächern']);
   w.push(['Holz', holz]);
   return w;

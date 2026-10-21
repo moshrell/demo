@@ -124,7 +124,7 @@ function renderPanel() {
     h += `<p class="kt">Werkzeug wählen, dann ein Feld antippen (in der Vorschau oder unten).</p>`;
     h += `<div class="kcs kcs--tools" role="group" aria-label="Werkzeug">${tools.map(([id, l]) => chip('w-' + id, l, tool === id)).join('')}</div>`;
     const f = c.felder[sel];
-    h += `<p class="kt kt--feld">Feld ${sel + 1}: ${f.g ? 'Garderobe (fest)' : [`${f.s} Fachböden`, f.t ? 'Tür' : 'offen', `${f.d} Schubladen`, f.b ? 'Rückwand' : 'ohne Rückwand'].join(', ')}</p>`;
+    h += `<p class="kt kt--feld">Feld ${sel + 1}: ${f.g ? 'Garderobe (fest)' : [`${f.s} ${f.s === 1 ? 'Fachboden' : 'Fachböden'}`, f.t ? 'Tür' : 'offen', `${f.d} ${f.d === 1 ? 'Schublade' : 'Schubladen'}`, f.b ? 'Rückwand' : 'ohne Rückwand'].join(', ')}</p>`;
     if (c.felder.some((x) => x.s > 0 && !x.g) && width(c) > 0) {
       const wide = c.fb - 2 > sagLimit(c.holz);
       h += `<label class="kcheck"><input type="checkbox" data-act="steel" ${c.x ? 'checked' : ''}><span>Stahlschienen in breiten Fächern (+ Aufpreis)${wide ? '' : ' (hier nicht nötig)'}</span></label>`;

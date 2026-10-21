@@ -193,7 +193,7 @@ const kon = mode === 'konstruktor';
   .af__total--plain { color: var(--muted); }
   .af__done { padding: var(--space-lg); border: 1.5px solid var(--ink); border-radius: var(--radius); background: var(--sk-fill); display: grid; gap: var(--space-sm); }
   .af__done:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
-  @media (max-width: 30rem) { .af__bar { flex-wrap: wrap; } .af__btn { flex: 1 1 100%; } }
+  @media (max-width: 30rem) { .af__bar { gap: var(--space-sm); padding: var(--space-xs) 0; padding-bottom: max(var(--space-xs), env(safe-area-inset-bottom)); } .af__total:not(.af__total--plain) span:first-child { display: none; } .af__total--plain { font-size: var(--text-xs); } .af__btn { flex: 1 1 auto; padding-inline: var(--space-sm); } }
 </style>
 
 <script>

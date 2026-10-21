@@ -121,7 +121,11 @@ if (sz) {
     const place = (el: HTMLElement, name: 'breite' | 'hoehe' | 'duebel', on: boolean) => {
       const a = on ? scene!.anchor(name) : null;
       el.style.opacity = a && a.visible ? '1' : '0';
-      if (a && a.visible) el.style.transform = `translate(${a.x.toFixed(0)}px, ${a.y.toFixed(0)}px) translate(-50%, -50%)`;
+      if (a && a.visible) {
+        const hw = el.offsetWidth / 2 + 6, W = el.parentElement ? el.parentElement.clientWidth : 0;
+        const x = W ? Math.max(hw, Math.min(W - hw, a.x)) : a.x;
+        el.style.transform = `translate(${x.toFixed(0)}px, ${a.y.toFixed(0)}px) translate(-50%, -50%)`;
+      }
     };
     const keep = !photoOk || mix < 0.3;
     place(lbl.b, 'breite', asm > 0.97 && keep); place(lbl.h, 'hoehe', asm > 0.97 && keep); place(lbl.d, 'duebel', asm > 0.1 && asm < 0.6);

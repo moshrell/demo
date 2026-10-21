@@ -271,7 +271,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .skip { position: absolute; left: -999px; top: 0; z-index: 100; padding: 0.6rem 1rem; background: var(--ink); color: var(--paper); }
   .skip:focus { left: 0; }
   /* Kopf */
-  .hd { position: sticky; top: 0; z-index: 40; height: var(--bar-h); display: flex; align-items: center; gap: var(--space-sm); padding: 0 var(--gutter); background: oklch(96.5% 0.014 82 / 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); }
+  .hd { position: sticky; top: 0; z-index: 40; height: var(--bar-h); display: flex; align-items: center; gap: var(--space-sm); padding: 0 var(--gutter); background: rgb(248 243 233 / 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); }
   .hd__brand { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-weight: 700; font-size: 1.45rem; text-decoration: none; margin-right: auto; }
   .hd__mark { width: 22px; height: 22px; background: var(--ink); clip-path: polygon(0 100%, 0 30%, 22% 30%, 14% 100%, 36% 100%, 28% 0, 72% 0, 64% 100%, 86% 100%, 78% 30%, 100% 30%, 100% 100%); border-top: 3px solid var(--accent); }
   .hd__status { display: none; font-size: var(--text-sm); color: var(--ink-2); }
@@ -279,7 +279,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .hd__tel { display: none; font-weight: 700; text-decoration: none; }
   .hd__menu summary { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-md); border: 1.5px solid var(--ink); border-radius: var(--radius); font-weight: 700; cursor: pointer; list-style: none; }
   .hd__menu summary::-webkit-details-marker { display: none; }
-  .hd__nav { position: absolute; right: var(--gutter); top: calc(100% + 4px); width: min(20rem, calc(100vw - 2 * var(--gutter))); display: grid; padding: var(--space-xs); background: var(--paper); border: 1.5px solid var(--ink); border-radius: var(--radius); box-shadow: 0 10px 28px oklch(25% 0.02 255 / 0.18); }
+  .hd__nav { max-height: calc(100vh - var(--bar-h) * 2 - 1rem); max-height: calc(100dvh - var(--bar-h) * 2 - 1rem); overflow-y: auto; overscroll-behavior: contain; position: absolute; right: var(--gutter); top: calc(100% + 4px); width: min(20rem, calc(100vw - 2 * var(--gutter))); display: grid; padding: var(--space-xs); background: var(--paper); border: 1.5px solid var(--ink); border-radius: var(--radius); box-shadow: 0 10px 28px rgb(27 34 43 / 0.18); }
   .hd__nav a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--space-sm); text-decoration: none; border-bottom: 1px solid var(--rule); }
   .hd__nav a:last-child { border-bottom: 0; }
   .hd__nav a:hover { background: var(--paper-2); }
@@ -292,8 +292,8 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .hero__no { font-size: var(--text-sm); color: var(--muted); max-width: 32rem; }
   .hero__hand { font-size: 1.5rem; transform: rotate(-3deg); }
   /* Szene */
-  .sz__track { height: 330dvh; }
-  .sz__sticky { position: sticky; top: var(--bar-h); height: calc(100dvh - var(--bar-h)); display: grid; grid-template-rows: auto minmax(0, 1fr); padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); background: var(--paper); }
+  .sz__track { height: 330vh; height: 330dvh; }
+  .sz__sticky { position: sticky; top: var(--bar-h); height: calc(100vh - var(--bar-h)); height: calc(100dvh - var(--bar-h)); display: grid; grid-template-rows: auto minmax(0, 1fr); padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); background: var(--paper); }
   .sz__tabs { display: flex; gap: var(--space-xs); padding: var(--space-xs) var(--gutter); overflow-x: auto; scrollbar-width: none; }
   .sz__tab { flex: 0 0 auto; min-height: 44px; padding: 0 var(--space-md); border: 1.5px solid var(--ink); border-radius: 999px; background: transparent; font-weight: 700; cursor: pointer; }
   .sz__tab[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
@@ -308,7 +308,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .sz__note.is-off { opacity: 0; }
   @media (prefers-reduced-motion: no-preference) { .sz__note:not(.is-off) { animation: sacken 1.6s var(--ease-in-out) 2; } }
   @keyframes sacken { 50% { transform: translate(-50%, 6px); } }
-  .sz__capt { position: absolute; inset: auto 0 0 0; padding: var(--space-lg) var(--space-md) var(--space-md); background: linear-gradient(transparent, oklch(96.5% 0.014 82 / 0.96) 38%); display: grid; gap: 0.3rem; justify-items: start; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
+  .sz__capt { position: absolute; inset: auto 0 0 0; padding: var(--space-lg) var(--space-md) var(--space-md); background: linear-gradient(transparent, rgb(248 243 233 / 0.96) 38%); display: grid; gap: 0.3rem; justify-items: start; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
   .sz__capt.is-on { opacity: 1; transform: none; pointer-events: auto; }
   .sz__capt h2 { font-size: var(--text-xl); }
   .sz__capt-p { font-size: var(--text-sm); color: var(--ink-2); }
@@ -323,7 +323,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   /* Bretter */
   .brett { background: var(--paper); padding: var(--space-xl) 0 var(--space-2xl); }
   .brett--2 { background: var(--paper-2); } .brett--3 { background: var(--paper-3); }
-  .brett__in { max-width: 64rem; margin: 0 auto; padding: 0 var(--gutter); display: grid; gap: var(--space-md); align-content: start; }
+  .brett__in { max-width: 64rem; margin: 0 auto; padding: 0 var(--gutter); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); align-content: start; }
   .brett__in--2 { gap: var(--space-lg); }
   .brett__lead { max-width: var(--measure); color: var(--ink-2); }
   .brett p + p { margin-top: var(--space-sm); }
@@ -338,9 +338,10 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .holz__img { display: block; aspect-ratio: 1; background: var(--paper-3); border-radius: var(--radius); overflow: hidden; }
   .holz__img img { width: 100%; height: 100%; object-fit: cover; }
   .holz__n { font-family: var(--font-display); font-size: var(--text-xl); } .holz__s { font-size: var(--text-sm); color: var(--muted); }
-  .holzd { width: min(30rem, calc(100vw - 2rem)); padding: 0; border: 1.5px solid var(--ink); border-radius: var(--radius); background: var(--paper); color: var(--ink); overflow: hidden; }
-  .holzd::backdrop { background: oklch(25% 0.02 255 / 0.55); }
-  .holzd img { width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--paper-3); }
+  .holzd { width: min(30rem, calc(100vw - 2rem)); max-height: calc(100vh - 1.5rem); max-height: calc(100dvh - 1.5rem); margin: auto; padding: 0; border: 1.5px solid var(--ink); border-radius: var(--radius); background-color: #f8f3e9; background-color: var(--paper); color: #1e2227; color: var(--ink); overflow-y: auto; }
+  .holzd[open] { display: grid; }
+  .holzd::backdrop { background: rgb(27 34 43 / 0.55); }
+  .holzd img { display: block; width: 100%; height: auto; aspect-ratio: 1; max-height: 46vh; max-height: 46dvh; object-fit: cover; background: var(--paper-3); }
   .holzd__t { padding: var(--space-md); display: grid; gap: var(--space-xs); justify-items: start; }
   .holzd__f .hand { font-size: 1.25rem; }
   .abl { display: grid; gap: var(--space-xs); align-content: start; padding: var(--space-md); background: var(--paper); border: 1.5px solid var(--ink); border-radius: var(--radius); }
@@ -352,7 +353,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .ref dl { margin: 0 0 var(--space-xs); display: grid; } .ref dl > div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--space-xs); padding: 0.25rem 0; border-bottom: 1px solid var(--rule); font-size: var(--text-sm); } .ref dt { color: var(--muted); } .ref dd { margin: 0; }
   .ref .btn { justify-self: start; white-space: normal; text-align: left; }
   .b2b { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-sm); max-width: var(--measure); } .b2b li { padding-bottom: var(--space-sm); border-bottom: 1px solid var(--rule); }
-  .plz { display: grid; gap: var(--space-xs); max-width: 24rem; } .plz label { font-weight: 700; }
+  .plz { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); max-width: 24rem; } .plz label { font-weight: 700; }
   .plz__row { display: flex; gap: var(--space-xs); } .plz__row input { flex: 1; min-width: 0; min-height: 48px; padding: 0 0.85rem; border: 1.5px solid var(--ink); border-radius: var(--radius); background: var(--sk-fill); font: inherit; }
   .plz__a { min-height: 3em; font-weight: 700; } .plz__a[data-z='ok'] { color: var(--ok); } .plz__a[data-z='no'] { color: var(--alert); }
   .uber__img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); background: var(--paper-3); }
@@ -378,6 +379,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
     .lst__row { grid-template-columns: minmax(0, 1fr) 14rem 9rem; } .lst__a { grid-column: auto; justify-content: flex-end; }
     .hd__nav { right: var(--gutter); }
   }
+  @media (max-height: 30rem) and (orientation: landscape) { :root { --bar-h: 52px; } .hd__nav a { min-height: 44px; } }
 </style>
 
 <script>

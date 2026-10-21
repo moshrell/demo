@@ -18,6 +18,7 @@ const base = import.meta.env.BASE_URL;
           <summary><span class="kon__plabel">Richtpreis</span> <strong data-price>–</strong></summary>
           <div class="kon__pop" data-price-detail></div>
         </details>
+        <button type="button" class="kon__ib kon__ib--undo" data-undo aria-label="Letzte Änderung rückgängig machen" disabled>↶<span class="kon__ibt"> Zurück</span></button>
         <button type="button" class="kon__ib" data-share aria-label="Link teilen">Teilen</button>
         <button type="button" class="kon__ib" data-open-book aria-label="Werkbuch öffnen"><span class="kon__ibt">Werkbuch </span><span data-count>0/7</span></button>
       </header>
@@ -28,8 +29,7 @@ const base = import.meta.env.BASE_URL;
         <p class="kon__toast" data-toast role="status"></p>
       </div>
 
-      <div class="kon__felder" data-felder hidden></div>
-      <div class="kon__hints" data-hints hidden></div>
+      <button type="button" class="kon__hintbar" data-hintbar hidden aria-haspopup="dialog"></button>
 
       <div class="kon__ctl">
         <div class="kon__tabs" role="tablist" aria-label="Bereiche" data-tabs></div>
@@ -68,6 +68,13 @@ const base = import.meta.env.BASE_URL;
       <AnfrageForm id="kon-form" mode="konstruktor" title="An die Werkstatt senden" />
     </section>
 
+    <dialog class="kon__sheet" data-sheet aria-labelledby="sheet-h">
+      <div class="kon__sheet-in">
+        <header><h2 id="sheet-h">Notiz vom Meister</h2><button type="button" class="kon__x" data-close-sheet aria-label="Schließen">✕</button></header>
+        <div data-sheet-list></div>
+      </div>
+    </dialog>
+
     <dialog class="kon__dialog" data-dialog aria-labelledby="book-h">
       <h2 id="book-h">Werkbuch</h2>
       <p class="kt">Kleine Meilensteine auf Ihrem Weg zum Möbel. Nur für Sie, ohne Bedeutung für den Preis.</p>
@@ -83,7 +90,7 @@ const base = import.meta.env.BASE_URL;
   .kon__crumbs { list-style: none; margin: 0; box-sizing: border-box; height: 32px; align-items: center; padding: 0 var(--gutter); display: flex; gap: var(--space-md); font-size: var(--text-xs); color: var(--muted); border-bottom: 1px solid var(--rule); }
   .kon__crumbs [aria-current='step'] { color: var(--ink); font-weight: 700; border-bottom: 2px solid var(--accent); }
   /* App-Raster: Handy = Spalte, ab 60rem = Bühne links, Bedienung rechts */
-  .kon__app { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(30vh, 1fr) auto auto auto auto; grid-template-rows: auto minmax(30dvh, 1fr) auto auto auto auto; height: calc(100vh - 32px); height: calc(100dvh - 32px); min-height: 30rem; }
+  .kon__app { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(30vh, 1fr) auto auto auto; grid-template-rows: auto minmax(30dvh, 1fr) auto auto auto; height: calc(100vh - 32px); height: calc(100dvh - 32px); min-height: 30rem; }
   .kon__top { position: relative; display: flex; align-items: center; gap: var(--space-xs); min-width: 0; padding: var(--space-2xs) var(--gutter); border-bottom: 1px solid var(--rule); background: var(--paper); }
   .kon__back { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; text-decoration: none; padding-right: var(--space-xs); }
   .kon__back span { display: none; }
@@ -98,7 +105,8 @@ const base = import.meta.env.BASE_URL;
   .kon__pop dd, .kon__abn-price dd { margin: 0; }
   .kon__ib { min-height: 44px; padding: 0 0.6rem; border: 1.5px solid var(--ink); border-radius: var(--radius); background: transparent; font-weight: 700; font-size: var(--text-sm); cursor: pointer; white-space: nowrap; }
   .kon__ib:hover { background: var(--paper-2); }
-  .kon__stage { position: relative; min-height: 0; background: linear-gradient(var(--paper-2), var(--paper)); overflow: hidden; }
+  .kon__ib:disabled { opacity: 0.35; cursor: default; }
+  .kon__stage { position: relative; min-height: 0; background: linear-gradient(#dde7f4 0%, #c6d6ea 72%, #b7c9e0 100%); overflow: hidden; }
   .kon__svg { position: absolute; inset: 0; padding: var(--space-md) var(--space-lg); display: grid; place-items: center; }
   .kon__svg .sk { max-height: 100%; }
   .kon__canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; touch-action: pan-y; }
@@ -107,22 +115,46 @@ const base = import.meta.env.BASE_URL;
   .kon__stage.is-gl .kon__svg { visibility: hidden; }
   .kon__toast { position: absolute; left: 50%; bottom: var(--space-sm); transform: translate(-50%, 12px); max-width: calc(100% - 2rem); padding: 0.45rem 0.9rem; background: var(--ink); color: var(--paper); border-radius: 999px; font-size: var(--text-sm); font-weight: 700; opacity: 0; pointer-events: none; transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out); text-align: center; }
   .kon__toast.is-on { opacity: 1; transform: translate(-50%, 0); }
-  .kon__felder { display: flex; gap: var(--space-xs); padding: var(--space-xs) var(--gutter); overflow-x: auto; border-top: 1px solid var(--rule); background: var(--paper); scrollbar-width: thin; }
-  .kon__felder[hidden], .kon__hints[hidden] { display: none; }
-  .kf { flex: 0 0 auto; min-width: 64px; min-height: 48px; padding: 0.2rem 0.6rem; border: 1.5px solid var(--ink); border-radius: var(--radius); background: transparent; display: grid; text-align: center; cursor: pointer; }
+  .kon__hintbar { display: flex; align-items: center; gap: var(--space-xs); width: 100%; min-height: 46px; padding: 0.3rem var(--gutter); border: 0; border-top: 1px solid var(--rule); border-left: 5px solid var(--accent); background: var(--accent-soft); color: var(--ink); font: inherit; font-size: var(--text-sm); text-align: left; cursor: pointer; }
+  @media (prefers-reduced-motion: no-preference) { .kon__hintbar.is-new { animation: hbpulse 900ms var(--ease-out); } }
+  @keyframes hbpulse { 0% { box-shadow: inset 0 0 0 3px var(--accent); } 100% { box-shadow: inset 0 0 0 3px transparent; } }
+  .kon__hintbar[hidden] { display: none; }
+  .kon__hintbar.is-warn { border-left-color: var(--alert); background: #f6e1de; }
+  .kon__hintbar b { flex: none; font-weight: 800; }
+  .kon__hintbar .hb__t { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .kon__hintbar .hb__n { flex: none; padding: 0.1rem 0.5rem; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 0.75rem; font-weight: 700; }
+  .kon__hintbar .hb__go { flex: none; font-weight: 800; }
+  .kon__sheet { margin: auto auto 0; width: min(100vw, 34rem); max-width: 100vw; max-height: 80vh; max-height: 80dvh; padding: 0; border: 1.5px solid var(--ink); border-bottom: 0; border-radius: var(--radius-lg) var(--radius-lg) 0 0; background: var(--paper); color: var(--ink); box-shadow: 0 -10px 40px rgb(20 32 46 / 0.3); overflow: auto; }
+  .kon__sheet::backdrop { background: rgb(20 32 46 / 0.45); }
+  .kon__sheet-in { padding: var(--space-md) var(--gutter) max(var(--space-lg), env(safe-area-inset-bottom)); display: grid; gap: var(--space-sm); }
+  .kon__sheet header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); }
+  .kon__sheet h2 { font-size: var(--text-lg); }
+  .kon__x { width: 44px; height: 44px; border: 1.5px solid var(--ink); border-radius: 50%; background: transparent; font-size: 1.1rem; cursor: pointer; }
+  .kh { display: grid; gap: var(--space-xs); padding: var(--space-sm); border: 1px solid var(--rule); border-left: 5px solid var(--accent); border-radius: var(--radius); background: var(--sk-fill); font-size: var(--text-sm); }
+  .kh--warn { border-left-color: var(--alert); }
+  .kh h3 { font-family: var(--font-body); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .kh--warn h3 { color: var(--alert); }
+  .kh p { max-width: none; }
+  .kh__fix { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+  .kfeld { display: flex; gap: var(--space-xs); overflow-x: auto; padding: 0.3rem 0; scrollbar-width: thin; }
+  .kf { flex: 0 0 auto; min-width: 64px; min-height: 52px; padding: 0.2rem 0.6rem; border: 1.5px solid var(--ink); border-radius: var(--radius); background: transparent; display: grid; text-align: center; cursor: pointer; }
   .kf span { font-weight: 700; line-height: 1.1; }
   .kf small { font-size: 0.7rem; color: var(--muted); white-space: nowrap; }
-  .kf.is-sel { background: var(--ink); color: var(--paper); }
-  .kf.is-sel small { color: #d1cdc7; }
-  .kon__hints { padding: var(--space-xs) var(--gutter); background: #ffecc9; border-top: 1.5px solid var(--accent); max-height: 30vh; max-height: 30dvh; overflow-y: auto; display: grid; gap: var(--space-xs); }
-  .kh { display: flex; flex-wrap: wrap; gap: var(--space-xs); align-items: center; font-size: var(--text-sm); }
-  .kh p { flex: 1 1 14rem; }
-  .kh--info { color: var(--ink-2); }
-  .kon__ctl { border-top: 1.5px solid var(--ink); background: var(--paper); }
+  .kf.is-sel { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .kf.is-sel small { color: #dce6f6; }
+  .kf-edit { display: grid; gap: 0.15rem; padding: 0.25rem 0 0; border-top: 1px dashed var(--rule); }
+  .kf-edit__h { font-weight: 800; font-size: var(--text-sm); color: var(--accent-2); }
+  .ksw { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.2rem 0; }
+  .ksw button { display: grid; justify-items: center; gap: 0.15rem; width: 64px; padding: 0.2rem 0 0.1rem; border: 1.5px solid transparent; border-radius: var(--radius); background: transparent; font-size: 0.72rem; line-height: 1.1; cursor: pointer; color: var(--ink); }
+  .ksw button i { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgb(20 32 46 / 0.35); background: var(--tex) center/cover; background-color: var(--c); background-blend-mode: var(--bm, normal); }
+  .ksw button.is-on { border-color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+  .ksw--deck button i { background: var(--c); }
+  .kon__ctl { border-top: 1.5px solid var(--ink); background: var(--paper); min-height: 0; }
   .kon__tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; }
+  .kon__tabs button { padding: 0 0.2rem; font-size: var(--text-sm); }
   .kon__tabs button { min-height: 44px; border: 0; border-bottom: 2px solid var(--rule); background: transparent; font-weight: 700; cursor: pointer; }
   .kon__tabs button[aria-selected='true'] { border-bottom-color: var(--accent); background: var(--paper-2); }
-  .kon__panel { padding: var(--space-xs) var(--gutter) var(--space-sm); max-height: 30vh; max-height: 30dvh; overflow-y: auto; display: grid; gap: 0.15rem; align-content: start; }
+  .kon__panel { padding: var(--space-xs) var(--gutter) var(--space-sm); max-height: 32vh; max-height: 32dvh; overscroll-behavior: contain; overflow-y: auto; display: grid; gap: 0.15rem; align-content: start; }
   .ks, .kr { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); min-height: 48px; flex-wrap: wrap; }
   .ks__l { font-weight: 700; font-size: var(--text-sm); }
   .ks__c { display: inline-flex; align-items: center; gap: var(--space-xs); }
@@ -131,9 +163,8 @@ const base = import.meta.env.BASE_URL;
   .ks__b:disabled { opacity: 0.35; cursor: not-allowed; }
   .ks__v { min-width: 4.2rem; text-align: center; font-variant-numeric: tabular-nums; font-weight: 700; }
   .kcs { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-  .kcs--tools { padding: 0.3rem 0; }
   .kc { min-height: 44px; padding: 0.3rem 0.75rem; border: 1.5px solid var(--ink); border-radius: 999px; background: transparent; font-weight: 700; font-size: var(--text-sm); cursor: pointer; }
-  .kc.is-on { background: var(--ink); color: var(--paper); }
+  .kc.is-on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
   .kc:disabled { opacity: 0.4; cursor: not-allowed; }
   .kc--tex { display: inline-flex; align-items: center; gap: 0.4rem; padding-left: 0.35rem; }
   .kc--tex i { width: 30px; height: 30px; border-radius: 50%; background: var(--tex) center/cover; border: 1px solid rgb(54 44 36 / 0.4); }
@@ -164,24 +195,24 @@ const base = import.meta.env.BASE_URL;
   .kon__dialog::backdrop { background: rgb(20 32 46 / 0.5); }
   .kon__book { list-style: none; margin: var(--space-md) 0; padding: 0; display: grid; gap: 0.25rem; }
   .kon__book li { display: grid; padding: 0.45rem 0; border-bottom: 1px solid var(--rule); opacity: 0.55; }
-  @media (max-width: 29.99rem) { .kon__ibt { display: none; } .kon__ib[data-open-book]::before { content: '★ '; } }
+  @media (max-width: 29.99rem) { .kon__ibt { display: none; } .kon__ib[data-open-book]::before { content: '★ '; } .kon__ib { padding: 0 0.5rem; } }
   @media (max-width: 25.99rem) { .kon__plabel { display: none; } .kon__price summary { padding: 0 0.6rem; } }
   .kon__book li.is-got { opacity: 1; } .kon__book li.is-got strong::before { content: '✓ '; color: var(--ok); }
   .kon__book span { font-size: var(--text-sm); color: var(--ink-2); }
   @media (min-width: 60rem), (orientation: landscape) and (min-width: 36rem) and (max-height: 32rem) {
     .kon__back span { display: inline; }
     .kon__app { min-height: 0; }
-    .kon__app { grid-template-columns: minmax(0, 1fr) min(26rem, 48vw); grid-template-rows: auto minmax(0, 1fr) auto auto; grid-template-areas: 'top top' 'stage ctl' 'felder hints' 'cta cta'; }
+    .kon__app { grid-template-columns: minmax(0, 1fr) min(26rem, 48vw); grid-template-rows: auto minmax(0, 1fr) auto auto; grid-template-areas: 'top top' 'stage ctl' 'hint ctl' 'cta cta'; }
     .kon__top { grid-area: top; } .kon__stage { grid-area: stage; } .kon__ctl { grid-area: ctl; border-top: 0; border-left: 1.5px solid var(--ink); overflow: auto; }
-    .kon__hints { grid-area: hints; border-left: 1.5px solid var(--ink); } .kon__felder { grid-area: felder; } .kon__cta { grid-area: cta; }
+    .kon__hintbar { grid-area: hint; } .kon__cta { grid-area: cta; }
     .kon__panel { max-height: none; }
     .kon__abn { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: start; }
   }
   @media (orientation: landscape) and (min-width: 36rem) and (max-height: 32rem) {
-    .kon__app { grid-template-rows: auto minmax(0, 1fr) auto auto; grid-template-areas: 'top top' 'stage ctl' 'stage hints' 'stage cta'; position: relative; }
-    .kon__felder { position: absolute; left: 0; bottom: 0; width: calc(100% - min(26rem, 48vw)); z-index: 5; border-top: 1.5px solid var(--ink); }
+    .kon__app { grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: 'top top' 'stage ctl' 'hint cta'; grid-template-columns: minmax(0, 1fr) min(24rem, 48vw); }
     .kon__cta { border-left: 1.5px solid var(--ink); }
     .kon__cta-p span + span { display: none; }
+    .kon__sheet { margin: auto; border-bottom: 1.5px solid var(--ink); border-radius: var(--radius-lg); }
   }
   @media (min-height: 800px) and (max-width: 59.99rem) { .kon__panel { max-height: 34vh; max-height: 34dvh; } }
 </style>

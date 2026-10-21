@@ -14,7 +14,8 @@
   "oberM2": {
     "g": 12,
     "l": 18,
-    "f": 24
+    "f": 24,
+    "b": 20
   },
   "rueckwandM2": 32,
   "beschlag": {
@@ -43,9 +44,20 @@
     "gestell": {
       "v": 5,
       "k": 7,
-      "w": 6
+      "w": 6,
+      "x": 8,
+      "z": 8,
+      "b": 6
     },
-    "tischLieferung": 1.5
+    "tischLieferung": 1.5,
+    "plattenRund": 1.5,
+    "plattenOval": 3.5,
+    "kanteFase": 1,
+    "kanteBaum": 3,
+    "beize": 2,
+    "beine": 1.2,
+    "montageKommode": 1,
+    "montageKommodeFeld": 0.2
   },
   "tischDicke": 2.2
 }

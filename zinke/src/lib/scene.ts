@@ -8,16 +8,17 @@ import {
   MeshStandardMaterial, Material, TextureLoader, Texture, RepeatWrapping, SRGBColorSpace, HemisphereLight, DirectionalLight,
   PlaneGeometry, CanvasTexture, MeshBasicMaterial, Raycaster, Vector2, Vector3, Color, PMREMGenerator, NeutralToneMapping,
   Points, BufferGeometry, Float32BufferAttribute, PointsMaterial, LineSegments, EdgesGeometry, LineBasicMaterial, BufferAttribute,
+  ShadowMaterial, PCFShadowMap, Object3D,
 } from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
-import { type Cfg, type Part, type Holz, buildParts, bounds, width, feldSpan, plinth, hTop, FARBEN, T } from './model';
+import { type Cfg, type Part, type Holz, buildParts, bounds, width, feldSpan, feldBase, hTop, farbeOf, T } from './model';
 
 const S = 0.01;          // cm -> m
 const TS = 0.9;          // Textur deckt 0,9 m ab
 const ease = (t: number) => 1 - Math.pow(1 - t, 3);
 const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
 
-export type View = 'front' | 'links' | 'rechts' | 'detail';
+export type View = 'front' | 'links' | 'rechts' | 'oben' | 'ecke' | 'nah';
 export interface SceneOpts {
   canvas: HTMLCanvasElement;
   base: string;
@@ -60,14 +61,17 @@ function boxGeo(w: number, h: number, d: number, grain: 'x' | 'y' | 'z', seed: n
   }
   return g;
 }
-function polyGeo(pts: [number, number][], depth: number, seed: number) {
+function polyGeo(pts: [number, number][], depth: number, seed: number, bevel = 0) {
   const sh = new Shape(pts.map(([x, y]) => new Vector2(x * S, y * S)));
-  const g = new ExtrudeGeometry(sh, { depth: depth * S, bevelEnabled: false });
+  const g = new ExtrudeGeometry(sh, bevel > 0
+    ? { depth: Math.max(0.01, depth - 2 * bevel) * S, bevelEnabled: true, bevelSize: bevel * S, bevelThickness: bevel * S, bevelSegments: 1 }
+    : { depth: depth * S, bevelEnabled: false });
   const uv = g.attributes.uv as BufferAttribute;
   const ox = (seed * 0.137) % 1, oy = (seed * 0.311) % 1;
   for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) / TS + ox, uv.getY(i) / TS + oy);
   return g;
 }
+const edgeMat = new LineBasicMaterial({ color: new Color('#33200f'), transparent: true, opacity: 0.3 });
 const hash = (s: string) => { let h = 7; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 9973; return h; };
 
 function partMesh(p: Part, mats: Mats): Mesh {
@@ -85,9 +89,10 @@ function partMesh(p: Part, mats: Mats): Mesh {
     m = new Mesh(polyGeo(p.poly.pts, p.poly.dz, seed), pair());
     m.position.set(0, 0, p.poly.z * S);
   } else if (p.polyXZ) {
-    m = new Mesh(polyGeo(p.polyXZ.pts.map(([x, z]) => [x, -z]), p.polyXZ.dy, seed), pair());
+    const bv = p.polyXZ.bevel || 0;
+    m = new Mesh(polyGeo(p.polyXZ.pts.map(([x, z]) => [x, -z]), p.polyXZ.dy, seed, bv), pair());
     m.rotation.x = -Math.PI / 2;
-    m.position.set(0, p.polyXZ.y * S, 0);
+    m.position.set(0, (p.polyXZ.y + bv) * S, 0);
   } else {
     const c = p.cyl!;
     const g = new CylinderGeometry(c.r * S, c.r * S, c.len * S, 14);
@@ -98,6 +103,11 @@ function partMesh(p: Part, mats: Mats): Mesh {
   }
   m.userData.part = p;
   m.userData.home = m.position.clone();
+  if (p.kind !== 'dowel') { m.castShadow = true; m.receiveShadow = true; }
+  if (!p.cyl && p.kind !== 'back' && p.kind !== 'zinke') {
+    const e = new LineSegments(new EdgesGeometry(m.geometry, 28), edgeMat);
+    m.add(e); m.userData.edges = e;
+  }
   return m;
 }
 
@@ -105,12 +115,22 @@ function partMesh(p: Part, mats: Mats): Mesh {
 interface Mats { face: MeshStandardMaterial; end: MeshStandardMaterial; front: MeshStandardMaterial; frontEnd: MeshStandardMaterial;
   back: MeshStandardMaterial; dowel: MeshStandardMaterial; steel: MeshStandardMaterial; cushion: MeshStandardMaterial }
 const texCache = new Map<string, Promise<Texture>>();
+const texAvg = new Map<Holz, number>();
 function loadTex(base: string, holz: Holz, aniso: number) {
   const key = holz;
   if (!texCache.has(key)) {
     const name = { e: 'eiche', n: 'nussbaum', a: 'ahorn', k: 'kiefer' }[holz];
     texCache.set(key, new TextureLoader().loadAsync(`${base}tex/${name}.jpg`).then((t) => {
-      t.wrapS = t.wrapT = RepeatWrapping; t.colorSpace = SRGBColorSpace; t.anisotropy = aniso; return t;
+      t.wrapS = t.wrapT = RepeatWrapping; t.colorSpace = SRGBColorSpace; t.anisotropy = aniso;
+      try {
+        const c = document.createElement('canvas'); c.width = c.height = 32; const x = c.getContext('2d')!;
+        x.drawImage(t.image as CanvasImageSource, 0, 0, 32, 32);
+        const d = x.getImageData(0, 0, 32, 32).data; let sum = 0;
+        const lin = (v: number) => { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+        for (let i = 0; i < d.length; i += 4) sum += 0.2126 * lin(d[i]) + 0.7152 * lin(d[i + 1]) + 0.0722 * lin(d[i + 2]);
+        texAvg.set(holz, Math.max(0.02, sum / (d.length / 4)));
+      } catch { /* Standardwert */ }
+      return t;
     }));
   }
   return texCache.get(key)!;
@@ -124,16 +144,24 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
   renderer.setPixelRatio(dpr);
   renderer.toneMapping = NeutralToneMapping;
   renderer.toneMappingExposure = 1.05;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = PCFShadowMap;
   const scene = new Scene();
   const pmrem = new PMREMGenerator(renderer);
   const env = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environment = env;
-  scene.environmentIntensity = 0.45;
+  scene.environmentIntensity = 0.3;
   pmrem.dispose();
-  scene.add(new HemisphereLight(0xfff7ea, 0xb9a88f, 1.35));
-  const sun = new DirectionalLight(0xfff1dc, 1.7);
-  sun.position.set(-2.2, 3.2, 3);
-  scene.add(sun);
+  scene.add(new HemisphereLight(0xfff4e6, 0x9a8f80, 0.8));
+  const sun = new DirectionalLight(0xfff0dc, 2.7);
+  sun.position.set(-2.6, 3.6, 3.2);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(o.lowPower ? 512 : 1024, o.lowPower ? 512 : 1024);
+  sun.shadow.bias = -0.0003; sun.shadow.normalBias = 0.004; sun.shadow.radius = 3;
+  scene.add(sun); scene.add(sun.target);
+  const fill = new DirectionalLight(0xdbe6ff, 0.55);
+  fill.position.set(3.2, 1.6, 2.4);
+  scene.add(fill);
 
   const camera = new PerspectiveCamera(30, 1, 0.05, 40);
   const root = new Group();
@@ -142,16 +170,38 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
   // "eingebackener" Schatten: Ebene mit radialem Verlauf
   const sc = document.createElement('canvas'); sc.width = sc.height = 128;
   const sx = sc.getContext('2d')!; const gr = sx.createRadialGradient(64, 64, 4, 64, 64, 64);
-  gr.addColorStop(0, 'rgba(70,52,30,0.42)'); gr.addColorStop(0.55, 'rgba(70,52,30,0.16)'); gr.addColorStop(1, 'rgba(70,52,30,0)');
+  gr.addColorStop(0, 'rgba(40,36,34,0.34)'); gr.addColorStop(0.55, 'rgba(40,36,34,0.12)'); gr.addColorStop(1, 'rgba(40,36,34,0)');
   sx.fillStyle = gr; sx.fillRect(0, 0, 128, 128);
   const shadow = new Mesh(new PlaneGeometry(1, 1), new MeshBasicMaterial({ map: new CanvasTexture(sc), transparent: true, depthWrite: false }));
   shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.001;
   root.add(shadow);
+  const ground = new Mesh(new PlaneGeometry(8, 8), new ShadowMaterial({ opacity: 0.24 }));
+  ground.rotation.x = -Math.PI / 2; ground.position.y = 0.0008; ground.receiveShadow = true;
+  root.add(ground);
 
   const aniso = Math.min(4, renderer.capabilities.getMaxAnisotropy());
-  const mk = (p: Partial<MeshStandardMaterial>) => { const m = new MeshStandardMaterial({ roughness: 0.62, metalness: 0 }); Object.assign(m, p); return m; };
+  // Holzmaserung: Kontrast anheben, bei Beize Farbe über die Helligkeit der Maserung legen
+  const U = { uAvg: { value: 0.3 }, uContrast: { value: 1.55 }, uMono: { value: 0 } };
+  const mk = (p: Partial<MeshStandardMaterial>, wood = false) => {
+    const m = new MeshStandardMaterial({ roughness: 0.62, metalness: 0, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
+    Object.assign(m, p);
+    if (wood) {
+      m.onBeforeCompile = (sh) => {
+        sh.uniforms.uAvg = U.uAvg; sh.uniforms.uContrast = U.uContrast; sh.uniforms.uMono = U.uMono;
+        sh.fragmentShader = 'uniform float uAvg; uniform float uContrast; uniform float uMono;\n' + sh.fragmentShader.replace('#include <map_fragment>', `
+          #ifdef USE_MAP
+            vec4 sc = texture2D( map, vMapUv );
+            float l = max(dot(sc.rgb, vec3(0.2126, 0.7152, 0.0722)), 0.002);
+            float g = max((l - uAvg) * uContrast + uAvg, 0.015);
+            diffuseColor.rgb *= mix(sc.rgb * (g / l), vec3(g / uAvg), uMono);
+          #endif`);
+      };
+      m.customProgramCacheKey = () => 'wood-v1';
+    }
+    return m;
+  };
   const mats: Mats = {
-    face: mk({}), end: mk({}), front: mk({}), frontEnd: mk({}), back: mk({}),
+    face: mk({}, true), end: mk({}, true), front: mk({}, true), frontEnd: mk({}, true), back: mk({}, true),
     dowel: mk({ color: new Color('#d9bf92'), roughness: 0.7 }),
     steel: mk({ color: new Color('#8a8d91'), roughness: 0.38, metalness: 0.85 }),
     cushion: mk({ color: new Color('#d8d1c2'), roughness: 0.95 }),
@@ -160,29 +210,42 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
   let texToken = 0;
   async function applyMaterials(c: Cfg) {
     const token = ++texToken;
-    const base = new Color(FALLBACK[c.holz]);
-    const rough = c.ober === 'l' ? 0.34 : 0.62;
-    [mats.face, mats.end, mats.front, mats.frontEnd, mats.back].forEach((m) => { m.roughness = rough; });
-    // sofort Farbe, dann Textur
-    mats.face.color.copy(base); mats.front.color.copy(base); mats.back.color.copy(base).multiplyScalar(1.04);
-    mats.end.color.copy(base).multiplyScalar(0.74); mats.frontEnd.color.copy(base).multiplyScalar(0.74);
-    if (c.ober === 'f') {
-      const pc = new Color(FARBEN[c.farbe].hex);
-      mats.front.map = null; mats.frontEnd.map = null; mats.front.color.copy(pc); mats.frontEnd.color.copy(pc).multiplyScalar(0.92);
-      mats.front.roughness = mats.frontEnd.roughness = 0.5;
-    }
-    [mats.face, mats.end, mats.front, mats.frontEnd, mats.back].forEach((m) => { m.needsUpdate = true; });
-    need();
+    const fa = farbeOf(c);
+    const stained = c.ober === 'b' && !!fa;
+    const painted = c.ober === 'f' && !!fa;
+    const paintAll = painted && (c.t === 't' || c.fk);
+    const rough = c.ober === 'l' ? 0.3 : 0.62;
+    const all = [mats.face, mats.end, mats.front, mats.frontEnd, mats.back];
+    all.forEach((m) => { m.roughness = rough; });
+    U.uMono.value = stained ? 1 : 0;
+    const set = (m: MeshStandardMaterial, tex: Texture | null, col: Color, k = 1) => { m.map = tex; m.color.copy(col).multiplyScalar(k); };
+    const wood = new Color(FALLBACK[c.holz]);
+    const apply = (tex: Texture | null) => {
+      const white = new Color('#ffffff');
+      const tint = stained ? new Color(fa!.hex) : white;
+      const base = tex ? tint : stained ? new Color(fa!.hex) : wood;
+      // Korpus / sichtbare Holzflächen
+      if (paintAll) {
+        const pc = new Color(fa!.hex);
+        set(mats.face, null, pc); set(mats.back, null, pc, 0.82); set(mats.end, null, pc, 0.9);
+        mats.face.roughness = mats.end.roughness = mats.back.roughness = 0.5;
+      } else {
+        set(mats.face, tex, base); set(mats.back, tex, base, 0.78); set(mats.end, tex, base, 0.72);
+      }
+      // Fronten
+      if (painted) {
+        const pc = new Color(fa!.hex);
+        set(mats.front, null, pc); set(mats.frontEnd, null, pc, 0.9);
+        mats.front.roughness = mats.frontEnd.roughness = 0.5;
+      } else { set(mats.front, tex, base); set(mats.frontEnd, tex, base, 0.72); }
+      all.forEach((m) => { m.needsUpdate = true; });
+    };
+    apply(null); need();
     try {
       const tex = await loadTex(o.base, c.holz, aniso);
       if (token !== texToken) return;
-      const white = new Color('#ffffff');
-      mats.face.map = tex; mats.face.color.copy(white);
-      mats.back.map = tex; mats.back.color.copy(white).multiplyScalar(1.03);
-      mats.end.map = tex; mats.end.color.copy(white).multiplyScalar(0.72);
-      if (c.ober !== 'f') { mats.front.map = tex; mats.front.color.copy(white); mats.frontEnd.map = tex; mats.frontEnd.color.copy(white).multiplyScalar(0.72); }
-      [mats.face, mats.end, mats.front, mats.frontEnd, mats.back].forEach((m) => { m.needsUpdate = true; });
-      need();
+      U.uAvg.value = texAvg.get(c.holz) ?? 0.3;
+      apply(tex); need();
     } catch { /* Farbe reicht */ }
   }
 
@@ -201,11 +264,18 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
     const distH = (h * pad) / 2 / Math.tan(vf / 2), distW = (w * pad) / 2 / Math.tan(hf / 2);
     goal.dist = Math.max(distH, distW) + (b.z1 - b.z0) * 0.6;
     goal.tx = 0; goal.ty = (b.y0 + b.y1) / 2; goal.tz = 0;
-    goal.yaw = v === 'links' ? -26 : v === 'rechts' ? 26 : v === 'detail' ? -18 : 0;
-    goal.pitch = v === 'detail' ? 26 : cfg?.t === 't' ? 18 : 7;
-    if (v === 'detail' && cfg) {
-      if (cfg.t === 't') { goal.tx = -w / 2 + w * 0.2; goal.ty = b.y1; goal.dist *= 0.5; }
+    const table = cfg?.t === 't';
+    goal.yaw = v === 'links' ? -28 : v === 'rechts' ? 28 : v === 'ecke' ? -18 : v === 'nah' ? -12 : 0;
+    goal.pitch = v === 'oben' ? (table ? 58 : 50) : v === 'ecke' ? 26 : v === 'nah' ? 12 : table ? 18 : v === 'front' ? 7 : 10;
+    if (v === 'oben') goal.dist *= table ? 1.0 : 1.12;
+    if (v === 'ecke' && cfg) {
+      if (table) { goal.tx = -w / 2 + w * 0.2; goal.ty = b.y1; goal.dist *= 0.5; }
       else { goal.tx = -w / 2 + 0.12; goal.ty = b.y1 - 0.15; goal.dist *= 0.42; }
+    }
+    if (v === 'nah' && cfg) {
+      goal.dist *= 0.55;
+      if (table) { goal.tx = -w * 0.25; goal.ty = b.y1 * 0.7; goal.yaw = 34; }
+      else { goal.tx = -w * 0.12; goal.ty = b.y0 + h * 0.5; }
     }
   }
   function applyCam() {
@@ -236,14 +306,15 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
   }
 
   function clearPicks() { picks.forEach((m) => { root.remove(m); m.geometry.dispose(); }); picks.length = 0; }
+  const fitSun = () => { const w = box.x1 - box.x0, h = box.y1 - box.y0, r = Math.max(w, h) * 0.75 + 0.3; const c = sun.shadow.camera; c.left = -r; c.right = r; c.top = r; c.bottom = -r; c.near = 0.5; c.far = 12; c.updateProjectionMatrix(); sun.target.position.set(0, h / 2, 0); sun.position.set(-2.6 - w * 0.2, 3.6 + h * 0.3, 3.2); };
   function buildPicks(c: Cfg, xoff: number) {
     clearPicks();
     if (c.t === 't') return;
     for (let i = 0; i < c.n; i++) {
       const [l, r] = feldSpan(c, i);
-      const top = Math.max(hTop(c, l), hTop(c, r));
-      const m = new Mesh(new BoxGeometry((r - l) * S, (top - plinth(c)) * S, c.tf * S), pickMat);
-      m.position.set(((l + r) / 2) * S + xoff, ((top + plinth(c)) / 2) * S, 0.01);
+      const top = Math.max(hTop(c, l), hTop(c, r)), y0 = feldBase(c, i) - T;
+      const m = new Mesh(new BoxGeometry((r - l) * S, (top - y0) * S, c.tf * S), pickMat);
+      m.position.set(((l + r) / 2) * S + xoff, ((top + y0) / 2) * S, 0.01);
       m.userData.feld = i;
       root.add(m); picks.push(m);
     }
@@ -276,7 +347,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
       seen.add(p.id);
       const ex = meshes.get(p.id);
       if (ex && ex.userData.key === geoKey(p)) return;
-      if (ex) { content.remove(ex); ex.geometry.dispose(); }
+      if (ex) { content.remove(ex); killGeo(ex); }
       const m = partMesh(p, mats);
       m.userData.key = geoKey(p);
       content.add(m); meshes.set(p.id, m);
@@ -295,12 +366,14 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
     });
     maxOrder = Math.max(1, ...parts.map((p) => p.order));
     buildPicks(c, xoff);
+    fitSun();
     frame(view);
     if (!animate || prevType !== c.t) Object.assign(cam, goal);
     if (o.mode === 'assembly') setProgress(progress);
     need();
   }
-  function dispose(m: Mesh) { content.remove(m); m.geometry.dispose(); if (m.userData.own) (m.material as Material[]).forEach((x) => x.dispose()); }
+  function killGeo(m: Mesh) { m.geometry.dispose(); (m.userData.edges as LineSegments | undefined)?.geometry.dispose(); }
+  function dispose(m: Mesh) { content.remove(m); killGeo(m); if (m.userData.own) (m.material as Material[]).forEach((x) => x.dispose()); }
 
   /* ------------------------------------------ Montage nach Scroll (Startseite) */
   let progress = 1;
@@ -317,7 +390,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
       const fading = t < 1;
       if (fading && !own.has(m)) {
         const arr = Array.isArray(m.material) ? m.material : [m.material];
-        m.material = arr.map((x) => { const c = x.clone(); c.transparent = true; return c; }) as any;
+        m.material = arr.map((x) => { const c = x.clone(); c.transparent = true; c.onBeforeCompile = x.onBeforeCompile; c.customProgramCacheKey = x.customProgramCacheKey; return c; }) as any;
         m.userData.own = true; own.add(m);
       }
       if (own.has(m)) {
@@ -335,7 +408,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
     if (!own.has(m)) return;
     const p = m.userData.part as Part;
     const base = partMesh(p, mats); const src = Array.isArray(base.material) ? base.material : [base.material];
-    base.geometry.dispose();
+    base.geometry.dispose(); (base.userData.edges as LineSegments | undefined)?.geometry.dispose();
     (m.material as Material[]).forEach((x, i) => { const s = src[i] as MeshStandardMaterial, d = x as MeshStandardMaterial; d.map = s.map; d.color.copy(s.color); d.roughness = s.roughness; d.needsUpdate = true; });
   });
 
@@ -467,7 +540,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
       if (markLine) { root.remove(markLine); markLine.geometry.dispose(); markLine = null; }
       if (feld === null || !cfg || cfg.t === 't') return;
       const [l, r] = feldSpan(cfg, feld);
-      const top = Math.min(hTop(cfg, l), hTop(cfg, r)) - T, y0 = plinth(cfg);
+      const top = Math.min(hTop(cfg, l), hTop(cfg, r)) - T, y0 = feldBase(cfg, feld);
       const g = new EdgesGeometry(new BoxGeometry((r - l + 1.6) * S, (top - y0 + 1.6) * S, 0.001));
       markLine = new LineSegments(g, markMat);
       markLine.position.set(((l + r) / 2) * S + content.position.x, ((top + y0) / 2) * S, (cfg.tf / 2 + T + 0.6) * S);

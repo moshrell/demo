@@ -1,0 +1,96 @@
+PROMPTS ДЛЯ GEMINI: сайт электрика «Elektro Brakhage» (демо, папка stromkreis)
+
+Как работать:
+- Все кадры делай в ОДНОМ чате Gemini, строго по порядку (единый свет и стиль: вечер, тёплый свет ламп накаливания, графитовые тени).
+- Перед каждым промптом выбери кнопку формата из заголовка.
+- Кадры 02 → 03 и 14 → 15 — пары с одного ракурса: второй кадр каждой пары делай СРАЗУ после первого (промпт уже просит изменить предыдущую картинку).
+- Сохраняй файлы ТОЧНО под указанными именами (jpg) в папку D:\Webdesign\stromkreis\public\img\ (или просто прикрепи в этот чат — я разложу сам).
+- На кадрах нет текста, надписей, логотипов, цифр. Если Gemini нарисовал надпись или лицо крупно — попроси «сделай другой вариант» и сохрани под тем же именем.
+- Самые важные — 01, 02, 03 (главный экран). Если времени мало, сначала их.
+
+====================================================================
+01 · sicherungskasten.jpg · формат 3:4
+====================================================================
+Straight-on frontal photograph of the open interior of a modern German residential electrical distribution cabinet, shot exactly perpendicular to the back plate, perfectly centered and symmetrical, no perspective distortion, like a scan. The cabinet is a recessed wall enclosure with a light grey powder-coated steel frame and an open door that is not visible. Inside: a matte dark graphite back plate with three empty horizontal metal DIN rails evenly spaced across the full width, upper rail at about one third of the height, middle rail at the center, lower rail at about two thirds of the height. The rails are completely empty: no circuit breakers, no fuses, no modules, no wires crossing the rails. Neat grey cable ducts run horizontally between the rails and along the left and right edges, with closed duct covers. Lighting: dark evening room, a single warm tungsten light from slightly above giving a soft warm 2700K glow on the metal and deep graphite shadows at the edges. Realistic, sharp, calm, high resolution. No text, no labels, no stickers, no logos, no numbers, no warning symbols, no people, no watermark.
+
+====================================================================
+02 · haus-dunkel.jpg · формат 3:4
+====================================================================
+Photorealistic architectural cutaway cross-section of a typical German detached family house from the 1960s at night, viewed exactly straight-on from the front like an orthographic elevation drawing, no perspective, the front wall removed so every room is visible like a dollhouse. Strict layout, all rooms are clean rectangles with straight walls, thin walls between rooms:
+- Top: an attic under a symmetrical pitched tiled roof; on the roof surface a row of dark solar panels. The attic is empty with wooden roof beams.
+- Upper floor, two rooms of equal width side by side: on the left a bathroom with a white bathtub and a mirror; on the right a small home office with a desk, a chair and a shelf.
+- Ground floor, two rooms of equal width side by side: on the left a kitchen with a counter and a stove; on the right an integrated garage with a closed garage door at the back and a small modern electric car inside, a charging box on the garage wall.
+- Below ground: a basement spanning the full width, cut open into the soil, with a grey electrical meter cabinet on the wall, a few shelves and a heating unit; brown soil around the basement walls.
+- On the left side outside the house: a narrow front garden strip on the ground level with a lawn, a small tree, a low hedge and three small garden path lamps.
+- Above the roof: a deep night sky, dark blue-graphite, no moon, no stars.
+ALL LIGHTS ARE OFF: every room is dark, only very faint cool moonlight reveals the outlines of furniture, the windows are dark, the garden lamps are off. The house fills most of the frame with a little sky above and soil below. Realistic 3D architectural visualization, high detail, calm and clean. No people, no text, no labels, no numbers, no logos, no watermark.
+
+====================================================================
+03 · haus-hell.jpg · формат 3:4
+====================================================================
+Use the previous image exactly as it is: the same house, the same cutaway, the same camera, the same framing, the same composition, every wall, room, piece of furniture and object in exactly the same position and size. Change only the lighting: now ALL LIGHTS ARE ON. Every room (attic, bathroom, home office, kitchen, garage, basement) is lit by warm incandescent ceiling lamps with a cozy 2700K amber glow, each room has a visible glowing lamp near the ceiling and warm light falling on the furniture; the three garden path lamps glow warm amber on the lawn. The night sky and the soil stay dark. Nothing else changes. No people, no text, no labels, no numbers, no logos, no watermark.
+
+====================================================================
+04 · leistung-altbau.jpg · формат 4:3
+====================================================================
+Documentary photograph inside an old German house from the 1960s during electrical renovation, evening. A plastered wall with freshly cut horizontal and vertical channels (wall chases) for new cables, new grey installation cables neatly laid in the channels, an old brown socket and an old round switch still on the wall next to new empty flush boxes. A work lamp with warm tungsten light on the floor, dust sheets on the parquet floor, a ladder in the background. Warm 2700K light, deep graphite shadows, calm documentary craft photography, 35mm lens. No people, no text, no logos, no brand names, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+05 · leistung-wallbox.jpg · формат 4:3
+====================================================================
+Documentary photograph of a tidy private garage of a German house in the evening. A compact modern wall charging box in neutral graphite color mounted on a light grey plastered wall, its charging cable plugged into a small modern electric car parked inside. The cable to the charging box runs neatly in a straight grey cable duct along the wall. Warm 2700K light from a single ceiling lamp, deep graphite shadows, calm documentary photography, 35mm lens. No people, no text, no logos, no brand names, no license plate text, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+06 · leistung-pv.jpg · формат 4:3
+====================================================================
+Documentary photograph of a basement utility room in a German house in the evening: a modern wall-mounted home battery storage unit in white and graphite next to a hybrid solar inverter, connected with neat grey cables in cable ducts to a new electrical cabinet. A small window high on the wall shows the dark blue evening sky. Warm 2700K light from a ceiling lamp, deep graphite shadows, clean and orderly, calm documentary photography, 35mm lens. No people, no text, no displays with numbers, no logos, no brand names, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+07 · leistung-smarthome.jpg · формат 4:3
+====================================================================
+Documentary photograph of a modern kitchen in a renovated German family house in the evening. Warm pendant lights over a kitchen island glow at 2700K, under-cabinet LED strips light the counter, an induction cooktop, a simple matte white wall switch panel with a few buttons next to the doorway. Calm cozy atmosphere, deep graphite shadows in the corners, dark window with evening garden outside. Calm documentary interior photography, 35mm lens. No people, no text, no screens with text, no logos, no brand names, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+08 · leistung-echeck.jpg · формат 4:3
+====================================================================
+Documentary photograph in a small German office after working hours. On a desk, an electrician's hands (no face visible, only forearms in dark work clothing) hold the plug of a desktop computer power cable connected to a compact portable appliance tester with measuring leads. Around: office chairs, a monitor switched off, neat cable trays under the desks. Warm 2700K desk lamp light, deep graphite shadows, calm documentary photography, 35mm lens. No face, no text, no readable display, no labels, no logos, no brand names, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+09 · leistung-beleuchtung.jpg · формат 4:3
+====================================================================
+Documentary photograph of the front garden of a German family house at blue hour. A curved garden path lined with small low bollard lights glowing warm amber 2700K, a wall light next to the front door, a small tree softly lit from below by a ground spotlight, a low hedge and lawn. The sky is deep blue-graphite. Calm, cozy, realistic, 35mm lens, no people, no text, no house numbers, no logos, no brand names, no watermark. Sharp, high resolution.
+
+====================================================================
+10 · alt-schraubsicherungen.jpg · формат 1:1
+====================================================================
+Close-up documentary photograph of an old 1960s German fuse box: a row of old ceramic screw-in fuses with small round glass caps on a dark brown panel, slightly dusty, an old rotary electricity meter partly visible at the edge. Warm 2700K light from a flashlight, deep graphite shadows, shallow depth of field. No text, no readable labels, no numbers, no logos, no people, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+11 · alt-stoffleitung.jpg · формат 1:1
+====================================================================
+Close-up documentary photograph of old electrical wires coming out of an opened wall junction box in an old German house: wires with old fabric braided insulation and brittle black rubber insulation, slightly frayed, only two wires and no green-yellow earth wire, next to old plaster. Warm 2700K light, deep graphite shadows, shallow depth of field. No text, no numbers, no logos, no people, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+12 · alt-steckdose.jpg · формат 1:1
+====================================================================
+Close-up documentary photograph of an old 1960s wall socket made of yellowed cream plastic, with two round holes and NO earthing contacts, slightly discolored with a faint brown heat mark around one hole, mounted on an old patterned wallpaper. Warm 2700K light, deep graphite shadows, shallow depth of field. No text, no numbers, no logos, no people, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+13 · alt-zaehlerschrank.jpg · формат 1:1
+====================================================================
+Close-up documentary photograph of an old cramped electricity meter cabinet in a German basement from the 1970s: an old black rotary meter, a few old circuit breakers squeezed next to old screw fuses, wires tangled loosely across the panel, no free space left, a grey painted wooden board behind. Warm 2700K flashlight light, deep graphite shadows. No text, no readable labels, no numbers, no logos, no people, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+14 · referenz-vorher.jpg · формат 3:4
+====================================================================
+Straight-on documentary photograph of an old electricity meter board in the basement of a German house built in 1965, before renovation: an old black rotary meter mounted on a grey painted wooden board, old ceramic screw fuses, a few cables loosely fixed with old clips on a whitewashed basement wall, a bare light bulb lighting it from above. Warm 2700K light, deep graphite shadows, calm documentary photography, 35mm lens, camera exactly perpendicular to the wall. No people, no text, no readable labels, no numbers, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+15 · referenz-nachher.jpg · формат 3:4
+====================================================================
+Use the previous image as the base: the same basement wall, the same camera position, the same framing and the same bare light bulb. Change only the electrical installation: the old wooden board, the old meter and the old fuses are gone; in their place there is a new modern closed grey electrical meter cabinet with a clean light grey front and two small viewing windows, new cables run straight up into a neat grey cable duct, the wall around is freshly plastered and painted white. Warm 2700K light, deep graphite shadows, calm documentary photography. No people, no text, no readable labels, no numbers, no logos, no watermark. Realistic, sharp, high resolution.
+
+====================================================================
+16 · team.jpg · формат 16:9
+====================================================================
+Documentary photograph of three electricians at work in a bright stairwell of a German family house under renovation in the late afternoon: one on a ladder installing a ceiling light, one kneeling and pulling a grey cable into a wall channel, one young apprentice holding a cable reel. All wear neutral dark graphite work clothing without any prints. Faces are not the focus: seen from behind or from the side, small in the frame, nobody looks into the camera. Warm 2700K work lamp light mixed with soft daylight, deep graphite shadows, calm documentary craft photography, 35mm lens. No text, no logos, no brand names, no prints on clothing, no watermark. Realistic, sharp, high resolution.

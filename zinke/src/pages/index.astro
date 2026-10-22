@@ -64,7 +64,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
               {produkte.map((p, i) => <button type="button" class="sz__tab" data-prod={p.id} aria-pressed={i === 0}>{p.label}</button>)}
             </div>
             <div class="sz__stage" data-sz-stage>
-              <div class="sz__view" data-sz-view>
+              <div class="sz__vbox"><div class="sz__view" data-sz-view>
                 <div class="sz__svg" data-sz-svg></div>
                 <canvas class="sz__canvas" data-sz-canvas aria-hidden="true"></canvas>
                 <img class="sz__photo" data-sz-photo src={img(produkte[0].photo)} alt={produkte[0].alt} width="900" height="1200" loading="lazy" decoding="async" />
@@ -72,7 +72,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
                 <span class="sz__lbl hand" data-lbl-h aria-hidden="true"></span>
                 <span class="sz__lbl sz__lbl--d hand" data-lbl-d aria-hidden="true">Dübel statt Schrauben</span>
                 <p class="sz__note hand" data-sz-note>Scrollen: ich baue es Ihnen zusammen ↓</p>
-              </div>
+              </div></div>
               <div class="sz__capt" data-sz-capt>
                 <h2 data-sz-name>{produkte[0].label}</h2>
                 <p class="sz__capt-p" data-sz-cap>{produkte[0].caption}</p>
@@ -296,16 +296,23 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   /* Szene */
   .sz__track { height: 330vh; height: 330dvh; }
   .sz__sticky { position: sticky; top: var(--bar-h); height: calc(100vh - var(--bar-h)); height: calc(100dvh - var(--bar-h)); display: grid; grid-template-rows: auto minmax(0, 1fr); padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); background: var(--paper); }
-  .sz__tabs { display: flex; gap: var(--space-xs); padding: var(--space-xs) var(--gutter); overflow-x: auto; scrollbar-width: none; }
+  .sz__tabs { display: flex; gap: var(--space-xs); padding: var(--space-xs) 0; overflow-x: auto; scrollbar-width: none; max-width: 64rem; width: calc(100% - 2 * var(--gutter)); margin: 0 auto; box-sizing: border-box; }
+  @media (min-width: 40rem) { .sz__tabs { justify-content: center; } }
   .sz__tab { flex: 0 0 auto; min-height: 44px; padding: 0 var(--space-md); border: 1.5px solid var(--ink); border-radius: 999px; background: transparent; font-weight: 700; cursor: pointer; }
   .sz__tab[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
   .sz__stage { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto; margin: 0 var(--gutter); overflow: hidden; background: linear-gradient(var(--paper-2), var(--paper)); border-radius: var(--radius-lg); max-width: 64rem; width: calc(100% - 2 * var(--gutter)); justify-self: center; min-height: 0; }
-  .sz__view { position: relative; min-height: 0; }
+  /* Bildfläche hat exakt das Seitenverhältnis der Fotos (Handy 3:4, breit 4:3): nichts wird beschnitten */
+  .sz { --R: 0.75; }
+  @media (min-aspect-ratio: 1/1) { .sz { --R: 1.3333; } }
+  .sz__vbox { align-self: stretch; min-height: 0; display: grid; place-items: center; container-type: size; }
+  .sz__view { position: relative; width: 100%; height: 100%; min-height: 0; background: var(--paper-3); }
+  @supports (width: 1cqw) { .sz__view { width: min(100cqw, calc(100cqh * var(--R))); height: auto; aspect-ratio: var(--R); } }
   .sz__svg, .sz__canvas, .sz__photo { position: absolute; inset: 0; width: 100%; height: 100%; }
   .sz__svg { display: grid; place-items: center; padding: var(--space-lg); transition: opacity var(--dur) var(--ease-out); }
   .sz__svg .sk { max-height: 100%; }
   .sz__canvas { opacity: 0; touch-action: pan-y; }
-  .sz__photo { object-fit: cover; opacity: 0; }
+  .sz__photo { object-fit: cover; opacity: 0; will-change: opacity; }
+  .sz__canvas, .sz__lbl { will-change: opacity; }
   .sz__lbl { position: absolute; left: 0; top: 0; font-size: 1.7rem; opacity: 0; pointer-events: none; white-space: nowrap; transition: opacity var(--dur) var(--ease-out); }
   .sz__note { position: absolute; left: 50%; bottom: var(--space-lg); transform: translateX(-50%); font-size: 1.5rem; white-space: nowrap; transition: opacity var(--dur-slow) var(--ease-out); }
   .sz__note.is-off { opacity: 0; }
@@ -317,12 +324,18 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .sz__capt h2 { font-size: var(--text-xl); }
   .sz__capt-p { font-size: var(--text-sm); color: var(--ink-2); }
   .sz__capt-price { font-weight: 700; }
+  /* Handy quer: Bildfläche links, Beschriftung rechts (sonst bleibt für das Bild kaum Höhe) */
+  @media (orientation: landscape) and (max-height: 32rem) {
+    .sz__stage { grid-template-columns: minmax(0, 1fr) minmax(11rem, 15rem); grid-template-rows: minmax(0, 1fr); align-items: center; }
+    .sz__capt { padding: var(--space-sm); }
+  }
   .sz--static .sz__track { height: auto; }
   .sz--static .sz__sticky { position: static; height: auto; display: block; padding-bottom: 0; }
   .sz--static .sz__stage { aspect-ratio: auto; display: grid; gap: var(--space-md); padding: var(--space-md); background: var(--paper-2); }
   .sz--static .sz__svg, .sz--static .sz__photo, .sz--static .sz__capt { position: static; opacity: 1; transform: none; height: auto; background: none; padding: 0; }
   .sz--static .sz__photo { aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius); }
-  .sz--static .sz__view { display: grid; gap: var(--space-md); }
+  .sz--static .sz__view { display: grid; gap: var(--space-md); width: auto; aspect-ratio: auto; background: none; }
+  .sz--static .sz__vbox { display: block; container-type: normal; }
   .sz--static .sz__canvas, .sz--static .sz__note, .sz--static .sz__lbl { display: none; }
   .is-missing { visibility: hidden; }
   .abl img.is-missing, .ref > img.is-missing, .uber__img.is-missing { display: none; }

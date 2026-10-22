@@ -3,6 +3,7 @@ import site from '../data/site.json';
 import { PRESETS, clone, normalize, width, type Cfg } from './model';
 import { sketch } from './sketch';
 import { zoneFor } from './zone';
+import fitData from '../data/fit.json';
 import type { WerkScene } from './scene';
 
 const $ = <T extends HTMLElement>(s: string, r: ParentNode = document) => r.querySelector<T>(s);
@@ -91,26 +92,36 @@ if (sz) {
   const capt = sz.querySelector<HTMLElement>('[data-sz-capt]')!, note = sz.querySelector<HTMLElement>('[data-sz-note]')!;
   const lbl = { b: sz.querySelector<HTMLElement>('[data-lbl-b]')!, h: sz.querySelector<HTMLElement>('[data-lbl-h]')!, d: sz.querySelector<HTMLElement>('[data-lbl-d]')! };
   const prods = JSON.parse(sz.dataset.prods || '[]') as { id: string; label: string; preset: string; photo: string; alt: string; caption: string; price: string }[];
+  const wide = matchMedia('(min-aspect-ratio: 1/1)');
   let cur = prods[0], cfg: Cfg = normalize(clone(PRESETS[cur.preset]));
   const done = new Set<string>();   // schon einmal fertig gebaut: bleibt zusammengebaut, ohne neu scrollen
   let scene: WerkScene | null = null, p = 0, photoOk = true, started = false, staticMode = reduced;
   const link = capt.querySelector<HTMLAnchorElement>('[data-sz-link]')!;
 
+  /** Kamera auf die Silhouette im Foto legen (nur wenn das geladene Foto zum Format der Fläche passt) */
+  const applyFit = () => {
+    const isD = photo.currentSrc.includes('-d.jpg');
+    const f = photoOk && !photo.classList.contains('is-missing') && isD === wide.matches ? (fitData as Record<string, { x0: number; y0: number; x1: number; y1: number }>)[`${cur.id}:${isD ? 'd' : 'm'}`] : undefined;
+    scene?.setFit(f || null);
+  };
   const setProduct = (id: string) => {
     cur = prods.find((x) => x.id === id) || prods[0]; cfg = normalize(clone(PRESETS[cur.preset]));
-    photoOk = true; photo.classList.remove('is-missing'); delete photo.dataset.fixed; photo.removeAttribute('data-fb');
-    photo.src = BASE + 'img/' + cur.photo; photo.alt = cur.alt;
+    photoOk = true; photo.classList.remove('is-missing'); delete photo.dataset.fixed;
+    // Querformat-Variante (-d) auf breiten Bildschirmen; fehlt sie, greift das Hochformat
+    photo.dataset.fb = 'img/' + cur.photo;
+    photo.src = BASE + 'img/' + (wide.matches ? cur.photo.replace('.jpg', '-d.jpg') : cur.photo); photo.alt = cur.alt;
     svgBox.innerHTML = sketch(cfg, 'wood', { marks: true });
     capt.querySelector('[data-sz-name]')!.textContent = cur.label;
     capt.querySelector('[data-sz-cap]')!.textContent = cur.caption;
     capt.querySelector('[data-sz-price]')!.textContent = cur.price;
     link.href = `${BASE}konstruktor/?v=${cur.preset}`;
     $$('[data-prod]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.prod === cur.id)));
-    scene?.setConfig(cfg, false);
+    scene?.setConfig(cfg, false); applyFit();
     paint();
   };
   photo.addEventListener('error', () => { photoOk = false; paint(); });
-  photo.addEventListener('load', () => { photoOk = true; paint(); });
+  photo.addEventListener('load', () => { photoOk = true; applyFit(); paint(); });
+  wide.addEventListener?.('change', () => { setProduct(cur.id); fillLabels(); });
 
   const pe = () => (done.has(cur.id) ? 1 : p);
   function paint() {
@@ -126,17 +137,23 @@ if (sz) {
     note.classList.toggle('is-off', q > 0.04);
     labels();
   }
+  const dims = new Map<HTMLElement, [number, number]>();   // Maße der Beschriftungen einmal messen, nicht bei jedem Frame (kein erzwungenes Layout beim Scrollen)
+  let viewW = 0;
+  const measure = () => { dims.clear(); viewW = lbl.b.parentElement?.clientWidth || 0; };
+  new ResizeObserver(measure).observe(lbl.b.parentElement!);
   function labels() {
     if (!scene) return;
     const q = pe(), asm = Math.min(1, q / 0.72), mix = Math.max(0, Math.min(1, (q - 0.8) / 0.15));
     const place = (el: HTMLElement, name: 'breite' | 'hoehe' | 'duebel', on: boolean) => {
+      if (!on && el.style.opacity === '0') return;
       const a = on ? scene!.anchor(name) : null;
       el.style.opacity = a && a.visible ? '1' : '0';
       if (a && a.visible) {
-        const hw = el.offsetWidth / 2 + 6, W = el.parentElement ? el.parentElement.clientWidth : 0;
+        const sz = dims.get(el) || (dims.set(el, [el.offsetWidth, el.offsetHeight]), dims.get(el)!);
+        const hw = sz[0] / 2 + 6, W = viewW;
         const x = W ? Math.max(hw, Math.min(W - hw, a.x)) : a.x;
         // Maße stehen neben/über dem Möbel, nie darauf: Höhe senkrecht links, Breite oberhalb
-        const hh = el.offsetHeight / 2;
+        const hh = sz[1] / 2;
         const pos = name === 'hoehe' ? `translate(${Math.max(hh + 2, a.x - 6 - hh).toFixed(0)}px, ${a.y.toFixed(0)}px) translate(-50%, -50%) rotate(-90deg)`
           : name === 'breite' ? `translate(${x.toFixed(0)}px, ${(a.y - 4).toFixed(0)}px) translate(-50%, -100%)`
           : `translate(${x.toFixed(0)}px, ${a.y.toFixed(0)}px) translate(-50%, -50%)`;
@@ -146,13 +163,15 @@ if (sz) {
     const keep = !photoOk || mix < 0.3;
     place(lbl.b, 'breite', asm > 0.97 && keep); place(lbl.h, 'hoehe', asm > 0.97 && keep); lbl.d.style.opacity = asm > 0.1 && asm < 0.6 ? '1' : '0';
   }
-  const onScroll = () => {
+  let raf = 0;
+  const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); };
+  const update = () => {
     const r = track.getBoundingClientRect(), vh = innerHeight;
     p = Math.max(0, Math.min(1, -r.top / Math.max(1, r.height - vh)));
     if (p > 0.9) done.add(cur.id);
     paint();
   };
-  const fillLabels = () => { lbl.b.textContent = `${width(cfg as any) || (cfg as any).l} cm`; lbl.h.textContent = `${(cfg as any).h || 75} cm`; };
+  const fillLabels = () => { dims.clear(); lbl.b.textContent = `${width(cfg as any) || (cfg as any).l} cm`; lbl.h.textContent = `${(cfg as any).h || 75} cm`; };
 
   $$('[data-prod]').forEach((b) => b.addEventListener('click', () => {
     const id = b.dataset.prod!;
@@ -162,7 +181,7 @@ if (sz) {
     if (!staticMode && !done.has(id)) {
       const top = track.getBoundingClientRect().top + scrollY;
       if (Math.abs(scrollY - top) > 2) scrollTo({ top, behavior: 'instant' as ScrollBehavior });
-      onScroll();
+      update();
     }
   }));
   setProduct(cur.id); fillLabels();
@@ -180,7 +199,10 @@ if (sz) {
           onFrame: () => labels(),
           onSlow: () => { staticMode = true; sz.classList.add('sz--static'); scene?.dispose(); scene = null; canvas.style.display = 'none'; paint(); },
         });
-        scene.setConfig(cfg, false); fillLabels(); paint();
+        scene.setConfig(cfg, false); fillLabels(); applyFit(); paint();
+        // Fotos im Leerlauf laden und dekodieren, damit sie beim Scrollen nicht ruckeln
+        const idle = (window as any).requestIdleCallback || ((f: () => void) => setTimeout(f, 600));
+        idle(() => prods.forEach((x) => { const im = new Image(); im.decoding = 'async'; im.src = BASE + 'img/' + (wide.matches ? x.photo.replace('.jpg', '-d.jpg') : x.photo); im.decode?.().catch(() => {}); }));
       } catch { staticMode = true; sz.classList.add('sz--static'); paint(); }
     };
     if ('IntersectionObserver' in window) new IntersectionObserver((es, o) => { if (es.some((e) => e.isIntersecting)) { start(); o.disconnect(); } }, { rootMargin: '120% 0px' }).observe(sz);

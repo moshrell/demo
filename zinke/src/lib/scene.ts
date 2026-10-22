@@ -35,6 +35,8 @@ export interface WerkScene {
   setConfig(c: Cfg, animate: boolean): void;
   setProgress(p: number): void;
   setView(v: View): void;
+  /** Kamera so setzen, dass die Möbel-Silhouette genau die Fläche f (Bruchteile 0..1 des Bildes) füllt, z. B. um sie mit einem Foto zur Deckung zu bringen */
+  setFit(f: { x0: number; y0: number; x1: number; y1: number } | null): void;
   mark(feld: number | null): void;
   anchor(name: 'breite' | 'hoehe' | 'zinken' | 'duebel'): { x: number; y: number; visible: boolean } | null;
   resize(): void;
@@ -255,6 +257,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
   let drag = 0, dragGoal = 0, dragP = 0, dragPGoal = 0;
   const maxYaw = o.maxYaw ?? (o.mode === 'konstruktor' ? 30 : 12);
   let view: View = 'front';
+  let fit: { x0: number; y0: number; x1: number; y1: number } | null = null;
   let box = { x0: 0, x1: 1, y0: 0, y1: 1, z0: 0, z1: 0 };
   function frame(v: View) {
     const b = box, w = b.x1 - b.x0, h = b.y1 - b.y0;
@@ -267,6 +270,11 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
     const table = cfg?.t === 't';
     goal.yaw = v === 'links' ? -28 : v === 'rechts' ? 28 : v === 'ecke' ? -18 : v === 'nah' ? -12 : 0;
     goal.pitch = v === 'oben' ? (table ? 58 : 50) : v === 'ecke' ? 26 : v === 'nah' ? 12 : table ? 18 : v === 'front' ? 7 : 10;
+    if (fit && v === 'front') {
+      const fw = Math.max(0.05, fit.x1 - fit.x0), fh = Math.max(0.05, fit.y1 - fit.y0);
+      const dH = h / (fh * 2 * Math.tan(vf / 2)), dW = w / (fw * 2 * Math.tan(hf / 2));
+      goal.dist = (dH + dW) / 2 + b.z1; goal.pitch = 0; goal.yaw = 0;
+    }
     if (v === 'oben') goal.dist *= table ? 1.0 : 1.12;
     if (v === 'ecke' && cfg) {
       if (table) { goal.tx = -w / 2 + w * 0.2; goal.ty = b.y1; goal.dist *= 0.5; }
@@ -277,6 +285,13 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
       if (table) { goal.tx = -w * 0.25; goal.ty = b.y1 * 0.7; goal.yaw = 34; }
       else { goal.tx = -w * 0.12; goal.ty = b.y0 + h * 0.5; }
     }
+  }
+  /** Lens-Shift: Silhouette auf die Mitte der Fläche f schieben (Senkrechte bleiben senkrecht, wie bei einem Foto) */
+  function applyOffset() {
+    const W = el.clientWidth, H = el.clientHeight;
+    if (fit && view === 'front' && W && H) camera.setViewOffset(W, H, -((fit.x0 + fit.x1) / 2 - 0.5) * W, -((fit.y0 + fit.y1) / 2 - 0.5) * H, W, H);
+    else camera.clearViewOffset();
+    camera.updateProjectionMatrix();
   }
   function applyCam() {
     const yaw = ((cam.yaw + drag) * Math.PI) / 180, pitch = (Math.max(-4, Math.min(80, cam.pitch + dragP)) * Math.PI) / 180;
@@ -367,7 +382,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
     maxOrder = Math.max(1, ...parts.map((p) => p.order));
     buildPicks(c, xoff);
     fitSun();
-    frame(view);
+    frame(view); applyOffset();
     if (!animate || prevType !== c.t) Object.assign(cam, goal);
     if (o.mode === 'assembly') setProgress(progress);
     need();
@@ -534,7 +549,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
     if (!w || !h) return;
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
-    frame(view); Object.assign(cam, { ...goal, yaw: cam.yaw, pitch: cam.pitch });
+    frame(view); Object.assign(cam, { ...goal, yaw: cam.yaw, pitch: cam.pitch }); applyOffset();
     need();
   }
   const ro = new ResizeObserver(resize); ro.observe(el);
@@ -543,7 +558,8 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
   const api: WerkScene = {
     setConfig(c, animate) { const holzChange = cfg && (cfg.holz !== c.holz || cfg.ober !== c.ober || cfg.farbe !== c.farbe); setConfig(c, animate); if (holzChange) { setTimeout(() => { syncOwn(); need(); }, 0); texCache.get(c.holz)?.then(() => { syncOwn(); need(); }); } },
     setProgress,
-    setView(v) { view = v; frame(v); dragGoal = 0; dragPGoal = 0; need(); },
+    setView(v) { view = v; frame(v); applyOffset(); dragGoal = 0; dragPGoal = 0; need(); },
+    setFit(f) { fit = f; frame(view); Object.assign(cam, { ...goal }); applyOffset(); need(); },
     mark(feld) {
       if (markLine) { root.remove(markLine); markLine.geometry.dispose(); markLine = null; }
       if (feld === null || !cfg || cfg.t === 't') return;
@@ -557,7 +573,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
     anchor(name) {
       if (!cfg) return null;
       const b = box; let v: Vector3;
-      if (name === 'breite') v = new Vector3((b.x0 + b.x1) / 2, b.y1 + 0.06, b.z1);
+      if (name === 'breite') v = new Vector3((b.x0 + b.x1) / 2, b.y1 + 0.05, b.z0);
       else if (name === 'hoehe') v = new Vector3(b.x0 - 0.06, (b.y0 + b.y1) / 2, b.z1);
       else if (name === 'zinken') v = new Vector3(b.x0 + 0.01, b.y1, 0);
       else {

@@ -52,6 +52,24 @@ $$<HTMLImageElement>('img').forEach((i) => { if (i.complete && i.naturalWidth ==
 }
 $$('[data-menu] a').forEach((a) => a.addEventListener('click', () => $<HTMLDetailsElement>('[data-menu]')!.removeAttribute('open')));
 
+/* ---- Kopfzeile: beim Runterscrollen weg, beim Hochscrollen wieder da (nur Startseite) ---- */
+{
+  const hd = $('.hd'), menu = $<HTMLDetailsElement>('[data-menu]');
+  if (hd) {
+    let last = scrollY, tick = false;
+    const run = () => {
+      tick = false;
+      const y = Math.max(0, scrollY), dy = y - last;
+      if (y < 80 || menu?.open) hd.classList.remove('is-hidden');
+      else if (dy > 6) hd.classList.add('is-hidden');
+      else if (dy < -6) hd.classList.remove('is-hidden');
+      if (Math.abs(dy) > 6 || y < 80) last = y;
+    };
+    addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(run); } }, { passive: true });
+    hd.addEventListener('focusin', () => hd.classList.remove('is-hidden'));
+  }
+}
+
 /* ---- klebende Leiste ausblenden, wenn Formular im Bild ---- */
 const bar = $('[data-bar]'), form = $('#anfrage');
 if (bar && form && 'IntersectionObserver' in window) new IntersectionObserver((es) => { bar.classList.toggle('is-off', es.some((e) => e.isIntersecting)); }, { threshold: 0.12 }).observe(form);
@@ -96,6 +114,7 @@ if (sz) {
   let cur = prods[0], cfg: Cfg = normalize(clone(PRESETS[cur.preset]));
   const done = new Set<string>();   // schon einmal fertig gebaut: bleibt zusammengebaut, ohne neu scrollen
   let scene: WerkScene | null = null, p = 0, photoOk = true, started = false, staticMode = reduced;
+  const stickyEl = sz.querySelector<HTMLElement>('.sz__sticky')!;
   const link = capt.querySelector<HTMLAnchorElement>('[data-sz-link]')!;
 
   /** Kamera auf die Silhouette im Foto legen (nur wenn das geladene Foto zum Format der Fläche passt) */
@@ -123,17 +142,19 @@ if (sz) {
   photo.addEventListener('load', () => { photoOk = true; applyFit(); paint(); });
   wide.addEventListener?.('change', () => { setProduct(cur.id); fillLabels(); });
 
+  // Zeitplan der Szene (Anteil des Scrollwegs): Aufbau 0–0,62, Überblendung ins Foto 0,68–0,88, Beschriftung ab 0,82
+  const A_END = 0.62, M0 = 0.68, M1 = 0.88, C_ON = 0.82;
   const pe = () => (done.has(cur.id) ? 1 : p);
   function paint() {
     if (staticMode) { photo.style.opacity = ''; svgBox.style.opacity = ''; canvas.style.display = 'none'; capt.classList.add('is-on'); return; }
     const q = pe();
-    const asm = Math.min(1, q / 0.72);
-    const mix = Math.max(0, Math.min(1, (q - 0.8) / 0.15));
+    const asm = Math.min(1, q / A_END);
+    const mix = Math.max(0, Math.min(1, (q - M0) / (M1 - M0)));
     scene?.setProgress(asm);
     photo.style.opacity = String(photoOk ? mix : 0);
     canvas.style.opacity = scene ? String(photoOk ? 1 - mix * 0.9 : 1) : '0';
     svgBox.style.opacity = scene ? '0' : (staticMode ? '1' : '0.38');
-    capt.classList.toggle('is-on', q > 0.88 || staticMode);
+    capt.classList.toggle('is-on', q > C_ON || staticMode);
     note.classList.toggle('is-off', q > 0.04);
     labels();
   }
@@ -143,7 +164,7 @@ if (sz) {
   new ResizeObserver(measure).observe(lbl.b.parentElement!);
   function labels() {
     if (!scene) return;
-    const q = pe(), asm = Math.min(1, q / 0.72), mix = Math.max(0, Math.min(1, (q - 0.8) / 0.15));
+    const q = pe(), asm = Math.min(1, q / A_END), mix = Math.max(0, Math.min(1, (q - M0) / (M1 - M0)));
     const place = (el: HTMLElement, name: 'breite' | 'hoehe' | 'duebel', on: boolean) => {
       if (!on && el.style.opacity === '0') return;
       const a = on ? scene!.anchor(name) : null;
@@ -166,9 +187,10 @@ if (sz) {
   let raf = 0;
   const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); };
   const update = () => {
-    const r = track.getBoundingClientRect(), vh = innerHeight;
+    // Höhe der klebenden Fläche statt innerHeight: ändert sich nicht, wenn die Adressleiste ein-/ausfährt
+    const r = track.getBoundingClientRect(), vh = stickyEl.offsetHeight;
     p = Math.max(0, Math.min(1, -r.top / Math.max(1, r.height - vh)));
-    if (p > 0.9) done.add(cur.id);
+    if (p > 0.85) done.add(cur.id);
     paint();
   };
   const fillLabels = () => { dims.clear(); lbl.b.textContent = `${width(cfg as any) || (cfg as any).l} cm`; lbl.h.textContent = `${(cfg as any).h || 75} cm`; };

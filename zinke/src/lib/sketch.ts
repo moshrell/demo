@@ -23,7 +23,7 @@ function shape(p: Part): string | null {
   if (p.cyl && p.cyl.axis === 'z') return `M${n1(p.cyl.x - p.cyl.r)} ${n1(-p.cyl.y)}a${p.cyl.r} ${p.cyl.r} 0 1 0 ${n1(2 * p.cyl.r)} 0a${p.cyl.r} ${p.cyl.r} 0 1 0 ${n1(-2 * p.cyl.r)} 0Z`;
   return null;
 }
-const ORDER = ['back', 'side', 'top', 'bottom', 'plinth', 'shelf', 'steel', 'bench', 'cushion', 'peg', 'leg', 'rail', 'leiste', 'lamelle', 'drawer', 'door', 'knob'];
+const ORDER = ['back', 'side', 'top', 'bottom', 'plinth', 'shelf', 'steel', 'bench', 'cushion', 'leiste', 'peg', 'leg', 'rail', 'lamelle', 'drawer', 'door', 'knob'];
 
 export function sketch(c: Cfg, style: 'wood' | 'pencil', opts: { picks?: boolean; marks?: boolean } = {}): string {
   const parts = buildParts(c, false).filter((p) => p.kind !== 'dowel' && p.kind !== 'zinke')

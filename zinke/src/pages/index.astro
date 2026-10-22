@@ -70,9 +70,13 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
                 <img class="sz__photo" data-sz-photo src={img(produkte[0].photo)} alt={produkte[0].alt} width="900" height="1200" loading="lazy" decoding="async" />
                 <span class="sz__lbl hand" data-lbl-b aria-hidden="true"></span>
                 <span class="sz__lbl hand" data-lbl-h aria-hidden="true"></span>
-                <span class="sz__lbl sz__lbl--d hand" data-lbl-d aria-hidden="true">Dübel statt Schrauben</span>
-                <p class="sz__note hand" data-sz-note>Scrollen: ich baue es Ihnen zusammen ↓</p>
               </div></div>
+            </div>
+            <div class="sz__side">
+              <div class="sz__hint">
+                <p class="sz__note hand" data-sz-note>Scrollen: ich baue es Ihnen zusammen ↓</p>
+                <span class="sz__lbl sz__lbl--d hand" data-lbl-d aria-hidden="true">Dübel statt Schrauben</span>
+              </div>
               <div class="sz__capt" data-sz-capt>
                 <h2 data-sz-name>{produkte[0].label}</h2>
                 <p class="sz__capt-p" data-sz-cap>{produkte[0].caption}</p>
@@ -273,7 +277,8 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .skip { position: absolute; left: -999px; top: 0; z-index: 100; padding: 0.6rem 1rem; background: var(--ink); color: var(--paper); }
   .skip:focus { left: 0; }
   /* Kopf */
-  .hd { position: sticky; top: 0; z-index: 40; height: var(--bar-h); display: flex; align-items: center; gap: var(--space-sm); padding: 0 var(--gutter); background: rgb(246 242 234 / 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); }
+  .hd { position: sticky; top: 0; z-index: 40; transition: transform var(--dur) var(--ease-out); height: var(--bar-h); display: flex; align-items: center; gap: var(--space-sm); padding: 0 var(--gutter); background: rgb(246 242 234 / 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); }
+  .hd.is-hidden { transform: translateY(-101%); }
   .hd__brand { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-weight: 700; font-size: 1.45rem; text-decoration: none; margin-right: auto; }
   .hd__mark { width: 22px; height: 22px; background: var(--ink); clip-path: polygon(0 100%, 0 30%, 22% 30%, 14% 100%, 36% 100%, 28% 0, 72% 0, 64% 100%, 86% 100%, 78% 30%, 100% 30%, 100% 100%); border-top: 3px solid var(--accent); }
   .hd__status { display: none; font-size: var(--text-sm); color: var(--ink-2); }
@@ -294,48 +299,77 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .hero__no { font-size: var(--text-sm); color: var(--muted); max-width: 32rem; }
   .hero__hand { font-size: 1.5rem; transform: rotate(-3deg); }
   /* Szene */
-  .sz__track { height: 330vh; height: 330dvh; }
-  .sz__sticky { position: sticky; top: var(--bar-h); height: calc(100vh - var(--bar-h)); height: calc(100dvh - var(--bar-h)); display: grid; grid-template-rows: auto minmax(0, 1fr); padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); background: var(--paper); }
-  .sz__tabs { display: flex; gap: var(--space-xs); padding: var(--space-xs) 0; overflow-x: auto; scrollbar-width: none; max-width: 64rem; width: calc(100% - 2 * var(--gutter)); margin: 0 auto; box-sizing: border-box; }
+  .sz { --R: 0.75; --tabs-h: 3.75rem; --side-min: 9.5rem; --full: 100vh; --avail: calc(var(--full) - var(--bar-h) - env(safe-area-inset-bottom)); }
+  @supports (height: 100svh) { .sz { --full: 100svh; } }
+  @media (min-width: 60rem) { .sz { --avail: var(--full); } }
+  @media (min-aspect-ratio: 1/1) { .sz { --R: 1.3333; } }
+  /* svh statt dvh: die Höhe ändert sich nicht, wenn die Adressleiste ein-/ausfährt (kein Größensprung der Fläche) */
+  .sz__track { height: 230vh; height: 230svh; }
+  .sz__sticky { position: sticky; top: 0; height: 100vh; height: var(--full); display: grid; grid-template-rows: auto auto minmax(0, 1fr); align-content: start; padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); background: var(--paper); }
+  .sz__tabs { display: flex; gap: var(--space-xs); padding: var(--space-xs) 0; overflow-x: auto; scrollbar-width: none; max-width: 64rem; width: calc(100% - 2 * var(--gutter)); margin: 0 auto; box-sizing: border-box; min-height: var(--tabs-h); align-items: center; }
   @media (min-width: 40rem) { .sz__tabs { justify-content: center; } }
   .sz__tab { flex: 0 0 auto; min-height: 44px; padding: 0 var(--space-md); border: 1.5px solid var(--ink); border-radius: 999px; background: transparent; font-weight: 700; cursor: pointer; }
   .sz__tab[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
-  .sz__stage { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto; margin: 0 var(--gutter); overflow: hidden; background: linear-gradient(var(--paper-2), var(--paper)); border-radius: var(--radius-lg); max-width: 64rem; width: calc(100% - 2 * var(--gutter)); justify-self: center; min-height: 0; }
-  /* Bildfläche hat exakt das Seitenverhältnis der Fotos (Handy 3:4, breit 4:3): nichts wird beschnitten */
-  .sz { --R: 0.75; }
-  @media (min-aspect-ratio: 1/1) { .sz { --R: 1.3333; } }
-  .sz__vbox { align-self: stretch; min-height: 0; display: grid; place-items: center; container-type: size; }
-  .sz__view { position: relative; width: 100%; height: 100%; min-height: 0; background: var(--paper-3); }
-  @supports (width: 1cqw) { .sz__view { width: min(100cqw, calc(100cqh * var(--R))); height: auto; aspect-ratio: var(--R); } }
+  .sz__stage { position: relative; margin: 0 auto; width: calc(100% - 2 * var(--gutter)); max-width: 64rem; container-type: inline-size; }
+  .sz__vbox { display: block; }
+  .sz__view { position: relative; width: 100%; aspect-ratio: var(--R); margin: 0 auto; background: var(--paper-3); border-radius: var(--radius-lg); overflow: hidden; }
+  @supports (width: 1cqw) {
+    /* Hochformat: Breite der Spalte, Höhe begrenzt durch Platz für Tabs und Textblock darunter */
+    .sz__view { width: auto; max-width: 100%; height: min(calc(100cqw / var(--R)), calc(100vh - var(--tabs-h) - var(--side-min) - var(--bar-h) - env(safe-area-inset-bottom))); height: min(calc(100cqw / var(--R)), calc(100svh - var(--tabs-h) - var(--side-min) - var(--bar-h) - env(safe-area-inset-bottom))); }
+  }
   .sz__svg, .sz__canvas, .sz__photo { position: absolute; inset: 0; width: 100%; height: 100%; }
   .sz__svg { display: grid; place-items: center; padding: var(--space-lg); transition: opacity var(--dur) var(--ease-out); }
   .sz__svg .sk { max-height: 100%; }
-  .sz__canvas { opacity: 0; touch-action: pan-y; }
+  .sz__canvas { opacity: 0; touch-action: auto; }
   .sz__photo { object-fit: cover; opacity: 0; will-change: opacity; }
   .sz__canvas, .sz__lbl { will-change: opacity; }
-  .sz__lbl { position: absolute; left: 0; top: 0; font-size: 1.7rem; opacity: 0; pointer-events: none; white-space: nowrap; transition: opacity var(--dur) var(--ease-out); }
-  .sz__note { position: absolute; left: 50%; bottom: var(--space-lg); transform: translateX(-50%); font-size: 1.5rem; white-space: nowrap; transition: opacity var(--dur-slow) var(--ease-out); }
+  .sz__lbl { position: absolute; left: 0; top: 0; font-size: 1.7rem; line-height: 1.1; opacity: 0; pointer-events: none; white-space: nowrap; transition: opacity var(--dur) var(--ease-out); }
+  /* Textblock unter bzw. neben der Fläche: Hinweis und Dübel-Plakette teilen sich einen Platz, am Ende ersetzt ihn die Beschriftung */
+  @media (max-width: 40rem) { .sz__lbl:not(.sz__lbl--d) { font-size: 1.3rem; } }
+  .sz__side { display: grid; align-content: start; justify-items: center; padding: var(--space-md) var(--gutter) var(--space-xs); min-height: var(--side-min); }
+  .sz__side > * { grid-area: 1 / 1; }
+  .sz__hint { display: grid; justify-items: center; align-items: center; text-align: center; }
+  .sz__hint > * { grid-area: 1 / 1; }
+  .sz__note { font-size: 1.5rem; margin: 0; transition: opacity var(--dur-slow) var(--ease-out); }
   .sz__note.is-off { opacity: 0; }
   @media (prefers-reduced-motion: no-preference) { .sz__note:not(.is-off) { animation: sacken 1.6s var(--ease-in-out) 2; } }
-  @keyframes sacken { 50% { transform: translate(-50%, 6px); } }
-  .sz__lbl--d { left: var(--space-sm); top: var(--space-sm); transform: rotate(-2deg); padding: 0.05rem 0.6rem; font-size: 1.4rem; color: var(--ink); background: var(--paper); border: 1.5px dashed var(--accent); border-radius: var(--radius); box-shadow: 0 2px 8px rgb(20 32 46 / 0.12); }
-  .sz__capt { position: relative; padding: var(--space-sm) var(--space-md) var(--space-md); background: var(--paper); display: grid; gap: 0.3rem; justify-items: start; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
+  @keyframes sacken { 50% { transform: translateY(6px); } }
+  .sz__lbl--d { position: static; transform: rotate(-2deg); padding: 0.05rem 0.6rem; font-size: 1.4rem; color: var(--ink); background: var(--paper); border: 1.5px dashed var(--accent); border-radius: var(--radius); box-shadow: 0 2px 8px rgb(20 32 46 / 0.12); }
+  .sz__capt { display: grid; gap: 0.3rem; justify-items: center; text-align: center; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); background: var(--paper); }
   .sz__capt.is-on { opacity: 1; transform: none; pointer-events: auto; }
   .sz__capt h2 { font-size: var(--text-xl); }
-  .sz__capt-p { font-size: var(--text-sm); color: var(--ink-2); }
+  .sz__capt-p { font-size: var(--text-sm); color: var(--ink-2); max-width: 28rem; }
   .sz__capt-price { font-weight: 700; }
-  /* Handy quer: Bildfläche links, Beschriftung rechts (sonst bleibt für das Bild kaum Höhe) */
-  @media (orientation: landscape) and (max-height: 32rem) {
-    .sz__stage { grid-template-columns: minmax(0, 1fr) minmax(11rem, 15rem); grid-template-rows: minmax(0, 1fr); align-items: center; }
-    .sz__capt { padding: var(--space-sm); }
+  /* Breit (Desktop, Tablet quer, Handy quer): Fläche links auf ganzer Höhe, Spalte rechts mit Auswahl, Name, Preis, Knopf, Plakette */
+  @media (min-aspect-ratio: 1/1) {
+    .sz__sticky { top: 0; grid-template-columns: minmax(0, calc(var(--avail) * 1.3333)) minmax(20rem, 1fr); grid-template-rows: minmax(0, 1fr) auto auto minmax(0, 1fr); padding-bottom: calc(var(--full) - var(--avail)); }
+    .sz__stage { grid-column: 1; grid-row: 1 / -1; width: 100%; max-width: none; margin: 0; align-self: center; }
+    .sz__view { width: 100%; height: auto; max-width: none; border-radius: 0; }
+    @supports (width: 1cqw) { .sz__view { width: 100%; height: auto; max-height: var(--avail); } }
+    .sz__tabs { grid-column: 2; grid-row: 2; flex-direction: column; align-items: stretch; width: calc(100% - 3rem); max-width: 22rem; min-height: 0; padding: 0 0 var(--space-md); overflow: visible; }
+    .sz__tab { border-radius: var(--radius); text-align: left; min-height: 44px; }
+    .sz__side { grid-column: 2; grid-row: 3; width: calc(100% - 3rem); max-width: 22rem; padding: var(--space-sm) 0 0; min-height: 0; justify-self: center; justify-items: start; align-content: start; border-top: 1px solid var(--rule); gap: var(--space-md); }
+    .sz__side > * { grid-area: auto; }
+    .sz__capt { order: -1; }
+    .sz__capt { opacity: 1; transform: none; pointer-events: auto; justify-items: start; text-align: left; }
+    .sz__hint { min-height: 3.2rem; justify-items: start; text-align: left; }
+  }
+  @media (min-aspect-ratio: 1/1) and (max-height: 32rem) {
+    .sz__capt-p { display: none; } .sz__side { gap: var(--space-xs); } .sz__tabs { padding-bottom: var(--space-xs); } .sz__tab { min-height: 40px; }
+    .sz__hint { min-height: 2.6rem; } .sz__lbl--d { font-size: 1.2rem; } .sz__note { font-size: 1.25rem; }
   }
   .sz--static .sz__track { height: auto; }
   .sz--static .sz__sticky { position: static; height: auto; display: block; padding-bottom: 0; }
-  .sz--static .sz__stage { aspect-ratio: auto; display: grid; gap: var(--space-md); padding: var(--space-md); background: var(--paper-2); }
-  .sz--static .sz__svg, .sz--static .sz__photo, .sz--static .sz__capt { position: static; opacity: 1; transform: none; height: auto; background: none; padding: 0; }
+  .sz--static .sz__tabs { flex-direction: row; max-width: 64rem; width: calc(100% - 2 * var(--gutter)); margin: 0 auto; overflow-x: auto; }
+  .sz--static .sz__tab { border-radius: 999px; }
+  .sz--static .sz__stage { display: grid; gap: var(--space-md); padding: var(--space-md); background: var(--paper-2); width: calc(100% - 2 * var(--gutter)); max-width: 64rem; margin: 0 auto; container-type: normal; border-radius: var(--radius-lg); }
+  .sz--static .sz__svg, .sz--static .sz__photo { position: static; opacity: 1; height: auto; background: none; padding: 0; }
   .sz--static .sz__photo { aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius); }
-  .sz--static .sz__view { display: grid; gap: var(--space-md); width: auto; aspect-ratio: auto; background: none; }
-  .sz--static .sz__vbox { display: block; container-type: normal; }
+  .sz--static .sz__view { display: grid; gap: var(--space-md); width: auto; height: auto; max-height: none; aspect-ratio: auto; background: none; border-radius: 0; }
+  .sz--static .sz__vbox { display: block; }
+  .sz--static .sz__side { display: block; width: calc(100% - 2 * var(--gutter)); max-width: 64rem; margin: 0 auto; padding: var(--space-md) 0; border: 0; }
+  .sz--static .sz__capt { opacity: 1; transform: none; pointer-events: auto; justify-items: start; text-align: left; }
+  .sz--static .sz__hint { display: none; }
   .sz--static .sz__canvas, .sz--static .sz__note, .sz--static .sz__lbl { display: none; }
   .is-missing { visibility: hidden; }
   .abl img.is-missing, .ref > img.is-missing, .uber__img.is-missing { display: none; }
@@ -385,7 +419,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .faq summary::-webkit-details-marker { display: none; } .faq summary::after { content: '+'; position: absolute; right: 0.25rem; top: 0.8rem; font-size: 1.5rem; color: var(--accent); } .faq details[open] summary::after { content: '−'; }
   .faq details p { padding-bottom: var(--space-md); max-width: var(--measure); color: var(--ink-2); }
   .brett#anfrage { padding-bottom: calc(var(--space-2xl) + 8px); }
-  .letter { font-family: var(--font-display); font-size: var(--text-lg); } .letter .pen { display: inline-block; margin-top: 0.2rem; font-family: var(--font-pen); font-size: 3.4rem; line-height: 1.1; color: var(--accent); transform: rotate(-2deg); transform-origin: left center; }
+  .letter { font-family: var(--font-display); font-size: var(--text-lg); } .letter .pen { display: inline-block; margin-top: 0.2rem; font-family: var(--font-pen); font-size: 3.4rem; line-height: 1.1; color: var(--accent); transform: rotate(-2deg); transform-origin: center; }
   /* klebende Leiste (Handy) */
   .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: grid; grid-template-columns: 1fr 1.2fr 1.2fr; height: calc(var(--bar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--paper); border-top: 1.5px solid var(--ink); transition: transform var(--dur) var(--ease-out); }
   .bar.is-off { transform: translateY(100%); }
@@ -393,7 +427,6 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   @media (min-width: 40rem) { .hd__status { display: flex; align-items: center; } .hero__status { display: none; } .lane--5 { grid-auto-columns: 17rem; } }
   @media (min-width: 60rem) {
     .bar { display: none; } .hd__tel { display: inline; } .site-foot { padding-bottom: var(--space-xl); }
-    .sz__sticky { padding-bottom: var(--space-md); }
     .brett__in--2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
     .lane { overflow: visible; grid-auto-flow: row; grid-auto-columns: auto; max-width: 64rem; margin-left: auto; margin-right: auto; }
     .lane--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } .lane--5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }

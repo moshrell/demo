@@ -263,13 +263,13 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
     const b = box, w = b.x1 - b.x0, h = b.y1 - b.y0;
     const aspect = renderer.domElement.clientWidth / Math.max(1, renderer.domElement.clientHeight);
     const vf = (camera.fov * Math.PI) / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * aspect);
-    const padH = o.mode === 'konstruktor' ? 1.22 : 1.3, padW = o.mode === 'konstruktor' ? 1.22 : 1.34;   // Assembly: Rand für Maßzahlen und Hinweis
+    const padH = o.mode === 'konstruktor' ? 1.22 : 1.5, padW = o.mode === 'konstruktor' ? 1.22 : 1.5;   // Assembly: Rand für Maßzahlen und Hinweis
     const distH = (h * padH) / 2 / Math.tan(vf / 2), distW = (w * padW) / 2 / Math.tan(hf / 2);
     goal.dist = Math.max(distH, distW) + (b.z1 - b.z0) * 0.6;
     goal.tx = 0; goal.ty = (b.y0 + b.y1) / 2; goal.tz = 0;
     const table = cfg?.t === 't';
     goal.yaw = v === 'links' ? -28 : v === 'rechts' ? 28 : v === 'ecke' ? -18 : v === 'nah' ? -12 : 0;
-    goal.pitch = v === 'oben' ? (table ? 58 : 50) : v === 'ecke' ? 26 : v === 'nah' ? 12 : table ? 18 : v === 'front' ? 7 : 10;
+    goal.pitch = v === 'oben' ? (table ? 58 : 50) : v === 'ecke' ? 26 : v === 'nah' ? 12 : table ? (o.mode === 'assembly' ? 0 : 18) : v === 'front' ? 7 : 10;
     if (fit && v === 'front') {
       const fw = Math.max(0.05, fit.x1 - fit.x0), fh = Math.max(0.05, fit.y1 - fit.y0);
       const dH = h / (fh * 2 * Math.tan(vf / 2)), dW = w / (fw * 2 * Math.tan(hf / 2));
@@ -313,7 +313,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
       case 'door': case 'knob': return new Vector3(0, 0.05, 0.7);
       case 'back': return new Vector3(0, 0, -0.6);
       case 'dowel': return new Vector3(p.cyl && p.cyl.x < 50 ? -0.25 : 0.25, 0, 0);
-      case 'leiste': return new Vector3(0, 0, 0.9);
+      case 'leiste': case 'peg': return new Vector3(0, 0, 0.9);
       case 'leg': case 'rail': return new Vector3(0, -0.6, 0);
       case 'plinth': return new Vector3(0, 0, 0.5);
       default: return new Vector3(0, 0.55, 0.12);
@@ -447,7 +447,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
   let down: { x: number; y: number; id: number; d0: number; p0: number; moved: boolean } | null = null;
   const maxPitch = o.mode === 'konstruktor' ? 22 : 9;
   const el = o.canvas;
-  el.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY, id: e.pointerId, d0: dragGoal, p0: dragPGoal, moved: false }; });
+  el.addEventListener('pointerdown', (e) => { if (o.mode === 'assembly' && e.pointerType !== 'mouse') return; down = { x: e.clientX, y: e.clientY, id: e.pointerId, d0: dragGoal, p0: dragPGoal, moved: false }; });
   el.addEventListener('pointermove', (e) => {
     if (!down || e.pointerId !== down.id) return;
     const dx = e.clientX - down.x, dy = e.clientY - down.y;
@@ -455,7 +455,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
     const tilt = o.mode === 'konstruktor' || e.pointerType === 'mouse';
     if (!down.moved && (Math.abs(dx) > 6 && (Math.abs(dx) > Math.abs(dy) || tilt) || (tilt && Math.abs(dy) > 6))) down.moved = true;
     if (down.moved) {
-      dragGoal = Math.max(-maxYaw, Math.min(maxYaw, down.d0 + dx * 0.18));
+      dragGoal = Math.max(-maxYaw, Math.min(maxYaw, down.d0 - dx * 0.18));   // wie anfassen und ziehen: Vorderseite folgt dem Finger/der Maus
       if (tilt) dragPGoal = Math.max(-maxPitch, Math.min(maxPitch, down.p0 + dy * 0.14));
       need();
     }
@@ -573,8 +573,8 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
     anchor(name) {
       if (!cfg) return null;
       const b = box; let v: Vector3;
-      if (name === 'breite') v = new Vector3((b.x0 + b.x1) / 2, b.y1 + 0.05, b.z0);
-      else if (name === 'hoehe') v = new Vector3(b.x0 - 0.06, (b.y0 + b.y1) / 2, b.z1);
+      if (name === 'breite') v = new Vector3((b.x0 + b.x1) / 2, b.y1 + 0.05, b.z1);
+      else if (name === 'hoehe') v = new Vector3(b.x0 - 0.07, (b.y0 + b.y1) / 2, b.z1);
       else if (name === 'zinken') v = new Vector3(b.x0 + 0.01, b.y1, 0);
       else {
         const m = [...meshes.values()].find((x) => (x.userData.part as Part).kind === 'dowel' && x.visible);

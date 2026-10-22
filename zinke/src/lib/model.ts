@@ -85,10 +85,10 @@ const rad = (d: number) => (d * Math.PI) / 180;
 const f = (s: number, d = 0, t = false, b = true, g = false): Feld => ({ s, d, t, b, ...(g ? { g } : {}) });
 const K0 = { sch: '0' as const, sp: 'o' as const, k: 100, a: 45, x: false, farbe: 0, fk: false, fu: 's' as const };
 export const PRESETS: Record<string, Cfg> = {
-  schrank: { ...K0, t: 's', n: 4, fb: 60, h: 230, tf: 60, holz: 'e', ober: 'g', sch: 'r',
-    felder: [f(3, 0, true), f(3, 0, true), f(1, 3), f(2)] },
-  regal: { ...K0, t: 'r', n: 3, fb: 60, h: 200, tf: 35, holz: 'a', ober: 'g', fu: 'n',
-    felder: [f(4), f(3, 2), f(4)] },
+  schrank: { ...K0, t: 's', n: 4, fb: 60, h: 230, tf: 60, holz: 'e', ober: 'g', sch: 'r', k: 110,
+    felder: [f(3, 0, true), f(3, 0, true), f(0, 3, true), f(2)] },
+  regal: { ...K0, t: 'r', n: 3, fb: 60, h: 200, tf: 35, holz: 'a', ober: 'g', fu: 's',
+    felder: [f(5), f(3, 2), f(5)] },
   garderobe: { ...K0, t: 's', n: 2, fb: 80, h: 200, tf: 40, holz: 'n', ober: 'g',
     felder: [f(0, 0, false, true, true), f(4, 0, true)] },
   sideboard: { ...K0, t: 'k', n: 3, fb: 60, h: 70, tf: 40, holz: 'e', ober: 'b', farbe: 0, fu: 'b',
@@ -161,7 +161,8 @@ export function kink(c: CfgKorpus) {
   return c.sch === 'l' ? k[0] : k[k.length - 1];
 }
 export function feldSpan(c: CfgKorpus, i: number): [number, number] {
-  const l = i * c.fb + (i === 0 ? T : T / 2), r = (i + 1) * c.fb - (i === c.n - 1 ? T : T / 2);
+  // offene Außenseite (Garderobe): Feld reicht bis zum Rand
+  const l = i * c.fb + (i === 0 ? (c.felder[0]?.g ? 0 : T) : T / 2), r = (i + 1) * c.fb - (i === c.n - 1 ? (c.felder[c.n - 1]?.g ? 0 : T) : T / 2);
   return [l, r];
 }
 /** niedrigste Oberkante über einem Feld */
@@ -236,6 +237,8 @@ function buildKorpus(c: CfgKorpus, joints: boolean): Part[] {
   // 1 Seiten und Mittelwände
   for (let i = 0; i <= c.n; i++) {
     const outer = i === 0 || i === c.n;
+    // Garderobe: Außenseite an der Bank-Seite bleibt offen (wie im Foto)
+    if ((i === 0 && c.felder[0]?.g) || (i === c.n && c.felder[c.n - 1]?.g)) continue;
     const x = i === 0 ? T / 2 : i === c.n ? W - T / 2 : i * c.fb;
     const y0 = hBot(c, x) + (outer ? 0 : T);
     const y1 = hTop(c, x) - T;
@@ -308,9 +311,11 @@ function buildKorpus(c: CfgKorpus, joints: boolean): Part[] {
       P.push({ id: `bench-${i}`, kind: 'bench', order: o + 2, feld: i, box: { x: xm, y: 44, z: 0, w: wi, h: 4, d: D - 2 }, grain: 'x' });
       P.push({ id: `bench-f-${i}`, kind: 'bench', order: o + 2, feld: i, box: { x: xm, y: 21, z: D / 2 - 6, w: wi, h: 42, d: T }, grain: 'x' });
       P.push({ id: `cushion-${i}`, kind: 'cushion', order: o + 3, feld: i, box: { x: xm, y: 48, z: 1, w: wi - 4, h: 4, d: D - 8 }, mat: 'cushion', grain: 'x' });
-      const np = Math.max(3, Math.round(wi / 16));
+      // Hakenleiste: Brett an der Rückwand, Haken sitzen darauf (Montage: alles zusammen)
+      const np = Math.max(3, Math.round(wi / 16)), rw = wi - 10;
+      P.push({ id: `leiste-g-${i}`, kind: 'leiste', order: o + 3, feld: i, box: { x: xm, y: 165, z: -D / 2 + 1 + 1.5, w: rw, h: 7, d: 3 }, grain: 'x' });
       for (let k = 0; k < np; k++) P.push({ id: `peg-${i}-${k}`, kind: 'peg', order: o + 3, feld: i,
-        cyl: { x: l + (wi / (np + 1)) * (k + 1), y: 165, z: -D / 2 + 1 + 4, r: 1.4, len: 8, axis: 'z' }, grain: 'z' });
+        cyl: { x: xm - rw / 2 + 6 + ((rw - 12) / (np - 1)) * k, y: 165, z: -D / 2 + 1 + 3 + 4, r: 1.4, len: 8, axis: 'z' }, grain: 'z' });
       P.push({ id: `shelf-${i}-0`, kind: 'shelf', order: o + 2, feld: i, box: { x: xm, y: 182, z: -1.5, w: wi, h: T, d: D - 3 }, grain: 'x' });
       return;
     }
@@ -378,7 +383,7 @@ function buildTisch(c: CfgTisch, joints: boolean): Part[] {
   // Gestell
   let gx = L / 2 - 32;
   if (c.g === 'v') {
-    const lx = L / 2 - 20, lz = B / 2 - 9; gx = lx;
+    const lx = L / 2 - clamp(L * 0.143, 20, 34), lz = B / 2 - 9; gx = lx;
     [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz], k) =>
       P.push({ id: `leg-${k}`, kind: 'leg', order: o, box: { x: sx * lx, y: hl / 2, z: sz * lz, w: 7, h: hl, d: 7 }, grain: 'y' }));
   } else if (c.g === 'k') {

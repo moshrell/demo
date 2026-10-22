@@ -252,7 +252,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
   /* ------------------------------------------------------------ Kamera */
   const cam = { yaw: 0, pitch: 8, dist: 3, tx: 0, ty: 1, tz: 0 };
   const goal = { ...cam };
-  let drag = 0, dragGoal = 0;
+  let drag = 0, dragGoal = 0, dragP = 0, dragPGoal = 0;
   const maxYaw = o.maxYaw ?? (o.mode === 'konstruktor' ? 30 : 12);
   let view: View = 'front';
   let box = { x0: 0, x1: 1, y0: 0, y1: 1, z0: 0, z1: 0 };
@@ -260,8 +260,8 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
     const b = box, w = b.x1 - b.x0, h = b.y1 - b.y0;
     const aspect = renderer.domElement.clientWidth / Math.max(1, renderer.domElement.clientHeight);
     const vf = (camera.fov * Math.PI) / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * aspect);
-    const pad = o.mode === 'konstruktor' ? 1.22 : 1.14;
-    const distH = (h * pad) / 2 / Math.tan(vf / 2), distW = (w * pad) / 2 / Math.tan(hf / 2);
+    const padH = o.mode === 'konstruktor' ? 1.22 : 1.3, padW = o.mode === 'konstruktor' ? 1.22 : 1.34;   // Assembly: Rand für Maßzahlen und Hinweis
+    const distH = (h * padH) / 2 / Math.tan(vf / 2), distW = (w * padW) / 2 / Math.tan(hf / 2);
     goal.dist = Math.max(distH, distW) + (b.z1 - b.z0) * 0.6;
     goal.tx = 0; goal.ty = (b.y0 + b.y1) / 2; goal.tz = 0;
     const table = cfg?.t === 't';
@@ -279,7 +279,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
     }
   }
   function applyCam() {
-    const yaw = ((cam.yaw + drag) * Math.PI) / 180, pitch = (cam.pitch * Math.PI) / 180;
+    const yaw = ((cam.yaw + drag) * Math.PI) / 180, pitch = (Math.max(-4, Math.min(80, cam.pitch + dragP)) * Math.PI) / 180;
     camera.position.set(cam.tx + Math.sin(yaw) * Math.cos(pitch) * cam.dist, cam.ty + Math.sin(pitch) * cam.dist, cam.tz + Math.cos(yaw) * Math.cos(pitch) * cam.dist);
     camera.lookAt(cam.tx, cam.ty, cam.tz);
   }
@@ -429,20 +429,27 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
 
   /* ------------------------------------------------------- Eingabe: Drag/Tap */
   const ray = new Raycaster();
-  let down: { x: number; y: number; id: number; d0: number; moved: boolean } | null = null;
+  let down: { x: number; y: number; id: number; d0: number; p0: number; moved: boolean } | null = null;
+  const maxPitch = o.mode === 'konstruktor' ? 22 : 9;
   const el = o.canvas;
-  el.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY, id: e.pointerId, d0: dragGoal, moved: false }; });
+  el.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY, id: e.pointerId, d0: dragGoal, p0: dragPGoal, moved: false }; });
   el.addEventListener('pointermove', (e) => {
     if (!down || e.pointerId !== down.id) return;
     const dx = e.clientX - down.x, dy = e.clientY - down.y;
-    if (!down.moved && Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy)) down.moved = true;
-    if (down.moved) { dragGoal = Math.max(-maxYaw, Math.min(maxYaw, down.d0 + dx * 0.18)); need(); }
+    // Konstruktor: Finger frei in beide Richtungen. Startseite: Touch scrollt die Seite senkrecht, nur Maus kippt auch.
+    const tilt = o.mode === 'konstruktor' || e.pointerType === 'mouse';
+    if (!down.moved && (Math.abs(dx) > 6 && (Math.abs(dx) > Math.abs(dy) || tilt) || (tilt && Math.abs(dy) > 6))) down.moved = true;
+    if (down.moved) {
+      dragGoal = Math.max(-maxYaw, Math.min(maxYaw, down.d0 + dx * 0.18));
+      if (tilt) dragPGoal = Math.max(-maxPitch, Math.min(maxPitch, down.p0 + dy * 0.14));
+      need();
+    }
   });
   const up = (e: PointerEvent) => {
     if (!down) return;
     const tap = !down.moved && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 8;
     down = null;
-    if (o.mode === 'assembly') { dragGoal = 0; need(); }
+    if (o.mode === 'assembly') { dragGoal = 0; dragPGoal = 0; need(); }
     if (!tap || !o.onPick || !picks.length) return;
     const r = el.getBoundingClientRect();
     ray.setFromCamera(new Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), camera);
@@ -450,7 +457,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
     if (hit) o.onPick(hit.object.userData.feld);
   };
   el.addEventListener('pointerup', up);
-  el.addEventListener('pointercancel', () => { down = null; if (o.mode === 'assembly') { dragGoal = 0; need(); } });
+  el.addEventListener('pointercancel', () => { down = null; if (o.mode === 'assembly') { dragGoal = 0; dragPGoal = 0; need(); } });
 
   /* ------------------------------------------------------------ Render-Loop */
   let needs = 2, raf = 0, alive = true;
@@ -466,6 +473,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
       const dlt = goal[key] - cam[key]; if (Math.abs(dlt) > 1e-4) { cam[key] += dlt * k; moving = true; } else cam[key] = goal[key];
     });
     const dd = dragGoal - drag; if (Math.abs(dd) > 0.01) { drag += dd * Math.min(1, k * 1.6); moving = true; } else drag = dragGoal;
+    const dp = dragPGoal - dragP; if (Math.abs(dp) > 0.01) { dragP += dp * Math.min(1, k * 1.6); moving = true; } else dragP = dragPGoal;
     // Teile einfliegen lassen
     for (let i = anims.length - 1; i >= 0; i--) {
       const a = anims[i]; const t = clamp01((now - a.t0) / a.dur);
@@ -535,7 +543,7 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
   const api: WerkScene = {
     setConfig(c, animate) { const holzChange = cfg && (cfg.holz !== c.holz || cfg.ober !== c.ober || cfg.farbe !== c.farbe); setConfig(c, animate); if (holzChange) { setTimeout(() => { syncOwn(); need(); }, 0); texCache.get(c.holz)?.then(() => { syncOwn(); need(); }); } },
     setProgress,
-    setView(v) { view = v; frame(v); dragGoal = 0; need(); },
+    setView(v) { view = v; frame(v); dragGoal = 0; dragPGoal = 0; need(); },
     mark(feld) {
       if (markLine) { root.remove(markLine); markLine.geometry.dispose(); markLine = null; }
       if (feld === null || !cfg || cfg.t === 't') return;

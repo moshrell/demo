@@ -7,7 +7,7 @@ const base = import.meta.env.BASE_URL;
 <Base title={`Konstruktor: Möbel zusammenstellen | ${site.name}`} description="Stellen Sie Ihr Möbel selbst zusammen: Maße, Fächer, Türen, Holz. Mit Richtpreis und Skizze, die Sie der Werkstatt schicken können." bodyClass="kon">
   <div class="kon__root" data-base={base}>
     <ol class="kon__crumbs" aria-label="Schritte">
-      <li data-crumb="1" aria-current="step">1 Bauen</li><li data-crumb="2" aria-current="false">2 Abnahme</li><li data-crumb="3" aria-current="false">3 Anfrage</li>
+      <li class="kon__home"><a href={base}>← Startseite</a></li><li data-crumb="1" aria-current="step">1 Bauen</li><li data-crumb="2" aria-current="false">2 Abnahme</li><li data-crumb="3" aria-current="false">3 Anfrage</li>
     </ol>
 
     <!-- Schritt 1: Bauen -->
@@ -57,6 +57,7 @@ const base = import.meta.env.BASE_URL;
           <div class="kon__acts">
             <button type="button" class="btn" data-go="1">← Weiter bauen</button>
             <button type="button" class="btn btn--red" data-go="3">Weiter zur Anfrage</button>
+            <a class="btn" href={base}>Zur Startseite</a>
           </div>
         </div>
       </div>
@@ -64,7 +65,7 @@ const base = import.meta.env.BASE_URL;
 
     <!-- Schritt 3: Anfrage -->
     <section class="kon__step" data-step="3" hidden>
-      <button type="button" class="btn btn--sm" data-go="2">← Zur Abnahme</button>
+      <div class="kon__acts kon__acts--top"><button type="button" class="btn btn--sm" data-go="2">← Zur Abnahme</button><a class="btn btn--sm" href={base}>Zur Startseite</a></div>
       <AnfrageForm id="kon-form" mode="konstruktor" title="An die Werkstatt senden" />
     </section>
 
@@ -88,6 +89,8 @@ const base = import.meta.env.BASE_URL;
   body.kon { background: var(--paper); }
   .kon__root { max-width: 80rem; margin: 0 auto; }
   .kon__crumbs { list-style: none; margin: 0; box-sizing: border-box; height: 32px; align-items: center; padding: 0 var(--gutter); display: flex; gap: var(--space-md); font-size: var(--text-xs); color: var(--muted); border-bottom: 1px solid var(--rule); }
+  .kon__home { margin-right: auto; } .kon__home a { color: var(--ink); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; min-height: 32px; }
+  .kon__acts--top { margin-top: 0; }
   .kon__crumbs [aria-current='step'] { color: var(--ink); font-weight: 700; border-bottom: 2px solid var(--accent); }
   /* App-Raster: Handy = Spalte, ab 60rem = Bühne links, Bedienung rechts */
   .kon__app { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(30vh, 1fr) auto auto auto; grid-template-rows: auto minmax(30dvh, 1fr) auto auto auto; height: calc(100vh - 32px); height: calc(100dvh - 32px); min-height: 30rem; }
@@ -109,7 +112,7 @@ const base = import.meta.env.BASE_URL;
   .kon__stage { position: relative; min-height: 0; background: linear-gradient(#dde7f4 0%, #c6d6ea 72%, #b7c9e0 100%); overflow: hidden; }
   .kon__svg { position: absolute; inset: 0; padding: var(--space-md) var(--space-lg); display: grid; place-items: center; }
   .kon__svg .sk { max-height: 100%; }
-  .kon__canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; touch-action: pan-y; }
+  .kon__canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; touch-action: none; cursor: grab; }
   .kon__stage:not(.is-gl) .kon__canvas { display: none; }
   .kon__stage.is-gl .kon__canvas { opacity: 1; transition: opacity var(--dur-slow) var(--ease-out); }
   .kon__stage.is-gl .kon__svg { visibility: hidden; }

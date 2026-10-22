@@ -136,6 +136,7 @@ const kon = mode === 'konstruktor';
     <p>Ich melde mich innerhalb von {site.replyDays} telefonisch bei Ihnen.</p>
     <dl data-done-list></dl>
     <p class="af__note">Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.</p>
+    <div class="af__after"><a class="btn btn--red" href={base}>Zur Startseite</a>{kon ? <a class="btn" href={`${base}konstruktor/`}>Neues Möbel bauen</a> : <a class="btn" href="#top">Nach oben</a>}</div>
   </div>
 </section>
 
@@ -189,6 +190,10 @@ const kon = mode === 'konstruktor';
   .af__cfg dt, .af__done dt { color: var(--muted); }
   .af__cfg dd, .af__done dd { margin: 0; font-variant-numeric: tabular-nums; }
   .af__sum { font-weight: 700; }
+  .af__after { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-xs); }
+  /* Startseite: Leiste fließt mit dem Formular (kein Sonder-Rechteck), Demo-Hinweis unter dem Knopf */
+  form[data-mode='quick'] .af__bar { position: static; flex-direction: column-reverse; align-items: stretch; gap: var(--space-xs); padding: var(--space-sm) 0 0; background: transparent; border-top: 0; text-align: center; }
+  form[data-mode='quick'] .af__total--plain { padding: 0 var(--space-xs); }
   .af__bar { position: sticky; bottom: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); padding: var(--space-sm) 0; padding-bottom: max(var(--space-sm), env(safe-area-inset-bottom)); background: var(--paper); border-top: 1.5px solid var(--ink); }
   .af__total { display: grid; gap: 0.1rem; min-width: 0; font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
   .af__total strong { font-size: 1.45rem; margin-left: var(--space-2xs); font-family: var(--font-display); }

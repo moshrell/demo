@@ -74,10 +74,11 @@ $$('[data-holz]').forEach((b) => b.addEventListener('click', () => {
   dlg.querySelector('[data-h-name]')!.textContent = b.dataset.name!;
   dlg.querySelector('[data-h-art]')!.textContent = b.dataset.art!;
   dlg.querySelector('[data-h-fuer]')!.textContent = b.dataset.fuer!;
-  dlg.showModal?.();
+  if (!dlg.open) dlg.show?.();
+  dlg.dataset.on = b.dataset.name!;
 }));
 $('[data-holz-close]')?.addEventListener('click', () => dlg?.close?.());
-dlg?.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && dlg?.open) dlg.close(); });
 
 /* ---- Referenz-Links in den Konstruktor / Formular vorbelegen: übernimmt data-was in AnfrageForm ---- */
 
@@ -91,6 +92,7 @@ if (sz) {
   const lbl = { b: sz.querySelector<HTMLElement>('[data-lbl-b]')!, h: sz.querySelector<HTMLElement>('[data-lbl-h]')!, d: sz.querySelector<HTMLElement>('[data-lbl-d]')! };
   const prods = JSON.parse(sz.dataset.prods || '[]') as { id: string; label: string; preset: string; photo: string; alt: string; caption: string; price: string }[];
   let cur = prods[0], cfg: Cfg = normalize(clone(PRESETS[cur.preset]));
+  const done = new Set<string>();   // schon einmal fertig gebaut: bleibt zusammengebaut, ohne neu scrollen
   let scene: WerkScene | null = null, p = 0, photoOk = true, started = false, staticMode = reduced;
   const link = capt.querySelector<HTMLAnchorElement>('[data-sz-link]')!;
 
@@ -104,34 +106,41 @@ if (sz) {
     capt.querySelector('[data-sz-price]')!.textContent = cur.price;
     link.href = `${BASE}konstruktor/?v=${cur.preset}`;
     $$('[data-prod]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.prod === cur.id)));
-    scene?.setConfig(cfg, false); scene?.setProgress(Math.min(1, p / 0.72));
+    scene?.setConfig(cfg, false);
     paint();
   };
   photo.addEventListener('error', () => { photoOk = false; paint(); });
   photo.addEventListener('load', () => { photoOk = true; paint(); });
 
+  const pe = () => (done.has(cur.id) ? 1 : p);
   function paint() {
     if (staticMode) { photo.style.opacity = ''; svgBox.style.opacity = ''; canvas.style.display = 'none'; capt.classList.add('is-on'); return; }
-    const asm = Math.min(1, p / 0.72);
-    const mix = Math.max(0, Math.min(1, (p - 0.8) / 0.15));
+    const q = pe();
+    const asm = Math.min(1, q / 0.72);
+    const mix = Math.max(0, Math.min(1, (q - 0.8) / 0.15));
     scene?.setProgress(asm);
     photo.style.opacity = String(photoOk ? mix : 0);
     canvas.style.opacity = scene ? String(photoOk ? 1 - mix * 0.9 : 1) : '0';
     svgBox.style.opacity = scene ? '0' : (staticMode ? '1' : '0.38');
-    capt.classList.toggle('is-on', p > 0.88 || staticMode);
-    note.classList.toggle('is-off', p > 0.04);
+    capt.classList.toggle('is-on', q > 0.88 || staticMode);
+    note.classList.toggle('is-off', q > 0.04);
     labels();
   }
   function labels() {
     if (!scene) return;
-    const asm = Math.min(1, p / 0.72), mix = Math.max(0, Math.min(1, (p - 0.8) / 0.15));
+    const q = pe(), asm = Math.min(1, q / 0.72), mix = Math.max(0, Math.min(1, (q - 0.8) / 0.15));
     const place = (el: HTMLElement, name: 'breite' | 'hoehe' | 'duebel', on: boolean) => {
       const a = on ? scene!.anchor(name) : null;
       el.style.opacity = a && a.visible ? '1' : '0';
       if (a && a.visible) {
         const hw = el.offsetWidth / 2 + 6, W = el.parentElement ? el.parentElement.clientWidth : 0;
         const x = W ? Math.max(hw, Math.min(W - hw, a.x)) : a.x;
-        el.style.transform = `translate(${x.toFixed(0)}px, ${a.y.toFixed(0)}px) translate(-50%, -50%)`;
+        // Maße stehen neben/über dem Möbel, nie darauf: Höhe senkrecht links, Breite oberhalb
+        const hh = el.offsetHeight / 2;
+        const pos = name === 'hoehe' ? `translate(${Math.max(hh + 2, a.x - 6 - hh).toFixed(0)}px, ${a.y.toFixed(0)}px) translate(-50%, -50%) rotate(-90deg)`
+          : name === 'breite' ? `translate(${x.toFixed(0)}px, ${(a.y - 4).toFixed(0)}px) translate(-50%, -100%)`
+          : `translate(${x.toFixed(0)}px, ${a.y.toFixed(0)}px) translate(-50%, -50%)`;
+        el.style.transform = pos;
       }
     };
     const keep = !photoOk || mix < 0.3;
@@ -140,11 +149,22 @@ if (sz) {
   const onScroll = () => {
     const r = track.getBoundingClientRect(), vh = innerHeight;
     p = Math.max(0, Math.min(1, -r.top / Math.max(1, r.height - vh)));
+    if (p > 0.9) done.add(cur.id);
     paint();
   };
   const fillLabels = () => { lbl.b.textContent = `${width(cfg as any) || (cfg as any).l} cm`; lbl.h.textContent = `${(cfg as any).h || 75} cm`; };
 
-  $$('[data-prod]').forEach((b) => b.addEventListener('click', () => { setProduct(b.dataset.prod!); fillLabels(); }));
+  $$('[data-prod]').forEach((b) => b.addEventListener('click', () => {
+    const id = b.dataset.prod!;
+    if (id === cur.id) return;
+    setProduct(id); fillLabels();
+    // noch nicht gebaut: Seite zurück an den Anfang der Szene, dort festgehalten, Scrollen baut das neue Möbel
+    if (!staticMode && !done.has(id)) {
+      const top = track.getBoundingClientRect().top + scrollY;
+      if (Math.abs(scrollY - top) > 2) scrollTo({ top, behavior: 'instant' as ScrollBehavior });
+      onScroll();
+    }
+  }));
   setProduct(cur.id); fillLabels();
 
   if (staticMode) { sz.classList.add('sz--static'); paint(); }

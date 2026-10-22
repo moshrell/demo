@@ -114,12 +114,12 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
       <section class="brett" id="werkstoffe" aria-labelledby="h-holz">
         <div class="brett__in">
           <h2 id="h-holz">Werkstoffe</h2>
-          <p class="brett__lead">Vier Hölzer, die wir verarbeiten. Tippen Sie auf eine Probe: das Brett wird groß.</p>
+          <p class="brett__lead">Vier Hölzer, die wir verarbeiten. Tippen Sie auf eine Probe, darunter steht, wofür sie sich eignet.</p>
         </div>
-        <ul class="lane lane--4">
-          {holz.map((h) => (
+        <ul class="holzl">
+          {holz.map((h, i) => (
             <li>
-              <button type="button" class="holz" data-holz data-name={h.name} data-art={h.art} data-fuer={h.fuer} data-photo={h.photo} data-tex={h.tex} aria-label={`${h.name}: Probe ansehen`}>
+              <button type="button" class="holz" data-holz data-name={h.name} data-art={h.art} data-fuer={h.fuer} data-photo={h.photo} data-tex={h.tex} aria-pressed={i === 0} aria-label={`${h.name}: Probe ansehen`}>
                 <span class="holz__img"><img src={img(h.photo)} data-fb={`tex/${h.tex}`} alt="" width="400" height="400" loading="lazy" decoding="async" /></span>
                 <span class="holz__n">{h.name}</span>
                 <span class="holz__s">Preisstufe {h.stufe}</span>
@@ -127,16 +127,17 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
             </li>
           ))}
         </ul>
-      </section>
-      <dialog class="holzd" data-holz-dialog aria-labelledby="holzd-n">
-        <img src="" alt="" width="800" height="800" decoding="async" />
-        <div class="holzd__t">
-          <h3 id="holzd-n" data-h-name></h3>
-          <p data-h-art></p>
-          <p class="holzd__f"><span class="hand">Geeignet für:</span> <span data-h-fuer></span></p>
+        <div class="brett__in">
+          <div class="holzp" data-holz-panel aria-live="polite">
+            <img src={img(holz[0].photo)} data-fb={`tex/${holz[0].tex}`} alt={`Probe ${holz[0].name}, Draufsicht auf ein geöltes Brett`} width="800" height="800" loading="lazy" decoding="async" />
+            <div class="holzp__t">
+              <h3 data-h-name>{holz[0].name}</h3>
+              <p data-h-art>{holz[0].art}</p>
+              <p class="holzp__f"><span class="hand">Geeignet für:</span> <span data-h-fuer>{holz[0].fuer}</span></p>
+            </div>
+          </div>
         </div>
-        <button type="button" class="holzd__x" data-holz-close aria-label="Probe schließen">✕</button>
-      </dialog>
+      </section>
 
       <!-- 5. Ablauf -->
       <Zinken from="var(--paper)" to="var(--paper-2)" />
@@ -145,7 +146,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
           <h2 id="h-abl">Wie wir arbeiten</h2>
           <p class="brett__lead">Fünf Schritte, damit Sie immer wissen, was als Nächstes kommt. Die Zeiten sind Richtwerte und hängen von Auftrag und Auslastung ab.</p>
         </div>
-        <ol class="lane lane--5">
+        <ol class="steps">
           {ablauf.map((s) => (
             <li class="abl">
               <p class="abl__n hand" aria-hidden="true">{s.n}</p>
@@ -165,7 +166,7 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
           <h2 id="h-ref">Referenzen</h2>
           <p class="brett__lead">Was wir gebaut haben, mit den Fakten. Bei den ersten beiden können Sie die Konfiguration im Konstruktor öffnen und selbst abwandeln.</p>
         </div>
-        <ul class="lane lane--4">
+        <ul class="refs">
           {referenzen.map((r) => (
             <li class="ref">
               <img src={img(r.img)} alt={r.alt} width="800" height="600" loading="lazy" decoding="async" />
@@ -187,6 +188,10 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
           <div>
             <h2 id="h-b2b">Für Planer und Hausverwaltungen</h2>
             <p class="brett__lead">Türen, Zargen und Treppen in Serie, nach Ihren Plänen und zu Ihrem Bauzeitenplan.</p>
+            <div class="hero__acts">
+              <a class="btn btn--red" href="#anfrage" data-b2b-link data-was="Türen">Objektanfrage stellen</a>
+              <a class="btn" href={`tel:${site.phoneHref}`}>{site.phone}</a>
+            </div>
           </div>
           <ul class="b2b">
             <li><strong>Nach Ihren Unterlagen.</strong> Pläne als PDF oder DWG, Leistungsverzeichnis, Aufmaß am Objekt.</li>
@@ -194,10 +199,6 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
             <li><strong>Termine schriftlich.</strong> Bauzeitenplan und Montagefenster stehen im Angebot.</li>
             <li><strong>Meisterbetrieb.</strong> Eingetragen in der Handwerksrolle der Handwerkskammer Hannover. Versicherungsnachweise auf Anfrage (Demo).</li>
           </ul>
-          <div class="hero__acts">
-            <a class="btn btn--red" href="#anfrage" data-b2b-link data-was="Türen">Objektanfrage stellen</a>
-            <a class="btn" href={`tel:${site.phoneHref}`}>{site.phone}</a>
-          </div>
         </div>
       </section>
 
@@ -291,7 +292,8 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .hd__nav a:last-child { border-bottom: 0; }
   .hd__nav a:hover { background: var(--paper-2); }
   /* Hero */
-  .hero { padding: var(--space-xl) var(--gutter) var(--space-lg); max-width: 64rem; margin: 0 auto; display: grid; gap: var(--space-md); }
+  .hero { padding: var(--space-xl) var(--gutter) var(--space-lg); max-width: 64rem; margin: 0 auto; display: grid; gap: var(--space-md); align-content: center; min-height: calc(100vh - 2 * var(--bar-h)); min-height: calc(100svh - 2 * var(--bar-h) - env(safe-area-inset-bottom)); }
+  @media (min-width: 60rem) { .hero { min-height: calc(100vh - var(--bar-h)); min-height: calc(100svh - var(--bar-h)); } }
   .hero__status { font-size: var(--text-sm); color: var(--ink-2); display: flex; align-items: center; gap: 0.45rem; }
   .hero__status::before, .hd__status::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--muted); display: inline-block; margin-right: 0.35rem; }
   .hero__lead { font-size: var(--text-lg); max-width: 34rem; color: var(--ink-2); }
@@ -301,13 +303,20 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   /* Szene */
   .sz { --R: 0.75; --tabs-h: 3.75rem; --side-min: 9.5rem; --full: 100vh; --avail: calc(var(--full) - var(--bar-h) - env(safe-area-inset-bottom)); }
   @supports (height: 100svh) { .sz { --full: 100svh; } }
-  @media (min-width: 60rem) { .sz { --avail: var(--full); } }
+  @media (min-width: 60rem) { .sz { --avail: calc(var(--full) - var(--space-lg)); } }
+  @media not (min-aspect-ratio: 1/1) { .sz[data-view='d'] { --R: 1.3333; } }
   @media (min-aspect-ratio: 1/1) { .sz { --R: 1.3333; } }
   /* svh statt dvh: die Höhe ändert sich nicht, wenn die Adressleiste ein-/ausfährt (kein Größensprung der Fläche) */
   .sz__track { height: 230vh; height: 230svh; }
   .sz__sticky { position: sticky; top: 0; height: 100vh; height: var(--full); display: grid; grid-template-rows: auto auto minmax(0, 1fr); align-content: start; padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); background: var(--paper); }
   .sz__tabs { display: flex; gap: var(--space-xs); padding: var(--space-xs) 0; overflow-x: auto; scrollbar-width: none; max-width: 64rem; width: calc(100% - 2 * var(--gutter)); margin: 0 auto; box-sizing: border-box; min-height: var(--tabs-h); align-items: center; }
   @media (min-width: 40rem) { .sz__tabs { justify-content: center; } }
+  /* Handy hochkant: Auswahl in zwei Reihen, nichts wird abgeschnitten oder muss gewischt werden */
+  @media (orientation: portrait) and (max-width: 39.99rem) {
+    .sz { --tabs-h: 7.25rem; }
+    .sz__tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; align-content: center; }
+    .sz__tab { padding: 0 var(--space-xs); }
+  }
   .sz__tab { flex: 0 0 auto; min-height: 44px; padding: 0 var(--space-md); border: 1.5px solid var(--ink); border-radius: 999px; background: transparent; font-weight: 700; cursor: pointer; }
   .sz__tab[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
   .sz__stage { position: relative; margin: 0 auto; width: calc(100% - 2 * var(--gutter)); max-width: 64rem; container-type: inline-size; }
@@ -380,8 +389,6 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .brett__in--2 { gap: var(--space-lg); }
   .brett__lead { max-width: var(--measure); color: var(--ink-2); }
   .brett p + p { margin-top: var(--space-sm); }
-  .lane { list-style: none; margin: var(--space-lg) 0 0; padding: 0 var(--gutter) var(--space-xs); display: grid; grid-auto-flow: column; grid-auto-columns: min(78vw, 20rem); gap: var(--space-md); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); scrollbar-width: thin; }
-  .lane > li { scroll-snap-align: start; min-width: 0; }
   .lst { list-style: none; margin: var(--space-md) 0 0; padding: 0; display: grid; }
   .lst__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-xs) var(--space-md); padding: var(--space-md) 0; border-top: 1.5px solid var(--ink); align-items: baseline; }
   .lst__t h3 { font-size: var(--text-lg); } .lst__t p { font-size: var(--text-sm); color: var(--ink-2); }
@@ -391,22 +398,47 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .holz__img { display: block; aspect-ratio: 1; background: var(--paper-3); border-radius: var(--radius); overflow: hidden; }
   .holz__img img { width: 100%; height: 100%; object-fit: cover; }
   .holz__n { font-family: var(--font-display); font-size: var(--text-xl); } .holz__s { font-size: var(--text-sm); color: var(--muted); }
-  /* Probe-Fenster: kein Vollbild-Dialog, die Seite dahinter bleibt bedienbar */
-  .holzd { position: fixed; z-index: 60; inset: auto var(--space-sm) calc(var(--bar-h) + var(--space-xs) + env(safe-area-inset-bottom)) var(--space-sm); width: auto; max-width: 34rem; margin: 0 auto; padding: 0; border: 1.5px solid var(--ink); border-radius: var(--radius-lg); background-color: #f8f3e9; background-color: var(--paper); color: #1e2227; color: var(--ink); overflow: hidden; box-shadow: 0 10px 34px rgb(20 32 46 / 0.35); }
-  .holzd[open] { display: grid; grid-template-columns: minmax(0, 7.5rem) minmax(0, 1fr); }
-  .holzd img { display: block; width: 100%; height: 100%; min-height: 100%; aspect-ratio: auto; object-fit: cover; background: var(--paper-3); }
-  .holzd__x { position: absolute; top: 4px; right: 4px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; font-size: 1.2rem; cursor: pointer; color: var(--ink); }
-  @media (min-width: 60rem) { .holzd { inset: auto auto var(--space-md) 50%; transform: translateX(-50%); width: 34rem; } }
-  .holzd__t { padding: var(--space-sm) 3rem var(--space-sm) var(--space-md); display: grid; gap: var(--space-2xs); justify-items: start; }
-  .holzd__f .hand { font-size: 1.25rem; }
-  .abl { display: grid; gap: var(--space-xs); align-content: start; padding: var(--space-md); background: var(--paper); border: 1.5px solid var(--ink); border-radius: var(--radius); }
+  /* Werkstoffe: 2×2 bzw. 4 Proben, darunter das Detail der gewählten (kein schwebendes Fenster) */
+  .holzl { list-style: none; margin: var(--space-lg) auto 0; padding: 0 var(--gutter); max-width: 64rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); }
+  @media (min-width: 40rem) { .holzl { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .holz[aria-pressed='true'] .holz__img { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .holzp { display: grid; grid-template-columns: minmax(0, 7rem) minmax(0, 1fr); gap: var(--space-md); align-items: center; margin-top: var(--space-lg); padding: var(--space-md); background: var(--paper-2); border: 1.5px solid var(--ink); border-radius: var(--radius-lg); }
+  .holzp img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius); background: var(--paper-3); }
+  .holzp__t { display: grid; gap: var(--space-2xs); justify-items: start; }
+  .holzp__f .hand { font-size: 1.25rem; }
+  @media (min-width: 40rem) { .holzp { grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); } }
+  /* Ablauf: Zeitleiste. Handy: senkrechte Linie links; Desktop: fünf Spalten unter einer Linie, Zeilen aufeinander ausgerichtet */
+  .steps { list-style: none; margin: var(--space-lg) auto 0; padding: 0 var(--gutter); max-width: 64rem; display: grid; }
+  .abl { display: grid; grid-template-columns: 2.75rem minmax(0, 1fr); column-gap: var(--space-sm); align-content: start; position: relative; padding-bottom: var(--space-lg); }
+  .abl::before { content: ''; position: absolute; left: 0.95rem; top: 2.9rem; bottom: 0.4rem; width: 2px; background: var(--ink); }
+  .abl:last-child::before { display: none; }
+  .abl > * { grid-column: 2; margin: 0; }
+  .abl > .abl__n { grid-column: 1; grid-row: 1 / span 5; }
+  .abl h3 { font-size: var(--text-xl); }
+  .abl > p:not(.abl__n):not(.abl__t) { margin-top: var(--space-2xs); }
   .abl__n { font-size: 2.4rem; line-height: 1; } .abl__t { font-weight: 700; color: var(--accent-2); font-size: var(--text-sm); }
-  .abl img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); background: var(--paper-3); margin-top: var(--space-xs); }
+  .abl img { width: 100%; max-width: 18rem; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); background: var(--paper-3); margin-top: var(--space-sm); }
+  @media (min-width: 60rem) {
+    .steps { grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: auto auto auto 1fr auto; column-gap: var(--space-lg); }
+    .abl { grid-template-columns: minmax(0, 1fr); grid-row: span 5; grid-template-rows: subgrid; row-gap: var(--space-2xs); padding: var(--space-sm) 0 0; border-top: 2px solid var(--ink); }
+    .abl::before { display: none; }
+    .abl > *, .abl > .abl__n { grid-column: 1; grid-row: auto; }
+    .abl h3 { font-size: var(--text-lg); }
+    .abl img { max-width: none; margin-top: var(--space-xs); }
+  }
+  /* Referenzen: eine Spalte auf dem Handy, sonst 2×2; Karten gleich hoch, Zeilen ausgerichtet */
+  .refs { list-style: none; margin: var(--space-lg) auto 0; padding: 0 var(--gutter); max-width: 64rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl) var(--space-lg); }
   .ref { display: grid; gap: var(--space-xs); align-content: start; }
-  .ref > img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); background: var(--paper-3); }
+  .ref h3 { font-size: var(--text-xl); overflow-wrap: break-word; hyphens: auto; }
+  .ref .btn { align-self: end; }
+  @media (min-width: 40rem) { .refs { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--space-xl); } .ref { grid-row: span 5; grid-template-rows: subgrid; } }
+  .brett .af { margin-left: 0; }
+  .brett__in--2 > div { display: grid; gap: var(--space-md); align-content: start; }
+  .brett__in--2 .brett__lead { margin: 0; }
   .ref__o { font-size: var(--text-sm); color: var(--muted); }
   .ref dl { margin: 0 0 var(--space-xs); display: grid; } .ref dl > div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--space-xs); padding: 0.25rem 0; border-bottom: 1px solid var(--rule); font-size: var(--text-sm); } .ref dt { color: var(--muted); } .ref dd { margin: 0; }
   .ref .btn { justify-self: start; white-space: normal; text-align: left; }
+  .ref > img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); background: var(--paper-3); }
   .b2b { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-sm); max-width: var(--measure); } .b2b li { padding-bottom: var(--space-sm); border-bottom: 1px solid var(--rule); }
   .plz { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); max-width: 24rem; } .plz label { font-weight: 700; }
   .plz__row { display: flex; gap: var(--space-xs); } .plz__row input { flex: 1; min-width: 0; min-height: 48px; padding: 0 0.85rem; border: 1.5px solid var(--ink); border-radius: var(--radius); background: var(--sk-fill); font: inherit; }
@@ -419,17 +451,15 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
   .faq summary::-webkit-details-marker { display: none; } .faq summary::after { content: '+'; position: absolute; right: 0.25rem; top: 0.8rem; font-size: 1.5rem; color: var(--accent); } .faq details[open] summary::after { content: '−'; }
   .faq details p { padding-bottom: var(--space-md); max-width: var(--measure); color: var(--ink-2); }
   .brett#anfrage { padding-bottom: calc(var(--space-2xl) + 8px); }
-  .letter { font-family: var(--font-display); font-size: var(--text-lg); } .letter .pen { display: inline-block; margin-top: 0.2rem; font-family: var(--font-pen); font-size: 3.4rem; line-height: 1.1; color: var(--accent); transform: rotate(-2deg); transform-origin: center; }
+  .letter { font-family: var(--font-display); font-size: var(--text-lg); } .letter .pen { display: inline-block; margin-top: 0.2rem; font-family: var(--font-pen); font-size: 3.4rem; line-height: 1.1; color: var(--accent); transform: rotate(-2deg); transform-origin: left center; }
   /* klebende Leiste (Handy) */
   .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: grid; grid-template-columns: 1fr 1.2fr 1.2fr; height: calc(var(--bar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--paper); border-top: 1.5px solid var(--ink); transition: transform var(--dur) var(--ease-out); }
   .bar.is-off { transform: translateY(100%); }
   .bar__a { display: flex; align-items: center; justify-content: center; font-weight: 700; text-decoration: none; border-right: 1px solid var(--rule); } .bar__a--red { background: var(--accent); color: var(--on-accent); border: 0; }
-  @media (min-width: 40rem) { .hd__status { display: flex; align-items: center; } .hero__status { display: none; } .lane--5 { grid-auto-columns: 17rem; } }
+  @media (min-width: 40rem) { .hd__status { display: flex; align-items: center; } .hero__status { display: none; } }
   @media (min-width: 60rem) {
     .bar { display: none; } .hd__tel { display: inline; } .site-foot { padding-bottom: var(--space-xl); }
     .brett__in--2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
-    .lane { overflow: visible; grid-auto-flow: row; grid-auto-columns: auto; max-width: 64rem; margin-left: auto; margin-right: auto; }
-    .lane--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } .lane--5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
     .lst__row { grid-template-columns: minmax(0, 1fr) 14rem 9rem; } .lst__a { grid-column: auto; justify-content: flex-end; }
     .hd__nav { right: var(--gutter); }
   }

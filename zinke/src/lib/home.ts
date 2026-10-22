@@ -56,10 +56,13 @@ $$('[data-menu] a').forEach((a) => a.addEventListener('click', () => $<HTMLDetai
 {
   const hd = $('.hd'), menu = $<HTMLDetailsElement>('[data-menu]');
   if (hd) {
-    let last = scrollY, tick = false;
+    let last = scrollY, tick = false, hold = 0;
+    // Sprung der Szene (Möbelwechsel) ist kein Hochscrollen der Person: Kopfzeile bleibt, wie sie ist
+    addEventListener('hd:hold', () => { hold = performance.now() + 700; });
     const run = () => {
       tick = false;
       const y = Math.max(0, scrollY), dy = y - last;
+      if (performance.now() < hold) { last = y; return; }
       if (y < 80 || menu?.open) hd.classList.remove('is-hidden');
       else if (dy > 6) hd.classList.add('is-hidden');
       else if (dy < -6) hd.classList.remove('is-hidden');
@@ -83,21 +86,18 @@ if (pf) {
   pf.addEventListener('submit', (e) => { e.preventDefault(); run(); });
 }
 
-/* ---- Werkstoff-Probe (Dialog) ---- */
-const dlg = $<HTMLDialogElement>('[data-holz-dialog]');
+/* ---- Werkstoff-Probe: Detail der gewählten Holzart unter den Proben ---- */
+const hp = $('[data-holz-panel]');
 $$('[data-holz]').forEach((b) => b.addEventListener('click', () => {
-  if (!dlg) return;
-  const img = dlg.querySelector<HTMLImageElement>('img')!;
+  if (!hp) return;
+  const img = hp.querySelector<HTMLImageElement>('img')!;
   img.classList.remove('is-missing'); delete img.dataset.fixed;
   img.dataset.fb = 'tex/' + b.dataset.tex; img.src = BASE + 'img/' + b.dataset.photo; img.alt = `Probe ${b.dataset.name}, Draufsicht auf ein geöltes Brett`;
-  dlg.querySelector('[data-h-name]')!.textContent = b.dataset.name!;
-  dlg.querySelector('[data-h-art]')!.textContent = b.dataset.art!;
-  dlg.querySelector('[data-h-fuer]')!.textContent = b.dataset.fuer!;
-  if (!dlg.open) dlg.show?.();
-  dlg.dataset.on = b.dataset.name!;
+  hp.querySelector('[data-h-name]')!.textContent = b.dataset.name!;
+  hp.querySelector('[data-h-art]')!.textContent = b.dataset.art!;
+  hp.querySelector('[data-h-fuer]')!.textContent = b.dataset.fuer!;
+  $$('[data-holz]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
 }));
-$('[data-holz-close]')?.addEventListener('click', () => dlg?.close?.());
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && dlg?.open) dlg.close(); });
 
 /* ---- Referenz-Links in den Konstruktor / Formular vorbelegen: übernimmt data-was in AnfrageForm ---- */
 
@@ -118,9 +118,11 @@ if (sz) {
   const link = capt.querySelector<HTMLAnchorElement>('[data-sz-link]')!;
 
   /** Kamera auf die Silhouette im Foto legen (nur wenn das geladene Foto zum Format der Fläche passt) */
+  // Tisch auf dem Handy: Querformat-Foto (4:3), nur dort passt das 3D exakt (das Hochformat-Tischfoto ist nicht frontal)
+  const useD = () => wide.matches || cur.id === 'tisch';
   const applyFit = () => {
     const isD = photo.currentSrc.includes('-d.jpg');
-    const f = photoOk && !photo.classList.contains('is-missing') && isD === wide.matches ? (fitData as Record<string, { x0: number; y0: number; x1: number; y1: number }>)[`${cur.id}:${isD ? 'd' : 'm'}`] : undefined;
+    const f = photoOk && !photo.classList.contains('is-missing') && isD === useD() ? (fitData as Record<string, { x0: number; y0: number; x1: number; y1: number }>)[`${cur.id}:${isD ? 'd' : 'm'}`] : undefined;
     scene?.setFit(f || null);
   };
   const setProduct = (id: string) => {
@@ -128,7 +130,8 @@ if (sz) {
     photoOk = true; photo.classList.remove('is-missing'); delete photo.dataset.fixed;
     // Querformat-Variante (-d) auf breiten Bildschirmen; fehlt sie, greift das Hochformat
     photo.dataset.fb = 'img/' + cur.photo;
-    photo.src = BASE + 'img/' + (wide.matches ? cur.photo.replace('.jpg', '-d.jpg') : cur.photo); photo.alt = cur.alt;
+    sz.dataset.view = useD() ? 'd' : 'm';
+    photo.src = BASE + 'img/' + (useD() ? cur.photo.replace('.jpg', '-d.jpg') : cur.photo); photo.alt = cur.alt;
     svgBox.innerHTML = sketch(cfg, 'wood', { marks: true });
     capt.querySelector('[data-sz-name]')!.textContent = cur.label;
     capt.querySelector('[data-sz-cap]')!.textContent = cur.caption;
@@ -202,6 +205,7 @@ if (sz) {
     // noch nicht gebaut: Seite zurück an den Anfang der Szene, dort festgehalten, Scrollen baut das neue Möbel
     if (!staticMode && !done.has(id)) {
       const top = track.getBoundingClientRect().top + scrollY;
+      if (Math.abs(scrollY - top) > 2) dispatchEvent(new Event('hd:hold'));
       if (Math.abs(scrollY - top) > 2) scrollTo({ top, behavior: 'instant' as ScrollBehavior });
       update();
     }
@@ -224,7 +228,7 @@ if (sz) {
         scene.setConfig(cfg, false); fillLabels(); applyFit(); paint();
         // Fotos im Leerlauf laden und dekodieren, damit sie beim Scrollen nicht ruckeln
         const idle = (window as any).requestIdleCallback || ((f: () => void) => setTimeout(f, 600));
-        idle(() => prods.forEach((x) => { const im = new Image(); im.decoding = 'async'; im.src = BASE + 'img/' + (wide.matches ? x.photo.replace('.jpg', '-d.jpg') : x.photo); im.decode?.().catch(() => {}); }));
+        idle(() => prods.forEach((x) => { const im = new Image(); im.decoding = 'async'; im.src = BASE + 'img/' + (wide.matches || x.id === 'tisch' ? x.photo.replace('.jpg', '-d.jpg') : x.photo); im.decode?.().catch(() => {}); }));
       } catch { staticMode = true; sz.classList.add('sz--static'); paint(); }
     };
     if ('IntersectionObserver' in window) new IntersectionObserver((es, o) => { if (es.some((e) => e.isIntersecting)) { start(); o.disconnect(); } }, { rootMargin: '120% 0px' }).observe(sz);

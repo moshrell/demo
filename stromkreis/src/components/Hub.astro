@@ -22,8 +22,8 @@ const rooms = haus.rooms.map((r) => {
   const [cx, cy] = center(r.poly);
   return { ...r, cx, cy, href: `${base}${r.service}/${r.anchor ? '#' + r.anchor : ''}`, s };
 });
-const rowA = rooms.slice(0, 4);
-const rowB = rooms.slice(4);
+const byId = Object.fromEntries(rooms.map((r) => [r.id, r]));
+const rows = haus.order.map((row) => row.map((id) => byId[id]));
 const cards = rooms.map((r) => ({
   id: r.id, name: r.name, circuit: r.circuit, title: r.s.nav, text: r.id === 'bad' ? 'FI-Schutzschalter nachrüsten, Bad-Elektrik bei der Sanierung gleich mitplanen.' : r.s.card,
   from: r.id === 'bad' ? '290 €' : r.s.from, fromLabel: r.id === 'bad' ? 'FI-Schutz ab' : r.s.fromLabel,
@@ -44,19 +44,19 @@ const toolLabel: Record<string, string> = { altbau: 'Ist meine Elektrik alt?', w
     <div class="kasten__wrap">
     <div class="kasten__box" data-has-photo={panel ? '1' : '0'}>
       {panel && <img class="kasten__foto" src={panel.src} width={panel.width} height={panel.height} alt="" fetchpriority="high" decoding="async" />}
-      <div class="kasten__rail kasten__rail--1" style={`top:${haus.rails[0]}%`}>
-        <button class="brk brk--main" type="button" data-main aria-pressed="false" aria-label="Hauptschalter einschalten">
-          <span class="brk__body"><span class="brk__lever" aria-hidden="true"></span><span class="brk__led" aria-hidden="true"></span></span>
-          <span class="strip brk__lab"><b>Haupt</b>schalter</span>
-          <span class="brk__tap" aria-hidden="true"></span>
-        </button>
-      </div>
-      {[rowA, rowB].map((row, ri) => (
-        <div class={`kasten__rail kasten__rail--${ri + 2}`} style={`top:${haus.rails[ri + 1]}%`}>
+      {rows.map((row, ri) => (
+        <div class={`kasten__rail kasten__rail--${ri + 1}`} style={`top:${haus.rails[ri]}%`}>
+          {ri === 0 && (
+            <button class="brk brk--main" type="button" data-main aria-pressed="false" aria-label="Hauptschalter einschalten">
+              <span class="brk__body"><span class="brk__lever" aria-hidden="true"></span><span class="brk__led" aria-hidden="true"></span></span>
+              <span class="strip brk__lab"><b>Haupt</b></span>
+              <span class="brk__tap" aria-hidden="true"></span>
+            </button>
+          )}
           {row.map((r) => (
             <button class="brk" type="button" data-brk={r.id} aria-pressed="false" aria-label={`${r.circuit} ${r.name}: ${r.line}`} tabindex="-1">
               <span class="brk__body"><span class="brk__lever" aria-hidden="true"></span><span class="brk__led" aria-hidden="true"></span></span>
-              <span class="strip brk__lab"><b>{r.circuit}</b>{r.breaker}</span>
+              <span class="strip brk__lab">{r.breaker}</span>
             </button>
           ))}
         </div>
@@ -94,7 +94,7 @@ const toolLabel: Record<string, string> = { altbau: 'Ist meine Elektrik alt?', w
           <svg class="haus__hit" viewBox="0 0 100 100" preserveAspectRatio="none">
             {rooms.map((r) => (
               <a href={r.href} data-room={r.id} aria-label={`${r.name}: ${r.s.nav}`}>
-                <polygon points={pts(r.poly)} />
+                <polygon points={pts(r.hit ?? r.poly)} />
               </a>
             ))}
           </svg>
@@ -157,6 +157,7 @@ const toolLabel: Record<string, string> = { altbau: 'Ist meine Elektrik alt?', w
   .hub__h { font-size: clamp(1.375rem, 6.4vw, 2.25rem); line-height: 1.02; text-transform: uppercase; letter-spacing: 0.01em; text-wrap: balance; }
   .hub__sub { font-size: var(--text-sm); color: var(--color-ink-2); }
   .hub__sub-on { display: none; }
+  @media (max-height: 44rem) { .hub__sub { display: none; } .hub__h { font-size: clamp(1.2rem, 5.6vw, 1.75rem); } }
   .hub[data-state='on'] .hub__sub-on { display: inline; }
   .hub[data-state='on'] .hub__sub-off { display: none; }
   .hub__skip { justify-self: center; font-size: var(--text-sm); padding: var(--space-xs) var(--space-sm); min-height: 2.75rem; display: inline-flex; align-items: center; white-space: nowrap; }
@@ -170,29 +171,32 @@ const toolLabel: Record<string, string> = { altbau: 'Ist meine Elektrik alt?', w
   /* ---------- Kasten ---------- */
   .kasten { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-sm); }
   .kasten__wrap { flex: 1 1 auto; min-height: 0; width: 100%; container-type: size; display: grid; place-items: center; }
-  .kasten__box { position: relative; width: min(100cqw, 75cqh, 26rem); aspect-ratio: 3 / 4; border-radius: var(--radius-lg); overflow: hidden; background: var(--color-paper-2); box-shadow: inset 0 0 0 0.5rem var(--color-plastic-2), inset 0 0 0 0.6rem var(--color-paper-4), 0 2rem 4rem oklch(0% 0 0 / 0.55); }
-  .kasten__box[data-has-photo='1'] { box-shadow: 0 2rem 4rem oklch(0% 0 0 / 0.55); }
-  .kasten__foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.75); }
-  .kasten__box[data-has-photo='0'] .kasten__rail::before { content: ''; position: absolute; left: 6%; right: 6%; top: 50%; height: 0.55rem; transform: translateY(-50%); background: linear-gradient(var(--color-plastic-2), var(--color-paper-4)); }
-  .kasten__rail { position: absolute; left: 0; right: 0; height: 0; display: flex; justify-content: center; align-items: center; gap: 2px; }
-
+  .kasten__box { position: relative; width: min(100cqw, 75cqh, 26rem); aspect-ratio: 3 / 4; container-type: inline-size; border-radius: var(--radius-lg); overflow: hidden; background: var(--color-paper-2); box-shadow: 0 2rem 4rem oklch(0% 0 0 / 0.55); }
+  .kasten__box[data-has-photo='0'] { box-shadow: inset 0 0 0 0.5rem var(--color-plastic-2), inset 0 0 0 0.6rem var(--color-paper-4), 0 2rem 4rem oklch(0% 0 0 / 0.55); }
+  .kasten__foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .kasten__box[data-has-photo='0'] .kasten__rail::before { content: ''; position: absolute; left: 26%; right: 26%; top: 50%; height: 0.55rem; transform: translateY(-50%); background: linear-gradient(var(--color-plastic-2), var(--color-paper-4)); }
+  /* Rail liegt im Foto bei 26–74 % der Breite: Sicherungen skalieren mit der Kastenbreite (cqw) */
+  .kasten__rail { position: absolute; left: 26%; right: 26%; height: 0; display: flex; justify-content: center; align-items: center; gap: 0.6cqw; }
+  .kasten__box .brk { --mod: 11.6cqw; }
   .kasten__hint { font: 500 var(--text-xs)/1 var(--font-mono); text-transform: uppercase; color: var(--color-amber); letter-spacing: 0.06em; }
   .kasten__box .brk { --mod: clamp(2.75rem, 12.5vw, 3.6rem); }
 
   /* ---------- Sicherung (HTML-Schalter) ---------- */
-  .brk { --mod: 2.9rem; position: relative; display: grid; justify-items: center; gap: 0.3rem; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-  .brk__body { position: relative; width: var(--mod); height: calc(var(--mod) * 1.9); border-radius: 3px; background: linear-gradient(90deg, var(--color-plastic-2), var(--color-plastic) 30%, var(--color-plastic) 70%, var(--color-plastic-2)); box-shadow: 0 2px 0 oklch(0% 0 0 / 0.5), inset 0 0 0 1px oklch(0% 0 0 / 0.12); }
+  .brk { --mod: 2.9rem; position: relative; display: block; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  .brk__body { position: relative; display: block; width: var(--mod); height: calc(var(--mod) * 1.25); border-radius: 3px; background: linear-gradient(90deg, var(--color-plastic-2), var(--color-plastic) 30%, var(--color-plastic) 70%, var(--color-plastic-2)); box-shadow: 0 2px 0 oklch(0% 0 0 / 0.5), inset 0 0 0 1px oklch(0% 0 0 / 0.12); }
   .brk__lever { position: absolute; left: 30%; right: 30%; top: 22%; height: 32%; border-radius: 2px; background: var(--color-paper-4); box-shadow: inset 0 -3px 0 oklch(0% 0 0 / 0.35); transform: translateY(70%); }
   .brk__led { position: absolute; left: 50%; bottom: 10%; width: 0.4rem; height: 0.4rem; margin-left: -0.2rem; border-radius: 50%; background: var(--color-led-off); }
   .brk[aria-pressed='true'] .brk__lever { transform: translateY(0); background: var(--color-amber-deep); }
   .brk[aria-pressed='true'] .brk__led { background: var(--color-amber); box-shadow: 0 0 0.5rem var(--color-amber); }
-  .brk__lab { font-size: 0.5625rem; padding: 0.3rem 0.25rem; gap: 0.2rem; max-width: calc(var(--mod) + 1.6rem); }
-  .brk--main { --mod: clamp(4rem, 19vw, 5rem); }
-  .brk--main .brk__body { width: calc(var(--mod) * 1.6); height: calc(var(--mod) * 1.45); }
+  .brk__lab { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 0.3rem; font-size: 0.5625rem; padding: 0.25rem 0.2rem; gap: 0.15rem; }
+  .kasten__box .brk__lab { font-size: clamp(0.5rem, 2.6cqw, 0.75rem); letter-spacing: 0; padding: 0.2rem 0.15rem; }
+  .brk::after { content: ''; position: absolute; inset: -0.4rem -0.2rem; }
+  .kasten__box .brk--main { --mod: 11.6cqw; }
+  .brk--main .brk__body { width: calc(var(--mod) * 1.7); height: calc(var(--mod) * 1.25); }
   .brk--main .brk__lever { left: 20%; right: 20%; background: var(--color-alert); }
   .brk--main[aria-pressed='true'] .brk__lever { background: var(--color-alert); }
-  .brk--main .brk__lab { font-size: 0.625rem; max-width: none; }
-  .brk__tap { position: absolute; left: 50%; top: 28%; width: 3.5rem; height: 3.5rem; margin: -1.75rem 0 0 -1.75rem; border-radius: 50%; border: 2px solid var(--color-amber); opacity: 0; pointer-events: none; }
+  .brk--main .brk__lab { max-width: none; }
+  .brk__tap { position: absolute; left: 50%; top: 35%; width: 3.5rem; height: 3.5rem; margin: -1.75rem 0 0 -1.75rem; border-radius: 50%; border: 2px solid var(--color-amber); opacity: 0; pointer-events: none; }
   .kasten__box .brk:not(.brk--main) { pointer-events: auto; }
   .brk:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; border-radius: 4px; }
 
@@ -246,13 +250,15 @@ const toolLabel: Record<string, string> = { altbau: 'Ist meine Elektrik alt?', w
   .schiene__t.is-nudge { border-color: var(--color-amber); box-shadow: 0 0 0 3px var(--color-amber-glow); }
   .schiene__rail { position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; padding: var(--space-sm) var(--space-xs) var(--space-xs); border-radius: var(--radius); background: var(--color-paper-2); box-shadow: inset 0 0 0 1px var(--color-rule); }
   .schiene__rail::before { content: ''; position: absolute; left: var(--space-xs); right: var(--space-xs); top: calc(var(--space-sm) + 1.55rem); height: 0.4rem; background: var(--color-paper-4); }
-  .brk--s { --mod: min(2.6rem, 100%); }
+  .brk--s { --mod: min(2.6rem, 100%); display: grid; justify-items: center; gap: 0.3rem; }
+  .brk--s::after { display: none; }
   .brk--s .brk__body { width: 100%; max-width: 2.6rem; height: 3.1rem; }
-  .brk--s .brk__lab { font-size: 0.5rem; padding: 0.25rem 0.15rem; letter-spacing: 0; max-width: 100%; overflow: hidden; }
+  .brk--s .brk__lab { position: static; transform: none; margin: 0; font-size: 0.625rem; padding: 0.25rem 0.2rem; letter-spacing: 0; max-width: 100%; overflow: hidden; }
 
   @media (min-width: 48rem) {
     .hub { max-height: none; }
-    .haus { grid-template-columns: minmax(0, 1fr) 20rem; grid-template-rows: minmax(0, 1fr); align-items: center; }
+    .haus { grid-template-columns: minmax(0, 1fr) 20rem; grid-template-rows: minmax(0, 1fr); align-items: stretch; column-gap: var(--space-lg); }
+    .haus__stage { align-self: stretch; }
     .karte { left: auto; right: -21rem; width: 20rem; bottom: auto; top: 0; }
     .schiene { align-self: end; }
     .brk--s { --mod: 2.4rem; }

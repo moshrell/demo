@@ -85,10 +85,10 @@ button { font: inherit; color: inherit; }
 
 /* Inhaltsseiten */
 .page { padding: var(--space-lg) 0 var(--space-2xl); }
-.page__in { display: grid; gap: var(--space-xl); }
-.page__head { display: grid; gap: var(--space-smd); }
+.page__in { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); }
+.page__head { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-smd); }
 .page__lead { font-size: var(--text-lg); color: var(--color-ink-2); }
-.block { display: grid; gap: var(--space-md); }
+.block { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); }
 .back { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 2.75rem; font-size: var(--text-sm); white-space: nowrap; }
 .prices { margin: 0; display: grid; border-top: 1px solid var(--color-rule); }
 .prices > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2xs) var(--space-md); padding: var(--space-smd) 0; border-bottom: 1px solid var(--color-rule); }

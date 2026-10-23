@@ -1,28 +1,32 @@
-# Elektro Brakhage
+# Demo: Elektro Brakhage («Stromkreis»)
 
-Astro-Projekt (Demo). Адрес на портфолио: `/vorschau/handwerk/stromkreis/`
+Статус: **сайт собран (Astro), проверен headless на 320–1280 px; ждёт фото из Gemini (`PROMPTS.txt`) и ревью Степана.**
+Живая версия после push: https://moshrell.github.io/demo/stromkreis/ · Разведка: `RECON.txt` · ТЗ владельца: `TZ.txt`.
+Фирма вымышленная: Elektro Brakhage, Gehrden (имя «Hellwig» из брифа заменено: в Nordhorn есть реальная «Hellwig Elektrotechnik»). Адрес, телефоны (Drama Numbers 030 23125), HWK-номер и USt-ID — выдуманы.
 
-    START.bat           # первый запуск ставит пакеты, дальше dev-сервер
-    npm run build       # сборка + dist/.htaccess (CSP с хэшами, noindex)
-    npm run publish     # сборка + копия в ..\kravets-site\public\vorschau\handwerk\stromkreis
+## Механика
+Главная = хаб без длинного скролла: тёмный Sicherungskasten (щиток) → Hauptschalter (главный рубильник) → разрез дома ночью → автоматы внизу включают комнаты → карточка услуги → тап по светлой комнате = наезд камеры (фиксированная точка) → страница услуги. «Alles an», «Licht aus», «Ohne Licht direkt zu den Leistungen» и Schnellzugriff (быстрый список с ценами) всегда доступны. Нижняя панель (Anrufen / Notdienst / Anfrage) на всех страницах. Статус «открыто/закрыто» по Europe/Berlin.
+Состояние дома, ответы инструментов и PLZ — в sessionStorage. Нет WebGL вообще: фото + HTML.
 
-Данные клиента (тексты, цены, часы) — `src/data/site.json`.
-Что ещё нужно от клиента — искать `TODO` в проекте.
+Инструменты: Wallbox-Check (`/wallbox/`, 5 вопросов, бегущая сумма) · E-Check-Rechner (`/e-check/`, netto + MwSt. + brutto) · «Ist meine Elektrik alt?» (`/altbau/`) · PLZ-проверка района с ценой Anfahrt (выезда). Все ведут в `AnfrageForm.astro` и переносят сводку и сумму.
 
-## Правило форм (всегда, для каждого демо)
-Готовый блок: `src/components/OrderForm.astro` (форма) + `src/components/DatenschutzForm.astro` (раздел для `datenschutz.astro`). Если на сайте есть любая форма — брать их, а не писать с нуля:
-1. Каждое поле: `label`, понятный placeholder-пример (`Vor- und Nachname`, `z. B. 030 23125 123`, `name@example.com`), `autocomplete`, `type`/`inputmode`.
-2. Если собираются имя/телефон/e-mail: обязательный чекбокс согласия (`required`) с целью + ссылка на `${base}datenschutz/`, сообщение об ошибке, если не отмечен. В `datenschutz.astro` раздел про эту форму (Verantwortlicher, Daten, Zweck, Art. 6 Abs. 1 lit. b DSGVO, Speicherdauer, Weitergabe, Rechte Art. 15–21, Beschwerderecht, Freiwilligkeit, Demo-Hinweis).
-3. Цены/выбор: итог «Summe» виден по ходу выбора (на мобильном липкая плашка внизу формы) и повторяется в подтверждении. Нет цен: итог не выдумывать, в подтверждении показать сводку выбора (услуга, дата/время).
-4. Стили только через токены (`--muted`, `--alert`, `--focus`, `--space-*` в `global.css`: подогнать под дизайн проекта), доступность (focus-visible, aria-invalid, aria-describedby), проверка на 390px.
-5. Введённые данные не должны пропадать никогда: sessionStorage-автосохранение (уже встроено в `OrderForm.astro`; ключ `form:<pathname>:<id>`, всё в try/catch), ссылки на Datenschutz/Impressum открываются в новой вкладке (`target="_blank" rel="noopener"`), чекбокс согласия не сохраняется и не восстанавливается, после успешной отправки хранилище очищается. В Datenschutz есть предложение про Zwischenspeicher (уже в `DatenschutzForm.astro`).
+## Файлы
+- Данные: `src/data/*.json` (`site`, `leistungen`, `haus`, `plz`, `wallbox`, `echeck`, `altbau`). Цены только там.
+- Токены: `src/styles/tokens.css` (hallmark: кастом-тема, графит + янтарь 2700K + кремовые полоски; Sofia Sans Condensed / Sofia Sans / Martian Mono, локально).
+- Хаб: `src/components/Hub.astro`. Форма: `AnfrageForm.astro` (по стандарту `_template/OrderForm`). Фото: `Foto.astro` + `src/scripts/img.ts` (читает `public/img/`).
 
-## SEO & KI-Sichtbarkeit (AIO) — Standard in jedem Projekt
-`Base.astro` liefert: title, description, canonical, Open Graph, Schema.org-JSON-LD (`type`, Adresse, Öffnungszeiten, Preise als `prices`), FAQPage-Markup (`faq`). Checkliste pro Projekt:
-1. Ein `<h1>`, logische `<h2>`/`<h3>`, `alt` bei jedem Bild.
-2. `type` auf passenden Schema.org-Typ setzen; `site.json`: `openingHours`, `areaServed` füllen (Platzhalter `TODO` nie live).
-3. FAQ: dieselben Fragen/Antworten sichtbar auf der Seite UND als `faq`-Prop übergeben.
-4. Kundenseite live: `index` setzen (Demos bleiben noindex), sitemap.xml + robots.txt ergänzen, Google Business Profile mit identischen Name/Adresse/Telefon (NAP).
+## Фото (ждёт Степана)
+Кадры из `PROMPTS.txt` положить в `D:\Webdesign\stromkreis\public\img\` под именами из файла (jpg). Пока файла нет, на его месте полосатая плашка «Foto folgt», дом нарисован схемой из прямоугольников комнат (параметрическая геометрия), всё кликается.
+**После появления `haus-dunkel.jpg` + `haus-hell.jpg`:** в `src/data/haus.json` поставить `"images": true` и пересчитать полигоны комнат по разнице двух кадров (скрипт масок ещё не написан, это следующий шаг), проверить совпадение ракурса. Сейчас `poly` — ориентировочные координаты под промпт, не под готовую картинку. Автоматы на `sicherungskasten.jpg` позиционируются по `haus.json → rails` (% высоты), после получения фото сверить с рейками.
 
-## Demo-Kontaktdaten (fiktiv)
-Telefon nur aus den offiziellen «Drama Numbers» der Bundesnetzagentur (z. B. Berlin `030 23125 000–999`, Hamburg `040 66969 000–999`, Köln `0221 4710 000–999`, München `089 99998 000–999`, Frankfurt `069 90009 000–999`), E-Mail nur `@example.com`. Keine Geschäftsdaten-Markup (LocalBusiness) in Demos: `index = false` unterdrückt sie, FAQPage bleibt. Demos bleiben `noindex`.
+## Известные недочёты
+- Полигоны комнат и позиции рейк щитка привязаны к промпту, а не к реальным кадрам (см. выше).
+- Не проверено глазами (скриншоты не делались): вёрстка хаба на разных высотах телефона, плавность анимаций на реальном iPhone/Android. Наклон по гироскопу работает только там, где не нужно разрешение (Android); на iOS остаётся drag.
+- Цены демонстрационные: ориентир по открытым данным (ADAC: Wallbox 500–3 000 € монтаж; прайсы DGUV V3 3–8,50 € за прибор + выезд). На живом клиенте заменить своими. Нулевая ставка MwSt. для PV (до 30 kWp) указана по публикации priwatt.de; относится ли к ней Zählerschrank, в тексте оставлено «клиентом уточняется».
+- Формы ничего не отправляют (демо). Фото в форме — только превью в браузере. В реальном проекте отправка идёт через PHP на All-Inkl (фото как вложение), Datenschutz подправить.
+- Телефон/e-mail/Handwerksrolle/USt-ID/Berufshaftpflicht в Impressum: вымышленные или `TODO vom Kunden`.
+- Страницы услуг не имеют отдельных фото-кадров до генерации (см. выше).
+
+## Технически
+`npm run build` (astro build + ki-hinweis + htaccess/CSP с хэшами). Все ссылки через `import.meta.env.BASE_URL`. Без внешних запросов.
+Проверено (headless, без скриншотов): нет горизонтального скролла и обрезанного контента на 320/375/390/414/768/1280, нет ошибок консоли и битых запросов, нет двустрочных кликабельных текстов, все внутренние ссылки 200, reduced-motion и отключённый JS (дом сразу светится, ссылки работают), форма не теряет данные (Datenschutz в новой вкладке, перезагрузка), согласие не восстанавливается.

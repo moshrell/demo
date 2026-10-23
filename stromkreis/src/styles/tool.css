@@ -1,5 +1,5 @@
 /* Gemeinsame Stile der Werkzeuge (Wallbox-Check, E-Check-Rechner, Altbau-Check) */
-  .tool { display: grid; gap: var(--space-md); padding: var(--space-md); border: 1px solid var(--color-rule); border-radius: var(--radius-lg); background: var(--color-paper-2); }
+  .tool { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); padding: var(--space-md); border: 1px solid var(--color-rule); border-radius: var(--radius-lg); background: var(--color-paper-2); }
   .tool__head { display: grid; gap: var(--space-sm); }
   .tool__meter { height: 3px; background: var(--color-paper-4); border-radius: 2px; overflow: hidden; }
   .tool__meter span { display: block; height: 100%; width: 100%; background: var(--color-amber); transform-origin: left; transform: scaleX(0); }
@@ -37,3 +37,5 @@
     .tool__step:not([hidden]) { animation: tool-in var(--dur-mid) var(--ease-out); }
   }
   @keyframes tool-in { from { opacity: 0; transform: translateY(6px); } }
+
+.tool .strip { white-space: normal; justify-self: start; line-height: 1.25; }

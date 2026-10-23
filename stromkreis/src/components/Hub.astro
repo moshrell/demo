@@ -41,6 +41,7 @@ const toolLabel: Record<string, string> = { altbau: 'Ist meine Elektrik alt?', w
 
   <!-- Zustand AUS: der Sicherungskasten -->
   <div class="kasten" data-kasten>
+    <div class="kasten__wrap">
     <div class="kasten__box" data-has-photo={panel ? '1' : '0'}>
       {panel && <img class="kasten__foto" src={panel.src} width={panel.width} height={panel.height} alt="" fetchpriority="high" decoding="async" />}
       <div class="kasten__rail kasten__rail--1" style={`top:${haus.rails[0]}%`}>
@@ -60,6 +61,7 @@ const toolLabel: Record<string, string> = { altbau: 'Ist meine Elektrik alt?', w
           ))}
         </div>
       ))}
+    </div>
     </div>
     <p class="kasten__hint">Hauptschalter antippen</p>
   </div>
@@ -166,13 +168,14 @@ const toolLabel: Record<string, string> = { altbau: 'Ist meine Elektrik alt?', w
   .hub[data-state='on'] .hub__skip { display: none; }
 
   /* ---------- Kasten ---------- */
-  .kasten { display: grid; place-items: center; align-content: center; gap: var(--space-sm); }
-  .kasten__box { position: relative; height: min(100%, calc((100vw - 2 * var(--gutter)) * 4 / 3)); max-height: 34rem; aspect-ratio: 3 / 4; border-radius: var(--radius-lg); overflow: hidden; background: var(--color-paper-2); box-shadow: inset 0 0 0 0.5rem var(--color-plastic-2), inset 0 0 0 0.6rem var(--color-paper-4), 0 2rem 4rem oklch(0% 0 0 / 0.55); }
+  .kasten { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-sm); }
+  .kasten__wrap { flex: 1 1 auto; min-height: 0; width: 100%; container-type: size; display: grid; place-items: center; }
+  .kasten__box { position: relative; width: min(100cqw, 75cqh, 26rem); aspect-ratio: 3 / 4; border-radius: var(--radius-lg); overflow: hidden; background: var(--color-paper-2); box-shadow: inset 0 0 0 0.5rem var(--color-plastic-2), inset 0 0 0 0.6rem var(--color-paper-4), 0 2rem 4rem oklch(0% 0 0 / 0.55); }
   .kasten__box[data-has-photo='1'] { box-shadow: 0 2rem 4rem oklch(0% 0 0 / 0.55); }
   .kasten__foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.75); }
   .kasten__box[data-has-photo='0'] .kasten__rail::before { content: ''; position: absolute; left: 6%; right: 6%; top: 50%; height: 0.55rem; transform: translateY(-50%); background: linear-gradient(var(--color-plastic-2), var(--color-paper-4)); }
-  .kasten__rail { position: absolute; left: 0; right: 0; height: 0; display: flex; justify-content: center; gap: 2px; }
-  .kasten__rail > .brk { transform: translateY(-50%); }
+  .kasten__rail { position: absolute; left: 0; right: 0; height: 0; display: flex; justify-content: center; align-items: center; gap: 2px; }
+
   .kasten__hint { font: 500 var(--text-xs)/1 var(--font-mono); text-transform: uppercase; color: var(--color-amber); letter-spacing: 0.06em; }
   .kasten__box .brk { --mod: clamp(2.75rem, 12.5vw, 3.6rem); }
 
@@ -195,8 +198,8 @@ const toolLabel: Record<string, string> = { altbau: 'Ist meine Elektrik alt?', w
 
   /* ---------- Haus ---------- */
   .haus { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: var(--space-sm); }
-  .haus__stage { position: relative; min-height: 0; display: grid; place-items: center; perspective: 900px; }
-  .haus__tilt { height: 100%; max-width: 100%; aspect-ratio: 3 / 4; transform-style: preserve-3d; will-change: transform; }
+  .haus__stage { position: relative; min-height: 0; display: grid; place-items: center; perspective: 900px; container-type: size; }
+  .haus__tilt { width: min(100cqw, 75cqh); aspect-ratio: 3 / 4; transform-style: preserve-3d; will-change: transform; }
   .haus__frame { position: relative; width: 100%; height: 100%; border-radius: var(--radius-lg); overflow: hidden; transform-origin: 50% 50%; background: var(--color-sky); }
   .haus__img, .haus__lit { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .haus__lit { opacity: 0; }
@@ -221,6 +224,7 @@ const toolLabel: Record<string, string> = { altbau: 'Ist meine Elektrik alt?', w
   /* Karte (Bottom-Sheet über dem Haus) */
   .karte { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; }
   .karte[hidden] { display: none; }
+  @media (max-width: 47.99rem) { .karte[data-pos='top'] { bottom: auto; top: 0; } }
   .karte__in { display: grid; gap: var(--space-sm); padding: var(--space-md); border-radius: var(--radius-lg); background: oklch(20.5% 0.008 70 / 0.97); border: 1px solid var(--color-amber-deep); box-shadow: 0 -1rem 2rem oklch(0% 0 0 / 0.5); }
   .karte__in[hidden] { display: none; }
   .karte__top { display: flex; justify-content: space-between; align-items: center; }
@@ -306,6 +310,10 @@ const toolLabel: Record<string, string> = { altbau: 'Ist meine Elektrik alt?', w
 
     const showCard = (sel: string | null) => {
       shown = sel;
+      // Karte oben, wenn der Raum in der unteren Hälfte liegt (sonst verdeckt sie ihn auf dem Telefon)
+      const rid = sel?.match(/"([^"]+)"/)?.[1];
+      const ny = parseFloat(hub.querySelector<HTMLElement>(`[data-name="${rid}"]`)?.style.top || '0');
+      karte.dataset.pos = ny > 50 ? 'top' : 'bottom';
       $$<HTMLElement>('.karte__in').forEach((c) => (c.hidden = !sel || !c.matches(sel)));
       karte.hidden = !sel;
     };

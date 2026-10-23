@@ -13,7 +13,7 @@ import B2BForm from './B2BForm.astro';
   <div class="wrap vs-hero">
     <h2 id="vs-h" class="vs-hero__h">In Ruhe sicherer wohnen.</h2>
     <p class="vs-hero__lead">Nach einem Einbruch in der Nachbarschaft fragen sich viele: Was hilft wirklich? Wir kommen vorbei, zeigen es an Ihrer Tür und nennen den Preis schriftlich.</p>
-    <Foto name="zylinder-nah" alt="Sicherheitszylinder aus Messing in einer hellen Wohnungstür" ratio="4 / 3" eager />
+    <Foto name="zylinder-nah" alt="Sicherheitszylinder aus Messing in einer hellen Wohnungstür" ratio="4 / 3" />
   </div>
 
   <div class="bund" aria-labelledby="bund-h">
@@ -25,7 +25,7 @@ import B2BForm from './B2BForm.astro';
       {vorsorge.karten.map((k, i) => (
         <li class="anh" data-anh={i} id={`karte-${k.id}`}>
           <article class="anh__in">
-            <Foto name={k.img} alt={k.alt} ratio="4 / 3" sizes="(min-width: 46rem) 22rem, 78vw" widths={[320, 480, 700]} />
+            <Foto name={k.img} alt={k.alt} ratio="4 / 3" sizes="(min-width: 46rem) 22rem, 78vw" widths={[320, 480, 700, 900]} />
             <h3>{k.titel}</h3>
             <p class="anh__text">{k.text}</p>
             <p class="anh__preis num">{k.preis}</p>
@@ -55,7 +55,7 @@ import B2BForm from './B2BForm.astro';
       <h2>Für Hausverwaltungen</h2>
       <p class="block__lead">Schließanlagen für Mehrfamilienhäuser und Büros. Sie bekommen den Meister als festen Ansprechpartner.</p>
       <div class="b2b__grid">
-        <Foto name="hauseingang-mfh" alt="Eingang eines hellen Mehrfamilienhauses mit dunkler Glastür und Briefkästen" ratio="3 / 4" sizes="(min-width: 46rem) 18rem, 100vw" widths={[360, 560, 800]} class="b2b__foto" />
+        <Foto name="hauseingang-mfh" alt="Eingang eines hellen Mehrfamilienhauses mit dunkler Glastür und Briefkästen" ratio="4 / 3" sizes="(min-width: 40rem) 15rem, 100vw" widths={[360, 560, 800, 1100]} class="b2b__foto" />
         <ul class="haken">
           {vorsorge.b2b.punkte.map((p) => <li><Icon name="check" />{p}</li>)}
         </ul>
@@ -122,6 +122,9 @@ import B2BForm from './B2BForm.astro';
   .haken { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-sm); }
   .haken li { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr); gap: var(--space-sm); }
   .haken :global(.icon) { width: 1.4rem; height: 1.4rem; color: var(--color-brass-deep); margin-top: 0.1rem; }
+  /* Telefon: quer zugeschnitten (sonst ein bildschirmhohes Foto), ab Tablet hochkant neben der Liste */
+  .b2b__grid :global(.b2b__foto) { object-position: 50% 35%; }
+  @media (min-width: 40rem) { .b2b__grid :global(.b2b__foto) { aspect-ratio: 3 / 4 !important; } }
   @media (min-width: 40rem) { .b2b__grid:has(.foto) { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); align-items: start; } }
 
   .ueber { display: grid; gap: var(--space-md); margin-bottom: var(--space-xl); }

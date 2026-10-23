@@ -64,13 +64,19 @@ const hole = 'M2,4.583 A5,5 0 1 0 -2,4.583 L-4,15 L4,15 Z';
     const play = () => {
       if (done) return;
       if (!key) return reveal(200);
+      // Foto: Kopf oben, Bart unten; der Punkt bei 78 % Höhe (unteres Bartdrittel) sitzt auf dem Schlüsselloch.
+      // Einführen: Schlüssel kommt auf den Betrachter zu, der Bart verschwindet im Loch (clip-path).
       const k = key.animate([
-        { opacity: 0, transform: 'translateY(55vh) scale(1.5) rotate(-14deg)' },
-        { opacity: 1, transform: 'translateY(6vh) scale(1.08) rotate(-3deg)', offset: 0.55 },
-        { opacity: 1, transform: 'translateY(0) scale(1) rotate(0deg)' },
-      ], { duration: 520, delay: 80, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' });
-      const turn = key.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(90deg)' }], { duration: 330, delay: 620, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', fill: 'forwards' });
-      const out = key.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 110, delay: 950, fill: 'forwards' });
+        { opacity: 0, transform: 'translateY(38vh) scale(1.6)', clipPath: 'inset(0 0 0 0)' },
+        { opacity: 1, transform: 'translateY(4vh) scale(1.06)', clipPath: 'inset(0 0 0 0)', offset: 0.6 },
+        { opacity: 1, transform: 'translateY(0) scale(1)', clipPath: 'inset(0 0 22% 0)' },
+      ], { duration: 520, delay: 60, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' });
+      // Drehen um die Längsachse des Bartes (wie im echten Schloss), nicht in der Bildebene
+      const turn = key.animate([
+        { transform: 'perspective(500px) rotateY(0deg)', clipPath: 'inset(0 0 22% 0)' },
+        { transform: 'perspective(500px) rotateY(78deg)', clipPath: 'inset(0 0 22% 0)' },
+      ], { duration: 340, delay: 600, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', fill: 'forwards' });
+      const out = key.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 120, delay: 940, fill: 'forwards' });
       anims.push(k, turn, out);
       reveal(960); // Ende ≈ 1,52 s
     };

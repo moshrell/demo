@@ -6,9 +6,11 @@ const { name, alt, ratio = '4 / 3', sizes = '(min-width: 46rem) 44rem, 100vw', w
 const files = import.meta.glob<{ default: ImageMetadata }>('../assets/img/*.{jpg,jpeg,png,webp}', { eager: true });
 const hit = Object.entries(files).find(([p]) => p.split('/').pop()!.replace(/\.\w+$/, '') === name);
 const img = hit?.[1].default;
+// Breiten über der Originalgröße fallen weg, dafür kommt das Original selbst als größte Stufe dazu
+const ws = img ? [...new Set([...widths.filter((w) => w < img.width), ...(widths.some((w) => w >= img.width) ? [img.width] : [])])] : [];
 ---
 {img && (
-  <Picture src={img} alt={alt} widths={widths.filter((w) => w <= img.width)} sizes={sizes} formats={['webp']} quality={72} loading={eager ? 'eager' : 'lazy'} decoding="async" class={`foto ${cls}`} style={`aspect-ratio:${ratio}`} />
+  <Picture src={img} alt={alt} widths={ws} sizes={sizes} formats={['webp']} quality={72} loading={eager ? 'eager' : 'lazy'} decoding="async" class={`foto ${cls}`} style={`aspect-ratio:${ratio}`} />
 )}
 <style>
   .foto { width: 100%; object-fit: cover; border-radius: var(--radius); background: var(--color-paper-3); }

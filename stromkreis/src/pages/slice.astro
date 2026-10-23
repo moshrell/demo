@@ -1,0 +1,90 @@
+---
+// Срез 3D-hero. Не в меню, не в sitemap (noindex через Base).
+import Base from '../layouts/Base.astro';
+---
+<Base title="Срез 3D · Elektro Brakhage" bar={false}>
+  <section class="s" data-s>
+    <div class="s__pin">
+      <div class="s__stage"><canvas data-c aria-label="Haus im Schnitt, Räume gehen per Scroll an"></canvas></div>
+      <canvas class="s__spark" data-spark aria-hidden="true"></canvas>
+      <div class="s__top">
+        <h1>Ihr Haus.<br />Unter Strom.</h1>
+      </div>
+      <p class="s__hint" data-hint>Nach unten wischen</p>
+      <aside class="s__card" data-card hidden>
+        <span class="strip" data-f></span>
+        <h2 data-n></h2>
+        <p data-l></p>
+        <div class="s__btns">
+          <a class="btn btn--amber" href="#preise">Preise &amp; Details</a>
+          <button class="btn btn--line" type="button" data-back>Zurück</button>
+        </div>
+      </aside>
+      <p class="s__fail" data-fail hidden>Die 3D-Ansicht braucht WebGL. <a href="../">Zur normalen Startseite</a></p>
+    </div>
+  </section>
+  <section id="preise" class="s__after"><div class="wrap"><h2>Preise &amp; Details</h2><p>Hier folgen später die Preise.</p></div></section>
+</Base>
+
+<style>
+  .s { height: 380svh; position: relative; background: radial-gradient(120% 80% at 50% 0%, #1a2540 0%, #0b0f1a 60%, #06080e 100%); }
+  .s__pin { position: sticky; top: var(--head-h); height: calc(100svh - var(--head-h)); overflow: hidden; }
+  .s__stage, .s__stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; }
+  .s__spark { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .s__top { position: absolute; inset: 0 0 auto 0; padding: var(--space-md) var(--gutter) 0; pointer-events: none; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.7); }
+  .s__pin[data-room] .s__top { opacity: 0; transition: opacity 0.4s; }
+  .s__top { transition: opacity 0.4s; }
+  .s__top h1 { font-size: clamp(2rem, 7vw, 4.2rem); font-weight: 600; line-height: 1; letter-spacing: -0.01em; }
+  .s__hint { position: absolute; left: 0; right: 0; bottom: calc(var(--space-md) + env(safe-area-inset-bottom)); text-align: center; font: 500 var(--text-xs) / 1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-2); pointer-events: none; }
+  .s__card { position: absolute; left: var(--gutter); right: var(--gutter); bottom: calc(var(--space-md) + env(safe-area-inset-bottom)); background: rgba(10, 13, 22, 0.86); backdrop-filter: blur(8px); border: 1px solid var(--color-rule); border-radius: var(--radius); padding: var(--space-md); display: grid; gap: var(--space-sm); }
+  .s__card h2 { font-size: var(--text-2xl); }
+  .s__card p { color: var(--color-ink-2); }
+  .s__btns { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+  [hidden] { display: none !important; }
+  .s__fail { position: absolute; inset: 40% var(--gutter) auto; text-align: center; }
+  .s__after { padding: var(--space-2xl) 0; background: var(--color-paper); }
+  @media (min-width: 48rem) {
+    .s__card { left: var(--space-xl); right: auto; bottom: auto; top: 50%; transform: translateY(-50%); width: 22rem; }
+  }
+</style>
+
+<script>
+  import { createHero, ROOMS } from '../scripts/haus3d';
+  const base = import.meta.env.BASE_URL;
+  const q = <T extends Element>(s: string) => document.querySelector(s) as T;
+  const sec = q<HTMLElement>('[data-s]'), cv = q<HTMLCanvasElement>('[data-c]'), card = q<HTMLElement>('[data-card]'), hint = q<HTMLElement>('[data-hint]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const order = ['bad', 'garage', 'kueche', 'buero', 'wohnen', 'schlaf'] as const;
+  (async () => {
+    let hero;
+    try { hero = await createHero(cv, base, [...order]); } catch (e) { q('[data-fail]').hidden = false; console.error(e); return; }
+    (window as any).__hero = hero;
+    const prog = () => { const r = sec.getBoundingClientRect(); const max = sec.offsetHeight - innerHeight; return Math.min(1, Math.max(0, -r.top / max)); };
+    let inRoom = false;
+    const upd = () => { const p = reduce ? 1 : prog(); if (!inRoom) hero.setProgress(p); hint.textContent = p < 0.05 ? 'Nach unten wischen' : p > 0.85 ? 'Raum antippen' : ''; };
+    addEventListener('scroll', upd, { passive: true }); addEventListener('resize', () => { hero.resize(); upd(); }); upd();
+    const open = (id: string) => {
+      const r = ROOMS.find((x) => x.id === id)!; inRoom = true; hero.flyTo(id as any); if (reduce) hero.skip();
+      q('[data-f]').textContent = `${r.circuit} · ${r.name}`; q('[data-n]').textContent = r.name; q('[data-l]').textContent = r.line; card.hidden = false; hint.textContent = ''; q('.s__pin').setAttribute('data-room', '');
+      document.documentElement.style.overflow = 'hidden';
+    };
+    const close = () => { inRoom = false; hero.flyTo(null); if (reduce) hero.skip(); card.hidden = true; q('.s__pin').removeAttribute('data-room'); document.documentElement.style.overflow = ''; upd(); };
+    hero.onPick((id) => { if (inRoom) return; if (id) { if (hero.litIds().includes(id)) open(id); else hero.light(id, true); } });
+    q('[data-back]').addEventListener('click', close); addEventListener('keydown', (e) => { if (e.key === 'Escape' && inRoom) close(); });
+    // Parallax (Maus)
+    matchMedia('(pointer: fine)').matches && !reduce && cv.addEventListener('pointermove', (e) => { const r = cv.getBoundingClientRect(); hero.setPointer(((e.clientX - r.left) / r.width - 0.5) * 2, ((e.clientY - r.top) / r.height - 0.5) * 2); });
+    // Funken unter dem Finger
+    const sp = q<HTMLCanvasElement>('[data-spark]'); const g = sp.getContext('2d')!; const parts: { x: number; y: number; vx: number; vy: number; t: number }[] = [];
+    const fit = () => { sp.width = sp.clientWidth * devicePixelRatio; sp.height = sp.clientHeight * devicePixelRatio; }; fit(); addEventListener('resize', fit);
+    let touch: { x: number; y: number } | null = null; let lastSpawn = 0; let ticking = false;
+    const spawn = (x: number, y: number) => { for (let i = 0; i < 3; i++) parts.push({ x, y, vx: (Math.random() - 0.5) * 160, vy: (Math.random() - 0.7) * 160, t: 0 }); if (!ticking) { ticking = true; requestAnimationFrame(tick); } };
+    let lt = 0; const tick = (now: number) => { const dt = Math.min(0.04, (now - (lt || now)) / 1000); lt = now; g.clearRect(0, 0, sp.width, sp.height);
+      for (let i = parts.length - 1; i >= 0; i--) { const p = parts[i]; p.t += dt; if (p.t > 0.4) { parts.splice(i, 1); continue; } p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 260 * dt; const a = 1 - p.t / 0.4; g.strokeStyle = `rgba(255,${180 + 50 * a | 0},90,${a})`; g.lineWidth = 1.6 * devicePixelRatio; g.beginPath(); g.moveTo(p.x * devicePixelRatio, p.y * devicePixelRatio); g.lineTo((p.x - p.vx * 0.04) * devicePixelRatio, (p.y - p.vy * 0.04) * devicePixelRatio); g.stroke(); }
+      if (parts.length) requestAnimationFrame(tick); else { ticking = false; lt = 0; g.clearRect(0, 0, sp.width, sp.height); } };
+    if (!reduce) {
+      addEventListener('touchstart', (e) => { const t = e.touches[0]; touch = { x: t.clientX, y: t.clientY - sp.getBoundingClientRect().top }; }, { passive: true });
+      addEventListener('touchmove', (e) => { const t = e.touches[0]; const r = sp.getBoundingClientRect(); touch = { x: t.clientX, y: t.clientY - r.top }; if (inRoom || r.bottom < 0 || r.top > innerHeight) return; const now = performance.now(); if (now - lastSpawn > 220 && Math.random() < 0.6) { lastSpawn = now; spawn(touch.x, touch.y); } }, { passive: true });
+      addEventListener('touchend', () => { touch = null; }, { passive: true });
+    }
+  })();
+</script>

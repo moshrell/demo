@@ -22,7 +22,7 @@ async function ctxFor(browser, vp) {
     const ended = await page.evaluate(() => ({ out: document.querySelector('[data-intro]').classList.contains('is-out') || document.querySelector('[data-intro]').hidden, dur: document.querySelector('[data-intro-video]').duration }));
     ok(ended.out, `${vp.n}: Intro endet (${ended.dur.toFixed(1)} s) und blendet in die Box über`);
     await sleep(900); const s = await px(page); ok(s.luma > 30 && s.dark < 0.5, `${vp.n}: Box nach dem Intro nicht schwarz (${s.luma.toFixed(0)})`);
-    const flights = vp.w < 700 ? [['lack', '[data-station="lack"]'], ['innenraum', '[data-station="innenraum"]']] : [['lack', '.hs[data-hs="lack"]'], ['felgen', '.hs[data-hs="felgen"]'], ['innenraum', '.hs[data-hs="innenraum"]']];
+    const flights = vp.w < 700 ? [['lack', '[data-station="lack"]'], ['innenraum', '[data-station="innenraum"]']] : [['lack', '.wall [data-station="lack"]'], ['felgen', '.wall [data-station="felgen"]'], ['innenraum', '.wall [data-station="innenraum"]']];
     let first = true;
     for (const [id, sel] of flights) {
       await page.click(sel); await sleep(600);

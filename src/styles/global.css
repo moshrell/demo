@@ -610,7 +610,7 @@ dialog.qs::backdrop { background: #000; }
    Das Bild ist links bündig (rechts liegt die dunkle Wand); das Panel sitzt rechts an dieser Wand, die Kamera nimmt den Platz links davon.
    Die Knöpfe liegen als Etiketten am Auto und an den Wänden. Handy-Layout bleibt unberührt (alles hier nur unter html.desk). */
 html.desk { --col: 100vw; }
-html.desk .stage__bg, html.desk .svcs, html.desk .dock { display: none; }
+html.desk .stage__bg { display: none; }
 html.desk .stage__frame { left: 0; translate: none; width: 100vw; }
 html.desk .intro__video { left: 0; translate: none; width: 100vw; object-position: left center; }
 html.desk .intro__ui { left: 0; translate: none; width: 100vw; justify-content: flex-end; padding: 0 28px; }
@@ -634,7 +634,8 @@ html.desk .st__bar { background: transparent; }
 html.desk .sheet[open]:not(.sheet--cam) { animation-name: up-d; }
 
 html.desk .hs { display: grid; width: 40px; height: 40px; }
-html.desk .hs--dk { display: grid; }
+html.desk .hs--dk { display: none; }
+html.desk .hs:not(:hover):not(:focus-visible) .hs__lbl { display: none; }
 html.desk .hs__lbl {
   display: grid; position: absolute; gap: 2px; padding: 6px 11px 7px; border-radius: 10px; white-space: nowrap; text-align: left;
   background: rgba(9, 10, 13, .84); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16), 0 6px 18px rgba(0, 0, 0, .55);
@@ -657,3 +658,29 @@ html.desk .hs.is-done:hover .hs__lbl b::after { color: #137a43; }
   html.desk .hud { padding: calc(8px + var(--safe-t)) 14px 0; }
   html.desk .hs__lbl { font-size: 12px; padding: 4px 8px 5px; }
 }
+
+/* Desktop: alle Knöpfe liegen gesammelt an der freien Wand rechts (Leistungen + Werkstatt), am Auto blinken nur die vier Punkte wie am Handy.
+   Öffnet sich ein Panel, blendet die Wand aus (das Panel sitzt an derselben Stelle). */
+.wall { display: contents; }
+html.desk .wall { position: absolute; z-index: 9; right: 28px; top: 84px; width: min(440px, 38vw); display: grid; gap: 10px; padding: 12px; border-radius: 20px; background: rgba(14, 15, 19, .62); box-shadow: inset 0 0 0 1px var(--line), 0 24px 60px rgba(0, 0, 0, .45); transition: opacity 240ms, translate 300ms var(--ease); }
+html.desk .wall .svcs, html.desk .wall .dock { position: static; translate: none; width: auto; padding: 0; background: none; opacity: 1; pointer-events: auto; }
+html.desk .wall .svcs { grid-template-columns: repeat(3, minmax(0, 1fr)); --card-h: clamp(64px, 9.5svh, 84px); }
+html.desk .wall .dock { gap: 6px; border-top: 1px solid var(--line); padding-top: 10px; }
+html.desk .wall .dock button { min-height: 52px; }
+html.desk .at-station .wall, html.desk .has-cam-sheet .wall { opacity: 0; pointer-events: none; translate: 0 10px; }
+html.desk .at-station .wall .svcs, html.desk .at-station .wall .dock, html.desk .has-cam-sheet .wall .svcs, html.desk .has-cam-sheet .wall .dock { translate: none; }
+html.desk .in-intro .wall { opacity: 0; pointer-events: none; }
+@media (max-height: 520px) {
+  html.desk .wall { top: 64px; right: 12px; gap: 6px; padding: 8px; width: min(400px, 44vw); }
+  html.desk .wall .svcs { --card-h: 52px; gap: 6px; }
+  html.desk .wall .svc { padding: 6px 8px; }
+  html.desk .wall .svc__n { font-size: 12.5px; }
+  html.desk .wall .dock { padding-top: 6px; }
+  html.desk .wall .dock button { min-height: 40px; gap: 2px; font-size: 10.5px; }
+  html.desk .wall .dock svg { width: 18px; height: 18px; }
+}
+
+.dock button.dock__rd { display: none; }
+html.desk .wall .dock { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+html.desk .wall .dock button.dock__rd { display: grid; }
+@media (max-width: 1200px) { html.desk .wall .dock button { font-size: 10px; letter-spacing: 0; } html.desk .wall { width: min(440px, 42vw); } }

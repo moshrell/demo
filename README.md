@@ -5,8 +5,8 @@
 к машине → панель с ценой → заказ (Auftrag) → печатается чек. Всё на немецком, комментарии в коде — тоже немецкие.
 
 - Исходники: `D:\Webdesign\glanzleistung`
-- Живой адрес (закрытый, noindex): https://kravets-webdesign.de/p/gl-qo6jm6lj/
-  → файлы лежат в `D:\Webdesign\kravets-site\public\p\gl-qo6jm6lj`, выкладка — `D:\Webdesign\PUSH-SITE.bat` (запускает Степан).
+- Живой адрес (с 24.10.2026 открытый, первое демо в «Auto & Mobilität»): https://kravets-webdesign.de/vorschau/auto/glanzleistung/
+  → файлы: `D:\Webdesign\kravets-site\public\vorschau\auto\glanzleistung` (`npm run publish`), карточка в `kravets-site\src\config\works.ts`, превью `kravets-site\public\works\glanzleistung.webp`. Закрытая копия `/p/gl-qo6jm6lj/` удалена; `npm run privat` остаётся для будущих закрытых показов. Выкладка — `D:\Webdesign\PUSH-SITE.bat` (запускает Степан).
 - Blender-пакеты: `D:\Webdesign\bay-film\v4` (актуальный: интро, цвета плёнки, десктоп; у каждой папки свой README) и `v3` (мобильный базовый набор)
 - Сценарий/решения v3: `D:\Webdesign\Deister autopflege\SZENARIO-v3.html`
 
@@ -36,7 +36,7 @@ npm run publish        сборка в портфолио /vorschau/auto/glanzle
 После `privat`: commit в `D:\Webdesign\kravets-site` и `PUSH-SITE.bat`.
 База URL задаётся переменной `GL_BASE` (по умолчанию `/vorschau/auto/glanzleistung/`).
 
-Из облачного контейнера Claude: собрать `GL_BASE=/p/gl-qo6jm6lj/ npm run build`, упаковать `dist` и исходники в tgz,
+Из облачного контейнера Claude: собрать `npm run build` (для публикации в портфолио) или `GL_BASE=/p/<token>/ npm run build` (закрытая копия), упаковать `dist` и исходники в tgz,
 передать на ПК (`device_commit_files`, **каждый раз новое имя файла** — иначе мост может отдать старую копию),
 распаковать и сверить `md5sum src/scripts/app.js` с облачной версией.
 

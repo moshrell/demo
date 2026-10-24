@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+---
+<Base title={`Impressum · ${site.name}`}>
+  <main class="doc">
+    <h1>Impressum</h1>
+    <p><strong>Demo-Seite von Kravets Webdesign.</strong> Betrieb und Personen sind erfunden. Die Bilder und Videos dieser Beispielseite sind teils KI-erzeugt, die Szenen der Box (Garage, Auto, Kamerafahrten, Folienfarben) in Blender gerendert.</p>
+    <h2>Angaben gemäß § 5 DDG</h2>
+    <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+    <h2>Kontakt</h2>
+    <p>Telefon: {site.phone}<br />E-Mail: {site.email}</p>
+    <p class="muted small">Bei einem echten Betrieb stehen hier außerdem ggf. Handelsregister, Umsatzsteuer-ID und zuständige Kammer. TODO vom Kunden.</p>
+    <h2 id="credits">3D-Modell und Lizenzen</h2>
+    <ul>
+      {site.credits.map((c) => (
+        <li>{c.what} von {c.by} (<a href={c.url} target="_blank" rel="noopener">Quelle</a>), Lizenz <a href={c.licenseUrl} target="_blank" rel="noopener">{c.license}</a>{c.changes ? `. Geändert: ${c.changes}.` : '.'}{c.note ? ` ${c.note}` : ''}</li>
+      ))}
+    </ul>
+    <h2>Webdesign</h2>
+    <p>Kravets Webdesign, Gehrden · <a href="https://kravets-webdesign.de" target="_blank" rel="noopener">kravets-webdesign.de</a></p>
+  </main>
+</Base>

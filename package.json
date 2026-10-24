@@ -1,0 +1,19 @@
+{
+  "name": "glanzleistung",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --open",
+    "build": "astro build && node scripts/ki-hinweis.mjs && node scripts/htaccess.mjs",
+    "preview": "astro preview --open",
+    "publish": "npm run build && node scripts/publish.mjs",
+    "privat": "node scripts/privat.mjs",
+    "handy": "astro dev --host"
+  },
+  "dependencies": {
+    "@fontsource-variable/onest": "^5.3.1",
+    "@fontsource/chakra-petch": "^5.3.0",
+    "astro": "^7.3.5"
+  }
+}

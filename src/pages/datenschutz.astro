@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import DatenschutzForm from '../components/DatenschutzForm.astro';
+import site from '../data/site.json';
+---
+<Base title={`Datenschutz · ${site.name}`}>
+  <main class="doc">
+    <h1>Datenschutz</h1>
+    <p><strong>Demo-Seite:</strong> Betrieb und Personen sind erfunden. Es werden keine Daten gesendet oder gespeichert.</p>
+    <h2>Kurz und ehrlich</h2>
+    <p>Diese Seite nutzt keine Cookies, keine Tracker, keine Analyse-Werkzeuge und lädt nichts von fremden Servern. Schriften, Bilder und Videos liegen auf demselben Server wie die Seite.</p>
+    <p><strong>Server-Protokolle:</strong> Beim Aufruf speichert der Hoster technisch notwendige Daten (IP-Adresse, Zeitpunkt, aufgerufene Seite, Browser) für kurze Zeit, um die Seite sicher auszuliefern (Art. 6 Abs. 1 lit. f DSGVO). TODO vom Kunden: Hoster, Auftragsverarbeitungsvertrag, Speicherdauer.</p>
+    <p><strong>Auswahl in der Box:</strong> Deine gewählten Leistungen und Fahrzeuge werden nur im Speicher dieses Browser-Tabs (sessionStorage) gehalten, damit beim Neuladen nichts verloren geht. Sie verlassen dein Gerät nicht und werden beim Schließen des Tabs gelöscht.</p>
+    <p><strong>Aktionscode und Mini-Spiel:</strong> Das Feld „Aktionscode“ im Auftrag ist freiwillig. Ein eingegebener Code wird nur in deinem Browser geprüft und wie die übrigen Eingaben im Tab-Speicher (sessionStorage) gehalten. Das Mini-Spiel auf der Seite sendet nichts. Deine Bestzeit speichert dein Browser lokal (localStorage, Eintrag „gl:qs:best“); sie verlässt dein Gerät nicht, du kannst sie jederzeit über die Browserdaten löschen.</p>
+    <p><strong>Google Maps:</strong> Auf dieser Seite ist keine Karte eingebettet. Erst wenn du auf „Route in Google Maps“ tippst, öffnet sich Google Maps in einem neuen Tab; dort gelten die Datenschutzhinweise von Google.</p>
+    <DatenschutzForm formName="Werkstattauftrag" data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Wunschtermin, Wunsch nach Hol- und Bringservice, Nachricht (freiwillig) und deine Auswahl an Leistungen und Fahrzeugen" purpose="Wir bearbeiten deinen Auftrag, bestätigen den Termin telefonisch und melden uns bei Rückfragen." />
+  </main>
+</Base>

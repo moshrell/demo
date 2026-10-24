@@ -1,0 +1,87 @@
+{
+  "name": "Glanzleistung",
+  "tagline": "Fahrzeugaufbereitung in Gehrden",
+  "legalName": "Glanzleistung Fahrzeugaufbereitung, Inh. Kai Wachsmann (fiktiv)",
+  "owner": "Kai Wachsmann",
+  "address": {
+    "street": "Musterweg 1",
+    "zip": "30989",
+    "city": "Gehrden"
+  },
+  "email": "box@glanzleistung.example",
+  "phone": "05108 000 000",
+  "phoneHref": "+495108000000",
+  "mapsQuery": "Gehrden",
+  "hours": [
+    {
+      "day": "Montag",
+      "short": "Mo",
+      "open": "08:00",
+      "close": "18:00"
+    },
+    {
+      "day": "Dienstag",
+      "short": "Di",
+      "open": "08:00",
+      "close": "18:00"
+    },
+    {
+      "day": "Mittwoch",
+      "short": "Mi",
+      "open": "08:00",
+      "close": "18:00"
+    },
+    {
+      "day": "Donnerstag",
+      "short": "Do",
+      "open": "08:00",
+      "close": "18:00"
+    },
+    {
+      "day": "Freitag",
+      "short": "Fr",
+      "open": "08:00",
+      "close": "18:00"
+    },
+    {
+      "day": "Samstag",
+      "short": "Sa",
+      "open": "09:00",
+      "close": "14:00"
+    },
+    {
+      "day": "Sonntag",
+      "short": "So",
+      "open": null,
+      "close": null
+    }
+  ],
+  "holBring": "Hol- und Bringservice bis 10 km kostenlos",
+  "discount": {
+    "code": "QUERSTEHER",
+    "percent": 10,
+    "exclude": [
+      "folie"
+    ]
+  },
+  "credits": [
+    {
+      "what": "3D-Modell „BMW M6 E64 Cabrio (WIP)“",
+      "by": "obviously.csmx",
+      "url": "https://sketchfab.com/3d-models/bmw-m6-e64-cabrio-wip-64492fb4d53d46478135c678f83c3ba6",
+      "license": "CC BY 4.0",
+      "licenseUrl": "http://creativecommons.org/licenses/by/4.0/",
+      "changes": "Emblem, Kennzeichen und Schriftzüge auf den Felgen entfernt, Materialien geändert (u. a. Folienfarben)",
+      "note": "Das Modell steckt in allen Bildern und Videos des Autos (Intro, Box, Kamerafahrten, Folienfarben)."
+    },
+    {
+      "what": "Texturen, HDRI-Panorama „Hansaplatz“, Ziegelwand, Wandleuchte, Asphalt und weitere Requisiten",
+      "by": "Poly Haven",
+      "url": "https://polyhaven.com",
+      "license": "CC0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "",
+      "note": "Bei CC0 ist die Nennung freiwillig, wir danken trotzdem."
+    }
+  ]
+}

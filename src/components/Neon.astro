@@ -1,0 +1,15 @@
+---
+// Neon-Tafel mit Öffnungszeiten: einmal in der Box, einmal in der Nahaufnahme
+import site from '../data/site.json';
+const days = site.hours;
+const hh = (t: string) => t.slice(0, 2).replace(/^0/, '');
+const rows = [
+  ['Mo – Fr', `${hh(days[0].open!)} – ${hh(days[0].close!)}`],
+  ['Sa', `${hh(days[5].open!)} – ${hh(days[5].close!)}`],
+  ['So', 'zu'],
+];
+---
+<div class="neon" aria-hidden="true">
+  <p class="neon__state" data-neon-state>Offen</p>
+  <ul class="neon__hours">{rows.map(([d, t]) => <li><span>{d}</span><b>{t}</b></li>)}</ul>
+</div>

@@ -42,7 +42,7 @@
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
-            "show_dynamic_checkout": true,
+            "show_dynamic_checkout": false,
             "show_gift_card_recipient": false
           }
         },
@@ -110,7 +110,7 @@
         "constrain_to_viewport": false,
         "media_fit": "cover",
         "image_zoom": "lightbox",
-        "mobile_thumbnails": "show",
+        "mobile_thumbnails": "hide",
         "hide_variants": true,
         "enable_video_looping": false,
         "padding_top": 0,
@@ -131,14 +131,16 @@
           "type": "step",
           "settings": {
             "title": "Band einhaken",
-            "text": "Hake das Scrunchie-Band am Tab ein."
+            "text": "Hake das Scrunchie-Band am Tab ein.",
+            "image": "shopify://shop_images/schritt-2-einhaken.jpg"
           }
         },
         "s3": {
           "type": "step",
           "settings": {
             "title": "Los geht's",
-            "text": "Band ums Handgelenk, Hände frei."
+            "text": "Band ums Handgelenk, Hände frei.",
+            "image": "shopify://shop_images/schritt-3-handgelenk.jpg"
           }
         }
       },

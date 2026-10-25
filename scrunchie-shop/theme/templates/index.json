@@ -79,14 +79,16 @@
           "type": "step",
           "settings": {
             "title": "Band einhaken",
-            "text": "Hake das Scrunchie-Band am Tab ein."
+            "text": "Hake das Scrunchie-Band am Tab ein.",
+            "image": "shopify://shop_images/schritt-2-einhaken.jpg"
           }
         },
         "s3": {
           "type": "step",
           "settings": {
             "title": "Los geht's",
-            "text": "Band ums Handgelenk, beide Hände frei."
+            "text": "Band ums Handgelenk, beide Hände frei.",
+            "image": "shopify://shop_images/schritt-3-handgelenk.jpg"
           }
         }
       },

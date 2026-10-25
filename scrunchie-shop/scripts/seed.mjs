@@ -96,7 +96,7 @@ for (const p of catalog.products) {
 // --- Seiten
 for (const pg of catalog.pages) {
   const body = await readFile(path.join(root, 'data', 'pages', `${pg.handle}.html`), 'utf8');
-  const existing = (await gql(`query($q: String!) { pages(first: 1, query: $q) { nodes { id handle } } }`, { q: `handle:${pg.handle}` })).pages.nodes[0];
+  const existing = (await gql(`{ pages(first: 100) { nodes { id handle } } }`)).pages.nodes.find((x) => x.handle === pg.handle);
   if (existing) {
     const r = (await gql(
       `mutation($id: ID!, $page: PageUpdateInput!) { pageUpdate(id: $id, page: $page) { userErrors { field message } } }`,
@@ -116,7 +116,7 @@ for (const pg of catalog.pages) {
 // --- Menüs
 const toItems = (items) => items.map((i) => ({ title: i.title, type: 'HTTP', url: i.url }));
 for (const m of catalog.menus) {
-  const existing = (await gql(`query($q: String!) { menus(first: 1, query: $q) { nodes { id handle } } }`, { q: `handle:${m.handle}` })).menus.nodes[0];
+  const existing = (await gql(`{ menus(first: 50) { nodes { id handle } } }`)).menus.nodes.find((x) => x.handle === m.handle);
   if (existing) {
     const r = (await gql(
       `mutation($id: ID!, $title: String!, $items: [MenuItemUpdateInput!]!) { menuUpdate(id: $id, title: $title, items: $items) { userErrors { field message } } }`,

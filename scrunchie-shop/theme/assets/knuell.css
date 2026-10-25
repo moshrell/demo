@@ -267,6 +267,12 @@ h1, h2, h3, h4, .h0, .h1, .h2, .h3, .h4, .h5 {
 .product-form__buttons .button { width: 100%; }
 .product-media-container, .product__media-item .media { border-radius: var(--k-radius); }
 
+/* Handy: Galerie etwas flacher, damit Preis und Farben im ersten Bildschirm sichtbar sind */
+@media screen and (max-width: 749px) {
+  html body .product-media-container { --aspect-ratio: 0.88; }
+  .product-media-container .media img { object-fit: cover; object-position: 50% 42%; }
+}
+
 /* Live-Summe */
 .k-total { display: block; margin: 1.6rem 0 1.2rem; padding: 1.4rem 1.6rem; border-radius: 1.6rem; background: rgba(var(--color-foreground), 0.06); }
 .k-total__row { display: flex; align-items: baseline; gap: 0.8rem; }

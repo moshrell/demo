@@ -1,0 +1,24 @@
+{%- comment -%}
+  Knüll: lokale Schriften (kein Google Fonts, DSGVO) + eigenes Stylesheet.
+{%- endcomment -%}
+<style>
+  @font-face {
+    font-family: 'KF Bricolage';
+    src: url('{{ 'kflow-bricolage.woff2' | asset_url }}') format('woff2');
+    font-weight: 200 800;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'KF DM Sans';
+    src: url('{{ 'kflow-dmsans.woff2' | asset_url }}') format('woff2');
+    font-weight: 100 1000;
+    font-style: normal;
+    font-display: swap;
+  }
+</style>
+{{ 'knuell.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'knuell.js' | asset_url }}" defer="defer"></script>
+
+{{ 'kflow.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kflow.js' | asset_url }}" defer="defer"></script>

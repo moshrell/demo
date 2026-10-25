@@ -36,3 +36,12 @@ Demo-Shop für eine mögliche Kundin, die Scrunchie-Handybänder verkaufen will.
 - Fotos: alle 12 sind da (`img/`) und im Shop.
 - Preisformat: Shopify zeigt `€24,90` (Shop-Einstellung). Deutsch üblich ist `24,90 €`: Settings → General → Store currency → Change formatting → "HTML with currency" `{{amount_with_comma_separator}} €`.
 - Skripte: `seed.mjs` (Produkte, Seiten, Menüs) und `upload-images.mjs` (Fotos), beide mit `SHOPIFY_STORE` und `SHOPIFY_ADMIN_TOKEN` aus der Umgebung. Token über Dev-Dashboard-App (Client ID und Secret, `grant_type=client_credentials`, 24 h gültig).
+
+
+## Design B: «Knüll Flow» (`theme-b/`)
+- Zweites Theme im selben Shop (unveröffentlicht), eigene Startseite: Hero mit bewegten Farbfeldern, die die Bandfarbe annehmen; Lauftext; großes Szenenfoto; Szenen zum Wischen; «Drei Griffe» als Zahlen mit Linie (ohne Schritt-Fotos); Produktkarten Hals/Handgelenk; FAQ; Abschluss.
+- Hauptprodukt: **Scrunchie Umhängeband** (`scrunchie-umhaengeband`, 4 Farben, 29,90 €, Preis und Länge sind Demo-Annahmen; Maße vom Hersteller: TODO). In Theme A erscheint es nur im Katalog.
+- Schrift Bricolage Grotesque + DM Sans (lokal, `assets/kflow-*.woff2`), Palette Creme/Tinte/Koralle, Pastellfelder.
+- Fotos: `PROMPTS-B.txt` (12 Stück) -> `img-b/`, dann `node scripts/upload-images-b.mjs` und die `shopify://shop_images/b-…`-Verweise in `theme-b/templates/index.json` (Szene, Szenen-Karten) setzen. Bis dahin zeigen die Rahmen Farbverläufe.
+- Kein Umschalter auf der Seite: A und B sind getrennte Vorschau-Links (`?preview_theme_id=`).
+- Animationen sind reine CSS-Transformationen; bei «Bewegung reduzieren» (Systemeinstellung) stehen sie still.

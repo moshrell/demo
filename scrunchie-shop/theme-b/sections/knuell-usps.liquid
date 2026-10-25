@@ -1,0 +1,77 @@
+{%- comment -%} Knüll: kurze Vertrauens-Leiste (Versand, Rückgabe, Passform) {%- endcomment -%}
+<div class="k-usps color-{{ section.settings.color_scheme }} gradient">
+  <ul class="k-usps__list page-width" role="list">
+    {%- for block in section.blocks -%}
+      <li class="k-usps__item" {{ block.shopify_attributes }}>
+        <span class="k-usps__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            {%- case block.settings.icon -%}
+              {%- when 'truck' -%}
+                <path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>
+              {%- when 'return' -%}
+                <path d="M4 9h11a5 5 0 0 1 0 10H8"/><path d="M8 5L4 9l4 4"/>
+              {%- when 'shield' -%}
+                <path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/>
+              {%- when 'phone' -%}
+                <rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18h2"/>
+              {%- when 'heart' -%}
+                <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>
+            {%- endcase -%}
+          </svg>
+        </span>
+        <span class="k-usps__text">
+          <strong>{{ block.settings.title }}</strong>
+          {%- if block.settings.text != blank -%}<span>{{ block.settings.text }}</span>{%- endif -%}
+        </span>
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "name": "Knüll Vorteile",
+  "tag": "section",
+  "class": "section k-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Farbschema",
+      "options": [
+        { "value": "scheme-1", "label": "Schema 1" },
+        { "value": "scheme-2", "label": "Schema 2" },
+        { "value": "scheme-3", "label": "Schema 3" },
+        { "value": "scheme-4", "label": "Schema 4" },
+        { "value": "scheme-5", "label": "Schema 5" }
+      ],
+      "default": "scheme-2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "usp",
+      "name": "Vorteil",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Symbol",
+          "options": [
+            { "value": "truck", "label": "Lieferung" },
+            { "value": "return", "label": "Rückgabe" },
+            { "value": "shield", "label": "Sicherheit" },
+            { "value": "phone", "label": "Handy" },
+            { "value": "heart", "label": "Herz" }
+          ],
+          "default": "truck"
+        },
+        { "type": "text", "id": "title", "label": "Titel", "default": "Schneller Versand" },
+        { "type": "text", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [{ "name": "Knüll Vorteile" }]
+}
+{% endschema %}

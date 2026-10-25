@@ -1,0 +1,137 @@
+{%- comment -%}
+  Knüll Hero: Farbe direkt auf der Startseite wählen.
+  Voraussetzung: Produkt hat als Option 1 die Farbe. Foto je Farbe = Variantenbild.
+{%- endcomment -%}
+{%- liquid
+  assign hero_product = section.settings.product
+  assign seen = ''
+  assign first_variant = null
+  assign cheapest = hero_product.price
+-%}
+
+{%- capture tint0 -%}{%- render 'knuell-colour', name: hero_product.variants.first.option1 -%}{%- endcapture -%}
+<div class="k-hero kf-hero color-{{ section.settings.color_scheme }} gradient" id="KHero-{{ section.id }}" data-tint-root style="--k-tint: {{ tint0 | strip | default: '#EBA9B7' }}">
+  <div class="kf-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="k-hero__inner page-width">
+    <div class="k-hero__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="k-eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h1 class="k-hero__title">{{ section.settings.heading }}</h1>
+      {%- if section.settings.text != blank -%}
+        <p class="k-hero__text">{{ section.settings.text }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if hero_product != blank -%}
+      <k-hero-picker class="k-hero__picker" data-product-url="{{ hero_product.url }}">
+        <div class="k-hero__media">
+          {%- for variant in hero_product.variants -%}
+            {%- assign vkey = '|' | append: variant.option1 | append: '|' -%}
+            {%- unless seen contains vkey -%}
+              {%- assign seen = seen | append: vkey -%}
+              {%- if first_variant == null -%}{%- assign first_variant = variant -%}{%- endif -%}
+              {%- assign vmedia = variant.featured_media | default: hero_product.featured_media -%}
+              {%- assign img_loading = 'lazy' -%}
+              {%- assign img_priority = 'low' -%}
+              {%- if forloop.first -%}
+                {%- assign img_loading = 'eager' -%}
+                {%- assign img_priority = 'high' -%}
+              {%- endif -%}
+              {%- capture hex -%}{%- render 'knuell-colour', name: variant.option1 -%}{%- endcapture -%}
+              <figure
+                class="k-hero__figure"
+                data-variant-id="{{ variant.id }}"
+                data-name="{{ variant.option1 | escape }}"
+                data-price="{{ variant.price | money }}"
+                data-available="{{ variant.available }}"
+                style="--k-fill: {{ hex }}"
+                {% unless forloop.first %}hidden{% endunless %}
+              >
+                {%- if vmedia != blank -%}
+                  {{
+                    vmedia
+                    | image_url: width: 1100
+                    | image_tag:
+                      widths: '390, 560, 780, 1100',
+                      sizes: '(min-width: 990px) 560px, 100vw',
+                      class: 'k-hero__img',
+                      loading: img_loading,
+                      fetchpriority: img_priority,
+                      alt: variant.title
+                  }}
+                {%- endif -%}
+              </figure>
+            {%- endunless -%}
+          {%- endfor -%}
+        </div>
+
+        <div class="k-hero__buy">
+  <div class="k-hero__dots" role="radiogroup" aria-label="Farbe wählen">
+    {%- assign seen = '' -%}
+    {%- for variant in hero_product.variants -%}
+      {%- assign vkey = '|' | append: variant.option1 | append: '|' -%}
+      {%- unless seen contains vkey -%}
+        {%- assign seen = seen | append: vkey -%}
+        {%- capture hex -%}{%- render 'knuell-colour', name: variant.option1 -%}{%- endcapture -%}
+        <a
+          class="k-dot{% if forloop.first %} is-active{% endif %}"
+          href="{{ hero_product.url }}?variant={{ variant.id }}"
+          role="radio"
+          aria-checked="{% if forloop.first %}true{% else %}false{% endif %}"
+          aria-label="{{ variant.option1 | escape }}"
+          data-variant-id="{{ variant.id }}"
+          style="--k-dot: {{ hex }}"
+        ><span class="visually-hidden">{{ variant.option1 }}</span></a>
+      {%- endunless -%}
+    {%- endfor -%}
+  </div>
+          <p class="k-hero__colour">
+            <span class="k-hero__colour-label">Farbe</span>
+            <strong data-hero-name>{{ first_variant.option1 }}</strong>
+            <span class="k-hero__price" data-hero-price>{{ first_variant.price | money }}</span>
+          </p>
+          <a
+            class="button button--full-width k-hero__cta"
+            data-hero-cta
+            href="{{ hero_product.url }}?variant={{ first_variant.id }}"
+          >
+            {{- section.settings.button_label -}}
+          </a>
+          <p class="k-hero__note">inkl. MwSt.{% if settings.knuell_free_shipping_eur > 0 %} · Versand kostenlos ab {{ settings.knuell_free_shipping_eur | times: 100 | money_without_trailing_zeros }}{% endif %}</p>
+        </div>
+      </k-hero-picker>
+    {%- else -%}
+      <div class="k-hero__empty">Wähle in den Section-Einstellungen das Produkt.</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Knüll Hero",
+  "tag": "section",
+  "class": "section k-section",
+  "settings": [
+    { "type": "product", "id": "product", "label": "Produkt" },
+    { "type": "text", "id": "eyebrow", "label": "Kleine Zeile über der Überschrift", "default": "Scrunchie Handyband" },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Dein Handy. Immer am Handgelenk." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Weiches Scrunchie-Band, das dein Handy sicher hält und gut aussieht." },
+    { "type": "text", "id": "button_label", "label": "Button", "default": "Dieses Band kaufen" },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Farbschema",
+      "options": [
+        { "value": "scheme-1", "label": "Schema 1" },
+        { "value": "scheme-2", "label": "Schema 2" },
+        { "value": "scheme-3", "label": "Schema 3" },
+        { "value": "scheme-4", "label": "Schema 4" },
+        { "value": "scheme-5", "label": "Schema 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [{ "name": "Knüll Hero" }]
+}
+{% endschema %}

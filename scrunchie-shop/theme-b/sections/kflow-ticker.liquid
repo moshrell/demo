@@ -1,0 +1,26 @@
+{%- comment -%} Flow: Lauftext (reine CSS-Animation, stoppt bei "Bewegung reduzieren") {%- endcomment -%}
+{%- assign words = section.settings.words | split: ',' -%}
+<div class="kf-ticker color-{{ section.settings.color_scheme }} gradient" aria-hidden="true">
+  <div class="kf-ticker__track">
+    {%- for n in (1..4) -%}
+      <span class="kf-ticker__set">
+        {%- for w in words -%}<span>{{ w | strip }}</span><i></i>{%- endfor -%}
+      </span>
+    {%- endfor -%}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Flow Lauftext",
+  "tag": "section",
+  "class": "section k-section",
+  "settings": [
+    { "type": "text", "id": "words", "label": "Wörter, durch Komma getrennt", "default": "Hände frei, Stil, Tempo, Leichtigkeit, Dein Tag" },
+    { "type": "select", "id": "color_scheme", "label": "Farbschema", "options": [
+      { "value": "scheme-1", "label": "Schema 1" }, { "value": "scheme-2", "label": "Schema 2" },
+      { "value": "scheme-3", "label": "Schema 3" }, { "value": "scheme-4", "label": "Schema 4" }, { "value": "scheme-5", "label": "Schema 5" }
+    ], "default": "scheme-3" }
+  ],
+  "presets": [{ "name": "Flow Lauftext" }]
+}
+{% endschema %}

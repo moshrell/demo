@@ -1,0 +1,47 @@
+{%- comment -%} Flow: "So geht's" als große Zahlen mit Linie, die sich beim Scrollen zeichnet. Ohne Fotos, dafür sofort lesbar. {%- endcomment -%}
+<div class="kf-steps color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <header class="k-head" data-reveal>
+      <p class="k-eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 class="k-h2">{{ section.settings.heading }}</h2>
+    </header>
+    <ol class="kf-steps__list" role="list">
+      {%- for block in section.blocks -%}
+        <li class="kf-step" data-reveal {{ block.shopify_attributes }}>
+          <span class="kf-step__num" aria-hidden="true">{{ forloop.index }}</span>
+          <div>
+            <h3 class="kf-step__title">{{ block.settings.title }}</h3>
+            <p class="kf-step__text">{{ block.settings.text }}</p>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Flow Schritte",
+  "tag": "section",
+  "class": "section k-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Kleine Zeile", "default": "So geht's" },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Drei Griffe, fertig" },
+    { "type": "select", "id": "color_scheme", "label": "Farbschema", "options": [
+      { "value": "scheme-1", "label": "Schema 1" }, { "value": "scheme-2", "label": "Schema 2" },
+      { "value": "scheme-3", "label": "Schema 3" }, { "value": "scheme-4", "label": "Schema 4" }, { "value": "scheme-5", "label": "Schema 5" }
+    ], "default": "scheme-1" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Schritt",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titel" },
+        { "type": "textarea", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "max_blocks": 5,
+  "presets": [{ "name": "Flow Schritte" }]
+}
+{% endschema %}

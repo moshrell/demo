@@ -1,0 +1,56 @@
+{%- comment -%} Flow: Szenen zum Wischen (scroll-snap, nativ und flüssig auf dem Handy) {%- endcomment -%}
+<div class="kf-scenes color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <header class="k-head" data-reveal>
+      <p class="k-eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 class="k-h2">{{ section.settings.heading }}</h2>
+    </header>
+  </div>
+  <div class="kf-scenes__rail" tabindex="0" role="region" aria-label="{{ section.settings.heading | escape }}">
+    {%- for block in section.blocks -%}
+      <article class="kf-card" {{ block.shopify_attributes }}>
+        <div class="kf-card__media">
+          {%- if block.settings.image != blank -%}
+            {{
+              block.settings.image
+              | image_url: width: 600
+              | image_tag: widths: '300, 450, 600', sizes: '(min-width: 990px) 340px, 74vw', loading: 'lazy', alt: block.settings.alt
+            }}
+          {%- endif -%}
+        </div>
+        <h3 class="kf-card__title">{{ block.settings.title }}</h3>
+        <p class="kf-card__text">{{ block.settings.text }}</p>
+      </article>
+    {%- endfor -%}
+  </div>
+  <div class="page-width"><div class="kf-scenes__bar" aria-hidden="true"><i></i></div></div>
+</div>
+{% schema %}
+{
+  "name": "Flow Szenen",
+  "tag": "section",
+  "class": "section k-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Kleine Zeile", "default": "Unterwegs" },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Für alles, was du heute vorhast" },
+    { "type": "select", "id": "color_scheme", "label": "Farbschema", "options": [
+      { "value": "scheme-1", "label": "Schema 1" }, { "value": "scheme-2", "label": "Schema 2" },
+      { "value": "scheme-3", "label": "Schema 3" }, { "value": "scheme-4", "label": "Schema 4" }, { "value": "scheme-5", "label": "Schema 5" }
+    ], "default": "scheme-2" }
+  ],
+  "blocks": [
+    {
+      "type": "scene",
+      "name": "Szene",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Foto (3:4)" },
+        { "type": "text", "id": "alt", "label": "Bildbeschreibung" },
+        { "type": "text", "id": "title", "label": "Titel", "default": "Café" },
+        { "type": "text", "id": "text", "label": "Text", "default": "Tablett in beiden Händen." }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [{ "name": "Flow Szenen" }]
+}
+{% endschema %}

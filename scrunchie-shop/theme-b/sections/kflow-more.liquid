@@ -1,0 +1,57 @@
+{%- comment -%} Flow: zwei Produkte nebeneinander (Umhängeband / Handgelenk-Band) {%- endcomment -%}
+<div class="kf-more color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <header class="k-head" data-reveal>
+      <p class="k-eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 class="k-h2">{{ section.settings.heading }}</h2>
+    </header>
+    <ul class="kf-more__grid" role="list">
+      {%- for block in section.blocks -%}
+        {%- assign p = block.settings.product -%}
+        {%- if p != blank -%}
+          <li class="kf-pcard" data-reveal {{ block.shopify_attributes }}>
+            <a href="{{ p.url }}" class="kf-pcard__link">
+              <span class="kf-pcard__media">
+                {%- if p.featured_media -%}
+                  {{ p.featured_media | image_url: width: 700 | image_tag: widths: '350, 500, 700', sizes: '(min-width: 750px) 420px, 90vw', loading: 'lazy', alt: p.title }}
+                {%- endif -%}
+              </span>
+              <span class="kf-pcard__body">
+                <span class="kf-pcard__tag">{{ block.settings.tag }}</span>
+                <span class="kf-pcard__title">{{ p.title }}</span>
+                <span class="kf-pcard__price">ab {{ p.price | money }}</span>
+              </span>
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Flow Produkte",
+  "tag": "section",
+  "class": "section k-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Kleine Zeile", "default": "Zwei Arten, es zu tragen" },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Hals oder Handgelenk" },
+    { "type": "select", "id": "color_scheme", "label": "Farbschema", "options": [
+      { "value": "scheme-1", "label": "Schema 1" }, { "value": "scheme-2", "label": "Schema 2" },
+      { "value": "scheme-3", "label": "Schema 3" }, { "value": "scheme-4", "label": "Schema 4" }, { "value": "scheme-5", "label": "Schema 5" }
+    ], "default": "scheme-2" }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Produkt",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Produkt" },
+        { "type": "text", "id": "tag", "label": "Kurzzeile", "default": "Umhängen" }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [{ "name": "Flow Produkte" }]
+}
+{% endschema %}

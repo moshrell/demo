@@ -1,0 +1,310 @@
+{
+  "sections": {
+    "hero": {
+      "type": "knuell-hero",
+      "settings": {
+        "product": "scrunchie-umhaengeband",
+        "eyebrow": "Scrunchie Umhängeband",
+        "heading": "Hände frei.",
+        "text": "Dein Handy hängt griffbereit am Körper. Weicher Satin, in deiner Farbe.",
+        "button_label": "Dieses Band kaufen",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "ticker": {
+      "type": "kflow-ticker",
+      "settings": {
+        "words": "Hände frei, Stil, Tempo, Leichtigkeit, Dein Tag",
+        "color_scheme": "scheme-3"
+      }
+    },
+    "stage": {
+      "type": "kflow-stage",
+      "settings": {
+        "eyebrow": "Dein Tag",
+        "heading": "Dein Tag läuft. Das Handy läuft mit.",
+        "text": "Kaffee in der einen Hand, Tasche in der anderen. Das Handy bleibt griffbereit am Körper, nicht in der Tasche und nicht im Weg.",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "scenes": {
+      "type": "kflow-scenes",
+      "settings": {
+        "eyebrow": "Unterwegs",
+        "heading": "Für alles, was du heute vorhast",
+        "color_scheme": "scheme-2"
+      },
+      "blocks": {
+        "c1": {
+          "type": "scene",
+          "settings": {
+            "title": "Café",
+            "text": "Tablett in beiden Händen.",
+            "alt": "Frau auf einer Café-Terrasse mit Tablett, Handy am Umhängeband"
+          }
+        },
+        "c2": {
+          "type": "scene",
+          "settings": {
+            "title": "Rad",
+            "text": "Beide Hände am Lenker.",
+            "alt": "Mann auf dem Fahrrad, Handy hängt seitlich am Umhängeband"
+          }
+        },
+        "c3": {
+          "type": "scene",
+          "settings": {
+            "title": "Reise",
+            "text": "Koffer in der einen, Ticket in der anderen.",
+            "alt": "Frau am Bahnsteig mit Koffer, Handy am Umhängeband"
+          }
+        },
+        "c4": {
+          "type": "scene",
+          "settings": {
+            "title": "Markt",
+            "text": "Beide Hände voll Blumen und Obst.",
+            "alt": "Frau auf dem Wochenmarkt mit Einkauf, Handy am Umhängeband"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ]
+    },
+    "steps": {
+      "type": "kflow-steps",
+      "settings": {
+        "eyebrow": "So geht's",
+        "heading": "Drei Griffe, fertig",
+        "color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Tab einlegen",
+            "text": "Den flachen Tab zwischen Handy und Hülle schieben."
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Band einhaken",
+            "text": "Das Band am Tab einhaken. Es klickt hörbar ein."
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Umhängen und los",
+            "text": "Länge einstellen, über den Kopf oder die Schulter, fertig."
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ]
+    },
+    "usps": {
+      "type": "knuell-usps",
+      "settings": {
+        "color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "u1": {
+          "type": "usp",
+          "settings": {
+            "icon": "truck",
+            "title": "Versand in 1–3 Werktagen",
+            "text": "Kostenlos ab 40 €"
+          }
+        },
+        "u2": {
+          "type": "usp",
+          "settings": {
+            "icon": "return",
+            "title": "14 Tage Rückgabe",
+            "text": "Einfach und fair"
+          }
+        },
+        "u3": {
+          "type": "usp",
+          "settings": {
+            "icon": "phone",
+            "title": "Passt zu jedem Handy",
+            "text": "Mit Hülle, ohne Umbau"
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2",
+        "u3"
+      ]
+    },
+    "more": {
+      "type": "kflow-more",
+      "settings": {
+        "eyebrow": "Zwei Arten, es zu tragen",
+        "heading": "Hals oder Handgelenk",
+        "color_scheme": "scheme-2"
+      },
+      "blocks": {
+        "m1": {
+          "type": "product",
+          "settings": {
+            "product": "scrunchie-umhaengeband",
+            "tag": "Umhängen"
+          }
+        },
+        "m2": {
+          "type": "product",
+          "settings": {
+            "product": "scrunchie-handyband",
+            "tag": "Am Handgelenk"
+          }
+        }
+      },
+      "block_order": [
+        "m1",
+        "m2"
+      ]
+    },
+    "faq": {
+      "type": "collapsible-content",
+      "settings": {
+        "caption": "Fragen",
+        "heading": "Gut zu wissen",
+        "heading_size": "h2",
+        "heading_alignment": "left",
+        "layout": "none",
+        "container_color_scheme": "scheme-1",
+        "color_scheme": "scheme-1",
+        "open_first_collapsible_row": true,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_first",
+        "padding_top": 36,
+        "padding_bottom": 36
+      },
+      "blocks": {
+        "q1": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Passt das zu meinem Handy?",
+            "icon": "none",
+            "row_content": "<p>Ja, zu fast jedem Handy mit Hülle: iPhone, Samsung Galaxy, Google Pixel und andere. Der Tab liegt zwischen Handy und Hülle, du brauchst keine Spezialhülle.</p>"
+          }
+        },
+        "q2": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Wie trage ich das Band?",
+            "icon": "none",
+            "row_content": "<p>Um den Hals oder quer über der Schulter. Die Länge ist verstellbar, du stellst sie so ein, dass das Handy auf der Höhe sitzt, die für dich bequem ist.</p>"
+          }
+        },
+        "q3": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Hält das Handy sicher?",
+            "icon": "none",
+            "row_content": "<p>Der Tab sitzt fest unter einer anliegenden Hülle. Prüfe beim ersten Mal, ob die Hülle fest sitzt, und lass das Handy erst dann am Band hängen.</p>"
+          }
+        },
+        "q4": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Wie lange dauert der Versand?",
+            "icon": "none",
+            "row_content": "<p>In Deutschland 1–3 Werktage, ab 40 € versandkostenfrei. <a href=\"/pages/versand-und-zahlung\">Mehr zu Versand und Zahlung</a></p>"
+          }
+        },
+        "q5": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Und wenn es mir nicht gefällt?",
+            "icon": "none",
+            "row_content": "<p>Du hast 14 Tage Widerrufsrecht. <a href=\"/pages/widerrufsbelehrung\">So geht die Rückgabe</a></p>"
+          }
+        },
+        "q6": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Kann ich das Band waschen?",
+            "icon": "none",
+            "row_content": "<p>Von Hand bei 30 °C, nicht in den Trockner.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6"
+      ]
+    },
+    "cta": {
+      "type": "rich-text",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-3",
+        "full_width": true,
+        "padding_top": 52,
+        "padding_bottom": 56
+      },
+      "blocks": {
+        "caption": {
+          "type": "caption",
+          "settings": {
+            "caption": "Los geht’s",
+            "text_style": "uppercase",
+            "text_size": "medium"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Hände frei. Farbe wählen.",
+            "heading_size": "h1"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "button_label": "Zum Umhängeband",
+            "button_link": "shopify://products/scrunchie-umhaengeband",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "caption",
+        "heading",
+        "button"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "ticker",
+    "stage",
+    "scenes",
+    "steps",
+    "usps",
+    "more",
+    "faq",
+    "cta"
+  ]
+}

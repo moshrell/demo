@@ -26,24 +26,26 @@ h1, h2, h3, .h0, .h1, .h2, .h3 { letter-spacing: -0.03em; font-weight: 700; line
 .kf-hero > .k-hero__inner { position: relative; z-index: 1; }
 .kf-blobs { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .kf-blobs span { position: absolute; width: 90vmax; height: 90vmax; border-radius: 50%; will-change: transform; }
+.kf-hero { --k-soft: color-mix(in srgb, var(--k-tint) 64%, #fff); }
+/* Farbflächen: die Bandfarbe sitzt unten und rechts, nie hinter der Überschrift (dunkle Farben bleiben lesbar) */
 .kf-blobs span:nth-child(1) {
-  top: -42vmax; left: -34vmax; opacity: 0.85;
-  background: radial-gradient(closest-side, var(--k-tint), transparent);
+  bottom: -52vmax; left: -46vmax; opacity: 0.95;
+  background: radial-gradient(closest-side, var(--k-soft), transparent);
   animation: kfDriftA 19s ease-in-out infinite alternate;
 }
 .kf-blobs span:nth-child(2) {
-  bottom: -50vmax; right: -40vmax; opacity: 0.9;
-  background: radial-gradient(closest-side, var(--kf-peach), transparent);
+  top: 18vmax; right: -58vmax; opacity: 0.9;
+  background: radial-gradient(closest-side, var(--k-soft), transparent);
   animation: kfDriftB 23s ease-in-out infinite alternate;
 }
 .kf-blobs span:nth-child(3) {
-  top: 8vmax; right: -52vmax; opacity: 0.8;
-  background: radial-gradient(closest-side, var(--kf-lilac), transparent);
+  top: -48vmax; left: -40vmax; opacity: 0.85;
+  background: radial-gradient(closest-side, var(--kf-peach), transparent);
   animation: kfDriftC 27s ease-in-out infinite alternate;
 }
-@keyframes kfDriftA { to { transform: translate3d(26vmax, 18vmax, 0) scale(1.12); } }
-@keyframes kfDriftB { to { transform: translate3d(-30vmax, -14vmax, 0) scale(0.92); } }
-@keyframes kfDriftC { to { transform: translate3d(-24vmax, 20vmax, 0) scale(1.1); } }
+@keyframes kfDriftA { to { transform: translate3d(22vmax, -10vmax, 0) scale(1.1); } }
+@keyframes kfDriftB { to { transform: translate3d(-14vmax, 14vmax, 0) scale(0.94); } }
+@keyframes kfDriftC { to { transform: translate3d(14vmax, 8vmax, 0) scale(1.08); } }
 
 .kf-hero .k-hero__title {
   font-size: clamp(5rem, 17vw, 10rem);
@@ -178,3 +180,6 @@ h1, h2, h3, .h0, .h1, .h2, .h3 { letter-spacing: -0.03em; font-weight: 700; line
 
 /* Dawn blendet leere Elemente aus; die Foto-Rahmen sollen bis zum Foto sichtbar bleiben */
 .kf-card__media:empty, .kf-stage__media:empty { display: block !important; }
+
+/* Auf dunklen Farbflächen bleibt auch die Kleinschrift gut lesbar */
+.kf-hero .k-hero__note, .kf-hero .k-hero__colour-label { color: rgba(var(--color-foreground), 0.92); }

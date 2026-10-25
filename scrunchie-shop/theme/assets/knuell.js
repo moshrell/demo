@@ -61,7 +61,7 @@ class KnuellTotal extends HTMLElement {
   connectedCallback() {
     this.sectionId = this.dataset.sectionId;
     this.data = JSON.parse(this.querySelector('script[type="application/json"]').textContent);
-    this.fmt = new Intl.NumberFormat(document.documentElement.lang || 'de', {
+    this.fmt = new Intl.NumberFormat('de-DE', {
       style: 'currency',
       currency: this.data.currency,
     });

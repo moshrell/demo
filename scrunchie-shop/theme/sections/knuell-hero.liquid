@@ -43,6 +43,7 @@
                 data-name="{{ variant.option1 | escape }}"
                 data-price="{{ variant.price | money }}"
                 data-available="{{ variant.available }}"
+                style="--k-fill: {{ hex }}"
                 {% unless forloop.first %}hidden{% endunless %}
               >
                 {%- if vmedia != blank -%}
@@ -57,8 +58,6 @@
                       fetchpriority: img_priority,
                       alt: variant.title
                   }}
-                {%- else -%}
-                  <div class="k-hero__img k-hero__img--empty" style="--k-fill: {{ hex }}"></div>
                 {%- endif -%}
               </figure>
             {%- endunless -%}
@@ -79,7 +78,7 @@
                   aria-label="{{ variant.option1 | escape }}"
                   data-variant-id="{{ variant.id }}"
                   style="--k-dot: {{ hex }}"
-                ></a>
+                ><span class="visually-hidden">{{ variant.option1 }}</span></a>
               {%- endunless -%}
             {%- endfor -%}
           </div>
@@ -115,7 +114,7 @@
   "settings": [
     { "type": "product", "id": "product", "label": "Produkt" },
     { "type": "text", "id": "eyebrow", "label": "Kleine Zeile über der Überschrift", "default": "Scrunchie Handyband" },
-    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Dein Handy. Immer griffbereit am Handgelenk." },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Dein Handy. Immer am Handgelenk." },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Weiches Scrunchie-Band, das dein Handy sicher hält und gut aussieht." },
     { "type": "text", "id": "button_label", "label": "Button", "default": "Dieses Band kaufen" },
     {

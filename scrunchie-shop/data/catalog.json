@@ -1,0 +1,60 @@
+{
+  "vendor": "Knüll",
+  "products": [
+    {
+      "handle": "scrunchie-handyband",
+      "title": "Scrunchie Handyband",
+      "productType": "Handyband",
+      "price": "24.90",
+      "tags": ["handyband", "scrunchie"],
+      "seoTitle": "Scrunchie Handyband in 6 Farben | Knüll",
+      "seoDescription": "Weiches Scrunchie-Band für dein Handy. Mit Tab, passt zu jedem Handy mit Hülle. Versand in 1–3 Werktagen.",
+      "descriptionHtml": "<p>Das Scrunchie Handyband hält dein Handy sicher am Handgelenk und sieht dabei aus wie dein liebstes Haarband. Weicher Satin, elastisch, in sanften Farben.</p><ul><li>Im Set: 1 Scrunchie-Band und 1 Tab</li><li>Tab einlegen, Band einhaken, fertig</li><li>Für fast jedes Handy mit Hülle</li></ul>",
+      "colours": [
+        { "name": "Rosé", "sku": "KN-SCR-ROSE" },
+        { "name": "Butter", "sku": "KN-SCR-BUTTER" },
+        { "name": "Salbei", "sku": "KN-SCR-SALBEI" },
+        { "name": "Flieder", "sku": "KN-SCR-FLIEDER" },
+        { "name": "Espresso", "sku": "KN-SCR-ESPRESSO" },
+        { "name": "Schwarz", "sku": "KN-SCR-SCHWARZ" }
+      ]
+    },
+    {
+      "handle": "ersatz-tab",
+      "title": "Ersatz-Tab, 3er-Set",
+      "productType": "Zubehör",
+      "price": "6.90",
+      "sku": "KN-TAB-3",
+      "tags": ["zubehör", "tab"],
+      "seoTitle": "Ersatz-Tab 3er-Set | Knüll",
+      "seoDescription": "Drei Ersatz-Tabs für dein Scrunchie Handyband, zum Wechseln zwischen mehreren Hüllen.",
+      "descriptionHtml": "<p>Drei flache Tabs für dein Scrunchie Handyband. Praktisch, wenn du mehrere Hüllen hast oder das Band für ein zweites Handy nutzt.</p>"
+    }
+  ],
+  "pages": [
+    { "handle": "impressum", "title": "Impressum" },
+    { "handle": "datenschutz", "title": "Datenschutzerklärung" },
+    { "handle": "agb", "title": "Allgemeine Geschäftsbedingungen" },
+    { "handle": "widerrufsbelehrung", "title": "Widerrufsbelehrung" },
+    { "handle": "versand-und-zahlung", "title": "Versand und Zahlung" },
+    { "handle": "kontakt", "title": "Kontakt", "template": "contact" }
+  ],
+  "menus": [
+    { "handle": "main-menu", "title": "Hauptmenü", "items": [
+      { "title": "Band und Farben", "url": "/products/scrunchie-handyband" },
+      { "title": "Zubehör", "url": "/products/ersatz-tab" },
+      { "title": "Versand und Zahlung", "url": "/pages/versand-und-zahlung" },
+      { "title": "Kontakt", "url": "/pages/kontakt" }
+    ]},
+    { "handle": "footer-help", "title": "Footer Hilfe", "items": [
+      { "title": "Versand und Zahlung", "url": "/pages/versand-und-zahlung" },
+      { "title": "Widerruf und Rückgabe", "url": "/pages/widerrufsbelehrung" },
+      { "title": "Kontakt", "url": "/pages/kontakt" }
+    ]},
+    { "handle": "footer-legal", "title": "Footer Rechtliches", "items": [
+      { "title": "AGB", "url": "/pages/agb" },
+      { "title": "Datenschutz", "url": "/pages/datenschutz" },
+      { "title": "Impressum", "url": "/pages/impressum" }
+    ]}
+  ]
+}

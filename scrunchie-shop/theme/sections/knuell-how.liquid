@@ -1,0 +1,73 @@
+{%- comment -%} Knüll: "So funktioniert's" in 3 Schritten. Antwort auf die wichtigste Kundenfrage: Wie hält das am Handy? {%- endcomment -%}
+<div class="k-how color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <header class="k-head">
+      {%- if section.settings.eyebrow != blank -%}<p class="k-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="k-h2">{{ section.settings.heading }}</h2>
+      {%- if section.settings.text != blank -%}<p class="k-lead">{{ section.settings.text }}</p>{%- endif -%}
+    </header>
+    <ol class="k-how__steps" role="list">
+      {%- for block in section.blocks -%}
+        <li class="k-step" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <div class="k-step__media">
+              {{
+                block.settings.image
+                | image_url: width: 600
+                | image_tag: widths: '300, 450, 600', sizes: '(min-width: 990px) 360px, 90vw', loading: 'lazy', alt: block.settings.title
+              }}
+            </div>
+          {%- endif -%}
+          <div class="k-step__body">
+            <span class="k-step__num" aria-hidden="true">{{ forloop.index }}</span>
+            <h3 class="k-step__title">{{ block.settings.title }}</h3>
+            <p class="k-step__text">{{ block.settings.text }}</p>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ol>
+    {%- if section.settings.note != blank -%}
+      <p class="k-how__note">{{ section.settings.note }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Knüll So funktioniert's",
+  "tag": "section",
+  "class": "section k-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Kleine Zeile", "default": "So funktioniert's" },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "In 10 Sekunden angebracht" },
+    { "type": "textarea", "id": "text", "label": "Text" },
+    { "type": "text", "id": "note", "label": "Hinweis unter den Schritten" },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Farbschema",
+      "options": [
+        { "value": "scheme-1", "label": "Schema 1" },
+        { "value": "scheme-2", "label": "Schema 2" },
+        { "value": "scheme-3", "label": "Schema 3" },
+        { "value": "scheme-4", "label": "Schema 4" },
+        { "value": "scheme-5", "label": "Schema 5" }
+      ],
+      "default": "scheme-2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Schritt",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Bild (quadratisch)" },
+        { "type": "text", "id": "title", "label": "Titel", "default": "Schritt" },
+        { "type": "textarea", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [{ "name": "Knüll So funktioniert's" }]
+}
+{% endschema %}

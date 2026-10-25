@@ -1,0 +1,31 @@
+{%- comment -%}
+  Live-Summe unter der Variantenauswahl + Sticky-Leiste (nur Handy).
+  Einbindung: Block "Eigenes Liquid" in der Produktvorlage:  {% render 'knuell-buy-total', product: product %}
+{%- endcomment -%}
+<knuell-total class="k-total" data-section-id="{{ section.id }}">
+  <div class="k-total__row">
+    <span class="k-total__label">Summe</span>
+    <span class="k-total__qty" data-k-qty></span>
+    <strong class="k-total__value" data-k-total>{{ product.selected_or_first_available_variant.price | money }}</strong>
+  </div>
+  <p class="k-total__note">inkl. MwSt., zzgl. <a href="{{ routes.root_url }}pages/versand-und-zahlung" target="_blank" rel="noopener">Versand</a></p>
+
+  <div class="k-sticky" hidden>
+    <div class="k-sticky__info">
+      <span class="k-sticky__name" data-k-bar-name>{{ product.selected_or_first_available_variant.title }}</span>
+      <span class="k-sticky__sum">Summe <strong data-k-bar-total>{{ product.selected_or_first_available_variant.price | money }}</strong></span>
+    </div>
+    <button type="button" class="button k-sticky__btn" data-k-bar-btn>{{ 'products.product.add_to_cart' | t }}</button>
+  </div>
+
+  <script type="application/json">
+    {
+      "currency": {{ cart.currency.iso_code | json }},
+      "variants": {
+        {%- for v in product.variants -%}
+          "{{ v.id }}": { "price": {{ v.price }}, "available": {{ v.available }}, "title": {{ v.title | json }} }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      }
+    }
+  </script>
+</knuell-total>

@@ -1,0 +1,218 @@
+{
+  "sections": {
+    "hero": {
+      "type": "knuell-hero",
+      "settings": {
+        "product": "scrunchie-handyband",
+        "eyebrow": "Scrunchie Handyband",
+        "heading": "Dein Handy. Immer griffbereit am Handgelenk.",
+        "text": "Weiches Scrunchie-Band, das dein Handy sicher hält und dabei gut aussieht.",
+        "button_label": "Dieses Band kaufen",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "usps": {
+      "type": "knuell-usps",
+      "settings": {
+        "color_scheme": "scheme-2"
+      },
+      "blocks": {
+        "u1": {
+          "type": "usp",
+          "settings": {
+            "icon": "truck",
+            "title": "Versand in 1–3 Werktagen",
+            "text": "Kostenlos ab 40 €"
+          }
+        },
+        "u2": {
+          "type": "usp",
+          "settings": {
+            "icon": "return",
+            "title": "14 Tage Rückgabe",
+            "text": "Einfach und fair"
+          }
+        },
+        "u3": {
+          "type": "usp",
+          "settings": {
+            "icon": "phone",
+            "title": "Passt zu jedem Handy",
+            "text": "Mit Hülle, ohne Umbau"
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2",
+        "u3"
+      ]
+    },
+    "colours": {
+      "type": "knuell-colours",
+      "settings": {
+        "product": "scrunchie-handyband",
+        "eyebrow": "Farben",
+        "heading": "Welche Farbe passt zu dir?",
+        "text": "Tippe auf eine Farbe, sie öffnet sich in groß.",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "how": {
+      "type": "knuell-how",
+      "settings": {
+        "eyebrow": "So funktioniert's",
+        "heading": "In 10 Sekunden angebracht",
+        "text": "",
+        "note": "",
+        "color_scheme": "scheme-2"
+      },
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Tab einlegen",
+            "text": "Schiebe den flachen Tab zwischen Handy und Hülle."
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Band einhaken",
+            "text": "Hake das Scrunchie-Band am Tab ein."
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Los geht's",
+            "text": "Band ums Handgelenk, beide Hände frei."
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ]
+    },
+    "faq": {
+      "type": "collapsible-content",
+      "settings": {
+        "caption": "Fragen",
+        "heading": "Gut zu wissen",
+        "heading_size": "h2",
+        "heading_alignment": "left",
+        "layout": "none",
+        "container_color_scheme": "scheme-1",
+        "color_scheme": "scheme-1",
+        "open_first_collapsible_row": true,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_first",
+        "padding_top": 36,
+        "padding_bottom": 36
+      },
+      "blocks": {
+        "q1": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Passt das zu meinem Handy?",
+            "icon": "none",
+            "row_content": "<p>Ja, zu fast jedem Handy mit Hülle: iPhone, Samsung Galaxy, Google Pixel und andere. Der Tab liegt zwischen Handy und Hülle, du brauchst keine Spezialhülle.</p>"
+          }
+        },
+        "q2": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Hält das Band mein Handy sicher?",
+            "icon": "none",
+            "row_content": "<p>Der Tab sitzt fest unter einer anliegenden Hülle. Prüfe beim ersten Mal, ob die Hülle fest sitzt, und lass das Handy erst dann am Band hängen.</p>"
+          }
+        },
+        "q3": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Kann ich das Band waschen?",
+            "icon": "none",
+            "row_content": "<p>Von Hand bei 30 °C, nicht in den Trockner.</p>"
+          }
+        },
+        "q4": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Wie lange dauert der Versand?",
+            "icon": "none",
+            "row_content": "<p>In Deutschland 1–3 Werktage, ab 40 € versandkostenfrei. <a href=\"/pages/versand-und-zahlung\">Mehr zu Versand und Zahlung</a></p>"
+          }
+        },
+        "q5": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Und wenn es mir nicht gefällt?",
+            "icon": "none",
+            "row_content": "<p>Du hast 14 Tage Widerrufsrecht. <a href=\"/pages/widerrufsbelehrung\">So geht die Rückgabe</a></p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ]
+    },
+    "cta": {
+      "type": "rich-text",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-4",
+        "full_width": true,
+        "padding_top": 52,
+        "padding_bottom": 56
+      },
+      "blocks": {
+        "caption": {
+          "type": "caption",
+          "settings": {
+            "caption": "Bereit?",
+            "text_style": "uppercase",
+            "text_size": "medium"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Such dir deine Farbe aus.",
+            "heading_size": "h1"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "button_label": "Zum Band",
+            "button_link": "shopify://products/scrunchie-handyband",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "caption",
+        "heading",
+        "button"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "usps",
+    "colours",
+    "how",
+    "faq",
+    "cta"
+  ]
+}

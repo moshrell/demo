@@ -1,0 +1,21 @@
+{%- comment -%}
+  Knüll: lokale Schriften (kein Google Fonts, DSGVO) + eigenes Stylesheet.
+{%- endcomment -%}
+<style>
+  @font-face {
+    font-family: 'Knuell Fraunces';
+    src: url('{{ 'knuell-fraunces.woff2' | asset_url }}') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Knuell Figtree';
+    src: url('{{ 'knuell-figtree.woff2' | asset_url }}') format('woff2');
+    font-weight: 300 900;
+    font-style: normal;
+    font-display: swap;
+  }
+</style>
+{{ 'knuell.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'knuell.js' | asset_url }}" defer="defer"></script>

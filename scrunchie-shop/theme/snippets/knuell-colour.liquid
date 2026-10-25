@@ -1,0 +1,26 @@
+{%- comment -%}
+  Gibt den Hex-Wert zu einem Farbnamen aus (ohne Leerzeichen).
+  Reihenfolge: Shopify-Farbmuster (swatch) -> Theme-Einstellung "Farbnamen und Farbwerte" -> neutrales Grau.
+  Aufruf: {%- capture hex -%}{%- render 'knuell-colour', name: variant.option1 -%}{%- endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign k_hex = ''
+  assign k_name = name | strip | downcase
+  if swatch and swatch.color
+    assign k_hex = swatch.color | color_to_hex
+  else
+    assign k_lines = settings.knuell_colours | newline_to_br | split: '<br />'
+    for k_line in k_lines
+      assign k_parts = k_line | split: '='
+      assign k_key = k_parts[0] | strip | downcase
+      if k_key == k_name
+        assign k_hex = k_parts[1] | strip
+        break
+      endif
+    endfor
+  endif
+  if k_hex == ''
+    assign k_hex = '#CFC6BC'
+  endif
+-%}
+{{- k_hex -}}

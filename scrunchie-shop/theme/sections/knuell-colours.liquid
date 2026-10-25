@@ -1,0 +1,78 @@
+{%- comment -%} Knüll: Farbübersicht. Jede Kachel führt direkt zur Farbe auf der Produktseite. {%- endcomment -%}
+{%- assign cprod = section.settings.product -%}
+<div class="k-colours color-{{ section.settings.color_scheme }} gradient" id="KColours-{{ section.id }}">
+  <div class="page-width">
+    <header class="k-head">
+      {%- if section.settings.eyebrow != blank -%}<p class="k-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="k-h2">{{ section.settings.heading }}</h2>
+      {%- if section.settings.text != blank -%}<p class="k-lead">{{ section.settings.text }}</p>{%- endif -%}
+    </header>
+
+    {%- if cprod != blank -%}
+      {%- assign seen = '' -%}
+      <ul class="k-colours__grid" role="list">
+        {%- for variant in cprod.variants -%}
+          {%- assign vkey = '|' | append: variant.option1 | append: '|' -%}
+          {%- unless seen contains vkey -%}
+            {%- assign seen = seen | append: vkey -%}
+            {%- assign vmedia = variant.featured_media | default: cprod.featured_media -%}
+            {%- capture hex -%}{%- render 'knuell-colour', name: variant.option1 -%}{%- endcapture -%}
+            <li class="k-colours__item">
+              <a class="k-tile" href="{{ cprod.url }}?variant={{ variant.id }}" style="--k-dot: {{ hex }}">
+                <span class="k-tile__media">
+                  {%- if vmedia != blank -%}
+                    {{
+                      vmedia
+                      | image_url: width: 600
+                      | image_tag:
+                        widths: '300, 450, 600',
+                        sizes: '(min-width: 990px) 380px, 50vw',
+                        loading: 'lazy',
+                        alt: ''
+                    }}
+                  {%- else -%}
+                    <span class="k-tile__empty"></span>
+                  {%- endif -%}
+                  {%- unless variant.available -%}<span class="k-tile__badge">Ausverkauft</span>{%- endunless -%}
+                </span>
+                <span class="k-tile__label">
+                  <span class="k-tile__dot" aria-hidden="true"></span>
+                  <span class="k-tile__name">{{ variant.option1 }}</span>
+                  <span class="k-tile__price">{{ variant.price | money }}</span>
+                </span>
+              </a>
+            </li>
+          {%- endunless -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Knüll Farben",
+  "tag": "section",
+  "class": "section k-section",
+  "settings": [
+    { "type": "product", "id": "product", "label": "Produkt" },
+    { "type": "text", "id": "eyebrow", "label": "Kleine Zeile", "default": "Farben" },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Welche Farbe passt zu dir?" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Tippe auf eine Farbe und sieh sie in groß." },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Farbschema",
+      "options": [
+        { "value": "scheme-1", "label": "Schema 1" },
+        { "value": "scheme-2", "label": "Schema 2" },
+        { "value": "scheme-3", "label": "Schema 3" },
+        { "value": "scheme-4", "label": "Schema 4" },
+        { "value": "scheme-5", "label": "Schema 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [{ "name": "Knüll Farben" }]
+}
+{% endschema %}

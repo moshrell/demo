@@ -1,0 +1,20 @@
+{%- comment -%}
+  Fortschritt bis zum kostenlosen Versand. Wird im Warenkorb-Drawer und auf der Warenkorb-Seite gezeigt.
+  Schwelle: Theme-Einstellung "Kostenloser Versand ab (EUR)". 0 = aus.
+{%- endcomment -%}
+{%- assign k_free = settings.knuell_free_shipping_eur | times: 100 -%}
+{%- if k_free > 0 and cart.item_count > 0 -%}
+  {%- assign k_total = cart.items_subtotal_price -%}
+  {%- assign k_left = k_free | minus: k_total -%}
+  {%- assign k_pct = k_total | times: 100 | divided_by: k_free | at_most: 100 -%}
+  <div class="k-ship" role="status">
+    <p class="k-ship__text">
+      {%- if k_left > 0 -%}
+        Noch <strong>{{ k_left | money }}</strong> bis zum kostenlosen Versand
+      {%- else -%}
+        <strong>Kostenloser Versand</strong> ist freigeschaltet
+      {%- endif -%}
+    </p>
+    <div class="k-ship__bar" aria-hidden="true"><span style="width: {{ k_pct }}%"></span></div>
+  </div>
+{%- endif -%}

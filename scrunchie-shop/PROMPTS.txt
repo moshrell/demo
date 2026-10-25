@@ -1,0 +1,69 @@
+KNÜLL (Demo-Shop, Scrunchie Handyband): ПРОМПТЫ ДЛЯ GEMINI
+=====================================================================
+Как работать:
+1. Все 12 кадров делай в ОДНОМ чате Gemini, по порядку. Так рука, свет и телефон получатся похожими между цветами.
+2. Формат ставь кнопкой, как указано у каждого промпта (3:4 или 1:1).
+3. Готовые картинки пришли мне в этот чат одним сообщением в том же порядке (1 → 12), я сам сохраню их под нужными именами в img/ проекта и загружу в магазин.
+4. Если кадр не получился (текст на телефоне, лишние пальцы, лого), просто напиши Gemini «redo, no text, no logos, correct hand anatomy» и пришли удачный вариант.
+
+Единый стиль всех кадров: мягкий дневной свет из окна, кремовый тёплый фон, натуральные тени, лёгкая малая глубина резкости, чистая редакторская съёмка. Лиц нет, только руки и предплечья. На телефоне нет текста, логотипов и надписей.
+
+---------------------------------------------------------------------
+01  файл: farbe-rose.jpg   |  формат: 3:4
+---------------------------------------------------------------------
+Editorial lifestyle photo, portrait 3:4. A woman's hand and forearm (no face, no other people) against a warm cream plaster wall in soft window daylight. On her wrist sits a fabric scrunchie wrist strap in dusty rose satin, the same kind of ruched elastic fabric band as a hair scrunchie. A short thin fabric cord leads from the scrunchie to the bottom corner of a modern smartphone held loosely in her hand. The smartphone has a plain matte case in off-white, the screen is switched off and black, no text, no logos, no brand marks anywhere. The scrunchie is the clear hero of the image, centered with generous empty margin around it so it can be cropped square. Natural skin, correct hand anatomy with five fingers, shallow depth of field, calm premium look, warm color palette of cream and rose.
+
+---------------------------------------------------------------------
+02  файл: farbe-butter.jpg   |  формат: 3:4
+---------------------------------------------------------------------
+Editorial lifestyle photo, portrait 3:4. A woman's hand and forearm (no face, no other people) against a warm cream plaster wall in soft window daylight. On her wrist sits a fabric scrunchie wrist strap in soft butter yellow satin, the same kind of ruched elastic fabric band as a hair scrunchie. A short thin fabric cord leads from the scrunchie to the bottom corner of a modern smartphone held loosely in her hand. The smartphone has a plain matte case in off-white, the screen is switched off and black, no text, no logos, no brand marks anywhere. The scrunchie is the clear hero of the image, centered with generous empty margin around it so it can be cropped square. Natural skin, correct hand anatomy with five fingers, shallow depth of field, calm premium look, warm color palette of cream and butter yellow. Same hand, same light, same wall and same phone as the previous images in this chat.
+
+---------------------------------------------------------------------
+03  файл: farbe-salbei.jpg   |  формат: 3:4
+---------------------------------------------------------------------
+Editorial lifestyle photo, portrait 3:4. A woman's hand and forearm (no face, no other people) against a warm cream plaster wall in soft window daylight. On her wrist sits a fabric scrunchie wrist strap in muted sage green satin, the same kind of ruched elastic fabric band as a hair scrunchie. A short thin fabric cord leads from the scrunchie to the bottom corner of a modern smartphone held loosely in her hand. The smartphone has a plain matte case in off-white, the screen is switched off and black, no text, no logos, no brand marks anywhere. The scrunchie is the clear hero of the image, centered with generous empty margin around it so it can be cropped square. Natural skin, correct hand anatomy with five fingers, shallow depth of field, calm premium look, warm color palette of cream and sage green. Same hand, same light, same wall and same phone as the previous images in this chat.
+
+---------------------------------------------------------------------
+04  файл: farbe-flieder.jpg   |  формат: 3:4
+---------------------------------------------------------------------
+Editorial lifestyle photo, portrait 3:4. A woman's hand and forearm (no face, no other people) against a warm cream plaster wall in soft window daylight. On her wrist sits a fabric scrunchie wrist strap in soft lilac lavender satin, the same kind of ruched elastic fabric band as a hair scrunchie. A short thin fabric cord leads from the scrunchie to the bottom corner of a modern smartphone held loosely in her hand. The smartphone has a plain matte case in off-white, the screen is switched off and black, no text, no logos, no brand marks anywhere. The scrunchie is the clear hero of the image, centered with generous empty margin around it so it can be cropped square. Natural skin, correct hand anatomy with five fingers, shallow depth of field, calm premium look, warm color palette of cream and lilac. Same hand, same light, same wall and same phone as the previous images in this chat.
+
+---------------------------------------------------------------------
+05  файл: farbe-espresso.jpg   |  формат: 3:4
+---------------------------------------------------------------------
+Editorial lifestyle photo, portrait 3:4. A woman's hand and forearm (no face, no other people) against a warm cream plaster wall in soft window daylight. On her wrist sits a fabric scrunchie wrist strap in deep espresso brown satin, the same kind of ruched elastic fabric band as a hair scrunchie. A short thin fabric cord leads from the scrunchie to the bottom corner of a modern smartphone held loosely in her hand. The smartphone has a plain matte case in off-white, the screen is switched off and black, no text, no logos, no brand marks anywhere. The scrunchie is the clear hero of the image, centered with generous empty margin around it so it can be cropped square. Natural skin, correct hand anatomy with five fingers, shallow depth of field, calm premium look, warm color palette of cream and espresso brown. Same hand, same light, same wall and same phone as the previous images in this chat.
+
+---------------------------------------------------------------------
+06  файл: farbe-schwarz.jpg   |  формат: 3:4
+---------------------------------------------------------------------
+Editorial lifestyle photo, portrait 3:4. A woman's hand and forearm (no face, no other people) against a warm cream plaster wall in soft window daylight. On her wrist sits a fabric scrunchie wrist strap in glossy black satin, the same kind of ruched elastic fabric band as a hair scrunchie. A short thin fabric cord leads from the scrunchie to the bottom corner of a modern smartphone held loosely in her hand. The smartphone has a plain matte case in off-white, the screen is switched off and black, no text, no logos, no brand marks anywhere. The scrunchie is the clear hero of the image, centered with generous empty margin around it so it can be cropped square. Natural skin, correct hand anatomy with five fingers, shallow depth of field, calm premium look, warm color palette of cream and black. Same hand, same light, same wall and same phone as the previous images in this chat.
+
+---------------------------------------------------------------------
+07  файл: produkt-set-flatlay.jpg   |  формат: 3:4
+---------------------------------------------------------------------
+Top-down flat lay product photo, portrait 3:4, on a warm cream linen surface in soft daylight. In the center a dusty rose satin scrunchie wrist strap, ruched elastic fabric band like a hair scrunchie, with a short thin fabric cord attached. Next to it lies one small flat rounded rectangular tab made of thin off-white plastic, and below them the back of a modern smartphone in a plain matte off-white case with no text, no logos, no brand marks. Everything neatly arranged with generous empty space around, soft natural shadows, calm editorial still life, warm cream and rose color palette. No people, no hands.
+
+---------------------------------------------------------------------
+08  файл: produkt-detail-stoff.jpg   |  формат: 3:4
+---------------------------------------------------------------------
+Close-up macro product photo, portrait 3:4. The soft ruched folds of a dusty rose satin scrunchie fabric in the foreground with visible fabric texture and gentle highlights, a thin fabric cord and a small flat off-white tab slightly out of focus behind it. Warm cream background, soft window daylight, very shallow depth of field, tactile premium feeling. No people, no text, no logos.
+
+---------------------------------------------------------------------
+09  файл: schritt-1-tab.jpg   |  формат: 1:1
+---------------------------------------------------------------------
+Square 1:1 lifestyle photo on a warm cream surface in soft daylight. Close view of two hands (no faces) sliding a small flat off-white tab between the back of a modern smartphone and its plain matte off-white case, the case is partly lifted at the bottom corner. Screen is off, no text, no logos, no brand marks. Clear, simple instructional but beautiful editorial look, correct hand anatomy with five fingers, shallow depth of field, warm cream color palette.
+
+---------------------------------------------------------------------
+10  файл: schritt-2-einhaken.jpg   |  формат: 1:1
+---------------------------------------------------------------------
+Square 1:1 lifestyle photo on a warm cream surface in soft daylight. Close view of two hands (no faces) hooking the short fabric loop of a dusty rose satin scrunchie wrist strap onto a small flat tab that sticks out at the bottom corner of a modern smartphone with a plain matte off-white case. Screen is off, no text, no logos, no brand marks. Clear, simple instructional but beautiful editorial look, correct hand anatomy with five fingers, shallow depth of field, warm cream and rose color palette.
+
+---------------------------------------------------------------------
+11  файл: schritt-3-handgelenk.jpg   |  формат: 1:1
+---------------------------------------------------------------------
+Square 1:1 lifestyle photo in soft daylight. A woman's forearm and hand (no face) with a dusty rose satin scrunchie wrist strap on the wrist, the smartphone with plain matte off-white case hanging loosely on the short cord below the hand while the same hand holds a ceramic coffee cup, which shows that the hand is free. Warm cream and wood tones, screen off, no text, no logos, no brand marks, correct hand anatomy with five fingers, shallow depth of field.
+
+---------------------------------------------------------------------
+12  файл: zubehoer-tabs.jpg   |  формат: 3:4
+---------------------------------------------------------------------
+Top-down product photo, portrait 3:4, on a warm cream linen surface in soft daylight. Three identical small flat rounded rectangular tabs made of thin off-white plastic, fanned out neatly in the center with generous empty space around them, soft natural shadows, calm minimal still life. No people, no text, no logos, no brand marks.

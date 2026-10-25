@@ -24,7 +24,9 @@
         "eyebrow": "Dein Tag",
         "heading": "Dein Tag läuft. Das Handy läuft mit.",
         "text": "Kaffee in der einen Hand, Tasche in der anderen. Das Handy bleibt griffbereit am Körper, nicht in der Tasche und nicht im Weg.",
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-1",
+        "image": "shopify://shop_images/b-hero-stadt.jpg",
+        "image_wide": "shopify://shop_images/b-hero-breit.jpg"
       }
     },
     "scenes": {
@@ -40,7 +42,8 @@
           "settings": {
             "title": "Café",
             "text": "Tablett in beiden Händen.",
-            "alt": "Frau auf einer Café-Terrasse mit Tablett, Handy am Umhängeband"
+            "alt": "Frau auf einer Café-Terrasse mit Tablett, Handy am Umhängeband",
+            "image": "shopify://shop_images/b-szene-cafe.jpg"
           }
         },
         "c2": {
@@ -48,7 +51,8 @@
           "settings": {
             "title": "Rad",
             "text": "Beide Hände am Lenker.",
-            "alt": "Mann auf dem Fahrrad, Handy hängt seitlich am Umhängeband"
+            "alt": "Mann auf dem Fahrrad, Handy hängt seitlich am Umhängeband",
+            "image": "shopify://shop_images/b-szene-rad.jpg"
           }
         },
         "c3": {
@@ -56,7 +60,8 @@
           "settings": {
             "title": "Reise",
             "text": "Koffer in der einen, Ticket in der anderen.",
-            "alt": "Frau am Bahnsteig mit Koffer, Handy am Umhängeband"
+            "alt": "Frau am Bahnsteig mit Koffer, Handy am Umhängeband",
+            "image": "shopify://shop_images/b-szene-reise.jpg"
           }
         },
         "c4": {
@@ -64,7 +69,8 @@
           "settings": {
             "title": "Markt",
             "text": "Beide Hände voll Blumen und Obst.",
-            "alt": "Frau auf dem Wochenmarkt mit Einkauf, Handy am Umhängeband"
+            "alt": "Frau auf dem Wochenmarkt mit Einkauf, Handy am Umhängeband",
+            "image": "shopify://shop_images/b-szene-einkauf.jpg"
           }
         }
       },

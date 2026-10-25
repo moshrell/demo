@@ -24,7 +24,6 @@ const colours = [
   ['Schwarz', 'b-farbe-schwarz', 'Scrunchie Umhängeband in Schwarz, quer getragen'],
 ];
 const shared = [
-  ['b-set-flatlay', 'Die Umhängebänder in vier Farben mit Tab und Hülle'],
   ['b-detail-band', 'Nahaufnahme: Satin-Scrunchie und verstellbares Band'],
 ];
 async function product(handle) {

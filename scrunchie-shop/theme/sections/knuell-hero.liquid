@@ -62,29 +62,28 @@
               </figure>
             {%- endunless -%}
           {%- endfor -%}
-
-          <div class="k-hero__dots" role="radiogroup" aria-label="Farbe wählen">
-            {%- assign seen = '' -%}
-            {%- for variant in hero_product.variants -%}
-              {%- assign vkey = '|' | append: variant.option1 | append: '|' -%}
-              {%- unless seen contains vkey -%}
-                {%- assign seen = seen | append: vkey -%}
-                {%- capture hex -%}{%- render 'knuell-colour', name: variant.option1 -%}{%- endcapture -%}
-                <a
-                  class="k-dot{% if forloop.first %} is-active{% endif %}"
-                  href="{{ hero_product.url }}?variant={{ variant.id }}"
-                  role="radio"
-                  aria-checked="{% if forloop.first %}true{% else %}false{% endif %}"
-                  aria-label="{{ variant.option1 | escape }}"
-                  data-variant-id="{{ variant.id }}"
-                  style="--k-dot: {{ hex }}"
-                ><span class="visually-hidden">{{ variant.option1 }}</span></a>
-              {%- endunless -%}
-            {%- endfor -%}
-          </div>
         </div>
 
         <div class="k-hero__buy">
+  <div class="k-hero__dots" role="radiogroup" aria-label="Farbe wählen">
+    {%- assign seen = '' -%}
+    {%- for variant in hero_product.variants -%}
+      {%- assign vkey = '|' | append: variant.option1 | append: '|' -%}
+      {%- unless seen contains vkey -%}
+        {%- assign seen = seen | append: vkey -%}
+        {%- capture hex -%}{%- render 'knuell-colour', name: variant.option1 -%}{%- endcapture -%}
+        <a
+          class="k-dot{% if forloop.first %} is-active{% endif %}"
+          href="{{ hero_product.url }}?variant={{ variant.id }}"
+          role="radio"
+          aria-checked="{% if forloop.first %}true{% else %}false{% endif %}"
+          aria-label="{{ variant.option1 | escape }}"
+          data-variant-id="{{ variant.id }}"
+          style="--k-dot: {{ hex }}"
+        ><span class="visually-hidden">{{ variant.option1 }}</span></a>
+      {%- endunless -%}
+    {%- endfor -%}
+  </div>
           <p class="k-hero__colour">
             <span class="k-hero__colour-label">Farbe</span>
             <strong data-hero-name>{{ first_variant.option1 }}</strong>

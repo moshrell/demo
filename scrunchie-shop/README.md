@@ -33,6 +33,6 @@ Demo-Shop für eine mögliche Kundin, die Scrunchie-Handybänder verkaufen will.
 - Schriften (Fraunces, Figtree) liegen lokal im Theme (`assets/knuell-*.woff2`), werden aber über das Shopify-CDN ausgeliefert. Das gehört zur Shopify-Infrastruktur und steht in der Datenschutzerklärung.
 - Kundenkonto-Symbol und Suche in der Kopfzeile sind per Theme-Einstellung ausgeblendet (bei 2 Produkten nur Ablenkung).
 - Variantenbilder: pro Farbe genau ein Foto (Variantenbild), dazu geteilte Bilder (Set, Detail). Mehrere Fotos je Farbe würden alle Farben im Bildkarussell mischen (Shopify-Eigenheit, `hide_variants`).
-- Fotos: 11 von 12 sind da (`img/`). **Es fehlt `schritt-1-tab.jpg`** (Prompt 09 in `PROMPTS.txt`), Schritt 1 in "So funktioniert's" hat deshalb noch kein Bild. Nach Lieferung: Datei in `img/` legen, in `scripts/upload-images.mjs` die Zeile `if (f === 'schritt-1-tab') continue;` entfernen, Skript ausführen, in `theme/templates/index.json` und `product.json` bei Block `s1` `image` auf `shopify://shop_images/schritt-1-tab.jpg` setzen, Theme pushen.
+- Fotos: alle 12 sind da (`img/`) und im Shop.
 - Preisformat: Shopify zeigt `€24,90` (Shop-Einstellung). Deutsch üblich ist `24,90 €`: Settings → General → Store currency → Change formatting → "HTML with currency" `{{amount_with_comma_separator}} €`.
 - Skripte: `seed.mjs` (Produkte, Seiten, Menüs) und `upload-images.mjs` (Fotos), beide mit `SHOPIFY_STORE` und `SHOPIFY_ADMIN_TOKEN` aus der Umgebung. Token über Dev-Dashboard-App (Client ID und Secret, `grant_type=client_credentials`, 24 h gültig).

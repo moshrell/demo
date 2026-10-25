@@ -72,7 +72,8 @@
           "type": "step",
           "settings": {
             "title": "Tab einlegen",
-            "text": "Schiebe den flachen Tab zwischen Handy und Hülle."
+            "text": "Schiebe den flachen Tab zwischen Handy und Hülle.",
+            "image": "shopify://shop_images/schritt-1-tab.jpg"
           }
         },
         "s2": {

@@ -73,9 +73,8 @@ if (tab.media.nodes.length === 0) { await addMedia(tab.id, [['zubehoer-tabs', 'D
 console.log('Zubehör-Bild ok');
 
 // --- Dateien für Theme (Schritt-Fotos)
-const steps = [['schritt-2-einhaken', 'Schritt 2: Band am Tab einhaken'], ['schritt-3-handgelenk', 'Schritt 3: Band am Handgelenk, Hand frei']];
-for (const f of ['schritt-1-tab', ...steps.map((s) => s[0])]) {
-  if (f === 'schritt-1-tab') continue; // Foto fehlt noch
+const steps = [['schritt-1-tab', 'Schritt 1: Tab zwischen Handy und Hülle schieben'], ['schritt-2-einhaken', 'Schritt 2: Band am Tab einhaken'], ['schritt-3-handgelenk', 'Schritt 3: Band am Handgelenk, Hand frei']];
+for (const f of steps.map((s) => s[0])) {
   const alt = steps.find((s) => s[0] === f)[1];
   const q = (await gql(`query($q:String!){ files(first:1, query:$q){ nodes{ id } } }`, { q: `filename:${f}` })).files.nodes;
   if (q.length) { console.log('Datei vorhanden:', f); continue; }

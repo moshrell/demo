@@ -5,7 +5,7 @@ const { id = 'plz' } = Astro.props;
 const orte = [...new Set(data.zones.flatMap((z) => Object.values(z.plz)))];
 ---
 <div class="plz" data-plz-check>
-  <label class="plz__label" for={`${id}-in`}>Kommen Sie zu mir? <span>Postleitzahl eingeben</span></label>
+  <label class="plz__label" for={`${id}-in`}>Kommen wir zu Ihnen? <span>Postleitzahl eingeben</span></label>
   <div class="plz__row">
     <input id={`${id}-in`} class="plz__in num" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="z. B. 30989" aria-describedby={`${id}-out`} />
   </div>
@@ -17,6 +17,7 @@ const orte = [...new Set(data.zones.flatMap((z) => Object.values(z.plz)))];
   .plz { display: grid; gap: var(--space-sm); padding: var(--space-md); border: 1px solid var(--color-rule); border-radius: var(--radius-lg); background: var(--color-paper-2); }
   .plz__label { font-weight: 700; display: grid; gap: var(--space-2xs); }
   .plz__label span { font-weight: 400; font-size: var(--text-sm); color: var(--color-ink-2); }
+  .plz__in::placeholder { font-size: 0.9rem; letter-spacing: 0; color: var(--color-ink-2); opacity: 0.7; }
   .plz__in { width: 9rem; min-height: 3rem; padding: 0.6rem 0.8rem; font-size: 1.25rem; letter-spacing: 0.08em; background: var(--color-paper); color: var(--color-ink); border: 1px solid var(--color-ink-2); border-radius: var(--radius); }
   .plz__out { min-height: 1.5em; font-size: var(--text-sm); font-weight: 600; }
   .plz__out[data-state='in'] { color: var(--color-amber-hi); }

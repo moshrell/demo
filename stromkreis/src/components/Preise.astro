@@ -1,0 +1,72 @@
+---
+/** Preise: ein Block, Reiter pro Leistung. Ohne JS stehen alle Preislisten untereinander. */
+import leistungen from '../data/leistungen.json';
+const base = import.meta.env.BASE_URL;
+const toolLabel: Record<string, string> = { wallbox: 'Wallbox-Check starten', echeck: 'Preis im E-Check-Rechner', altbau: 'Ist meine Elektrik alt?' };
+---
+<section class="pr" id="preise" aria-labelledby="pr-h">
+  <div class="wrap pr__in">
+    <p class="strip">Preise</p>
+    <h2 id="pr-h">Richtpreise, ehrlich aufgeschlüsselt</h2>
+    <p class="pr__lead">Alle Preise inkl. 19 % MwSt., Betriebe netto. Den genauen Preis nennen wir nach Foto oder Besichtigung (89 €, bei Auftrag angerechnet).</p>
+    <div class="pr__tabs" role="tablist" aria-label="Leistung wählen" data-tabs>
+      {leistungen.map((l, i) => (<button class="pr__tab" type="button" role="tab" id={`pt-${l.slug}`} aria-controls={`pp-${l.slug}`} aria-selected={i === 0 ? 'true' : 'false'} data-i={i}>{l.nav}</button>))}
+    </div>
+    {leistungen.map((l, i) => (
+      <div class="pr__panel" id={`pp-${l.slug}`} role="tabpanel" aria-labelledby={`pt-${l.slug}`} data-i={i} data-slug={l.slug}>
+        <h3 class="pr__h3">{l.nav}</h3>
+        <dl class="prices">
+          {l.prices.map((p) => (<div><dt>{p.name}{(p as any).note && <small>{(p as any).note}</small>}</dt><dd>{p.price}</dd></div>))}
+        </dl>
+        <p class="vat">{l.vat}</p>
+        <p class="pr__cta">
+          {l.tool && <a class="btn btn--amber" href={`${base}${l.slug}/`}>{toolLabel[l.tool]}</a>}
+          <a class={`btn ${l.tool ? 'btn--line' : 'btn--amber'}`} href={`${base}${l.slug}/`}>Mehr zu {l.nav}</a>
+        </p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .pr { padding: var(--space-2xl) 0; background: var(--color-paper-2); border-block: 1px solid var(--color-rule); }
+  .pr__in { display: grid; gap: var(--space-md); justify-items: start; }
+  @media (min-width: 48rem) { .pr__in { width: min(100% - 2 * var(--gutter), 72rem); } .pr__panel { max-width: 46rem; } }
+  .pr__in > * { min-width: 0; max-width: 100%; }
+  .pr h2 { font-size: clamp(2rem, 6vw, 3.25rem); }
+  .pr__lead { color: var(--color-ink-2); max-width: 38rem; }
+  .pr__tabs { display: none; gap: var(--space-xs); overflow-x: auto; max-width: 100%; padding-bottom: var(--space-xs); scrollbar-width: none; }
+  .pr__tabs::-webkit-scrollbar { display: none; }
+  .pr__tab { flex: none; min-height: 2.75rem; padding: 0 var(--space-md); border: 1px solid var(--color-rule); background: #fff; border-radius: 999px; font: 650 var(--text-sm)/1 var(--font-body); color: var(--color-ink); cursor: pointer; white-space: nowrap; }
+  .pr__tab[aria-selected='true'] { background: var(--strip-bg); color: var(--strip-ink); border-color: var(--strip-bg); }
+  .pr__panel { display: grid; gap: var(--space-md); width: 100%; justify-items: start; background: #fff; border: 1px solid var(--color-rule); border-radius: var(--radius-lg); padding: var(--space-md); box-shadow: var(--shadow); }
+  .pr__panel .prices { width: 100%; }
+  .pr__h3 { font-size: var(--text-xl); }
+  .pr__cta { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+  :global(.pr.is-tabs) .pr__tabs { display: flex; }
+  :global(.pr.is-tabs) .pr__panel[hidden] { display: none; }
+  :global(.pr.is-tabs) .pr__h3 { display: none; }
+  @media (min-width: 48rem) { .pr__panel { padding: var(--space-lg); } }
+</style>
+
+<script>
+  const root = document.getElementById('preise');
+  if (root) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.pr__tab')];
+    const panels = [...root.querySelectorAll<HTMLElement>('.pr__panel')];
+    const show = (i: number, focus = false) => {
+      tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+      panels.forEach((p, k) => (p.hidden = k !== i));
+      if (focus) tabs[i].focus();
+      tabs[i].scrollIntoView({ block: 'nearest', inline: 'center' });
+    };
+    root.classList.add('is-tabs'); show(0);
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => show(i));
+      t.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') show((i + 1) % tabs.length, true); if (e.key === 'ArrowLeft') show((i - 1 + tabs.length) % tabs.length, true); });
+    });
+    // Sprung von außen: #preise-wallbox usw.
+    const fromHash = () => { const m = location.hash.match(/^#preise-(.+)$/); if (m) { const i = panels.findIndex((p) => p.dataset.slug === m[1]); if (i >= 0) { show(i); root.scrollIntoView(); } } };
+    addEventListener('hashchange', fromHash); fromHash();
+  }
+</script>

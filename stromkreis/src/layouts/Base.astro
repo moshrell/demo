@@ -5,6 +5,7 @@ import '@fontsource-variable/sofia-sans';
 import '@fontsource-variable/martian-mono';
 import '../styles/global.css';
 import site from '../data/site.json';
+import leistungen from '../data/leistungen.json';
 const {
   title = `${site.name} · Elektromeister in Gehrden`,
   description = 'Elektro Brakhage (Demo): Altbau-Elektrik, Zählerschrank, Wallbox, PV und Speicher, E-Check nach DGUV V3 in Gehrden, Ronnenberg und Barsinghausen.',
@@ -62,24 +63,32 @@ const path = Astro.url.pathname;
         <span class="status__dot" aria-hidden="true"></span>
         <span data-status-text>{site.hoursText}</span>
       </p>
-      <details class="menu">
-        <summary>Menü</summary>
+      <button class="menu" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="vz" data-vz-open>Menü</button>
+    </header>
+
+    <div class="vz" id="vz" role="dialog" aria-modal="true" aria-label="Menü: Stromkreisverzeichnis" hidden>
+      <div class="vz__in">
+        <header class="vz__top">
+          <p class="vz__title">Stromkreisverzeichnis</p>
+          <p class="vz__zaehler" aria-hidden="true">Zählerstand <span data-zaehler>00000</span></p>
+          <button class="vz__x" type="button" data-vz-close aria-label="Menü schließen">Schließen</button>
+        </header>
         <nav aria-label="Hauptmenü">
-          <ul>
-            <li><a href={`${base}#schnellzugriff`}>Alle Leistungen</a></li>
-            <li><a href={`${base}altbau/`}>Altbau & Zählerschrank</a></li>
-            <li><a href={`${base}wallbox/`}>Wallbox</a></li>
-            <li><a href={`${base}pv-speicher/`}>PV & Speicher</a></li>
-            <li><a href={`${base}smart-home/`}>Küche & Smart Home</a></li>
-            <li><a href={`${base}e-check/`}>E-Check für Betriebe</a></li>
-            <li><a href={`${base}beleuchtung/`}>Außenbeleuchtung</a></li>
-            <li><a href={`${base}notdienst/`}>Notdienst</a></li>
+          <ol class="vz__list">
+            {leistungen.map((l, i) => (
+              <li style={`--i:${i}`}><a href={`${base}${l.slug}/`}><span class="vz__f">F{i + 1}</span><span class="vz__n">{l.nav}</span><span class="vz__p">{l.fromLabel} {l.from}</span></a></li>
+            ))}
+            <li style={`--i:${leistungen.length}`}><a class="vz__nd" href={`${base}notdienst/`}><span class="vz__f">F{leistungen.length + 1}</span><span class="vz__n">Notdienst</span><span class="vz__p">rund um die Uhr</span></a></li>
+          </ol>
+          <ul class="vz__more">
             <li><a href={`${base}team/`}>Über uns</a></li>
             <li><a href={`${base}anfrage/`}>Anfrage</a></li>
+            <li><a href={`${base}#preise`}>Preise</a></li>
           </ul>
         </nav>
-      </details>
-    </header>
+        <p class="vz__tel"><a href={`tel:${site.phoneHref}`}>{site.phone}</a> · {site.hoursText}</p>
+      </div>
+    </div>
 
     <slot />
 
@@ -113,10 +122,9 @@ const path = Astro.url.pathname;
     position: sticky; top: 0; z-index: 40; height: var(--head-h);
     display: flex; align-items: center; gap: var(--space-smd);
     padding: 0 var(--gutter);
-    background: oklch(16% 0.006 70 / 0.92);
+    background: oklch(16% 0.006 70);
     border-bottom: 1px solid var(--color-rule);
   }
-  @supports (backdrop-filter: blur(6px)) { .head { backdrop-filter: blur(6px); background: oklch(16% 0.006 70 / 0.78); } }
   .head__mark { display: inline-flex; align-items: baseline; gap: var(--space-xs); text-decoration: none; color: var(--color-ink); flex: none; }
   .head__name { font: 800 1.35rem/1 var(--font-display); letter-spacing: 0.01em; text-transform: uppercase; }
   .head__sub { font: 500 0.625rem/1 var(--font-mono); color: var(--color-amber); text-transform: uppercase; letter-spacing: 0.06em; }
@@ -126,14 +134,37 @@ const path = Astro.url.pathname;
   .status.is-open .status__dot { background: var(--color-amber); box-shadow: 0 0 0.5rem var(--color-amber-glow); }
   .status.is-open { color: var(--color-ink); }
 
-  .menu { position: relative; flex: none; }
-  .menu summary { list-style: none; cursor: pointer; min-height: 2.75rem; display: inline-flex; align-items: center; padding: 0 var(--space-smd); border: 1px solid var(--color-rule); border-radius: var(--radius); font: 600 var(--text-sm)/1 var(--font-body); }
-  .menu summary::-webkit-details-marker { display: none; }
-  .menu[open] summary { background: var(--color-paper-3); }
-  .menu nav { position: absolute; right: 0; top: calc(100% + var(--space-sm)); width: min(18rem, calc(100vw - 2 * var(--gutter))); background: var(--color-paper-2); border: 1px solid var(--color-rule); border-radius: var(--radius-lg); padding: var(--space-sm); box-shadow: 0 1rem 2rem oklch(0% 0 0 / 0.5); }
-  .menu ul { list-style: none; margin: 0; padding: 0; }
-  .menu a { display: block; padding: 0.7rem var(--space-smd); color: var(--color-ink); text-decoration: none; border-radius: var(--radius); white-space: nowrap; }
-  .menu a:hover { background: var(--color-paper-3); }
+  .menu { flex: none; cursor: pointer; min-height: 2.75rem; display: inline-flex; align-items: center; padding: 0 var(--space-smd); background: transparent; border: 1px solid var(--color-rule); border-radius: var(--radius); font: 600 var(--text-sm)/1 var(--font-body); color: var(--color-ink); }
+  .menu:hover { background: var(--color-paper-3); }
+
+  /* Menü = Stromkreisverzeichnis (wie der Zettel im Sicherungskasten) */
+  .vz { position: fixed; inset: 0; z-index: 70; background: var(--color-paper); color: var(--color-ink); overflow-y: auto; overscroll-behavior: contain; }
+  .vz[hidden] { display: none; }
+  .vz__in { width: min(100% - 2 * var(--gutter), 40rem); margin-inline: auto; padding: var(--space-md) 0 var(--space-xl); display: grid; gap: var(--space-lg); }
+  .vz__top { display: flex; align-items: center; gap: var(--space-md); flex-wrap: wrap; }
+  .vz__title { margin: 0; font: 500 var(--text-xs)/1 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-2); flex: 1 1 auto; }
+  .vz__zaehler { margin: 0; font: 500 0.6875rem/1 var(--font-mono); color: var(--color-ink-2); letter-spacing: 0.04em; }
+  .vz__zaehler span { display: inline-block; padding: 0.2rem 0.35rem; background: var(--strip-bg); color: var(--strip-ink); border-radius: 2px; letter-spacing: 0.18em; }
+  .vz__x { min-height: 2.75rem; padding: 0 var(--space-smd); background: transparent; border: 1px solid var(--color-rule); border-radius: var(--radius); color: var(--color-ink); font: 600 var(--text-sm)/1 var(--font-body); cursor: pointer; }
+  .vz__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--color-rule); }
+  .vz__list li { border-bottom: 1px solid var(--color-rule); }
+  .vz__list a { display: grid; grid-template-columns: 2.75rem minmax(0, 1fr) auto; align-items: center; gap: var(--space-smd); min-height: 3.75rem; padding: var(--space-smd) 0; color: var(--color-ink); text-decoration: none; position: relative; }
+  .vz__list a::before { content: ''; position: absolute; left: -0.75rem; top: 50%; width: 0.4rem; height: 0.4rem; margin-top: -0.2rem; border-radius: 50%; background: var(--color-led-off); }
+  .vz__list a:hover::before, .vz__list a:focus-visible::before { background: var(--color-amber); box-shadow: 0 0 0.6rem var(--color-amber-glow); }
+  .vz__f { font: 600 var(--text-xs)/1 var(--font-mono); color: var(--color-amber-hi); }
+  .vz__n { font: 750 clamp(1.3rem, 5vw, 1.9rem)/1.05 var(--font-display); text-transform: uppercase; letter-spacing: 0.01em; }
+  .vz__p { font: 500 var(--text-xs)/1.2 var(--font-mono); font-stretch: 87.5%; color: var(--color-ink-2); text-align: right; white-space: nowrap; }
+  .vz__nd .vz__f, .vz__nd .vz__p { color: var(--color-alert); }
+  .vz__more { list-style: none; margin: var(--space-md) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-lg); }
+  .vz__more a { display: inline-block; padding: var(--space-sm) 0; color: var(--color-ink); font-weight: 600; }
+  .vz__tel { margin: 0; color: var(--color-ink-2); font-size: var(--text-sm); }
+  @media (prefers-reduced-motion: no-preference) {
+    .vz:not([hidden]) .vz__list li { animation: vz-in 420ms var(--ease-out) both; animation-delay: calc(var(--i) * 45ms); }
+    .vz:not([hidden]) .vz__list a::before { animation: vz-led 600ms ease-out both; animation-delay: calc(var(--i) * 45ms + 120ms); }
+  }
+  @keyframes vz-in { from { opacity: 0; transform: translateY(0.6rem); } }
+  @keyframes vz-led { 0% { background: var(--color-amber); box-shadow: 0 0 0.8rem var(--color-amber-glow); } 100% { background: var(--color-led-off); box-shadow: none; } }
+  html.vz-open { overflow: hidden; }
 
   .foot { border-top: 1px solid var(--color-rule); background: var(--color-paper-2); color: var(--color-ink-2); font-size: var(--text-sm); }
   .foot__in { width: min(100% - 2 * var(--gutter), 46rem); margin-inline: auto; padding: var(--space-xl) 0; display: grid; gap: var(--space-sm); }
@@ -151,7 +182,7 @@ const path = Astro.url.pathname;
   .bar__a { min-height: 3rem; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs); border-radius: var(--radius); font: 700 0.9375rem/1 var(--font-body); color: var(--color-ink); text-decoration: none; border: 1px solid var(--color-rule); white-space: nowrap; }
   .bar__a:hover { color: var(--color-ink); background: var(--color-paper-3); }
   .bar__a--main { background: var(--color-amber); color: var(--color-cream-ink); border-color: var(--color-amber); }
-  .bar__a--main:hover { background: var(--color-amber-hi); color: var(--color-cream-ink); }
+  .bar__a--main:hover { background: oklch(86% 0.14 78); color: var(--color-cream-ink); }
   .bar__a[aria-current='page'] { outline: 2px solid var(--color-cream); outline-offset: -4px; }
   .bar__ico { font-size: 1.05rem; }
   .bar__ico--nd { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--color-alert); }
@@ -177,8 +208,15 @@ const path = Astro.url.pathname;
     run();
     setInterval(run, 60000);
   }
-  // Menü schließen bei Klick außerhalb / Esc
-  const menu = document.querySelector<HTMLDetailsElement>('.menu');
-  document.addEventListener('click', (e) => { if (menu?.open && !menu.contains(e.target as Node)) menu.open = false; });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu?.open) { menu.open = false; menu.querySelector('summary')?.focus(); } });
+  // Menü = Stromkreisverzeichnis
+  const vz = document.getElementById('vz') as HTMLElement;
+  const openBtn = document.querySelector<HTMLButtonElement>('[data-vz-open]')!;
+  const zaehler = document.querySelector<HTMLElement>('[data-zaehler]');
+  const setZ = () => { if (!zaehler) return; const max = document.documentElement.scrollHeight - innerHeight; const p = max > 0 ? Math.min(1, scrollY / max) : 0; zaehler.textContent = String(Math.round(p * 99999)).padStart(5, '0'); };
+  const openVz = () => { setZ(); vz.hidden = false; document.documentElement.classList.add('vz-open'); openBtn.setAttribute('aria-expanded', 'true'); vz.querySelector<HTMLElement>('.vz__list a')?.focus(); };
+  const closeVz = () => { vz.hidden = true; document.documentElement.classList.remove('vz-open'); openBtn.setAttribute('aria-expanded', 'false'); openBtn.focus(); };
+  openBtn.addEventListener('click', openVz);
+  vz.querySelector('[data-vz-close]')!.addEventListener('click', closeVz);
+  vz.addEventListener('click', (e) => { const a = (e.target as HTMLElement).closest('a'); if (a) { vz.hidden = true; document.documentElement.classList.remove('vz-open'); openBtn.setAttribute('aria-expanded', 'false'); } });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !vz.hidden) closeVz(); });
 </script>

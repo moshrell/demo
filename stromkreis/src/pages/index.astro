@@ -1,6 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
-import Hub from '../components/Hub.astro';
+import Hero3D from '../components/Hero3D.astro';
+import Leistungen from '../components/Leistungen.astro';
+import Compare from '../components/Compare.astro';
+import Preise from '../components/Preise.astro';
+import Foto from '../components/Foto.astro';
 import PlzCheck from '../components/PlzCheck.astro';
 import leistungen from '../data/leistungen.json';
 import site from '../data/site.json';
@@ -19,61 +23,109 @@ const faq = [
 ---
 <Base faq={faq} prices={leistungen.map((l) => ({ name: l.nav, price: l.from }))}>
   <main id="inhalt">
-    <Hub />
+    <Hero3D />
+    <Leistungen />
 
-    <section class="sz" id="schnellzugriff" aria-labelledby="sz-h">
-      <div class="wrap sz__in">
-        <h2 id="sz-h">Alle Leistungen</h2>
-        <p class="sz__vat">Richtpreise inkl. 19 % MwSt., Betriebe netto. Genauer Preis nach Foto oder Besichtigung.</p>
-        <ul class="sz__list">
-          {leistungen.map((l) => (
-            <li>
-              <a class="sz__row" href={`${base}${l.slug}/`}>
-                <span class="sz__name">{l.nav}</span>
-                <span class="sz__from"><span>{l.fromLabel}</span> <strong class="num">{l.from}</strong></span>
-                <span class="sz__txt">{l.card}</span>
-              </a>
-            </li>
-          ))}
-          <li>
-            <a class="sz__row sz__row--nd" href={`${base}notdienst/`}>
-              <span class="sz__name">Notdienst</span>
-              <span class="sz__from"><span>rund um die Uhr</span> <strong class="num">{site.notdienst}</strong></span>
-              <span class="sz__txt">Stromausfall im ganzen Haus, Brandgeruch, Wasser im Sicherungskasten.</span>
-            </a>
-          </li>
+    <section class="wir" id="wir" aria-labelledby="wir-h">
+      <div class="wrap wir__in">
+        <p class="strip">Wir</p>
+        <h2 id="wir-h">Ein Betrieb, keine Hotline</h2>
+        <p class="wir__lead">{site.owner} führt den Betrieb als Elektrotechnikermeister. Vier Monteure und ein Auszubildender arbeiten in Gehrden, Ronnenberg, Barsinghausen und Wennigsen, weil die Wege kurz sind und wir die Häuser kennen.</p>
+        <ul class="wir__facts">
+          <li><strong class="num">6</strong><span>Leute im Team, alle fest angestellt</span></li>
+          <li><strong class="num">3</strong><span>Werktage bis zur Besichtigung, meist früher</span></li>
+          <li><strong class="num">1</strong><span>Ansprechpartner vom Angebot bis zum Protokoll</span></li>
         </ul>
+        <Foto name="team.jpg" alt="Werkstatthof mit weißem Servicebus, fünf Elektrikern in orangen Westen und einem Auszubildenden, als Low-Poly-Szene" ratio="16 / 9" />
+        <div class="wir__row">
+          <Foto name="werkstatt.jpg" alt="Werkstatt mit Werkbank, Kabeltrommeln und geöffnetem Rolltor, als Low-Poly-Szene" ratio="4 / 3" />
+          <p>Bei uns kommt dasselbe Team, das das Angebot geschrieben hat. Wir dokumentieren jeden Auftrag mit Protokoll und Fotos vorher und nachher. Das zählt später bei der Versicherung, beim Hausverkauf und beim nächsten Elektriker. <a href={`${base}team/`}>Mehr über uns</a></p>
+        </div>
+      </div>
+    </section>
 
+    <section class="bew" id="beweis" aria-labelledby="bew-h">
+      <div class="wrap bew__in">
+        <p class="strip">Vorher / Nachher</p>
+        <h2 id="bew-h">Das sehen Sie nach dem Umbau</h2>
+        <p class="bew__lead">Ziehen Sie den Regler. Links der Zustand, den wir in Häusern von 1950 bis 1985 oft finden, rechts das Ergebnis.</p>
+        <div class="bew__grid">
+          <figure>
+            <Compare id="cmp-z" before="zaehler-alt.jpg" after="zaehler-neu.jpg" ratio="3 / 4" altBefore="Alter Zählerplatz mit Schraubsicherungen und Stoffleitungen" altAfter="Neuer Zählerschrank mit sauberen Reihen von Sicherungsautomaten" />
+            <figcaption><strong>Zählerschrank.</strong> Aus Schraubsicherungen und Stoffleitungen wird ein geschlossener, beschrifteter Verteiler nach aktueller Norm.</figcaption>
+          </figure>
+          <figure>
+            <Compare id="cmp-w" before="wand-alt.jpg" after="wand-neu.jpg" ratio="4 / 3" altBefore="Offene Wand mit alten, verwirrten Leitungen" altAfter="Offene Wand mit geordneten Kabelkanälen" />
+            <figcaption><strong>Leitungen in der Wand.</strong> Alte Leitungen verstecken sich im Putz. Wir legen sie frei, prüfen sie und ersetzen, was nicht mehr sicher ist.</figcaption>
+          </figure>
+        </div>
+        <p><a class="btn btn--line" href={`${base}altbau/`}>Ist meine Elektrik alt? Zum Check</a></p>
+      </div>
+    </section>
+
+    <Preise />
+
+    <section class="ab" aria-labelledby="ab-h">
+      <div class="wrap ab__in">
         <PlzCheck id="plz-home" />
-
-        <div class="sz__ablauf">
-          <h2>So läuft es ab</h2>
+        <div class="ab__block">
+          <h2 id="ab-h">So läuft es ab</h2>
           <ol class="ablauf">
             {ablauf.map(([t, d]) => (<li><strong>{t}</strong><span>{d}</span></li>))}
           </ol>
         </div>
+      </div>
+    </section>
 
-        <div class="sz__faq">
-          <h2>Kurz gefragt</h2>
-          {faq.map((f) => (<details class="faq"><summary>{f.q}</summary><p>{f.a}</p></details>))}
+    <section class="azu" aria-labelledby="azu-h">
+      <div class="wrap azu__in">
+        <Foto name="azubi.jpg" alt="Übungsecke der Werkstatt mit Schaltbrett, auf dem ein Auszubildender mit einem erfahrenen Kollegen übt, als Low-Poly-Szene" ratio="4 / 3" />
+        <div class="azu__txt">
+          <p class="strip">Ausbildung</p>
+          <h2 id="azu-h">Wir bilden aus</h2>
+          <p>Jedes Jahr ein Platz: Elektroniker/in für Energie- und Gebäudetechnik. Auch ein Praktikum in den Ferien ist möglich. Schreiben Sie uns, wir melden uns persönlich.</p>
+          <a class="btn btn--amber" href={`${base}anfrage/`}>Bewerbung oder Praktikum anfragen</a>
         </div>
+      </div>
+    </section>
+
+    <section class="fq" aria-labelledby="fq-h">
+      <div class="wrap fq__in">
+        <h2 id="fq-h">Kurz gefragt</h2>
+        {faq.map((f) => (<details class="faq"><summary>{f.q}</summary><p>{f.a}</p></details>))}
       </div>
     </section>
   </main>
 </Base>
 
 <style>
-  .sz { padding: var(--space-xl) 0; border-top: 1px solid var(--color-rule); background: var(--color-paper); }
-  .sz__in { display: grid; gap: var(--space-lg); }
-  .sz__vat { font-size: var(--text-sm); color: var(--color-ink-2); margin-top: calc(-1 * var(--space-md)); }
-  .sz__list { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--color-rule); }
-  .sz__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2xs) var(--space-md); padding: var(--space-md) 0; border-bottom: 1px solid var(--color-rule); color: var(--color-ink); text-decoration: none; }
-  .sz__row:hover { color: var(--color-ink); background: var(--color-paper-2); }
-  .sz__name { font: 750 var(--text-lg)/1.15 var(--font-display); text-transform: uppercase; letter-spacing: 0.01em; }
-  .sz__from { text-align: right; font-size: var(--text-xs); color: var(--color-ink-2); white-space: nowrap; }
-  .sz__from strong { display: block; font-size: var(--text-md); color: var(--color-amber-hi); }
-  .sz__txt { grid-column: 1 / -1; font-size: var(--text-sm); color: var(--color-ink-2); }
-  .sz__row--nd .sz__from strong { color: var(--color-alert); }
-  :global(#schnellzugriff.is-hint) .sz__list { outline: 1px solid var(--color-amber-deep); outline-offset: 4px; }
-  .sz__ablauf, .sz__faq { display: grid; gap: var(--space-md); }
+  .wir, .bew, .ab, .azu, .fq { padding: var(--space-2xl) 0; }
+  .wir__in, .bew__in, .ab__in, .azu__in, .fq__in { display: grid; gap: var(--space-lg); justify-items: start; }
+  .wir__in > *, .bew__in > *, .ab__in > *, .azu__in > *, .fq__in > * { min-width: 0; max-width: 100%; }
+  .wir h2, .bew h2, .azu h2, .fq h2, .ab h2 { font-size: clamp(2rem, 6vw, 3.25rem); }
+  .wir__lead, .bew__lead { color: var(--color-ink-2); max-width: 40rem; }
+  .wir__facts { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-md); grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+  .wir__facts li { display: grid; gap: var(--space-xs); padding-top: var(--space-md); border-top: 2px solid var(--color-amber); }
+  .wir__facts strong { font-size: clamp(2.4rem, 9vw, 4rem); line-height: 1; color: var(--color-ink); }
+  .wir__facts span { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .wir__in :global(.foto) { width: 100%; }
+  .wir__row { display: grid; gap: var(--space-md); width: 100%; align-items: center; }
+  .bew { background: var(--color-paper-2); border-block: 1px solid var(--color-rule); }
+  .bew__grid { display: grid; gap: var(--space-xl); width: 100%; }
+  .bew__grid figure { margin: 0; display: grid; gap: var(--space-smd); }
+  .bew__grid figcaption { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .bew__grid figcaption strong { color: var(--color-ink); }
+  .ab__block { display: grid; gap: var(--space-md); width: 100%; }
+  .azu { background: var(--color-paper-2); border-top: 1px solid var(--color-rule); }
+  .azu__in { gap: var(--space-lg); }
+  .azu__txt { display: grid; gap: var(--space-smd); justify-items: start; align-content: center; }
+  .azu__txt p:not(.strip) { color: var(--color-ink-2); max-width: 32rem; }
+  .fq__in { width: min(100% - 2 * var(--gutter), 46rem); }
+  .fq__in .faq { width: 100%; }
+  @media (min-width: 48rem) {
+    .wir__row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-xl); }
+    .bew__grid { grid-template-columns: minmax(0, 3fr) minmax(0, 4fr); align-items: end; }
+    .azu__in { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: var(--space-xl); }
+    .wrap { width: min(100% - 2 * var(--gutter), 72rem); }
+  }
 </style>

@@ -1,0 +1,37 @@
+---
+/** Vorher/Nachher: Regler zieht die Trennlinie. Tastatur + Touch (nativer Range-Regler). */
+import Foto from './Foto.astro';
+const { id, before, after, ratio = '3 / 4', altBefore, altAfter, labelBefore = 'Vorher', labelAfter = 'Nachher' } = Astro.props;
+---
+<div class="cmp" data-cmp style="--x: 50%">
+  <div class="cmp__a"><Foto name={after} alt={altAfter} ratio={ratio} /></div>
+  <div class="cmp__b"><Foto name={before} alt={altBefore} ratio={ratio} /></div>
+  <span class="strip cmp__l cmp__l--b">{labelBefore}</span>
+  <span class="strip cmp__l cmp__l--a">{labelAfter}</span>
+  <span class="cmp__line" aria-hidden="true"><span class="cmp__knob">⇆</span></span>
+  <input class="cmp__r" id={id} type="range" min="0" max="100" value="50" aria-label={`${labelBefore} und ${labelAfter} vergleichen`} />
+</div>
+
+<style>
+  .cmp { position: relative; border-radius: var(--radius-lg); overflow: hidden; touch-action: pan-y; background: var(--color-paper-3); border: 1px solid var(--color-rule); }
+  .cmp__a { display: block; }
+  .cmp__b { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--x)) 0 0); }
+  .cmp__a :global(.foto), .cmp__b :global(.foto) { border-radius: 0; border: 0; height: 100%; }
+  .cmp__b :global(.foto) { width: 100%; height: 100%; object-fit: cover; }
+  .cmp__l { position: absolute; top: var(--space-sm); }
+  .cmp__l--b { left: var(--space-sm); }
+  .cmp__l--a { right: var(--space-sm); }
+  .cmp__line { position: absolute; top: 0; bottom: 0; left: var(--x); width: 2px; margin-left: -1px; background: var(--color-amber); box-shadow: 0 0 1rem var(--color-amber-glow); pointer-events: none; }
+  .cmp__knob { position: absolute; top: 50%; left: 50%; width: 2.75rem; height: 2.75rem; margin: -1.375rem 0 0 -1.375rem; border-radius: 50%; display: grid; place-items: center; background: var(--color-amber); color: var(--color-cream-ink); font-weight: 800; box-shadow: 0 0.25rem 1rem oklch(0% 0 0 / 0.3); }
+  .cmp__r { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; touch-action: pan-y; }
+  .cmp__r:focus-visible + * { outline: 0; }
+  .cmp:has(.cmp__r:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-cmp]').forEach((el) => {
+    const r = el.querySelector<HTMLInputElement>('.cmp__r')!;
+    const set = () => el.style.setProperty('--x', `${r.value}%`);
+    r.addEventListener('input', set); set();
+  });
+</script>

@@ -1,0 +1,11 @@
+[
+  { "id": "keller", "circuit": "F1", "name": "Keller", "service": "altbau" },
+  { "id": "bad", "circuit": "F2", "name": "Bad", "service": "altbau" },
+  { "id": "kueche", "circuit": "F3", "name": "Küche", "service": "smart-home" },
+  { "id": "wohnen", "circuit": "F4", "name": "Wohnzimmer", "service": "smart-home" },
+  { "id": "garage", "circuit": "F5", "name": "Garage", "service": "wallbox" },
+  { "id": "schlaf", "circuit": "F6", "name": "Schlafzimmer", "service": "smart-home" },
+  { "id": "buero", "circuit": "F7", "name": "Büro", "service": "e-check" },
+  { "id": "dach", "circuit": "F8", "name": "Dach", "service": "pv-speicher" },
+  { "id": "garten", "circuit": "F9", "name": "Garten", "service": "beleuchtung" }
+]

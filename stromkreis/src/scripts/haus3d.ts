@@ -3,8 +3,8 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-export type RoomId = 'keller' | 'kueche' | 'wohnen' | 'garage' | 'bad' | 'schlaf' | 'buero';
-export interface RoomInfo { id: RoomId; name: string; line: string; circuit: string; cx: number; cy: number; w: number; h: number; ax?: number; ay?: number; az?: number; aw?: number; }
+export type RoomId = 'keller' | 'kueche' | 'wohnen' | 'garage' | 'bad' | 'schlaf' | 'buero' | 'dach' | 'garten';
+export interface RoomInfo { id: RoomId; name: string; line: string; circuit: string; cx: number; cy: number; w: number; h: number; ax?: number; ay?: number; az?: number; aw?: number; free?: boolean; }
 
 const K = 2; // Kenney-Einheit -> Meter (Wand 1.29 -> ~2.6 m)
 const HW = 6; // halbe Innenbreite
@@ -13,18 +13,20 @@ const LEVEL = { keller: -3, eg: 0, og: 3 } as const;
 const WALL_H = 3;
 
 export const ROOMS: RoomInfo[] = [
-  { id: 'kueche', name: 'Küche', line: 'Herd, Steckdosen, Licht', circuit: 'F3', cx: -4, cy: 1.5, w: 4, h: 2.7, ax: -3.7, ay: 1.25, az: -3.0, aw: 3.4 },
-  { id: 'wohnen', name: 'Wohnzimmer', line: 'Smart Home & Licht', circuit: 'F4', cx: 0, cy: 1.5, w: 4, h: 2.7 },
-  { id: 'garage', name: 'Garage', line: 'Wallbox', circuit: 'F5', cx: 4, cy: 1.5, w: 4, h: 2.7, ax: 5.2, ay: 1.25, az: -2.6, aw: 3.2 },
-  { id: 'bad', name: 'Bad', line: 'FI-Schutz & Potenzialausgleich', circuit: 'F2', cx: -4, cy: 4.5, w: 4, h: 2.7, ax: -4.0, ay: 4.2, az: -2.8, aw: 3.6 },
-  { id: 'schlaf', name: 'Schlafzimmer', line: 'Rauchmelder & Dimmer', circuit: 'F6', cx: 0, cy: 4.5, w: 4, h: 2.7 },
-  { id: 'buero', name: 'Büro', line: 'E-Check nach DGUV V3', circuit: 'F7', cx: 4, cy: 4.5, w: 4, h: 2.7 },
-  { id: 'keller', name: 'Keller', line: 'Zählerschrank & Hausanschluss', circuit: 'F1', cx: 0, cy: -1.5, w: 12, h: 2.7 },
+  { id: 'keller', name: 'Keller', line: 'Zählerschrank und Hausanschluss', circuit: 'F1', cx: 0, cy: -1.5, w: 12, h: 2.7, ax: 0.6, ay: -1.4, az: -3.0, aw: 4.6 },
+  { id: 'bad', name: 'Bad', line: 'FI-Schutz und Potenzialausgleich', circuit: 'F2', cx: -4, cy: 4.5, w: 4, h: 2.7, ax: -4.0, ay: 4.2, az: -2.8, aw: 3.6 },
+  { id: 'kueche', name: 'Küche', line: 'Herdanschluss, Steckdosen, Licht', circuit: 'F3', cx: -4, cy: 1.5, w: 4, h: 2.7, ax: -3.7, ay: 1.25, az: -3.0, aw: 3.4 },
+  { id: 'wohnen', name: 'Wohnzimmer', line: 'Smart Home, Lichtszenen, Netzwerk', circuit: 'F4', cx: 0, cy: 1.5, w: 4, h: 2.7, ax: 0, ay: 1.2, az: -2.4, aw: 3.8 },
+  { id: 'garage', name: 'Garage', line: 'Wallbox mit Anmeldung beim Netzbetreiber', circuit: 'F5', cx: 4, cy: 1.5, w: 4, h: 2.7, ax: 5.2, ay: 1.25, az: -2.6, aw: 3.2 },
+  { id: 'schlaf', name: 'Schlafzimmer', line: 'Rauchmelder und Dimmer', circuit: 'F6', cx: 0, cy: 4.5, w: 4, h: 2.7, ax: 0, ay: 3.9, az: -2.0, aw: 3.8 },
+  { id: 'buero', name: 'Büro', line: 'E-Check nach DGUV V3', circuit: 'F7', cx: 4, cy: 4.5, w: 4, h: 2.7, ax: 4.1, ay: 3.9, az: -2.7, aw: 3.6 },
+  { id: 'dach', name: 'Dach', line: 'PV-Anlage und Speicher', circuit: 'F8', cx: 0, cy: 7.6, w: 8, h: 2.6, ax: 2.5, ay: 7.6, az: 0, aw: 9, free: true },
+  { id: 'garten', name: 'Garten', line: 'Wegelicht, Bewegungsmelder, Außensteckdosen', circuit: 'F9', cx: -9.5, cy: 1.3, w: 6, h: 2.6, ax: -8.4, ay: 0.9, az: 2.8, aw: 5.5, free: true },
 ];
 
 interface Pose { pos: THREE.Vector3; target: THREE.Vector3; fov: number; }
 interface Mat { m: THREE.MeshStandardMaterial; c: THREE.Color; }
-interface RoomRt { info: RoomInfo; mats: Mat[]; glow: THREE.Mesh; hit: THREE.Mesh; lit: number; to: number; lamp: THREE.PointLight }
+interface RoomRt { info: RoomInfo; mats: Mat[]; glow: THREE.Mesh; hit: THREE.Mesh; lit: number; to: number; lamp: THREE.PointLight; glows?: THREE.Mesh[]; extraHits?: THREE.Mesh[]; emis?: number; ground?: boolean }
 
 const RED: Record<string, number> = { loungeSofa: 0x2f6b78, rugRectangle: 0x3a4f63, bedDouble: 0x4d6a8f, chairCushion: 0x2f6b78, chairDesk: 0x2f6b78, sedan: 0x3d6fb0, bookcaseClosed: 0xb58a5a, cardboardBoxClosed: 0xb58a5a };
 const DIM = new THREE.Color(0.02, 0.035, 0.08);
@@ -175,7 +177,6 @@ export async function createHero(canvas: HTMLCanvasElement, base: string, order:
   tree(-10.6, -1.5, 1.25); tree(-8.3, 1.8, 0.8); tree(10.9, -2, 1.35);
   const lampMat = new THREE.MeshBasicMaterial({ color: 0xffd9a0 });
   const post = (x: number, z: number) => { const p = new THREE.Group(); p.add(new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.9, 6), concreteDark)).position.y = 0.45; const b = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 6), lampMat); b.position.y = 1; p.add(b); p.position.set(x, 0.1, z); scene.add(p); };
-  post(-7.4, 2.8); post(7.8, 2.8); post(-9.2, 3.2);
   // ---- Räume
   const lampOf = (rt: RoomRt, g: THREE.Group, x: number) => { const l = put(rt, g, 'lampSquareCeiling', x, 3 * 0 + rt.info.cy - 1.5 + WALL_H - 0.33 - 0.23 * 2, 0, 0, K); return l; };
   const lvl = (id: RoomId) => rooms.get(id)!.info.cy - 1.5;
@@ -218,6 +219,35 @@ export async function createHero(canvas: HTMLCanvasElement, base: string, order:
     const zs = new THREE.Group(); const sm = new THREE.MeshStandardMaterial({ color: 0xb9bfc8, roughness: 0.5 }); rt.mats.push({ m: sm, c: sm.color.clone() });
     zs.add(new THREE.Mesh(new THREE.BoxGeometry(1.7, 1.9, 0.22), sm)); const dm = new THREE.MeshBasicMaterial({ color: 0x1c2330 }); const dp = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.7, 0.02), dm); dp.position.z = 0.12; zs.add(dp);
     zs.position.set(0.6, -1.5, -D + 0.2); g.add(zs); lampOf(rt, g, 0); lampOf(rt, g, -3.5); lampOf(rt, g, 3.5); }
+  // Dach (Spitzboden): Wechselrichter + Speicher, PV-Module leuchten mit
+  {
+    const { g, rt } = mk('dach'); const r = rt.info;
+    const tri = new THREE.Shape(); tri.moveTo(-5.5, 6.3); tri.lineTo(5.5, 6.3); tri.lineTo(0, 8.8); tri.closePath();
+    const am = new THREE.MeshStandardMaterial({ color: 0xb9a98f, roughness: 0.95 }); rt.mats.push({ m: am, c: am.color.clone() });
+    const ap = new THREE.Mesh(new THREE.ExtrudeGeometry(tri, { depth: 0.05, bevelEnabled: false }), am); ap.position.z = -D + 0.05; g.add(ap);
+    const im = new THREE.MeshStandardMaterial({ color: 0xe9ecf1, roughness: 0.45 }); rt.mats.push({ m: im, c: im.color.clone() });
+    box(0.8, 1.0, 0.28, im, -1.6, 6.3 + 0.5, -D + 0.25, g); box(1.0, 1.55, 0.5, im, 0.1, 6.3 + 0.78, -D + 0.34, g);
+    const led = new THREE.MeshBasicMaterial({ color: 0x45e08a }); const ls = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.05, 0.02), led); ls.position.set(0.1, 6.3 + 1.2, -D + 0.6); g.add(ls); (rt as any).led = ls;
+    rt.mats.push({ m: pvMat, c: pvMat.color.clone() });
+    put(rt, g, 'lampSquareCeiling', 0, 8.55, 0.2, 0, K);
+    const glow = new THREE.Mesh(new THREE.PlaneGeometry(r.w * 1.2, r.h * 1.5), new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
+    glow.position.set(0, 7.5, D + 0.4); glow.renderOrder = 5; scene.add(glow); rt.glow = glow;
+    const hit = new THREE.Mesh(new THREE.PlaneGeometry(9, 3), new THREE.MeshBasicMaterial({ visible: false })); hit.position.set(0, 7.5, D); hit.userData.room = 'dach'; scene.add(hit); rt.hit = hit;
+  }
+  // Garten: vier Wegeleuchten, Lichtflecken auf dem Rasen
+  {
+    const { g, rt } = mk('garten'); rt.ground = true; rt.emis = 1.3; rt.glows = []; rt.extraHits = [];
+    const pole = std(0x2b313c); rt.mats.push({ m: pole, c: pole.color.clone() });
+    const bulb = new THREE.MeshStandardMaterial({ color: 0xffe2b0, roughness: 0.5 }); rt.mats.push({ m: bulb, c: bulb.color.clone() });
+    [[-7.4, 2.8], [7.8, 2.8], [-9.2, 3.2], [-8.4, 0.6], [9.6, 0.8]].forEach(([x, z], n) => {
+      const p = new THREE.Group(); p.add(new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.9, 6), pole)).position.y = 0.45;
+      const b = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 6), bulb); b.position.y = 1; p.add(b); p.position.set(x, 0.1, z); g.add(p);
+      const gp = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 4.2), new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
+      gp.rotation.x = -Math.PI / 2; gp.position.set(x, 0.16, z); gp.renderOrder = 4; g.add(gp); rt.glows!.push(gp); if (n === 0) rt.glow = gp;
+    });
+    const mkHit = (x: number) => { const h = new THREE.Mesh(new THREE.PlaneGeometry(5.9, 2.8), new THREE.MeshBasicMaterial({ visible: false })); h.position.set(x, 1.4, 3.0); h.userData.room = 'garten'; scene.add(h); return h; };
+    rt.hit = mkHit(-9.6); rt.extraHits.push(mkHit(9.6));
+  }
 
   // ---- Kamera
   let aspect = 1;
@@ -237,9 +267,9 @@ export async function createHero(canvas: HTMLCanvasElement, base: string, order:
     const wFit = (r.aw ?? r.w) * (aspect < 0.8 ? 1 : 1.45);
     const dist = Math.max(fitBox(wFit, 0.1, fov, 1.0), 3.2);
     const dir = r.id === 'garage' ? 1 : ax > r.cx ? -1 : 1; const side = (aspect < 0.8 ? 0.5 : 1.0) * dir;
-    const camX = Math.min(r.cx + r.w / 2 - 0.4, Math.max(r.cx - r.w / 2 + 0.4, ax + side));
+    const camX = r.free ? ax + side : Math.min(r.cx + r.w / 2 - 0.4, Math.max(r.cx - r.w / 2 + 0.4, ax + side));
     const por = aspect < 0.8; // Telefon: Karte liegt unten, Motiv in die obere Bildhälfte schieben
-    return { pos: new THREE.Vector3(camX, ay + (por ? 0.85 : 0.35), Math.min(Math.max(az + dist, D - 0.1), D + 11)), target: new THREE.Vector3(ax, ay - (por ? 0.7 : 0), az), fov };
+    return { pos: new THREE.Vector3(camX, ay + (por ? 0.85 : 0.35) + (r.id === 'dach' ? 2.2 : 0), Math.min(Math.max(az + dist, D - 0.1), D + 11)), target: new THREE.Vector3(ax, ay - (por ? 0.7 : 0), az), fov };
   };
   let progress = 0; let pointer = new THREE.Vector2(0, 0); let focus: RoomId | null = null; let fly = 0; let flyDir = 0; let dirty = true;
   const cur: Pose = overview(0);
@@ -252,7 +282,7 @@ export async function createHero(canvas: HTMLCanvasElement, base: string, order:
 
   const cbs: { pick?: (id: RoomId | null) => void; ready?: () => void } = {};
   const raycaster = new THREE.Raycaster();
-  const hits = [...rooms.values()].map((r) => r.hit);
+  const hits = [...rooms.values()].flatMap((r) => [r.hit, ...(r.extraHits ?? [])]);
 
   const setRoomLit = (id: RoomId, on: boolean) => { const r = rooms.get(id); if (!r) return; r.to = on ? 1 : 0; dirty = true; };
   const tickLights = (dt: number) => {
@@ -263,9 +293,10 @@ export async function createHero(canvas: HTMLCanvasElement, base: string, order:
       const l = r.lit * (focus && focus !== r.info.id ? 1 - 0.92 * fd : 1);
       r.mats.forEach(({ m, c }) => {
         m.color.copy(c).multiplyScalar(0.2).add(DIM).lerp(c, l);
-        m.emissive.copy(c).multiply(WARM).multiplyScalar(0.3 * l);
+        m.emissive.copy(c).multiply(WARM).multiplyScalar((r.emis ?? 0.3) * l);
       });
-      (r.glow.material as THREE.MeshBasicMaterial).opacity = 0.34 * l * (1 - smooth(0, 0.55, fly));
+      if (r.ground) r.glows!.forEach((m) => ((m.material as THREE.MeshBasicMaterial).opacity = 0.5 * l * (1 - 0.8 * smooth(0, 0.55, fly))));
+      else (r.glow.material as THREE.MeshBasicMaterial).opacity = 0.34 * l * (1 - smooth(0, 0.55, fly));
       r.lamp.intensity = 0;
       const led = (r as any).led as THREE.Mesh | undefined; if (led) (led.material as THREE.MeshBasicMaterial).color.setHex(l > 0.5 ? 0x45e08a : 0x1d3a2b);
     });

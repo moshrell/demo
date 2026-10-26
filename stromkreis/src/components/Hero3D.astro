@@ -1,0 +1,102 @@
+---
+/** Hero: 3D-Haus im Schnitt (Three.js). Scroll schaltet die Räume nacheinander an, Tippen fliegt die Kamera in den Raum.
+ *  Ohne JS / WebGL: Titel + Link zu den Leistungen (der Rest der Seite trägt alle Inhalte). */
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<section class="h3 night" data-h3 aria-label="Haus im Schnitt: Räume gehen nacheinander an">
+  <div class="h3__pin">
+    <div class="h3__stage"><canvas data-c aria-hidden="true"></canvas></div>
+    <canvas class="h3__spark" data-spark aria-hidden="true"></canvas>
+    <div class="h3__top">
+      <p class="h3__kicker"><span class="strip">{site.name}</span></p>
+      <h1>Ihr Haus.<br />Unter Strom.</h1>
+      <p class="h3__sub">Elektromeister und fünf Monteure in Gehrden: Altbau, Wallbox, PV, E-Check.</p>
+    </div>
+    <a class="h3__skip" href="#leistungen">Direkt zu den Leistungen ↓</a>
+    <p class="h3__hint" data-hint aria-live="polite">Nach unten wischen</p>
+    <aside class="h3__card" data-card hidden>
+      <span class="strip" data-f></span>
+      <h2 data-n></h2>
+      <p data-l></p>
+      <div class="h3__btns">
+        <a class="btn btn--amber" data-go href={base}>Leistung ansehen</a>
+        <button class="btn btn--line" type="button" data-back>Zurück</button>
+      </div>
+    </aside>
+  </div>
+</section>
+<div class="dawn" aria-hidden="true"></div>
+
+<style>
+  .h3 { position: relative; min-height: 70svh; background: radial-gradient(120% 80% at 50% 0%, #1a2540 0%, #0b0f1a 60%, #06080e 100%); color: var(--color-ink); }
+  .h3[data-ready] { height: 420svh; min-height: 0; }
+  .h3__pin { position: sticky; top: var(--head-h); height: calc(100svh - var(--head-h) - var(--bar-h) - env(safe-area-inset-bottom)); min-height: 26rem; overflow: hidden; }
+  .h3__stage, .h3__stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; }
+  .h3__spark { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .h3__top { position: absolute; inset: 0 0 auto 0; padding: var(--space-md) var(--gutter) 0; pointer-events: none; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75); display: grid; gap: var(--space-sm); justify-items: start; transition: opacity 0.4s; }
+  .h3__top h1 { font-size: clamp(2.1rem, 7.5vw, 4.6rem); font-weight: 600; line-height: 0.98; letter-spacing: -0.012em; }
+  .h3__sub { max-width: 26rem; font-size: var(--text-sm); color: var(--color-ink-2); }
+  .h3__pin[data-room] .h3__top, .h3__pin[data-room] .h3__skip { opacity: 0; pointer-events: none; }
+  .h3__skip { position: absolute; right: var(--gutter); bottom: calc(var(--space-xl) + 0.25rem); z-index: 2; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 var(--space-smd); color: var(--color-ink-2); font-size: var(--text-sm); transition: opacity 0.4s; }
+  .h3__hint { position: absolute; left: 0; right: 0; bottom: var(--space-sm); text-align: center; font: 500 var(--text-xs) / 1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-2); pointer-events: none; }
+  .h3__card { position: absolute; left: var(--gutter); right: var(--gutter); bottom: var(--space-sm); background: oklch(14% 0.01 260 / 0.88); backdrop-filter: blur(8px); border: 1px solid var(--color-rule); border-radius: var(--radius-lg); padding: var(--space-md); display: grid; gap: var(--space-sm); justify-items: start; }
+  .h3__card[hidden] { display: none; }
+  .h3__card h2 { font-size: var(--text-2xl); }
+  .h3__card p { color: var(--color-ink-2); }
+  .h3__btns { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+  .dawn { height: 26svh; background: linear-gradient(to bottom, #06080e 0%, #2a2430 28%, #b98a5e 62%, var(--color-paper) 100%); }
+  @media (min-width: 60rem) {
+    .h3__pin { height: calc(100svh - var(--head-h)); }
+    .h3__skip { bottom: auto; top: var(--space-md); }
+    .h3__hint { bottom: var(--space-md); }
+  }
+  @media (min-width: 48rem) {
+    .h3__card { left: var(--space-xl); right: auto; bottom: auto; top: 50%; transform: translateY(-50%); width: 22rem; }
+    .h3__top { padding-left: var(--space-xl); }
+    .h3__skip { right: var(--space-xl); }
+  }
+</style>
+
+<script>
+  import { createHero, ROOMS } from '../scripts/haus3d';
+  const base = import.meta.env.BASE_URL;
+  const q = <T extends Element>(s: string) => document.querySelector(s) as T;
+  const sec = q<HTMLElement>('[data-h3]'), cv = q<HTMLCanvasElement>('[data-c]'), card = q<HTMLElement>('[data-card]'), hint = q<HTMLElement>('[data-hint]'), pin = q<HTMLElement>('.h3__pin');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const order = ['bad', 'garage', 'dach', 'keller', 'buero', 'kueche', 'garten', 'schlaf', 'wohnen'] as const;
+  const service: Record<string, string> = { keller: 'altbau', bad: 'altbau', kueche: 'smart-home', wohnen: 'smart-home', schlaf: 'smart-home', garage: 'wallbox', buero: 'e-check', dach: 'pv-speicher', garten: 'beleuchtung' };
+  (async () => {
+    let hero: Awaited<ReturnType<typeof createHero>>;
+    try { hero = await createHero(cv, base, [...order]); } catch (e) { console.error(e); hint.textContent = ''; return; }
+    sec.setAttribute('data-ready', ''); hero.resize();
+    (window as any).__hero = hero;
+    const prog = () => { const r = sec.getBoundingClientRect(); const max = sec.offsetHeight - pin.offsetHeight; return Math.min(1, Math.max(0, -r.top / max)); };
+    let inRoom = false;
+    const upd = () => {
+      const p = reduce ? 1 : prog(); if (!inRoom) hero.setProgress(p);
+      const n = hero.litIds().length;
+      hint.textContent = inRoom ? '' : p < 0.04 ? 'Nach unten wischen' : p > 0.88 ? 'Raum antippen' : `${n} von ${order.length} Stromkreisen an`;
+    };
+    addEventListener('scroll', upd, { passive: true }); addEventListener('resize', () => { hero.resize(); upd(); }); upd();
+    const open = (id: string) => {
+      const r = ROOMS.find((x) => x.id === id)!; inRoom = true; hero.flyTo(id as any); if (reduce) hero.skip();
+      q('[data-f]').textContent = `${r.circuit} · ${r.name}`; q('[data-n]').textContent = r.name; q('[data-l]').textContent = r.line;
+      q<HTMLAnchorElement>('[data-go]').href = `${base}${service[id]}/`; card.hidden = false; hint.textContent = '';
+      pin.setAttribute('data-room', ''); document.documentElement.style.overflow = 'hidden';
+    };
+    const close = () => { inRoom = false; hero.flyTo(null); if (reduce) hero.skip(); card.hidden = true; pin.removeAttribute('data-room'); document.documentElement.style.overflow = ''; upd(); };
+    hero.onPick((id) => { if (inRoom) return; if (id) { if (hero.litIds().includes(id)) open(id); else { hero.light(id, true); upd(); } } });
+    q('[data-back]').addEventListener('click', close); addEventListener('keydown', (e) => { if (e.key === 'Escape' && inRoom) close(); });
+    matchMedia('(pointer: fine)').matches && !reduce && cv.addEventListener('pointermove', (e) => { const r = cv.getBoundingClientRect(); hero.setPointer(((e.clientX - r.left) / r.width - 0.5) * 2, ((e.clientY - r.top) / r.height - 0.5) * 2); });
+    // Funken unter dem Finger (nur Touch, selten, klein)
+    const sp = q<HTMLCanvasElement>('[data-spark]'); const g = sp.getContext('2d')!; const parts: { x: number; y: number; vx: number; vy: number; t: number }[] = [];
+    const fit = () => { sp.width = sp.clientWidth * devicePixelRatio; sp.height = sp.clientHeight * devicePixelRatio; }; fit(); addEventListener('resize', fit);
+    let lastSpawn = 0; let ticking = false; let lt = 0;
+    const tick = (now: number) => { const dt = Math.min(0.04, (now - (lt || now)) / 1000); lt = now; g.clearRect(0, 0, sp.width, sp.height);
+      for (let i = parts.length - 1; i >= 0; i--) { const p = parts[i]; p.t += dt; if (p.t > 0.4) { parts.splice(i, 1); continue; } p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 260 * dt; const a = 1 - p.t / 0.4; g.strokeStyle = `rgba(255,${180 + 50 * a | 0},90,${a})`; g.lineWidth = 1.6 * devicePixelRatio; g.beginPath(); g.moveTo(p.x * devicePixelRatio, p.y * devicePixelRatio); g.lineTo((p.x - p.vx * 0.04) * devicePixelRatio, (p.y - p.vy * 0.04) * devicePixelRatio); g.stroke(); }
+      if (parts.length) requestAnimationFrame(tick); else { ticking = false; lt = 0; g.clearRect(0, 0, sp.width, sp.height); } };
+    const spawn = (x: number, y: number) => { for (let i = 0; i < 3; i++) parts.push({ x, y, vx: (Math.random() - 0.5) * 160, vy: (Math.random() - 0.7) * 160, t: 0 }); if (!ticking) { ticking = true; requestAnimationFrame(tick); } };
+    if (!reduce) addEventListener('touchmove', (e) => { const t = e.touches[0]; const r = sp.getBoundingClientRect(); if (inRoom || r.bottom < 0 || r.top > innerHeight) return; const now = performance.now(); if (now - lastSpawn > 220 && Math.random() < 0.6) { lastSpawn = now; spawn(t.clientX, t.clientY - r.top); } }, { passive: true });
+  })();
+</script>

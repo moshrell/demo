@@ -1,0 +1,62 @@
+---
+/** Leistungen als Karten: Telefon = seitlich wischen (Scroll-Snap), ab Tablet = Raster. Preise nur "ab", Details in den Preisen. */
+import Foto from './Foto.astro';
+import leistungen from '../data/leistungen.json';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const cards = [
+  ...leistungen.map((l) => ({ href: `${base}${l.slug}/`, name: l.nav, text: l.card, label: l.fromLabel, price: l.from, image: l.image, alt: l.imageAlt, nd: false })),
+  { href: `${base}notdienst/`, name: 'Notdienst', text: 'Stromausfall im ganzen Haus, Brandgeruch, ausgelöste Sicherung ohne Ursache: wir kommen.', label: 'rund um die Uhr', price: site.notdienst, image: 'leistung-stoerung.jpg', alt: 'Küchenecke mit flackernder Lampe, ausgelöstem Sicherungsautomat, Taschenlampe und Werkzeugkasten, als Low-Poly-Szene', nd: true },
+];
+---
+<section class="lz" id="leistungen" aria-labelledby="lz-h">
+  <div class="wrap lz__head">
+    <p class="strip">Leistungen</p>
+    <h2 id="lz-h">Was wir für Ihr Haus tun</h2>
+    <p class="lz__lead">Von der Kellertür bis zum Dach. Wischen Sie durch, tippen Sie auf eine Karte, dort stehen Preise und der passende Rechner.</p>
+  </div>
+  <ul class="lz__track" role="list">
+    {cards.map((c, i) => (
+      <li class="lz__item">
+        <a class={`lz__card${c.nd ? ' lz__card--nd' : ''}`} href={c.href}>
+          <span class="lz__img"><Foto name={c.image} alt={c.alt} ratio="4 / 3" /></span>
+          <span class="lz__body">
+            <span class="lz__no num">F{i + 1}</span>
+            <span class="lz__name">{c.name}</span>
+            <span class="lz__txt">{c.text}</span>
+            <span class="lz__from"><span>{c.label}</span> <strong class="num">{c.price}</strong></span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .lz { padding: var(--space-2xl) 0 var(--space-xl); background: var(--color-paper); }
+  .lz__head { display: grid; gap: var(--space-smd); justify-items: start; margin-bottom: var(--space-lg); }
+  .lz__head h2 { font-size: clamp(2rem, 6vw, 3.25rem); }
+  .lz__lead { color: var(--color-ink-2); max-width: 36rem; }
+  .lz__track { list-style: none; margin: 0; padding: 0 var(--gutter) var(--space-md); display: flex; gap: var(--space-md); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .lz__track::-webkit-scrollbar { display: none; }
+  .lz__item { flex: 0 0 min(78vw, 20rem); scroll-snap-align: start; }
+  .lz__card { display: grid; grid-template-rows: auto 1fr; height: 100%; text-decoration: none; color: var(--color-ink); background: #fff; border: 1px solid var(--color-rule); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+  .lz__img :global(.foto) { border-radius: 0; border: 0; }
+  .lz__body { display: grid; gap: var(--space-xs); padding: var(--space-md); align-content: start; }
+  .lz__no { font-size: var(--text-xs); color: var(--color-amber-hi); }
+  .lz__name { font: 750 1.55rem/1.02 var(--font-display); text-transform: uppercase; letter-spacing: 0.005em; }
+  .lz__txt { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .lz__from { margin-top: var(--space-sm); display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-sm); font-size: var(--text-xs); color: var(--color-ink-2); }
+  .lz__from strong { font-size: var(--text-md); color: var(--color-amber-hi); white-space: nowrap; }
+  .lz__card--nd .lz__from strong, .lz__card--nd .lz__no { color: var(--color-alert); }
+  .lz__card:hover { border-color: var(--color-amber-deep); }
+  @media (min-width: 48rem) {
+    .lz__track { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; width: min(100% - 2 * var(--gutter), 72rem); margin-inline: auto; padding: 0 0 var(--space-md); gap: var(--space-lg); }
+    .lz__item { flex: none; }
+    .lz__head { width: min(100% - 2 * var(--gutter), 72rem); }
+  }
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    .lz__card { transition: transform var(--dur-mid) var(--ease-out), box-shadow var(--dur-mid) var(--ease-out); }
+    .lz__card:hover { transform: translateY(-4px); }
+  }
+</style>

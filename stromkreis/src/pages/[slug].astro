@@ -6,14 +6,14 @@ import WallboxCheck from '../components/WallboxCheck.astro';
 import EcheckRechner from '../components/EcheckRechner.astro';
 import AltbauCheck from '../components/AltbauCheck.astro';
 import leistungen from '../data/leistungen.json';
-import haus from '../data/haus.json';
+import rooms from '../data/rooms.json';
 
 export function getStaticPaths() {
   return leistungen.map((l) => ({ params: { slug: l.slug }, props: { l } }));
 }
 const { l } = Astro.props as { l: (typeof leistungen)[number] };
 const base = import.meta.env.BASE_URL;
-const room = haus.rooms.find((r) => r.service === l.slug && !r.anchor)!;
+const room = rooms.find((r) => r.service === l.slug)!;
 const firma = l.slug === 'e-check';
 const ref = (l as any).referenz;
 const bad = (l as any).bad;
@@ -27,7 +27,7 @@ const formIntro = firma ? 'Ihre Angaben aus dem Rechner werden übernommen. Sie 
   <main id="inhalt" class="page">
     <div class="wrap page__in">
       <header class="page__head">
-        <a class="back" href={base} data-back>← Zum Haus</a>
+        <a class="back" href={base} data-back>← Zurück zur Startseite</a>
         <p><span class="strip"><b>{room.circuit}</b>{room.name}</span></p>
         <h1>{l.title}</h1>
         <p class="page__lead">{l.lead}</p>

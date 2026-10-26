@@ -54,7 +54,7 @@ import Base from '../layouts/Base.astro';
   const q = <T extends Element>(s: string) => document.querySelector(s) as T;
   const sec = q<HTMLElement>('[data-s]'), cv = q<HTMLCanvasElement>('[data-c]'), card = q<HTMLElement>('[data-card]'), hint = q<HTMLElement>('[data-hint]');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const order = ['bad', 'garage', 'kueche', 'buero', 'wohnen', 'schlaf'] as const;
+  const order = ['bad', 'garage', 'kueche', 'buero', 'keller', 'schlaf', 'wohnen'] as const;
   (async () => {
     let hero;
     try { hero = await createHero(cv, base, [...order]); } catch (e) { q('[data-fail]').hidden = false; console.error(e); return; }

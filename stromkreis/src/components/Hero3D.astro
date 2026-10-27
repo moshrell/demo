@@ -67,6 +67,10 @@ const base = import.meta.env.BASE_URL;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const order = ['bad', 'garage', 'dach', 'keller', 'buero', 'kueche', 'garten', 'schlaf', 'wohnen'] as const;
   const service: Record<string, string> = { keller: 'altbau', bad: 'altbau', kueche: 'smart-home', wohnen: 'smart-home', schlaf: 'smart-home', garage: 'wallbox', buero: 'e-check', dach: 'pv-speicher', garten: 'beleuchtung' };
+  // Neuer Aufruf oder Neuladen: oben starten (Zurück-Navigation darf Position behalten)
+  const navType = (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined)?.type;
+  if (navType !== 'back_forward' && !location.hash) { history.scrollRestoration = 'manual'; scrollTo(0, 0); }
+  addEventListener('pageshow', (e) => { if (!e.persisted && !location.hash && navType !== 'back_forward') scrollTo(0, 0); });
   (async () => {
     let hero: Awaited<ReturnType<typeof createHero>>;
     try { hero = await createHero(cv, base, [...order]); } catch (e) { console.error(e); hint.textContent = ''; sec.setAttribute('data-fail', ''); return; }

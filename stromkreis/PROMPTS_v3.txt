@@ -21,3 +21,18 @@ Low-poly isometric diorama, flat-shaded simple geometric shapes, matte materials
 
 === 06 · leistung-stoerung.jpg · 3:4 ===
 Low-poly isometric diorama, flat-shaded simple geometric shapes, matte materials, no textures, soft shadows, calm blue evening light, clean soft off-white background, slightly toy-like but premium, muted palette of graphite, cream, warm amber and sage green with a few accents of signal orange. No text, no letters, no logos, no real brands, no people. Vertical composition, tall subject centered and filling the frame: a kitchen corner cutaway with one flickering bulb above the counter, a small distribution cabinet on the wall beside it with one circuit breaker switch tripped to the off position, a flashlight resting on the counter, a toolbox with a screwdriver and a cable tester standing ready.
+
+=== ЧАСТЬ Б: 4 кадра 1:1 для блока «Ist meine Elektrik alt?» (замена старых фото alt-*.webp) ===
+Кнопка формата Gemini: 1:1. Класть в D:\Webdesign\stromkreis\public\img\ , имена как ниже.
+
+=== 07 · alt-schraubsicherungen.jpg · 1:1 ===
+Low-poly isometric diorama, flat-shaded simple geometric shapes, matte materials, no textures, soft shadows, bright warm morning daylight, clean soft off-white background, slightly toy-like but premium, muted palette of graphite, cream, warm amber and sage green with a few accents of signal orange. No text, no letters, no logos, no real brands, no people. Square composition, subject centered and filling the frame: a small old brown fuse board panel mounted on a cream wall, with six round porcelain screw-in fuses in two rows, each with a small glass window, a few old cloth-covered cables entering from above, a slightly worn look.
+
+=== 08 · alt-stoffleitung.jpg · 1:1 ===
+Low-poly isometric diorama, flat-shaded simple geometric shapes, matte materials, no textures, soft shadows, bright warm morning daylight, clean soft off-white background, slightly toy-like but premium, muted palette of graphite, cream, warm amber and sage green with a few accents of signal orange. No text, no letters, no logos, no real brands, no people. Square composition, subject centered and filling the frame: an opened old junction box in a cream wall showing brittle old wires with frayed cloth insulation in beige and brown, twisted connections and old terminal blocks, one wire end loosely hanging.
+
+=== 09 · alt-steckdose.jpg · 1:1 ===
+Low-poly isometric diorama, flat-shaded simple geometric shapes, matte materials, no textures, soft shadows, bright warm morning daylight, clean soft off-white background, slightly toy-like but premium, muted palette of graphite, cream, warm amber and sage green with a few accents of signal orange. No text, no letters, no logos, no real brands, no people. Square composition, subject centered and filling the frame: an old yellowed two-hole wall socket without earthing contacts on a cream wall, slightly discolored with a faint brownish stain around it, a small crack in the plaster beside it.
+
+=== 10 · alt-zaehlerschrank.jpg · 1:1 ===
+Low-poly isometric diorama, flat-shaded simple geometric shapes, matte materials, no textures, soft shadows, bright warm morning daylight, clean soft off-white background, slightly toy-like but premium, muted palette of graphite, cream, warm amber and sage green with a few accents of signal orange. No text, no letters, no logos, no real brands, no people. Square composition, subject centered and filling the frame: an old overfilled electrical meter cabinet with a black rotating-disc electricity meter, crowded fuses with no free slots, cables crossing in a tangle, no room left for new devices.

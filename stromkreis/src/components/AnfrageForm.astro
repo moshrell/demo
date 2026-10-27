@@ -54,7 +54,11 @@ const options = [...leistungen.map((l) => l.nav), 'Kleinauftrag (Freitags-Runde)
       {photo && (
         <div class="af__field">
           <label for={`${id}-foto`}>Foto vom Zählerschrank <span class="af__opt">(optional, bis 3 Bilder)</span></label>
-          <input id={`${id}-foto`} class="af__file" name="foto" type="file" accept="image/*" multiple aria-describedby={`${id}-foto-hint`} />
+          <div class="af__filebox">
+            <input id={`${id}-foto`} class="af__file" name="foto" type="file" accept="image/*" multiple aria-describedby={`${id}-foto-hint`} />
+            <label class="af__filebtn" for={`${id}-foto`}>Fotos auswählen</label>
+            <span class="af__fname" data-fname aria-live="polite">Noch keine Fotos</span>
+          </div>
           <p class="af__hint" id={`${id}-foto-hint`}>Tür vom Zählerschrank öffnen, alles im Bild, von vorn. So sehen wir Baujahr und freie Plätze und können meist schon ohne Besichtigung ein Angebot machen. <strong>Demo: Fotos werden nicht gesendet.</strong></p>
           <div class="af__thumbs" data-thumbs></div>
         </div>
@@ -139,7 +143,11 @@ const options = [...leistungen.map((l) => l.nav), 'Kleinauftrag (Freitags-Runde)
   .af__field textarea { resize: vertical; }
   .af__field ::placeholder { color: var(--color-ink-2); opacity: 0.8; }
   .af__field input[aria-invalid='true'] { border-color: var(--color-alert); box-shadow: inset 0 0 0 1px var(--color-alert); }
-  .af__file { font-size: var(--text-sm); color: var(--color-ink-2); max-width: 100%; }
+  .af__filebox { position: relative; display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-smd); }
+  .af__file { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+  .af__filebtn { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 var(--space-md); border: 1px solid var(--color-ink); background: transparent; color: var(--color-ink); border-radius: var(--radius); font: 700 var(--text-sm) var(--font-body); cursor: pointer; }
+  .af__file:focus-visible + .af__filebtn { outline: 3px solid var(--color-amber-hi); outline-offset: 2px; }
+  .af__fname { font-size: var(--text-sm); color: var(--color-ink-2); }
   .af__file::file-selector-button { min-height: 2.75rem; margin-right: var(--space-smd); padding: 0 var(--space-md); border: 1px solid var(--color-cream); background: var(--color-cream); color: var(--color-cream-ink); border-radius: var(--radius); font: 700 var(--text-sm) var(--font-body); cursor: pointer; }
   .af__hint { font-size: var(--text-sm); color: var(--color-ink-2); }
   .af__hint strong { color: var(--color-ink); }
@@ -261,6 +269,7 @@ const options = [...leistungen.map((l) => l.nav), 'Kleinauftrag (Freitags-Runde)
     foto?.addEventListener('change', () => {
       urls.forEach((u) => URL.revokeObjectURL(u));
       const files = [...(foto.files || [])].slice(0, 3);
+      const fn = form.querySelector<HTMLElement>('[data-fname]'); if (fn) fn.textContent = files.length ? `${files.length} ${files.length === 1 ? 'Foto' : 'Fotos'} ausgewählt` : 'Noch keine Fotos';
       urls = files.map((f) => URL.createObjectURL(f));
       thumbs?.replaceChildren(...urls.map((u, i) => { const im = document.createElement('img'); im.src = u; im.alt = `Ihr Foto ${i + 1}`; im.width = 72; im.height = 72; return im; }));
     });

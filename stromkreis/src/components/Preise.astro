@@ -39,10 +39,12 @@ const toolLabel: Record<string, string> = { wallbox: 'Wallbox-Check starten', ec
   .pr__tabs::-webkit-scrollbar { display: none; }
   .pr__tab { flex: none; min-height: 2.75rem; padding: 0 var(--space-md); border: 1px solid var(--color-rule); background: #fff; border-radius: 999px; font: 650 var(--text-sm)/1 var(--font-body); color: var(--color-ink); cursor: pointer; white-space: nowrap; }
   .pr__tab[aria-selected='true'] { background: var(--strip-bg); color: var(--strip-ink); border-color: var(--strip-bg); }
-  .pr__panel { display: grid; gap: var(--space-md); width: 100%; justify-items: start; background: #fff; border: 1px solid var(--color-rule); border-radius: var(--radius-lg); padding: var(--space-md); box-shadow: var(--shadow); }
-  .pr__panel .prices { width: 100%; }
+  .pr__panel { display: grid; gap: var(--space-md); width: 100%; justify-items: start; background: #fff; border: 1px solid var(--color-rule); border-radius: var(--radius-lg); padding: var(--space-lg) var(--space-md); box-shadow: var(--shadow); }
+  .pr__panel .prices { width: 100%; border-top: 0; }
   .pr__h3 { font-size: var(--text-xl); }
-  .pr__cta { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+  .pr__cta { display: grid; gap: var(--space-sm); width: 100%; margin: var(--space-xs) 0 0; }
+  .pr__cta .btn { width: 100%; white-space: normal; text-align: center; }
+  @media (min-width: 40rem) { .pr__cta { display: flex; flex-wrap: wrap; width: auto; } .pr__cta .btn { width: auto; } }
   :global(.pr.is-tabs) .pr__tabs { display: flex; }
   :global(.pr.is-tabs) .pr__panel[hidden] { display: none; }
   :global(.pr.is-tabs) .pr__h3 { display: none; }

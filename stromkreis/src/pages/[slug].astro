@@ -5,6 +5,7 @@ import AnfrageForm from '../components/AnfrageForm.astro';
 import WallboxCheck from '../components/WallboxCheck.astro';
 import EcheckRechner from '../components/EcheckRechner.astro';
 import AltbauCheck from '../components/AltbauCheck.astro';
+import Soot from '../components/Soot.astro';
 import leistungen from '../data/leistungen.json';
 import rooms from '../data/rooms.json';
 
@@ -24,7 +25,8 @@ const formTitle = firma ? 'Angebot anfordern' : l.slug === 'altbau' ? 'Besichtig
 const formIntro = firma ? 'Ihre Angaben aus dem Rechner werden übernommen. Sie bekommen ein schriftliches Angebot für Ihre Unterlagen.' : l.tool ? 'Ihre Angaben aus dem Check werden übernommen.' : '';
 ---
 <Base title={`${l.title} · Elektro Brakhage`} description={l.lead} faq={l.faq} prices={l.prices.map((p) => ({ name: p.name, price: p.price }))}>
-  <main id="inhalt" class="page">
+  <main id="inhalt" class={`page${l.slug === 'altbau' ? ' page--burn' : ''}`}>
+    {l.slug === 'altbau' && <Soot />}
     <div class="wrap page__in">
       <header class="page__head">
         <a class="back" href={base} data-back>← Zurück zur Startseite</a>
@@ -90,6 +92,9 @@ const formIntro = firma ? 'Ihre Angaben aus dem Rechner werden übernommen. Sie 
 </Base>
 
 <style>
+  .page--burn { position: relative; isolation: isolate; overflow: hidden; padding-inline: 0.75rem; }
+  .page--burn .page__in { position: relative; z-index: 1; }
+  .page--burn .wrap { width: min(100% - 2.5rem, 46rem); }
   .lp-from { display: flex; align-items: baseline; gap: var(--space-sm); font-size: var(--text-sm); color: var(--color-ink-2); }
   .lp-from strong { font-size: var(--text-2xl); color: var(--color-amber-hi); }
   .ref__pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-sm); }

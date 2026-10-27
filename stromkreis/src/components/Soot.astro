@@ -1,0 +1,23 @@
+---
+/** Rußrand wie um eine Steckdose nach dem Kurzschluss: schwarzer, ausgefranster Rand, dazu Rußwolken in den Ecken.
+ *  Rein dekorativ (CSS + SVG-Filter, keine Bilder). Elternelement braucht position: relative; overflow: hidden. */
+---
+<svg class="soot__defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <filter id="soot-edge" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="4" seed="11" result="n" />
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="34" />
+  </filter>
+</svg>
+<span class="soot" aria-hidden="true"><span class="soot__edge"></span><span class="soot__corner soot__corner--tl"></span><span class="soot__corner soot__corner--tr"></span><span class="soot__corner soot__corner--bl"></span><span class="soot__corner soot__corner--br"></span></span>
+
+<style>
+  .soot__defs { position: absolute; }
+  .soot { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .soot__edge { position: absolute; inset: -1rem; border: 1.7rem solid #0b0908; border-radius: 1.2rem; filter: url(#soot-edge);
+    box-shadow: inset 0 0 1.8rem 0.9rem rgb(11 9 8 / 0.92), inset 0 0 4.5rem 1.6rem rgb(35 24 18 / 0.45), inset 0 0 6rem 1.2rem rgb(90 55 30 / 0.12); }
+  .soot__corner { position: absolute; width: 13rem; height: 13rem; filter: url(#soot-edge); }
+  .soot__corner--tl { left: -7rem; top: -8rem; background: radial-gradient(closest-side, rgb(8 6 5 / 0.95) 0 30%, rgb(25 17 12 / 0.55) 62%, transparent 100%); }
+  .soot__corner--tr { right: -7rem; top: -7rem; background: radial-gradient(closest-side, rgb(8 6 5 / 0.9) 0 26%, rgb(25 17 12 / 0.5) 60%, transparent 100%); }
+  .soot__corner--bl { left: -6rem; bottom: -5rem; background: radial-gradient(closest-side, rgb(8 6 5 / 0.9) 0 28%, rgb(25 17 12 / 0.5) 60%, transparent 100%); }
+  .soot__corner--br { right: -5rem; bottom: -6rem; background: radial-gradient(closest-side, rgb(8 6 5 / 0.95) 0 30%, rgb(25 17 12 / 0.55) 62%, transparent 100%); }
+</style>

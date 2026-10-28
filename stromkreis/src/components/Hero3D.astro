@@ -15,7 +15,7 @@ const base = import.meta.env.BASE_URL;
       <h1>Ihr Haus.<br />Unter Strom.</h1>
       <p class="h3__sub">Elektromeister und fünf Monteure in Gehrden: Altbau, Wallbox, PV, E-Check.</p>
     </div>
-    <p class="h3__tip" data-tip aria-hidden="true"><span class="h3__dot"></span><span data-tip-t>Leuchtenden Raum antippen</span></p>
+    <p class="h3__tip" data-tip aria-hidden="true"><span data-tip-t>Leuchtenden Raum antippen</span></p>
     <div class="h3__foot">
       <p class="h3__hint" data-hint aria-live="polite">Nach unten wischen</p>
       <a class="h3__skip" href="#leistungen">Zu den Leistungen <span aria-hidden="true">↓</span></a>
@@ -45,11 +45,10 @@ const base = import.meta.env.BASE_URL;
   .h3__sub { max-width: 26rem; font-size: var(--text-sm); color: var(--color-ink-2); }
   .h3__pin[data-room] .h3__top, .h3__pin[data-room] .h3__foot { opacity: 0; pointer-events: none; }
   .h3__pin.is-scrolled .h3__top { opacity: 0; transform: translateY(-0.5rem); }
-  .h3__tip { position: absolute; top: var(--space-md); left: 50%; transform: translate(-50%, -0.5rem); z-index: 2; margin: 0; display: inline-flex; align-items: center; gap: var(--space-smd); max-width: calc(100% - 2 * var(--gutter)); padding: var(--space-smd) var(--space-md); border: 1px solid oklch(78% 0.14 75 / 0.55); border-radius: 999px; background: oklch(14% 0.01 260 / 0.78); backdrop-filter: blur(6px); color: var(--color-ink); font-size: var(--text-sm); font-weight: 600; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.4s, transform 0.4s; }
-  .h3__pin.is-scrolled:not([data-room]) .h3__tip { opacity: 1; transform: translate(-50%, 0); }
-  .h3__dot { flex: none; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--color-amber); box-shadow: 0 0 0.6rem var(--color-amber-glow); }
-  @media (prefers-reduced-motion: no-preference) { .h3__dot { animation: h3-pulse 1.8s ease-in-out infinite; } }
-  @keyframes h3-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.55; } }
+  .h3__tip { position: absolute; top: var(--space-lg); left: 0; right: 0; z-index: 2; margin: 0; padding: 0 var(--gutter); text-align: center; font: 500 clamp(1.05rem, 5.2vw, 1.5rem) / 1.25 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: oklch(92% 0.09 80); text-shadow: 0 0 0.6rem oklch(80% 0.17 70 / 0.85), 0 0 1.6rem oklch(75% 0.18 60 / 0.55); opacity: 0; transform: translateY(-0.5rem); pointer-events: none; transition: opacity 0.4s, transform 0.4s; }
+  .h3__pin.is-scrolled:not([data-room]) .h3__tip { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: no-preference) { .h3__pin.is-scrolled:not([data-room]) .h3__tip { animation: h3-glow 2.6s ease-in-out infinite; } }
+  @keyframes h3-glow { 0%, 100% { text-shadow: 0 0 0.5rem oklch(80% 0.17 70 / 0.7), 0 0 1.2rem oklch(75% 0.18 60 / 0.4); opacity: 0.88; } 45% { text-shadow: 0 0 0.8rem oklch(85% 0.17 75 / 1), 0 0 2.2rem oklch(75% 0.18 60 / 0.75); opacity: 1; } 52% { opacity: 0.8; } 58% { opacity: 1; } }
   .h3__foot { position: absolute; left: var(--gutter); right: var(--gutter); bottom: var(--space-sm); z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); transition: opacity 0.4s; }
   .h3__hint { margin: 0; font: 500 var(--text-xs) / 1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-2); }
   .h3__skip { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 2.75rem; padding: 0 var(--space-md); border: 1px solid var(--color-rule); border-radius: 999px; background: oklch(14% 0.01 260 / 0.7); color: var(--color-ink); font-size: var(--text-sm); font-weight: 600; text-decoration: none; white-space: nowrap; }

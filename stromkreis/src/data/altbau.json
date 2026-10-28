@@ -4,48 +4,48 @@
     "label": "Schraubsicherungen statt Kippschaltern",
     "text": "Runde Porzellansicherungen zum Eindrehen, oft mit kleinem Glasfenster.",
     "image": "alt-schraubsicherungen.jpg",
-    "alt": "Alte Schraubsicherungen aus Porzellan mit Glaskappen auf brauner Platte"
+    "alt": "Alte Schraubsicherungen aus Porzellan, zwei davon gerissen und verrußt"
   },
   {
     "id": "stoff",
     "label": "Leitungen mit Stoff- oder Gummimantel",
     "text": "Sichtbar in Abzweigdosen oder am Zählerschrank. Kein grün-gelber Schutzleiter.",
     "image": "alt-stoffleitung.jpg",
-    "alt": "Alte Leitungen mit Stoffummantelung aus einer geöffneten Abzweigdose"
+    "alt": "Geöffnete alte Abzweigdose mit verkohlten Stoffleitungen"
   },
   {
     "id": "steckdose",
     "label": "Steckdosen ohne Schutzkontakt",
     "text": "Nur zwei Löcher, keine Metallbügel oben und unten. Gelbliche oder braune Verfärbungen.",
     "image": "alt-steckdose.jpg",
-    "alt": "Vergilbte alte Steckdose mit zwei Löchern ohne Schutzkontakte"
+    "alt": "Verbrannte alte Steckdose mit Rußspur an der Wand"
   },
   {
     "id": "kasten",
     "label": "Zählerschrank voll und unübersichtlich",
     "text": "Alter Drehstromzähler, Leitungen kreuz und quer, kein Platz mehr für neue Sicherungen.",
     "image": "alt-zaehlerschrank.jpg",
-    "alt": "Alter, voller Zählerschrank mit schwarzem Drehzähler und losen Leitungen"
+    "alt": "Alter, voller Zählerschrank mit Drehzähler, verkohlten Leitungen und geschmolzener Sicherung"
   },
   {
     "id": "fi",
     "label": "Kein FI-Schalter mit Prüftaste",
     "text": "Im Sicherungskasten gibt es keinen breiteren Schalter mit „T“-Taste. Er schützt vor Stromschlag.",
     "image": "alt-fi.jpg",
-    "alt": "Alter Sicherungskasten ohne FI-Schalter mit Lücke und Brandspuren, Low-Poly-Szene"
+    "alt": "Geöffneter alter Sicherungskasten ohne FI-Schalter, mit verrußter Lücke in der Sicherungsreihe"
   },
   {
     "id": "fliegt",
     "label": "Sicherung fliegt öfter raus, Licht flackert",
     "text": "Wenn Wasserkocher und Föhn gleichzeitig laufen, ist der Strom weg.",
     "image": "alt-flackert.jpg",
-    "alt": "Dunkle Zimmerecke mit flackernder Glühbirne, verrußtem Schalter und überhitzter Steckerleiste, Low-Poly-Szene"
+    "alt": "Verrußte Wandecke mit schwach glimmender Glühbirne, geschwärztem Schalter und überhitzter Steckerleiste"
   },
   {
     "id": "mehrfach",
     "label": "Überall Mehrfachstecker",
     "text": "Pro Raum ein oder zwei Steckdosen, der Rest läuft über Verlängerungen.",
     "image": "alt-mehrfach.jpg",
-    "alt": "Steckdose mit langer Kette überlasteter Mehrfachstecker, angeschmort, Low-Poly-Szene"
+    "alt": "Steckdose mit langer Kette überlasteter Mehrfachstecker, angeschmort und verrußt"
   }
 ]

@@ -120,21 +120,21 @@ const path = Astro.url.pathname;
   .head {
     position: sticky; top: 0; z-index: 40; height: var(--head-h);
     display: flex; align-items: center; gap: var(--space-smd);
-    padding: 0 var(--gutter) 0.3rem;
+    padding: 0 var(--gutter) 0.2rem;
     background: oklch(16% 0.006 70);
     border-bottom: 1px solid var(--color-rule);
   }
-  .head__mark { display: inline-flex; align-items: baseline; gap: var(--space-xs); text-decoration: none; color: var(--color-ink); flex: none; }
+  .head__mark { display: inline-flex; align-items: center; min-height: 2.75rem; gap: var(--space-xs); text-decoration: none; color: var(--color-ink); flex: none; }
   .head__name { font: 800 1.35rem/1 var(--font-display); letter-spacing: 0.01em; text-transform: uppercase; }
-  .head__sub { font: 500 0.625rem/1 var(--font-mono); color: var(--color-amber); text-transform: uppercase; letter-spacing: 0.06em; }
-  .status { display: inline-flex; align-items: center; gap: var(--space-xs); margin: 0 0 0 auto; min-width: 0; font: 500 0.6875rem/1.2 var(--font-mono); font-stretch: 87.5%; color: var(--color-ink-2); }
+  .head__sub { font: 500 0.75rem/1 var(--font-mono); color: var(--color-amber); text-transform: uppercase; letter-spacing: 0.06em; }
+  .status { display: inline-flex; align-items: center; gap: var(--space-xs); margin: 0 0 0 auto; min-width: 0; font: 500 0.75rem/1.2 var(--font-mono); font-stretch: 87.5%; color: var(--color-ink-2); }
   .status [data-status-text] { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .status__dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--color-led-off); flex: none; }
   .status.is-open .status__dot { background: var(--color-amber); box-shadow: 0 0 0.5rem var(--color-amber-glow); }
   .status.is-open { color: var(--color-ink); }
 
-  @media (max-width: 30rem) { .head { gap: var(--space-sm); } .head__sub { display: none; } .status { font-size: 0.625rem; gap: 0.3rem; line-height: 1.15; } .status [data-status-text] { white-space: normal; overflow: visible; text-overflow: clip; } }
-  .menu { flex: none; cursor: pointer; min-height: 2.5rem; display: inline-flex; align-items: center; padding: 0 0.7rem; background: transparent; border: 1px solid var(--color-rule); border-radius: var(--radius); font: 600 var(--text-sm)/1 var(--font-body); color: var(--color-ink); }
+  @media (max-width: 30rem) { .head { gap: var(--space-sm); } .head__sub { display: none; } .status { font-size: 0.75rem; gap: 0.3rem; line-height: 1.15; } .status [data-status-text] { white-space: normal; overflow: visible; text-overflow: clip; } }
+  .menu { flex: none; cursor: pointer; min-height: 2.75rem; display: inline-flex; align-items: center; padding: 0 0.75rem; background: transparent; border: 1px solid var(--color-rule); border-radius: var(--radius); font: 600 var(--text-sm)/1 var(--font-body); color: var(--color-ink); }
   .menu:hover { background: var(--color-paper-3); }
 
   /* Menü = Stromkreisverzeichnis (wie der Zettel im Sicherungskasten) */
@@ -168,10 +168,11 @@ const path = Astro.url.pathname;
   html.vz-open { overflow: hidden; }
 
   .foot { border-top: 1px solid var(--color-rule); background: var(--color-paper-2); color: var(--color-ink-2); font-size: var(--text-sm); }
-  .foot__in { width: min(100% - 2 * var(--gutter), 46rem); margin-inline: auto; padding: var(--space-xl) 0; display: grid; gap: var(--space-sm); }
+  .foot__in { width: min(100% - 2 * var(--gutter), 46rem); margin-inline: auto; padding: var(--space-xl) 0 calc(var(--space-xl) + var(--bar-h) + env(safe-area-inset-bottom)); display: grid; gap: var(--space-sm); }
+  .foot a[href^='tel'] { white-space: nowrap; }
   .foot__name { color: var(--color-ink); font-weight: 700; }
-  .foot__links { display: flex; flex-wrap: wrap; gap: var(--space-md); }
-  .foot__links a { display: inline-block; padding: var(--space-xs) 0; white-space: nowrap; }
+  .foot__links { display: flex; flex-wrap: wrap; gap: 0 var(--space-lg); }
+  .foot__links a { display: inline-flex; align-items: center; min-height: 2.75rem; white-space: nowrap; }
   .foot__demo { font-size: var(--text-xs); }
 
   .bar {

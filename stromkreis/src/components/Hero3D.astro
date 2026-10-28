@@ -2,9 +2,11 @@
 /** Hero: 3D-Haus im Schnitt (Three.js). Scroll schaltet die Räume nacheinander an, Tippen fliegt die Kamera in den Raum.
  *  Ohne JS / WebGL: Titel + Link zu den Leistungen (der Rest der Seite trägt alle Inhalte). */
 import site from '../data/site.json';
+import leistungen from '../data/leistungen.json';
+const svc = Object.fromEntries(leistungen.map((l, i) => [l.slug, { f: `F${i + 1}`, nav: l.nav }]));
 const base = import.meta.env.BASE_URL;
 ---
-<section class="h3 night" data-h3 aria-label="Haus im Schnitt: Räume gehen nacheinander an">
+<section class="h3 night" data-h3 data-svc={JSON.stringify(svc)} aria-label="Haus im Schnitt: Räume gehen nacheinander an">
   <div class="h3__pin">
     <div class="h3__stage"><canvas data-c aria-hidden="true"></canvas></div>
     <canvas class="h3__spark" data-spark aria-hidden="true"></canvas>
@@ -13,8 +15,11 @@ const base = import.meta.env.BASE_URL;
       <h1>Ihr Haus.<br />Unter Strom.</h1>
       <p class="h3__sub">Elektromeister und fünf Monteure in Gehrden: Altbau, Wallbox, PV, E-Check.</p>
     </div>
-    <a class="h3__skip" href="#leistungen">Direkt zu den Leistungen ↓</a>
-    <p class="h3__hint" data-hint aria-live="polite">Nach unten wischen</p>
+    <p class="h3__tip" data-tip aria-hidden="true"><span class="h3__dot"></span><span data-tip-t>Leuchtenden Raum antippen</span></p>
+    <div class="h3__foot">
+      <p class="h3__hint" data-hint aria-live="polite">Nach unten wischen</p>
+      <a class="h3__skip" href="#leistungen">Zu den Leistungen <span aria-hidden="true">↓</span></a>
+    </div>
     <aside class="h3__card" data-card hidden>
       <span class="strip" data-f></span>
       <h2 data-n></h2>
@@ -35,12 +40,20 @@ const base = import.meta.env.BASE_URL;
   .h3__pin { position: sticky; top: var(--head-h); height: calc(100svh - var(--head-h) - var(--bar-h) - env(safe-area-inset-bottom)); min-height: 26rem; overflow: hidden; }
   .h3__stage, .h3__stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; }
   .h3__spark { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-  .h3__top { position: absolute; inset: 0 0 auto 0; padding: var(--space-md) var(--gutter) 0; pointer-events: none; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75); display: grid; gap: var(--space-sm); justify-items: start; transition: opacity 0.4s; }
+  .h3__top { transition: opacity 0.4s, transform 0.4s; position: absolute; inset: 0 0 auto 0; padding: var(--space-md) var(--gutter) 0; pointer-events: none; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75); display: grid; gap: var(--space-sm); justify-items: start; transition: opacity 0.4s; }
   .h3__top h1 { font-size: clamp(2.1rem, 7.5vw, 4.6rem); font-weight: 600; line-height: 0.98; letter-spacing: -0.012em; }
   .h3__sub { max-width: 26rem; font-size: var(--text-sm); color: var(--color-ink-2); }
-  .h3__pin[data-room] .h3__top, .h3__pin[data-room] .h3__skip { opacity: 0; pointer-events: none; }
-  .h3__skip { position: absolute; right: var(--gutter); bottom: calc(var(--space-xl) + 0.25rem); z-index: 2; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 var(--space-smd); color: var(--color-ink-2); font-size: var(--text-sm); transition: opacity 0.4s; }
-  .h3__hint { position: absolute; left: 0; right: 0; bottom: var(--space-sm); text-align: center; font: 500 var(--text-xs) / 1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-2); pointer-events: none; }
+  .h3__pin[data-room] .h3__top, .h3__pin[data-room] .h3__foot { opacity: 0; pointer-events: none; }
+  .h3__pin.is-scrolled .h3__top { opacity: 0; transform: translateY(-0.5rem); }
+  .h3__tip { position: absolute; top: var(--space-md); left: 50%; transform: translate(-50%, -0.5rem); z-index: 2; margin: 0; display: inline-flex; align-items: center; gap: var(--space-smd); max-width: calc(100% - 2 * var(--gutter)); padding: var(--space-smd) var(--space-md); border: 1px solid oklch(78% 0.14 75 / 0.55); border-radius: 999px; background: oklch(14% 0.01 260 / 0.78); backdrop-filter: blur(6px); color: var(--color-ink); font-size: var(--text-sm); font-weight: 600; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.4s, transform 0.4s; }
+  .h3__pin.is-scrolled:not([data-room]) .h3__tip { opacity: 1; transform: translate(-50%, 0); }
+  .h3__dot { flex: none; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--color-amber); box-shadow: 0 0 0.6rem var(--color-amber-glow); }
+  @media (prefers-reduced-motion: no-preference) { .h3__dot { animation: h3-pulse 1.8s ease-in-out infinite; } }
+  @keyframes h3-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.55; } }
+  .h3__foot { position: absolute; left: var(--gutter); right: var(--gutter); bottom: var(--space-sm); z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); transition: opacity 0.4s; }
+  .h3__hint { margin: 0; font: 500 var(--text-xs) / 1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-2); }
+  .h3__skip { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 2.75rem; padding: 0 var(--space-md); border: 1px solid var(--color-rule); border-radius: 999px; background: oklch(14% 0.01 260 / 0.7); color: var(--color-ink); font-size: var(--text-sm); font-weight: 600; text-decoration: none; white-space: nowrap; }
+  .h3__skip:hover { border-color: var(--color-amber); }
   .h3__card { position: absolute; left: var(--gutter); right: var(--gutter); bottom: var(--space-sm); background: oklch(14% 0.01 260 / 0.88); backdrop-filter: blur(8px); border: 1px solid var(--color-rule); border-radius: var(--radius-lg); padding: var(--space-md); display: grid; gap: var(--space-sm); justify-items: start; }
   .h3__card[hidden] { display: none; }
   .h3__card h2 { font-size: var(--text-2xl); }
@@ -49,13 +62,12 @@ const base = import.meta.env.BASE_URL;
   .dawn { height: 26svh; background: linear-gradient(to bottom, #06080e 0%, #2a2430 28%, #b98a5e 62%, var(--color-paper) 100%); }
   @media (min-width: 60rem) {
     .h3__pin { height: calc(100svh - var(--head-h)); }
-    .h3__skip { bottom: auto; top: var(--space-md); }
-    .h3__hint { bottom: var(--space-md); }
+    .h3__foot { bottom: var(--space-md); }
   }
   @media (min-width: 48rem) {
     .h3__card { left: var(--space-xl); right: auto; bottom: auto; top: 50%; transform: translateY(-50%); width: 22rem; }
     .h3__top { padding-left: var(--space-xl); }
-    .h3__skip { right: var(--space-xl); }
+    .h3__foot { left: var(--space-xl); right: var(--space-xl); }
   }
 </style>
 
@@ -64,6 +76,7 @@ const base = import.meta.env.BASE_URL;
   const base = import.meta.env.BASE_URL;
   const q = <T extends Element>(s: string) => document.querySelector(s) as T;
   const sec = q<HTMLElement>('[data-h3]'), cv = q<HTMLCanvasElement>('[data-c]'), card = q<HTMLElement>('[data-card]'), hint = q<HTMLElement>('[data-hint]'), pin = q<HTMLElement>('.h3__pin');
+  const svcMap = JSON.parse(sec.dataset.svc || '{}') as Record<string, { f: string; nav: string }>;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const order = ['bad', 'garage', 'dach', 'keller', 'buero', 'kueche', 'garten', 'schlaf', 'wohnen'] as const;
   const service: Record<string, string> = { keller: 'altbau', bad: 'altbau', kueche: 'smart-home', wohnen: 'smart-home', schlaf: 'smart-home', garage: 'wallbox', buero: 'e-check', dach: 'pv-speicher', garten: 'beleuchtung' };
@@ -81,12 +94,14 @@ const base = import.meta.env.BASE_URL;
     const upd = () => {
       const p = reduce ? 1 : prog(); if (!inRoom) hero.setProgress(p);
       const n = hero.litIds().length;
-      hint.textContent = inRoom ? '' : p < 0.04 ? 'Nach unten wischen' : p > 0.88 ? 'Raum antippen' : `${n} von ${order.length} Stromkreisen an`;
+      hint.textContent = inRoom ? '' : p < 0.04 ? 'Nach unten wischen' : `${n} von ${order.length} an`;
+      q('[data-tip-t]').textContent = n >= order.length ? 'Raum antippen' : 'Leuchtenden Raum antippen';
+      pin.classList.toggle('is-scrolled', p > 0.03 && !reduce);
     };
     addEventListener('scroll', upd, { passive: true }); addEventListener('resize', () => { hero.resize(); upd(); }); upd();
     const open = (id: string) => {
       const r = ROOMS.find((x) => x.id === id)!; inRoom = true; hero.flyTo(id as any); if (reduce) hero.skip();
-      q('[data-f]').textContent = `${r.circuit} · ${r.name}`; q('[data-n]').textContent = r.name; q('[data-l]').textContent = r.line;
+      const sv = svcMap[service[id]]; q('[data-f]').textContent = sv ? `${sv.f} · ${sv.nav}` : r.name; q('[data-n]').textContent = r.name; q('[data-l]').textContent = r.line;
       q<HTMLAnchorElement>('[data-go]').href = `${base}${service[id]}/`; card.hidden = false; hint.textContent = '';
       pin.setAttribute('data-room', ''); document.documentElement.style.overflow = 'hidden';
     };

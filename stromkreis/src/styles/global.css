@@ -21,7 +21,6 @@ body {
   background: var(--color-paper);
   color: var(--color-ink);
   font: 400 1.0625rem/1.55 var(--font-body);
-  padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom));
 }
 img { max-width: 100%; height: auto; display: block; }
 a { color: var(--color-amber-hi); text-underline-offset: 0.18em; }
@@ -83,6 +82,7 @@ button { font: inherit; color: inherit; }
 .faq p { padding: 0 0 var(--space-md); color: var(--color-ink-2); }
 
 /* Inhaltsseiten */
+[hidden] { display: none !important; }
 .page { padding: var(--space-lg) 0 var(--space-2xl); }
 .page__in { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); }
 .page__head { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-smd); }

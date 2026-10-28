@@ -11,8 +11,12 @@
 
 Инструменты: Wallbox-Check (`/wallbox/`) · E-Check-Rechner (`/e-check/`) · «Ist meine Elektrik alt?» (`/altbau/`) · PLZ-проверка. Все ведут в `AnfrageForm.astro` и переносят сводку и сумму.
 
+## Нумерация F
+F = номер услуги (F1–F7 как в меню и карточках; F7 = Notdienst). У комнат героя своих F нет: карточка комнаты показывает «F{услуга} · {название услуги}».
+
 ## 3D-hero
-`src/components/Hero3D.astro` + `src/scripts/haus3d.ts` (API в `window.__hero`: `setProgress, flyTo, light, onPick, litIds, skip…`). Без реальных источников света и теней (дёшево для телефонов): цвет/emissive материалов по уровню «lit», светящиеся плоскости, блоб-тени. Модели: Kenney Furniture Kit и Car Kit (CC0, лицензии в `public/3d/`), оболочка дома из боксов. Искры под пальцем (только тач). Высота hero 420svh резервируется сразу (иначе восстановление скролла при перезагрузке попадало на «Wir»); при ошибке WebGL ставится `data-fail`.
+`src/components/Hero3D.astro` + `src/scripts/haus3d.ts` (API в `window.__hero`: `setProgress, flyTo, light, onPick, litIds, skip…`). Без реальных источников света и теней (дёшево для телефонов): цвет/emissive материалов по уровню «lit», светящиеся плоскости, блоб-тени. Модели: Kenney Furniture Kit и Car Kit (CC0, лицензии в `public/3d/`), оболочка дома из боксов. Искры под пальцем (только тач). Высота hero 420svh резервируется сразу (иначе восстановление скролла при перезагрузке попадало на «Wir»); при ошибке WebGL ставится `data-fail`. В портрете дом сдвинут вниз, пока виден заголовок; при скролле заголовок уходит, сверху появляется подсказка «Leuchtenden Raum antippen», внизу счётчик и ссылка «Zu den Leistungen».
+UI-каноны: 8-pt шкала отступов (`--space-*`), тап-зоны ≥ 44 px, шрифт ≥ 12 px, поля страницы 20 px на телефоне (`--gutter`), внутренний отступ ≤ внешнего. Проверка (headless, 320/390/768/1280): нет горизонтального скролла на всех страницах.
 
 ## Файлы
 - Данные: `src/data/*.json` (`site`, `leistungen`, `rooms`, `plz`, `wallbox`, `echeck`, `altbau`). Цены только там.

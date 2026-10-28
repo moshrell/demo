@@ -30,7 +30,7 @@ const formIntro = firma ? 'Ihre Angaben aus dem Rechner werden übernommen. Sie 
     <div class="wrap page__in">
       <header class="page__head">
         <a class="back" href={base} data-back>← Zurück zur Startseite</a>
-        <p><span class="strip"><b>{room.circuit}</b>{room.name}</span></p>
+        <p><span class="strip"><b>F{leistungen.findIndex((x) => x.slug === l.slug) + 1}</b>{l.nav}</span></p>
         <h1>{l.title}</h1>
         <p class="page__lead">{l.lead}</p>
         <p class="lp-from"><span>{l.fromLabel}</span> <strong class="num">{l.from}</strong></p>
@@ -43,7 +43,7 @@ const formIntro = firma ? 'Ihre Angaben aus dem Rechner werden übernommen. Sie 
 
       {bad && (
         <section class="block" id="bad" aria-labelledby="bad-h">
-          <p><span class="strip"><b>F2</b>Bad</span></p>
+          <p><span class="strip">Bad</span></p>
           <h2 id="bad-h">{bad.title}</h2>
           <p>{bad.text}</p>
         </section>

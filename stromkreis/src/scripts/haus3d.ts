@@ -255,10 +255,10 @@ export async function createHero(canvas: HTMLCanvasElement, base: string, order:
     const t = Math.tan((fov * Math.PI) / 360);
     return Math.max((h * pad) / 2 / t, (w * pad) / 2 / t / aspect);
   };
-  const overview = (az: number): Pose => {
+  const overview = (az: number, p = 0): Pose => {
     const fov = 30; const dist = fitBox(aspect < 0.8 ? 16.4 : 16, 13.4, fov, aspect < 0.8 ? 1.0 : 1.14) + 2;
-    const el = 0.16; const target = new THREE.Vector3(0, 2.7, 0);
-    const pos = new THREE.Vector3(Math.sin(az) * dist * Math.cos(el), 2.7 + Math.sin(el) * dist + 0.9, Math.cos(az) * dist * Math.cos(el));
+    const el = 0.16; const ty = 2.7 + (aspect < 0.8 ? Math.min(4.2, (0.8 - aspect) * 11) * (1 - smooth(0, 0.08, p)) : 0); const target = new THREE.Vector3(0, ty, 0);
+    const pos = new THREE.Vector3(Math.sin(az) * dist * Math.cos(el), ty + Math.sin(el) * dist + 0.9, Math.cos(az) * dist * Math.cos(el));
     return { pos, target, fov };
   };
   const roomPose = (r: RoomInfo): Pose => {
@@ -278,7 +278,7 @@ export async function createHero(canvas: HTMLCanvasElement, base: string, order:
     const e = ease(t); const pos = a.pos.clone().lerp(b.pos, e); pos.x += Math.sin(e * Math.PI) * 0.0; pos.y += Math.sin(e * Math.PI) * 0.35;
     return { pos, target: a.target.clone().lerp(b.target, e), fov: a.fov + (b.fov - a.fov) * e };
   };
-  const basePose = () => { const o = overview(-0.2 + progress * 0.4 + pointer.x * 0.04); o.pos.y += pointer.y * -0.2; return o; };
+  const basePose = () => { const o = overview(-0.2 + progress * 0.4 + pointer.x * 0.04, progress); o.pos.y += pointer.y * -0.2; return o; };
 
   const cbs: { pick?: (id: RoomId | null) => void; ready?: () => void } = {};
   const raycaster = new THREE.Raycaster();

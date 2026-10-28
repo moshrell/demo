@@ -49,7 +49,8 @@
   --space-lg: 1.5rem;
   --space-xl: 2.5rem;
   --space-2xl: 4rem;
-  --gutter: 1rem;
+  --gutter: 1.25rem;
+  --section-y: clamp(3rem, 12vw, 5rem);
 
   --radius: 4px;
   --radius-lg: 10px;

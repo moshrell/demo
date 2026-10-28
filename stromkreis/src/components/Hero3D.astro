@@ -58,7 +58,12 @@ const base = import.meta.env.BASE_URL;
   .h3__card h2 { font-size: var(--text-2xl); }
   .h3__card p { color: var(--color-ink-2); }
   .h3__btns { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
-  .dawn { height: 26svh; background: linear-gradient(to bottom, #06080e 0%, #2a2430 28%, #b98a5e 62%, var(--color-paper) 100%); }
+  /* Übergang Nacht → Tag: eine Hutschiene (Montageschiene im Sicherungskasten) statt Verlauf */
+  .dawn { position: relative; height: 2rem; background: linear-gradient(to bottom, #06080e 50%, var(--color-paper) 50%); }
+  .dawn::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1.25rem; transform: translateY(-50%);
+    background: linear-gradient(to bottom, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 30%, rgb(0 0 0 / 0) 70%, rgb(0 0 0 / 0.35)),
+      repeating-linear-gradient(90deg, #aab0b8 0 1.1rem, #2a2e35 1.1rem 1.9rem, #aab0b8 1.9rem 2.2rem);
+    box-shadow: 0 0.2rem 0.5rem rgb(0 0 0 / 0.25); }
   @media (min-width: 60rem) {
     .h3__pin { height: calc(100svh - var(--head-h)); }
     .h3__foot { bottom: var(--space-md); }

@@ -64,7 +64,7 @@
   --dur-slow: 600ms;
 
   --bar-h: 2.25rem;
-  --head-h: 3.25rem;
+  --head-h: 3.75rem;
 }
 @media (min-width: 48rem) {
   :root { --gutter: 2rem; }

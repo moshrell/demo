@@ -33,7 +33,9 @@ const { form = 'anfrage' } = Astro.props;
   .ab__list li:last-child:nth-child(odd) :global(.ab__img), .ab__list li:last-child:nth-child(odd) .ab__mark { aspect-ratio: 16 / 9; }
   .ab__item { position: relative; display: grid; grid-template-rows: auto 1fr; gap: var(--space-sm); height: 100%; padding: var(--space-xs) var(--space-xs) var(--space-smd); border: 1px solid var(--color-rule); border-radius: var(--radius-lg); background: #fff; box-shadow: var(--shadow); }
   .ab__item input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
-  .ab__item:has(input:checked) { border-color: var(--color-amber); background: var(--color-paper-3); box-shadow: inset 4px 0 0 var(--color-amber); }
+  .ab__item::after { content: ''; position: absolute; top: var(--space-sm); right: var(--space-sm); width: 1.75rem; height: 1.75rem; border-radius: 50%; border: 2px solid #fff; background: oklch(20% 0.01 70 / 0.35); box-shadow: 0 0 0 1px oklch(20% 0.01 70 / 0.25); }
+  .ab__item:has(input:checked) { border-color: var(--color-ink); outline: 2px solid var(--color-ink); outline-offset: -3px; background: #fff; }
+  .ab__item:has(input:checked)::after { content: '✓'; display: grid; place-items: center; background: var(--color-ink); border-color: #fff; color: var(--color-paper); font: 700 1rem/1 var(--font-body); }
   .ab__item:has(input:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 2px; }
   .ab__item :global(.ab__img) { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border-radius: calc(var(--radius-lg) - 0.25rem); }
   .ab__item :global(.foto--leer.ab__img) .strip { display: none; }

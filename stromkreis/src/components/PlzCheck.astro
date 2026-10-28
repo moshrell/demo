@@ -1,5 +1,5 @@
 ---
-/** Einsatzgebiet-Prüfung per PLZ (eigenständig). Ergebnis wird in sessionStorage gemerkt und ins Formular übernommen. */
+/** Einsatzgebiet-Prüfung per PLZ (eigenständig). Ergebnis wird für das Formular in sessionStorage gemerkt; das Feld selbst startet immer leer. */
 import data from '../data/plz.json';
 const { id = 'plz' } = Astro.props;
 const orte = [...new Set(data.zones.flatMap((z) => Object.values(z.plz)))];
@@ -19,7 +19,8 @@ const orte = [...new Set(data.zones.flatMap((z) => Object.values(z.plz)))];
   .plz__label span { font-weight: 400; font-size: var(--text-sm); color: var(--color-ink-2); }
   .plz__in::placeholder { font-size: 0.9rem; letter-spacing: 0; color: var(--color-ink-2); opacity: 0.7; }
   .plz__in { width: 9rem; min-height: 3rem; padding: 0.6rem 0.8rem; font-size: 1.25rem; letter-spacing: 0.08em; background: var(--color-paper); color: var(--color-ink); border: 1px solid var(--color-ink-2); border-radius: var(--radius); }
-  .plz__out { min-height: 1.5em; font-size: var(--text-sm); font-weight: 600; }
+  .plz__out { font-size: var(--text-sm); font-weight: 600; }
+  .plz__out:empty { margin-top: calc(-1 * var(--space-sm)); }
   .plz__out[data-state='in'] { color: var(--color-amber-hi); }
   .plz__out[data-state='out'] { color: var(--color-alert); }
   .plz__out a { color: inherit; }
@@ -42,7 +43,6 @@ const orte = [...new Set(data.zones.flatMap((z) => Object.values(z.plz)))];
       }
       try { if (r.state === 'in' || r.state === 'out') sessionStorage.setItem('plz', input.value.replace(/\D/g, '')); } catch {}
     };
-    try { const s = sessionStorage.getItem('plz'); if (s) { input.value = s; } } catch {}
     input.addEventListener('input', run);
     run();
   });

@@ -92,7 +92,9 @@ const formIntro = firma ? 'Ihre Angaben aus dem Rechner werden übernommen. Sie 
 </Base>
 
 <style>
-  .page--burn { position: relative; isolation: isolate; overflow: hidden; padding-inline: 0.75rem; }
+  .page--burn { position: relative; isolation: isolate; overflow: hidden; padding-inline: 1rem; }
+  .page--burn .back { justify-self: start; padding: 0 var(--space-md); border-radius: 999px; background: oklch(30% 0.07 50); color: oklch(97% 0.02 80); text-decoration: none; font-weight: 600; }
+  .page--burn .back:hover { background: oklch(36% 0.08 50); color: #fff; }
   .page--burn .page__in { position: relative; z-index: 1; }
   .page--burn .wrap { width: min(100% - 2.5rem, 46rem); }
   .lp-from { display: flex; align-items: baseline; gap: var(--space-sm); font-size: var(--text-sm); color: var(--color-ink-2); }

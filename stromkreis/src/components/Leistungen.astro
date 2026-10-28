@@ -37,22 +37,23 @@ const cards = [
   .lz__head { display: grid; gap: var(--space-smd); justify-items: start; margin-bottom: var(--space-lg); }
   .lz__head h2 { font-size: clamp(2rem, 6vw, 3.25rem); }
   .lz__lead { color: var(--color-ink-2); max-width: 36rem; }
-  .lz__track { list-style: none; margin: 0; padding: var(--space-sm) var(--gutter) var(--space-xl); display: flex; align-items: flex-start; gap: var(--space-lg); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .lz__track { list-style: none; margin: 0; padding: var(--space-sm) var(--gutter) var(--space-xl); display: flex; align-items: stretch; gap: var(--space-lg); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .lz__track::-webkit-scrollbar { display: none; }
-  .lz__item { flex: 0 0 min(78vw, 20rem); scroll-snap-align: start; }
-  .lz__card { display: grid; grid-template-rows: auto auto; text-decoration: none; color: var(--color-ink); background: #fff; border: 1px solid var(--color-rule); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+  .lz__item { flex: 0 0 min(78vw, 20rem); scroll-snap-align: start; display: flex; }
+  .lz__card { display: grid; grid-template-rows: auto 1fr; width: 100%; text-decoration: none; color: var(--color-ink); background: #fff; border: 1px solid var(--color-rule); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
   .lz__img { display: block; padding: var(--space-xs) var(--space-xs) 0; }
   .lz__img :global(.foto) { display: block; border: 0; border-radius: calc(var(--radius-lg) - 0.25rem); }
   .lz__body { display: grid; gap: var(--space-xs); padding: var(--space-lg) var(--space-lg) var(--space-lg); align-content: start; }
   .lz__no { font-size: var(--text-xs); color: var(--color-amber-hi); }
   .lz__name { font: 750 1.55rem/1.02 var(--font-display); text-transform: uppercase; letter-spacing: 0.005em; }
   .lz__txt { font-size: var(--text-sm); color: var(--color-ink-2); }
-  .lz__from { margin-top: var(--space-sm); display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-sm); font-size: var(--text-xs); color: var(--color-ink-2); }
+  .lz__body { grid-template-rows: auto auto auto 1fr; }
+  .lz__from { margin-top: var(--space-sm); align-self: end; display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-sm); font-size: var(--text-xs); color: var(--color-ink-2); }
   .lz__from strong { font-size: var(--text-md); color: var(--color-amber-hi); white-space: nowrap; }
   .lz__card--nd .lz__from strong, .lz__card--nd .lz__no { color: var(--color-alert); }
   .lz__card:hover { border-color: var(--color-amber-deep); }
   @media (min-width: 48rem) {
-    .lz__track { display: grid; align-items: start; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; width: min(100% - 2 * var(--gutter), 72rem); margin-inline: auto; padding: var(--space-xs) 0 var(--space-lg); gap: var(--space-lg); }
+    .lz__track { display: grid; align-items: stretch; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; width: min(100% - 2 * var(--gutter), 72rem); margin-inline: auto; padding: var(--space-xs) 0 var(--space-lg); gap: var(--space-lg); }
     .lz__item { flex: none; }
     .lz__head { width: min(100% - 2 * var(--gutter), 72rem); }
   }

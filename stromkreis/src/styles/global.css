@@ -69,7 +69,7 @@ button { font: inherit; color: inherit; }
 /* Ablauf (4 Schritte) */
 .ablauf { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-smd); counter-reset: ab; }
 .ablauf li { counter-increment: ab; display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); gap: var(--space-2xs) var(--space-smd); }
-.ablauf li::before { content: counter(ab); grid-row: span 2; width: 2.25rem; height: 2.25rem; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--color-amber); color: var(--color-amber); font: 600 var(--text-sm)/1 var(--font-mono); }
+.ablauf li::before { content: counter(ab); grid-row: span 2; width: 2.25rem; height: 2.25rem; display: grid; place-items: center; border-radius: 50%; background: var(--color-ink); color: var(--color-paper); font: 700 var(--text-sm)/1 var(--font-mono); }
 .ablauf strong { font-weight: 700; }
 .ablauf span { font-size: var(--text-sm); color: var(--color-ink-2); }
 

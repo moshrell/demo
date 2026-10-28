@@ -153,7 +153,8 @@ const options = [...leistungen.map((l) => l.nav), 'Kleinauftrag (Freitags-Runde)
   .af__hint strong { color: var(--color-ink); }
   .af__thumbs { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
   .af__thumbs img { width: 4.5rem; height: 4.5rem; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--color-rule); }
-  .af__plz { min-height: 1.4em; font-size: var(--text-sm); font-weight: 600; }
+  .af__plz:empty { margin-top: calc(-1 * var(--space-xs)); }
+  .af__plz { font-size: var(--text-sm); font-weight: 600; }
   .af__plz[data-state='in'] { color: var(--color-amber-hi); }
   .af__plz[data-state='out'], .af__plz[data-state='bad'] { color: var(--color-alert); }
   .af__plz a { color: inherit; }
@@ -183,14 +184,15 @@ const options = [...leistungen.map((l) => l.nav), 'Kleinauftrag (Freitags-Runde)
   @media (min-width: 60rem) { .af__bar { bottom: 0; } }
   .af__sum { padding: var(--space-md); border: 1px solid var(--color-amber-deep); border-radius: var(--radius-lg); background: var(--color-paper-2); display: grid; gap: var(--space-sm); }
   .af__sum[hidden] { display: none; }
-  .af__sum dl, .af__done dl { margin: 0; display: grid; }
-  .af__sum dl > div, .af__done dl > div { display: flex; justify-content: space-between; gap: var(--space-md); padding: var(--space-xs) 0; border-bottom: 1px solid var(--color-rule); font-size: var(--text-sm); }
-  .af__sum dt, .af__done dt { color: var(--color-ink-2); }
-  .af__sum dd, .af__done dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+  .af__sum :global(dl), .af__done :global(dl) { margin: 0; display: grid; }
+  .af__sum :global(dl > div), .af__done :global(dl > div) { display: flex; justify-content: space-between; gap: var(--space-md); padding: var(--space-xs) 0; border-bottom: 1px solid var(--color-rule); font-size: var(--text-sm); }
+  .af__sum :global(dt), .af__done :global(dt) { color: var(--color-ink-2); flex: none; }
+  .af__sum :global(dd), .af__done :global(dd) { margin: 0; min-width: 0; text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
   .af__sumnote { font-size: var(--text-xs); color: var(--color-ink-2); }
-  .af__strong dt, .af__strong dd { color: var(--color-amber-hi); font-weight: 700; }
-  .af__done { padding: var(--space-lg); border: 1px solid var(--color-amber-deep); border-radius: var(--radius-lg); display: grid; gap: var(--space-md); }
-  .af__done:focus { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+  .af__strong :global(dt), .af__strong :global(dd) { color: var(--color-amber-hi); font-weight: 700; }
+  .af__done { padding: var(--space-lg); background: var(--color-paper); border: 1px solid var(--color-amber-deep); border-radius: var(--radius-lg); display: grid; gap: var(--space-md); }
+  .af__done:focus { outline: 0; }
+  .af__done:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
   .af__next { color: var(--color-ink-2); }
   .af__demo { font-size: var(--text-sm); color: var(--color-ink-2); }
 </style>

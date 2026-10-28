@@ -37,6 +37,8 @@ const toolLabel: Record<string, string> = { wallbox: 'Wallbox-Check starten', ec
   .pr__lead { color: var(--color-ink-2); max-width: 38rem; }
   .pr__tabs { display: none; gap: var(--space-xs); overflow-x: auto; max-width: 100%; padding-bottom: var(--space-xs); scrollbar-width: none; }
   .pr__tabs::-webkit-scrollbar { display: none; }
+  @media (max-width: 47.99rem) { .pr__in > .pr__tabs { width: calc(100% + 2 * var(--gutter)); max-width: none; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); } }
+  @media (min-width: 48rem) { .pr__tabs { flex-wrap: wrap; overflow: visible; } }
   .pr__tab { flex: none; min-height: 2.75rem; padding: 0 var(--space-md); border: 1px solid var(--color-rule); background: #fff; border-radius: 999px; font: 650 var(--text-sm)/1 var(--font-body); color: var(--color-ink); cursor: pointer; white-space: nowrap; }
   .pr__tab[aria-selected='true'] { background: var(--strip-bg); color: var(--strip-ink); border-color: var(--strip-bg); }
   .pr__panel { display: grid; gap: var(--space-md); width: 100%; justify-items: start; background: #fff; border: 1px solid var(--color-rule); border-radius: var(--radius-lg); padding: var(--space-lg) var(--space-md); box-shadow: var(--shadow); }

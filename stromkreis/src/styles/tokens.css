@@ -63,7 +63,7 @@
   --dur-mid: 300ms;
   --dur-slow: 600ms;
 
-  --bar-h: 4rem;
+  --bar-h: 2.25rem;
   --head-h: 3.25rem;
 }
 @media (min-width: 48rem) {

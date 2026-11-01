@@ -43,7 +43,7 @@ const { form = 'anfrage' } = Astro.props;
   .ab__item:has(input:checked) .ab__mark { background: var(--color-amber); color: var(--color-cream-ink); }
   .ab__txt { display: grid; gap: var(--space-2xs); font-size: var(--text-xs); padding: 0 var(--space-xs); align-content: start; }
   .ab__txt strong { font-size: var(--text-sm); line-height: 1.2; }
-  @media (min-width: 40rem) { .ab__list { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ab__list li:last-child:nth-child(odd) { grid-column: auto; } }
+  @media (min-width: 40rem) { .ab__list { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ab__list li:last-child:nth-child(3n+1) .ab__item { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); grid-template-rows: auto; align-items: center; } }
   .ab__txt span { color: var(--color-ink-2); }
   .ab__verdict { padding: var(--space-md); border-radius: var(--radius); background: var(--color-paper); display: grid; gap: var(--space-xs); }
   .ab__count { font: 750 var(--text-xl)/1.1 var(--font-display); }

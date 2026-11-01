@@ -13,7 +13,7 @@ const base = import.meta.env.BASE_URL;
     <div class="h3__top">
       <p class="h3__kicker"><span class="strip">{site.name}</span></p>
       <h1>Ihr Haus.<br />Unter Strom.</h1>
-      <p class="h3__sub">Elektromeister und fünf Monteure in Gehrden: Altbau, Wallbox, PV, E-Check.</p>
+      <p class="h3__sub">Elektromeister und fünf Monteure in Gehrden: Altbau, Wallbox, PV, E‑Check.</p>
     </div>
     <p class="h3__tip" data-tip aria-hidden="true"><span data-tip-t>Leuchtenden Raum antippen</span></p>
     <div class="h3__foot">
@@ -45,12 +45,12 @@ const base = import.meta.env.BASE_URL;
   .h3__sub { max-width: 26rem; font-size: var(--text-sm); color: var(--color-ink-2); }
   .h3__pin[data-room] .h3__top, .h3__pin[data-room] .h3__foot { opacity: 0; pointer-events: none; }
   .h3__pin.is-scrolled .h3__top { opacity: 0; transform: translateY(-0.5rem); }
-  .h3__tip { position: absolute; top: var(--space-lg); left: 0; right: 0; z-index: 2; margin: 0; padding: 0 var(--gutter); text-align: center; font: 500 clamp(1.05rem, 5.2vw, 1.5rem) / 1.25 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: oklch(92% 0.09 80); text-shadow: 0 0 0.6rem oklch(80% 0.17 70 / 0.85), 0 0 1.6rem oklch(75% 0.18 60 / 0.55); opacity: 0; transform: translateY(-0.5rem); pointer-events: none; transition: opacity 0.4s, transform 0.4s; }
+  .h3__tip { position: absolute; top: var(--space-lg); left: 0; right: 0; z-index: 2; margin: 0; padding: 0 var(--gutter); text-align: center; font: 500 clamp(1.05rem, min(5.2vw, 5.5vh), 1.5rem) / 1.25 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: oklch(92% 0.09 80); text-shadow: 0 0 0.6rem oklch(80% 0.17 70 / 0.85), 0 0 1.6rem oklch(75% 0.18 60 / 0.55); opacity: 0; transform: translateY(-0.5rem); pointer-events: none; transition: opacity 0.4s, transform 0.4s; }
   .h3__pin.is-scrolled:not([data-room]) .h3__tip { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: no-preference) { .h3__pin.is-scrolled:not([data-room]) .h3__tip { animation: h3-glow 2.6s ease-in-out infinite; } }
   @keyframes h3-glow { 0%, 100% { text-shadow: 0 0 0.5rem oklch(80% 0.17 70 / 0.7), 0 0 1.2rem oklch(75% 0.18 60 / 0.4); opacity: 0.88; } 45% { text-shadow: 0 0 0.8rem oklch(85% 0.17 75 / 1), 0 0 2.2rem oklch(75% 0.18 60 / 0.75); opacity: 1; } 52% { opacity: 0.8; } 58% { opacity: 1; } }
   .h3__foot { position: absolute; left: var(--gutter); right: var(--gutter); bottom: var(--space-sm); z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); transition: opacity 0.4s; }
-  .h3__hint { margin: 0; font: 500 var(--text-xs) / 1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-2); }
+  .h3__hint { margin: 0; font: 500 var(--text-xs) / 1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-2); white-space: nowrap; }
   .h3__skip { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 2.75rem; padding: 0 var(--space-md); border: 1px solid var(--color-rule); border-radius: 999px; background: oklch(14% 0.01 260 / 0.7); color: var(--color-ink); font-size: var(--text-sm); font-weight: 600; text-decoration: none; white-space: nowrap; }
   .h3__skip:hover { border-color: var(--color-amber); }
   .h3__card { position: absolute; left: var(--gutter); right: var(--gutter); bottom: var(--space-sm); background: oklch(14% 0.01 260 / 0.88); backdrop-filter: blur(8px); border: 1px solid var(--color-rule); border-radius: var(--radius-lg); padding: var(--space-md); display: grid; gap: var(--space-sm); justify-items: start; }
@@ -59,18 +59,26 @@ const base = import.meta.env.BASE_URL;
   .h3__card p { color: var(--color-ink-2); }
   .h3__btns { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
   /* Übergang Nacht → Tag: eine Hutschiene (Montageschiene im Sicherungskasten) statt Verlauf */
+  /* Telefon quer / niedrige Fenster: Bühne passt in den Bildschirm, Titel kleiner */
+  @media (max-height: 30rem) and (orientation: landscape) {
+    .h3__pin { min-height: 0; }
+    .h3__top { padding-top: var(--space-sm); gap: var(--space-xs); }
+    .h3__top h1 { font-size: clamp(1.6rem, 9vh, 2.4rem); }
+    .h3__sub { display: none; }
+    .h3__tip { top: var(--space-sm); }
+  }
   .dawn { position: relative; height: 2rem; background: linear-gradient(to bottom, #06080e 50%, var(--color-paper) 50%); }
   .dawn::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1.25rem; transform: translateY(-50%);
     background: linear-gradient(to bottom, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 30%, rgb(0 0 0 / 0) 70%, rgb(0 0 0 / 0.35)),
       repeating-linear-gradient(90deg, #aab0b8 0 1.1rem, #2a2e35 1.1rem 1.9rem, #aab0b8 1.9rem 2.2rem);
     box-shadow: 0 0.2rem 0.5rem rgb(0 0 0 / 0.25); }
   @media (min-width: 60rem) {
-    .h3__pin { height: calc(100svh - var(--head-h)); }
     .h3__foot { bottom: var(--space-md); }
   }
   @media (min-width: 48rem) {
     .h3__card { left: var(--space-xl); right: auto; bottom: auto; top: 50%; transform: translateY(-50%); width: 22rem; }
-    .h3__top { padding-left: var(--space-xl); }
+    .h3__top { padding: var(--space-xl) var(--space-xl) 0; }
+    .h3__sub { font-size: var(--text-md); max-width: 30rem; }
     .h3__foot { left: var(--space-xl); right: var(--space-xl); }
   }
 </style>
@@ -98,7 +106,7 @@ const base = import.meta.env.BASE_URL;
     const upd = () => {
       const p = reduce ? 1 : prog(); if (!inRoom) hero.setProgress(p);
       const n = hero.litIds().length;
-      hint.textContent = inRoom ? '' : p < 0.04 ? 'Nach unten wischen' : `${n} von ${order.length} an`;
+      hint.textContent = inRoom ? '' : p < 0.04 ? (matchMedia('(hover: hover)').matches ? 'Nach unten scrollen' : 'Nach unten wischen') : `${n} von ${order.length} an`;
       q('[data-tip-t]').textContent = n >= order.length ? 'Raum antippen' : 'Leuchtenden Raum antippen';
       pin.classList.toggle('is-scrolled', p > 0.03 && !reduce);
     };

@@ -31,7 +31,6 @@
   .tool__run { display: grid; font-size: var(--text-xs); color: var(--color-ink-2); }
   .tool__run strong { font-size: var(--text-xl); color: var(--color-amber-hi); }
   .tool__back { min-height: 2.75rem; }
-  @media (min-width: 60rem) { .tool__bar { bottom: 0; } }
   @media (prefers-reduced-motion: no-preference) {
     .tool__meter span { transition: transform var(--dur-mid) var(--ease-out); }
     .tool__step:not([hidden]) { animation: tool-in var(--dur-mid) var(--ease-out); }

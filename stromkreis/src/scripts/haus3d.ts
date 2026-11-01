@@ -250,15 +250,16 @@ export async function createHero(canvas: HTMLCanvasElement, base: string, order:
   }
 
   // ---- Kamera
-  let aspect = 1;
+  let aspect = 1; let cw = 390;
   const fitBox = (w: number, h: number, fov: number, pad: number) => {
     const t = Math.tan((fov * Math.PI) / 360);
     return Math.max((h * pad) / 2 / t, (w * pad) / 2 / t / aspect);
   };
   const overview = (az: number, p = 0): Pose => {
     const fov = 30; const dist = fitBox(aspect < 0.8 ? 16.4 : 16, 13.4, fov, aspect < 0.8 ? 1.0 : 1.14) + 2;
-    const el = 0.16; const ty = 2.7 + (aspect < 0.8 ? Math.min(4.2, (0.8 - aspect) * 11) * (1 - smooth(0, 0.08, p)) : 0); const target = new THREE.Vector3(0, ty, 0);
-    const pos = new THREE.Vector3(Math.sin(az) * dist * Math.cos(el), ty + Math.sin(el) * dist + 0.9, Math.cos(az) * dist * Math.cos(el));
+    const el = 0.16; const ty = 2.7 + (aspect < 0.8 ? Math.min(4.2, (0.8 - aspect) * 11) * (1 - smooth(0, 0.08, p)) : 0); const tx = aspect > 1.2 ? -Math.min(5, (aspect - 1.2) * 6) * (1 - smooth(0, 0.08, p)) : 0; // Desktop: Haus nach rechts, Platz für den Titel
+    const target = new THREE.Vector3(tx, ty, 0);
+    const pos = new THREE.Vector3(tx + Math.sin(az) * dist * Math.cos(el), ty + Math.sin(el) * dist + 0.9, Math.cos(az) * dist * Math.cos(el));
     return { pos, target, fov };
   };
   const roomPose = (r: RoomInfo): Pose => {
@@ -269,7 +270,10 @@ export async function createHero(canvas: HTMLCanvasElement, base: string, order:
     const dir = r.id === 'garage' ? 1 : ax > r.cx ? -1 : 1; const side = (aspect < 0.8 ? 0.5 : 1.0) * dir;
     const camX = r.free ? ax + side : Math.min(r.cx + r.w / 2 - 0.4, Math.max(r.cx - r.w / 2 + 0.4, ax + side));
     const por = aspect < 0.8; // Telefon: Karte liegt unten, Motiv in die obere Bildhälfte schieben
-    return { pos: new THREE.Vector3(camX, ay + (por ? 0.85 : 0.35) + (r.id === 'dach' ? 2.2 : 0), Math.min(Math.max(az + dist, D - 0.1), D + 11)), target: new THREE.Vector3(ax, ay - (por ? 0.7 : 0), az), fov };
+    const pz = Math.min(Math.max(az + dist, D - 0.1), D + 11);
+    // Breite Bildschirme: Karte liegt links (≈ 24rem), Raum in die freie rechte Fläche schieben
+    const shift = !por && cw >= 768 ? Math.min(0.5, 400 / cw) * (pz - az) * Math.tan((fov / 2) * Math.PI / 180) * aspect : 0;
+    return { pos: new THREE.Vector3(camX - shift, ay + (por ? 0.85 : 0.35) + (r.id === 'dach' ? 2.2 : 0), pz), target: new THREE.Vector3(ax - shift, ay - (por ? 0.7 : 0), az), fov };
   };
   let progress = 0; let pointer = new THREE.Vector2(0, 0); let focus: RoomId | null = null; let fly = 0; let flyDir = 0; let dirty = true;
   const cur: Pose = overview(0);
@@ -318,7 +322,7 @@ export async function createHero(canvas: HTMLCanvasElement, base: string, order:
     raf = requestAnimationFrame(loop);
   };
 
-  const resize = () => { const r = canvas.parentElement!.getBoundingClientRect(); const w = Math.max(1, Math.round(r.width)); const h = Math.max(1, Math.round(r.height)); aspect = w / h; camera.aspect = aspect; renderer.setSize(w, h, false); dirty = true; };
+  const resize = () => { const r = canvas.parentElement!.getBoundingClientRect(); const w = Math.max(1, Math.round(r.width)); const h = Math.max(1, Math.round(r.height)); aspect = w / h; cw = w; camera.aspect = aspect; renderer.setSize(w, h, false); dirty = true; };
   resize();
   const ro = new ResizeObserver(resize); ro.observe(canvas.parentElement!);
 

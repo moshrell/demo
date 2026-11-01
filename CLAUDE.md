@@ -1,6 +1,6 @@
 # Demo — портфолио демо-сайтов (репозиторий moshrell/demo)
 
-Один проект = одна папка в корне (`architekt/`, ...). Новый проект создаётся из `_template/` (Astro). Скиллы в `.claude/skills/`: свои `demo-site-workflow`, `client-brief`, `scroll-bake-hero` и сторонний `hallmark` (MIT, github.com/Nutlope/hallmark, лицензия в папке). `firecrawl-website-design-clone` в репозиторий не коммитится (`.gitignore`): лежит в `D:\Webdesign\.claude\skills\`.
+Один проект = одна папка в корне (`architekt/`, ...). Новый проект создаётся из `_template/` (Astro). Скиллы в `.claude/skills/`: свои `demo-site-workflow`, `client-brief`, `scroll-bake-hero`, `mechanism-3d` (3D-механизм кодом, образец `boxer-lab/`) и сторонний `hallmark` (MIT, github.com/Nutlope/hallmark, лицензия в папке). `firecrawl-website-design-clone` в репозиторий не коммитится (`.gitignore`): лежит в `D:\Webdesign\.claude\skills\`.
 
 Брифы серий: `_briefs/` (сейчас `_briefs/handwerk/`: `00_ОБЩЕЕ_читать_первым.txt` + 6 демо). В облачной сессии папка проекта = `<slug>/` в корне этого репозитория, а не `D:\Webdesign\<slug>`; `leads.csv` лежит только на компьютере Степана, без него разведку делать веб-поиском.
 

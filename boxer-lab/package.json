@@ -1,0 +1,19 @@
+{
+  "name": "boxer-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --open",
+    "build": "astro build",
+    "check": "node tools/check.mjs",
+    "shots": "node tools/shots.mjs"
+  },
+  "dependencies": {
+    "astro": "^7.3.5",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "playwright-core": "1.58.2"
+  }
+}

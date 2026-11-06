@@ -1,0 +1,56 @@
+---
+/** Einsatzgebiet: Postleitzahl prüfen (nur lokal, keine Anfrage nach außen). */
+import plz from '../data/plz.json';
+const { id = 'plz' } = Astro.props;
+---
+<form class="plz" data-plz novalidate aria-labelledby={`${id}-h`}>
+  <h3 id={`${id}-h`}>Bauen Sie bei uns?</h3>
+  <div class="plz__row">
+    <div class="field">
+      <label for={`${id}-in`}>Postleitzahl des Grundstücks</label>
+      <input id={`${id}-in`} name="plz" inputmode="numeric" autocomplete="postal-code" maxlength="5" pattern="[0-9]{5}" placeholder="z. B. 30989" />
+    </div>
+    <button class="btn btn--ink" type="submit">Prüfen</button>
+  </div>
+  <p class="plz__out" data-out role="status" aria-live="polite"></p>
+  <script type="application/json" data-plz-data set:html={JSON.stringify(plz)} />
+</form>
+
+<style>
+  .plz { display: grid; gap: var(--space-sm); }
+  .plz h3 { font-size: var(--text-lg); }
+  .plz__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-sm); align-items: end; }
+  .plz__out { min-height: 1.6em; font-weight: 600; }
+  .plz__out[data-state='ok'] { color: var(--color-ok); }
+  .plz__out[data-state='maybe'] { color: var(--color-ink); }
+  .plz__out[data-state='no'] { color: var(--color-bad); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('form[data-plz]').forEach((form) => {
+    const data = JSON.parse(form.querySelector('[data-plz-data]')!.textContent || '{}');
+    const out = form.querySelector<HTMLElement>('[data-out]')!;
+    const input = form.querySelector<HTMLInputElement>('input')!;
+    const fee = (km: number) => (data.zonen.find((z: { max: number }) => km <= z.max) || { fee: null }).fee;
+    const check = () => {
+      const v = input.value.trim();
+      if (!/^\d{5}$/.test(v)) { out.dataset.state = 'no'; out.textContent = 'Bitte fünf Ziffern eingeben, z. B. 30989.'; return; }
+      let hit = data.orte.find((o: { plz: string[] }) => o.plz.includes(v));
+      const n = Number(v);
+      if (!hit && n >= data.hannover.von && n <= data.hannover.bis) hit = { ort: data.hannover.ort, km: data.hannover.km };
+      if (hit) {
+        const f = fee(hit.km);
+        out.dataset.state = 'ok';
+        out.textContent = `Ja, ${hit.ort} liegt in unserem Gebiet (ca. ${hit.km} km). ${f ? `Anfahrt zur Besichtigung ${f} €.` : 'Besichtigung ohne Anfahrtskosten.'}`;
+      } else if (/^3[01]/.test(v)) {
+        out.dataset.state = 'maybe';
+        out.textContent = 'Wahrscheinlich ja. Rufen Sie kurz an, wir sagen es Ihnen sofort.';
+      } else {
+        out.dataset.state = 'no';
+        out.textContent = 'Leider nein. Wir bauen im Umkreis von etwa 40 km um Gehrden.';
+      }
+    };
+    form.addEventListener('submit', (e) => { e.preventDefault(); check(); });
+    input.addEventListener('input', () => { input.value = input.value.replace(/\D/g, '').slice(0, 5); if (input.value.length === 5) check(); else out.textContent = ''; });
+  });
+</script>

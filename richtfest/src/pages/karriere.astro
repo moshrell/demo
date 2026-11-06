@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import OrderForm from '../components/OrderForm.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const jobs = [
+  { t: 'Maurer (m/w/d)', pay: '21,50–25,00 € pro Stunde', info: 'Vollzeit, Rohbau im Wohnungsbau, feste Kolonne, Firmenwagen zur Baustelle' },
+  { t: 'Vorarbeiter Hochbau (m/w/d)', pay: '25,00–28,50 € pro Stunde', info: 'Führung einer Kolonne, Abrechnung mit dem Polier' },
+  { t: 'Ausbildung Maurer (m/w/d)', pay: '1.080 / 1.380 / 1.700 € im 1./2./3. Jahr', info: 'Start 1. August, Probetag jederzeit möglich' },
+];
+---
+<Base title="Karriere · Maurer und Azubis gesucht · Thielking Bau" description="Maurer, Vorarbeiter und Azubis im Raum Gehrden: Lohn auf der Seite, feste Kolonnen, Bewerbung in zwei Minuten ohne Lebenslauf." current="karriere">
+  <section class="section section--tight">
+    <div class="wrap ka">
+      <div class="stack">
+        <p class="mono ka__k">Karriere</p>
+        <h1>Bei uns stehen Lohn und Kolonne vorher fest.</h1>
+        <p class="lead">Keine Leiharbeit, keine Montage quer durch Deutschland. Abends zu Hause, freitags um 13 Uhr Feierabend.</p>
+      </div>
+      <figure class="ka__img"><img src={`${base}img/karriere-azubi.jpg`} alt="Maurer zeigt einem Auszubildenden, wie man eine Wand mit der Wasserwaage prüft" width="1200" height="900" loading="eager" /></figure>
+    </div>
+  </section>
+  <section class="section section--alt">
+    <div class="wrap">
+      <h2>Offene Stellen</h2>
+      <ul class="ka__jobs">
+        {jobs.map((j) => (
+          <li class="sheet">
+            <p class="sheet__hd mono"><span>{j.t.includes('Ausbildung') ? 'Ausbildung' : 'Vollzeit'}</span><span>Gehrden</span></p>
+            <div class="sheet__bd stack">
+              <h3>{j.t}</h3>
+              <p class="ka__pay">{j.pay}</p>
+              <p class="muted">{j.info}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p class="muted ka__fine">Demo-Werte. Beim echten Betrieb: Tariflohn nach Bau-Tarifvertrag eintragen.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap ka__form">
+      <div class="sheet">
+        <OrderForm id="bewerbung" title="Bewerbung in 2 Minuten" options={jobs.map((j) => j.t)} optionsLabel="Für welche Stelle?" submitLabel="Bewerbung senden" purpose="meiner Bewerbung" />
+      </div>
+      <p class="muted">Kein Lebenslauf nötig. {site.owner} ruft Sie an und lädt Sie zum Probetag ein.</p>
+    </div>
+  </section>
+</Base>
+<style>
+  .ka { display: grid; gap: var(--space-xl); grid-template-columns: minmax(0, 1fr); align-items: center; }
+  @media (min-width: 56rem) { .ka { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+  .ka__k { color: var(--color-accent); }
+  .ka__img { margin: 0; aspect-ratio: 4 / 3; background: var(--color-paper-3); border-radius: var(--radius); overflow: hidden; }
+  .ka__img img { width: 100%; height: 100%; object-fit: cover; }
+  .ka__jobs { list-style: none; margin: var(--space-lg) 0 0; padding: 0; display: grid; gap: var(--space-md); grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 56rem) { .ka__jobs { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .ka__pay { font-weight: 700; color: var(--color-accent); }
+  .ka__fine { margin-top: var(--space-md); font-size: var(--text-sm); }
+  .ka__form { max-width: 44rem; display: grid; gap: var(--space-md); }
+</style>

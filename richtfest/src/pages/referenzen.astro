@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+import refs from '../data/referenzen.json';
+const base = import.meta.env.BASE_URL;
+const img = (f: string) => `${base}img/${f}`;
+const types = [{ v: 'alle', l: 'Alle' }, { v: 'neubau', l: 'Neubau' }, { v: 'anbau', l: 'Anbau' }, { v: 'sanierung', l: 'Sanierung' }, { v: 'gewerbe', l: 'Gewerbe' }];
+---
+<Base title="Referenzen · Thielking Bau" description="Gebaute Projekte im Calenberger Land: Einfamilienhäuser, Anbauten, Aufstockungen, Sanierungen und Gewerbebau, mit Bauzeit und Fläche." current="referenzen">
+  <section class="section section--tight">
+    <div class="wrap stack">
+      <p class="mono rf__k">Referenzen</p>
+      <h1>Gebaut, übergeben, bewohnt.</h1>
+      <p class="lead">Jedes Projekt mit Fläche und echter Bauzeit. Auf Wunsch vermitteln wir den Kontakt zu Bauherren, die mit uns gebaut haben.</p>
+      <div class="chips rf__filter" role="radiogroup" aria-label="Nach Art filtern" data-filter>
+        {types.map((t, i) => <label class="chip"><input type="radio" name="f" value={t.v} checked={i === 0} /><span>{t.l}</span></label>)}
+      </div>
+    </div>
+  </section>
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <ul class="rf" data-grid>
+        {refs.map((r, i) => (
+          <li class={`rf__item${i === 0 ? ' rf__item--wide' : ''}`} data-type={r.type} data-flip-id={r.id}>
+            <figure class="rf__img"><img src={img(r.img)} alt={r.alt} width="1200" height="900" loading={i < 2 ? 'eager' : 'lazy'} decoding="async" /></figure>
+            <div class="rf__body">
+              <p class="mono rf__meta"><span>{r.typeLabel}</span><span>{r.place} · {r.year}</span></p>
+              <h2 class="rf__t">{r.title}</h2>
+              <p>{r.story}</p>
+              <dl class="rf__facts"><div><dt>Fläche</dt><dd>{r.size}</dd></div><div><dt>Bauzeit</dt><dd>{r.time}</dd></div></dl>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p class="rf__empty muted" data-empty hidden>In dieser Kategorie zeigen wir gerade keine Projekte.</p>
+      <p class="rf__cta"><a class="btn btn--primary" href={`${base}anfrage/`}>Ihr Projekt anfragen</a></p>
+    </div>
+  </section>
+</Base>
+<style>
+  .rf__k { color: var(--color-accent); }
+  .rf__filter { padding-top: var(--space-sm); }
+  .rf { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-xl) var(--space-lg); grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 48rem) { .rf { grid-template-columns: repeat(2, minmax(0, 1fr)); } .rf__item--wide { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--space-lg); align-items: end; } }
+  .rf__item[hidden] { display: none; }
+  .rf__img { margin: 0 0 var(--space-md); aspect-ratio: 4 / 3; background: var(--color-paper-3); border-radius: var(--radius); overflow: hidden; }
+  .rf__item--wide .rf__img { margin: 0; }
+  .rf__img img { width: 100%; height: 100%; object-fit: cover; }
+  .rf__body { display: grid; gap: var(--space-sm); }
+  .rf__meta { display: flex; justify-content: space-between; gap: var(--space-sm); color: var(--color-ink-2); }
+  .rf__t { font-size: var(--text-xl); }
+  .rf__facts { margin: 0; display: flex; gap: var(--space-lg); }
+  .rf__facts dt { color: var(--color-ink-2); font-size: var(--text-sm); }
+  .rf__facts dd { margin: 0; font-weight: 650; }
+  .rf__cta { margin-top: var(--space-xl); }
+</style>
+<script>
+  import { gsap } from 'gsap';
+  import { Flip } from 'gsap/Flip';
+  gsap.registerPlugin(Flip);
+  const grid = document.querySelector<HTMLElement>('[data-grid]')!;
+  const items = [...grid.querySelectorAll<HTMLElement>('[data-type]')];
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelector('[data-filter]')!.addEventListener('change', (e) => {
+    const v = (e.target as HTMLInputElement).value;
+    const state = Flip.getState(items);
+    let n = 0;
+    items.forEach((it) => { const show = v === 'alle' || it.dataset.type === v; it.hidden = !show; if (show) n++; });
+    empty.hidden = n > 0;
+    if (!reduce) Flip.from(state, { duration: 0.5, ease: 'power2.inOut', absolute: true, onEnter: (els) => gsap.fromTo(els, { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.35 }), onLeave: (els) => gsap.to(els, { opacity: 0, duration: 0.2 }) });
+  });
+</script>

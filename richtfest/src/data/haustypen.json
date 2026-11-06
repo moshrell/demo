@@ -1,0 +1,99 @@
+{
+  "typen": [
+    {
+      "id": "bungalow",
+      "name": "Bungalow",
+      "w": 13,
+      "d": 10,
+      "h": 4.2,
+      "wohn": 115,
+      "note": "1 Geschoss"
+    },
+    {
+      "id": "efh",
+      "name": "Einfamilienhaus",
+      "w": 10,
+      "d": 9,
+      "h": 6.5,
+      "wohn": 140,
+      "note": "1,5 Geschosse"
+    },
+    {
+      "id": "villa",
+      "name": "Stadtvilla",
+      "w": 10,
+      "d": 10,
+      "h": 7.2,
+      "wohn": 165,
+      "note": "2 Geschosse"
+    },
+    {
+      "id": "dhh",
+      "name": "Doppelhaushälfte",
+      "w": 6.5,
+      "d": 11,
+      "h": 7,
+      "wohn": 125,
+      "note": "2 Geschosse, an einer Seite an der Grenze"
+    },
+    {
+      "id": "mfh",
+      "name": "Mehrfamilienhaus",
+      "w": 15,
+      "d": 12,
+      "h": 10,
+      "wohn": 420,
+      "note": "3 Geschosse, 4–6 Wohnungen"
+    },
+    {
+      "id": "anbau",
+      "name": "Anbau",
+      "w": 6,
+      "d": 7,
+      "h": 3.4,
+      "wohn": 38,
+      "note": "1 Geschoss, an den Bestand"
+    }
+  ],
+  "abstand": {
+    "faktor": 0.4,
+    "min": 3,
+    "quelle": "§ 5 Abs. 2 NBauO"
+  },
+  "grzMax": 0.4,
+  "preise": {
+    "schluesselfertig": [
+      2950,
+      3700
+    ],
+    "rohbau": [
+      1150,
+      1450
+    ],
+    "keller": [
+      55000,
+      80000
+    ],
+    "anbau": [
+      2400,
+      3100
+    ]
+  },
+  "ausstattung": [
+    {
+      "id": "solide",
+      "name": "Solide",
+      "f": 1
+    },
+    {
+      "id": "gehoben",
+      "name": "Gehoben",
+      "f": 1.12
+    },
+    {
+      "id": "exklusiv",
+      "name": "Exklusiv",
+      "f": 1.28
+    }
+  ]
+}

@@ -5,11 +5,13 @@ import site from '../data/site.json';
 const {
   title = site.name,
   description = '',
-  index = false,          // Demo = noindex. Echte Kundenseite: index
-  type = 'LocalBusiness', // Schema.org-Typ, z. B. 'Hairdresser', 'Architect', 'Dentist'
-  faq = [],               // [{ q, a }] -> sichtbarer FAQ-Block UND FAQPage-Markup (gleicher Text, sonst ignoriert Google es)
-  image = '',             // OG-Bild, relativ zu public/
-  prices = [],            // [{ name, price }] -> makesOffer
+  index = false,
+  type = 'GeneralContractor',
+  faq = [],
+  image = '',
+  prices = [],
+  current = '',
+  bar = true,
 } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -28,16 +30,25 @@ const graph = [
     ...(site.areaServed ? { areaServed: site.areaServed } : {}),
     ...(ogImage ? { image: ogImage } : {}),
     ...(prices.length ? { makesOffer: prices.map((p) => ({ '@type': 'Offer', priceCurrency: 'EUR', price: p.price, itemOffered: { '@type': 'Service', name: p.name } })) } : {}),
-  }] : []), // Demo (index = false): keine Geschäftsdaten-Markup mit erfundener Adresse/Telefon, nur FAQPage
+  }] : []),
   ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
 ];
 const ld = { '@context': 'https://schema.org', '@graph': graph };
+const nav = [
+  { href: '', key: 'start', label: 'Bauablauf' },
+  { href: 'grundstueck/', key: 'grundstueck', label: 'Grundstücks-Check' },
+  { href: 'leistungen/', key: 'leistungen', label: 'Leistungen & Preise' },
+  { href: 'referenzen/', key: 'referenzen', label: 'Referenzen' },
+  { href: 'architekten/', key: 'architekten', label: 'Für Architekten' },
+  { href: 'karriere/', key: 'karriere', label: 'Karriere' },
+];
 ---
 <!doctype html>
 <html lang="de">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ebedf0" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
@@ -50,12 +61,98 @@ const ld = { '@context': 'https://schema.org', '@graph': graph };
     {ogImage && <meta property="og:image" content={ogImage} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+    <slot name="head" />
   </head>
   <body>
-    <slot />
-    <footer>
-      <a href={`${base}impressum/`}>Impressum</a> · <a href={`${base}datenschutz/`}>Datenschutz</a>
-      {!index && <p>Demo-Seite, alle Angaben fiktiv. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihr Unternehmen? Jetzt anfragen</a></p>}
+    <a class="skip" href="#main">Zum Inhalt</a>
+    <header class="hd">
+      <div class="wrap hd__in">
+        <a class="hd__brand" href={base} aria-label={`${site.name}, Startseite`}><b>THIELKING</b><span>BAU</span></a>
+        <nav class="hd__nav" aria-label="Hauptmenü">
+          {nav.slice(1).map((n) => <a href={base + n.href} aria-current={current === n.key ? 'page' : undefined}>{n.label}</a>)}
+        </nav>
+        <a class="hd__tel" href={`tel:${site.phoneHref}`}>{site.phone}</a>
+        <a class="btn btn--primary hd__cta" href={`${base}anfrage/`} data-desk>Projekt anfragen</a>
+        <button class="hd__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-open>Menü</button>
+      </div>
+    </header>
+
+    <div class="menu" id="menu" hidden role="dialog" aria-modal="true" aria-label="Menü">
+      <div class="menu__top">
+        <a class="hd__brand" href={base}><b>THIELKING</b><span>BAU</span></a>
+        <button class="menu__close" type="button" data-menu-close>Schließen</button>
+      </div>
+      <ol>
+        {nav.map((n) => <li><a href={base + n.href} aria-current={current === n.key ? 'page' : undefined}>{n.label}</a></li>)}
+        <li><a href={`${base}anfrage/`}>Projekt anfragen</a></li>
+      </ol>
+      <div class="menu__foot">
+        <a class="btn btn--chalk" href={`tel:${site.phoneHref}`}>Anrufen: {site.phone}</a>
+        <p class="mono"><span class="status" data-status>{site.hoursText}</span></p>
+      </div>
+    </div>
+
+    <main id="main"><slot /></main>
+
+    <footer class="ft">
+      <div class="wrap">
+        <p class="ft__big">Bis zum Richtfest<br /><span>und darüber hinaus.</span></p>
+        <div class="ft__grid">
+          <div class="stack">
+            <p><strong>{site.legalName}</strong><br />{site.address.street}, {site.address.zip} {site.address.city}</p>
+            <p><a href={`tel:${site.phoneHref}`}>{site.phone}</a><br /><a href={`mailto:${site.email}`}>{site.email}</a></p>
+            <p class="mono"><span class="status" data-status>{site.hoursText}</span></p>
+          </div>
+          <ul>
+            {nav.map((n) => <li><a href={base + n.href}>{n.label}</a></li>)}
+            <li><a href={`${base}anfrage/`}>Projekt anfragen</a></li>
+          </ul>
+          <div class="stack">
+            <p>Wir bauen in: {site.areaServed.join(', ')} und Umgebung (ca. {site.radiusKm} km).</p>
+            <p><a href={`${base}karriere/`}>Maurer und Azubis gesucht</a></p>
+          </div>
+        </div>
+        <div class="ft__legal">
+          <p><a href={`${base}impressum/`}>Impressum</a> · <a href={`${base}datenschutz/`}>Datenschutz</a></p>
+          {!index && <p>Demo-Seite, Betrieb und Personen erfunden. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihr Unternehmen? Jetzt anfragen</a></p>}
+        </div>
+      </div>
     </footer>
+
+    {bar && (
+      <nav class="bar" aria-label="Schnellkontakt">
+        <a class="btn btn--chalk" href={`tel:${site.phoneHref}`}>Anrufen</a>
+        <a class="btn btn--primary" href={`${base}anfrage/`}>Projekt anfragen</a>
+      </nav>
+    )}
+
+    <script>
+      import site from '../data/site.json';
+      // Menü
+      const menu = document.getElementById('menu')!;
+      const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]')!;
+      const closeBtn = menu.querySelector<HTMLButtonElement>('[data-menu-close]')!;
+      const setMenu = (open: boolean) => {
+        menu.hidden = !open;
+        openBtn.setAttribute('aria-expanded', String(open));
+        document.documentElement.style.overflow = open ? 'hidden' : '';
+        (open ? closeBtn : openBtn).focus();
+      };
+      openBtn.addEventListener('click', () => setMenu(true));
+      closeBtn.addEventListener('click', () => setMenu(false));
+      menu.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setMenu(false); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) setMenu(false); });
+
+      // Büro offen/geschlossen (Ortszeit Berlin)
+      const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Berlin' }));
+      const d = now.getDay(), m = now.getHours() * 60 + now.getMinutes();
+      const toMin = (t: string) => { const [h, mm] = t.split(':').map(Number); return h * 60 + mm; };
+      const today = site.hours.find((h) => h.days.includes(d));
+      const open = !!today && m >= toMin(today.open) && m < toMin(today.close);
+      document.querySelectorAll<HTMLElement>('[data-status]').forEach((el) => {
+        el.dataset.open = open ? '1' : '0';
+        el.textContent = open ? `Büro jetzt erreichbar · bis ${today!.close} Uhr` : `Büro geschlossen · ${site.hoursText}`;
+      });
+    </script>
   </body>
 </html>

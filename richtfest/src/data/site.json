@@ -1,15 +1,32 @@
 {
   "name": "Thielking Bau",
-  "legalName": "TODO vom Kunden",
+  "legalName": "Thielking Bau GmbH (fiktiv)",
+  "owner": "Jens Thielking",
+  "ownerTitle": "Maurermeister, Geschäftsführer",
+  "founded": 1986,
   "address": {
-    "street": "TODO",
-    "zip": "TODO",
-    "city": "TODO"
+    "street": "Am Ziegelhof 4",
+    "zip": "30989",
+    "city": "Gehrden"
   },
-  "email": "TODO",
-  "phone": "030 23125 123",
-  "openingHours": "TODO z. B. Mo-Fr 09:00-17:00",
-  "areaServed": [
-    "TODO Ort"
-  ]
+  "email": "info@example.com",
+  "phone": "030 23125 480",
+  "phoneHref": "+493023125480",
+  "polier": { "name": "Uwe Brandes", "role": "Polier (Bauleiter vor Ort)", "phone": "030 23125 481", "phoneHref": "+493023125481" },
+  "office": { "name": "Sabine Koch", "role": "Büro, Termine und Angebote" },
+  "hours": [
+    { "days": [1, 2, 3, 4], "open": "07:00", "close": "16:30" },
+    { "days": [5], "open": "07:00", "close": "13:00" }
+  ],
+  "hoursText": "Mo–Do 7:00–16:30 · Fr 7:00–13:00",
+  "openingHours": "Mo-Th 07:00-16:30, Fr 07:00-13:00",
+  "areaServed": ["Gehrden", "Wennigsen", "Ronnenberg", "Barsinghausen", "Hemmingen", "Seelze", "Hannover-West"],
+  "team": 18,
+  "crews": 2,
+  "register": "Amtsgericht Hannover, HRB 000000 (fiktiv)",
+  "vat": "DE000000000 (fiktiv)",
+  "chamber": "Handwerkskammer Hannover, Berliner Allee 17, 30175 Hannover",
+  "insurance": "Betriebshaftpflicht: TODO Versicherer, Geltungsbereich Deutschland",
+  "base": { "lat": 52.3113, "lon": 9.5975 },
+  "radiusKm": 40
 }

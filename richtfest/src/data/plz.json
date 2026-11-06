@@ -1,0 +1,30 @@
+{
+  "note": "Anfahrt pauschal je Termin vor Ort; innerhalb von 15 km kostenlos. Demo-Werte.",
+  "zonen": [
+    { "max": 15, "fee": 0 },
+    { "max": 30, "fee": 45 },
+    { "max": 45, "fee": 85 }
+  ],
+  "orte": [
+    { "plz": ["30989"], "ort": "Gehrden", "km": 0 },
+    { "plz": ["30974"], "ort": "Wennigsen", "km": 7 },
+    { "plz": ["30952"], "ort": "Ronnenberg", "km": 6 },
+    { "plz": ["30890"], "ort": "Barsinghausen", "km": 11 },
+    { "plz": ["30966"], "ort": "Hemmingen", "km": 13 },
+    { "plz": ["30926"], "ort": "Seelze", "km": 13 },
+    { "plz": ["30982"], "ort": "Pattensen", "km": 18 },
+    { "plz": ["30880"], "ort": "Laatzen", "km": 20 },
+    { "plz": ["30823", "30826", "30827"], "ort": "Garbsen", "km": 21 },
+    { "plz": ["31832"], "ort": "Springe", "km": 22 },
+    { "plz": ["31515"], "ort": "Wunstorf", "km": 25 },
+    { "plz": ["31542"], "ort": "Bad Nenndorf", "km": 24 },
+    { "plz": ["31157"], "ort": "Sarstedt", "km": 28 },
+    { "plz": ["30853", "30855"], "ort": "Langenhagen", "km": 24 },
+    { "plz": ["30916"], "ort": "Isernhagen", "km": 30 },
+    { "plz": ["31319"], "ort": "Sehnde", "km": 32 },
+    { "plz": ["31275"], "ort": "Lehrte", "km": 38 },
+    { "plz": ["31535"], "ort": "Neustadt am Rübenberge", "km": 38 },
+    { "plz": ["31785", "31787", "31789"], "ort": "Hameln", "km": 40 }
+  ],
+  "hannover": { "von": 30159, "bis": 30669, "ort": "Hannover", "km": 15 }
+}

@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import AnfrageForm from '../components/AnfrageForm.astro';
+import site from '../data/site.json';
+---
+<Base title="Projekt anfragen · Thielking Bau" description="Neubau, Anbau, Sanierung oder Rohbau anfragen. Wir melden uns innerhalb von zwei Werktagen." current="anfrage">
+  <section class="section">
+    <div class="wrap an">
+      <div class="an__intro stack">
+        <p class="mono an__k">Projektanfrage</p>
+        <h1>Erzählen Sie uns von Ihrem Vorhaben.</h1>
+        <p class="lead">Je mehr wir vorher wissen, desto konkreter wird das erste Gespräch. Fünf Minuten reichen.</p>
+        <div class="sheet an__alt">
+          <p class="sheet__hd mono"><span>Lieber direkt?</span><span class="status" data-status>{site.hoursText}</span></p>
+          <div class="sheet__bd stack">
+            <p><a class="btn btn--ink" href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+            <p class="muted">{site.office.name}, {site.office.role}</p>
+          </div>
+        </div>
+      </div>
+      <div class="an__form sheet"><div class="sheet__bd"><AnfrageForm /></div></div>
+    </div>
+  </section>
+</Base>
+<style>
+  .an { display: grid; gap: var(--space-xl); grid-template-columns: minmax(0, 1fr); align-items: start; }
+  @media (min-width: 60rem) { .an { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); } .an__intro { position: sticky; top: calc(var(--header-h) + var(--space-lg)); } }
+  .an__k { color: var(--color-accent); }
+  .an h1 { font-size: var(--text-2xl); }
+  .an__form .sheet__bd { padding: var(--space-lg) var(--space-md) 0; }
+  @media (min-width: 40rem) { .an__form .sheet__bd { padding: var(--space-lg) var(--space-lg) 0; } }
+</style>

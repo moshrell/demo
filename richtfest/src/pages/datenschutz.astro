@@ -1,14 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
 import DatenschutzForm from '../components/DatenschutzForm.astro';
-const base = import.meta.env.BASE_URL;
+import site from '../data/site.json';
 ---
-<Base title="Datenschutz">
-  <main style="padding:120px var(--gutter);max-width:760px;margin:auto">
-    <h1>Datenschutz</h1>
-    <!-- Formular-Standard: Abschnitt zum Formular (Pflicht, sobald es ein Formular gibt) -->
-    <DatenschutzForm formName="Vorbestell-Formular" />
-    <!-- TODO: Pflichtangaben vom Kunden (Name, Anschrift, E-Mail, USt-IdNr., Register) bzw. Datenschutzerklärung -->
-    <p><a href={base}>← Zurück</a></p>
-  </main>
+<Base title="Datenschutz · Thielking Bau">
+  <section class="section">
+    <div class="wrap prose ds">
+      <h1>Datenschutz</h1>
+      <p><strong>Verantwortlich:</strong> {site.legalName}, {site.address.street}, {site.address.zip} {site.address.city} (fiktiv), {site.email}</p>
+      <p>Diese Website setzt keine Cookies, nutzt keine Analyse- oder Werbedienste und lädt Schriften vom eigenen Server.</p>
+
+      <DatenschutzForm formName="Projektanfrage, Rückruf, Leistungsverzeichnis und Bewerbung" data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Projektangaben, Nachricht (freiwillig), bei Bewerbungen die gewünschte Stelle und, wenn Sie es mitschicken, die Daten aus dem Grundstücks-Check" purpose="Wir bearbeiten Ihre Anfrage oder Bewerbung und rufen Sie zurück." retention="Anfragen löschen wir, wenn sie erledigt sind, spätestens nach 6 Monaten; kommt ein Auftrag zustande, gelten die gesetzlichen Aufbewahrungsfristen. Bewerbungen löschen wir 6 Monate nach Abschluss des Verfahrens." />
+
+      <h2 id="grundstueck">Grundstücks-Check</h2>
+      <p><strong>Demo-Hinweis:</strong> Auch in dieser Beispielseite werden bei der Suche echte Anfragen an die beiden unten genannten Dienste gestellt. Wir selbst speichern nichts.</p>
+      <p><strong>Was passiert:</strong> Nur wenn Sie auf „Grundstück suchen“ tippen, sendet Ihr Browser die eingegebene Adresse an die Adresssuche Photon (komoot GmbH, Potsdam; Daten aus OpenStreetMap) und danach die gefundenen Koordinaten an den Kartendienst des Landesamts für Geoinformation und Landesvermessung Niedersachsen (LGLN, Hannover), um das Flurstück und die Gebäude zu laden. Dabei wird, wie bei jedem Abruf einer Internetseite, Ihre IP-Adresse an diese Stellen übertragen.</p>
+      <p><strong>Rechtsgrundlage:</strong> Ihre Einwilligung durch das Auslösen der Suche (Art. 6 Abs. 1 lit. a DSGVO). Sie können stattdessen die Maße selbst eingeben, dann wird nichts übertragen.</p>
+      <p><strong>Speicherung:</strong> Das Ergebnis bleibt nur im Zwischenspeicher dieses Browser-Tabs (sessionStorage) und wird beim Schließen des Tabs gelöscht. An uns geht es nur, wenn Sie es mit einer Anfrage absenden.</p>
+      <p><strong>Datenschutzhinweise der Dienste:</strong> komoot (photon.komoot.io) und LGLN (lgln.niedersachsen.de).</p>
+
+      <h2>Server und Hosting</h2>
+      <p>TODO beim echten Kunden: Hoster, Server-Logfiles (IP-Adresse, Zeitpunkt, Seite; Speicherdauer), Auftragsverarbeitungsvertrag.</p>
+      <h2>Ihre Rechte</h2>
+      <p>Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch, Datenübertragbarkeit (Art. 15 bis 21 DSGVO) und Beschwerde bei der Landesbeauftragten für den Datenschutz Niedersachsen.</p>
+    </div>
+  </section>
 </Base>
+<style>
+  .ds :global(h2) { font-size: var(--text-xl); margin-top: var(--space-xl); }
+</style>

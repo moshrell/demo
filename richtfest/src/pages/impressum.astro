@@ -1,11 +1,24 @@
 ---
 import Base from '../layouts/Base.astro';
-const base = import.meta.env.BASE_URL;
+import site from '../data/site.json';
 ---
-<Base title="Impressum">
-  <main style="padding:120px var(--gutter);max-width:760px;margin:auto">
-    <h1>Impressum</h1>
-    <!-- TODO: Pflichtangaben vom Kunden (Name, Anschrift, E-Mail, USt-IdNr., Register) bzw. Datenschutzerklärung -->
-    <p><a href={base}>← Zurück</a></p>
-  </main>
+<Base title="Impressum · Thielking Bau">
+  <section class="section">
+    <div class="wrap prose">
+      <h1>Impressum</h1>
+      <p><strong>Demo-Hinweis:</strong> Diese Seite ist eine Beispielseite von Kravets Webdesign. Betrieb, Personen und alle Angaben sind erfunden. Bilder sind teils KI-erzeugt.</p>
+      <h2>Angaben gemäß § 5 DDG</h2>
+      <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+      <p>Vertreten durch den Geschäftsführer: {site.owner}</p>
+      <p>Telefon: {site.phone}<br />E-Mail: {site.email}</p>
+      <p>Registereintrag: {site.register}<br />Umsatzsteuer-ID: {site.vat}</p>
+      <h2>Berufsrechtliche Angaben</h2>
+      <p>Berufsbezeichnung: Maurer- und Betonbauermeister (verliehen in Deutschland)<br />Zuständige Kammer: {site.chamber}<br />Berufsrechtliche Regelung: Gesetz zur Ordnung des Handwerks (Handwerksordnung), abrufbar unter gesetze-im-internet.de</p>
+      <p>{site.insurance}</p>
+      <h2>Verbraucherstreitbeilegung</h2>
+      <p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+      <h2>Kartendaten</h2>
+      <p>Flurstücke und Gebäude im Grundstücks-Check: Landesamt für Geoinformation und Landesvermessung Niedersachsen (LGLN), Liegenschaftskataster, Lizenz CC BY 4.0. Adresssuche: © OpenStreetMap-Mitwirkende, ODbL, über den Dienst Photon (komoot).</p>
+    </div>
+  </section>
 </Base>

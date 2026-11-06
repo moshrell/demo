@@ -1,0 +1,607 @@
+---
+import Base from '../layouts/Base.astro';
+import typen from '../data/haustypen.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Grundstücks-Check · Passt Ihr Haus auf Ihr Grundstück? · Thielking Bau" description="Adresse eingeben, Flurstück aus dem Liegenschaftskataster Niedersachsen laden und prüfen, ob Ihr Haus mit Grenzabstand passt. Mit Kostenrahmen." current="grundstueck">
+  <section class="gc" data-gc>
+    <div class="wrap gc__head">
+      <p class="mono gc__kicker">Grundstücks-Check</p>
+      <h1>Passt Ihr Haus auf Ihr Grundstück?</h1>
+      <p class="lead">Wir laden Ihr Flurstück aus dem amtlichen Kataster. Sie setzen den Haustyp darauf und sehen sofort, ob der Grenzabstand reicht.</p>
+    </div>
+
+    <!-- Schritt 1: Grundstück finden -->
+    <div class="wrap gc__find" data-find>
+      <form class="sheet gc__form" data-search novalidate>
+        <p class="sheet__hd mono"><span>Schritt 1</span><span>Grundstück</span></p>
+        <div class="sheet__bd stack">
+          <div class="field">
+            <label for="gc-addr">Adresse des Grundstücks</label>
+            <input id="gc-addr" name="addr" type="text" autocomplete="street-address" placeholder="z. B. Musterstraße 12, 30989 Gehrden" />
+          </div>
+          <button class="btn btn--primary gc__go" type="submit">Grundstück suchen</button>
+          <p class="gc__privacy">Beim Suchen geht die Adresse an die OpenStreetMap-Suche (photon.komoot.io) und die Koordinaten an das Landesamt LGLN. Wir speichern nichts. <a href={`${base}datenschutz/#grundstueck`} target="_blank" rel="noopener">Datenschutz</a></p>
+          <p class="gc__msg" data-msg role="status" aria-live="polite"></p>
+          <ul class="gc__hits" data-hits hidden></ul>
+          <div class="gc__alt">
+            <button class="btn" type="button" data-manual-open>Maße selbst eingeben</button>
+            <button class="btn" type="button" data-example>Beispielgrundstück</button>
+          </div>
+          <div class="gc__manual" data-manual hidden>
+            <div class="field"><label for="gc-w">Breite an der Straße (m)</label><input id="gc-w" type="number" inputmode="decimal" min="8" max="80" step="0.5" placeholder="z. B. 20" /></div>
+            <div class="field"><label for="gc-d">Tiefe (m)</label><input id="gc-d" type="number" inputmode="decimal" min="8" max="120" step="0.5" placeholder="z. B. 32" /></div>
+            <button class="btn btn--ink" type="button" data-manual-go>Grundstück zeichnen</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Schritt 2: Plan -->
+    <div class="gc__work" data-work hidden>
+      <div class="wrap gc__grid">
+        <div class="gc__planwrap">
+          <p class="mono gc__plaininfo" data-meta></p>
+          <figure class="gc__plan">
+            <svg data-svg role="img" aria-labelledby="gc-svg-t">
+              <title id="gc-svg-t">Lageplan des Grundstücks mit Haus und Grenzabstand</title>
+              <g data-neighbors></g>
+              <polygon class="gc__parcel" data-parcel />
+              <g data-buildings></g>
+              <g data-dims></g>
+              <path class="gc__zone" data-zone />
+              <g class="gc__house" data-house tabindex="0" role="button" aria-label="Haus verschieben: ziehen oder Pfeiltasten">
+                <polygon data-house-poly />
+                <line class="gc__ridge" data-ridge />
+              </g>
+              <line class="gc__gap" data-gap />
+              <g data-handles></g>
+              <g class="gc__north" data-north><path d="M0,-9 L5,6 L0,3 L-5,6 Z" /><text y="-12" text-anchor="middle">N</text></g>
+            </svg>
+          </figure>
+          <div class="gc__tools" role="toolbar" aria-label="Werkzeuge">
+            <button class="btn" type="button" data-rot="-15" aria-label="Haus 15 Grad nach links drehen">↺ 15°</button>
+            <button class="btn" type="button" data-rot="15" aria-label="Haus 15 Grad nach rechts drehen">↻ 15°</button>
+            <button class="btn" type="button" data-align>An Grenze ausrichten</button>
+            <button class="btn" type="button" data-edit aria-pressed="false">Ecken anpassen</button>
+            <button class="btn" type="button" data-reset hidden>Zurücksetzen</button>
+          </div>
+          <p class="gc__hint mono" data-hint>Haus mit dem Finger verschieben. Grenzen falsch? „Ecken anpassen“.</p>
+        </div>
+
+        <div class="gc__side">
+          <fieldset class="gc__types">
+            <legend>Was soll darauf?</legend>
+            <div class="chips">
+              {typen.typen.map((t, i) => (
+                <label class="chip"><input type="radio" name="typ" value={t.id} checked={i === 1} /><span>{t.name}</span></label>
+              ))}
+            </div>
+            <p class="gc__typenote muted" data-typenote></p>
+          </fieldset>
+
+          <div class="gc__result sheet" data-result>
+            <p class="sheet__hd mono"><span>Ergebnis</span><span data-verdict-short>—</span></p>
+            <div class="sheet__bd">
+              <p class="gc__verdict" data-verdict></p>
+              <dl class="gc__facts">
+                <div><dt>Grundstück</dt><dd data-f-area>—</dd></div>
+                <div><dt>Haus (Grundfläche)</dt><dd data-f-house>—</dd></div>
+                <div><dt>Bebauung (GRZ)</dt><dd data-f-grz>—</dd></div>
+                <div><dt>Kleinster Abstand zur Grenze</dt><dd data-f-gap>—</dd></div>
+              </dl>
+            </div>
+          </div>
+
+          <div class="gc__cost sheet">
+            <p class="sheet__hd mono"><span>Kostenrahmen</span><span>Richtwert</span></p>
+            <div class="sheet__bd stack">
+              <div class="chips" role="radiogroup" aria-label="Leistung">
+                <label class="chip"><input type="radio" name="art" value="schluesselfertig" checked /><span>Schlüsselfertig</span></label>
+                <label class="chip"><input type="radio" name="art" value="rohbau" /><span>Nur Rohbau</span></label>
+              </div>
+              <div class="gc__row">
+                <div class="field"><label for="gc-wohn">Wohnfläche (m²)</label><input id="gc-wohn" type="number" inputmode="numeric" min="20" max="900" step="5" data-wohn /></div>
+                <div class="field"><label for="gc-aus">Ausstattung</label>
+                  <select id="gc-aus" data-aus>{typen.ausstattung.map((a) => <option value={a.id}>{a.name}</option>)}</select>
+                </div>
+              </div>
+              <label class="gc__check"><input type="checkbox" data-keller /> <span>mit Keller</span></label>
+              <p class="gc__sum"><span>Summe</span><strong data-sum>—</strong></p>
+              <p class="gc__fine muted">Richtwert inkl. 19 % MwSt., ohne Grundstück, Baunebenkosten und Außenanlagen. Verbindlich ist nur unser schriftliches Angebot.</p>
+            </div>
+          </div>
+
+          <div class="gc__send">
+            <a class="btn btn--primary" href={`${base}anfrage/?von=grundstueck`} data-send>Mit diesem Grundstück anfragen</a>
+            <button class="btn" type="button" data-new>Anderes Grundstück</button>
+          </div>
+          <p class="gc__law">Orientierung, keine Baugenehmigung. Was gebaut werden darf, regelt der Bebauungsplan Ihrer Gemeinde. Grenzabstand nach § 5 Abs. 2 NBauO: 0,4 × Wandhöhe, mindestens 3 m (vereinfacht gerechnet). Den Bebauungsplan prüfen wir gern mit Ihnen.</p>
+          <p class="mono gc__src" data-src hidden>Quelle Flurstücke und Gebäude: LGLN, Liegenschaftskataster, CC BY 4.0 · Adresssuche: © OpenStreetMap-Mitwirkende (ODbL) via Photon</p>
+        </div>
+      </div>
+    </div>
+    <div class="gc__proxy" data-proxy aria-hidden="true"></div>
+    <script type="application/json" data-typen set:html={JSON.stringify(typen)} />
+  </section>
+</Base>
+
+<style>
+  .gc { padding-block: var(--space-xl) var(--space-2xl); }
+  .gc__head { display: grid; gap: var(--space-md); margin-bottom: var(--space-lg); }
+  .gc__kicker { color: var(--color-accent); }
+  .gc__form { max-width: 40rem; }
+  .gc__go { width: 100%; }
+  @media (min-width: 40rem) { .gc__go { width: auto; } }
+  .gc__privacy { font-size: var(--text-sm); color: var(--color-ink-2); }
+  .gc__msg:empty { display: none; }
+  .gc__msg { font-weight: 600; }
+  .gc__msg[data-state='err'] { color: var(--color-bad); }
+  .gc__hits { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-xs); }
+  .gc__hits button { width: 100%; text-align: left; min-height: 2.75rem; padding: var(--space-sm) var(--space-md); border: 1px solid var(--color-rule); border-radius: var(--radius); background: var(--color-paper); cursor: pointer; }
+  .gc__alt { display: flex; flex-wrap: wrap; gap: var(--space-sm); padding-top: var(--space-sm); border-top: 1px solid var(--color-rule); }
+  .gc__manual { display: grid; gap: var(--space-sm); grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; }
+  .gc__manual[hidden] { display: none; }
+  .gc__manual .btn { grid-column: 1 / -1; }
+
+  .gc__grid { display: grid; gap: var(--space-lg); grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 60rem) { .gc__grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: start; } .gc__planwrap { position: sticky; top: calc(var(--header-h) + var(--space-md)); } }
+  .gc__plaininfo { color: var(--color-ink-2); margin-bottom: var(--space-sm); min-height: 1.2em; }
+  .gc__plan { margin: 0; background: var(--color-night); border-radius: var(--radius); overflow: hidden; aspect-ratio: 1 / 1; max-height: 68svh; width: 100%; }
+  @media (min-width: 60rem) { .gc__plan { aspect-ratio: 5 / 4; max-height: 72svh; } }
+  .gc__plan svg { width: 100%; height: 100%; display: block; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+  .gc__parcel { fill: oklch(28% 0.045 265); stroke: var(--color-chalk); stroke-width: 0.25; stroke-dasharray: 1 0.6; vector-effect: non-scaling-stroke; }
+  :global(.gc__nb) { fill: transparent; stroke: oklch(55% 0.03 262); stroke-width: 1; vector-effect: non-scaling-stroke; cursor: pointer; }
+  :global(.gc__nb:hover) { fill: oklch(30% 0.04 265); }
+  :global(.gc__bld) { fill: oklch(50% 0.02 262); stroke: none; }
+  .gc__zone { fill: oklch(52% 0.11 150 / 0.2); stroke: var(--color-ok); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+  .gc__zone.is-bad { fill: oklch(50% 0.17 28 / 0.25); stroke: oklch(65% 0.17 28); }
+  .gc__house { cursor: grab; outline: none; }
+  .gc__house polygon { fill: var(--color-accent); stroke: var(--color-chalk); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+  .gc__house:focus-visible polygon { stroke: var(--focus); stroke-width: 3; }
+  .gc__house.is-overlap polygon { fill: oklch(55% 0.17 28); }
+  .gc__ridge { stroke: var(--color-chalk); stroke-width: 1; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
+  .gc__gap { stroke: var(--color-lamp); stroke-width: 2; vector-effect: non-scaling-stroke; }
+  :global(.gc__dim) { fill: oklch(85% 0.015 262); font-family: var(--font-mono); }
+  :global(.gc__handle) { fill: var(--color-chalk); stroke: var(--color-accent); stroke-width: 2; vector-effect: non-scaling-stroke; cursor: move; }
+  .gc__north path { fill: var(--color-chalk); }
+  .gc__north text { fill: var(--color-chalk); font-family: var(--font-mono); font-size: 7px; }
+  .gc__tools { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-sm); }
+  .gc__tools .btn { min-height: 2.75rem; padding-inline: 0.85rem; font-size: 0.92rem; }
+  .gc__tools .btn[aria-pressed='true'] { background: var(--color-ink); color: var(--color-chalk); }
+  .gc__hint { margin-top: var(--space-sm); color: var(--color-ink-2); }
+
+  .gc__side { display: grid; gap: var(--space-md); }
+  .gc__types { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: var(--space-sm); }
+  .gc__types legend { font-weight: 700; margin-bottom: var(--space-sm); padding: 0; }
+  .gc__typenote { font-size: var(--text-sm); }
+  .gc__verdict { font-weight: 650; margin-bottom: var(--space-sm); }
+  .gc__verdict[data-state='ok'] { color: var(--color-ok); }
+  .gc__verdict[data-state='bad'] { color: var(--color-bad); }
+  .gc__facts { margin: 0; display: grid; }
+  .gc__facts div { display: flex; justify-content: space-between; gap: var(--space-md); padding: var(--space-xs) 0; border-top: 1px solid var(--color-rule); font-size: 0.95rem; }
+  .gc__facts dt { color: var(--color-ink-2); }
+  .gc__facts dd { margin: 0; font-variant-numeric: tabular-nums; text-align: right; font-weight: 600; }
+  .gc__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-sm); }
+  .gc__check { display: inline-flex; align-items: center; gap: var(--space-sm); min-height: 2.75rem; cursor: pointer; }
+  .gc__check input { width: 1.3rem; height: 1.3rem; accent-color: var(--color-accent); }
+  .gc__sum { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-md); padding-top: var(--space-sm); border-top: 1.5px solid var(--color-ink); }
+  .gc__sum strong { font-size: clamp(1.15rem, 0.9rem + 1.2vw, 1.5rem); font-variant-numeric: tabular-nums; text-align: right; }
+  .gc__fine, .gc__law { font-size: var(--text-sm); }
+  .gc__law { color: var(--color-ink-2); }
+  .gc__send { display: grid; gap: var(--space-sm); }
+  .gc__src { color: var(--color-ink-2); font-size: 0.68rem; }
+  .gc__proxy { position: fixed; left: 0; top: 0; width: 1px; height: 1px; pointer-events: none; visibility: hidden; }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { Draggable } from 'gsap/Draggable';
+  import { InertiaPlugin } from 'gsap/InertiaPlugin';
+  import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+  import * as G from '../scripts/geo';
+  import type { Pt, Parcel, Place } from '../scripts/geo';
+  gsap.registerPlugin(Draggable, InertiaPlugin, DrawSVGPlugin);
+
+  const root = document.querySelector<HTMLElement>('[data-gc]')!;
+  const $ = <T extends Element = HTMLElement>(s: string) => root.querySelector<T>(s)!;
+  const T = JSON.parse($('[data-typen]').textContent || '{}');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fmtM = (n: number) => n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' m';
+  const fmtA = (n: number) => Math.round(n).toLocaleString('de-DE') + ' m²';
+  const eur = (n: number) => (Math.round(n / 1000) * 1000).toLocaleString('de-DE') + ' €';
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  const KEY = 'rf:grundstueck';
+
+  interface State {
+    source: 'kataster' | 'manuell' | 'beispiel';
+    place?: string; parcel: Parcel; original: Pt[]; buildings: Pt[][]; neighbors: Parcel[];
+    typ: string; cx: number; cy: number; deg: number;
+    art: string; wohn: number; aus: string; keller: boolean;
+  }
+  let S: State | null = null;
+
+  /* ---------- Speicher ---------- */
+  const save = () => { try { if (S) sessionStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
+  const restore = (): State | null => { try { const r = sessionStorage.getItem(KEY); return r ? JSON.parse(r) : null; } catch { return null; } };
+
+  /* ---------- Schritt 1 ---------- */
+  const form = $<HTMLFormElement>('[data-search]');
+  const msg = $('[data-msg]');
+  const hits = $('[data-hits]');
+  const say = (t: string, err = false) => { msg.textContent = t; msg.dataset.state = err ? 'err' : ''; };
+  let ctrl: AbortController | null = null;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const q = (form.elements.namedItem('addr') as HTMLInputElement).value.trim();
+    if (q.length < 5) { say('Bitte Straße, Hausnummer und Ort eingeben.', true); return; }
+    ctrl?.abort(); ctrl = new AbortController();
+    hits.hidden = true; say('Suche Adresse …');
+    try {
+      const list = await G.geocode(q, ctrl.signal);
+      if (!list.length) { say('Adresse in Niedersachsen nicht gefunden. Prüfen Sie die Schreibweise oder geben Sie die Maße selbst ein.', true); return; }
+      if (list.length === 1) return pick(list[0]);
+      say('Welche Adresse meinen Sie?');
+      hits.replaceChildren(...list.map((p) => { const li = document.createElement('li'); const b = document.createElement('button'); b.type = 'button'; b.textContent = p.label; b.addEventListener('click', () => pick(p)); li.append(b); return li; }));
+      hits.hidden = false;
+    } catch (err) {
+      if ((err as Error).name !== 'AbortError') say('Die Suche ist gerade nicht erreichbar. Geben Sie die Maße selbst ein.', true);
+    }
+  });
+
+  async function pick(p: Place) {
+    hits.hidden = true;
+    say(`Lade Flurstück für ${p.label} …`);
+    ctrl?.abort(); ctrl = new AbortController();
+    try {
+      const [{ parcels, main }, bld] = await Promise.all([G.loadParcels(p, ctrl.signal), G.loadBuildings(p, ctrl.signal).catch(() => [])]);
+      if (!main) { say('Für diese Adresse liegt kein Flurstück vor. Geben Sie die Maße selbst ein.', true); return; }
+      say('');
+      start({ source: 'kataster', place: p.label, parcel: main, neighbors: parcels.filter((x) => x.id !== main.id), buildings: bld });
+    } catch (err) {
+      if ((err as Error).name !== 'AbortError') say('Das Kataster antwortet gerade nicht. Versuchen Sie es gleich noch einmal oder geben Sie die Maße selbst ein.', true);
+    }
+  }
+
+  $('[data-manual-open]').addEventListener('click', () => { const m = $('[data-manual]'); m.hidden = !m.hidden; if (!m.hidden) $<HTMLInputElement>('#gc-w').focus(); });
+  $('[data-manual-go]').addEventListener('click', () => {
+    const w = Number($<HTMLInputElement>('#gc-w').value.replace(',', '.')), d = Number($<HTMLInputElement>('#gc-d').value.replace(',', '.'));
+    if (!(w >= 8 && w <= 80 && d >= 8 && d <= 120)) { say('Bitte Breite (8–80 m) und Tiefe (8–120 m) eingeben.', true); return; }
+    say('');
+    const ring: Pt[] = [[-w / 2, -d / 2], [w / 2, -d / 2], [w / 2, d / 2], [-w / 2, d / 2]];
+    start({ source: 'manuell', parcel: { id: 'manuell', ring, area: w * d, label: '', gemarkung: '', flur: '', nr: '', use: '' }, neighbors: [], buildings: [] });
+  });
+  $('[data-example]').addEventListener('click', () => {
+    // Erfundenes Grundstück (keine echte Adresse), leicht schief wie im Neubaugebiet
+    const ring: Pt[] = [[-11.5, -17], [10.8, -18.6], [12.6, 16.9], [-1.5, 18.2], [-12.4, 17.4]];
+    start({ source: 'beispiel', place: 'Beispielgrundstück (erfunden)', parcel: { id: 'beispiel', ring, area: G.area(ring), label: 'Beispielgrundstück', gemarkung: 'Beispiel', flur: '1', nr: '42/7', use: 'Wohnbaufläche' }, neighbors: [], buildings: [] });
+  });
+  $('[data-new]').addEventListener('click', () => {
+    try { sessionStorage.removeItem(KEY); } catch {}
+    S = null; work.hidden = true; $('[data-find]').hidden = false; $<HTMLInputElement>('#gc-addr').focus();
+  });
+
+  /* ---------- Schritt 2 ---------- */
+  const work = $('[data-work]');
+  const svg = $<SVGSVGElement>('[data-svg]');
+  const parcelEl = $<SVGPolygonElement>('[data-parcel]');
+  const zoneEl = $<SVGPathElement>('[data-zone]');
+  const houseG = $<SVGGElement>('[data-house]');
+  const housePoly = $<SVGPolygonElement>('[data-house-poly]');
+  const ridge = $<SVGLineElement>('[data-ridge]');
+  const gapEl = $<SVGLineElement>('[data-gap]');
+  const dimsG = $<SVGGElement>('[data-dims]');
+  const bldG = $<SVGGElement>('[data-buildings]');
+  const nbG = $<SVGGElement>('[data-neighbors]');
+  const handlesG = $<SVGGElement>('[data-handles]');
+  const north = $<SVGGElement>('[data-north]');
+  const proxy = $('[data-proxy]');
+  const pts = (r: Pt[]) => r.map((p) => `${p[0].toFixed(2)},${p[1].toFixed(2)}`).join(' ');
+  const typ = () => T.typen.find((t: any) => t.id === S!.typ) || T.typen[1];
+  const setback = () => Math.max(T.abstand.min, T.abstand.faktor * typ().h);
+  let vb = { x: 0, y: 0, w: 100, h: 100 };
+  let editing = false;
+
+  function start(p: Pick<State, 'source' | 'place' | 'parcel' | 'neighbors' | 'buildings'>) {
+    const c = G.centroid(p.parcel.ring);
+    // Ursprung auf den Schwerpunkt legen
+    const sh = (r: Pt[]) => r.map(([x, y]) => [x - c[0], y - c[1]] as Pt);
+    const parcel = { ...p.parcel, ring: sh(p.parcel.ring) };
+    const pre = new URLSearchParams(location.search).get('typ');
+    const t = T.typen.find((x: any) => x.id === pre) || T.typen.find((x: any) => x.id === (S?.typ || 'efh'));
+    S = {
+      source: p.source, place: p.place, parcel, original: parcel.ring.map((q) => [...q] as Pt),
+      neighbors: p.neighbors.map((n) => ({ ...n, ring: sh(n.ring) })), buildings: p.buildings.map(sh),
+      typ: t.id, cx: 0, cy: 0, deg: alignDeg(parcel.ring),
+      art: 'schluesselfertig', wohn: t.wohn, aus: 'solide', keller: false,
+    };
+    placeFree();
+    open(true);
+  }
+
+  // Haus parallel zur längsten Grenze (|Winkel| ≤ 45°)
+  function alignDeg(r: Pt[]) {
+    const a = G.longestEdgeAngle(r);
+    return [a, a - 90, a - 180].reduce((b, c) => (Math.abs(c) < Math.abs(b) ? c : b));
+  }
+
+  // Haus an eine freie Stelle setzen: Schwerpunkt, sonst Raster absuchen
+  function placeFree() {
+    if (!S) return;
+    const t = typ();
+    const fits = (cx: number, cy: number) => {
+      const h = G.rect(cx, cy, t.w, t.d, S!.deg);
+      return h.every((q) => G.inside(q, S!.parcel.ring)) && !S!.buildings.some((b) => G.overlaps(h, b));
+    };
+    if (fits(S.cx, S.cy)) return;
+    const r = Math.sqrt(G.area(S.parcel.ring));
+    let best: Pt | null = null, bestScore = -Infinity;
+    for (let x = -r; x <= r; x += 1.5) for (let y = -r; y <= r; y += 1.5) {
+      if (!fits(x, y)) continue;
+      const h = G.rect(x, y, t.w, t.d, S.deg);
+      const score = G.minGap(h, S.parcel.ring).d - Math.hypot(x, y) * 0.05;
+      if (score > bestScore) { bestScore = score; best = [x, y]; }
+    }
+    if (best) { S.cx = best[0]; S.cy = best[1]; }
+  }
+
+  function open(fresh: boolean) {
+    $('[data-find]').hidden = true;
+    work.hidden = false;
+    $('[data-src]').hidden = S!.source !== 'kataster';
+    const tr = root.querySelector<HTMLInputElement>(`input[name=typ][value="${S!.typ}"]`); if (tr) tr.checked = true;
+    (root.querySelector<HTMLInputElement>(`input[name=art][value="${S!.art}"]`)!).checked = true;
+    $<HTMLInputElement>('[data-wohn]').value = String(S!.wohn);
+    $<HTMLSelectElement>('[data-aus]').value = S!.aus;
+    $<HTMLInputElement>('[data-keller]').checked = S!.keller;
+    fitView();
+    drawStatic();
+    render();
+    if (fresh) {
+      work.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      if (!reduce) {
+        gsap.fromTo(parcelEl, { drawSVG: '0%' }, { drawSVG: '100%', duration: 1.1, ease: 'power2.inOut' });
+        gsap.from(houseG, { opacity: 0, duration: 0.4, delay: 0.7 });
+      }
+    }
+  }
+
+  function fitView() {
+    const r = S!.parcel.ring;
+    const xs = r.map((p) => p[0]), ys = r.map((p) => p[1]);
+    const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+    const w = maxX - minX, h = maxY - minY;
+    const box = svg.getBoundingClientRect();
+    const asp = box.width && box.height ? box.width / box.height : 1;
+    const pad = Math.max(w, h) * 0.16 + 4;
+    let W = w + pad * 2, H = h + pad * 2;
+    if (W / H < asp) W = H * asp; else H = W / asp;
+    vb = { x: (minX + maxX) / 2 - W / 2, y: (minY + maxY) / 2 - H / 2, w: W, h: H };
+    svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+    const u = vb.w / 300; // Einheit für Text etc.
+    north.setAttribute('transform', `translate(${vb.x + vb.w - 14 * u} ${vb.y + 18 * u}) scale(${u})`);
+  }
+  const unit = () => vb.w / 300;
+
+  function drawStatic() {
+    nbG.replaceChildren(...S!.neighbors.map((n) => {
+      const el = document.createElementNS(SVGNS, 'polygon');
+      el.setAttribute('points', pts(n.ring)); el.setAttribute('class', 'gc__nb');
+      el.setAttribute('role', 'button'); el.setAttribute('aria-label', `Nachbar-Flurstück ${n.nr} wählen`);
+      el.addEventListener('click', () => { if (!editing) switchParcel(n); });
+      return el;
+    }));
+    bldG.replaceChildren(...S!.buildings.map((b) => { const el = document.createElementNS(SVGNS, 'polygon'); el.setAttribute('points', pts(b)); el.setAttribute('class', 'gc__bld'); return el; }));
+  }
+
+  function switchParcel(n: Parcel) {
+    const all = [S!.parcel, ...S!.neighbors].filter((x) => x.id !== n.id);
+    S!.parcel = n; S!.original = n.ring.map((q) => [...q] as Pt); S!.neighbors = all;
+    S!.cx = G.centroid(n.ring)[0]; S!.cy = G.centroid(n.ring)[1];
+    placeFree(); fitView(); drawStatic(); render();
+  }
+
+  function render() {
+    if (!S) return;
+    const t = typ(), sb = setback();
+    const ring = S.parcel.ring;
+    parcelEl.setAttribute('points', pts(ring));
+    const house = G.rect(S.cx, S.cy, t.w, t.d, S.deg);
+    housePoly.setAttribute('points', pts(house));
+    const r = (S.deg * Math.PI) / 180;
+    ridge.setAttribute('x1', String(S.cx - Math.cos(r) * t.w * 0.38)); ridge.setAttribute('y1', String(S.cy - Math.sin(r) * t.w * 0.38));
+    ridge.setAttribute('x2', String(S.cx + Math.cos(r) * t.w * 0.38)); ridge.setAttribute('y2', String(S.cy + Math.sin(r) * t.w * 0.38));
+    const z = G.zone(S.cx, S.cy, t.w, t.d, S.deg, sb);
+    zoneEl.setAttribute('d', 'M' + z.map((p) => p.join(',')).join('L') + 'Z');
+
+    const inParcel = house.every((q) => G.inside(q, ring));
+    const gap = inParcel ? G.minGap(house, ring) : { d: 0, at: [house[0], house[0]] as [Pt, Pt] };
+    const overlap = S.buildings.some((b) => G.overlaps(house, b));
+    const area = S.parcel.area || G.area(ring);
+    const grz = (t.w * t.d) / area;
+    const okGap = gap.d + 0.01 >= sb;
+    const dhh = t.id === 'dhh', anbau = t.id === 'anbau';
+    const good = inParcel && (okGap || dhh) && (!overlap || anbau) && grz <= T.grzMax + 1e-9;
+    zoneEl.classList.toggle('is-bad', !okGap && !dhh);
+    houseG.classList.toggle('is-overlap', overlap && !anbau);
+    gapEl.setAttribute('x1', String(gap.at[0][0])); gapEl.setAttribute('y1', String(gap.at[0][1]));
+    gapEl.setAttribute('x2', String(gap.at[1][0])); gapEl.setAttribute('y2', String(gap.at[1][1]));
+    gapEl.style.display = inParcel ? '' : 'none';
+
+    // Kantenlängen
+    const u = unit();
+    dimsG.replaceChildren(...G.edgeLengths(ring).filter((e) => e.L > 3).map((e) => {
+      const tx = document.createElementNS(SVGNS, 'text');
+      const mx = (e.a[0] + e.b[0]) / 2, my = (e.a[1] + e.b[1]) / 2;
+      const c = G.centroid(ring); const ox = mx - c[0], oy = my - c[1]; const L = Math.hypot(ox, oy) || 1;
+      tx.setAttribute('x', String(mx + (ox / L) * 7 * u)); tx.setAttribute('y', String(my + (oy / L) * 7 * u + 3 * u));
+      tx.setAttribute('text-anchor', 'middle'); tx.setAttribute('class', 'gc__dim'); tx.setAttribute('font-size', String(8.5 * u));
+      tx.textContent = e.L.toFixed(1).replace('.', ',');
+      return tx;
+    }));
+
+    // Ergebnis
+    const v = $('[data-verdict]');
+    let text = '';
+    if (!inParcel) text = 'Das Haus ragt über die Grundstücksgrenze. Verschieben oder drehen Sie es.';
+    else if (overlap && !anbau) text = 'Das Haus überschneidet ein bestehendes Gebäude.';
+    else if (!okGap && !dhh) text = `Zu eng: an der engsten Stelle ${fmtM(gap.d)} statt ${fmtM(sb)} Abstand.`;
+    else if (grz > T.grzMax) text = `Abstände passen, aber die Bebauung (GRZ ${grz.toFixed(2).replace('.', ',')}) liegt über dem üblichen Höchstwert ${String(T.grzMax).replace('.', ',')} in Wohngebieten.`;
+    else if (dhh) text = 'Passt. Die Doppelhaushälfte steht an einer Seite auf der Grenze, das regelt der Bebauungsplan.';
+    else if (anbau) text = 'Passt mit Abstand. Ein Anbau wird direkt an den Bestand gesetzt; schieben Sie ihn an das graue Gebäude.';
+    else text = `Passt. Überall mindestens ${fmtM(sb)} Abstand zur Grenze.`;
+    v.textContent = text; v.dataset.state = good ? 'ok' : 'bad';
+    $('[data-verdict-short]').textContent = good ? 'passt' : 'prüfen';
+    $('[data-f-area]').textContent = fmtA(area) + (S.source === 'kataster' && S.parcel.area ? ' (amtlich)' : '');
+    $('[data-f-house]').textContent = `${fmtA(t.w * t.d)} · ${String(t.w).replace('.', ',')} × ${String(t.d).replace('.', ',')} m`;
+    $('[data-f-grz]').textContent = grz.toFixed(2).replace('.', ',');
+    $('[data-f-gap]').textContent = inParcel ? `${fmtM(gap.d)} (nötig ${fmtM(sb)})` : '—';
+    $('[data-typenote]').textContent = `${t.note} · Wandhöhe ca. ${String(t.h).replace('.', ',')} m → Abstand ${fmtM(sb)}`;
+    const meta = S.source === 'kataster'
+      ? `${S.place} · Gemarkung ${S.parcel.gemarkung}, Flur ${S.parcel.flur}, Flurstück ${S.parcel.nr}`
+      : S.source === 'beispiel' ? 'Beispielgrundstück (erfunden)' : 'Grundstück nach Ihren Maßen';
+    $('[data-meta]').textContent = meta;
+    costs();
+    save();
+  }
+
+  function costs() {
+    const t = typ();
+    const art = S!.art, base = t.id === 'anbau' ? T.preise.anbau : art === 'rohbau' ? T.preise.rohbau : T.preise.schluesselfertig;
+    const f = (T.ausstattung.find((a: any) => a.id === S!.aus) || { f: 1 }).f;
+    const fa = art === 'rohbau' ? 1 : f;
+    let lo = S!.wohn * base[0] * fa, hi = S!.wohn * base[1] * fa;
+    if (S!.keller && t.id !== 'anbau') { lo += T.preise.keller[0]; hi += T.preise.keller[1]; }
+    $('[data-sum]').textContent = `${eur(lo)} – ${eur(hi)}`;
+  }
+
+  /* ---------- Bedienung ---------- */
+  // Pixel → Meter
+  const k = () => vb.w / svg.getBoundingClientRect().width;
+  let start0: Pt = [0, 0];
+  Draggable.create(proxy, {
+    trigger: houseG, type: 'x,y', inertia: !reduce, minimumMovement: 3,
+    onPress() { gsap.set(proxy, { x: 0, y: 0 }); this.update(); start0 = [S!.cx, S!.cy]; },
+    onDrag() { S!.cx = start0[0] + this.x * k(); S!.cy = start0[1] + this.y * k(); render(); },
+    onThrowUpdate() { S!.cx = start0[0] + this.x * k(); S!.cy = start0[1] + this.y * k(); render(); },
+  });
+  houseG.addEventListener('keydown', (e) => {
+    const step = e.shiftKey ? 2 : 0.5;
+    const m: Record<string, Pt> = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
+    if (m[e.key]) { e.preventDefault(); S!.cx += m[e.key][0]; S!.cy += m[e.key][1]; render(); }
+  });
+
+  root.querySelectorAll<HTMLButtonElement>('[data-rot]').forEach((b) => b.addEventListener('click', () => {
+    const to = S!.deg + Number(b.dataset.rot);
+    if (reduce) { S!.deg = to; render(); return; }
+    gsap.to(S!, { deg: to, duration: 0.3, ease: 'power2.out', onUpdate: render });
+  }));
+  $('[data-align]').addEventListener('click', () => {
+    const a = G.longestEdgeAngle(S!.parcel.ring);
+    // nächstliegende Ausrichtung (parallel oder quer)
+    const cands = [a, a + 90, a - 90, a + 180, a - 180];
+    const to = cands.reduce((b, c) => (Math.abs(((c - S!.deg + 540) % 360) - 180) < Math.abs(((b - S!.deg + 540) % 360) - 180) ? c : b));
+    const delta = ((to - S!.deg + 540) % 360) - 180;
+    gsap.to(S!, { deg: S!.deg + delta, duration: reduce ? 0 : 0.35, ease: 'power2.out', onUpdate: render });
+  });
+
+  // Ecken anpassen
+  const editBtn = $<HTMLButtonElement>('[data-edit]');
+  const resetBtn = $<HTMLButtonElement>('[data-reset]');
+  let handleDrags: Draggable[] = [];
+  function buildHandles() {
+    handleDrags.forEach((d) => d.kill()); handleDrags = [];
+    handlesG.replaceChildren();
+    if (!editing) return;
+    const u = unit();
+    S!.parcel.ring.forEach((p, i) => {
+      const c = document.createElementNS(SVGNS, 'circle');
+      c.setAttribute('cx', String(p[0])); c.setAttribute('cy', String(p[1])); c.setAttribute('r', String(7 * u));
+      c.setAttribute('class', 'gc__handle'); c.setAttribute('tabindex', '0'); c.setAttribute('role', 'button'); c.setAttribute('aria-label', `Ecke ${i + 1} verschieben`);
+      handlesG.append(c);
+      let s0: Pt = [0, 0];
+      const px = document.createElement('div'); px.className = 'gc__proxy'; root.append(px);
+      const d = Draggable.create(px, {
+        trigger: c, type: 'x,y', minimumMovement: 2,
+        onPress() { gsap.set(px, { x: 0, y: 0 }); this.update(); s0 = [...S!.parcel.ring[i]] as Pt; },
+        onDrag() {
+          const q: Pt = [s0[0] + this.x * k(), s0[1] + this.y * k()];
+          S!.parcel.ring[i] = q; c.setAttribute('cx', String(q[0])); c.setAttribute('cy', String(q[1]));
+          S!.parcel.area = G.area(S!.parcel.ring); render();
+        },
+      })[0];
+      handleDrags.push(d);
+      c.addEventListener('keydown', (e) => {
+        const m: Record<string, Pt> = { ArrowLeft: [-0.25, 0], ArrowRight: [0.25, 0], ArrowUp: [0, -0.25], ArrowDown: [0, 0.25] };
+        if (!m[e.key]) return; e.preventDefault();
+        const q = S!.parcel.ring[i]; q[0] += m[e.key][0]; q[1] += m[e.key][1];
+        c.setAttribute('cx', String(q[0])); c.setAttribute('cy', String(q[1])); S!.parcel.area = G.area(S!.parcel.ring); render();
+      });
+    });
+  }
+  editBtn.addEventListener('click', () => {
+    editing = !editing; editBtn.setAttribute('aria-pressed', String(editing));
+    resetBtn.hidden = !editing; houseG.style.pointerEvents = editing ? 'none' : '';
+    $('[data-hint]').textContent = editing ? 'Weiße Punkte ziehen, um die Grenze anzupassen. Fertig? „Ecken anpassen“ erneut tippen.' : 'Haus mit dem Finger verschieben. Grenzen falsch? „Ecken anpassen“.';
+    buildHandles();
+  });
+  resetBtn.addEventListener('click', () => {
+    S!.parcel.ring = S!.original.map((q) => [...q] as Pt); S!.parcel.area = S!.source === 'kataster' ? S!.parcel.area : G.area(S!.parcel.ring);
+    S!.parcel.area = G.area(S!.parcel.ring);
+    buildHandles(); render();
+  });
+
+  root.querySelectorAll<HTMLInputElement>('input[name=typ]').forEach((r) => r.addEventListener('change', () => {
+    S!.typ = r.value; S!.wohn = typ().wohn; $<HTMLInputElement>('[data-wohn]').value = String(S!.wohn);
+    placeFree(); render();
+  }));
+  root.querySelectorAll<HTMLInputElement>('input[name=art]').forEach((r) => r.addEventListener('change', () => { S!.art = r.value; costs(); save(); }));
+  $<HTMLInputElement>('[data-wohn]').addEventListener('input', (e) => { const v = Number((e.target as HTMLInputElement).value); if (v >= 20 && v <= 900) { S!.wohn = v; costs(); save(); } });
+  $<HTMLSelectElement>('[data-aus]').addEventListener('change', (e) => { S!.aus = (e.target as HTMLSelectElement).value; costs(); save(); });
+  $<HTMLInputElement>('[data-keller]').addEventListener('change', (e) => { S!.keller = (e.target as HTMLInputElement).checked; costs(); save(); });
+
+  // Für die Anfrage: kurze Zusammenfassung ablegen
+  $('[data-send]').addEventListener('click', () => {
+    if (!S) return;
+    const t = typ();
+    const sum = $('[data-sum]').textContent;
+    // Plan als eigenständiges SVG: berechnete Farben als Attribute übernehmen (CSP-sicher, ohne style="")
+    const plan = svg.cloneNode(true) as SVGSVGElement;
+    const src = [svg, ...svg.querySelectorAll('*')], dst = [plan, ...plan.querySelectorAll('*')];
+    src.forEach((el, i) => {
+      const cs = getComputedStyle(el as Element), d = dst[i] as Element;
+      ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'fill-opacity', 'font-family'].forEach((p) => { const v = cs.getPropertyValue(p); if (v && v !== 'none' && v !== 'normal') d.setAttribute(p, v); });
+      if ((el as SVGElement).style?.display === 'none') d.setAttribute('display', 'none');
+      d.setAttribute('vector-effect', 'non-scaling-stroke');
+      d.removeAttribute('class'); d.removeAttribute('tabindex'); d.removeAttribute('role'); d.removeAttribute('style');
+      const drop = (el as Element).hasAttribute('data-handles');
+      [...d.attributes].filter((a) => a.name.startsWith('data-')).forEach((a) => d.removeAttribute(a.name));
+      if (drop) d.setAttribute('data-drop', '');
+    });
+    plan.querySelectorAll('title,[data-drop]').forEach((n) => n.remove());
+    plan.setAttribute('aria-hidden', 'true');
+    try {
+      sessionStorage.setItem('rf:grundstueck-summary', JSON.stringify({
+        ort: $('[data-meta]').textContent,
+        flaeche: $('[data-f-area]').textContent,
+        haus: `${t.name}, ${$('[data-f-house]').textContent}`,
+        abstand: $('[data-f-gap]').textContent,
+        ergebnis: $('[data-verdict]').textContent,
+        kosten: `${S.art === 'rohbau' ? 'Rohbau' : 'Schlüsselfertig'}, ${S.wohn} m² Wohnfläche${S.keller ? ', mit Keller' : ''}: ${sum}`,
+        typ: t.id,
+        svg: plan.outerHTML,
+      }));
+    } catch {}
+  });
+
+  window.addEventListener('resize', () => { if (S && !work.hidden) { fitView(); render(); if (editing) buildHandles(); } });
+
+  // Wiederherstellen (z. B. nach Zurück aus der Anfrage)
+  const old = restore();
+  if (old && old.parcel) { S = old; open(false); }
+  else {
+    const pre = new URLSearchParams(location.search).get('typ');
+    if (pre) { const r = root.querySelector<HTMLInputElement>(`input[name=typ][value="${pre}"]`); if (r) r.checked = true; }
+  }
+</script>

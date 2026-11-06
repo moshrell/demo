@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import OrderForm from '../components/OrderForm.astro';
+import site from '../data/site.json';
+import refs from '../data/referenzen.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Rohbau für Architekten und Bauträger · Thielking Bau" description="Rohbaupartner im Raum Hannover: zwei eigene Kolonnen, Wohn- und kleiner Gewerbebau, Leistungsverzeichnis senden, direkter Draht zum Polier." current="architekten">
+  <section class="section section--night ar__hero">
+    <div class="wrap stack">
+      <p class="mono ar__k">Für Architekten & Bauträger</p>
+      <h1>Rohbau, auf den Sie Ihren Terminplan bauen können.</h1>
+      <p class="lead">Zwei eigene Maurerkolonnen, kein Weiterreichen an Nachunternehmer im Rohbau. Wir kalkulieren Ihr Leistungsverzeichnis innerhalb von zehn Werktagen.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap ar">
+      <dl class="ar__facts">
+        <div class="sheet"><dt class="sheet__hd mono">Kolonnen</dt><dd class="sheet__bd">{site.crews} eigene, je 4–5 Mann + Polier</dd></div>
+        <div class="sheet"><dt class="sheet__hd mono">Objekte</dt><dd class="sheet__bd">EFH, DHH, MFH bis 12 WE, Gewerbe bis ca. 1.500 m² BGF</dd></div>
+        <div class="sheet"><dt class="sheet__hd mono">Gebiet</dt><dd class="sheet__bd">Region Hannover, Deister, Schaumburg (ca. {site.radiusKm} km)</dd></div>
+        <div class="sheet"><dt class="sheet__hd mono">Freie Kapazität</dt><dd class="sheet__bd">Ab 2. Quartal 2027 (Stand: Demo-Wert)</dd></div>
+      </dl>
+      <div class="stack ar__txt">
+        <h2>So arbeiten wir mit Planern</h2>
+        <ol class="ar__steps">
+          <li><strong>LV senden.</strong> Als GAEB-Datei oder PDF, dazu Pläne und Terminrahmen.</li>
+          <li><strong>Angebot in 10 Werktagen.</strong> Mit Rückfragen zu Details, nicht mit Nachträgen hinterher.</li>
+          <li><strong>Polier als Ansprechpartner.</strong> {site.polier.name} ist auf der Baustelle und am Telefon: <a href={`tel:${site.polier.phoneHref}`}>{site.polier.phone}</a>.</li>
+          <li><strong>Bautagebuch.</strong> Wöchentlich mit Fotos per Mail, Abweichungen am selben Tag.</li>
+        </ol>
+        <p><a class="link-arrow" href={`${base}referenzen/`}>Referenzen ansehen ({refs.length})</a></p>
+      </div>
+    </div>
+  </section>
+  <section class="section section--alt" id="lv">
+    <div class="wrap ar__form">
+      <div class="sheet">
+        <OrderForm id="lv-form" title="Leistungsverzeichnis senden" options={['Wohnungsbau', 'Gewerbebau', 'Sanierung / Bestand']} optionsLabel="Art des Projekts" submitLabel="LV senden" purpose="meiner Angebotsanfrage" />
+        <p class="ar__note muted">Dateien (GAEB, PDF) schicken wir Ihnen nach dem Rückruf per Upload-Link. Demo: Es wird nichts gesendet.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .ar__hero { padding-block: var(--space-2xl); }
+  .ar__hero .lead { color: oklch(88% 0.015 262); }
+  .ar__k { color: var(--color-lamp); }
+  .ar { display: grid; gap: var(--space-xl); grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 56rem) { .ar { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; } }
+  .ar__facts { margin: 0; display: grid; gap: var(--space-sm); grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 30rem) { .ar__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .ar__facts dd { margin: 0; font-weight: 650; }
+  .ar__steps { margin: 0; padding-left: 1.3rem; display: grid; gap: var(--space-sm); }
+  .ar__form { max-width: 44rem; }
+  .ar__note { padding: 0 var(--space-md) var(--space-lg); font-size: var(--text-sm); }
+  @media (min-width: 40rem) { .ar__note { padding-inline: var(--gutter); } }
+</style>

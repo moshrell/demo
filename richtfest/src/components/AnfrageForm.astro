@@ -1,0 +1,254 @@
+---
+/**
+ * AnfrageForm: Projektanfrage (abgeleitet von _template/OrderForm.astro, gleicher Standard):
+ * label + Platzhalter + autocomplete, Pflicht-Einwilligung mit Link auf datenschutz/ (neuer Tab),
+ * Zwischenspeicher in sessionStorage (ohne Einwilligung, ohne Dateien), Bestätigung mit Zusammenfassung.
+ * Übernimmt den Grundstücks-Check (sessionStorage 'rf:grundstueck-summary').
+ * Demo: nichts wird gesendet. Echt: Versand per PHP-Mailer auf All-Inkl.
+ */
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const arten = [
+  { v: 'neubau', l: 'Neubau' },
+  { v: 'anbau', l: 'Anbau / Aufstockung' },
+  { v: 'sanierung', l: 'Sanierung / Umbau' },
+  { v: 'rohbau', l: 'Rohbau als Subunternehmer' },
+];
+const start = ['Frühjahr 2027', 'Sommer 2027', 'Herbst 2027', '2028 oder später', 'Noch offen'];
+const budget = ['bis 150.000 €', '150.000–300.000 €', '300.000–500.000 €', '500.000–800.000 €', 'über 800.000 €', 'Noch offen'];
+---
+<form class="af" id="anfrage" novalidate data-af>
+  <fieldset class="af__group">
+    <legend>Was planen Sie?</legend>
+    <div class="chips">
+      {arten.map((a, i) => <label class="chip"><input type="radio" name="art" value={a.v} checked={i === 0} /><span>{a.l}</span></label>)}
+    </div>
+  </fieldset>
+
+  <fieldset class="af__group">
+    <legend>Grundstück</legend>
+    <div class="af__plot" data-plot hidden>
+      <div class="af__plotsvg" data-plot-svg></div>
+      <dl class="af__plotdl" data-plot-dl></dl>
+      <button class="btn" type="button" data-plot-remove>Grundstück entfernen</button>
+    </div>
+    <div data-plot-empty class="af__plotempty">
+      <div class="chips">
+        <label class="chip"><input type="radio" name="grundstueck" value="vorhanden" checked /><span>Vorhanden</span></label>
+        <label class="chip"><input type="radio" name="grundstueck" value="in Aussicht" /><span>In Aussicht</span></label>
+        <label class="chip"><input type="radio" name="grundstueck" value="noch keins" /><span>Noch keins</span></label>
+      </div>
+      <div class="field">
+        <label for="af-ort">Ort oder Adresse <span class="af__opt">(optional)</span></label>
+        <input id="af-ort" name="ort" type="text" autocomplete="street-address" placeholder="z. B. Gehrden, Neubaugebiet Lange Feldmark" />
+      </div>
+      <p class="af__tip"><a href={`${base}grundstueck/`}>Grundstück im Check prüfen</a> und hier mitschicken.</p>
+    </div>
+  </fieldset>
+
+  <fieldset class="af__group af__two">
+    <legend>Stand und Rahmen</legend>
+    <div class="field">
+      <label for="af-plan">Architekt / Baugenehmigung</label>
+      <select id="af-plan" name="planung">
+        <option>Noch nichts</option>
+        <option>Architekt beauftragt</option>
+        <option>Bauantrag gestellt</option>
+        <option>Baugenehmigung liegt vor</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="af-start">Gewünschter Baubeginn</label>
+      <select id="af-start" name="start">{start.map((s) => <option>{s}</option>)}</select>
+    </div>
+    <div class="field">
+      <label for="af-budget">Budget für den Bau</label>
+      <select id="af-budget" name="budget">{budget.map((s) => <option>{s}</option>)}</select>
+    </div>
+    <div class="field">
+      <label for="af-flaeche">Wohnfläche ca. <span class="af__opt">(optional)</span></label>
+      <input id="af-flaeche" name="flaeche" type="number" inputmode="numeric" min="10" max="5000" placeholder="z. B. 140" />
+    </div>
+  </fieldset>
+
+  <fieldset class="af__group">
+    <legend>Ihre Angaben</legend>
+    <div class="field">
+      <label for="af-name">Name</label>
+      <input id="af-name" name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname" required aria-describedby="af-err-name" />
+      <p class="af__err" id="af-err-name" hidden>Bitte geben Sie Ihren Namen an.</p>
+    </div>
+    <div class="field">
+      <label for="af-tel">Telefon</label>
+      <input id="af-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 030 23125 123" required aria-describedby="af-err-tel" />
+      <p class="af__err" id="af-err-tel" hidden>Bitte geben Sie eine Telefonnummer an, unter der wir Sie erreichen.</p>
+    </div>
+    <div class="field">
+      <label for="af-mail">E-Mail <span class="af__opt">(optional)</span></label>
+      <input id="af-mail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" aria-describedby="af-err-mail" />
+      <p class="af__err" id="af-err-mail" hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.</p>
+    </div>
+    <div class="field">
+      <label for="af-note">Nachricht <span class="af__opt">(optional)</span></label>
+      <textarea id="af-note" name="note" rows="4" autocomplete="off" placeholder="z. B. Haus mit 4 Zimmern, Garage, Hanglage"></textarea>
+    </div>
+    <div class="field">
+      <label for="af-file">Pläne oder Fotos <span class="af__opt">(optional, Demo: wird nicht hochgeladen)</span></label>
+      <input id="af-file" name="files" type="file" multiple accept="image/*,application/pdf" />
+    </div>
+  </fieldset>
+
+  <div class="af__consent">
+    <label class="af__check">
+      <input type="checkbox" name="privacy" required aria-describedby="af-err-privacy" />
+      <span>Ich bin einverstanden, dass {site.name} meine Angaben (Name, Telefon, E-Mail, Projektangaben, Nachricht und ggf. Grundstücksdaten) zur Bearbeitung meiner Anfrage verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a></span>
+    </label>
+    <p class="af__err" id="af-err-privacy" hidden>Bitte stimmen Sie zu, sonst können wir Ihre Anfrage nicht bearbeiten.</p>
+  </div>
+
+  <div class="af__bar">
+    <p class="af__barinfo" data-barinfo>Es wird nichts gesendet (Demo).</p>
+    <button class="btn btn--primary af__btn" type="submit">Anfrage senden</button>
+  </div>
+</form>
+
+<div class="af__done sheet" data-done tabindex="-1" hidden>
+  <p class="sheet__hd mono"><span>Anfrage</span><span data-done-nr></span></p>
+  <div class="sheet__bd stack">
+    <h2>Danke. Ihre Anfrage liegt bei uns.</h2>
+    <dl class="af__sum" data-done-list></dl>
+    <h3>So geht es weiter</h3>
+    <ol class="af__next">
+      <li>{site.office.name} ruft Sie innerhalb von zwei Werktagen an.</li>
+      <li>Termin auf Ihrem Grundstück mit {site.owner}.</li>
+      <li>Schriftliches Angebot mit Bauzeitenplan.</li>
+    </ol>
+    <p class="af__demo">Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.</p>
+    <p><button class="btn" type="button" data-again>Neue Anfrage</button></p>
+  </div>
+</div>
+
+<style>
+  .af { display: grid; gap: var(--space-lg); }
+  .af__group { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: var(--space-md); }
+  .af__group legend { font-family: var(--font-display); font-variation-settings: 'wdth' 125; font-weight: 750; font-size: 1.25rem; padding: 0; margin-bottom: var(--space-sm); }
+  .af__two { grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 40rem) { .af__two { grid-template-columns: repeat(2, minmax(0, 1fr)); } .af__two legend { grid-column: 1 / -1; } }
+  .af__opt { font-weight: 400; color: var(--color-ink-2); }
+  .af__err { margin: 0; font-size: var(--text-sm); font-weight: 600; color: var(--color-bad); }
+  .af__err[hidden] { display: none; }
+  .field input[aria-invalid='true'] { border-color: var(--color-bad); box-shadow: inset 0 0 0 1px var(--color-bad); }
+  .af__plotempty { display: grid; gap: var(--space-md); }
+  .af__tip { font-size: var(--text-sm); }
+  .af__plot { display: grid; gap: var(--space-sm); grid-template-columns: minmax(0, 1fr); padding: var(--space-md); background: var(--color-paper); border: 1px solid var(--color-rule); border-radius: var(--radius); }
+  .af__plot[hidden] { display: none; }
+  @media (min-width: 40rem) { .af__plot { grid-template-columns: 9rem minmax(0, 1fr); align-items: start; } .af__plot .btn { grid-column: 1 / -1; justify-self: start; } }
+  .af__plotsvg { background: var(--color-night); border-radius: var(--radius); aspect-ratio: 1; overflow: hidden; max-width: 12rem; }
+  .af__plotsvg :global(svg) { width: 100%; height: 100%; display: block; }
+  .af__plotdl, .af__sum { margin: 0; display: grid; }
+  .af__plotdl :global(div), .af__sum :global(div) { display: grid; grid-template-columns: minmax(0, 8rem) minmax(0, 1fr); gap: var(--space-sm); padding: var(--space-xs) 0; border-top: 1px solid var(--color-rule); font-size: 0.92rem; }
+  .af__plotdl :global(dt), .af__sum :global(dt) { color: var(--color-ink-2); }
+  .af__plotdl :global(dd), .af__sum :global(dd) { margin: 0; overflow-wrap: anywhere; }
+  .af__consent { display: grid; gap: var(--space-xs); }
+  .af__check { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-smd); align-items: start; font-size: var(--text-sm); line-height: 1.45; cursor: pointer; }
+  .af__check input { width: 1.4rem; height: 1.4rem; margin: 0.1rem 0 0; accent-color: var(--color-accent); }
+  .af__check.is-invalid span { color: var(--color-bad); }
+  .af__bar { position: sticky; bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); padding: var(--space-smd) 0; background: var(--color-chalk); border-top: 1.5px solid var(--color-ink); }
+  @media (min-width: 64rem) { .af__bar { bottom: 0; } }
+  .af__barinfo { font-size: var(--text-sm); color: var(--color-ink-2); }
+  @media (max-width: 30rem) { .af__bar { flex-wrap: wrap; } .af__btn { flex: 1 1 100%; } }
+  .af__done:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .af__done h2 { font-size: var(--text-xl); }
+  .af__done h3 { font-size: 1.1rem; }
+  .af__next { margin: 0; padding-left: 1.25rem; display: grid; gap: var(--space-xs); }
+  .af__demo { font-size: var(--text-sm); color: var(--color-ink-2); }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('form[data-af]');
+  if (form) {
+    const done = document.querySelector<HTMLElement>('[data-done]')!;
+    const list = done.querySelector<HTMLElement>('[data-done-list]')!;
+    const field = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
+    const KEY = `form:${location.pathname}:${form.id}`;
+    const PLOT = 'rf:grundstueck-summary';
+    let plot: Record<string, string> | null = null;
+
+    // Grundstück aus dem Check
+    const plotBox = form.querySelector<HTMLElement>('[data-plot]')!;
+    const plotEmpty = form.querySelector<HTMLElement>('[data-plot-empty]')!;
+    const row = (k: string, v: string) => { const d = document.createElement('div'); const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); return d; };
+    const showPlot = () => {
+      try { plot = JSON.parse(sessionStorage.getItem(PLOT) || 'null'); } catch { plot = null; }
+      plotBox.hidden = !plot; plotEmpty.hidden = !!plot;
+      if (!plot) return;
+      const svgBox = plotBox.querySelector<HTMLElement>('[data-plot-svg]')!;
+      const doc = new DOMParser().parseFromString(plot.svg || '', 'image/svg+xml').documentElement;
+      svgBox.replaceChildren(doc.nodeName === 'svg' ? document.importNode(doc, true) : document.createTextNode(''));
+      plotBox.querySelector<HTMLElement>('[data-plot-dl]')!.replaceChildren(
+        row('Grundstück', plot.ort), row('Fläche', plot.flaeche), row('Haus', plot.haus), row('Abstand', plot.abstand), row('Kostenrahmen', plot.kosten));
+      if (plot.typ === 'anbau') (form.querySelector('input[name=art][value=anbau]') as HTMLInputElement).checked = true;
+    };
+    plotBox.querySelector('[data-plot-remove]')!.addEventListener('click', () => { try { sessionStorage.removeItem(PLOT); } catch {} showPlot(); });
+
+    // Vorauswahl aus Link ?art=
+    const pre = new URLSearchParams(location.search).get('art');
+    if (pre) { const r = form.querySelector<HTMLInputElement>(`input[name=art][value="${pre}"]`); if (r) r.checked = true; }
+
+    // Zwischenspeicher
+    const keep = () => [...form.elements].filter((el): el is HTMLInputElement => (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement) && !!(el as HTMLInputElement).name && (el as HTMLInputElement).name !== 'privacy' && (el as HTMLInputElement).type !== 'file');
+    const save = () => {
+      try {
+        const d: Record<string, string> = {};
+        keep().forEach((el) => { if (el.type === 'radio') { if (el.checked) d[el.name] = el.value; } else d[el.name] = el.value; });
+        sessionStorage.setItem(KEY, JSON.stringify(d));
+      } catch {}
+    };
+    try {
+      const raw = sessionStorage.getItem(KEY);
+      if (raw) { const d = JSON.parse(raw); keep().forEach((el) => { if (!(el.name in d)) return; if (el.type === 'radio') el.checked = el.value === d[el.name]; else el.value = d[el.name]; }); }
+    } catch {}
+    if (pre) { const r = form.querySelector<HTMLInputElement>(`input[name=art][value="${pre}"]`); if (r) r.checked = true; }
+    showPlot();
+    form.addEventListener('input', save);
+    form.addEventListener('change', save);
+
+    const err = (input: HTMLInputElement, show: boolean) => {
+      const e = document.getElementById(input.getAttribute('aria-describedby') || '');
+      if (e) e.hidden = !show;
+      input.setAttribute('aria-invalid', show ? 'true' : 'false');
+      input.closest('.af__check')?.classList.toggle('is-invalid', show);
+    };
+    ['name', 'tel', 'email'].forEach((n) => field(n).addEventListener('input', () => err(field(n), false)));
+    field('privacy').addEventListener('change', () => err(field('privacy'), false));
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = field('name'), tel = field('tel'), mail = field('email'), priv = field('privacy');
+      const bad: HTMLInputElement[] = [];
+      const check = (i: HTMLInputElement, ok: boolean) => { err(i, !ok); if (!ok) bad.push(i); };
+      check(name, name.value.trim().length > 1);
+      check(tel, tel.value.replace(/\D/g, '').length >= 6);
+      check(mail, mail.value.trim() === '' || mail.checkValidity());
+      check(priv, priv.checked);
+      if (bad.length) { bad[0].focus(); return; }
+      const v = (n: string) => { const el = form.elements.namedItem(n) as any; return el instanceof RadioNodeList ? el.value : el?.value || ''; };
+      const art = form.querySelector<HTMLInputElement>('input[name=art]:checked')!;
+      const rows: [string, string][] = [['Projekt', art.nextElementSibling!.textContent || art.value]];
+      if (plot) { rows.push(['Grundstück', plot.ort], ['Haus', plot.haus], ['Kostenrahmen', plot.kosten]); }
+      else { rows.push(['Grundstück', [v('grundstueck'), v('ort')].filter(Boolean).join(', ')]); }
+      rows.push(['Planung', v('planung')], ['Baubeginn', v('start')], ['Budget', v('budget')]);
+      if (v('flaeche')) rows.push(['Wohnfläche', `${v('flaeche')} m²`]);
+      const files = (field('files').files || []).length; if (files) rows.push(['Dateien', `${files} ausgewählt (Demo: nicht hochgeladen)`]);
+      rows.push(['Name', name.value.trim()], ['Telefon', tel.value.trim()]);
+      if (mail.value.trim()) rows.push(['E-Mail', mail.value.trim()]);
+      list.replaceChildren(...rows.map(([k, val]) => row(k, val)));
+      done.querySelector('[data-done-nr]')!.textContent = 'Nr. ' + new Date().toISOString().slice(2, 10).replace(/-/g, '') + '-' + String(Math.floor(Math.random() * 900) + 100);
+      form.hidden = true; done.hidden = false; done.focus();
+      try { sessionStorage.removeItem(KEY); } catch {}
+    });
+    done.querySelector('[data-again]')!.addEventListener('click', () => {
+      form.reset(); form.hidden = false; done.hidden = true; try { sessionStorage.removeItem(PLOT); } catch {} showPlot(); field('name').focus();
+    });
+  }
+</script>

@@ -29,7 +29,7 @@ try {
     `style-src 'self' 'unsafe-hashes' ${[...styles].sort().join(' ')}`.trim(),
     "img-src 'self' data: blob:",
     "font-src 'self'",
-    "connect-src 'self'",
+    "connect-src 'self' https://photon.komoot.io https://opendata.lgln.niedersachsen.de",
     "form-action 'self'",
     "base-uri 'self'",
     "object-src 'none'",

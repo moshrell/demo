@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+import PlzCheck from '../components/PlzCheck.astro';
+import data from '../data/leistungen.json';
+const base = import.meta.env.BASE_URL;
+const prices = data.leistungen.filter((l) => /\d/.test(l.price)).map((l) => ({ name: l.title, price: l.price.replace(/\D/g, '') }));
+---
+<Base title="Leistungen & Preise · Neubau, Rohbau, Anbau, Sanierung · Thielking Bau" description="Richtpreise pro m², Bauzeiten und was enthalten ist: schlüsselfertiger Neubau, Rohbau, Anbau und Aufstockung, Sanierung im Raum Hannover." current="leistungen" prices={prices}>
+  <section class="section section--tight">
+    <div class="wrap stack">
+      <p class="mono ls__k">Leistungen & Preise</p>
+      <h1>Was wir bauen, was es ungefähr kostet.</h1>
+      <p class="lead">Ehrliche Richtwerte statt „Preis auf Anfrage“. Den genauen Preis bekommen Sie schriftlich nach der Besichtigung.</p>
+      <nav class="ls__jump" aria-label="Leistungen">
+        {data.leistungen.map((l) => <a class="btn" href={`#${l.id}`}>{l.title}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  {data.leistungen.map((l, i) => (
+    <section class={`section ${i % 2 ? '' : 'section--alt'}`} id={l.id} aria-labelledby={`${l.id}-h`}>
+      <div class="wrap ls">
+        <div class="stack">
+          <p class="mono ls__nr">{String(i + 1).padStart(2, '0')} / {String(data.leistungen.length).padStart(2, '0')}</p>
+          <h2 id={`${l.id}-h`}>{l.title}</h2>
+          <p class="lead">{l.lead}</p>
+          <div class="ls__cta">
+            <a class="btn btn--primary" href={`${base}anfrage/?art=${l.id === 'rohbau' ? 'neubau' : l.id}`}>Anfragen</a>
+            {l.check && <a class="btn" href={`${base}grundstueck/?typ=${l.check}`}>Passt das auf mein Grundstück?</a>}
+          </div>
+        </div>
+        <div class="sheet ls__card reveal">
+          <p class="sheet__hd mono"><span>Richtwert</span><span>{l.time}</span></p>
+          <div class="sheet__bd stack">
+            <p class="ls__price">{l.price}</p>
+            <div>
+              <h3 class="ls__h">Enthalten</h3>
+              <ul class="ls__list">{l.includes.map((x) => <li>{x}</li>)}</ul>
+            </div>
+            {l.excludes.length > 0 && (
+              <div>
+                <h3 class="ls__h">Nicht enthalten</h3>
+                <ul class="ls__list ls__list--no">{l.excludes.map((x) => <li>{x}</li>)}</ul>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="section">
+    <div class="wrap ls__foot">
+      <p class="muted prose">{data.priceNote}</p>
+      <div class="sheet"><div class="sheet__bd"><PlzCheck id="plz-ls" /></div></div>
+    </div>
+  </section>
+</Base>
+<style>
+  .ls__k, .ls__nr { color: var(--color-accent); }
+  .ls__jump { display: flex; flex-wrap: wrap; gap: var(--space-sm); padding-top: var(--space-sm); }
+  .ls__jump .btn { min-height: 2.75rem; }
+  .ls { display: grid; gap: var(--space-xl); grid-template-columns: minmax(0, 1fr); align-items: start; }
+  @media (min-width: 56rem) { .ls { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); } }
+  .ls__cta { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+  .ls__price { font-family: var(--font-display); font-variation-settings: 'wdth' 125; font-weight: 780; font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.2rem); line-height: 1.1; }
+  .ls__h { font-size: 0.95rem; margin-bottom: var(--space-xs); }
+  .ls__list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--space-xs); }
+  .ls__list li { padding-left: 1.4rem; position: relative; }
+  .ls__list li::before { content: '+'; position: absolute; left: 0; font-family: var(--font-mono); color: var(--color-ok); }
+  .ls__list--no li::before { content: '−'; color: var(--color-ink-2); }
+  .ls__foot { display: grid; gap: var(--space-lg); grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 56rem) { .ls__foot { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; } }
+</style>

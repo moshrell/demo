@@ -5,6 +5,7 @@
 @view-transition { navigation: auto; }
 
 *, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html, body { overflow-x: clip; }
 html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + var(--space-md)); }
 body {
@@ -169,3 +170,10 @@ p { margin: 0; }
 
 .hd__cta { display: none; }
 @media (min-width: 64rem) { .hd__cta { display: inline-flex; min-height: 2.5rem; padding-block: 0.5rem; } }
+
+/* Telefon quer: keine untere Leiste, dafür Anfrage-Knopf im Header */
+@media (max-height: 500px) and (orientation: landscape) {
+  .bar { display: none; }
+  body { padding-bottom: 0; }
+  .hd__cta { display: inline-flex; min-height: 2.5rem; padding-block: 0.4rem; }
+}

@@ -43,6 +43,7 @@ const base = import.meta.env.BASE_URL;
         <div class="gc__planwrap">
           <p class="mono gc__plaininfo" data-meta></p>
           <figure class="gc__plan">
+            <p class="gc__badge mono" data-badge aria-hidden="true"></p>
             <svg data-svg role="img" aria-labelledby="gc-svg-t">
               <title id="gc-svg-t">Lageplan des Grundstücks mit Haus und Grenzabstand</title>
               <g data-neighbors></g>
@@ -149,6 +150,11 @@ const base = import.meta.env.BASE_URL;
   .gc__plaininfo { color: var(--color-ink-2); margin-bottom: var(--space-sm); min-height: 1.2em; }
   .gc__plan { margin: 0; background: var(--color-night); border-radius: var(--radius); overflow: hidden; aspect-ratio: 1 / 1; max-height: 68svh; width: 100%; }
   @media (min-width: 60rem) { .gc__plan { aspect-ratio: 5 / 4; max-height: 72svh; } }
+  .gc__plan { position: relative; }
+  .gc__badge { position: absolute; left: var(--space-sm); top: var(--space-sm); margin: 0; padding: 0.35rem 0.6rem; border-radius: 2px; background: var(--color-chalk); color: var(--color-ink); font-size: 0.72rem; pointer-events: none; }
+  .gc__badge:empty { display: none; }
+  .gc__badge[data-state='ok'] { background: var(--color-ok); color: var(--color-chalk); }
+  .gc__badge[data-state='bad'] { background: var(--color-bad); color: var(--color-chalk); }
   .gc__plan svg { width: 100%; height: 100%; display: block; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
   .gc__parcel { fill: oklch(28% 0.045 265); stroke: var(--color-chalk); stroke-width: 0.25; stroke-dasharray: 1 0.6; vector-effect: non-scaling-stroke; }
   :global(.gc__nb) { fill: transparent; stroke: oklch(55% 0.03 262); stroke-width: 1; vector-effect: non-scaling-stroke; cursor: pointer; }
@@ -431,13 +437,15 @@ const base = import.meta.env.BASE_URL;
 
     // Kantenlängen
     const u = unit();
-    dimsG.replaceChildren(...G.edgeLengths(ring).filter((e) => e.L > 3).map((e) => {
+    const edges = G.edgeLengths(ring);
+    const longest = Math.max(...edges.map((e) => e.L));
+    dimsG.replaceChildren(...edges.filter((e) => e.L > Math.max(3, longest * 0.18)).map((e) => {
       const tx = document.createElementNS(SVGNS, 'text');
       const mx = (e.a[0] + e.b[0]) / 2, my = (e.a[1] + e.b[1]) / 2;
       const c = G.centroid(ring); const ox = mx - c[0], oy = my - c[1]; const L = Math.hypot(ox, oy) || 1;
       tx.setAttribute('x', String(mx + (ox / L) * 7 * u)); tx.setAttribute('y', String(my + (oy / L) * 7 * u + 3 * u));
       tx.setAttribute('text-anchor', 'middle'); tx.setAttribute('class', 'gc__dim'); tx.setAttribute('font-size', String(8.5 * u));
-      tx.textContent = e.L.toFixed(1).replace('.', ',');
+      tx.textContent = e.L.toFixed(1).replace('.', ',') + ' m';
       return tx;
     }));
 
@@ -448,11 +456,14 @@ const base = import.meta.env.BASE_URL;
     else if (overlap && !anbau) text = 'Das Haus überschneidet ein bestehendes Gebäude.';
     else if (!okGap && !dhh) text = `Zu eng: an der engsten Stelle ${fmtM(gap.d)} statt ${fmtM(sb)} Abstand.`;
     else if (grz > T.grzMax) text = `Abstände passen, aber die Bebauung (GRZ ${grz.toFixed(2).replace('.', ',')}) liegt über dem üblichen Höchstwert ${String(T.grzMax).replace('.', ',')} in Wohngebieten.`;
-    else if (dhh) text = 'Passt. Die Doppelhaushälfte steht an einer Seite auf der Grenze, das regelt der Bebauungsplan.';
+    else if (dhh) text = 'Möglich: Die Doppelhaushälfte steht an einer Seite auf der Grenze. Ob das hier zulässig ist, regelt der Bebauungsplan.';
     else if (anbau) text = 'Passt mit Abstand. Ein Anbau wird direkt an den Bestand gesetzt; schieben Sie ihn an das graue Gebäude.';
     else text = `Passt. Überall mindestens ${fmtM(sb)} Abstand zur Grenze.`;
     v.textContent = text; v.dataset.state = good ? 'ok' : 'bad';
     $('[data-verdict-short]').textContent = good ? 'passt' : 'prüfen';
+    const badge = $('[data-badge]');
+    badge.textContent = good ? `✓ passt · ${fmtM(gap.d)} Abstand` : !inParcel ? '✕ über der Grenze' : overlap && !anbau ? '✕ Gebäude im Weg' : !okGap && !dhh ? `✕ zu eng · ${fmtM(gap.d)}` : '! prüfen';
+    badge.dataset.state = good ? 'ok' : 'bad';
     $('[data-f-area]').textContent = fmtA(area) + (S.source === 'kataster' && S.parcel.area ? ' (amtlich)' : '');
     $('[data-f-house]').textContent = `${fmtA(t.w * t.d)} · ${String(t.w).replace('.', ',')} × ${String(t.d).replace('.', ',')} m`;
     $('[data-f-grz]').textContent = grz.toFixed(2).replace('.', ',');

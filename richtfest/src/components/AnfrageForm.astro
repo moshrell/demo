@@ -154,7 +154,7 @@ const budget = ['bis 150.000 €', '150.000–300.000 €', '300.000–500.000 �
   .af__check input { width: 1.4rem; height: 1.4rem; margin: 0.1rem 0 0; accent-color: var(--color-accent); }
   .af__check.is-invalid span { color: var(--color-bad); }
   .af__bar { position: sticky; bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); padding: var(--space-smd) 0; background: var(--color-chalk); border-top: 1.5px solid var(--color-ink); }
-  @media (min-width: 64rem) { .af__bar { bottom: 0; } }
+  @media (min-width: 64rem), (max-height: 500px) and (orientation: landscape) { .af__bar { bottom: 0; } }
   .af__barinfo { font-size: var(--text-sm); color: var(--color-ink-2); }
   @media (max-width: 30rem) { .af__bar { flex-wrap: wrap; } .af__btn { flex: 1 1 100%; } }
   .af__done:focus { outline: 3px solid var(--focus); outline-offset: 2px; }

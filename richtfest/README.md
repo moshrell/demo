@@ -1,28 +1,36 @@
-# Thielking Bau
+# Richtfest · Thielking Bau (Demo Bauunternehmen)
 
-Astro-Projekt (Demo). Адрес на портфолио: `/vorschau/bau/richtfest/`
+Статус: **сайт собран и проверен без фото; ждёт кадры Gemini** (`PROMPTS.txt`, Степан кладёт в `D:\Webdesign\richtfest\img\`, оттуда они копируются в `public/img/`).
+Живая версия: https://moshrell.github.io/demo/richtfest/ · портфолио: `/vorschau/bau/richtfest/`
+Бриф: `_briefs/bau/01_bauunternehmen_richtfest.txt` · ТЗ от владельца: `TZ.txt` · модуль участка: `_briefs/_module/grundstueck-adresse.txt`.
+Фирма вымышленная (Thielking Bau GmbH, Gehrden), проверено веб-поиском 06.11.2026.
 
-    START.bat           # первый запуск ставит пакеты, дальше dev-сервер
-    npm run build       # сборка + dist/.htaccess (CSP с хэшами, noindex)
-    npm run publish     # сборка + копия в ..\kravets-site\public\vorschau\bau\richtfest
+## Что где
+- `src/components/Bauablauf.astro` — главная сцена: GSAP ScrollTrigger (pin + scrub + snap к фазам), SplitText (заголовок), ScrollToPlugin (точки фаз). Фазы и проценты оплаты: `src/data/phasen.json`. Без JS и при reduced-motion — те же фазы списком.
+- `src/pages/grundstueck.astro` + `src/scripts/geo.ts` — Grundstücks-Check: Photon (адрес) → LGLN WFS `alkis_wfs_einfach` (Flurstück + здания, GML, EPSG:25832) → SVG-план, GSAP Draggable + Inertia (дом, вершины), DrawSVG (контур), отступ 0,4 H / мин. 3 м (NBauO § 5 Abs. 2), GRZ, Kostenrahmen. Типы домов и цены: `src/data/haustypen.json`.
+- `src/components/AnfrageForm.astro` — Projektanfrage (стандарт OrderForm + план участка из Check через sessionStorage).
+- `src/pages/referenzen.astro` — фильтр с GSAP Flip.
+- Переходы между страницами: CSS `@view-transition` (без JS), при reduced-motion выключены. Появление блоков: CSS `animation-timeline: view()`.
+- CSP: `scripts/htaccess.mjs`, `connect-src` разрешает только photon.komoot.io и opendata.lgln.niedersachsen.de.
 
-Данные клиента (тексты, цены, часы) — `src/data/site.json`.
-Что ещё нужно от клиента — искать `TODO` в проекте.
+## Осознанные исключения
+- **Внешние запросы** (вопреки правилу «без внешних запросов»): только в Grundstücks-Check и только по кнопке «Grundstück suchen». Описано в Datenschutz (`#grundstueck`). Альтернативы без передачи: «Maße selbst eingeben», «Beispielgrundstück» (выдуманный участок).
+- Только Niedersachsen (данные LGLN). Вне земли — сообщение и ручной ввод.
 
-## Правило форм (всегда, для каждого демо)
-Готовый блок: `src/components/OrderForm.astro` (форма) + `src/components/DatenschutzForm.astro` (раздел для `datenschutz.astro`). Если на сайте есть любая форма — брать их, а не писать с нуля:
-1. Каждое поле: `label`, понятный placeholder-пример (`Vor- und Nachname`, `z. B. 030 23125 123`, `name@example.com`), `autocomplete`, `type`/`inputmode`.
-2. Если собираются имя/телефон/e-mail: обязательный чекбокс согласия (`required`) с целью + ссылка на `${base}datenschutz/`, сообщение об ошибке, если не отмечен. В `datenschutz.astro` раздел про эту форму (Verantwortlicher, Daten, Zweck, Art. 6 Abs. 1 lit. b DSGVO, Speicherdauer, Weitergabe, Rechte Art. 15–21, Beschwerderecht, Freiwilligkeit, Demo-Hinweis).
-3. Цены/выбор: итог «Summe» виден по ходу выбора (на мобильном липкая плашка внизу формы) и повторяется в подтверждении. Нет цен: итог не выдумывать, в подтверждении показать сводку выбора (услуга, дата/время).
-4. Стили только через токены (`--muted`, `--alert`, `--focus`, `--space-*` в `global.css`: подогнать под дизайн проекта), доступность (focus-visible, aria-invalid, aria-describedby), проверка на 390px.
-5. Введённые данные не должны пропадать никогда: sessionStorage-автосохранение (уже встроено в `OrderForm.astro`; ключ `form:<pathname>:<id>`, всё в try/catch), ссылки на Datenschutz/Impressum открываются в новой вкладке (`target="_blank" rel="noopener"`), чекбокс согласия не сохраняется и не восстанавливается, после успешной отправки хранилище очищается. В Datenschutz есть предложение про Zwischenspeicher (уже в `DatenschutzForm.astro`).
+## Проверено (headless, Chromium)
+- Ширины 320/390/1024/1220/1280/1440 и 844×390: нет горизонтального скролла, кнопки в одну строку, ошибок JS нет.
+- Сцена: каждая прокрутка = одна фаза (snap к меткам), 0→6, панель не перекрывается нижней панелью, на 320×568 картинка ≥ половины экрана.
+- Check с реальными данными: «Dammstraße 10, Gehrden» → Flurstück 307/1, 413 м², здания; перетаскивание, типы, цены; передача в Anfrage со схемой.
+- Формы: ошибки и фокус, автосохранение после перезагрузки, согласие не восстанавливается, Datenschutz в новой вкладке, подтверждение со сводкой. PLZ-проверка. Reduced-motion и без JS: список фаз.
 
-## SEO & KI-Sichtbarkeit (AIO) — Standard in jedem Projekt
-`Base.astro` liefert: title, description, canonical, Open Graph, Schema.org-JSON-LD (`type`, Adresse, Öffnungszeiten, Preise als `prices`), FAQPage-Markup (`faq`). Checkliste pro Projekt:
-1. Ein `<h1>`, logische `<h2>`/`<h3>`, `alt` bei jedem Bild.
-2. `type` auf passenden Schema.org-Typ setzen; `site.json`: `openingHours`, `areaServed` füllen (Platzhalter `TODO` nie live).
-3. FAQ: dieselben Fragen/Antworten sichtbar auf der Seite UND als `faq`-Prop übergeben.
-4. Kundenseite live: `index` setzen (Demos bleiben noindex), sitemap.xml + robots.txt ergänzen, Google Business Profile mit identischen Name/Adresse/Telefon (NAP).
+## Не проверено / известные недочёты
+- **Кадры**: пока нет. Позиции выносок на фазах (`notes` в `phasen.json`, в % кадра 3:4) заданы на глаз — откалибровать по готовым картинкам.
+- Реальная плавность pin-сцены на iPhone/Android (адресная строка) — проверить на телефоне.
+- Объединение двух Flurstücke в одно не сделано (можно выбрать соседний тапом и подправить вершины).
+- Высота H для отступа упрощена (одна «Wandhöhe» на тип дома, без фронтонов и рельефа).
+- В Datenschutz — `TODO` по хостингу (данные реального клиента).
 
-## Demo-Kontaktdaten (fiktiv)
-Telefon nur aus den offiziellen «Drama Numbers» der Bundesnetzagentur (z. B. Berlin `030 23125 000–999`, Hamburg `040 66969 000–999`, Köln `0221 4710 000–999`, München `089 99998 000–999`, Frankfurt `069 90009 000–999`), E-Mail nur `@example.com`. Keine Geschäftsdaten-Markup (LocalBusiness) in Demos: `index = false` unterdrückt sie, FAQPage bleibt. Demos bleiben `noindex`.
+## Источники и лицензии
+- Кадастр: LGLN, Liegenschaftskataster, CC BY 4.0 (подпись на странице и в Impressum).
+- Поиск адреса: Photon (komoot), данные © OpenStreetMap, ODbL.
+- GSAP 3.15 (бесплатно, включая плагины), шрифты Archivo и Martian Mono (OFL, @fontsource-variable).

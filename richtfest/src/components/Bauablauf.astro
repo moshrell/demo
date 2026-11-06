@@ -131,18 +131,35 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
   :global(.ba-live) .ba__intro h1 { font-size: clamp(1.75rem, 1.1rem + 3.4vw, 4rem); }
   :global(.ba-live) .ba__intro .ba__lead { font-size: 1rem; margin-top: var(--space-sm); }
   :global(.ba-live) .ba__intro .ba__cta { margin-top: var(--space-md); }
-  :global(.ba-live) .ba__hint { display: block; margin-top: var(--space-md); color: var(--color-ink-2); }
-  :global(.ba-live) .ba__skip { display: block; position: absolute; right: var(--gutter); top: var(--space-md); min-height: 2.75rem; line-height: 2.75rem; color: var(--color-ink-2); }
-  :global(.ba-live) .ba__step .ba__meta { padding-right: 7.5rem; }
+  :global(.ba-live) .ba__hint { display: block; }
+  :global(.ba-live) .ba__skip { display: block; position: absolute; right: var(--gutter); top: -2.75rem; padding: 0 0.75rem; line-height: 2.1rem; background: oklch(19% 0.045 265 / 0.72); color: var(--color-chalk); border-radius: 2px; text-decoration: none; z-index: 2; }
+  :global(.ba-live) .ba__skip[hidden] { display: none; }
 
-  /* Telefon: Lead im Intro nur, wenn Platz ist */
-  @media (max-width: 47.99rem) and (max-height: 760px) {
-    :global(.ba-live) .ba__intro .ba__lead { display: none; }
-    :global(.ba-live) .ba__step .ba__who { display: none; }
+  /* Telefon: Bild dominiert, Panel kompakt */
+  :global(.ba-live) .ba__hint { position: absolute; left: var(--gutter); top: -2.75rem; margin: 0; padding: 0.4rem 0.75rem; background: oklch(19% 0.045 265 / 0.72); color: var(--color-chalk); border-radius: 2px; white-space: nowrap; z-index: 2; }
+  @media (max-width: 63.99rem) and (min-height: 501px) {
+    :global(.ba-live) .ba__pin { height: calc(100svh - var(--header-h) - var(--bar-h) - env(safe-area-inset-bottom)); }
   }
-  @media (max-width: 47.99rem) and (max-height: 640px) {
-    :global(.ba-live) .ba__step .ba__paynote { display: none; }
-    :global(.ba-live) .ba__hint { display: none; }
+  @media (max-width: 47.99rem) {
+    :global(.ba-live) .ba__pin { grid-template-rows: minmax(52%, 1fr) auto; }
+    :global(.ba-live) .ba__panel { min-height: 0; padding-top: var(--space-smd); padding-bottom: var(--space-smd); }
+    :global(.ba-live) .ba__kicker { display: none; }
+    :global(.ba-live) .ba__intro h1 { font-size: clamp(1.45rem, 0.9rem + 3.4vw, 2rem); }
+    :global(.ba-live) .ba__intro .ba__lead { display: none; }
+    :global(.ba-live) .ba__intro .ba__cta { margin-top: var(--space-smd); flex-wrap: nowrap; }
+    :global(.ba-live) .ba__intro .ba__cta .btn { flex: 1 1 auto; min-height: 2.75rem; padding-inline: 0.75rem; font-size: 0.92rem; }
+    :global(.ba-live) .ba__step .ba__who, :global(.ba-live) .ba__step .ba__paynote { display: none; }
+    :global(.ba-live) .ba__step h2 { font-size: 1.3rem; }
+    :global(.ba-live) .ba__step p:not(.ba__meta):not(.ba__payrow):not(.ba__paynote):not(.ba__who) { font-size: 0.92rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    :global(.ba-live) .ba__pay { margin-top: var(--space-xs); padding: var(--space-sm) var(--space-smd); }
+  }
+  @media (max-width: 47.99rem) and (min-height: 800px) {
+    :global(.ba-live) .ba__intro .ba__lead { display: block; font-size: 0.95rem; }
+    :global(.ba-live) .ba__step .ba__paynote { display: block; }
+  }
+  @media (max-width: 47.99rem) and (max-height: 600px) {
+    :global(.ba-live) .ba__step p:not(.ba__meta):not(.ba__payrow):not(.ba__paynote):not(.ba__who) { -webkit-line-clamp: 2; }
+    :global(.ba-live) .ba__intro .ba__cta .btn:last-child { display: none; }
   }
 
   /* Tablet/PC: Bild links, Text rechts */
@@ -151,7 +168,8 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
     :global(.ba-live) .ba__panel { border-top: 0; border-left: 1px solid var(--color-rule); padding: var(--space-xl) var(--gutter); align-content: center; }
     :global(.ba-live) .ba__intro, :global(.ba-live) .ba__step { align-self: center; max-width: 34rem; }
     :global(.ba-live) .ba__step .ba__txt { gap: var(--space-sm); }
-    :global(.ba-live) .ba__skip { top: var(--space-lg); }
+    :global(.ba-live) .ba__skip { top: var(--space-lg); background: none; color: var(--color-ink-2); text-decoration: underline; padding: 0; line-height: 2.75rem; }
+    :global(.ba-live) .ba__hint { position: static; transform: none; margin-top: var(--space-lg); padding: 0; background: none; color: var(--color-ink-2); }
   }
   @media (min-width: 48rem) and (orientation: landscape) and (max-height: 560px) {
     :global(.ba-live) .ba__panel { padding-block: var(--space-md); }
@@ -185,6 +203,7 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
     const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-go]')];
     const dotList = root.querySelector<HTMLElement>('[data-dots]')!;
     const hint = root.querySelector<HTMLElement>('[data-hint]');
+    const skip = root.querySelector<HTMLElement>('[data-skip-live]')!;
     const N = phase.length;
 
     // Fehlende Bilder (noch nicht generiert): Dateiname statt leerem Rahmen
@@ -280,6 +299,7 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
       current = idx;
       dots.forEach((d, i) => { if (i === idx - 1) d.setAttribute('aria-current', 'step'); else d.removeAttribute('aria-current'); });
       dotList.toggleAttribute('data-hidden', idx === 0);
+      skip.hidden = idx === 0;
       steps.forEach((s, i) => s.setAttribute('aria-hidden', String(i !== idx - 1)));
     };
     setActive(0);
@@ -298,7 +318,7 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
         animation: tl,
         anticipatePin: 1,
         invalidateOnRefresh: true,
-        snap: { snapTo: 'labelsDirectional', duration: { min: 0.2, max: 0.6 }, delay: 0.08, ease: 'power1.inOut' },
+        snap: { snapTo: 'labels', inertia: false, duration: { min: 0.25, max: 0.7 }, delay: 0.12, ease: 'power1.inOut' },
         onUpdate: (self) => {
           const t = self.animation!.time();
           let idx = 0;

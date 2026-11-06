@@ -1,0 +1,19 @@
+{
+  "name": "richtfest",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --open",
+    "build": "astro build && node scripts/ki-hinweis.mjs && node scripts/htaccess.mjs",
+    "preview": "astro preview --open",
+    "publish": "npm run build && node scripts/publish.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/martian-mono": "^5.3.0",
+    "astro": "^7.3.5",
+    "gsap": "^3.15.1",
+    "proj4": "^2.22.0"
+  }
+}

@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import DatenschutzForm from '../components/DatenschutzForm.astro';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Datenschutz">
+  <main style="padding:120px var(--gutter);max-width:760px;margin:auto">
+    <h1>Datenschutz</h1>
+    <!-- Formular-Standard: Abschnitt zum Formular (Pflicht, sobald es ein Formular gibt) -->
+    <DatenschutzForm formName="Vorbestell-Formular" />
+    <!-- TODO: Pflichtangaben vom Kunden (Name, Anschrift, E-Mail, USt-IdNr., Register) bzw. Datenschutzerklärung -->
+    <p><a href={base}>← Zurück</a></p>
+  </main>
+</Base>

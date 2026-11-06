@@ -1,0 +1,23 @@
+:root {
+  --ink: #111;
+  --paper: #fff;
+  --accent: #c8782a;
+  --gutter: clamp(20px, 5vw, 72px);
+  /* Formular-Standard (OrderForm.astro): beim Projektstart an das Design anpassen */
+  --muted: #55555a;
+  --rule: #d8d8dc;
+  --alert: #9b2c1d;
+  --focus: #1b5fd1;
+  --radius: 6px;
+  --text-sm: 0.875rem;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-smd: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 3rem;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.6 system-ui, sans-serif; }
+img { max-width: 100%; display: block; }

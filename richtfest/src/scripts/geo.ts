@@ -16,21 +16,52 @@ const WFS = 'https://opendata.lgln.niedersachsen.de/doorman/noauth/alkis_wfs_ein
 const PHOTON = 'https://photon.komoot.io/api/';
 const NDS_BBOX = '6.6,51.29,11.6,53.9';
 
-export async function geocode(q: string, signal?: AbortSignal): Promise<Place[]> {
+const NOMI = 'https://nominatim.openstreetmap.org/search';
+const dedupe = (l: Place[]) => { const seen = new Set<string>(); return l.filter((p) => (seen.has(p.label) ? false : (seen.add(p.label), true))); };
+const mkLabel = (street: string, zip?: string, city?: string) => [street, [zip, city].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+
+async function photon(q: string, signal: AbortSignal): Promise<Place[]> {
   const u = `${PHOTON}?q=${encodeURIComponent(q)}&limit=6&lang=de&bbox=${NDS_BBOX}`;
   const r = await fetch(u, { signal });
   if (!r.ok) throw new Error('geocode');
   const j = await r.json();
-  const seen = new Set<string>();
-  return (j.features || [])
+  return dedupe((j.features || [])
     .filter((f: any) => f.properties?.state === 'Niedersachsen')
     .map((f: any) => {
       const p = f.properties;
-      const street = [p.street || p.name, p.housenumber].filter(Boolean).join(' ');
-      const label = [street, [p.postcode, p.city || p.district].filter(Boolean).join(' ')].filter(Boolean).join(', ');
-      return { label, lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1] };
-    })
-    .filter((p: Place) => (seen.has(p.label) ? false : (seen.add(p.label), true)));
+      return { label: mkLabel([p.street || p.name, p.housenumber].filter(Boolean).join(' '), p.postcode, p.city || p.district), lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1] };
+    }));
+}
+
+// Ausweichdienst, falls Photon (öffentlicher Server) nicht antwortet. Nur bei Knopfdruck, ein Aufruf pro Suche.
+async function nominatim(q: string, signal: AbortSignal): Promise<Place[]> {
+  const u = `${NOMI}?q=${encodeURIComponent(q)}&format=jsonv2&addressdetails=1&limit=6&countrycodes=de&accept-language=de&viewbox=6.6,53.9,11.6,51.29&bounded=1`;
+  const r = await fetch(u, { signal });
+  if (!r.ok) throw new Error('geocode2');
+  const j = await r.json();
+  return dedupe((j || [])
+    .filter((x: any) => x.address?.state === 'Niedersachsen')
+    .map((x: any) => {
+      const a = x.address;
+      return { label: mkLabel([a.road || a.pedestrian || x.name, a.house_number].filter(Boolean).join(' '), a.postcode, a.city || a.town || a.village || a.municipality), lon: Number(x.lon), lat: Number(x.lat) };
+    }));
+}
+
+/** Adresse → Orte. Photon zuerst (6 s), danach Nominatim. Abbruch durch den Nutzer wird weitergereicht. */
+export async function geocode(q: string, signal?: AbortSignal): Promise<Place[]> {
+  const run = async (fn: (q: string, s: AbortSignal) => Promise<Place[]>, ms: number) => {
+    const c = new AbortController();
+    const onAbort = () => c.abort();
+    signal?.addEventListener('abort', onAbort);
+    const t = setTimeout(() => c.abort(), ms);
+    try { return await fn(q, c.signal); } finally { clearTimeout(t); signal?.removeEventListener('abort', onAbort); }
+  };
+  try {
+    return await run(photon, 6000);
+  } catch (e) {
+    if (signal?.aborted) throw e;
+    return await run(nominatim, 8000);
+  }
 }
 
 async function wfs(type: string, lat: number, lon: number, r: number, signal?: AbortSignal) {

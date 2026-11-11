@@ -7,12 +7,12 @@
  */
 const base = import.meta.env.BASE_URL;
 ---
-<section class="hc" aria-labelledby="hc-h" data-hc>
+<section class="section section--night hc" id="check" aria-labelledby="hc-h" data-hc>
   <div class="wrap hc__in">
     <div class="hc__txt">
-      <p class="mono hc__k">Bauunternehmen im Calenberger Land</p>
-      <h1 id="hc-h">Passt Ihr Haus auf Ihr Grundstück?</h1>
-      <p class="hc__lead">Adresse eingeben, Flurstück aus dem amtlichen Kataster laden und das Haus in Ihrer Größe daraufsetzen. Grenzabstand sofort, Kosten zum Schluss.</p>
+      <p class="mono hc__k">Werkzeug · kostenlos · ohne Anmeldung</p>
+      <h2 id="hc-h">Passt Ihr Haus auf Ihr Grundstück?</h2>
+      <p class="hc__lead">Adresse eingeben, Flurstück aus dem amtlichen Kataster laden, Haus daraufsetzen.</p>
       <form class="hc__form" action={`${base}grundstueck/`} method="get">
         <label for="hc-addr">Adresse Ihres Grundstücks</label>
         <div class="hc__row">
@@ -20,7 +20,7 @@ const base = import.meta.env.BASE_URL;
           <button class="btn btn--primary" type="submit">Grundstück laden</button>
         </div>
         <p class="hc__alt"><a href={`${base}grundstueck/?bsp=1`}>Beispielgrundstück ansehen</a><span aria-hidden="true"> · </span><a href={`${base}grundstueck/?manuell=1`}>Maße selbst eingeben</a></p>
-        <p class="hc__src mono">Daten: LGLN Liegenschaftskataster, CC BY 4.0 · nur Niedersachsen. Die Adresse wird erst auf der nächsten Seite per Knopf an die Kartensuche gesendet. <a href={`${base}datenschutz/#grundstueck`} target="_blank" rel="noopener">Datenschutz</a></p>
+        <p class="hc__src mono">Daten: LGLN, CC BY 4.0 · nur Niedersachsen · <a href={`${base}datenschutz/#grundstueck`} target="_blank" rel="noopener">Datenschutz</a></p>
       </form>
     </div>
 
@@ -37,32 +37,35 @@ const base = import.meta.env.BASE_URL;
         <text class="hc__dim" data-hc-dim text-anchor="middle"></text>
       </svg>
       <p class="hc__badge mono" data-hc-badge role="status" aria-live="polite">Haus ziehen</p>
-      <figcaption class="hc__cap mono">Beispiel, 10 × 9 m, Abstand 3 m (Niedersachsen)</figcaption>
+      <figcaption class="hc__cap mono">Beispiel: 10 × 9 m, Abstand 3 m</figcaption>
       <div class="hc__proxy" data-hc-proxy aria-hidden="true"></div>
     </figure>
   </div>
 </section>
 
 <style>
-  .hc { background: var(--color-paper); padding-block: var(--space-lg) var(--space-xl); }
-  .hc__in { display: grid; gap: var(--space-lg); grid-template-columns: minmax(0, 1fr); align-items: center; }
-  @media (min-width: 60rem) { .hc { padding-block: var(--space-xl) var(--space-2xl); } .hc__in { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: var(--space-2xl); } }
-  .hc__k { color: var(--color-accent); margin-bottom: var(--space-sm); }
-  .hc h1 { font-size: clamp(1.9rem, 1.1rem + 3.4vw, 3.6rem); line-height: 1.02; overflow-wrap: anywhere; }
-  .hc__lead { font-size: var(--text-lg); margin-top: var(--space-md); max-width: var(--measure); color: var(--color-ink-2); }
-  .hc__form { margin-top: var(--space-lg); display: grid; gap: var(--space-xs); max-width: 38rem; }
+  .hc { padding-block: var(--space-xl); scroll-margin-top: var(--header-h); }
+  .hc__in { display: grid; gap: var(--space-lg); grid-template-columns: minmax(0, 1fr); align-items: start; }
+  @media (min-width: 60rem) { .hc { padding-block: var(--space-2xl); } .hc__in { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: var(--space-2xl); } }
+  .hc__txt { display: grid; gap: var(--space-md); align-content: start; }
+  .hc__k { color: var(--color-lamp); margin: 0; }
+  .hc h2 { font-size: var(--text-2xl); line-height: 1.05; margin: 0; }
+  .hc__lead { color: oklch(88% 0.015 262); max-width: var(--measure); margin: 0; }
+  .hc__form { display: grid; gap: var(--space-xs); max-width: 38rem; }
   .hc__form label { font-weight: 650; }
   .hc__row { display: grid; gap: var(--space-sm); grid-template-columns: minmax(0, 1fr); }
   @media (min-width: 40rem) { .hc__row { grid-template-columns: minmax(0, 1fr) auto; } }
-  .hc__row input { min-height: 3.25rem; padding: 0 var(--space-md); font: inherit; border: 2px solid var(--color-ink); border-radius: var(--radius); background: var(--color-chalk); color: var(--color-ink); min-width: 0; }
+  .hc__row input { min-height: 3.25rem; padding: 0 var(--space-md); font: inherit; border: 2px solid var(--color-chalk); border-radius: var(--radius); background: var(--color-chalk); color: var(--color-ink); min-width: 0; }
+  .hc__row input:focus-visible { outline: 3px solid var(--color-lamp); outline-offset: 2px; }
   .hc__row .btn { min-height: 3.25rem; }
-  .hc__alt { margin-top: var(--space-xs); }
-  .hc__src { color: var(--color-ink-2); font-size: 0.72rem; line-height: 1.5; margin-top: var(--space-xs); }
+  .hc__alt { margin: var(--space-xs) 0 0; }
+  .hc__alt a, .hc__src a { color: var(--color-chalk); }
+  .hc__src { color: oklch(78% 0.02 262); font-size: 0.72rem; line-height: 1.5; margin: 0; }
 
-  .hc__fig { margin: 0; position: relative; background: var(--color-night); border-radius: var(--radius); padding: var(--space-sm); display: grid; gap: var(--space-xs); }
-  .hc__fig svg { width: 100%; height: auto; max-height: 62svh; aspect-ratio: 34 / 36; display: block; touch-action: none; }
-  .hc__parcel { fill: oklch(26% 0.045 265); stroke: var(--color-chalk); stroke-width: 0.18; stroke-dasharray: 0.9 0.6; }
-  .hc__zone { fill: oklch(52% 0.11 150 / 0.2); stroke: var(--color-ok); stroke-width: 0.14; transition: fill 0.2s, stroke 0.2s; }
+  .hc__fig { margin: 0; position: relative; background: var(--color-night-2); border-radius: var(--radius); padding: var(--space-sm); display: grid; gap: var(--space-xs); }
+  .hc__fig svg { width: 100%; height: auto; max-height: 52svh; aspect-ratio: 34 / 36; display: block; touch-action: none; margin-inline: auto; }
+  .hc__parcel { fill: oklch(30% 0.045 265); stroke: var(--color-chalk); stroke-width: 0.18; stroke-dasharray: 0.9 0.6; }
+  .hc__zone { fill: oklch(52% 0.11 150 / 0.2); stroke: oklch(72% 0.12 150); stroke-width: 0.14; transition: fill 0.2s, stroke 0.2s; }
   .hc__zone.is-bad { fill: oklch(52% 0.17 28 / 0.28); stroke: oklch(70% 0.17 28); }
   .hc__house { cursor: grab; }
   .hc__house polygon { fill: var(--color-accent); stroke: var(--color-chalk); stroke-width: 0.12; }
@@ -71,7 +74,7 @@ const base = import.meta.env.BASE_URL;
   .hc__gap { stroke: var(--color-chalk); stroke-width: 0.14; stroke-dasharray: 0.4 0.3; }
   .hc__dim { fill: var(--color-chalk); font-family: var(--font-mono); font-size: 1.15px; }
   .hc__badge { position: absolute; left: var(--space-md); top: var(--space-md); margin: 0; padding: 0.3rem 0.6rem; background: var(--color-chalk); color: var(--color-ink); border-radius: 2px; font-size: 0.72rem; }
-  .hc__badge[data-state='ok'] { background: var(--color-ok); color: var(--color-chalk); }
+  .hc__badge[data-state='ok'] { background: oklch(40% 0.1 150); color: var(--color-chalk); }
   .hc__badge[data-state='bad'] { background: var(--color-bad); color: var(--color-chalk); }
   .hc__cap { color: oklch(80% 0.02 262); font-size: 0.7rem; text-align: center; margin: 0; }
   .hc__proxy { position: absolute; width: 1px; height: 1px; left: 0; top: 0; visibility: hidden; }
@@ -148,13 +151,20 @@ const base = import.meta.env.BASE_URL;
     });
 
     if (!reduce) {
-      // Grenze zeichnet sich, danach zeigt das Haus einmal, dass es beweglich ist
-      const tl = gsap.timeline();
-      tl.fromTo(parcel, { drawSVG: '0%' }, { drawSVG: '100%', duration: 1.1, ease: 'power2.inOut' })
-        .from(house, { opacity: 0, duration: 0.4 }, 0.6)
-        .to(st, { x: 4.2, y: 3, duration: 0.9, ease: 'power2.inOut', onUpdate: () => { if (!touched) render(); } }, '+=0.5')
-        .to(st, { x: 0, y: 0, duration: 0.9, ease: 'power2.inOut', onUpdate: () => { if (!touched) render(); } });
-      tl.eventCallback('onComplete', () => render());
+      // Beim Einblenden: Grenze zeichnet sich, danach zeigt das Haus einmal, dass es beweglich ist (bleibt im grünen Bereich)
+      const io = new IntersectionObserver((es) => {
+        if (!es[0].isIntersecting) return;
+        io.disconnect();
+        const tl = gsap.timeline();
+        tl.fromTo(parcel, { drawSVG: '0%' }, { drawSVG: '100%', duration: 1.1, ease: 'power2.inOut' })
+          .from(house, { opacity: 0, duration: 0.4 }, 0.6)
+          .to(st, { x: 2.2, y: 1.6, duration: 0.9, ease: 'power2.inOut', onUpdate: () => { if (!touched) render(); } }, '+=0.4')
+          .to(st, { x: 0, y: 0, duration: 0.9, ease: 'power2.inOut', onUpdate: () => { if (!touched) render(); } });
+        tl.eventCallback('onComplete', () => render());
+      }, { threshold: 0.35 });
+      gsap.set(parcel, { drawSVG: '0%' });
+      gsap.set(house, { opacity: 0 });
+      io.observe(svg);
     }
   }
 </script>

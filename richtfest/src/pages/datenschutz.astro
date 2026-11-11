@@ -14,10 +14,10 @@ import site from '../data/site.json';
 
       <h2 id="grundstueck">Grundstücks-Check</h2>
       <p><strong>Demo-Hinweis:</strong> Auch in dieser Beispielseite werden bei der Suche echte Anfragen an die beiden unten genannten Dienste gestellt. Wir selbst speichern nichts.</p>
-      <p><strong>Was passiert:</strong> Nur wenn Sie auf „Grundstück suchen“ tippen, sendet Ihr Browser die eingegebene Adresse an die Adresssuche Photon (komoot GmbH, Potsdam; Daten aus OpenStreetMap) und danach die gefundenen Koordinaten an den Kartendienst des Landesamts für Geoinformation und Landesvermessung Niedersachsen (LGLN, Hannover), um das Flurstück und die Gebäude zu laden. Dabei wird, wie bei jedem Abruf einer Internetseite, Ihre IP-Adresse an diese Stellen übertragen.</p>
+      <p><strong>Was passiert:</strong> Nur wenn Sie auf „Grundstück suchen“ tippen, sendet Ihr Browser die eingegebene Adresse an die Adresssuche Photon (komoot GmbH, Potsdam; Daten aus OpenStreetMap). Antwortet Photon nicht innerhalb weniger Sekunden, geht dieselbe Adresse stattdessen an den Dienst Nominatim (OpenStreetMap Foundation, Vereinigtes Königreich). Danach die gefundenen Koordinaten an den Kartendienst des Landesamts für Geoinformation und Landesvermessung Niedersachsen (LGLN, Hannover), um das Flurstück und die Gebäude zu laden. Dabei wird, wie bei jedem Abruf einer Internetseite, Ihre IP-Adresse an diese Stellen übertragen.</p>
       <p><strong>Rechtsgrundlage:</strong> Ihre Einwilligung durch das Auslösen der Suche (Art. 6 Abs. 1 lit. a DSGVO). Sie können stattdessen die Maße selbst eingeben, dann wird nichts übertragen.</p>
       <p><strong>Speicherung:</strong> Das Ergebnis bleibt nur im Zwischenspeicher dieses Browser-Tabs (sessionStorage) und wird beim Schließen des Tabs gelöscht. An uns geht es nur, wenn Sie es mit einer Anfrage absenden.</p>
-      <p><strong>Datenschutzhinweise der Dienste:</strong> komoot (photon.komoot.io) und LGLN (lgln.niedersachsen.de).</p>
+      <p><strong>Datenschutzhinweise der Dienste:</strong> komoot (photon.komoot.io), OpenStreetMap Foundation (nominatim.openstreetmap.org) und LGLN (lgln.niedersachsen.de).</p>
 
       <h2>Server und Hosting</h2>
       <p>TODO beim echten Kunden: Hoster, Server-Logfiles (IP-Adresse, Zeitpunkt, Seite; Speicherdauer), Auftragsverarbeitungsvertrag.</p>

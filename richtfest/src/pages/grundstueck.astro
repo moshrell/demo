@@ -5,23 +5,22 @@ const base = import.meta.env.BASE_URL;
 ---
 <Base title="Grundstücks-Check · Passt Ihr Haus auf Ihr Grundstück? · Thielking Bau" description="Adresse eingeben, Flurstück aus dem Liegenschaftskataster Niedersachsen laden und prüfen, ob Ihr Haus mit Grenzabstand passt. Mit Kostenrahmen." current="grundstueck">
   <section class="gc" data-gc>
-    <div class="wrap gc__head">
-      <p class="mono gc__kicker">Grundstücks-Check</p>
-      <h1>Passt Ihr Haus auf Ihr Grundstück?</h1>
-      <p class="lead">Wir laden Ihr Flurstück aus dem amtlichen Kataster. Sie setzen den Haustyp darauf und sehen sofort, ob der Grenzabstand reicht.</p>
+    <div class="wrap gc__head" data-head>
+      <h1>Grundstücks-Check</h1>
+      <p class="lead" data-lead>Orientierung in zwei Minuten. Keine Baugenehmigung.</p>
     </div>
 
-    <!-- Schritt 1: Grundstück finden -->
+    <!-- Schritt 1: Grundstück -->
     <div class="wrap gc__find" data-find>
       <form class="sheet gc__form" data-search novalidate>
-        <p class="sheet__hd mono"><span>Schritt 1</span><span>Grundstück</span></p>
+        <p class="sheet__hd mono"><span>1 · Grundstück</span><span>Niedersachsen</span></p>
         <div class="sheet__bd stack">
           <div class="field">
             <label for="gc-addr">Adresse des Grundstücks</label>
             <input id="gc-addr" name="addr" type="text" autocomplete="street-address" placeholder="z. B. Musterstraße 12, 30989 Gehrden" />
           </div>
           <button class="btn btn--primary gc__go" type="submit">Grundstück suchen</button>
-          <p class="gc__privacy">Beim Suchen geht die Adresse an die OpenStreetMap-Suche (photon.komoot.io) und die Koordinaten an das Landesamt LGLN. Wir speichern nichts. <a href={`${base}datenschutz/#grundstueck`} target="_blank" rel="noopener">Datenschutz</a></p>
+          <p class="gc__privacy">Beim Suchen geht die Adresse an die OpenStreetMap-Suche (Photon, ersatzweise Nominatim) und die Koordinaten an das Landesamt LGLN. Wir speichern nichts. <a href={`${base}datenschutz/#grundstueck`} target="_blank" rel="noopener">Datenschutz</a></p>
           <p class="gc__msg" data-msg role="status" aria-live="polite"></p>
           <ul class="gc__hits" data-hits hidden></ul>
           <div class="gc__alt">
@@ -37,11 +36,30 @@ const base = import.meta.env.BASE_URL;
       </form>
     </div>
 
-    <!-- Schritt 2: Plan -->
+    <!-- Bestand: nur wenn auf dem Flurstück schon Gebäude stehen -->
+    <div class="wrap gc__bestand" data-bestand-ask hidden>
+      <fieldset class="sheet gc__ask">
+        <legend class="sheet__hd mono"><span>Auf dem Grundstück steht schon ein Gebäude</span></legend>
+        <div class="sheet__bd stack">
+          <p>Was haben Sie vor?</p>
+          <div class="gc__asks">
+            <label class="gc__askcard"><input type="radio" name="bestand-ask" value="bleibt" /><span><b>Bestand bleibt</b><small>Ich plane einen Anbau (Bestand: bleibt stehen).</small></span></label>
+            <label class="gc__askcard"><input type="radio" name="bestand-ask" value="abriss" /><span><b>Abriss und Neubau</b><small>Das Gebäude wird abgerissen, ein neues Haus entsteht.</small></span></label>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
     <div class="gc__work" data-work hidden>
+      <div class="wrap">
+        <nav class="gc__steps mono" aria-label="Schritte">
+          <span class="is-done">✓ 1 Grundstück</span>
+          <button type="button" data-goto="2">2 Haus</button>
+          <button type="button" data-goto="3">3 Ergebnis</button>
+        </nav>
+      </div>
       <div class="wrap gc__grid">
         <div class="gc__planwrap">
-          <p class="mono gc__plaininfo" data-meta></p>
           <figure class="gc__plan">
             <p class="gc__badge mono" data-badge aria-hidden="true"></p>
             <svg data-svg role="img" aria-labelledby="gc-svg-t">
@@ -59,82 +77,105 @@ const base = import.meta.env.BASE_URL;
               <g data-handles></g>
               <g class="gc__north" data-north><path d="M0,-9 L5,6 L0,3 L-5,6 Z" /><text y="-12" text-anchor="middle">N</text></g>
             </svg>
-          </figure>
-          <div class="gc__tools" role="toolbar" aria-label="Werkzeuge">
-            <button class="btn" type="button" data-rot="-15" aria-label="Haus 15 Grad nach links drehen">↺ 15°</button>
-            <button class="btn" type="button" data-rot="15" aria-label="Haus 15 Grad nach rechts drehen">↻ 15°</button>
-            <button class="btn" type="button" data-align>An Grenze ausrichten</button>
-            <button class="btn" type="button" data-edit aria-pressed="false">Ecken anpassen</button>
-            <button class="btn" type="button" data-reset hidden>Zurücksetzen</button>
-          </div>
-          <p class="gc__hint mono" data-hint>Haus mit dem Finger verschieben. Grenzen falsch? „Ecken anpassen“.</p>
-
-          <fieldset class="gc__size">
-            <legend><span class="mono">Schritt 2</span> Größe Ihres Hauses</legend>
-            <div class="gc__sl"><label for="gc-bw">Breite</label><input id="gc-bw" type="range" min="3" max="30" step="0.5" data-bw /><output class="mono" data-bw-o for="gc-bw"></output></div>
-            <div class="gc__sl"><label for="gc-bd">Tiefe</label><input id="gc-bd" type="range" min="3" max="30" step="0.5" data-bd /><output class="mono" data-bd-o for="gc-bd"></output></div>
-            <div class="gc__fl" role="radiogroup" aria-label="Geschosse">
-              <span class="gc__fl-l">Geschosse</span>
-              <div class="chips">
-                {[['1', '1'], ['1.5', '1,5'], ['2', '2'], ['3', '3']].map(([v, l]) => <label class="chip"><input type="radio" name="fl" value={v} /><span>{l}</span></label>)}
-              </div>
+            <div class="gc__tools" role="toolbar" aria-label="Werkzeuge" aria-orientation="vertical">
+              <button class="gc__tool" type="button" data-rot="-15" aria-label="Haus 15 Grad nach links drehen" title="Haus 15 Grad nach links drehen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v5h5"/></svg></button>
+              <button class="gc__tool" type="button" data-rot="15" aria-label="Haus 15 Grad nach rechts drehen" title="Haus 15 Grad nach rechts drehen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v5h-5"/></svg></button>
+              <button class="gc__tool" type="button" data-align aria-label="An Grenze ausrichten" title="An Grenze ausrichten"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17 17 3M7 21 21 7M3 9 9 3"/></svg></button>
+              <button class="gc__tool" type="button" data-edit aria-pressed="false" aria-label="Ecken der Grenze anpassen" title="Ecken der Grenze anpassen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7l12 3-2 9H7z"/><circle cx="6" cy="7" r="2" class="f"/><circle cx="18" cy="10" r="2" class="f"/><circle cx="16" cy="19" r="2" class="f"/><circle cx="7" cy="19" r="2" class="f"/></svg></button>
+              <button class="gc__tool" type="button" data-reset hidden aria-label="Grenze zurücksetzen" title="Grenze zurücksetzen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3"/></svg></button>
             </div>
-            <p class="gc__wohn-o mono" data-wohn-o></p>
-          </fieldset>
+            <p class="gc__hint mono" data-hint>Haus ziehen</p>
+          </figure>
         </div>
 
         <div class="gc__side">
-          <fieldset class="gc__types">
-            <legend><span class="mono">Schritt 3</span> Bauart</legend>
-            <div class="chips">
-              {typen.typen.map((t, i) => (
-                <label class="chip"><input type="radio" name="typ" value={t.id} checked={i === 1} /><span>{t.name}</span></label>
-              ))}
-            </div>
-            <p class="gc__typenote muted" data-typenote></p>
-          </fieldset>
+          <p class="gc__meta"><span class="mono" data-meta></span><button class="gc__link" type="button" data-new>Anderes Grundstück</button></p>
 
-          <div class="gc__result sheet" data-result>
-            <p class="sheet__hd mono"><span>Ergebnis</span><span data-verdict-short>—</span></p>
-            <div class="sheet__bd">
-              <p class="gc__verdict" data-verdict></p>
-              <dl class="gc__facts">
-                <div><dt>Grundstück</dt><dd data-f-area>—</dd></div>
-                <div><dt>Haus (Grundfläche)</dt><dd data-f-house>—</dd></div>
-                <div><dt>Bebauung (GRZ)</dt><dd data-f-grz>—</dd></div>
-                <div><dt>Kleinster Abstand zur Grenze</dt><dd data-f-gap>—</dd></div>
-              </dl>
-            </div>
-          </div>
-
-          <div class="gc__cost sheet">
-            <p class="sheet__hd mono"><span>Schritt 4 · Kostenrahmen</span><span>Richtwert</span></p>
-            <div class="sheet__bd stack">
-              <div class="chips" role="radiogroup" aria-label="Leistung">
-                <label class="chip"><input type="radio" name="art" value="schluesselfertig" checked /><span>Schlüsselfertig</span></label>
-                <label class="chip"><input type="radio" name="art" value="rohbau" /><span>Nur Rohbau</span></label>
-              </div>
-              <div class="gc__row">
-                <div class="field"><label for="gc-wohn">Wohnfläche (m², aus Ihrer Größe geschätzt)</label><input id="gc-wohn" type="number" inputmode="numeric" min="20" max="900" step="5" data-wohn /></div>
-                <div class="field"><label for="gc-aus">Ausstattung</label>
-                  <select id="gc-aus" data-aus>{typen.ausstattung.map((a) => <option value={a.id}>{a.name}</option>)}</select>
+          <div data-step="2" class="gc__step">
+            <fieldset class="gc__size">
+              <legend>2 · Haus</legend>
+              <div class="gc__sl"><label for="gc-bw">Breite</label><input id="gc-bw" type="range" min="3" max="30" step="0.5" data-bw /><output class="mono" data-bw-o for="gc-bw"></output></div>
+              <div class="gc__sl"><label for="gc-bd">Tiefe</label><input id="gc-bd" type="range" min="3" max="30" step="0.5" data-bd /><output class="mono" data-bd-o for="gc-bd"></output></div>
+              <div class="gc__fl" role="radiogroup" aria-label="Geschosse">
+                <span class="gc__fl-l">Geschosse</span>
+                <div class="chips">
+                  {[['1', '1'], ['1.5', '1,5'], ['2', '2'], ['3', '3']].map(([v, l]) => <label class="chip"><input type="radio" name="fl" value={v} /><span>{l}</span></label>)}
                 </div>
               </div>
-              <label class="gc__check"><input type="checkbox" data-keller /> <span>mit Keller</span></label>
-              <p class="gc__sum"><span>Summe</span><strong data-sum>—</strong></p>
-              <p class="gc__fine muted">Richtwert inkl. 19 % MwSt., ohne Grundstück, Baunebenkosten und Außenanlagen. Verbindlich ist nur unser schriftliches Angebot.</p>
-            </div>
+              <p class="gc__wohn-o mono" data-wohn-o></p>
+            </fieldset>
+
+            <fieldset class="gc__types">
+              <legend>Bauart</legend>
+              <div class="chips">
+                {typen.typen.map((t, i) => (
+                  <label class="chip"><input type="radio" name="typ" value={t.id} checked={i === 1} /><span>{t.name}</span></label>
+                ))}
+              </div>
+              <p class="gc__typenote muted" data-typenote></p>
+            </fieldset>
+
+            <fieldset class="gc__types" data-bestand-switch hidden>
+              <legend>Bestand</legend>
+              <div class="chips">
+                <label class="chip"><input type="radio" name="bestand" value="bleibt" /><span>Bleibt stehen</span></label>
+                <label class="chip"><input type="radio" name="bestand" value="abriss" /><span>Abriss</span></label>
+              </div>
+            </fieldset>
           </div>
 
-          <div class="gc__send">
-            <a class="btn btn--primary" href={`${base}anfrage/?von=grundstueck`} data-send>Mit diesem Grundstück anfragen</a>
-            <button class="btn" type="button" data-new>Anderes Grundstück</button>
+          <div data-step="3" class="gc__step">
+            <div class="gc__result sheet" data-result>
+              <p class="sheet__hd mono"><span>3 · Ergebnis</span><span data-verdict-short>—</span></p>
+              <div class="sheet__bd">
+                <p class="gc__verdict" data-verdict></p>
+                <dl class="gc__facts">
+                  <div><dt>Grundstück</dt><dd data-f-area>—</dd></div>
+                  <div><dt>Haus (Grundfläche)</dt><dd data-f-house>—</dd></div>
+                  <div><dt>Bebauung (GRZ)</dt><dd data-f-grz>—</dd></div>
+                  <div><dt>Kleinster Abstand zur Grenze</dt><dd data-f-gap>—</dd></div>
+                </dl>
+              </div>
+            </div>
+
+            <div class="gc__cost sheet" data-cost>
+              <p class="sheet__hd mono"><span>Kostenrahmen</span><span>Richtwert</span></p>
+              <div class="sheet__bd stack">
+                <div class="chips" role="radiogroup" aria-label="Leistung">
+                  <label class="chip"><input type="radio" name="art" value="schluesselfertig" checked /><span>Schlüsselfertig</span></label>
+                  <label class="chip"><input type="radio" name="art" value="rohbau" /><span>Nur Rohbau</span></label>
+                </div>
+                <div class="gc__row">
+                  <div class="field"><label for="gc-wohn">Wohnfläche (m²)</label><input id="gc-wohn" type="number" inputmode="numeric" min="20" max="900" step="5" data-wohn /></div>
+                  <div class="field"><label for="gc-aus">Ausstattung</label>
+                    <select id="gc-aus" data-aus>{typen.ausstattung.map((a) => <option value={a.id}>{a.name}</option>)}</select>
+                  </div>
+                </div>
+                <p class="gc__fine muted">Wohnfläche aus Ihrer Größe geschätzt, anpassbar.</p>
+                <label class="gc__check"><input type="checkbox" data-keller /> <span>mit Keller</span></label>
+                <p class="gc__sum"><span>Summe</span><strong data-sum>—</strong></p>
+                <p class="gc__fine muted">Richtwert inkl. 19 % MwSt., ohne Grundstück, Baunebenkosten und Außenanlagen. Verbindlich ist nur unser schriftliches Angebot.</p>
+              </div>
+            </div>
+            <div class="gc__cost gc__noprice sheet" data-noprice hidden>
+              <p class="sheet__hd mono"><span>Kostenrahmen</span><span>nach Anfrage</span></p>
+              <div class="sheet__bd"><p>Kostenrahmen nach Ihrer Anfrage: schriftlich, innerhalb von zwei Werktagen.</p></div>
+            </div>
+
+            <div class="gc__send" data-send-box>
+              <a class="btn btn--primary" href={`${base}anfrage/?von=grundstueck`} data-send>Mit diesem Grundstück anfragen</a>
+            </div>
+            <p class="gc__law">Orientierung, keine Baugenehmigung. Was gebaut werden darf, regelt der Bebauungsplan Ihrer Gemeinde. Grenzabstand nach § 5 Abs. 2 NBauO: 0,4 × Wandhöhe, mindestens 3 m (vereinfacht gerechnet). Den Bebauungsplan prüfen wir gern mit Ihnen.</p>
+            <p class="mono gc__src" data-src hidden>Quelle Flurstücke und Gebäude: LGLN, Liegenschaftskataster, CC BY 4.0 · Adresssuche: © OpenStreetMap-Mitwirkende (ODbL) via Photon / Nominatim</p>
           </div>
-          <p class="gc__law">Orientierung, keine Baugenehmigung. Was gebaut werden darf, regelt der Bebauungsplan Ihrer Gemeinde. Grenzabstand nach § 5 Abs. 2 NBauO: 0,4 × Wandhöhe, mindestens 3 m (vereinfacht gerechnet). Den Bebauungsplan prüfen wir gern mit Ihnen.</p>
-          <p class="mono gc__src" data-src hidden>Quelle Flurstücke und Gebäude: LGLN, Liegenschaftskataster, CC BY 4.0 · Adresssuche: © OpenStreetMap-Mitwirkende (ODbL) via Photon</p>
         </div>
       </div>
     </div>
+
+    <nav class="bar gc__bar" data-gcbar aria-label="Check-Ergebnis" hidden>
+      <span class="gc__bar-v" data-bar-v role="status"></span>
+      <a class="btn btn--primary" href="#" data-bar-go>Weiter: Kosten</a>
+    </nav>
     <div class="gc__proxy" data-proxy aria-hidden="true"></div>
     <script type="application/json" data-typen set:html={JSON.stringify(typen)} />
   </section>
@@ -143,7 +184,6 @@ const base = import.meta.env.BASE_URL;
 <style>
   .gc { padding-block: var(--space-xl) var(--space-2xl); }
   .gc__head { display: grid; gap: var(--space-md); margin-bottom: var(--space-lg); }
-  .gc__kicker { color: var(--color-accent); }
   .gc__form { max-width: 40rem; }
   .gc__go { width: 100%; }
   @media (min-width: 40rem) { .gc__go { width: auto; } }
@@ -158,23 +198,58 @@ const base = import.meta.env.BASE_URL;
   .gc__manual[hidden] { display: none; }
   .gc__manual .btn { grid-column: 1 / -1; }
 
-  .gc__grid { display: grid; gap: var(--space-lg); grid-template-columns: minmax(0, 1fr); }
-  @media (min-width: 60rem) { .gc__grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: start; } .gc__planwrap { position: sticky; top: calc(var(--header-h) + var(--space-md)); } }
-  .gc__plaininfo { color: var(--color-ink-2); margin-bottom: var(--space-sm); min-height: 1.2em; }
-  .gc__plan { margin: 0; background: var(--color-night); border-radius: var(--radius); overflow: hidden; aspect-ratio: 1 / 1; max-height: 68svh; width: 100%; }
-  @media (min-width: 60rem) { .gc__plan { aspect-ratio: 5 / 4; max-height: 72svh; } }
-  .gc__plan { position: relative; }
-  @media (max-width: 59.99rem) { .gc__plan { position: sticky; top: calc(var(--header-h, 4rem) + 2px); z-index: 2; max-height: 44svh; box-shadow: 0 6px 12px -8px oklch(19% 0.045 265 / 0.5); } }
-  .gc__badge { position: absolute; left: var(--space-sm); top: var(--space-sm); margin: 0; padding: 0.35rem 0.6rem; border-radius: 2px; background: var(--color-chalk); color: var(--color-ink); font-size: 0.72rem; pointer-events: none; }
+  .gc__head h1 { font-size: var(--text-2xl); }
+  .gc__head .lead { margin: 0; }
+  .gc.is-work .gc__head { margin-bottom: var(--space-sm); }
+  .gc.is-work .gc__head h1 { font-size: var(--text-xl); }
+  .gc.is-work .gc__head .lead { display: none; }
+
+  .gc__ask { border: 1px solid var(--color-rule); margin: 0; padding: 0; min-width: 0; max-width: 40rem; }
+  .gc__ask legend { padding: var(--space-sm) var(--space-md); }
+  .gc__asks { display: grid; gap: var(--space-sm); grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 40rem) { .gc__asks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .gc__askcard { display: block; cursor: pointer; }
+  .gc__askcard input { position: absolute; opacity: 0; pointer-events: none; }
+  .gc__askcard span { display: grid; gap: var(--space-xs); min-height: 4.5rem; padding: var(--space-md); border: 2px solid var(--color-ink); border-radius: var(--radius); background: var(--color-chalk); }
+  .gc__askcard small { color: var(--color-ink-2); font-size: var(--text-sm); }
+  .gc__askcard input:checked + span, .gc__askcard:hover span { background: var(--color-ink); color: var(--color-chalk); }
+  .gc__askcard input:checked + span small, .gc__askcard:hover span small { color: oklch(86% 0.02 262); }
+  .gc__askcard input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  .gc__steps { display: flex; gap: var(--space-sm) var(--space-md); flex-wrap: nowrap; align-items: center; margin-bottom: var(--space-xs); font-size: var(--text-sm); }
+  .gc__steps > * { white-space: nowrap; }
+  @media (min-width: 30rem) { .gc__steps { font-size: inherit; } }
+  .gc__steps > * { min-height: 2.75rem; display: inline-flex; align-items: center; padding: 0; background: none; border: 0; border-bottom: 2px solid transparent; font: inherit; color: var(--color-ink-2); }
+  .gc__steps button { cursor: pointer; }
+  .gc__steps .is-done { color: var(--color-ok); }
+  .gc__steps .is-active { color: var(--color-ink); border-bottom-color: var(--color-accent); font-weight: 700; }
+
+  .gc__grid { display: grid; gap: var(--space-md); grid-template-columns: minmax(0, 1fr); }
+  .gc__planwrap { position: sticky; top: calc(var(--header-h) + 2px); z-index: 3; margin-inline: calc(var(--gutter) * -1); }
+  .gc__plan { margin: 0; position: relative; background: var(--color-night); overflow: hidden; height: clamp(14rem, 44svh, 30rem); width: 100%; box-shadow: 0 8px 14px -10px oklch(19% 0.045 265 / 0.6); }
+  @media (min-width: 60rem) {
+    .gc__grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: start; gap: var(--space-lg); }
+    .gc__planwrap { top: calc(var(--header-h) + var(--space-md)); margin-inline: 0; }
+    .gc__plan { height: auto; aspect-ratio: 5 / 4; max-height: calc(100svh - var(--header-h) - var(--space-xl)); border-radius: var(--radius); box-shadow: none; }
+  }
+  /* Telefon quer: Plan links, Bedienung rechts */
+  @media (max-width: 59.99rem) and (orientation: landscape) and (max-height: 520px) {
+    .gc__grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; }
+    .gc__planwrap { top: calc(var(--header-h) + var(--space-xs)); margin-inline: 0; }
+    .gc__plan { height: calc(100svh - var(--header-h) - var(--space-md)); border-radius: var(--radius); }
+  }
+  .gc__badge { position: absolute; left: var(--space-sm); top: var(--space-sm); z-index: 2; margin: 0; padding: 0.35rem 0.6rem; border-radius: 2px; background: var(--color-chalk); color: var(--color-ink); font-size: 0.72rem; pointer-events: none; }
   .gc__badge:empty { display: none; }
-  .gc__badge[data-state='ok'] { background: var(--color-ok); color: var(--color-chalk); }
+  .gc__badge[data-state='ok'] { background: oklch(40% 0.1 150); color: var(--color-chalk); }
   .gc__badge[data-state='bad'] { background: var(--color-bad); color: var(--color-chalk); }
   .gc__plan svg { width: 100%; height: 100%; display: block; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
   .gc__parcel { fill: oklch(28% 0.045 265); stroke: var(--color-chalk); stroke-width: 0.25; stroke-dasharray: 1 0.6; vector-effect: non-scaling-stroke; }
   :global(.gc__nb) { fill: transparent; stroke: oklch(55% 0.03 262); stroke-width: 1; vector-effect: non-scaling-stroke; cursor: pointer; }
   :global(.gc__nb:hover) { fill: oklch(30% 0.04 265); }
   :global(.gc__bld) { fill: oklch(50% 0.02 262); stroke: none; }
-  .gc__zone { fill: oklch(52% 0.11 150 / 0.2); stroke: var(--color-ok); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+  :global(.gc__bld--abriss) { fill: oklch(50% 0.02 262 / 0.18); stroke: oklch(70% 0.02 262); stroke-width: 1; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
+  :global(.gc__bldlbl) { fill: oklch(80% 0.02 262); font-family: var(--font-mono); }
+  .gc__zone { fill: oklch(52% 0.11 150 / 0.2); stroke: oklch(72% 0.12 150); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
   .gc__zone.is-bad { fill: oklch(50% 0.17 28 / 0.25); stroke: oklch(65% 0.17 28); }
   .gc__house { cursor: grab; outline: none; }
   .gc__house polygon { fill: var(--color-accent); stroke: var(--color-chalk); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
@@ -186,24 +261,36 @@ const base = import.meta.env.BASE_URL;
   :global(.gc__handle) { fill: var(--color-chalk); stroke: var(--color-accent); stroke-width: 2; vector-effect: non-scaling-stroke; cursor: move; }
   .gc__north path { fill: var(--color-chalk); }
   .gc__north text { fill: var(--color-chalk); font-family: var(--font-mono); font-size: 7px; }
-  .gc__tools { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-sm); }
-  .gc__tools .btn { min-height: 2.75rem; padding-inline: 0.85rem; font-size: 0.92rem; }
-  .gc__tools .btn[aria-pressed='true'] { background: var(--color-ink); color: var(--color-chalk); }
-  .gc__hint { margin-top: var(--space-sm); color: var(--color-ink-2); }
+
+  .gc__tools { position: absolute; right: var(--space-sm); bottom: var(--space-sm); z-index: 2; display: grid; gap: 6px; }
+  .gc__tool { width: 2.75rem; height: 2.75rem; display: grid; place-items: center; padding: 0; border: 1px solid oklch(98% 0.003 90 / 0.45); border-radius: var(--radius); background: oklch(19% 0.045 265 / 0.78); color: var(--color-chalk); cursor: pointer; }
+  .gc__tool[hidden] { display: none; }
+  .gc__tool svg { width: 1.4rem; height: 1.4rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .gc__tool svg .f { fill: currentColor; stroke: none; }
+  .gc__tool[aria-pressed='true'] { background: var(--color-accent); border-color: var(--color-accent); }
+  .gc__tool:focus-visible { outline: 3px solid var(--color-lamp); outline-offset: 2px; }
+  @media (hover: hover) { .gc__tool:hover { background: var(--color-chalk); color: var(--color-ink); } }
+  .gc__hint { position: absolute; left: var(--space-sm); bottom: var(--space-sm); z-index: 2; margin: 0; max-width: calc(100% - 4.5rem); padding: 0.3rem 0.55rem; border-radius: 2px; background: oklch(19% 0.045 265 / 0.78); color: var(--color-chalk); font-size: 0.7rem; pointer-events: none; }
+  .gc__meta { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-md); margin: 0; color: var(--color-ink-2); flex-wrap: wrap; }
+  .gc__link { background: none; border: 0; padding: 0; min-height: 2.75rem; font: inherit; font-weight: 650; color: var(--color-ink); text-decoration: underline; cursor: pointer; }
+  .gc__step { display: grid; gap: var(--space-md); scroll-margin-top: calc(var(--header-h) + 52svh); }
+  .gc__bar { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .gc__bar-v { color: var(--color-chalk); font-weight: 650; min-width: 0; }
+  .gc__bar .btn { width: auto; }
 
   .gc__size { border: 1px solid var(--color-rule); border-radius: var(--radius); background: var(--color-chalk); margin: var(--space-md) 0 0; padding: var(--space-sm) var(--space-md) var(--space-md); min-width: 0; display: grid; gap: var(--space-xs); }
   .gc__size legend { font-weight: 700; padding: 0 var(--space-xs); }
-  .gc__size legend .mono { color: var(--color-accent); margin-right: var(--space-xs); }
-  .gc__sl { display: grid; grid-template-columns: 5.25rem minmax(0, 1fr) 4rem; align-items: center; gap: var(--space-sm); min-height: 2.75rem; }
+    .gc__sl { display: grid; grid-template-columns: 5.25rem minmax(0, 1fr) 4rem; align-items: center; gap: var(--space-sm); min-height: 2.75rem; }
   .gc__sl input[type='range'] { width: 100%; min-width: 0; height: 2.75rem; accent-color: var(--color-accent); touch-action: pan-y; margin: 0; }
   .gc__sl output { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
   .gc__fl { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-sm); }
   .gc__fl-l { flex: none; min-width: 5.25rem; }
   .gc__fl .chip span { padding: 0.4rem 0.85rem; min-width: 2.75rem; justify-content: center; }
   .gc__wohn-o { color: var(--color-ink-2); }
-  .gc__side { display: grid; gap: var(--space-md); }
+  .gc__side { display: grid; gap: var(--space-md); min-width: 0; }
   .gc__types { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: var(--space-sm); }
   .gc__types legend { font-weight: 700; margin-bottom: var(--space-sm); padding: 0; }
+  .gc__types[hidden] { display: none; }
   .gc__typenote { font-size: var(--text-sm); }
   .gc__verdict { font-weight: 650; margin-bottom: var(--space-sm); }
   .gc__verdict[data-state='ok'] { color: var(--color-ok); }
@@ -248,6 +335,7 @@ const base = import.meta.env.BASE_URL;
     place?: string; parcel: Parcel; original: Pt[]; buildings: Pt[][]; neighbors: Parcel[];
     typ: string; w: number; d: number; fl: number; sized: boolean; wohnManual: boolean; cx: number; cy: number; deg: number;
     art: string; wohn: number; aus: string; keller: boolean;
+    hasBestand?: boolean; bestand?: 'bleibt' | 'abriss' | null;
   }
   let S: State | null = null;
 
@@ -309,7 +397,7 @@ const base = import.meta.env.BASE_URL;
   });
   $('[data-new]').addEventListener('click', () => {
     try { sessionStorage.removeItem(KEY); } catch {}
-    S = null; work.hidden = true; $('[data-find]').hidden = false; $<HTMLInputElement>('#gc-addr').focus();
+    S = null; work.hidden = true; askBox.hidden = true; root.classList.remove('is-work'); setBars(false); $('[data-find]').hidden = false; $<HTMLInputElement>('#gc-addr').focus();
   });
 
   /* ---------- Schritt 2 ---------- */
@@ -350,9 +438,41 @@ const base = import.meta.env.BASE_URL;
       art: 'schluesselfertig', wohn: t.wohn, aus: 'solide', keller: false,
     };
     S.wohn = wohnEst();
+    S.hasBestand = p.source === 'kataster' && S.buildings.some(isIn);
+    S.bestand = null;
+    if (S.hasBestand) { showAsk(); return; }
     placeFree();
     open(true);
   }
+
+  /* ---------- Bestand: steht schon ein Gebäude auf dem Flurstück? ---------- */
+  const askBox = $('[data-bestand-ask]');
+  const isIn = (b: Pt[]) => G.inside(G.centroid(b), S!.parcel.ring);
+  const bl = () => (S!.bestand === 'abriss' ? S!.buildings.filter((b) => !isIn(b)) : S!.buildings);
+  function showAsk() {
+    $('[data-find]').hidden = true; work.hidden = true; askBox.hidden = false;
+    root.querySelectorAll<HTMLInputElement>('input[name=bestand-ask]').forEach((r) => (r.checked = false));
+    askBox.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  }
+  function applyBestand() {
+    const t0 = typ();
+    if (S!.bestand === 'bleibt' && t0.id !== 'anbau') S!.typ = 'anbau';
+    else if (S!.bestand === 'abriss' && t0.id === 'anbau') S!.typ = 'efh';
+    const t = typ();
+    S!.fl = t.fl; if (!S!.sized) { S!.w = t.w; S!.d = t.d; }
+    if (!S!.wohnManual) S!.wohn = wohnEst();
+  }
+  root.querySelectorAll<HTMLInputElement>('input[name=bestand-ask]').forEach((r) => r.addEventListener('change', () => {
+    S!.bestand = r.value as 'bleibt' | 'abriss';
+    askBox.hidden = true;
+    applyBestand(); placeFree(); open(true);
+  }));
+  root.querySelectorAll<HTMLInputElement>('input[name=bestand]').forEach((r) => r.addEventListener('change', () => {
+    S!.bestand = r.value as 'bleibt' | 'abriss';
+    applyBestand(); drawStatic();
+    const tr = root.querySelector<HTMLInputElement>(`input[name=typ][value="${S!.typ}"]`); if (tr) tr.checked = true;
+    placeFree(); render();
+  }));
 
   // Haus parallel zur längsten Grenze (|Winkel| ≤ 45°)
   function alignDeg(r: Pt[]) {
@@ -365,15 +485,17 @@ const base = import.meta.env.BASE_URL;
     if (!S) return;
     const fits = (cx: number, cy: number) => {
       const h = G.rect(cx, cy, S!.w, S!.d, S!.deg);
-      return h.every((q) => G.inside(q, S!.parcel.ring)) && !S!.buildings.some((b) => G.overlaps(h, b));
+      return h.every((q) => G.inside(q, S!.parcel.ring)) && !bl().some((b) => G.overlaps(h, b));
     };
-    if (fits(S.cx, S.cy)) return;
+    const keep = S.bestand === 'bleibt' ? S.buildings.find(isIn) : undefined;
+    const bc = keep ? G.centroid(keep) : null;
+    if (!bc && fits(S.cx, S.cy)) return;
     const r = Math.sqrt(G.area(S.parcel.ring));
     let best: Pt | null = null, bestScore = -Infinity;
     for (let x = -r; x <= r; x += 1.5) for (let y = -r; y <= r; y += 1.5) {
       if (!fits(x, y)) continue;
       const h = G.rect(x, y, S.w, S.d, S.deg);
-      const score = G.minGap(h, S.parcel.ring).d - Math.hypot(x, y) * 0.05;
+      const score = G.minGap(h, S.parcel.ring).d - Math.hypot(x, y) * 0.05 - (bc ? Math.hypot(x - bc[0], y - bc[1]) * 0.4 : 0);
       if (score > bestScore) { bestScore = score; best = [x, y]; }
     }
     if (best) { S.cx = best[0]; S.cy = best[1]; }
@@ -381,7 +503,13 @@ const base = import.meta.env.BASE_URL;
 
   function open(fresh: boolean) {
     $('[data-find]').hidden = true;
+    askBox.hidden = true;
     work.hidden = false;
+    root.classList.add('is-work');
+    setBars(true);
+    const sw = $('[data-bestand-switch]'); sw.hidden = !S!.hasBestand;
+    const br = root.querySelector<HTMLInputElement>(`input[name=bestand][value="${S!.bestand}"]`); if (br) br.checked = true;
+    $('[data-cost]').hidden = !T.preiseZeigen; $('[data-noprice]').hidden = !!T.preiseZeigen;
     $('[data-src]').hidden = S!.source !== 'kataster';
     const tr = root.querySelector<HTMLInputElement>(`input[name=typ][value="${S!.typ}"]`); if (tr) tr.checked = true;
     (root.querySelector<HTMLInputElement>(`input[name=art][value="${S!.art}"]`)!).checked = true;
@@ -393,7 +521,7 @@ const base = import.meta.env.BASE_URL;
     drawStatic();
     render();
     if (fresh) {
-      work.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      $('[data-head]').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
       if (!reduce) {
         gsap.fromTo(parcelEl, { drawSVG: '0%' }, { drawSVG: '100%', duration: 1.1, ease: 'power2.inOut' });
         gsap.from(houseG, { opacity: 0, duration: 0.4, delay: 0.7 });
@@ -408,8 +536,8 @@ const base = import.meta.env.BASE_URL;
     const w = maxX - minX, h = maxY - minY;
     const box = svg.getBoundingClientRect();
     const asp = box.width && box.height ? box.width / box.height : 1;
-    const pad = Math.max(w, h) * 0.16 + 4;
-    let W = w + pad * 2, H = h + pad * 2;
+    const fill = 0.84; // Grundstück füllt ca. 85 % der kleineren Seite
+    let W = w / fill, H = h / fill;
     if (W / H < asp) W = H * asp; else H = W / asp;
     vb = { x: (minX + maxX) / 2 - W / 2, y: (minY + maxY) / 2 - H / 2, w: W, h: H };
     svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
@@ -426,7 +554,13 @@ const base = import.meta.env.BASE_URL;
       el.addEventListener('click', () => { if (!editing) switchParcel(n); });
       return el;
     }));
-    bldG.replaceChildren(...S!.buildings.map((b) => { const el = document.createElementNS(SVGNS, 'polygon'); el.setAttribute('points', pts(b)); el.setAttribute('class', 'gc__bld'); return el; }));
+    const gone = S!.bestand === 'abriss';
+    const els: SVGElement[] = S!.buildings.map((b) => { const el = document.createElementNS(SVGNS, 'polygon'); el.setAttribute('points', pts(b)); el.setAttribute('class', gone && isIn(b) ? 'gc__bld--abriss' : 'gc__bld'); return el; });
+    if (gone) {
+      const b = S!.buildings.find(isIn);
+      if (b) { const c = G.centroid(b), t = document.createElementNS(SVGNS, 'text'); t.setAttribute('x', String(c[0])); t.setAttribute('y', String(c[1])); t.setAttribute('text-anchor', 'middle'); t.setAttribute('class', 'gc__bldlbl'); t.setAttribute('font-size', String(7 * unit())); t.textContent = 'Bestand (Abriss)'; els.push(t); }
+    }
+    bldG.replaceChildren(...els);
   }
 
   function switchParcel(n: Parcel) {
@@ -451,7 +585,7 @@ const base = import.meta.env.BASE_URL;
 
     const inParcel = house.every((q) => G.inside(q, ring));
     const gap = inParcel ? G.minGap(house, ring) : { d: 0, at: [house[0], house[0]] as [Pt, Pt] };
-    const overlap = S.buildings.some((b) => G.overlaps(house, b));
+    const overlap = bl().some((b) => G.overlaps(house, b));
     const area = S.parcel.area || G.area(ring);
     const grz = (S.w * S.d) / area;
     const okGap = gap.d + 0.01 >= sb;
@@ -467,7 +601,8 @@ const base = import.meta.env.BASE_URL;
     const u = unit();
     const edges = G.edgeLengths(ring);
     const longest = Math.max(...edges.map((e) => e.L));
-    dimsG.replaceChildren(...edges.filter((e) => e.L > Math.max(3, longest * 0.18)).map((e) => {
+    const keepL = [...edges].sort((x, y) => y.L - x.L)[Math.min(5, edges.length - 1)].L;
+    dimsG.replaceChildren(...edges.filter((e) => e.L > Math.max(3, longest * 0.18) && e.L >= keepL).map((e) => {
       const tx = document.createElementNS(SVGNS, 'text');
       const mx = (e.a[0] + e.b[0]) / 2, my = (e.a[1] + e.b[1]) / 2;
       const c = G.centroid(ring); const ox = mx - c[0], oy = my - c[1]; const L = Math.hypot(ox, oy) || 1;
@@ -489,6 +624,7 @@ const base = import.meta.env.BASE_URL;
     else text = `Passt. Überall mindestens ${fmtM(sb)} Abstand zur Grenze.`;
     v.textContent = text; v.dataset.state = good ? 'ok' : 'bad';
     $('[data-verdict-short]').textContent = good ? 'passt' : 'prüfen';
+    $('[data-bar-v]').textContent = good ? `✓ passt · ${fmtM(gap.d)}` : !inParcel ? '✕ über der Grenze' : overlap && !anbau ? '✕ Gebäude im Weg' : !okGap && !dhh ? `✕ zu eng · ${fmtM(gap.d)}` : '! prüfen';
     const badge = $('[data-badge]');
     badge.textContent = good ? `✓ passt · ${fmtM(gap.d)} Abstand` : !inParcel ? '✕ über der Grenze' : overlap && !anbau ? '✕ Gebäude im Weg' : !okGap && !dhh ? `✕ zu eng · ${fmtM(gap.d)}` : '! prüfen';
     badge.dataset.state = good ? 'ok' : 'bad';
@@ -518,6 +654,27 @@ const base = import.meta.env.BASE_URL;
     syncSize(); render();
   }
 
+  /* ---------- untere Leiste (Telefon) und Schritt-Navigation ---------- */
+  const baseBar = document.querySelector<HTMLElement>('nav.bar[aria-label="Schnellkontakt"]');
+  const gcBar = $('[data-gcbar]');
+  const barGo = $<HTMLAnchorElement>('[data-bar-go]');
+  const stepEl = (n: string) => root.querySelector<HTMLElement>(`[data-step="${n}"]`)!;
+  const stickyH = () => { const hd = document.querySelector('.hd') as HTMLElement | null; const pl = root.querySelector<HTMLElement>('.gc__planwrap'); const sticky = pl && getComputedStyle(pl).position === 'sticky'; return (hd?.offsetHeight || 0) + (sticky && window.matchMedia('(max-width: 59.99rem)').matches && !window.matchMedia('(orientation: landscape) and (max-height: 520px)').matches ? pl!.offsetHeight : 0) + 8; };
+  function setBars(on: boolean) { if (baseBar) baseBar.hidden = on; gcBar.hidden = !on; }
+  function toStep(n: string) { const y = stepEl(n).getBoundingClientRect().top + scrollY - stickyH(); window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' }); }
+  root.querySelectorAll<HTMLButtonElement>('[data-goto]').forEach((b) => b.addEventListener('click', () => toStep(b.dataset.goto!)));
+  let onStep3 = false;
+  function syncSteps() {
+    if (work.hidden) return;
+    const t3 = stepEl('3').getBoundingClientRect().top;
+    const at3 = t3 < window.innerHeight * 0.62;
+    root.querySelectorAll<HTMLElement>('[data-goto]').forEach((b) => b.classList.toggle('is-active', (b.dataset.goto === '3') === at3));
+    if (at3 !== onStep3) { onStep3 = at3; barGo.textContent = at3 ? 'Anfragen' : 'Weiter: Kosten'; }
+  }
+  barGo.addEventListener('click', (e) => { e.preventDefault(); if (onStep3) $<HTMLAnchorElement>('[data-send]').click(); else toStep('3'); });
+  let tick = false;
+  window.addEventListener('scroll', () => { if (tick) return; tick = true; requestAnimationFrame(() => { tick = false; syncSteps(); }); }, { passive: true });
+
   function costs() {
     const t = typ();
     syncSize();
@@ -526,7 +683,7 @@ const base = import.meta.env.BASE_URL;
     const fa = art === 'rohbau' ? 1 : f;
     let lo = S!.wohn * base[0] * fa, hi = S!.wohn * base[1] * fa;
     if (S!.keller && t.id !== 'anbau') { lo += T.preise.keller[0]; hi += T.preise.keller[1]; }
-    $('[data-sum]').textContent = `${eur(lo)} – ${eur(hi)}`;
+    $('[data-sum]').textContent = T.preiseZeigen ? `${eur(lo)} – ${eur(hi)}` : 'nach Anfrage';
   }
 
   /* ---------- Bedienung ---------- */
@@ -596,7 +753,7 @@ const base = import.meta.env.BASE_URL;
   editBtn.addEventListener('click', () => {
     editing = !editing; editBtn.setAttribute('aria-pressed', String(editing));
     resetBtn.hidden = !editing; houseG.style.pointerEvents = editing ? 'none' : '';
-    $('[data-hint]').textContent = editing ? 'Weiße Punkte ziehen, um die Grenze anzupassen. Fertig? „Ecken anpassen“ erneut tippen.' : 'Haus mit dem Finger verschieben. Grenzen falsch? „Ecken anpassen“.';
+    $('[data-hint]').textContent = editing ? 'Punkte ziehen, dann Ecken-Knopf erneut tippen' : 'Haus ziehen';
     buildHandles();
   });
   resetBtn.addEventListener('click', () => {
@@ -644,10 +801,10 @@ const base = import.meta.env.BASE_URL;
       sessionStorage.setItem('rf:grundstueck-summary', JSON.stringify({
         ort: $('[data-meta]').textContent,
         flaeche: $('[data-f-area]').textContent,
-        haus: `${t.name}, ${$('[data-f-house]').textContent}`,
+        haus: `${t.name}, ${$('[data-f-house]').textContent}${S.hasBestand ? (S.bestand === 'abriss' ? ', Bestand wird abgerissen' : ', Bestand bleibt') : ''}`,
         abstand: $('[data-f-gap]').textContent,
         ergebnis: $('[data-verdict]').textContent,
-        kosten: `${S.art === 'rohbau' ? 'Rohbau' : 'Schlüsselfertig'}, ${S.wohn} m² Wohnfläche${S.keller ? ', mit Keller' : ''}: ${sum}`,
+        kosten: T.preiseZeigen ? `${S.art === 'rohbau' ? 'Rohbau' : 'Schlüsselfertig'}, ${S.wohn} m² Wohnfläche${S.keller ? ', mit Keller' : ''}: ${sum}` : `${S.wohn} m² Wohnfläche (geschätzt), Kostenrahmen nach Anfrage`,
         typ: t.id,
         svg: plan.outerHTML,
       }));
@@ -664,8 +821,8 @@ const base = import.meta.env.BASE_URL;
   const old = fromHome ? null : restore();
   if (old && old.parcel) {
     S = old;
-    const t0 = typ(); S.w ??= t0.w; S.d ??= t0.d; S.fl ??= t0.fl; S.sized ??= false; S.wohnManual ??= false;
-    open(false);
+    const t0 = typ(); S.w ??= t0.w; S.d ??= t0.d; S.fl ??= t0.fl; S.sized ??= false; S.wohnManual ??= false; S.hasBestand ??= false; S.bestand ??= null;
+    if (S.hasBestand && !S.bestand) showAsk(); else open(false);
   } else {
     const pre = qs.get('typ');
     if (pre) { const r = root.querySelector<HTMLInputElement>(`input[name=typ][value="${pre}"]`); if (r) r.checked = true; }

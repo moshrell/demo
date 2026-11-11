@@ -12,11 +12,13 @@ let cum = 0;
 const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
 ---
 <section class="ba" id="bauablauf" aria-labelledby="ba-title" data-ba>
+  <div class="ba__head wrap">
+    <p class="mono ba__kicker">{intro.kicker}</p>
+    <h2 id="ba-title" data-split>{intro.title}</h2>
+    <p class="ba__lead">{intro.lead}</p>
+  </div>
   <div class="ba__pin" data-pin>
     <div class="ba__stage" data-stage aria-hidden="true">
-      <figure class="ba__frame ba__frame--hero" data-frame="hero" data-file={intro.img}>
-        <img src={src(intro.img)} srcset={srcset(intro.img)} sizes="(min-width: 48rem) 55vw, 100vw" alt="" width="896" height="1200" fetchpriority="high" />
-      </figure>
       {steps.map((p) => (
         <figure class={`ba__frame${p.nr === 4 ? ' ba__frame--top' : ''}`} data-frame={p.nr} data-file={p.img}>
           <img src={src(p.img)} srcset={srcset(p.img)} sizes="(min-width: 48rem) 55vw, 100vw" alt="" width="896" height="1200" loading="lazy" decoding="async" />
@@ -27,22 +29,16 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
           ))}
         </figure>
       ))}
-      <ol class="ba__dots" data-dots aria-hidden="false" aria-label="Bauabschnitt wählen">
+      <ol class="ba__dots" data-dots aria-label="Bauabschnitt wählen">
         {steps.map((p) => <li><button type="button" data-go={p.nr} aria-label={`Phase ${p.nr}: ${p.title}`}><span class="mono">{p.nr}</span></button></li>)}
       </ol>
     </div>
 
     <div class="ba__panel" data-panel>
-      <div class="ba__intro" data-intro>
-        <p class="mono ba__kicker">{intro.kicker}</p>
-        <h2 id="ba-title" data-split>{intro.title}</h2>
-        <p class="ba__lead">{intro.lead}</p>
-        <div class="ba__cta">
-          <a class="btn btn--primary" href={`${base}anfrage/`}>Projekt anfragen</a>
-          <a class="btn" href="#warum" data-skip>Zum Rest der Seite</a>
-        </div>
-        <p class="ba__hint mono" data-hint><span aria-hidden="true">↓</span> Scrollen, um zu bauen</p>
-      </div>
+      <p class="ba__hint mono" data-hint><span aria-hidden="true">↓</span> Scrollen, um zu bauen</p>
+      <ol class="ba__scale" aria-label="Bauabschnitt wählen">
+        {steps.map((p) => <li><button type="button" data-go={p.nr} aria-label={`Phase ${p.nr}: ${p.title}`}><span class="mono ba__scale-w">{p.weeks.replace('Woche ', 'Wo. ').replace('vor Baubeginn', 'vorab')}</span><span class="ba__scale-t">{p.title.split(' & ')[0].split(',')[0]}</span></button></li>)}
+      </ol>
 
       {steps.map((p) => (
         <article class="ba__step" data-step={p.nr} aria-labelledby={`ba-s${p.nr}`}>
@@ -55,7 +51,7 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
             <p>{p.text}</p>
             <p class="ba__who mono">Verantwortlich: {p.who}</p>
             <div class="ba__pay">
-              <p class="ba__payrow"><span>Rate <b class="mono">{p.pay} %</b></span><span>Gesamt bezahlt <strong class="mono">{p.cum} %</strong></span></p>
+              <p class="ba__payrow"><span>{p.pay ? <>Rate <b class="mono">{p.pay} %</b></> : 'Noch keine Zahlung'}</span><span>Gesamt bezahlt <strong class="mono">{p.cum} %</strong></span></p>
               <div class="ba__paybar" role="img" aria-label={`Insgesamt bezahlt bis hier: ${p.cum} Prozent der Bausumme`}><span style={`--p:${p.cum / 100}`}></span></div>
               <p class="ba__paynote">{p.payNote}</p>
             </div>
@@ -72,10 +68,12 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
   /* Basis: Liste (ohne JS / reduced-motion) */
   .ba { background: var(--color-paper); }
   .ba__stage { display: none; }
-  .ba__panel { max-width: 76rem; margin-inline: auto; padding: var(--space-xl) var(--gutter) var(--space-lg); display: grid; gap: var(--space-xl); }
-  .ba__kicker { color: var(--color-accent); margin-bottom: var(--space-md); }
+  .ba__panel { max-width: 76rem; margin-inline: auto; padding: var(--space-md) var(--gutter) var(--space-lg); display: grid; gap: var(--space-xl); }
+  .ba__kicker { color: var(--color-accent); margin-bottom: var(--space-sm); }
   .ba__lead { font-size: var(--text-lg); margin-top: var(--space-md); max-width: var(--measure); }
-  .ba__cta { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-lg); }
+  .ba__head { padding-block: var(--space-xl) var(--space-md); }
+  .ba__head h2 { font-size: var(--text-2xl); overflow-wrap: anywhere; }
+  .ba__scale { display: none; }
   .ba__hint, .ba__skip { display: none; }
   .ba__step { display: grid; gap: var(--space-md); grid-template-columns: minmax(0, 1fr); border-top: 1px solid var(--color-rule); padding-top: var(--space-lg); }
   @media (min-width: 48rem) { .ba__step { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); align-items: start; } }
@@ -124,16 +122,13 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
     background: var(--color-paper); border-top: 1px solid var(--color-rule);
     min-height: 15.5rem;
   }
-  :global(.ba-live) .ba__intro, :global(.ba-live) .ba__step { grid-area: p; align-self: start; }
+  :global(.ba-live) .ba__step { grid-area: p; align-self: start; }
   :global(.ba-live) .ba__step { border-top: 0; padding-top: 0; display: block; visibility: hidden; }
   :global(.ba-live) .ba__thumb { display: none; }
   :global(.ba-live) .ba__step .ba__txt { gap: var(--space-xs); }
   :global(.ba-live) .ba__step h2 { font-size: clamp(1.35rem, 1rem + 1.6vw, 2.2rem); }
   :global(.ba-live) .ba__step p:not(.ba__meta):not(.ba__payrow):not(.ba__paynote):not(.ba__who) { font-size: 0.98rem; line-height: 1.5; }
   :global(.ba-live) .ba__disclaimer { display: none; }
-  :global(.ba-live) .ba__intro h2 { font-size: clamp(1.75rem, 0.9rem + 2.4vw, 3.1rem); }
-  :global(.ba-live) .ba__intro .ba__lead { font-size: 1rem; margin-top: var(--space-sm); }
-  :global(.ba-live) .ba__intro .ba__cta { margin-top: var(--space-md); }
   :global(.ba-live) .ba__hint { display: block; }
   :global(.ba-live) .ba__skip { display: block; position: absolute; right: calc(var(--space-sm) + 3rem); top: -2.75rem; padding: 0 0.75rem; line-height: 2.1rem; background: oklch(19% 0.045 265 / 0.72); color: var(--color-chalk); border-radius: 2px; text-decoration: none; z-index: 2; }
   :global(.ba-live) .ba__skip[hidden] { display: none; }
@@ -146,39 +141,39 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
   @media (max-width: 47.99rem) {
     :global(.ba-live) .ba__pin { grid-template-rows: minmax(52%, 1fr) auto; }
     :global(.ba-live) .ba__panel { min-height: 0; padding-top: var(--space-smd); padding-bottom: var(--space-smd); }
-    :global(.ba-live) .ba__kicker { display: none; }
-    :global(.ba-live) .ba__intro h2 { font-size: clamp(1.45rem, 0.9rem + 3.4vw, 2rem); }
-    :global(.ba-live) .ba__intro .ba__lead { display: none; }
-    :global(.ba-live) .ba__intro .ba__cta { margin-top: var(--space-smd); flex-wrap: nowrap; }
-    :global(.ba-live) .ba__intro .ba__cta .btn { flex: 1 1 auto; min-height: 2.75rem; padding-inline: 0.75rem; font-size: 0.92rem; }
-    :global(.ba-live) .ba__step .ba__who, :global(.ba-live) .ba__step .ba__paynote { display: none; }
+          :global(.ba-live) .ba__step .ba__who, :global(.ba-live) .ba__step .ba__paynote { display: none; }
     :global(.ba-live) .ba__step h2 { font-size: 1.3rem; }
     :global(.ba-live) .ba__step p:not(.ba__meta):not(.ba__payrow):not(.ba__paynote):not(.ba__who) { font-size: 0.92rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     :global(.ba-live) .ba__pay { margin-top: var(--space-xs); padding: var(--space-sm) var(--space-smd); }
   }
   @media (max-width: 47.99rem) and (min-height: 800px) {
-    :global(.ba-live) .ba__intro .ba__lead { display: block; font-size: 0.95rem; }
-    :global(.ba-live) .ba__step .ba__paynote { display: block; }
+      :global(.ba-live) .ba__step .ba__paynote { display: block; }
   }
   @media (max-width: 47.99rem) and (max-height: 600px) {
     :global(.ba-live) .ba__step p:not(.ba__meta):not(.ba__payrow):not(.ba__paynote):not(.ba__who) { -webkit-line-clamp: 2; }
-    :global(.ba-live) .ba__intro .ba__cta .btn:last-child { display: none; }
   }
 
   /* Tablet/PC: Bild links, Text rechts */
   @media (min-width: 48rem) {
     :global(.ba-live) .ba__pin { grid-template-rows: 1fr; grid-template-columns: minmax(0, 1fr) minmax(20rem, 1fr); }
-    :global(.ba-live) .ba__panel { border-top: 0; border-left: 1px solid var(--color-rule); padding: var(--space-xl) var(--gutter); align-content: center; }
-    :global(.ba-live) .ba__intro, :global(.ba-live) .ba__step { align-self: center; max-width: 34rem; }
+    :global(.ba-live) .ba__panel { border-top: 0; border-left: 1px solid var(--color-rule); padding: var(--space-xl) var(--gutter); align-content: center; grid-template-areas: 's p'; grid-template-columns: 5.25rem minmax(0, 30rem); column-gap: var(--space-lg); justify-content: center; }
+    :global(.ba-live) .ba__step { align-self: center; max-width: 30rem; }
+    :global(.ba-live) .ba__dots { display: none; }
+    :global(.ba-live) .ba__scale { display: grid; grid-area: s; align-self: center; list-style: none; margin: 0; padding: 0; gap: 0; position: relative; }
+    :global(.ba-live) .ba__scale::before { content: ''; position: absolute; left: 0.45rem; top: 1.2rem; bottom: 1.2rem; width: 2px; background: var(--color-rule); }
+    :global(.ba-live) .ba__scale button { display: grid; gap: 0; justify-items: start; text-align: left; width: 100%; min-height: 2.75rem; padding: 0.2rem 0 0.2rem 1.4rem; background: none; border: 0; cursor: pointer; position: relative; color: var(--color-ink-2); font: inherit; }
+    :global(.ba-live) .ba__scale button::before { content: ''; position: absolute; left: 0; top: 50%; width: 0.95rem; height: 0.95rem; margin-top: -0.475rem; border-radius: 50%; background: var(--color-paper); border: 2px solid var(--color-rule); }
+    :global(.ba-live) .ba__scale button[aria-current='step'] { color: var(--color-ink); }
+    :global(.ba-live) .ba__scale button[aria-current='step']::before { background: var(--color-accent); border-color: var(--color-accent); }
+    :global(.ba-live) .ba__scale-w { font-size: 0.62rem; line-height: 1.2; }
+    :global(.ba-live) .ba__scale-t { font-size: 0.78rem; font-weight: 650; line-height: 1.2; }
     :global(.ba-live) .ba__step .ba__txt { gap: var(--space-sm); }
-    :global(.ba-live) .ba__skip { top: var(--space-lg); background: none; color: var(--color-ink-2); text-decoration: underline; padding: 0; line-height: 2.75rem; }
-    :global(.ba-live) .ba__hint { position: static; transform: none; margin-top: var(--space-lg); padding: 0; background: none; color: var(--color-ink-2); }
+    :global(.ba-live) .ba__skip { top: var(--space-lg); right: var(--gutter); background: none; color: var(--color-ink-2); text-decoration: underline; padding: 0; line-height: 2.75rem; }
+    :global(.ba-live) .ba__hint { position: absolute; left: auto; right: var(--gutter); top: auto; bottom: var(--space-md); padding: 0; background: none; color: var(--color-ink-2); }
   }
   @media (min-width: 48rem) and (orientation: landscape) and (max-height: 560px) {
     :global(.ba-live) .ba__panel { padding-block: var(--space-md); }
-    :global(.ba-live) .ba__intro .ba__lead, :global(.ba-live) .ba__step .ba__paynote, :global(.ba-live) .ba__hint { display: none; }
-    :global(.ba-live) .ba__intro h2 { font-size: 1.9rem; }
-  }
+    }
   @media (min-width: 80rem) {
     :global(.ba-live) .ba__pin { grid-template-columns: minmax(0, 1.15fr) minmax(24rem, 1fr); }
   }
@@ -197,28 +192,23 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
     gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText);
     root.classList.add('ba-live');
 
+    const pin = root.querySelector<HTMLElement>('[data-pin]')!;
     const stage = root.querySelector<HTMLElement>('[data-stage]')!;
-    const frames = [...root.querySelectorAll<HTMLElement>('[data-frame]')];
-    const hero = frames[0];
-    const phase = frames.slice(1); // 0..6
-    const intro = root.querySelector<HTMLElement>('[data-intro]')!;
+    const phase = [...root.querySelectorAll<HTMLElement>('[data-frame]')]; // 0..6
     const steps = [...root.querySelectorAll<HTMLElement>('[data-step]')];
-    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-go]')];
-    const dotList = root.querySelector<HTMLElement>('[data-dots]')!;
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-go]')]; // Telefon-Punkte + PC-Skala
     const hint = root.querySelector<HTMLElement>('[data-hint]');
-    const skip = root.querySelector<HTMLElement>('[data-skip-live]')!;
     const N = phase.length;
 
     // Fehlende Bilder (noch nicht generiert): Dateiname statt leerem Rahmen
-    frames.forEach((f) => {
+    phase.forEach((f) => {
       const im = f.querySelector('img')!;
       const miss = () => f.classList.add('is-missing');
       if (im.complete && im.naturalWidth === 0) miss();
       im.addEventListener('error', miss);
       im.addEventListener('load', () => f.classList.remove('is-missing'));
+      im.loading = 'eager'; // die Bilder liegen übereinander, lazy würde sie nie laden
     });
-    // Bilder der Szene früh laden (sie liegen übereinander, lazy würde sie nie laden)
-    phase.forEach((f) => { const im = f.querySelector('img')!; im.loading = 'eager'; });
 
     // Notizen auf das Bild legen: object-fit: cover nachrechnen (Bild 3:4)
     const notes = [...root.querySelectorAll<HTMLElement>('[data-note]')];
@@ -231,35 +221,35 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
         const px = ox + (x / 100) * rw, py = oy + (y / 100) * rh;
         n.style.setProperty('--px', String(Math.round(px)));
         n.style.setProperty('--py', String(Math.round(py)));
-        // Beschriftung innerhalb der Bühne halten
         const lab = n.querySelector<HTMLElement>('.ba__label')!;
         const lw = lab.offsetWidth;
-        const right = W - (W < 768 ? 54 : 58); // Platz für die Phasen-Punkte
+        const right = W - (W < 768 ? 54 : 16); // Platz für die Phasen-Punkte (nur Telefon)
         const left = Math.min(Math.max(px - lw / 2, 10), right - lw);
         n.style.setProperty('--lx', `${Math.round(left - px)}px`);
-        n.classList.toggle('is-down', py < 110); // zu weit oben: Linie nach unten
+        n.classList.toggle('is-down', py < 110);
       });
     };
     placeNotes();
 
-    // Ausgangszustand
+    // Ausgangszustand: Phase 0 steht, die anderen kommen beim Scrollen
     gsap.set(phase, { clipPath: 'inset(100% 0% 0% 0%)' });
-    gsap.set(phase[0], { clipPath: 'inset(0% 0% 0% 0%)', autoAlpha: 0 });
+    gsap.set(phase[0], { clipPath: 'inset(0% 0% 0% 0%)' });
     gsap.set(phase[4], { clipPath: 'inset(0% 0% 100% 0%)' }); // Dachstuhl kommt von oben
     gsap.set(phase[N - 1], { clipPath: 'inset(0% 0% 0% 0%)', autoAlpha: 0 }); // Abend blendet über
     gsap.set(steps, { autoAlpha: 0, y: 14 });
+    gsap.set(steps[0], { autoAlpha: 1, y: 0 });
     gsap.set(root.querySelectorAll('.ba__line'), { scaleY: 0 });
 
-    // Überschrift wortweise
-    const h1 = intro.querySelector<HTMLElement>('[data-split]');
-    if (h1) {
+    // Überschrift über der Szene: wortweise, einmal beim Einblenden
+    const h2 = root.querySelector<HTMLElement>('[data-split]');
+    if (h2) {
       document.fonts.ready.then(() => {
-        const split = SplitText.create(h1, { type: 'words', mask: 'words', aria: 'auto' });
-        gsap.from(split.words, { yPercent: 105, duration: 0.7, ease: 'power3.out', stagger: 0.045 });
+        const split = SplitText.create(h2, { type: 'words', mask: 'words', aria: 'auto' });
+        gsap.from(split.words, { yPercent: 105, duration: 0.7, ease: 'power3.out', stagger: 0.045, scrollTrigger: { trigger: h2, start: 'top 88%', once: true } });
       });
     }
 
-    const noteIn = (f: HTMLElement, tl: gsap.core.Timeline, at: string) => {
+    const noteIn = (f: HTMLElement, tl: gsap.core.Timeline, at: string | number) => {
       const ns = f.querySelectorAll('[data-note]');
       if (!ns.length) return;
       tl.to(ns, { autoAlpha: 1, duration: 0.15 }, at);
@@ -271,41 +261,29 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
     };
 
     const tl = gsap.timeline({ defaults: { ease: 'none' } });
-    tl.addLabel('s0', 0);
-    // 0 → Phase 0: "zurückspulen" auf das leere Grundstück
-    tl.to(intro, { autoAlpha: 0, y: -16, duration: 0.35 }, 's0')
-      .to(phase[0], { autoAlpha: 1, duration: 0.5 }, 's0')
-      .fromTo(hero, { scale: 1 }, { scale: 1.06, duration: 0.5 }, 's0')
-      .to(steps[0], { autoAlpha: 1, y: 0, duration: 0.3 }, 's0+=0.45');
-    noteIn(phase[0], tl, 's0+=0.6');
-    tl.addLabel('p0', 1);
-
+    tl.addLabel('p0', 0);
+    noteIn(phase[0], tl, 0.05);
     for (let i = 1; i < N; i++) {
       const at = `p${i - 1}`;
       const f = phase[i];
       noteOut(phase[i - 1], tl, at);
       tl.to(steps[i - 1], { autoAlpha: 0, y: -14, duration: 0.25 }, at);
-      if (i === N - 1) {
-        tl.to(f, { autoAlpha: 1, duration: 0.7 }, at); // Abend
-      } else {
-        tl.to(f, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, ease: 'power1.inOut' }, at);
-      }
+      if (i === N - 1) tl.to(f, { autoAlpha: 1, duration: 0.7 }, at); // Abend
+      else tl.to(f, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, ease: 'power1.inOut' }, at);
       tl.fromTo(f.querySelector('img'), { scale: 1.05 }, { scale: 1, duration: 0.9, ease: 'power1.out' }, at);
       tl.to(steps[i], { autoAlpha: 1, y: 0, duration: 0.3 }, `${at}+=0.45`);
       noteIn(f, tl, `${at}+=0.65`);
-      tl.addLabel(`p${i}`, i + 1);
+      tl.addLabel(`p${i}`, i);
     }
     tl.to({}, { duration: 0.3 }); // kurze Ruhe am Ende
 
-    const labels = ['s0', ...phase.map((_, i) => `p${i}`)];
+    const labels = phase.map((_, i) => `p${i}`);
     let current = -1;
     const setActive = (idx: number) => {
       if (idx === current) return;
       current = idx;
-      dots.forEach((d, i) => { if (i === idx - 1) d.setAttribute('aria-current', 'step'); else d.removeAttribute('aria-current'); });
-      dotList.toggleAttribute('data-hidden', idx === 0);
-      skip.hidden = idx === 0;
-      steps.forEach((s, i) => s.setAttribute('aria-hidden', String(i !== idx - 1)));
+      dots.forEach((d) => { if (Number(d.dataset.go) === idx) d.setAttribute('aria-current', 'step'); else d.removeAttribute('aria-current'); });
+      steps.forEach((s, i) => s.setAttribute('aria-hidden', String(i !== idx)));
     };
     setActive(0);
 
@@ -315,10 +293,10 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
     mm.add({ phone: '(max-width: 47.99rem)', wide: '(min-width: 48rem)' }, (ctx) => {
       const per = ctx.conditions!.phone ? 0.62 : 0.8; // Scroll-Länge pro Phase (× Höhe)
       st = ScrollTrigger.create({
-        trigger: root,
-        pin: root.querySelector<HTMLElement>('[data-pin]')!,
+        trigger: pin,
+        pin: true,
         start: () => `top top+=${headerH()}`,
-        end: () => '+=' + Math.round(window.innerHeight * per * (N + 0.3)),
+        end: () => '+=' + Math.round(window.innerHeight * per * (N - 1 + 0.3)),
         scrub: 0.6,
         animation: tl,
         anticipatePin: 1,
@@ -329,12 +307,11 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
           let idx = 0;
           labels.forEach((l, i) => { if (t >= tl.labels[l] - 0.35) idx = i; });
           setActive(idx);
-          if (hint && self.progress > 0.01) hint.style.visibility = 'hidden';
+          if (hint) hint.style.visibility = self.progress > 0.01 ? 'hidden' : '';
         },
         onRefresh: placeNotes,
       });
     });
-    // Bilder ändern nichts an der Höhe (feste Rahmen), Schriften schon: danach neu messen
     document.fonts.ready.then(() => ScrollTrigger.refresh());
 
     const goTo = (label: string) => {

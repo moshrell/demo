@@ -1,6 +1,6 @@
 # Richtfest · Thielking Bau (Demo Bauunternehmen)
 
-Статус: **собран, кадры стройки и 4 из 5 Referenzen подключены (11.11.2026).** Не хватает `ref-sanierung` и `karriere-azubi` (`PROMPTS.txt`): пока их нет, карточка Sanierung и фото на Karriere просто не выводятся (`src/lib/img.ts → has()`). Оригиналы jpg: `D:\Webdesign\richtfest\img\`, в сайте webp (полный + `-s` половинный) в `public/img/`.
+Статус: **собран, все кадры подключены (11.11.2026).** Если кадра нет, блок не выводится (`src/lib/img.ts → has()`), заглушек нет. Оригиналы jpg: `D:\Webdesign\richtfest\img\`, в сайте webp (полный + `-s` половинный) в `public/img/`.
 Живая версия: https://moshrell.github.io/demo/richtfest/ · портфолио: `/vorschau/bau/richtfest/`
 Бриф: `_briefs/bau/01_bauunternehmen_richtfest.txt` · ТЗ от владельца: `TZ.txt` · модуль участка: `_briefs/_module/grundstueck-adresse.txt`.
 Фирма вымышленная (Thielking Bau GmbH, Gehrden), проверено веб-поиском 06.11.2026.

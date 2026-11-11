@@ -6,7 +6,7 @@
  */
 import data from '../data/phasen.json';
 const base = import.meta.env.BASE_URL;
-const img = (f: string) => `${base}img/${f}`;
+import { src, srcset } from '../lib/img';
 const { intro, phasen, payDisclaimer } = data;
 let cum = 0;
 const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
@@ -15,11 +15,11 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
   <div class="ba__pin" data-pin>
     <div class="ba__stage" data-stage aria-hidden="true">
       <figure class="ba__frame ba__frame--hero" data-frame="hero" data-file={intro.img}>
-        <img src={img(intro.img)} alt="" width="1200" height="1600" fetchpriority="high" />
+        <img src={src(intro.img)} srcset={srcset(intro.img)} sizes="(min-width: 48rem) 55vw, 100vw" alt="" width="896" height="1200" fetchpriority="high" />
       </figure>
       {steps.map((p) => (
         <figure class={`ba__frame${p.nr === 4 ? ' ba__frame--top' : ''}`} data-frame={p.nr} data-file={p.img}>
-          <img src={img(p.img)} alt="" width="1200" height="1600" loading="lazy" decoding="async" />
+          <img src={src(p.img)} srcset={srcset(p.img)} sizes="(min-width: 48rem) 55vw, 100vw" alt="" width="896" height="1200" loading="lazy" decoding="async" />
           {p.notes.map((n) => (
             <span class="ba__note" data-note style={`--x:${n.x};--y:${n.y}`}>
               <span class="ba__dot"></span><span class="ba__line"></span><span class="ba__label mono">{n.label}</span>
@@ -47,7 +47,7 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
       {steps.map((p) => (
         <article class="ba__step" data-step={p.nr} aria-labelledby={`ba-s${p.nr}`}>
           <figure class="ba__thumb" data-file={p.img}>
-            <img src={img(p.img)} alt={p.alt} width="1200" height="1600" loading="lazy" decoding="async" />
+            <img src={src(p.img)} srcset={srcset(p.img)} sizes="(min-width: 48rem) 40vw, 100vw" alt={p.alt} width="896" height="1200" loading="lazy" decoding="async" />
           </figure>
           <div class="ba__txt">
             <p class="mono ba__meta"><span>Phase {p.nr} / 6</span><span>{p.weeks}</span></p>
@@ -109,6 +109,8 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
   :global(.ba-live) .ba__dot { position: absolute; left: -7px; top: -7px; width: 14px; height: 14px; border-radius: 50%; background: var(--color-chalk); box-shadow: 0 0 0 4px oklch(98% 0.003 90 / 0.35); }
   :global(.ba-live) .ba__line { position: absolute; left: -1px; bottom: 6px; width: 2px; height: 3.2rem; background: var(--color-chalk); transform-origin: bottom; }
   :global(.ba-live) .ba__label { position: absolute; bottom: calc(3.2rem + 6px); left: var(--lx, -0.5rem); white-space: nowrap; padding: 0.35rem 0.55rem; background: var(--color-chalk); color: var(--color-ink); border-radius: 2px; font-size: 0.7rem; }
+  :global(.ba-live) .ba__note.is-down .ba__line { bottom: auto; top: 6px; transform-origin: top; }
+  :global(.ba-live) .ba__note.is-down .ba__label { bottom: auto; top: calc(3.2rem + 6px); }
   :global(.ba-live) .ba__dots { position: absolute; right: var(--space-sm); top: 50%; transform: translateY(-50%); list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; z-index: 3; }
   :global(.ba-live) .ba__dots button { width: 2.75rem; height: 2.75rem; display: grid; place-items: center; background: transparent; border: 0; cursor: pointer; padding: 0; }
   :global(.ba-live) .ba__dots button span { display: grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: oklch(19% 0.045 265 / 0.55); color: var(--color-chalk); font-size: 0.62rem; border: 1px solid oklch(98% 0.003 90 / 0.5); }
@@ -128,7 +130,7 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
   :global(.ba-live) .ba__step h2 { font-size: clamp(1.35rem, 1rem + 1.6vw, 2.2rem); }
   :global(.ba-live) .ba__step p:not(.ba__meta):not(.ba__payrow):not(.ba__paynote):not(.ba__who) { font-size: 0.98rem; line-height: 1.5; }
   :global(.ba-live) .ba__disclaimer { display: none; }
-  :global(.ba-live) .ba__intro h1 { font-size: clamp(1.75rem, 1.1rem + 3.4vw, 4rem); }
+  :global(.ba-live) .ba__intro h1 { font-size: clamp(1.75rem, 0.9rem + 2.4vw, 3.1rem); }
   :global(.ba-live) .ba__intro .ba__lead { font-size: 1rem; margin-top: var(--space-sm); }
   :global(.ba-live) .ba__intro .ba__cta { margin-top: var(--space-md); }
   :global(.ba-live) .ba__hint { display: block; }
@@ -231,8 +233,10 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
         // Beschriftung innerhalb der Bühne halten
         const lab = n.querySelector<HTMLElement>('.ba__label')!;
         const lw = lab.offsetWidth;
-        const left = Math.min(Math.max(px - lw / 2, 10), W - lw - 10);
+        const right = W - (W < 768 ? 54 : 58); // Platz für die Phasen-Punkte
+        const left = Math.min(Math.max(px - lw / 2, 10), right - lw);
         n.style.setProperty('--lx', `${Math.round(left - px)}px`);
+        n.classList.toggle('is-down', py < 110); // zu weit oben: Linie nach unten
       });
     };
     placeNotes();

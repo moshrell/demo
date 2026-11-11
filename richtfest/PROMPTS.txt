@@ -2,7 +2,7 @@ PROMPTS · Richtfest (Thielking Bau, демо строительной фирм�
 ===========================================================
 Куда класть: D:\Webdesign\richtfest\img\  (имена файлов строго как в заголовках, jpg)
 Порядок важен. Блок А — ОДИН чат Gemini от начала до конца, ничего другого в нём не генерировать.
-Блок Б — можно новый чат.
+Блок Б — можно новый чат. Готово (11.11.2026): весь блок А, ref-neubau, ref-anbau, ref-aufstockung, ref-gewerbe. Осталось: ref-sanierung, karriere-azubi.
 
 Зачем такой порядок в блоке А: на главной сайта дом строится по мере прокрутки, кадры сменяют друг друга на одном месте. Поэтому дом, ракурс, участок, соседи и деревья должны совпадать во всех 7 кадрах. Сначала делаем почти готовый дом (он задаёт облик), потом «отматываем» стройку назад, а вечерний кадр — последним.
 Если какой-то кадр сдвинул ракурс или изменил дом — попроси в том же чате: «Same camera position and framing as the first image, only the construction stage differs. Regenerate.»
@@ -62,12 +62,6 @@ Photorealistic documentary architecture photography, horizontal 4:3 format. A ca
 
 === ref-gewerbe.jpg · 4:3 ===
 Photorealistic documentary architecture photography, horizontal 4:3 format. A new small two-storey commercial building for a local craft business on the edge of a small town in Lower Saxony, Germany: simple cubic volume, lower part dark red clinker brick, upper part light grey metal facade panels, a row of large windows, a wide sectional door for vehicles at one side, a few parking spaces with fresh asphalt and young trees in front. Eye-level three-quarter view. Overcast soft daylight, neutral slightly cool colour grading, real photo look. No people. No text, no logos, no company names, no signs, no watermark.
-
-=== team-bauleiter.jpg · 3:4 ===
-Photorealistic documentary photography, vertical 3:4 format. A construction site manager in his fifties, wearing a dark grey work jacket and a white helmet, stands on a building site in Lower Saxony, Germany, holding a large folded construction plan, seen from the side and slightly from behind, looking at a half-built house with white sand-lime block walls and a grey scaffold, his face turned away and not recognisable. Shallow depth of field, the plan and his hands sharp. Overcast soft daylight, neutral slightly cool colour grading, real photo look. No text, no logos, no signs, no watermark.
-
-=== detail-mauern.jpg · 1:1 ===
-Photorealistic close-up photography, square 1:1 format. Hands of a mason in grey work gloves placing a large white-grey sand-lime block onto a thin bed of mortar on a wall, a taut white mason's string line running along the top edge of the wall, a trowel resting on the wall, fine dust in the air. Shallow depth of field, side light. Overcast soft daylight, neutral slightly cool colour grading, real photo look. No face visible. No text, no logos, no watermark.
 
 === karriere-azubi.jpg · 4:3 ===
 Photorealistic documentary photography, horizontal 4:3 format. On a building site in Lower Saxony, Germany, an experienced mason in a grey work jacket and white helmet shows a young apprentice, about 18 years old, in matching grey work clothes and white helmet, how to check a freshly built sand-lime block wall with a long spirit level; both seen from the side and slightly from behind, faces not recognisable. Calm, focused, respectful mood. Overcast soft daylight, neutral slightly cool colour grading, real photo look. No text, no logos, no signs, no watermark.

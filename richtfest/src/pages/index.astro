@@ -8,9 +8,9 @@ import lst from '../data/leistungen.json';
 import refs from '../data/referenzen.json';
 import faq from '../data/faq.json';
 const base = import.meta.env.BASE_URL;
-const img = (f: string) => `${base}img/${f}`;
+import { has, src, srcset } from '../lib/img';
 ---
-<Base title="Thielking Bau · Bauunternehmen in Gehrden · Neubau, Anbau, Sanierung" description="Bauunternehmen im Calenberger Land: Einfamilienhäuser schlüsselfertig oder als Rohbau, Anbau, Aufstockung und Sanierung. Zahlung nach Baufortschritt, ein Ansprechpartner bis zum Schlüssel." faq={faq} current="start">
+<Base title="Thielking Bau · Bauunternehmen in Gehrden · Neubau, Anbau, Sanierung" description="Bauunternehmen im Calenberger Land: Einfamilienhäuser schlüsselfertig oder als Rohbau, Anbau, Aufstockung und Sanierung. Zahlung nach Baufortschritt, ein Ansprechpartner bis zum Schlüssel." faq={faq} current="start" image="img/phase-6-abend.webp">
   <Bauablauf />
 
   <section class="section planen" id="planen" aria-labelledby="planen-h">
@@ -78,9 +78,9 @@ const img = (f: string) => `${base}img/${f}`;
         <a class="link-arrow" href={`${base}referenzen/`}>Alle Referenzen</a>
       </div>
       <ul class="refs">
-        {refs.slice(0, 3).map((r) => (
+        {refs.filter((r) => has(r.img)).slice(0, 3).map((r) => (
           <li class="ref reveal">
-            <figure class="ref__img" data-file={r.img}><img src={img(r.img)} alt={r.alt} width="1200" height="900" loading="lazy" decoding="async" /></figure>
+            <figure class="ref__img"><img src={src(r.img)} srcset={srcset(r.img, false)} sizes="(min-width: 48rem) 33vw, 100vw" alt={r.alt} width="1200" height="896" loading="lazy" decoding="async" /></figure>
             <p class="mono ref__meta"><span>{r.typeLabel}</span><span>{r.place} · {r.year}</span></p>
             <h3>{r.title}</h3>
             <p class="muted">{r.size} · Bauzeit {r.time}</p>

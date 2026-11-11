@@ -3,6 +3,8 @@ import Base from '../layouts/Base.astro';
 import OrderForm from '../components/OrderForm.astro';
 import site from '../data/site.json';
 const base = import.meta.env.BASE_URL;
+import { has, src, srcset } from '../lib/img';
+const azubi = has('karriere-azubi');
 const jobs = [
   { t: 'Maurer (m/w/d)', pay: '21,50–25,00 € pro Stunde', info: 'Vollzeit, Rohbau im Wohnungsbau, feste Kolonne, Firmenwagen zur Baustelle' },
   { t: 'Vorarbeiter Hochbau (m/w/d)', pay: '25,00–28,50 € pro Stunde', info: 'Führung einer Kolonne, Abrechnung mit dem Polier' },
@@ -17,7 +19,7 @@ const jobs = [
         <h1>Bei uns stehen Lohn und Kolonne vorher fest.</h1>
         <p class="lead">Keine Leiharbeit, keine Montage quer durch Deutschland. Abends zu Hause, freitags um 13 Uhr Feierabend.</p>
       </div>
-      <figure class="ka__img"><img src={`${base}img/karriere-azubi.jpg`} alt="Maurer zeigt einem Auszubildenden, wie man eine Wand mit der Wasserwaage prüft" width="1200" height="900" loading="eager" /></figure>
+      {azubi && <figure class="ka__img"><img src={src('karriere-azubi')} srcset={srcset('karriere-azubi', false)} sizes="(min-width: 56rem) 50vw, 100vw" alt="Maurer zeigt einem Auszubildenden, wie man eine Wand mit der Wasserwaage prüft" width="1200" height="896" loading="eager" /></figure>}
     </div>
   </section>
   <section class="section section--alt">

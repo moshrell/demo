@@ -3,7 +3,7 @@
     "kicker": "Bauunternehmen im Calenberger Land",
     "title": "Wir bauen Ihr Haus. Stein für Stein, Woche für Woche.",
     "lead": "Von der ersten Schnur auf dem Grundstück bis zum Schlüssel: ein Ansprechpartner, ein schriftlicher Bauzeitenplan, Zahlung nur nach erledigtem Bauabschnitt.",
-    "img": "phase-6-abend.jpg",
+    "img": "phase-6-abend",
     "alt": "Fertiges Einfamilienhaus mit rotem Klinker in der Abenddämmerung, Licht in den Fenstern"
   },
   "phasen": [
@@ -16,10 +16,14 @@
       "pay": 0,
       "payNote": "Noch keine Zahlung. Bei Vertragsschluss erhalten Sie eine Sicherheit von 5 % (§ 650m BGB).",
       "who": "Jens Thielking",
-      "img": "phase-0-grundstueck.jpg",
+      "img": "phase-0-grundstueck",
       "alt": "Leeres Grundstück, Hausumriss mit weißen Schnüren und Holzpflöcken abgesteckt",
       "notes": [
-        { "x": 50, "y": 58, "label": "Schnurgerüst, 10 × 12 m" }
+        {
+          "x": 50,
+          "y": 66,
+          "label": "Schnurgerüst, 10 × 12 m"
+        }
       ]
     },
     {
@@ -31,10 +35,14 @@
       "pay": 15,
       "payNote": "Fällig, wenn die Bodenplatte fertig ist.",
       "who": "Polier Uwe Brandes",
-      "img": "phase-1-bodenplatte.jpg",
+      "img": "phase-1-bodenplatte",
       "alt": "Frisch betonierte Bodenplatte mit Anschlusseisen, Bagger am Rand",
       "notes": [
-        { "x": 52, "y": 60, "label": "Bodenplatte 25 cm, C25/30" }
+        {
+          "x": 54,
+          "y": 64,
+          "label": "Bodenplatte 25 cm, C25/30"
+        }
       ]
     },
     {
@@ -46,10 +54,14 @@
       "pay": 15,
       "payNote": "Fällig, wenn das Erdgeschoss steht.",
       "who": "Polier Uwe Brandes",
-      "img": "phase-2-mauerwerk.jpg",
-      "alt": "Erdgeschosswände aus Kalksandstein im Bau, Maurer an der Schnur",
+      "img": "phase-2-mauerwerk",
+      "alt": "Erdgeschosswände aus Kalksandstein, Maurer auf dem Gerüstbock",
       "notes": [
-        { "x": 48, "y": 52, "label": "Kalksandstein 17,5 cm" }
+        {
+          "x": 40,
+          "y": 55,
+          "label": "Kalksandstein 17,5 cm"
+        }
       ]
     },
     {
@@ -57,14 +69,18 @@
       "nr": 3,
       "title": "Decke & Obergeschoss",
       "weeks": "Woche 7–9",
-      "text": "Betondecke über dem Erdgeschoss, dann die Wände im Obergeschoss. Ab hier sehen Sie die Räume, wie sie später sein werden.",
+      "text": "Betondecke über dem Erdgeschoss, dann Obergeschoss und Giebel. Ab hier sehen Sie die Räume, wie sie später sein werden.",
       "pay": 15,
       "payNote": "Fällig, wenn die Obergeschosswände stehen.",
       "who": "Polier Uwe Brandes",
-      "img": "phase-3-decke.jpg",
-      "alt": "Betondecke auf dem Erdgeschoss, Obergeschosswände halb gemauert",
+      "img": "phase-3-decke",
+      "alt": "Rohbau mit zwei gemauerten Geschossen und Giebelwänden, Gerüst an der Seite",
       "notes": [
-        { "x": 50, "y": 46, "label": "Filigrandecke 20 cm" }
+        {
+          "x": 42,
+          "y": 47,
+          "label": "Decke über EG, 20 cm"
+        }
       ]
     },
     {
@@ -76,10 +92,14 @@
       "pay": 15,
       "payNote": "Fällig nach dem Richtfest. Rohbau damit zu 60 % bezahlt.",
       "who": "Jens Thielking",
-      "img": "phase-4-dachstuhl.jpg",
+      "img": "phase-4-dachstuhl",
       "alt": "Offener Holzdachstuhl mit Richtkranz und bunten Bändern auf dem First",
       "notes": [
-        { "x": 50, "y": 28, "label": "Richtkranz auf dem First" }
+        {
+          "x": 49,
+          "y": 19,
+          "label": "Richtkranz auf dem First"
+        }
       ]
     },
     {
@@ -91,10 +111,14 @@
       "pay": 20,
       "payNote": "Fällig, wenn das Haus dicht ist.",
       "who": "Polier Uwe Brandes",
-      "img": "phase-5-dach.jpg",
+      "img": "phase-5-dach",
       "alt": "Haus mit gedecktem Dach, Fenstern und roter Klinkerfassade, Gerüst an der Giebelseite",
       "notes": [
-        { "x": 44, "y": 56, "label": "Klinker, handgeformt" }
+        {
+          "x": 29,
+          "y": 47,
+          "label": "Klinker, handgeformt"
+        }
       ]
     },
     {
@@ -106,10 +130,14 @@
       "pay": 20,
       "payNote": "Fällig erst nach der Abnahme. Vorher zahlen Sie nie mehr als 80 %.",
       "who": "Jens Thielking",
-      "img": "phase-6-abend.jpg",
+      "img": "phase-6-abend",
       "alt": "Fertiges Haus am Abend, Familie geht zur Haustür",
       "notes": [
-        { "x": 46, "y": 64, "label": "Übergabe nach gemeinsamer Abnahme" }
+        {
+          "x": 67,
+          "y": 70,
+          "label": "Übergabe nach Abnahme"
+        }
       ]
     }
   ],

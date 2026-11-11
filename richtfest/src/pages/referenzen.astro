@@ -2,7 +2,9 @@
 import Base from '../layouts/Base.astro';
 import refs from '../data/referenzen.json';
 const base = import.meta.env.BASE_URL;
-const img = (f: string) => `${base}img/${f}`;
+import { has, src, srcset } from '../lib/img';
+const shown = refs.filter((r) => has(r.img));
+const present = new Set(shown.map((r) => r.type));
 const types = [{ v: 'alle', l: 'Alle' }, { v: 'neubau', l: 'Neubau' }, { v: 'anbau', l: 'Anbau' }, { v: 'sanierung', l: 'Sanierung' }, { v: 'gewerbe', l: 'Gewerbe' }];
 ---
 <Base title="Referenzen · Thielking Bau" description="Gebaute Projekte im Calenberger Land: Einfamilienhäuser, Anbauten, Aufstockungen, Sanierungen und Gewerbebau, mit Bauzeit und Fläche." current="referenzen">
@@ -12,16 +14,16 @@ const types = [{ v: 'alle', l: 'Alle' }, { v: 'neubau', l: 'Neubau' }, { v: 'anb
       <h1>Gebaut, übergeben, bewohnt.</h1>
       <p class="lead">Jedes Projekt mit Fläche und echter Bauzeit. Auf Wunsch vermitteln wir den Kontakt zu Bauherren, die mit uns gebaut haben.</p>
       <div class="chips rf__filter" role="radiogroup" aria-label="Nach Art filtern" data-filter>
-        {types.map((t, i) => <label class="chip"><input type="radio" name="f" value={t.v} checked={i === 0} /><span>{t.l}</span></label>)}
+        {types.filter((t) => t.v === 'alle' || present.has(t.v)).map((t, i) => <label class="chip"><input type="radio" name="f" value={t.v} checked={i === 0} /><span>{t.l}</span></label>)}
       </div>
     </div>
   </section>
   <section class="section" style="padding-top:0">
     <div class="wrap">
       <ul class="rf" data-grid>
-        {refs.map((r, i) => (
+        {shown.map((r, i) => (
           <li class={`rf__item${i === 0 ? ' rf__item--wide' : ''}`} data-type={r.type} data-flip-id={r.id}>
-            <figure class="rf__img"><img src={img(r.img)} alt={r.alt} width="1200" height="900" loading={i < 2 ? 'eager' : 'lazy'} decoding="async" /></figure>
+            <figure class="rf__img"><img src={src(r.img)} srcset={srcset(r.img, false)} sizes={i === 0 ? '(min-width: 48rem) 60vw, 100vw' : '(min-width: 48rem) 50vw, 100vw'} alt={r.alt} width="1200" height="896" loading={i < 2 ? 'eager' : 'lazy'} decoding="async" /></figure>
             <div class="rf__body">
               <p class="mono rf__meta"><span>{r.typeLabel}</span><span>{r.place} · {r.year}</span></p>
               <h2 class="rf__t">{r.title}</h2>

@@ -153,7 +153,7 @@ p { margin: 0; }
 .field input::placeholder, .field textarea::placeholder { color: var(--color-ink-2); opacity: 1; }
 .chips { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
 .chip input { position: absolute; opacity: 0; pointer-events: none; }
-.chip span { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.55rem 0.95rem; border: 1px solid var(--color-ink); border-radius: var(--radius); background: var(--color-chalk); cursor: pointer; white-space: nowrap; }
+.chip > span { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.55rem 0.95rem; border: 1px solid var(--color-ink); border-radius: var(--radius); background: var(--color-chalk); cursor: pointer; white-space: nowrap; }
 .chip input:checked + span { background: var(--color-ink); color: var(--color-chalk); }
 .chip input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
 

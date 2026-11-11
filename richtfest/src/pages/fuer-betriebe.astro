@@ -1,0 +1,68 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL;
+const rows = [
+  ['Bauart', 'Einfamilienhaus, 1,5 Geschosse'],
+  ['Haus', '10 × 9 m, ca. 110 m² Wohnfläche'],
+  ['Grundstück', '840 m², Gemarkung Gehrden, Flur 3, Flurstück 245/1'],
+  ['Grenzabstand', 'passt, überall mindestens 3,00 m'],
+  ['Kostenrahmen', 'Schlüsselfertig, ca. 110 m²: Rahmen aus dem Check'],
+  ['Name', 'Vor- und Nachname'],
+  ['Telefon', 'z. B. 030 23125 123'],
+];
+const gains = ['Sie sehen vor dem Rückruf, ob das Grundstück passt.', 'Größe und Budgetrahmen stehen schon drin.', 'Weniger Anfragen ohne Grundstück.'];
+---
+<Base title="Für Betriebe · So kommt die Anfrage bei Ihnen an" description="Beispiel einer Projektanfrage aus dem Grundstücks-Check, so wie sie im Büro eines Bauunternehmens ankäme.">
+  <section class="section">
+    <div class="wrap fb">
+      <p class="kicker mono">Für Betriebe · Demo</p>
+      <h1>So kommt die Anfrage bei Ihnen an.</h1>
+      <p class="fb__lead">Ein Bauherr prüft sein Grundstück auf der Website und schickt das Ergebnis mit. So sähe die Nachricht in Ihrem Postfach aus.</p>
+
+      <div class="fb__grid">
+        <article class="sheet fb__mail" aria-label="Beispiel-Anfrage">
+          <p class="mono fb__subj"><span class="muted">Betreff</span><br />Neue Projektanfrage: Neubau, Gehrden</p>
+          <dl class="fb__dl">
+            {rows.map(([k, v]) => <><dt class="mono">{k}</dt><dd>{v}</dd></>)}
+          </dl>
+          <figure class="fb__plan">
+            <svg viewBox="0 0 120 90" role="img" aria-label="Plan: Haus auf dem Grundstück, Grenzabstand eingehalten">
+              <polygon points="14,8 104,12 108,82 22,80" class="fb__p" />
+              <rect x="42" y="30" width="38" height="30" class="fb__h" />
+            </svg>
+            <figcaption class="mono muted">Plan aus dem Check, hängt der Anfrage an</figcaption>
+          </figure>
+        </article>
+
+        <div class="fb__side">
+          <ul class="fb__gain">{gains.map((g) => <li>{g}</li>)}</ul>
+          <p class="mono fb__note">Demo: Es wird nichts gesendet. Im echten Projekt geht die Anfrage per E-Mail an Ihr Büro.</p>
+          <h2>Wo der Check funktioniert</h2>
+          <p>Derzeit in Niedersachsen. Andere Bundesländer gehen auf Anfrage; das hängt davon ab, ob das Land seine Katasterdaten offen bereitstellt.</p>
+          <p><a class="btn btn--primary" href={`${base}grundstueck/`}>Check ausprobieren</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .fb h1 { max-width: 18ch; }
+  .fb .kicker { margin: 0 0 var(--space-sm); }
+  .fb h1 { margin: 0 0 var(--space-md); }
+  .fb__lead { max-width: 60ch; margin: 0; }
+  .fb__side > * { margin-block: 0; }
+  .fb__side { display: grid; gap: var(--space-md); }
+  .fb__grid { display: grid; gap: var(--space-xl); grid-template-columns: minmax(0, 1fr); margin-top: var(--space-lg); }
+  @media (min-width: 60rem) { .fb__grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: start; } }
+  .fb__mail { padding: var(--space-lg); display: grid; gap: var(--space-md); }
+  .fb__subj { margin: 0; font-weight: 700; }
+  .fb__dl { display: grid; grid-template-columns: minmax(0, 8rem) minmax(0, 1fr); gap: var(--space-sm) var(--space-md); margin: 0; }
+  .fb__dl dt { color: var(--color-ink-2); } .fb__dl dd { margin: 0; overflow-wrap: anywhere; }
+  .fb__plan { margin: 0; }
+  .fb__plan svg { width: 100%; max-width: 20rem; background: var(--color-night); display: block; }
+  .fb__p { fill: var(--color-night-2, var(--color-ink)); stroke: var(--color-chalk); stroke-width: 0.8; }
+  .fb__h { fill: var(--color-accent); stroke: var(--color-chalk); stroke-width: 0.8; }
+  .fb__gain { margin: 0; padding-left: 1.2rem; display: grid; gap: var(--space-sm); font-size: var(--text-lg); }
+  .fb__note { color: var(--color-ink-2); }
+  .fb h2 { font-size: var(--text-xl); margin-top: var(--space-md); }
+</style>

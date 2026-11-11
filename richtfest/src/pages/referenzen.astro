@@ -42,6 +42,7 @@ const types = [{ v: 'alle', l: 'Alle' }, { v: 'neubau', l: 'Neubau' }, { v: 'anb
   .rf__n { opacity: 0.65; font-size: 0.85em; margin-left: 0.15rem; }
   .rf__k { color: var(--color-accent); }
   .rf__filter { padding-top: var(--space-sm); }
+  @media (max-width: 47.99rem) { .rf__filter { min-width: 0; max-width: calc(100% + var(--gutter) * 2); flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: var(--gutter, 1rem); margin-inline: calc(var(--gutter, 1rem) * -1); padding-inline: var(--gutter, 1rem); scrollbar-width: none; } .rf__filter::-webkit-scrollbar { display: none; } .rf__filter .chip { position: relative; scroll-snap-align: start; flex: none; } }
   .rf { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-xl) var(--space-lg); grid-template-columns: minmax(0, 1fr); }
   @media (min-width: 48rem) { .rf { grid-template-columns: repeat(2, minmax(0, 1fr)); } .rf__item--wide { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--space-lg); align-items: end; } }
   .rf__item[hidden] { display: none; }

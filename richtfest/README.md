@@ -2,14 +2,16 @@
 
 Статус: **собран, все кадры подключены (11.11.2026).** Если кадра нет, блок не выводится (`src/lib/img.ts → has()`), заглушек нет. Оригиналы jpg: `D:\Webdesign\richtfest\img\`, в сайте webp (полный + `-s` половинный) в `public/img/`.
 Живая версия: https://moshrell.github.io/demo/richtfest/ · портфолио: `/vorschau/bau/richtfest/`
-**Следующий шаг: правки дизайна по `DESIGN_FIX.txt` (не сделано).**
+Правки дизайна по `DESIGN_FIX.txt` сделаны (11.11.2026). **Не сделано: «три круга правок не по дизайну» от Степана — текста нет в репозитории, ждём.**
 Бриф: `_briefs/bau/01_bauunternehmen_richtfest.txt` · ТЗ от владельца: `TZ.txt` · модуль участка: `_briefs/_module/grundstueck-adresse.txt`.
 Фирма вымышленная (Thielking Bau GmbH, Gehrden), проверено веб-поиском 06.11.2026.
 
 ## Что где
-- `src/components/HeroCheck.astro` — начало главной: адрес → `/grundstueck/?q=` (поиск запускается там кнопкой), рядом живой пример-план (GSAP Draggable + Inertia + DrawSVG): тянешь дом, Grenzabstand считается сразу.
+- `src/components/HeroFirma.astro` — первый экран главной: фото дома, кто фирма, CTA (на телефоне CTA в нижней панели).
+- `src/components/CheckTeaser.astro` — тёмный блок `#check` после «Was planen Sie?»: адрес → `/grundstueck/?q=`, ссылки `?bsp=1`/`?manuell=1`, живой пример-план (GSAP Draggable + DrawSVG).
+- `src/pages/fuer-betriebe.astro` — страница для покупателя сайта (как заявка приходит фирме); в меню нет, ссылка в подвале.
 - `src/components/Bauablauf.astro` — сцена «So wird gebaut» (на главной ниже Check и «Was planen Sie?»): GSAP ScrollTrigger (pin + scrub + snap к фазам), SplitText (заголовок), ScrollToPlugin (точки фаз). Фазы и проценты оплаты: `src/data/phasen.json`. Без JS и при reduced-motion — те же фазы списком.
-- `src/pages/grundstueck.astro` + `src/scripts/geo.ts` — Grundstücks-Check: Photon (адрес) → LGLN WFS `alkis_wfs_einfach` (Flurstück + здания, GML, EPSG:25832) → SVG-план, шаги: 1 Grundstück → 2 Größe (ползунки ширина/глубина, Geschosse; Wohnfläche оценивается) → 3 Bauart (правила DHH/Anbau, стартовые размеры, пока размер не менялся вручную) → 4 Kostenrahmen в конце. GSAP Draggable + Inertia (дом, вершины), DrawSVG (контур), отступ 0,4 H / мин. 3 м (NBauO § 5 Abs. 2), GRZ, Kostenrahmen. Типы домов и цены: `src/data/haustypen.json`.
+- `src/pages/grundstueck.astro` + `src/scripts/geo.ts` — Grundstücks-Check: Photon (адрес) → LGLN WFS `alkis_wfs_einfach` (Flurstück + здания, GML, EPSG:25832) → SVG-план, 3 шага (1 Grundstück → 2 Haus: размеры + Bauart → 3 Ergebnis & Kosten); план липкий вверху на телефоне, инструменты внутри плана, нижняя панель с вердиктом и «Weiter: Kosten»/«Anfragen»; на застроенном участке сначала вопрос «Bestand bleibt / Abriss und Neubau»; цены включает `preiseZeigen` в `haustypen.json` (в демо true). Photon → запасной Nominatim. GSAP Draggable + Inertia (дом, вершины), DrawSVG (контур), отступ 0,4 H / мин. 3 м (NBauO § 5 Abs. 2), GRZ, Kostenrahmen. Типы домов и цены: `src/data/haustypen.json`.
 - `src/components/AnfrageForm.astro` — Projektanfrage (стандарт OrderForm + план участка из Check через sessionStorage).
 - `src/pages/referenzen.astro` — фильтр с GSAP Flip.
 - Переходы между страницами: CSS `@view-transition` (без JS), при reduced-motion выключены. Появление блоков: CSS `animation-timeline: view()`.
@@ -43,3 +45,8 @@
 - Кадастр: LGLN, Liegenschaftskataster, CC BY 4.0 (подпись на странице и в Impressum).
 - Поиск адреса: Photon (komoot), данные © OpenStreetMap, ODbL.
 - GSAP 3.15 (бесплатно, включая плагины), шрифты Archivo и Martian Mono (OFL, @fontsource-variable).
+
+## Проверено 11.11.2026 (после DESIGN_FIX)
+- Check: пример-участок на 390×780 и 1366×768, застроенный участок (Gehrden, Steinweg; Photon замокан, LGLN живой): вопрос Anbau/Abriss, оба ответа, нет JS-ошибок.
+- Все 10 страниц на 320/390/768/1366 и 780×360: нет горизонтального скролла, один h1, нет двухстрочных кнопок, нет ошибок консоли.
+- Не проверено: реальные устройства; Photon/Nominatim из облака недоступны (fallback проверен только логикой); reduced-motion на новых блоках визуально; D:\Webdesign\richtfest не обновлён (источник правды — репозиторий).

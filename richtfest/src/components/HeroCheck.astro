@@ -1,0 +1,160 @@
+---
+/**
+ * Start der Seite: Grundstücks-Check als Einstieg.
+ * Links Adresse eingeben (GET → /grundstueck/?q=…, gesucht wird erst dort per Knopf),
+ * rechts ein kleiner Lageplan zum Ausprobieren: Haus ziehen, Grenzabstand rechnet live.
+ * GSAP: DrawSVG (Grenze zeichnet sich), Draggable + Inertia (Haus), kurze Hinweis-Bewegung.
+ */
+const base = import.meta.env.BASE_URL;
+---
+<section class="hc" aria-labelledby="hc-h" data-hc>
+  <div class="wrap hc__in">
+    <div class="hc__txt">
+      <p class="mono hc__k">Bauunternehmen im Calenberger Land</p>
+      <h1 id="hc-h">Passt Ihr Haus auf Ihr Grundstück?</h1>
+      <p class="hc__lead">Adresse eingeben, Flurstück aus dem amtlichen Kataster laden und das Haus in Ihrer Größe daraufsetzen. Grenzabstand sofort, Kosten zum Schluss.</p>
+      <form class="hc__form" action={`${base}grundstueck/`} method="get">
+        <label for="hc-addr">Adresse Ihres Grundstücks</label>
+        <div class="hc__row">
+          <input id="hc-addr" name="q" type="text" autocomplete="street-address" placeholder="z. B. Musterstraße 12, 30989 Gehrden" required minlength="5" />
+          <button class="btn btn--primary" type="submit">Grundstück laden</button>
+        </div>
+        <p class="hc__alt"><a href={`${base}grundstueck/?bsp=1`}>Beispielgrundstück ansehen</a><span aria-hidden="true"> · </span><a href={`${base}grundstueck/?manuell=1`}>Maße selbst eingeben</a></p>
+        <p class="hc__src mono">Daten: LGLN Liegenschaftskataster, CC BY 4.0 · nur Niedersachsen. Die Adresse wird erst auf der nächsten Seite per Knopf an die Kartensuche gesendet. <a href={`${base}datenschutz/#grundstueck`} target="_blank" rel="noopener">Datenschutz</a></p>
+      </form>
+    </div>
+
+    <figure class="hc__fig">
+      <svg viewBox="-17 -18 34 36" data-hc-svg role="img" aria-labelledby="hc-svg-t">
+        <title id="hc-svg-t">Beispiel-Lageplan: Haus ziehen, der Grenzabstand wird live geprüft</title>
+        <polygon class="hc__parcel" data-hc-parcel points="-11.5,-14.5 10.5,-15.5 12.5,13.5 -12,14.8" />
+        <path class="hc__zone" data-hc-zone />
+        <g data-hc-house class="hc__house" tabindex="0" role="button" aria-label="Haus verschieben: ziehen oder Pfeiltasten">
+          <polygon data-hc-poly />
+          <line class="hc__ridge" data-hc-ridge />
+        </g>
+        <line class="hc__gap" data-hc-gap />
+        <text class="hc__dim" data-hc-dim text-anchor="middle"></text>
+      </svg>
+      <p class="hc__badge mono" data-hc-badge role="status" aria-live="polite">Haus ziehen</p>
+      <figcaption class="hc__cap mono">Beispiel, 10 × 9 m, Abstand 3 m (Niedersachsen)</figcaption>
+      <div class="hc__proxy" data-hc-proxy aria-hidden="true"></div>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .hc { background: var(--color-paper); padding-block: var(--space-lg) var(--space-xl); }
+  .hc__in { display: grid; gap: var(--space-lg); grid-template-columns: minmax(0, 1fr); align-items: center; }
+  @media (min-width: 60rem) { .hc { padding-block: var(--space-xl) var(--space-2xl); } .hc__in { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: var(--space-2xl); } }
+  .hc__k { color: var(--color-accent); margin-bottom: var(--space-sm); }
+  .hc h1 { font-size: clamp(1.9rem, 1.1rem + 3.4vw, 3.6rem); line-height: 1.02; overflow-wrap: anywhere; }
+  .hc__lead { font-size: var(--text-lg); margin-top: var(--space-md); max-width: var(--measure); color: var(--color-ink-2); }
+  .hc__form { margin-top: var(--space-lg); display: grid; gap: var(--space-xs); max-width: 38rem; }
+  .hc__form label { font-weight: 650; }
+  .hc__row { display: grid; gap: var(--space-sm); grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 40rem) { .hc__row { grid-template-columns: minmax(0, 1fr) auto; } }
+  .hc__row input { min-height: 3.25rem; padding: 0 var(--space-md); font: inherit; border: 2px solid var(--color-ink); border-radius: var(--radius); background: var(--color-chalk); color: var(--color-ink); min-width: 0; }
+  .hc__row .btn { min-height: 3.25rem; }
+  .hc__alt { margin-top: var(--space-xs); }
+  .hc__src { color: var(--color-ink-2); font-size: 0.72rem; line-height: 1.5; margin-top: var(--space-xs); }
+
+  .hc__fig { margin: 0; position: relative; background: var(--color-night); border-radius: var(--radius); padding: var(--space-sm); display: grid; gap: var(--space-xs); }
+  .hc__fig svg { width: 100%; height: auto; max-height: 62svh; aspect-ratio: 34 / 36; display: block; touch-action: none; }
+  .hc__parcel { fill: oklch(26% 0.045 265); stroke: var(--color-chalk); stroke-width: 0.18; stroke-dasharray: 0.9 0.6; }
+  .hc__zone { fill: oklch(52% 0.11 150 / 0.2); stroke: var(--color-ok); stroke-width: 0.14; transition: fill 0.2s, stroke 0.2s; }
+  .hc__zone.is-bad { fill: oklch(52% 0.17 28 / 0.28); stroke: oklch(70% 0.17 28); }
+  .hc__house { cursor: grab; }
+  .hc__house polygon { fill: var(--color-accent); stroke: var(--color-chalk); stroke-width: 0.12; }
+  .hc__house:focus-visible polygon { stroke-width: 0.4; }
+  .hc__ridge { stroke: oklch(98% 0.003 90 / 0.6); stroke-width: 0.14; }
+  .hc__gap { stroke: var(--color-chalk); stroke-width: 0.14; stroke-dasharray: 0.4 0.3; }
+  .hc__dim { fill: var(--color-chalk); font-family: var(--font-mono); font-size: 1.15px; }
+  .hc__badge { position: absolute; left: var(--space-md); top: var(--space-md); margin: 0; padding: 0.3rem 0.6rem; background: var(--color-chalk); color: var(--color-ink); border-radius: 2px; font-size: 0.72rem; }
+  .hc__badge[data-state='ok'] { background: var(--color-ok); color: var(--color-chalk); }
+  .hc__badge[data-state='bad'] { background: var(--color-bad); color: var(--color-chalk); }
+  .hc__cap { color: oklch(80% 0.02 262); font-size: 0.7rem; text-align: center; margin: 0; }
+  .hc__proxy { position: absolute; width: 1px; height: 1px; left: 0; top: 0; visibility: hidden; }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { Draggable } from 'gsap/Draggable';
+  import { InertiaPlugin } from 'gsap/InertiaPlugin';
+  import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+  import * as G from '../scripts/geo';
+  import type { Pt } from '../scripts/geo';
+  gsap.registerPlugin(Draggable, InertiaPlugin, DrawSVGPlugin);
+
+  const root = document.querySelector<HTMLElement>('[data-hc]');
+  if (root) {
+    const $ = <T extends Element = SVGElement>(s: string) => root.querySelector<T>(s)!;
+    const svg = $<SVGSVGElement>('[data-hc-svg]');
+    const parcel = $<SVGPolygonElement>('[data-hc-parcel]');
+    const zoneEl = $<SVGPathElement>('[data-hc-zone]');
+    const house = $<SVGGElement>('[data-hc-house]');
+    const poly = $<SVGPolygonElement>('[data-hc-poly]');
+    const ridge = $<SVGLineElement>('[data-hc-ridge]');
+    const gapEl = $<SVGLineElement>('[data-hc-gap]');
+    const dim = $<SVGTextElement>('[data-hc-dim]');
+    const badge = $<HTMLElement>('[data-hc-badge]');
+    const proxy = $<HTMLElement>('[data-hc-proxy]');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const ring: Pt[] = parcel.getAttribute('points')!.trim().split(/\s+/).map((s) => s.split(',').map(Number) as Pt);
+    const W = 10, D = 9, SB = 3;
+    const deg = G.longestEdgeAngle(ring);
+    const rot = [deg, deg - 90, deg - 180].reduce((b, c) => (Math.abs(c) < Math.abs(b) ? c : b));
+    const st = { x: 0, y: 0 };
+    const pts = (r: Pt[]) => r.map((p) => `${p[0].toFixed(2)},${p[1].toFixed(2)}`).join(' ');
+
+    function render() {
+      const h = G.rect(st.x, st.y, W, D, rot);
+      poly.setAttribute('points', pts(h));
+      const r = (rot * Math.PI) / 180;
+      ridge.setAttribute('x1', String(st.x - Math.cos(r) * W * 0.38)); ridge.setAttribute('y1', String(st.y - Math.sin(r) * W * 0.38));
+      ridge.setAttribute('x2', String(st.x + Math.cos(r) * W * 0.38)); ridge.setAttribute('y2', String(st.y + Math.sin(r) * W * 0.38));
+      const z = G.zone(st.x, st.y, W, D, rot, SB);
+      zoneEl.setAttribute('d', 'M' + z.map((p) => p.join(',')).join('L') + 'Z');
+      const inP = h.every((q) => G.inside(q, ring));
+      const gap = inP ? G.minGap(h, ring) : null;
+      const ok = !!gap && gap.d + 0.01 >= SB;
+      zoneEl.classList.toggle('is-bad', !ok);
+      if (gap) {
+        gapEl.setAttribute('x1', String(gap.at[0][0])); gapEl.setAttribute('y1', String(gap.at[0][1]));
+        gapEl.setAttribute('x2', String(gap.at[1][0])); gapEl.setAttribute('y2', String(gap.at[1][1]));
+        gapEl.style.display = '';
+        dim.setAttribute('x', String((gap.at[0][0] + gap.at[1][0]) / 2)); dim.setAttribute('y', String((gap.at[0][1] + gap.at[1][1]) / 2 - 0.9));
+        dim.textContent = gap.d.toFixed(1).replace('.', ',') + ' m';
+      } else { gapEl.style.display = 'none'; dim.textContent = ''; }
+      badge.textContent = ok ? `✓ passt · ${gap!.d.toFixed(1).replace('.', ',')} m Abstand` : !inP ? '✕ über der Grenze' : `✕ zu eng · ${gap!.d.toFixed(1).replace('.', ',')} m`;
+      badge.dataset.state = ok ? 'ok' : 'bad';
+    }
+    render();
+
+    const k = () => 34 / svg.getBoundingClientRect().width;
+    let s0 = { x: 0, y: 0 };
+    let touched = false;
+    Draggable.create(proxy, {
+      trigger: house, type: 'x,y', inertia: !reduce, minimumMovement: 3,
+      onPress() { touched = true; gsap.killTweensOf(st); gsap.set(proxy, { x: 0, y: 0 }); this.update(); s0 = { ...st }; },
+      onDrag() { st.x = s0.x + this.x * k(); st.y = s0.y + this.y * k(); render(); },
+      onThrowUpdate() { st.x = s0.x + this.x * k(); st.y = s0.y + this.y * k(); render(); },
+    });
+    house.addEventListener('keydown', (e) => {
+      const step = e.shiftKey ? 2 : 0.5;
+      const m: Record<string, Pt> = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
+      if (m[e.key]) { e.preventDefault(); touched = true; st.x += m[e.key][0]; st.y += m[e.key][1]; render(); }
+    });
+
+    if (!reduce) {
+      // Grenze zeichnet sich, danach zeigt das Haus einmal, dass es beweglich ist
+      const tl = gsap.timeline();
+      tl.fromTo(parcel, { drawSVG: '0%' }, { drawSVG: '100%', duration: 1.1, ease: 'power2.inOut' })
+        .from(house, { opacity: 0, duration: 0.4 }, 0.6)
+        .to(st, { x: 4.2, y: 3, duration: 0.9, ease: 'power2.inOut', onUpdate: () => { if (!touched) render(); } }, '+=0.5')
+        .to(st, { x: 0, y: 0, duration: 0.9, ease: 'power2.inOut', onUpdate: () => { if (!touched) render(); } });
+      tl.eventCallback('onComplete', () => render());
+    }
+  }
+</script>

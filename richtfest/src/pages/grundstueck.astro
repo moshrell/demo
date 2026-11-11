@@ -68,11 +68,24 @@ const base = import.meta.env.BASE_URL;
             <button class="btn" type="button" data-reset hidden>Zurücksetzen</button>
           </div>
           <p class="gc__hint mono" data-hint>Haus mit dem Finger verschieben. Grenzen falsch? „Ecken anpassen“.</p>
+
+          <fieldset class="gc__size">
+            <legend><span class="mono">Schritt 2</span> Größe Ihres Hauses</legend>
+            <div class="gc__sl"><label for="gc-bw">Breite</label><input id="gc-bw" type="range" min="3" max="30" step="0.5" data-bw /><output class="mono" data-bw-o for="gc-bw"></output></div>
+            <div class="gc__sl"><label for="gc-bd">Tiefe</label><input id="gc-bd" type="range" min="3" max="30" step="0.5" data-bd /><output class="mono" data-bd-o for="gc-bd"></output></div>
+            <div class="gc__fl" role="radiogroup" aria-label="Geschosse">
+              <span class="gc__fl-l">Geschosse</span>
+              <div class="chips">
+                {[['1', '1'], ['1.5', '1,5'], ['2', '2'], ['3', '3']].map(([v, l]) => <label class="chip"><input type="radio" name="fl" value={v} /><span>{l}</span></label>)}
+              </div>
+            </div>
+            <p class="gc__wohn-o mono" data-wohn-o></p>
+          </fieldset>
         </div>
 
         <div class="gc__side">
           <fieldset class="gc__types">
-            <legend>Was soll darauf?</legend>
+            <legend><span class="mono">Schritt 3</span> Bauart</legend>
             <div class="chips">
               {typen.typen.map((t, i) => (
                 <label class="chip"><input type="radio" name="typ" value={t.id} checked={i === 1} /><span>{t.name}</span></label>
@@ -95,14 +108,14 @@ const base = import.meta.env.BASE_URL;
           </div>
 
           <div class="gc__cost sheet">
-            <p class="sheet__hd mono"><span>Kostenrahmen</span><span>Richtwert</span></p>
+            <p class="sheet__hd mono"><span>Schritt 4 · Kostenrahmen</span><span>Richtwert</span></p>
             <div class="sheet__bd stack">
               <div class="chips" role="radiogroup" aria-label="Leistung">
                 <label class="chip"><input type="radio" name="art" value="schluesselfertig" checked /><span>Schlüsselfertig</span></label>
                 <label class="chip"><input type="radio" name="art" value="rohbau" /><span>Nur Rohbau</span></label>
               </div>
               <div class="gc__row">
-                <div class="field"><label for="gc-wohn">Wohnfläche (m²)</label><input id="gc-wohn" type="number" inputmode="numeric" min="20" max="900" step="5" data-wohn /></div>
+                <div class="field"><label for="gc-wohn">Wohnfläche (m², aus Ihrer Größe geschätzt)</label><input id="gc-wohn" type="number" inputmode="numeric" min="20" max="900" step="5" data-wohn /></div>
                 <div class="field"><label for="gc-aus">Ausstattung</label>
                   <select id="gc-aus" data-aus>{typen.ausstattung.map((a) => <option value={a.id}>{a.name}</option>)}</select>
                 </div>
@@ -151,6 +164,7 @@ const base = import.meta.env.BASE_URL;
   .gc__plan { margin: 0; background: var(--color-night); border-radius: var(--radius); overflow: hidden; aspect-ratio: 1 / 1; max-height: 68svh; width: 100%; }
   @media (min-width: 60rem) { .gc__plan { aspect-ratio: 5 / 4; max-height: 72svh; } }
   .gc__plan { position: relative; }
+  @media (max-width: 59.99rem) { .gc__plan { position: sticky; top: calc(var(--header-h, 4rem) + 2px); z-index: 2; max-height: 44svh; box-shadow: 0 6px 12px -8px oklch(19% 0.045 265 / 0.5); } }
   .gc__badge { position: absolute; left: var(--space-sm); top: var(--space-sm); margin: 0; padding: 0.35rem 0.6rem; border-radius: 2px; background: var(--color-chalk); color: var(--color-ink); font-size: 0.72rem; pointer-events: none; }
   .gc__badge:empty { display: none; }
   .gc__badge[data-state='ok'] { background: var(--color-ok); color: var(--color-chalk); }
@@ -177,6 +191,16 @@ const base = import.meta.env.BASE_URL;
   .gc__tools .btn[aria-pressed='true'] { background: var(--color-ink); color: var(--color-chalk); }
   .gc__hint { margin-top: var(--space-sm); color: var(--color-ink-2); }
 
+  .gc__size { border: 1px solid var(--color-rule); border-radius: var(--radius); background: var(--color-chalk); margin: var(--space-md) 0 0; padding: var(--space-sm) var(--space-md) var(--space-md); min-width: 0; display: grid; gap: var(--space-xs); }
+  .gc__size legend { font-weight: 700; padding: 0 var(--space-xs); }
+  .gc__size legend .mono { color: var(--color-accent); margin-right: var(--space-xs); }
+  .gc__sl { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr) 4.5rem; align-items: center; gap: var(--space-sm); min-height: 2.75rem; }
+  .gc__sl input[type='range'] { width: 100%; min-width: 0; height: 2.75rem; accent-color: var(--color-accent); touch-action: pan-y; margin: 0; }
+  .gc__sl output { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .gc__fl { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-sm); }
+  .gc__fl-l { width: 4.5rem; }
+  .gc__fl .chip span { padding: 0.4rem 0.85rem; min-width: 2.75rem; justify-content: center; }
+  .gc__wohn-o { color: var(--color-ink-2); }
   .gc__side { display: grid; gap: var(--space-md); }
   .gc__types { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: var(--space-sm); }
   .gc__types legend { font-weight: 700; margin-bottom: var(--space-sm); padding: 0; }
@@ -222,7 +246,7 @@ const base = import.meta.env.BASE_URL;
   interface State {
     source: 'kataster' | 'manuell' | 'beispiel';
     place?: string; parcel: Parcel; original: Pt[]; buildings: Pt[][]; neighbors: Parcel[];
-    typ: string; cx: number; cy: number; deg: number;
+    typ: string; w: number; d: number; fl: number; sized: boolean; wohnManual: boolean; cx: number; cy: number; deg: number;
     art: string; wohn: number; aus: string; keller: boolean;
   }
   let S: State | null = null;
@@ -305,7 +329,10 @@ const base = import.meta.env.BASE_URL;
   const proxy = $('[data-proxy]');
   const pts = (r: Pt[]) => r.map((p) => `${p[0].toFixed(2)},${p[1].toFixed(2)}`).join(' ');
   const typ = () => T.typen.find((t: any) => t.id === S!.typ) || T.typen[1];
-  const setback = () => Math.max(T.abstand.min, T.abstand.faktor * typ().h);
+  // Maße kommen vom Nutzer (Schieberegler), die Bauart liefert Regeln und Startwerte
+  const hh = () => (typ().id === 'anbau' ? typ().h : T.hoehe[String(S!.fl)] || typ().h);
+  const wohnEst = () => Math.max(20, Math.round((S!.w * S!.d * S!.fl * T.wohnFaktor) / 5) * 5);
+  const setback = () => Math.max(T.abstand.min, T.abstand.faktor * hh());
   let vb = { x: 0, y: 0, w: 100, h: 100 };
   let editing = false;
 
@@ -319,9 +346,10 @@ const base = import.meta.env.BASE_URL;
     S = {
       source: p.source, place: p.place, parcel, original: parcel.ring.map((q) => [...q] as Pt),
       neighbors: p.neighbors.map((n) => ({ ...n, ring: sh(n.ring) })), buildings: p.buildings.map(sh),
-      typ: t.id, cx: 0, cy: 0, deg: alignDeg(parcel.ring),
+      typ: t.id, w: t.w, d: t.d, fl: t.fl, sized: false, wohnManual: false, cx: 0, cy: 0, deg: alignDeg(parcel.ring),
       art: 'schluesselfertig', wohn: t.wohn, aus: 'solide', keller: false,
     };
+    S.wohn = wohnEst();
     placeFree();
     open(true);
   }
@@ -335,9 +363,8 @@ const base = import.meta.env.BASE_URL;
   // Haus an eine freie Stelle setzen: Schwerpunkt, sonst Raster absuchen
   function placeFree() {
     if (!S) return;
-    const t = typ();
     const fits = (cx: number, cy: number) => {
-      const h = G.rect(cx, cy, t.w, t.d, S!.deg);
+      const h = G.rect(cx, cy, S!.w, S!.d, S!.deg);
       return h.every((q) => G.inside(q, S!.parcel.ring)) && !S!.buildings.some((b) => G.overlaps(h, b));
     };
     if (fits(S.cx, S.cy)) return;
@@ -345,7 +372,7 @@ const base = import.meta.env.BASE_URL;
     let best: Pt | null = null, bestScore = -Infinity;
     for (let x = -r; x <= r; x += 1.5) for (let y = -r; y <= r; y += 1.5) {
       if (!fits(x, y)) continue;
-      const h = G.rect(x, y, t.w, t.d, S.deg);
+      const h = G.rect(x, y, S.w, S.d, S.deg);
       const score = G.minGap(h, S.parcel.ring).d - Math.hypot(x, y) * 0.05;
       if (score > bestScore) { bestScore = score; best = [x, y]; }
     }
@@ -359,6 +386,7 @@ const base = import.meta.env.BASE_URL;
     const tr = root.querySelector<HTMLInputElement>(`input[name=typ][value="${S!.typ}"]`); if (tr) tr.checked = true;
     (root.querySelector<HTMLInputElement>(`input[name=art][value="${S!.art}"]`)!).checked = true;
     $<HTMLInputElement>('[data-wohn]').value = String(S!.wohn);
+    syncSize();
     $<HTMLSelectElement>('[data-aus]').value = S!.aus;
     $<HTMLInputElement>('[data-keller]').checked = S!.keller;
     fitView();
@@ -413,19 +441,19 @@ const base = import.meta.env.BASE_URL;
     const t = typ(), sb = setback();
     const ring = S.parcel.ring;
     parcelEl.setAttribute('points', pts(ring));
-    const house = G.rect(S.cx, S.cy, t.w, t.d, S.deg);
+    const house = G.rect(S.cx, S.cy, S.w, S.d, S.deg);
     housePoly.setAttribute('points', pts(house));
     const r = (S.deg * Math.PI) / 180;
-    ridge.setAttribute('x1', String(S.cx - Math.cos(r) * t.w * 0.38)); ridge.setAttribute('y1', String(S.cy - Math.sin(r) * t.w * 0.38));
-    ridge.setAttribute('x2', String(S.cx + Math.cos(r) * t.w * 0.38)); ridge.setAttribute('y2', String(S.cy + Math.sin(r) * t.w * 0.38));
-    const z = G.zone(S.cx, S.cy, t.w, t.d, S.deg, sb);
+    ridge.setAttribute('x1', String(S.cx - Math.cos(r) * S.w * 0.38)); ridge.setAttribute('y1', String(S.cy - Math.sin(r) * S.w * 0.38));
+    ridge.setAttribute('x2', String(S.cx + Math.cos(r) * S.w * 0.38)); ridge.setAttribute('y2', String(S.cy + Math.sin(r) * S.w * 0.38));
+    const z = G.zone(S.cx, S.cy, S.w, S.d, S.deg, sb);
     zoneEl.setAttribute('d', 'M' + z.map((p) => p.join(',')).join('L') + 'Z');
 
     const inParcel = house.every((q) => G.inside(q, ring));
     const gap = inParcel ? G.minGap(house, ring) : { d: 0, at: [house[0], house[0]] as [Pt, Pt] };
     const overlap = S.buildings.some((b) => G.overlaps(house, b));
     const area = S.parcel.area || G.area(ring);
-    const grz = (t.w * t.d) / area;
+    const grz = (S.w * S.d) / area;
     const okGap = gap.d + 0.01 >= sb;
     const dhh = t.id === 'dhh', anbau = t.id === 'anbau';
     const good = inParcel && (okGap || dhh) && (!overlap || anbau) && grz <= T.grzMax + 1e-9;
@@ -465,10 +493,10 @@ const base = import.meta.env.BASE_URL;
     badge.textContent = good ? `✓ passt · ${fmtM(gap.d)} Abstand` : !inParcel ? '✕ über der Grenze' : overlap && !anbau ? '✕ Gebäude im Weg' : !okGap && !dhh ? `✕ zu eng · ${fmtM(gap.d)}` : '! prüfen';
     badge.dataset.state = good ? 'ok' : 'bad';
     $('[data-f-area]').textContent = fmtA(area) + (S.source === 'kataster' && S.parcel.area ? ' (amtlich)' : '');
-    $('[data-f-house]').textContent = `${fmtA(t.w * t.d)} · ${String(t.w).replace('.', ',')} × ${String(t.d).replace('.', ',')} m`;
+    $('[data-f-house]').textContent = `${fmtA(S.w * S.d)} · ${String(S.w).replace('.', ',')} × ${String(S.d).replace('.', ',')} m`;
     $('[data-f-grz]').textContent = grz.toFixed(2).replace('.', ',');
     $('[data-f-gap]').textContent = inParcel ? `${fmtM(gap.d)} (nötig ${fmtM(sb)})` : '—';
-    $('[data-typenote]').textContent = `${t.note} · Wandhöhe ca. ${String(t.h).replace('.', ',')} m → Abstand ${fmtM(sb)}`;
+    $('[data-typenote]').textContent = `${t.note} · Wandhöhe ca. ${String(hh()).replace('.', ',')} m → Abstand ${fmtM(sb)}`;
     const meta = S.source === 'kataster'
       ? `${S.place} · Gemarkung ${S.parcel.gemarkung}, Flur ${S.parcel.flur}, Flurstück ${S.parcel.nr}`
       : S.source === 'beispiel' ? 'Beispielgrundstück (erfunden)' : 'Grundstück nach Ihren Maßen';
@@ -477,8 +505,22 @@ const base = import.meta.env.BASE_URL;
     save();
   }
 
+  const nf = (n: number) => String(n).replace('.', ',');
+  function syncSize() {
+    $<HTMLInputElement>('[data-bw]').value = String(S!.w); $<HTMLInputElement>('[data-bd]').value = String(S!.d);
+    $('[data-bw-o]').textContent = nf(S!.w) + ' m'; $('[data-bd-o]').textContent = nf(S!.d) + ' m';
+    const fr = root.querySelector<HTMLInputElement>(`input[name=fl][value="${S!.fl}"]`); if (fr) fr.checked = true;
+    $('[data-wohn-o]').textContent = `Grundfläche ${fmtA(S!.w * S!.d)} · ca. ${S!.wohn} m² Wohnfläche`;
+  }
+  function sizeChanged() {
+    S!.sized = true;
+    if (!S!.wohnManual) { S!.wohn = wohnEst(); $<HTMLInputElement>('[data-wohn]').value = String(S!.wohn); }
+    syncSize(); render();
+  }
+
   function costs() {
     const t = typ();
+    syncSize();
     const art = S!.art, base = t.id === 'anbau' ? T.preise.anbau : art === 'rohbau' ? T.preise.rohbau : T.preise.schluesselfertig;
     const f = (T.ausstattung.find((a: any) => a.id === S!.aus) || { f: 1 }).f;
     const fa = art === 'rohbau' ? 1 : f;
@@ -564,11 +606,17 @@ const base = import.meta.env.BASE_URL;
   });
 
   root.querySelectorAll<HTMLInputElement>('input[name=typ]').forEach((r) => r.addEventListener('change', () => {
-    S!.typ = r.value; S!.wohn = typ().wohn; $<HTMLInputElement>('[data-wohn]').value = String(S!.wohn);
+    S!.typ = r.value; const t = typ();
+    S!.fl = t.fl; if (!S!.sized) { S!.w = t.w; S!.d = t.d; }
+    if (!S!.wohnManual) S!.wohn = wohnEst();
+    $<HTMLInputElement>('[data-wohn]').value = String(S!.wohn);
     placeFree(); render();
   }));
   root.querySelectorAll<HTMLInputElement>('input[name=art]').forEach((r) => r.addEventListener('change', () => { S!.art = r.value; costs(); save(); }));
-  $<HTMLInputElement>('[data-wohn]').addEventListener('input', (e) => { const v = Number((e.target as HTMLInputElement).value); if (v >= 20 && v <= 900) { S!.wohn = v; costs(); save(); } });
+  $<HTMLInputElement>('[data-wohn]').addEventListener('input', (e) => { const v = Number((e.target as HTMLInputElement).value); if (v >= 20 && v <= 900) { S!.wohn = v; S!.wohnManual = true; costs(); save(); } });
+  $<HTMLInputElement>('[data-bw]').addEventListener('input', (e) => { S!.w = Number((e.target as HTMLInputElement).value); sizeChanged(); });
+  $<HTMLInputElement>('[data-bd]').addEventListener('input', (e) => { S!.d = Number((e.target as HTMLInputElement).value); sizeChanged(); });
+  root.querySelectorAll<HTMLInputElement>('input[name=fl]').forEach((r) => r.addEventListener('change', () => { S!.fl = Number(r.value); sizeChanged(); }));
   $<HTMLSelectElement>('[data-aus]').addEventListener('change', (e) => { S!.aus = (e.target as HTMLSelectElement).value; costs(); save(); });
   $<HTMLInputElement>('[data-keller]').addEventListener('change', (e) => { S!.keller = (e.target as HTMLInputElement).checked; costs(); save(); });
 
@@ -608,11 +656,24 @@ const base = import.meta.env.BASE_URL;
 
   window.addEventListener('resize', () => { if (S && !work.hidden) { fitView(); render(); if (editing) buildHandles(); } });
 
-  // Wiederherstellen (z. B. nach Zurück aus der Anfrage)
-  const old = restore();
-  if (old && old.parcel) { S = old; open(false); }
-  else {
-    const pre = new URLSearchParams(location.search).get('typ');
+  // Einstieg von der Startseite (?q=Adresse, ?bsp=1, ?manuell=1) oder Wiederherstellen (z. B. nach Zurück aus der Anfrage)
+  const qs = new URLSearchParams(location.search);
+  const qAddr = (qs.get('q') || '').slice(0, 200), qBsp = qs.get('bsp'), qMan = qs.get('manuell');
+  const fromHome = !!(qAddr || qBsp || qMan);
+  if (qAddr) { qs.delete('q'); history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '')); } // Adresse nicht in der URL stehen lassen
+  const old = fromHome ? null : restore();
+  if (old && old.parcel) {
+    S = old;
+    const t0 = typ(); S.w ??= t0.w; S.d ??= t0.d; S.fl ??= t0.fl; S.sized ??= false; S.wohnManual ??= false;
+    open(false);
+  } else {
+    const pre = qs.get('typ');
     if (pre) { const r = root.querySelector<HTMLInputElement>(`input[name=typ][value="${pre}"]`); if (r) r.checked = true; }
+  }
+  if (fromHome) {
+    try { sessionStorage.removeItem(KEY); } catch {}
+    if (qAddr) { $<HTMLInputElement>('#gc-addr').value = qAddr; form.requestSubmit(); }
+    else if (qBsp) $('[data-example]').click();
+    else if (qMan) $('[data-manual-open]').click();
   }
 </script>

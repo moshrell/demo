@@ -35,11 +35,11 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
     <div class="ba__panel" data-panel>
       <div class="ba__intro" data-intro>
         <p class="mono ba__kicker">{intro.kicker}</p>
-        <h1 id="ba-title" data-split>{intro.title}</h1>
+        <h2 id="ba-title" data-split>{intro.title}</h2>
         <p class="ba__lead">{intro.lead}</p>
         <div class="ba__cta">
           <a class="btn btn--primary" href={`${base}anfrage/`}>Projekt anfragen</a>
-          <a class="btn" href="#planen" data-skip>Direkt zur Auswahl</a>
+          <a class="btn" href="#warum" data-skip>Zum Rest der Seite</a>
         </div>
         <p class="ba__hint mono" data-hint><span aria-hidden="true">↓</span> Scrollen, um zu bauen</p>
       </div>
@@ -55,15 +55,15 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
             <p>{p.text}</p>
             <p class="ba__who mono">Verantwortlich: {p.who}</p>
             <div class="ba__pay">
-              <p class="ba__payrow"><span>{p.pay ? `+ ${p.pay} % der Bausumme` : 'Keine Zahlung'}</span><strong class="mono">{p.cum} %</strong></p>
-              <div class="ba__paybar" role="img" aria-label={`Bis hier bezahlt: ${p.cum} Prozent`}><span style={`--p:${p.cum / 100}`}></span></div>
+              <p class="ba__payrow"><span>Rate <b class="mono">{p.pay} %</b></span><span>Gesamt bezahlt <strong class="mono">{p.cum} %</strong></span></p>
+              <div class="ba__paybar" role="img" aria-label={`Insgesamt bezahlt bis hier: ${p.cum} Prozent der Bausumme`}><span style={`--p:${p.cum / 100}`}></span></div>
               <p class="ba__paynote">{p.payNote}</p>
             </div>
           </div>
         </article>
       ))}
       <p class="ba__disclaimer" data-disclaimer>{payDisclaimer}</p>
-      <a class="ba__skip mono" href="#planen" data-skip-live>Überspringen</a>
+      <a class="ba__skip mono" href="#warum" data-skip-live>Überspringen</a>
     </div>
   </div>
 </section>
@@ -86,7 +86,8 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
   .ba__step h2 { font-size: var(--text-xl); }
   .ba__who { color: var(--color-ink-2); }
   .ba__pay { margin-top: var(--space-sm); padding: var(--space-smd) var(--space-md); background: var(--color-chalk); border: 1px solid var(--color-rule); border-radius: var(--radius); display: grid; gap: var(--space-xs); }
-  .ba__payrow { display: flex; justify-content: space-between; gap: var(--space-md); font-weight: 600; font-size: var(--text-sm); }
+  .ba__payrow { display: flex; justify-content: space-between; gap: var(--space-sm); font-weight: 600; font-size: var(--text-sm); }
+  .ba__payrow span { white-space: nowrap; }
   .ba__payrow strong { color: var(--color-accent); font-size: 0.95rem; }
   .ba__paybar { height: 6px; background: var(--color-paper-3); border-radius: 3px; overflow: hidden; }
   .ba__paybar span { display: block; height: 100%; background: var(--color-accent); transform-origin: left; transform: scaleX(var(--p)); }
@@ -130,11 +131,11 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
   :global(.ba-live) .ba__step h2 { font-size: clamp(1.35rem, 1rem + 1.6vw, 2.2rem); }
   :global(.ba-live) .ba__step p:not(.ba__meta):not(.ba__payrow):not(.ba__paynote):not(.ba__who) { font-size: 0.98rem; line-height: 1.5; }
   :global(.ba-live) .ba__disclaimer { display: none; }
-  :global(.ba-live) .ba__intro h1 { font-size: clamp(1.75rem, 0.9rem + 2.4vw, 3.1rem); }
+  :global(.ba-live) .ba__intro h2 { font-size: clamp(1.75rem, 0.9rem + 2.4vw, 3.1rem); }
   :global(.ba-live) .ba__intro .ba__lead { font-size: 1rem; margin-top: var(--space-sm); }
   :global(.ba-live) .ba__intro .ba__cta { margin-top: var(--space-md); }
   :global(.ba-live) .ba__hint { display: block; }
-  :global(.ba-live) .ba__skip { display: block; position: absolute; right: var(--gutter); top: -2.75rem; padding: 0 0.75rem; line-height: 2.1rem; background: oklch(19% 0.045 265 / 0.72); color: var(--color-chalk); border-radius: 2px; text-decoration: none; z-index: 2; }
+  :global(.ba-live) .ba__skip { display: block; position: absolute; right: calc(var(--space-sm) + 3rem); top: -2.75rem; padding: 0 0.75rem; line-height: 2.1rem; background: oklch(19% 0.045 265 / 0.72); color: var(--color-chalk); border-radius: 2px; text-decoration: none; z-index: 2; }
   :global(.ba-live) .ba__skip[hidden] { display: none; }
 
   /* Telefon: Bild dominiert, Panel kompakt */
@@ -146,7 +147,7 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
     :global(.ba-live) .ba__pin { grid-template-rows: minmax(52%, 1fr) auto; }
     :global(.ba-live) .ba__panel { min-height: 0; padding-top: var(--space-smd); padding-bottom: var(--space-smd); }
     :global(.ba-live) .ba__kicker { display: none; }
-    :global(.ba-live) .ba__intro h1 { font-size: clamp(1.45rem, 0.9rem + 3.4vw, 2rem); }
+    :global(.ba-live) .ba__intro h2 { font-size: clamp(1.45rem, 0.9rem + 3.4vw, 2rem); }
     :global(.ba-live) .ba__intro .ba__lead { display: none; }
     :global(.ba-live) .ba__intro .ba__cta { margin-top: var(--space-smd); flex-wrap: nowrap; }
     :global(.ba-live) .ba__intro .ba__cta .btn { flex: 1 1 auto; min-height: 2.75rem; padding-inline: 0.75rem; font-size: 0.92rem; }
@@ -176,7 +177,7 @@ const steps = phasen.map((p) => ({ ...p, cum: (cum += p.pay) }));
   @media (min-width: 48rem) and (orientation: landscape) and (max-height: 560px) {
     :global(.ba-live) .ba__panel { padding-block: var(--space-md); }
     :global(.ba-live) .ba__intro .ba__lead, :global(.ba-live) .ba__step .ba__paynote, :global(.ba-live) .ba__hint { display: none; }
-    :global(.ba-live) .ba__intro h1 { font-size: 1.9rem; }
+    :global(.ba-live) .ba__intro h2 { font-size: 1.9rem; }
   }
   @media (min-width: 80rem) {
     :global(.ba-live) .ba__pin { grid-template-columns: minmax(0, 1.15fr) minmax(24rem, 1fr); }

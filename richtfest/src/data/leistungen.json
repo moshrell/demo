@@ -1,9 +1,33 @@
 {
   "einstieg": [
-    { "id": "neubau", "title": "Neubau", "sub": "Einfamilienhaus, Doppelhaus, Stadtvilla", "href": "leistungen/#neubau", "check": "efh" },
-    { "id": "anbau", "title": "Anbau & Aufstockung", "sub": "Mehr Platz auf dem Grundstück, das Sie haben", "href": "leistungen/#anbau", "check": "anbau" },
-    { "id": "sanierung", "title": "Sanierung", "sub": "Altbau, Fachwerk, Klinker, Feuchtigkeit", "href": "leistungen/#sanierung", "check": "" },
-    { "id": "rohbau", "title": "Rohbau für Profis", "sub": "Für Architekten und Bauträger", "href": "architekten/", "check": "" }
+    {
+      "id": "neubau",
+      "title": "Neubau",
+      "sub": "Einfamilienhaus, Doppelhaus, Stadtvilla",
+      "href": "leistungen/#neubau",
+      "check": "efh"
+    },
+    {
+      "id": "anbau",
+      "title": "Anbau & Aufstockung",
+      "sub": "Mehr Platz auf dem Grundstück, das Sie haben",
+      "href": "leistungen/#anbau",
+      "check": "anbau"
+    },
+    {
+      "id": "sanierung",
+      "title": "Sanierung",
+      "sub": "Altbau, Fachwerk, Klinker, Feuchtigkeit",
+      "href": "leistungen/#sanierung",
+      "check": ""
+    },
+    {
+      "id": "rohbau",
+      "title": "Rohbau für Profis",
+      "sub": "Für Architekten und Bauträger",
+      "href": "architekten/",
+      "check": ""
+    }
   ],
   "leistungen": [
     {
@@ -12,18 +36,17 @@
       "lead": "Ihr Haus aus einer Hand: Rohbau mit eigener Kolonne, Ausbau mit festen Partnerbetrieben, ein Ansprechpartner bis zum Schlüssel.",
       "price": "ab 2.950 € pro m² Wohnfläche",
       "time": "7–9 Monate ab Baubeginn",
-      "includes": ["Bodenplatte, Rohbau, Dach, Fenster, Fassade", "Haustechnik, Putz, Estrich, Fliesen, Malerarbeiten", "Bauzeitenplan und Festpreis-Angebot auf Wunsch", "Abnahme Raum für Raum"],
-      "excludes": ["Grundstück und Grunderwerbsteuer", "Baunebenkosten (Architekt, Statik, Genehmigung, Anschlüsse)", "Außenanlagen und Küche"],
-      "check": "efh"
-    },
-    {
-      "id": "rohbau",
-      "title": "Rohbau",
-      "lead": "Für Bauherren, die den Ausbau selbst organisieren oder mit dem Architekten vergeben. Wir liefern den Rohbau termingerecht und sauber übergeben.",
-      "price": "ab 1.150 € pro m² Wohnfläche",
-      "time": "10–12 Wochen bis zum Richtfest",
-      "includes": ["Erdarbeiten, Bodenplatte oder Keller", "Mauerwerk, Decken, Treppen aus Beton", "Koordination mit Zimmerei und Dachdecker"],
-      "excludes": ["Dachdeckung und Fenster (auf Wunsch über Partner)", "Innenausbau"],
+      "includes": [
+        "Bodenplatte, Rohbau, Dach, Fenster, Fassade",
+        "Haustechnik, Putz, Estrich, Fliesen, Malerarbeiten",
+        "Bauzeitenplan und Festpreis-Angebot auf Wunsch",
+        "Abnahme Raum für Raum"
+      ],
+      "excludes": [
+        "Grundstück und Grunderwerbsteuer",
+        "Baunebenkosten (Architekt, Statik, Genehmigung, Anschlüsse)",
+        "Außenanlagen und Küche"
+      ],
       "check": "efh"
     },
     {
@@ -32,8 +55,14 @@
       "lead": "Ein Zimmer für die Eltern, ein Geschoss für die Kinder: wir bauen an, während Sie wohnen bleiben, und planen Lärm und Staub mit Ihnen ein.",
       "price": "ab 2.400 € pro m² neue Fläche",
       "time": "3–5 Monate",
-      "includes": ["Prüfung der Statik mit Ihrem Tragwerksplaner", "Anschluss an Bestand, Dach und Fassade", "Bauantrag über Ihren oder unseren Partner-Architekten"],
-      "excludes": ["Genehmigungsgebühren der Gemeinde"],
+      "includes": [
+        "Prüfung der Statik mit Ihrem Tragwerksplaner",
+        "Anschluss an Bestand, Dach und Fassade",
+        "Bauantrag über Ihren oder unseren Partner-Architekten"
+      ],
+      "excludes": [
+        "Genehmigungsgebühren der Gemeinde"
+      ],
       "check": "anbau"
     },
     {
@@ -42,9 +71,30 @@
       "lead": "Feuchte Keller, Risse, alte Klinkerfassaden, Fachwerk: wir sehen uns den Bestand an und sagen ehrlich, was sich lohnt.",
       "price": "nach Besichtigung",
       "time": "je nach Umfang",
-      "includes": ["Horizontalsperre und Kellerabdichtung", "Klinker ausbessern und neu verfugen", "Wanddurchbrüche mit Abfangung"],
+      "includes": [
+        "Horizontalsperre und Kellerabdichtung",
+        "Klinker ausbessern und neu verfugen",
+        "Wanddurchbrüche mit Abfangung"
+      ],
       "excludes": [],
       "check": ""
+    },
+    {
+      "id": "rohbau",
+      "title": "Rohbau",
+      "lead": "Für Bauherren, die den Ausbau selbst organisieren oder mit dem Architekten vergeben. Wir liefern den Rohbau termingerecht und sauber übergeben.",
+      "price": "ab 1.150 € pro m² Wohnfläche",
+      "time": "10–12 Wochen bis zum Richtfest",
+      "includes": [
+        "Erdarbeiten, Bodenplatte oder Keller",
+        "Mauerwerk, Decken, Treppen aus Beton",
+        "Koordination mit Zimmerei und Dachdecker"
+      ],
+      "excludes": [
+        "Dachdeckung und Fenster (auf Wunsch über Partner)",
+        "Innenausbau"
+      ],
+      "check": "efh"
     }
   ],
   "priceNote": "Richtwerte inkl. 19 % MwSt., Stand 2026, für den Raum Hannover. Verbindlich ist nur das schriftliche Angebot nach Besichtigung."

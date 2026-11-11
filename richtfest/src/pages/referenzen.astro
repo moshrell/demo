@@ -14,7 +14,7 @@ const types = [{ v: 'alle', l: 'Alle' }, { v: 'neubau', l: 'Neubau' }, { v: 'anb
       <h1>Gebaut, übergeben, bewohnt.</h1>
       <p class="lead">Jedes Projekt mit Fläche und echter Bauzeit. Auf Wunsch vermitteln wir den Kontakt zu Bauherren, die mit uns gebaut haben.</p>
       <div class="chips rf__filter" role="radiogroup" aria-label="Nach Art filtern" data-filter>
-        {types.filter((t) => t.v === 'alle' || present.has(t.v)).map((t, i) => <label class="chip"><input type="radio" name="f" value={t.v} checked={i === 0} /><span>{t.l}</span></label>)}
+        {types.filter((t) => t.v === 'alle' || present.has(t.v)).map((t, i) => <label class="chip"><input type="radio" name="f" value={t.v} checked={i === 0} /><span>{t.l} <span class="rf__n">{t.v === 'alle' ? shown.length : shown.filter((r) => r.type === t.v).length}</span></span></label>)}
       </div>
     </div>
   </section>
@@ -39,6 +39,7 @@ const types = [{ v: 'alle', l: 'Alle' }, { v: 'neubau', l: 'Neubau' }, { v: 'anb
   </section>
 </Base>
 <style>
+  .rf__n { opacity: 0.65; font-size: 0.85em; margin-left: 0.15rem; }
   .rf__k { color: var(--color-accent); }
   .rf__filter { padding-top: var(--space-sm); }
   .rf { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-xl) var(--space-lg); grid-template-columns: minmax(0, 1fr); }
@@ -66,9 +67,16 @@ const types = [{ v: 'alle', l: 'Alle' }, { v: 'neubau', l: 'Neubau' }, { v: 'anb
   document.querySelector('[data-filter]')!.addEventListener('change', (e) => {
     const v = (e.target as HTMLInputElement).value;
     const state = Flip.getState(items);
+    const h0 = grid.offsetHeight;
+    grid.style.minHeight = h0 + 'px'; // Raster nicht zusammenfallen lassen, sonst rutscht der dunkle Bereich darunter hoch
     let n = 0;
     items.forEach((it) => { const show = v === 'alle' || it.dataset.type === v; it.hidden = !show; if (show) n++; });
     empty.hidden = n > 0;
-    if (!reduce) Flip.from(state, { duration: 0.5, ease: 'power2.inOut', absolute: true, onEnter: (els) => gsap.fromTo(els, { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.35 }), onLeave: (els) => gsap.to(els, { opacity: 0, duration: 0.2 }) });
+    grid.style.minHeight = '';
+    const h1 = grid.offsetHeight; // neue natürliche Höhe
+    if (reduce) return;
+    grid.style.minHeight = h0 + 'px';
+    gsap.to(grid, { minHeight: h1, duration: 0.5, ease: 'power2.inOut', onComplete: () => { grid.style.minHeight = ''; } });
+    Flip.from(state, { duration: 0.5, ease: 'power2.inOut', absolute: true, onEnter: (els) => gsap.fromTo(els, { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.35 }), onLeave: (els) => gsap.to(els, { opacity: 0, duration: 0.2 }) });
   });
 </script>

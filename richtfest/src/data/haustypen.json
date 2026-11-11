@@ -7,7 +7,8 @@
       "d": 10,
       "h": 4.2,
       "wohn": 115,
-      "note": "1 Geschoss"
+      "note": "1 Geschoss",
+      "fl": 1
     },
     {
       "id": "efh",
@@ -16,7 +17,8 @@
       "d": 9,
       "h": 6.5,
       "wohn": 140,
-      "note": "1,5 Geschosse"
+      "note": "1,5 Geschosse",
+      "fl": 1.5
     },
     {
       "id": "villa",
@@ -25,7 +27,8 @@
       "d": 10,
       "h": 7.2,
       "wohn": 165,
-      "note": "2 Geschosse"
+      "note": "2 Geschosse",
+      "fl": 2
     },
     {
       "id": "dhh",
@@ -34,7 +37,8 @@
       "d": 11,
       "h": 7,
       "wohn": 125,
-      "note": "2 Geschosse, an einer Seite an der Grenze"
+      "note": "2 Geschosse, an einer Seite an der Grenze",
+      "fl": 2
     },
     {
       "id": "mfh",
@@ -43,7 +47,8 @@
       "d": 12,
       "h": 10,
       "wohn": 420,
-      "note": "3 Geschosse, 4–6 Wohnungen"
+      "note": "3 Geschosse, 4–6 Wohnungen",
+      "fl": 3
     },
     {
       "id": "anbau",
@@ -52,7 +57,8 @@
       "d": 7,
       "h": 3.4,
       "wohn": 38,
-      "note": "1 Geschoss, an den Bestand"
+      "note": "1 Geschoss, an den Bestand",
+      "fl": 1
     }
   ],
   "abstand": {
@@ -95,5 +101,12 @@
       "name": "Exklusiv",
       "f": 1.28
     }
-  ]
+  ],
+  "hoehe": {
+    "1": 4.2,
+    "1.5": 6.5,
+    "2": 7.2,
+    "3": 10
+  },
+  "wohnFaktor": 0.8
 }

@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Bauablauf from '../components/Bauablauf.astro';
+import HeroCheck from '../components/HeroCheck.astro';
 import PlzCheck from '../components/PlzCheck.astro';
 import OrderForm from '../components/OrderForm.astro';
 import site from '../data/site.json';
@@ -11,7 +12,7 @@ const base = import.meta.env.BASE_URL;
 import { has, src, srcset } from '../lib/img';
 ---
 <Base title="Thielking Bau · Bauunternehmen in Gehrden · Neubau, Anbau, Sanierung" description="Bauunternehmen im Calenberger Land: Einfamilienhäuser schlüsselfertig oder als Rohbau, Anbau, Aufstockung und Sanierung. Zahlung nach Baufortschritt, ein Ansprechpartner bis zum Schlüssel." faq={faq} current="start" image="img/phase-6-abend.webp">
-  <Bauablauf />
+  <HeroCheck />
 
   <section class="section planen" id="planen" aria-labelledby="planen-h">
     <div class="wrap">
@@ -31,27 +32,9 @@ import { has, src, srcset } from '../lib/img';
     </div>
   </section>
 
-  <section class="section section--night check-teaser" aria-labelledby="ct-h">
-    <div class="wrap check-teaser__in">
-      <div class="stack">
-        <h2 id="ct-h">Passt Ihr Haus auf Ihr Grundstück?</h2>
-        <p class="lead">Adresse eingeben, Grundstück aus dem amtlichen Kataster laden, Haustyp mit dem Finger daraufsetzen. Sie sehen sofort Grenzabstände, Bebauung und einen Kostenrahmen.</p>
-        <p><a class="btn btn--primary" href={`${base}grundstueck/`}>Grundstücks-Check starten</a></p>
-        <p class="mono check-teaser__src">Daten: LGLN Liegenschaftskataster, CC BY 4.0 · nur Niedersachsen</p>
-      </div>
-      <figure class="check-teaser__fig" aria-hidden="true">
-        <svg viewBox="0 0 300 220" role="presentation">
-          <polygon class="ctf__parcel" points="22,30 270,14 286,196 34,208" />
-          <rect class="ctf__zone" x="78" y="58" width="146" height="120" rx="14" />
-          <rect class="ctf__house" x="96" y="76" width="110" height="84" />
-          <line class="ctf__dim" x1="96" y1="186" x2="206" y2="186" />
-          <text class="ctf__txt" x="151" y="202" text-anchor="middle">10,00 m</text>
-        </svg>
-      </figure>
-    </div>
-  </section>
+  <Bauablauf />
 
-  <section class="section" aria-labelledby="why-h">
+  <section class="section" id="warum" aria-labelledby="why-h">
     <div class="wrap why">
       <h2 id="why-h">Drei Dinge, die bei uns feststehen</h2>
       <ol class="why__list">
@@ -123,7 +106,7 @@ import { has, src, srcset } from '../lib/img';
 </Base>
 
 <style>
-  .planen { padding-top: var(--space-2xl); }
+  .planen { padding-block: var(--space-xl); background: var(--color-paper-2, var(--color-paper)); }
   .planen__grid { list-style: none; padding: 0; margin: var(--space-lg) 0 0; display: grid; gap: var(--space-sm); grid-template-columns: minmax(0, 1fr); }
   @media (min-width: 40rem) { .planen__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 64rem) { .planen__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
@@ -134,17 +117,6 @@ import { has, src, srcset } from '../lib/img';
   .planen__go { position: absolute; right: var(--space-md); top: var(--space-md); font-size: 1.3rem; }
   @media (hover: hover) { .planen__card:hover { border-top-color: var(--color-accent); } }
 
-  .check-teaser__in { display: grid; gap: var(--space-xl); align-items: center; grid-template-columns: minmax(0, 1fr); }
-  @media (min-width: 56rem) { .check-teaser__in { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); } }
-  .check-teaser .lead { color: oklch(88% 0.015 262); }
-  .check-teaser__src { color: oklch(72% 0.02 262); }
-  .check-teaser__fig { margin: 0; }
-  .check-teaser__fig svg { width: 100%; height: auto; display: block; }
-  .ctf__parcel { fill: oklch(26% 0.045 265); stroke: var(--color-chalk); stroke-width: 1.5; stroke-dasharray: 6 4; }
-  .ctf__zone { fill: oklch(52% 0.11 150 / 0.18); stroke: var(--color-ok); stroke-width: 1; }
-  .ctf__house { fill: var(--color-accent); }
-  .ctf__dim { stroke: var(--color-chalk); stroke-width: 1; }
-  .ctf__txt { fill: var(--color-chalk); font-family: var(--font-mono); font-size: 10px; }
 
   .why__list { list-style: none; padding: 0; margin: var(--space-lg) 0 0; display: grid; gap: var(--space-md); grid-template-columns: minmax(0, 1fr); }
   @media (min-width: 56rem) { .why__list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

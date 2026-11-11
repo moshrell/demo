@@ -82,8 +82,8 @@ const base = import.meta.env.BASE_URL;
   import { Draggable } from 'gsap/Draggable';
   import { InertiaPlugin } from 'gsap/InertiaPlugin';
   import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
-  import * as G from '../scripts/geo';
-  import type { Pt } from '../scripts/geo';
+  import * as G from '../scripts/geom';
+  import type { Pt } from '../scripts/geom';
   gsap.registerPlugin(Draggable, InertiaPlugin, DrawSVGPlugin);
 
   const root = document.querySelector<HTMLElement>('[data-hc]');

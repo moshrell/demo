@@ -40,7 +40,7 @@ const myCases = area.cases.map((id) => cases.cases.find((c) => c.id === id)!);
     <section class="section section--alt" aria-labelledby="themen-h">
       <div class="wrap split">
         <div>
-          <h2 id="themen-h">Wobei wir <em>helfen</em></h2>
+          <h2 id="themen-h">Wobei wir helfen</h2>
           <div class="themen mt-lg">
             {area.themen.map((t) => (
               <article><h3>{t.h}</h3><p>{t.t}</p></article>
@@ -50,7 +50,6 @@ const myCases = area.cases.map((id) => cases.cases.find((c) => c.id === id)!);
         <aside class="person" aria-label="Ansprechpartner">
           <Photo src={lawyer.photo} ratio="34" alt={lawyer.alt} />
           <div>
-            <p class="eyebrow">Ihr Ansprechpartner</p>
             <h3 class="person__name">{lawyer.name}</h3>
             <p class="person__role">{lawyer.role}</p>
           </div>
@@ -61,8 +60,7 @@ const myCases = area.cases.map((id) => cases.cases.find((c) => c.id === id)!);
     <section class="section" aria-labelledby="fall-h">
       <div class="wrap">
         <div class="sec-head">
-          <p class="eyebrow">Ihr Fall</p>
-          <h2 id="fall-h">Frist und Checkliste zu <em>Ihrem</em> Anliegen</h2>
+          <h2 id="fall-h">Frist und Checkliste zu Ihrem Anliegen</h2>
         </div>
         <div class="cards">
           {myCases.map((c) => (
@@ -79,8 +77,7 @@ const myCases = area.cases.map((id) => cases.cases.find((c) => c.id === id)!);
     <section class="section section--alt" aria-labelledby="vorgehen-h">
       <div class="wrap">
         <div class="sec-head">
-          <p class="eyebrow">Vorgehen</p>
-          <h2 id="vorgehen-h">So gehen wir <em>vor</em></h2>
+          <h2 id="vorgehen-h">So gehen wir vor</h2>
         </div>
         <ol class="steps">
           {area.ablauf.map((s, i) => <li><h3>{['Schildern', 'Prüfen', 'Entscheiden'][i]}</h3><p>{s}</p></li>)}
@@ -91,11 +88,10 @@ const myCases = area.cases.map((id) => cases.cases.find((c) => c.id === id)!);
     <section class="section" aria-labelledby="faq-h">
       <div class="wrap split">
         <div class="sec-head">
-          <p class="eyebrow">Häufige Fragen</p>
-          <h2 id="faq-h">Fragen zum <em>{area.label}</em></h2>
+          <h2 id="faq-h">Fragen zum {area.label}</h2>
           <p><a class="link-arrow" href={`${base}faq/`}>Alle Fragen ansehen</a></p>
         </div>
-        <Faq items={faq} name={`faq-${area.slug}`} />
+        <Faq items={faq} />
       </div>
     </section>
   </main>

@@ -15,7 +15,7 @@ const tel = `tel:${site.phoneHref}`;
     <section class="page-head">
       <div class="wrap">
         <p class="crumbs"><a href={base}>Start</a> / Anwälte</p>
-        <h1>Ihre <em>Anwälte</em> in Hannover</h1>
+        <h1>Ihre Anwälte in Hannover</h1>
         <p class="lead">Zwei Rechtsanwälte, zwei Gebiete. Sie sprechen von Anfang an mit der Person, die Ihren Fall bearbeitet.</p>
       </div>
     </section>
@@ -26,7 +26,6 @@ const tel = `tel:${site.phoneHref}`;
           <article class="person" id={p.id}>
             <Photo src={p.photo} ratio="34" alt={p.alt} />
             <div>
-              <p class="eyebrow">{p.area}</p>
               <h2 class="person__name">{p.name}</h2>
               <p class="person__role">{p.role}</p>
               <p class="mt-sm">{p.bio}</p>

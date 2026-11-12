@@ -1,10 +1,10 @@
 ---
 // Sichtbarer FAQ-Block. Dieselben Fragen/Antworten gehen als `faq`-Prop an Base (FAQPage-Markup).
-const { items = [], name = 'faq' } = Astro.props;
+const { items = [] } = Astro.props;
 ---
 <div class="faq">
   {items.map((f) => (
-    <details name={name}>
+    <details>
       <summary>{f.q}</summary>
       <p class="faq__a">{f.a}</p>
     </details>

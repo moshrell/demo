@@ -13,7 +13,7 @@ const endLabel: Record<string, string> = { kschg: 'Klage spätestens am', mieter
     <div class="finder__group">
       <h3>{g.label}</h3>
       {data.cases.filter((c) => c.group === g.id).map((c) => (
-        <details class="fall" id={`fall-${c.id}`} name="fall" data-case={c.id}>
+        <details class="fall" id={`fall-${c.id}`} data-case={c.id}>
           <summary>{c.label}</summary>
           <div class="fall__body">
             <p class="fall__was">{c.was}</p>

@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/betrieb.json';
+import fz from '../data/fahrzeuge.json';
+const base = import.meta.env.BASE_URL;
+const car = fz.fahrzeuge[fz.aktiv];
+---
+<Base title={`Impressum · ${site.name}`} description="Impressum der Demo-Seite Gegenlauf Sportwagenservice." leiste={false}>
+  <header class="kopf"><a class="marke" href={base}><b>{site.kurz}</b><span>{site.zusatz}</span></a></header>
+  <main class="recht">
+    <h1>Impressum</h1>
+    <p><strong>Beispielseite von Kravets Webdesign.</strong> Betrieb, Personen, Adresse, Telefonnummer und Preise sind erfunden. Die Fotos dieser Beispielseite sind teils KI-erzeugt.</p>
+    <h2>Angaben gemäß § 5 DDG</h2>
+    <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+    <h2>Kontakt</h2>
+    <p>Telefon: {site.phone}<br />E-Mail: {site.email}</p>
+    <h2>Meisterbetrieb, Kammer und Berufsbezeichnung</h2>
+    <p>Meisterbetrieb des Kraftfahrzeugtechniker-Handwerks, eingetragen in die Handwerksrolle.<br />Zuständige Kammer: {site.chamber}<br />Berufsbezeichnung: {site.titel}, verliehen in Deutschland.<br />Berufsrechtliche Regelung: Handwerksordnung (HwO), einsehbar unter <a href="https://www.gesetze-im-internet.de/hwo/" target="_blank" rel="noopener">gesetze-im-internet.de/hwo</a>.</p>
+    <h2>Umsatzsteuer-Identifikationsnummer</h2>
+    <p>{site.vat}</p>
+    <h2>Markenhinweis</h2>
+    <p>{site.markenhinweis} „Porsche“, „911“, „Boxster“ und „Cayman“ sind eingetragene Marken der Dr. Ing. h.c. F. Porsche AG. Sie werden auf dieser Seite ausschließlich beschreibend verwendet, um die betreuten Fahrzeuge zu benennen.</p>
+    <h2>3D-Modell und Software</h2>
+    <p>Fahrzeugmodell in der 3D-Ansicht: „{car.titel}“ von {car.autor}, <a href={car.quelle} target="_blank" rel="noopener">Sketchfab</a>, Lizenz <a href={car.lizenzUrl} target="_blank" rel="noopener">{car.lizenz}</a>. Änderungen: {car.aenderungen}. Die Bauteile unter der Karosserie sind eine eigene, schematische Darstellung.</p>
+    <p>Weitere Lizenzen (three.js, meshoptimizer, Schriften): <a href={`${base}THIRD_PARTY_LICENSES.txt`} target="_blank" rel="noopener">THIRD_PARTY_LICENSES.txt</a>.</p>
+    <h2>Verbraucherstreitbeilegung</h2>
+    <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+    <p><a href={base}>← Zurück zur Startseite</a></p>
+  </main>
+</Base>

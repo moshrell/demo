@@ -1,0 +1,54 @@
+GEGENLAUF SPORTWAGENSERVICE — ПРОМПТЫ ДЛЯ ФОТО (Gemini)
+========================================================
+Куда класть готовые файлы: D:\Webdesign\gegenlauf\public\img\  (имена файлов ровно как в заголовках).
+Пока файла нет, блок с фото на сайте просто не выводится (битых картинок не будет). После добавления файлов
+пересобрать сайт. В карточках «Aus der Werkstatt» (из мастерской) до появления фото стоит кадр из 3D-сцены.
+
+Единый стиль всех кадров (он уже вписан в каждый промпт целиком):
+вечерняя мастерская, тёплый свет рабочих ламп на тёмном графитовом фоне, приглушённые цвета, документальная
+съёмка без глянца, малая глубина резкости. Без текста, логотипов, эмблем и номерных знаков. Машины — спортивные
+купе общего вида, марка не читается. Люди одеты в тёмную рабочую одежду, лица не в фокусе или не в кадре.
+
+Кадры:
+1. werkstatt.jpg       16:9  — общий вид мастерской (блок «Warum frei?» = «Почему независимая мастерская?»)
+2. uebergabe.jpg       16:9  — передача ключей и протокола (блок «So läuft es ab» = «Как это проходит»)
+3. haende.jpg          4:3   — руки мастера с динамометрическим ключом (блок «Kontakt» = «Контакт»)
+4. fall-oelverlust.jpg 16:9  — мотор снизу, коробка снята (случай 1: течь масла)
+5. fall-bremse.jpg     16:9  — новый тормозной диск и суппорт (случай 2: тормоза)
+6. fall-ventilspiel.jpg 16:9 — регулировка клапанов щупом (случай 3: зазоры клапанов)
+7. hebebuehne.jpg      16:9  — спортивное купе на подъёмнике снизу (запасной кадр, пока не подключён)
+
+--------------------------------------------------------------------------------
+1) werkstatt.jpg — формат 16:9
+--------------------------------------------------------------------------------
+Photorealistic documentary photograph of a small independent sports car workshop in the evening. A low silver sports coupe of generic design stands on a two-post lift, raised about one metre, seen from a front three-quarter angle. Warm light from handheld work lamps and one long ceiling light strip, dark graphite walls and a clean grey epoxy floor, a red tool trolley and a workbench in the background out of focus. No people. Muted colours, deep shadows, soft warm highlights on the paint, shallow depth of field, shot on a 35 mm lens, natural film-like grain. No text, no logos, no emblems, no brand names, no licence plates, no posters on the walls.
+
+--------------------------------------------------------------------------------
+2) uebergabe.jpg — формат 16:9
+--------------------------------------------------------------------------------
+Photorealistic documentary photograph inside a small independent sports car workshop in the evening. Close view of a handover: a mechanic in a dark work jacket hands a car key and a printed service report on a clipboard to a customer in a dark coat, only hands, forearms and torsos visible, faces out of frame. In the background, out of focus, the rear of a low silver sports coupe of generic design. Warm light from work lamps, dark graphite walls, muted colours, shallow depth of field, shot on a 50 mm lens, natural film-like grain. The paper on the clipboard is blurred and unreadable. No readable text, no logos, no emblems, no brand names, no licence plates.
+
+--------------------------------------------------------------------------------
+3) haende.jpg — формат 4:3
+--------------------------------------------------------------------------------
+Photorealistic documentary close-up photograph in a sports car workshop in the evening. Two hands of a mechanic in dark nitrile gloves tighten a wheel bolt on a bare wheel hub with a click-type torque wrench, the brake disc and a red brake caliper visible, the wheel removed. Dark work jacket sleeves, no face in frame. Warm light from a handheld work lamp, dark graphite background, muted colours, shallow depth of field, shot on an 85 mm lens, natural film-like grain. No text, no logos, no emblems, no brand names, no engraved markings on the tools or the caliper.
+
+--------------------------------------------------------------------------------
+4) fall-oelverlust.jpg — формат 16:9
+--------------------------------------------------------------------------------
+Photorealistic documentary photograph taken from below a sports car raised on a workshop lift in the evening. View up at the rear of a flat six-cylinder boxer engine with the gearbox removed: the exposed flywheel area and the rear crankshaft seal are visible, a thin trace of dark oil on the aluminium engine case, an oil drain pan standing on the floor below. A mechanic's gloved hand points a small work lamp at the seal, no face in frame. Warm lamp light, dark graphite surroundings, muted colours, shallow depth of field, shot on a 35 mm lens, natural film-like grain. No text, no logos, no emblems, no brand names, no cast lettering on the engine parts.
+
+--------------------------------------------------------------------------------
+5) fall-bremse.jpg — формат 16:9
+--------------------------------------------------------------------------------
+Photorealistic documentary close-up photograph in a sports car workshop in the evening. The front axle of a low silver sports coupe of generic design on a lift with the wheel removed: a new ventilated, cross-drilled brake disc and a red brake caliper with fresh brake pads, clean wheel hub, the old scored brake disc leaning against the lift post in the background out of focus. Warm light from a work lamp, dark graphite background, muted colours, shallow depth of field, shot on a 50 mm lens, natural film-like grain. No people. No text, no logos, no emblems, no brand names, no lettering on the caliper.
+
+--------------------------------------------------------------------------------
+6) fall-ventilspiel.jpg — формат 16:9
+--------------------------------------------------------------------------------
+Photorealistic documentary close-up photograph in a sports car workshop in the evening. An older air-cooled flat six-cylinder boxer engine with one valve cover removed, rocker arms and valve springs visible. Two hands of a mechanic in dark nitrile gloves measure valve clearance with a steel feeler gauge and a small spanner, dark work jacket sleeves, no face in frame. The removed valve cover and a new gasket lie on a clean cloth beside the engine. Warm light from a handheld work lamp, dark graphite background, muted colours, shallow depth of field, shot on an 85 mm lens, natural film-like grain. No text, no logos, no emblems, no brand names, no cast lettering on the engine parts.
+
+--------------------------------------------------------------------------------
+7) hebebuehne.jpg — формат 16:9
+--------------------------------------------------------------------------------
+Photorealistic documentary photograph in a small independent sports car workshop in the evening. A low silver sports coupe of generic design raised high on a two-post lift, photographed from a low angle looking up along the flat underbody towards the rear axle and the exhaust. Warm light from a work lamp standing on the floor, long soft shadows, dark graphite walls, clean grey floor. No people. Muted colours, shallow depth of field, shot on a 24 mm lens, natural film-like grain. No text, no logos, no emblems, no brand names, no licence plates.

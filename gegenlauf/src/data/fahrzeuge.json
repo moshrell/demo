@@ -1,0 +1,30 @@
+{
+  "_hinweis": "Eine Zeile pro Fahrzeug in der Szene. Beim Kauf: Modell tauschen (tools/prep-model.mjs), Maße aus public/models/<datei>.json übernehmen.",
+  "aktiv": "turbo-s-992",
+  "fahrzeuge": {
+    "turbo-s-992": {
+      "bezeichnung": "911 Turbo S (Typ 992)",
+      "datei": "models/fahrzeug.glb",
+      "autor": "n.brizitskaya",
+      "titel": "Porsche 911 with interior",
+      "quelle": "https://skfb.ly/oWvKt",
+      "lizenz": "CC BY 4.0",
+      "lizenzUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "aenderungen": "Geometrie und Texturen reduziert, Embleme und Schriftzüge entfernt, Kennzeichen ersetzt, Lack und Materialien neu gesetzt, Tür geschlossen",
+      "masse": {
+        "_quelle": "Aus dem Modell gemessen (tools/prep-model.mjs → public/models/fahrzeug.json), in Metern",
+        "laenge": 4.535,
+        "breite": 1.9,
+        "hoehe": 1.31,
+        "spur": 1.56,
+        "hub": 0.12,
+        "achseVorn": { "z": 1.2345, "y": 0.349 },
+        "achseHinten": { "z": -1.217, "y": 0.3535 },
+        "nabeX": 0.755,
+        "sattelVorn": { "x": 0.715, "y": 0.37, "z": 1.075 },
+        "sattelHinten": { "x": 0.71, "y": 0.3, "z": -1.06 },
+        "endrohr": { "x": 0.4136, "y": 0.315, "z": -2.134 }
+      }
+    }
+  }
+}

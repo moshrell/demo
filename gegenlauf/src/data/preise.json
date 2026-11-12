@@ -1,0 +1,629 @@
+{
+ "_hinweis": "Preistabelle Modell × Leistung, Bruttopreise «ab» in Euro inkl. 19 % MwSt. Demo: Beispielwerte nach Marktgrößenordnung (986/987 ×1,0 · 996/997 ×1,1 · 964/993 ×1,25, gerundet). null = wird für dieses Modell nicht angeboten bzw. Preis nach Rückruf. Beim Kauf: eigene Tabelle 1:1 eintragen.",
+ "mwst": "inkl. 19 % MwSt.",
+ "modelle": [
+  {
+   "id": "986",
+   "label": "Boxster 986"
+  },
+  {
+   "id": "987",
+   "label": "Boxster / Cayman 987"
+  },
+  {
+   "id": "996",
+   "label": "911 · 996"
+  },
+  {
+   "id": "997",
+   "label": "911 · 997"
+  },
+  {
+   "id": "964",
+   "label": "911 · 964"
+  },
+  {
+   "id": "993",
+   "label": "911 · 993"
+  },
+  {
+   "id": "andere",
+   "label": "Anderes Modell"
+  }
+ ],
+ "standardModell": "986",
+ "zonen": [
+  {
+   "id": "motor",
+   "label": "Motor"
+  },
+  {
+   "id": "getriebe",
+   "label": "Kupplung & Getriebe"
+  },
+  {
+   "id": "bremsen",
+   "label": "Bremsen"
+  },
+  {
+   "id": "fahrwerk",
+   "label": "Fahrwerk"
+  },
+  {
+   "id": "abgas",
+   "label": "Abgasanlage"
+  },
+  {
+   "id": "elektrik",
+   "label": "Elektrik & Diagnose"
+  },
+  {
+   "id": "ganz",
+   "label": "Ganzes Fahrzeug"
+  }
+ ],
+ "leistungen": [
+  {
+   "id": "kleine-wartung",
+   "zone": "motor",
+   "name": "Kleine Wartung",
+   "kurz": "Öl, Filter, Durchsicht nach Checkliste",
+   "teile": [
+    "oelfilter",
+    "oelwanne"
+   ],
+   "inhalt": [
+    "Motoröl und Ölfilter wechseln",
+    "Sichtprüfung nach Wartungsplan, Unterboden und Leitungen",
+    "Fehlerspeicher auslesen, Serviceintervall zurücksetzen",
+    "Eintrag ins Serviceheft"
+   ],
+   "preise": {
+    "986": 590,
+    "987": 590,
+    "996": 650,
+    "997": 650,
+    "964": 740,
+    "993": 740,
+    "andere": null
+   },
+   "pos": "01"
+  },
+  {
+   "id": "grosse-wartung",
+   "zone": "motor",
+   "name": "Große Wartung",
+   "kurz": "zusätzlich Luftfilter, Zündkerzen, Bremsflüssigkeit",
+   "teile": [
+    "oelfilter",
+    "oelwanne",
+    "luftfilter",
+    "ansaugung",
+    "zuendkerzen"
+   ],
+   "inhalt": [
+    "Umfang der kleinen Wartung",
+    "Luftfilter und Innenraumfilter wechseln",
+    "Zündkerzen nach Wartungsplan",
+    "Bremsflüssigkeit wechseln",
+    "Wartungsprotokoll mit Messwerten"
+   ],
+   "preise": {
+    "986": 990,
+    "987": 990,
+    "996": 1090,
+    "997": 1090,
+    "964": 1240,
+    "993": 1240,
+    "andere": null
+   },
+   "pos": "02"
+  },
+  {
+   "id": "zuendkerzen",
+   "zone": "motor",
+   "name": "Zündkerzen wechseln",
+   "kurz": "sechs Kerzen, Zündspulen geprüft",
+   "teile": [
+    "zuendkerzen"
+   ],
+   "inhalt": [
+    "Sechs Zündkerzen erneuern",
+    "Zündspulen und Kerzenstecker prüfen",
+    "Kerzenbild dokumentieren"
+   ],
+   "preise": {
+    "986": 240,
+    "987": 240,
+    "996": 260,
+    "997": 260,
+    "964": 300,
+    "993": 300,
+    "andere": null
+   },
+   "pos": "03"
+  },
+  {
+   "id": "luftfilter",
+   "zone": "motor",
+   "name": "Luftfilter",
+   "kurz": "Filtereinsatz, Kasten gereinigt",
+   "teile": [
+    "luftfilter"
+   ],
+   "inhalt": [
+    "Luftfiltereinsatz erneuern",
+    "Filterkasten reinigen",
+    "Ansaugschläuche auf Risse prüfen"
+   ],
+   "preise": {
+    "986": 90,
+    "987": 90,
+    "996": 100,
+    "997": 100,
+    "964": 110,
+    "993": 110,
+    "andere": null
+   },
+   "pos": "04"
+  },
+  {
+   "id": "ims-lager",
+   "zone": "motor",
+   "name": "IMS-Lager nachrüsten",
+   "kurz": "Lager der Zwischenwelle, bekannte Schwachstelle der M96/M97-Motoren",
+   "teile": [
+    "ims"
+   ],
+   "inhalt": [
+    "Getriebe abnehmen, Zwischenwellenlager ersetzen",
+    "Kurbelwellendichtring erneuern",
+    "Kupplung vermessen, Befund am Telefon",
+    "Ölwechsel inklusive"
+   ],
+   "preise": {
+    "986": 1650,
+    "987": null,
+    "996": 1820,
+    "997": 1820,
+    "964": null,
+    "993": null,
+    "andere": null
+   },
+   "nur": [
+    "986",
+    "996",
+    "997"
+   ],
+   "pos": "05"
+  },
+  {
+   "id": "ventilspiel",
+   "zone": "motor",
+   "name": "Ventilspiel einstellen",
+   "kurz": "luftgekühlte Motoren, mit neuen Deckeldichtungen",
+   "teile": [
+    "ventildeckel_l",
+    "ventildeckel_r"
+   ],
+   "inhalt": [
+    "Ventilspiel an allen zwölf Ventilen messen und einstellen",
+    "Ventildeckeldichtungen erneuern",
+    "Messwerte im Protokoll"
+   ],
+   "preise": {
+    "986": null,
+    "987": null,
+    "996": null,
+    "997": null,
+    "964": 680,
+    "993": 680,
+    "andere": null
+   },
+   "nur": [
+    "964",
+    "993"
+   ],
+   "pos": "06"
+  },
+  {
+   "id": "oelverlust",
+   "zone": "motor",
+   "name": "Ölverlust-Diagnose",
+   "kurz": "Leckstelle finden, bevor Teile getauscht werden",
+   "teile": [
+    "motor_block",
+    "ventildeckel_l",
+    "ventildeckel_r",
+    "oelwanne"
+   ],
+   "inhalt": [
+    "Motor reinigen, Leckstelle mit Kontrastmittel suchen",
+    "Fotos der Stelle",
+    "Kostenvoranschlag für die Abdichtung"
+   ],
+   "preise": {
+    "986": 120,
+    "987": 120,
+    "996": 130,
+    "997": 130,
+    "964": 150,
+    "993": 150,
+    "andere": null
+   },
+   "pos": "07"
+  },
+  {
+   "id": "kupplung",
+   "zone": "getriebe",
+   "name": "Kupplung",
+   "kurz": "Satz mit Scheibe, Druckplatte, Ausrücklager",
+   "teile": [
+    "kupplung",
+    "kupplungsscheibe"
+   ],
+   "inhalt": [
+    "Kupplungsscheibe, Druckplatte und Ausrücklager erneuern",
+    "Schwungrad prüfen",
+    "Kurbelwellendichtring sichten"
+   ],
+   "preise": {
+    "986": 1450,
+    "987": 1450,
+    "996": 1600,
+    "997": 1600,
+    "964": 1810,
+    "993": 1810,
+    "andere": null
+   },
+   "pos": "08"
+  },
+  {
+   "id": "getriebeoel",
+   "zone": "getriebe",
+   "name": "Getriebeöl",
+   "kurz": "Schaltgetriebe, Öl nach Herstellerfreigabe",
+   "teile": [
+    "getriebe"
+   ],
+   "inhalt": [
+    "Getriebeöl ablassen und nach Vorgabe befüllen",
+    "Ablassschraube mit neuem Dichtring",
+    "Antriebswellenmanschetten prüfen"
+   ],
+   "preise": {
+    "986": 190,
+    "987": 190,
+    "996": 210,
+    "997": 210,
+    "964": 240,
+    "993": 240,
+    "andere": null
+   },
+   "pos": "09"
+  },
+  {
+   "id": "belaege-vorn",
+   "zone": "bremsen",
+   "name": "Bremsbeläge vorn",
+   "kurz": "je Achse, mit Verschleißanzeigern",
+   "teile": [
+    "bremse_vorn"
+   ],
+   "inhalt": [
+    "Bremsbeläge mit Verschleißanzeigern erneuern",
+    "Sättel und Führungen reinigen",
+    "Scheibenstärke messen"
+   ],
+   "preise": {
+    "986": 290,
+    "987": 290,
+    "996": 320,
+    "997": 320,
+    "964": 360,
+    "993": 360,
+    "andere": null
+   },
+   "einheit": "je Achse",
+   "pos": "10"
+  },
+  {
+   "id": "belaege-hinten",
+   "zone": "bremsen",
+   "name": "Bremsbeläge hinten",
+   "kurz": "je Achse, mit Verschleißanzeigern",
+   "teile": [
+    "bremse_hinten"
+   ],
+   "inhalt": [
+    "Bremsbeläge mit Verschleißanzeigern erneuern",
+    "Sättel und Führungen reinigen",
+    "Scheibenstärke messen"
+   ],
+   "preise": {
+    "986": 290,
+    "987": 290,
+    "996": 320,
+    "997": 320,
+    "964": 360,
+    "993": 360,
+    "andere": null
+   },
+   "einheit": "je Achse",
+   "pos": "11"
+  },
+  {
+   "id": "scheiben-vorn",
+   "zone": "bremsen",
+   "name": "Bremsscheiben und Beläge vorn",
+   "kurz": "je Achse, Scheiben und Beläge",
+   "teile": [
+    "bremse_vorn"
+   ],
+   "inhalt": [
+    "Bremsscheiben und Beläge erneuern",
+    "Radnaben reinigen, Seitenschlag messen",
+    "Einbremsen auf der Probefahrt"
+   ],
+   "preise": {
+    "986": 690,
+    "987": 690,
+    "996": 760,
+    "997": 760,
+    "964": 860,
+    "993": 860,
+    "andere": null
+   },
+   "einheit": "je Achse",
+   "pos": "12"
+  },
+  {
+   "id": "scheiben-hinten",
+   "zone": "bremsen",
+   "name": "Bremsscheiben und Beläge hinten",
+   "kurz": "je Achse, Scheiben und Beläge",
+   "teile": [
+    "bremse_hinten"
+   ],
+   "inhalt": [
+    "Bremsscheiben und Beläge erneuern",
+    "Feststellbremse einstellen",
+    "Einbremsen auf der Probefahrt"
+   ],
+   "preise": {
+    "986": 690,
+    "987": 690,
+    "996": 760,
+    "997": 760,
+    "964": 860,
+    "993": 860,
+    "andere": null
+   },
+   "einheit": "je Achse",
+   "pos": "13"
+  },
+  {
+   "id": "bremsfluessigkeit",
+   "zone": "bremsen",
+   "name": "Bremsflüssigkeit",
+   "kurz": "Wechsel an allen vier Rädern",
+   "teile": [
+    "bremsleitung",
+    "bremse_vorn",
+    "bremse_hinten"
+   ],
+   "inhalt": [
+    "Bremsflüssigkeit an allen vier Rädern wechseln",
+    "Siedepunkt vorher und nachher messen",
+    "Leitungen und Schläuche sichten"
+   ],
+   "preise": {
+    "986": 120,
+    "987": 120,
+    "996": 130,
+    "997": 130,
+    "964": 150,
+    "993": 150,
+    "andere": null
+   },
+   "pos": "14"
+  },
+  {
+   "id": "achsvermessung",
+   "zone": "fahrwerk",
+   "name": "Achsvermessung",
+   "kurz": "Spur und Sturz, mit Messprotokoll",
+   "teile": [
+    "querlenker",
+    "spurstangen"
+   ],
+   "inhalt": [
+    "Spur, Sturz und Nachlauf messen",
+    "Einstellen auf Herstellerwerte",
+    "Messprotokoll vorher/nachher"
+   ],
+   "preise": {
+    "986": 180,
+    "987": 180,
+    "996": 200,
+    "997": 200,
+    "964": 220,
+    "993": 220,
+    "andere": null
+   },
+   "pos": "15"
+  },
+  {
+   "id": "fahrwerk-befund",
+   "zone": "fahrwerk",
+   "name": "Stoßdämpfer und Querlenker",
+   "kurz": "Preis nach Befund",
+   "teile": [
+    "federbeine",
+    "querlenker"
+   ],
+   "inhalt": [
+    "Prüfung auf der Bühne und bei der Probefahrt",
+    "Festpreis nach Befund, bevor wir bestellen"
+   ],
+   "preise": {
+    "986": null,
+    "987": null,
+    "996": null,
+    "997": null,
+    "964": null,
+    "993": null,
+    "andere": null
+   },
+   "nachBefund": true,
+   "pos": "16"
+  },
+  {
+   "id": "abgas",
+   "zone": "abgas",
+   "name": "Abgasanlage prüfen, Krümmer",
+   "kurz": "Dichtheit, Halter, Krümmer",
+   "teile": [
+    "kruemmer",
+    "kat",
+    "endschalldaempfer",
+    "endrohre"
+   ],
+   "inhalt": [
+    "Dichtheit von Krümmer bis Endrohr prüfen",
+    "Halter und Schellen sichten",
+    "Kostenvoranschlag bei Befund"
+   ],
+   "preise": {
+    "986": 120,
+    "987": 120,
+    "996": 130,
+    "997": 130,
+    "964": 150,
+    "993": 150,
+    "andere": null
+   },
+   "pos": "17"
+  },
+  {
+   "id": "fehlerdiagnose",
+   "zone": "elektrik",
+   "name": "Fehlerdiagnose",
+   "kurz": "Fehlerspeicher auslesen, Befund am Telefon",
+   "teile": [
+    "steuergeraet",
+    "kabelbaum"
+   ],
+   "inhalt": [
+    "Fehlerspeicher aller Steuergeräte auslesen",
+    "Istwerte bei laufendem Motor",
+    "Befund und nächster Schritt am Telefon"
+   ],
+   "preise": {
+    "986": 89,
+    "987": 89,
+    "996": 89,
+    "997": 89,
+    "964": 89,
+    "993": 89,
+    "andere": 89
+   },
+   "pos": "18"
+  },
+  {
+   "id": "batterie",
+   "zone": "elektrik",
+   "name": "Batterie",
+   "kurz": "prüfen, erneuern, anlernen",
+   "teile": [
+    "batterie"
+   ],
+   "inhalt": [
+    "Batterie und Ladesystem prüfen",
+    "Batterie erneuern und anlernen",
+    "Ruhestrom messen"
+   ],
+   "preise": {
+    "986": 220,
+    "987": 220,
+    "996": 240,
+    "997": 240,
+    "964": 280,
+    "993": 280,
+    "andere": null
+   },
+   "pos": "19"
+  },
+  {
+   "id": "klimaservice",
+   "zone": "elektrik",
+   "name": "Klimaservice",
+   "kurz": "absaugen, Dichtheit prüfen, befüllen",
+   "teile": [
+    "klima"
+   ],
+   "inhalt": [
+    "Kältemittel absaugen, Vakuumprüfung",
+    "Neu befüllen nach Füllmenge",
+    "Funktionsprüfung"
+   ],
+   "preise": {
+    "986": 130,
+    "987": 130,
+    "996": 145,
+    "997": 145,
+    "964": 160,
+    "993": 160,
+    "andere": null
+   },
+   "pos": "20"
+  },
+  {
+   "id": "ankaufcheck",
+   "zone": "ganz",
+   "name": "Ankaufcheck",
+   "kurz": "Gebrauchtwagen prüfen, bevor Sie kaufen",
+   "teile": [],
+   "inhalt": [
+    "Karosserie, Lackschichtdicke, Unterboden",
+    "Motor, Getriebe, Fahrwerk, Bremsen",
+    "Fehlerspeicher und Überdreher auslesen, soweit das Modell es speichert",
+    "Schriftlicher Befund mit Fotos"
+   ],
+   "preise": {
+    "986": 250,
+    "987": 250,
+    "996": 280,
+    "997": 280,
+    "964": 310,
+    "993": 310,
+    "andere": null
+   },
+   "scan": true,
+   "pos": "21"
+  },
+  {
+   "id": "hu-vorbereitung",
+   "zone": "ganz",
+   "name": "HU/AU-Vorbereitung",
+   "kurz": "Durchsicht vor der Hauptuntersuchung",
+   "teile": [],
+   "inhalt": [
+    "Durchsicht nach den Prüfpunkten der Hauptuntersuchung",
+    "Mängelliste mit Festpreisen",
+    "Vorführung beim Prüfer auf Wunsch"
+   ],
+   "preise": {
+    "986": 90,
+    "987": 90,
+    "996": 100,
+    "997": 100,
+    "964": 110,
+    "993": 110,
+    "andere": null
+   },
+   "scan": true,
+   "pos": "22"
+  }
+ ]
+}

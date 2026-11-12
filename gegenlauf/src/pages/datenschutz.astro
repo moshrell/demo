@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import DatenschutzForm from '../components/DatenschutzForm.astro';
+import site from '../data/betrieb.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title={`Datenschutz · ${site.name}`} description="Datenschutzhinweise der Demo-Seite Gegenlauf Sportwagenservice." leiste={false}>
+  <header class="kopf"><a class="marke" href={base}><b>{site.kurz}</b><span>{site.zusatz}</span></a></header>
+  <main class="recht">
+    <h1>Datenschutz</h1>
+    <p><strong>Demo-Hinweis:</strong> Diese Beispielseite sendet und speichert keine Formulardaten. Die folgenden Abschnitte zeigen, was bei einem echten Betrieb hier stehen muss.</p>
+    <h2>Verantwortlicher</h2>
+    <p>{site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}. Kontakt: {site.email}, Telefon {site.phone}.</p>
+    <h2>Aufruf der Website</h2>
+    <p>Beim Aufruf verarbeitet der Hosting-Anbieter technisch notwendige Daten (IP-Adresse, Zeitpunkt, abgerufene Datei, Browsertyp), um die Seite auszuliefern (Art. 6 Abs. 1 lit. f DSGVO). Diese Seite setzt keine Cookies, verwendet keine Analyse- oder Werbedienste und lädt keine Inhalte von Drittanbietern: Schriften, 3D-Modell und Skripte liegen auf demselben Server. Die Karte wird nicht eingebettet, sondern nur verlinkt.</p>
+    <h2>3D-Ansicht</h2>
+    <p>Die 3D-Ansicht wird vollständig in Ihrem Browser berechnet. Dabei werden keine Daten an uns oder Dritte übertragen.</p>
+    <DatenschutzForm formName="Terminanfrage" data="Fahrzeugmodell, Baujahr, Kilometerstand, Fahrgestellnummer (freiwillig), gewählte Leistungen, Beschreibung und Foto (freiwillig), Wunschtermin, Hol- und Bringservice, Name, Telefonnummer, E-Mail-Adresse (freiwillig)" purpose="Wir rufen Sie zurück, klären Rückfragen zum Fahrzeug und nennen den Festpreis." retention="Wir löschen Ihre Angaben, sobald die Anfrage erledigt ist, spätestens nach 30 Tagen. Kommt ein Auftrag zustande, gelten die gesetzlichen Aufbewahrungsfristen für Rechnungsunterlagen." />
+    <p><strong>Auswahl im Zwischenspeicher:</strong> Auch das gewählte Modell und die angekreuzten Leistungen werden nur im Browser dieses Tabs (sessionStorage) zwischengespeichert, damit sie beim Blättern nicht verloren gehen.</p>
+    <p><a href={base}>← Zurück zur Startseite</a></p>
+  </main>
+</Base>

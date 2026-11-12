@@ -1,0 +1,33 @@
+---
+// Служебная страница: только сцена. Для стоп-кадров (tools/shots.mjs), постера и запасных кадров.
+import fz from '../data/fahrzeuge.json';
+const base = import.meta.env.BASE_URL;
+const car = fz.fahrzeuge[fz.aktiv];
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Gegenlauf · Szene</title>
+    <style is:global>
+      html, body { margin: 0; height: 100%; background: #131416; }
+      body.t { background: transparent; }
+      canvas { display: block; width: 100vw; height: 100vh; }
+    </style>
+  </head>
+  <body data-model={base + car.datei} data-dims={JSON.stringify(car.masse)}>
+    <canvas id="c"></canvas>
+    <script>
+      import {createStage, VIEWS} from '../scene/stage.js';
+      const b = document.body;
+      const still = new URLSearchParams(location.search).has('still');
+      const api = await createStage(document.getElementById('c'), {modelUrl: b.dataset.model, dims: JSON.parse(b.dataset.dims!), still});
+      (window as any).__stage = api; (window as any).__views = VIEWS;
+      (window as any).__png = () => (document.getElementById('c') as HTMLCanvasElement).toDataURL('image/png');
+      if (!still) { api.wake(); let t = 0; addEventListener('click', () => { t = t ? 0 : 1; api.setScroll(t); }); }
+      (window as any).__ready = true;
+    </script>
+  </body>
+</html>

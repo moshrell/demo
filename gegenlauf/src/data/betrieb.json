@@ -1,0 +1,158 @@
+{
+  "_hinweis": "Alle Angaben zum Betrieb. Demo: Betrieb, Personen, Adresse und Telefon sind erfunden. Beim Kauf: nur diese Datei, preise.json und fahrzeuge.json ersetzen.",
+  "name": "Gegenlauf Sportwagenservice",
+  "kurz": "Gegenlauf",
+  "zusatz": "Sportwagenservice",
+  "inhaber": "Jörn Halvesen",
+  "titel": "Kraftfahrzeugtechnikermeister",
+  "legalName": "Gegenlauf Sportwagenservice, Inhaber Jörn Halvesen (fiktiv)",
+  "address": {
+    "street": "Vahrenwalder Straße 0 (Demo)",
+    "zip": "30165",
+    "city": "Hannover"
+  },
+  "mapUrl": "https://www.openstreetmap.org/search?query=Vahrenwalder%20Stra%C3%9Fe%2C%20Hannover",
+  "email": "werkstatt@example.com",
+  "phone": "030 23125 911",
+  "phoneHref": "+493023125911",
+  "hours": [
+    {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "label": "Mo–Fr",
+      "open": "08:00",
+      "close": "18:00"
+    }
+  ],
+  "hoursNote": "Samstag nach Vereinbarung. Fahrzeugannahme nur mit Termin.",
+  "openingHours": "Mo-Fr 08:00-18:00",
+  "areaServed": [
+    "Hannover",
+    "Region Hannover"
+  ],
+  "since": 2014,
+  "chamber": "Handwerkskammer Hannover, Berliner Allee 17, 30175 Hannover",
+  "vat": "DE000000000 (Demo)",
+  "rueckruf": "innerhalb eines Werktags",
+  "markenhinweis": "Freie Werkstatt. Keine Porsche-Vertragswerkstatt, keine Verbindung zur Dr. Ing. h.c. F. Porsche AG.",
+  "hero": {
+    "titel": "Freie Porsche-Werkstatt in Hannover. Festpreise vorab.",
+    "nutzen": "Wartung, Bremsen und Kupplung für 911, Boxster und Cayman. Sie sehen am Fahrzeug, wo wir arbeiten und was es kostet, bevor Sie anrufen.",
+    "cta": "Preis berechnen",
+    "anruf": "Anrufen"
+  },
+  "fakten": [
+    {
+      "wert": "22 Jahre",
+      "text": "Arbeit an Boxermotoren, davon 9 Jahre in einem Porsche Zentrum"
+    },
+    {
+      "wert": "seit 2014",
+      "text": "eigene Meisterwerkstatt in Hannover"
+    },
+    {
+      "wert": "3 Schrauber",
+      "text": "zwei Meister und ein Auszubildender, kein Serviceberater dazwischen"
+    }
+  ],
+  "warum": [
+    {
+      "titel": "Wartung nach Herstellervorgabe, mit Eintrag ins Serviceheft",
+      "text": "Wir arbeiten den Wartungsplan Ihres Modells Punkt für Punkt ab und dokumentieren ihn. Der Service wird im Serviceheft eingetragen, bei neueren Modellen im digitalen Servicenachweis, soweit der Hersteller freien Werkstätten den Zugang gibt."
+    },
+    {
+      "titel": "Originalteile oder Teile in Erstausrüsterqualität",
+      "text": "Sie entscheiden: Originalteil oder das baugleiche Teil des Zulieferers, der es auch ans Band liefert. Auf der Rechnung steht, was verbaut wurde. Öl stellen wir, weil wir für das Material einstehen."
+    },
+    {
+      "titel": "Der Preis steht, bevor das Auto auf der Bühne ist",
+      "text": "Für Wartung und typische Reparaturen nennen wir einen Festpreis je Modell. Finden wir bei der Annahme mehr, rufen wir an und Sie entscheiden. Ohne Ihr Ja wird nichts zusätzlich gemacht."
+    }
+  ],
+  "ablauf": [
+    {
+      "titel": "Anfrage",
+      "text": "Modell, Baujahr, Kilometerstand und gewünschte Arbeiten, online oder am Telefon."
+    },
+    {
+      "titel": "Rückruf mit Festpreis",
+      "text": "Ein Meister ruft innerhalb eines Werktags zurück, klärt Rückfragen und nennt den Preis."
+    },
+    {
+      "titel": "Termin",
+      "text": "Fahrzeugannahme gemeinsam am Auto. Auf Wunsch holen wir den Wagen und bringen ihn zurück."
+    },
+    {
+      "titel": "Übergabe mit Protokoll und Fotos",
+      "text": "Sie bekommen das Wartungsprotokoll, Fotos der getauschten Teile und die Rechnung mit Teilenummern."
+    }
+  ],
+  "faelle": [
+    {
+      "id": "oelverlust",
+      "fahrzeug": "911 Carrera (996), 142.000 km",
+      "anlass": "Ölfleck unter dem Motor",
+      "befund": "Kurbelwellendichtring und Flansch der Zwischenwelle undicht, Lagerspiel an der Zwischenwelle fühlbar.",
+      "arbeit": "Getriebe abgenommen, Dichtring erneuert, Zwischenwellenlager nachgerüstet, Kupplung vermessen und wieder verbaut.",
+      "preis": "ab 1.820 €",
+      "zone": "motor",
+      "teile": [
+        "ims"
+      ],
+      "foto": "fall-oelverlust.jpg",
+      "alt": "Blick von unten auf einen Boxermotor auf der Hebebühne, Getriebe abgenommen"
+    },
+    {
+      "id": "bremse",
+      "fahrzeug": "Boxster (987), 88.000 km",
+      "anlass": "Rubbeln beim Bremsen aus hohem Tempo",
+      "befund": "Bremsscheiben vorn mit Riefen und Seitenschlag, Beläge an der Verschleißgrenze, Bremsflüssigkeit über drei Jahre alt.",
+      "arbeit": "Scheiben und Beläge vorn erneuert, Bremsflüssigkeit gewechselt, Probefahrt mit Einbremsen.",
+      "preis": "ab 810 €",
+      "zone": "bremsen",
+      "teile": [
+        "bremse_vorn"
+      ],
+      "foto": "fall-bremse.jpg",
+      "alt": "Neue Bremsscheibe und Bremssattel an einer Vorderachse, Rad abgenommen"
+    },
+    {
+      "id": "ventilspiel",
+      "fahrzeug": "911 Carrera 2 (964), 201.000 km",
+      "anlass": "Klackern im Leerlauf, vor allem warm",
+      "befund": "Ventilspiel an vier Ventilen außerhalb der Toleranz, Ventildeckeldichtungen ausgehärtet.",
+      "arbeit": "Ventilspiel an allen zwölf Ventilen eingestellt, Ventildeckeldichtungen erneuert, Messwerte im Protokoll.",
+      "preis": "ab 680 €",
+      "zone": "motor",
+      "teile": [
+        "ventildeckel_l",
+        "ventildeckel_r"
+      ],
+      "foto": "fall-ventilspiel.jpg",
+      "alt": "Hände stellen mit Fühlerlehre das Ventilspiel an einem luftgekühlten Boxermotor ein"
+    }
+  ],
+  "faq": [
+    {
+      "q": "Verliere ich die Herstellergarantie, wenn ich nicht ins Porsche Zentrum fahre?",
+      "a": "Nach der europäischen Gruppenfreistellungsverordnung für den Kfz-Sektor (Verordnung (EU) Nr. 461/2010) darf ein Hersteller die Garantie grundsätzlich nicht allein davon abhängig machen, dass Wartungen in einer Vertragswerkstatt erfolgen. Voraussetzung ist, dass nach Herstellervorgaben gearbeitet und das dokumentiert wird. Genau so arbeiten wir. Bei laufender Neuwagen- oder Anschlussgarantie lesen Sie bitte Ihre Vertragsbedingungen; Kulanz ist eine freiwillige Leistung des Herstellers."
+    },
+    {
+      "q": "Kann ich mein eigenes Öl mitbringen?",
+      "a": "Nein. Wir verwenden freigegebene Öle in der für Ihr Modell vorgesehenen Spezifikation und stehen für das Material ein. Für mitgebrachtes Öl können wir das nicht."
+    },
+    {
+      "q": "Holen Sie das Fahrzeug ab?",
+      "a": "Ja, im Raum Hannover auf Wunsch mit Hol- und Bringservice. Kreuzen Sie es in der Anfrage an, den Preis nennen wir beim Rückruf zusammen mit dem Festpreis."
+    },
+    {
+      "q": "Wie lange dauert eine Wartung?",
+      "a": "Eine kleine Wartung in der Regel einen halben Tag, eine große einen Tag. Kommt bei der Annahme etwas dazu, sagen wir es Ihnen am Telefon, bevor wir weiterarbeiten."
+    }
+  ]
+}

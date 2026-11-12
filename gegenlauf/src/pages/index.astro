@@ -1,0 +1,204 @@
+---
+import fs from 'node:fs';
+import Base from '../layouts/Base.astro';
+import Terminanfrage from '../components/Terminanfrage.astro';
+import site from '../data/betrieb.json';
+import preise from '../data/preise.json';
+import fz from '../data/fahrzeuge.json';
+const base = import.meta.env.BASE_URL;
+const car = fz.fahrzeuge[fz.aktiv];
+const euro = (n: number) => new Intl.NumberFormat('de-DE').format(n) + ' €';
+const std = preise.standardModell;
+const preisText = (l: any, m: string) => (l.nachBefund ? 'nach Befund' : l.preise[m] == null ? 'auf Anfrage' : 'ab ' + euro(l.preise[m]));
+// Fotos kommen aus PROMPTS.txt (Степан генерирует). Пока файла нет, блок не выводится: битых картинок не бывает.
+const foto = (name: string) => fs.existsSync(`public/img/${name}`);
+const hours = site.hours.map((h) => `${h.label} ${h.open}–${h.close} Uhr`).join(', ');
+const config = { modell: std, hours: site.hours, modelUrl: base + car.datei, dims: car.masse, kader: base + 'img/szene/', rueckruf: site.rueckruf };
+---
+<Base title={`${site.name} · Freie Porsche-Werkstatt in Hannover`} description="Freie Werkstatt für Porsche 911, Boxster und Cayman in Hannover: Wartung nach Herstellervorgabe zu Festpreisen, Preis je Modell online berechnen, Termin anfragen." faq={site.faq} image="img/szene/og.jpg">
+  <link slot="head" rel="preload" as="image" href={`${base}img/szene/poster.webp`} fetchpriority="high" />
+  <a class="skip" href="#service">Zu den Preisen</a>
+  <header class="kopf">
+    <a class="marke" href={base} aria-label={`${site.name}, Startseite`}><b>{site.kurz}</b><span>{site.zusatz}</span></a>
+    <span class="status" data-status>{hours}</span>
+    <a class="kopf__tel mono" href={`tel:${site.phoneHref}`}>{site.phone}</a>
+  </header>
+
+  <main id="inhalt">
+    <div class="buehne" id="buehne">
+      <section class="held" aria-labelledby="h1">
+        <h1 id="h1">{site.hero.titel}</h1>
+        <p class="held__nutzen">{site.hero.nutzen}</p>
+        <div class="held__cta">
+          <a class="btn btn--amber" href="#service">{site.hero.cta}</a>
+          <a class="btn" href={`tel:${site.phoneHref}`}>{site.hero.anruf}</a>
+        </div>
+        <p class="held__fein">{site.markenhinweis}</p>
+      </section>
+
+      <div class="szene" id="szene" data-config={JSON.stringify(config)}>
+        <img class="szene__bild" src={`${base}img/szene/poster.webp`} width="1280" height="800" alt="Silberner Sportwagen im dunklen Schauraum, Ansicht schräg von vorn" fetchpriority="high" decoding="async" data-bild-a />
+        <img class="szene__bild szene__bild--b" alt="" width="720" height="450" decoding="async" data-bild-b />
+        <canvas aria-hidden="true"></canvas>
+        <div class="szene__lade" aria-hidden="true"><i data-lade></i></div>
+        <div class="szene__text">
+          <p class="szene__hinweis">Tippen Sie auf einen Bereich – wir zeigen, wo wir arbeiten.</p>
+          <p class="szene__schema">Schematische Darstellung<br />Beispielfahrzeug</p>
+        </div>
+      </div>
+
+      <section class="blatt" id="service" aria-labelledby="h-service">
+        <div class="blatt__kopf">
+          <h2 id="h-service">Service am Fahrzeug</h2>
+          <p>Modell wählen, Bereich antippen, Leistungen ankreuzen. Die Summe läuft unten mit.</p>
+        </div>
+
+        <fieldset class="schritt">
+          <legend><b>1</b> · Ihr Modell</legend>
+          <div class="chips">
+            {preise.modelle.map((m) => (
+              <label class="chip"><input type="radio" name="modell_chip" value={m.id} checked={m.id === std} /><span>{m.label}</span></label>
+            ))}
+          </div>
+          <noscript><p class="held__fein">Ohne JavaScript sehen Sie die Preise für Boxster 986/987. Alle Modelle stehen in der Tabelle unten.</p></noscript>
+        </fieldset>
+
+        <div class="zonen" role="group" aria-labelledby="l-zonen">
+          <p class="schritt__titel" id="l-zonen"><b>2</b> · Bereich am Fahrzeug</p>
+          <div class="zonen__reihe">
+            {preise.zonen.map((z) => (
+              <a class="zchip" href={`#zone-${z.id}`} role="button" aria-pressed="false" data-zone={z.id}>{z.label}<i data-anzahl></i></a>
+            ))}
+          </div>
+        </div>
+
+        {preise.zonen.map((z) => (
+          <section class="zone" id={`zone-${z.id}`} data-zone-block={z.id} aria-labelledby={`hz-${z.id}`}>
+            <h3 id={`hz-${z.id}`}>{z.label}<small>ab-Preise, {preise.mwst}</small></h3>
+            <ul>
+              {preise.leistungen.filter((l) => l.zone === z.id).map((l: any) => (
+                <li class="pos" data-id={l.id} data-zone={l.zone} data-teile={JSON.stringify(l.teile)} data-preise={JSON.stringify(l.preise)} data-nur={l.nur ? l.nur.join(',') : null} data-scan={l.scan ? '1' : null} data-befund={l.nachBefund ? '1' : null} hidden={l.nur && !l.nur.includes(std)}>
+                  <label class="pos__kopf">
+                    <span class="pos__box"><input type="checkbox" name="leistung" value={l.id} form="termin" disabled={l.nur && !l.nur.includes(std)} /><span class="pos__nr">Pos. {l.pos}</span></span>
+                    <span class="pos__name" data-name>{l.name}</span>
+                    <span class="pos__preis" data-preis>{preisText(l, std)}{l.einheit && <small>{l.einheit}</small>}</span>
+                    <span class="pos__kurz">{l.kurz}</span>
+                  </label>
+                  <div class="pos__mehr">
+                    <ul>{l.inhalt.map((t: string) => <li>{t}</li>)}</ul>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+
+        <div class="blatt__fuss">
+          <details class="tabelle">
+            <summary>Alle Preise als Tabelle</summary>
+            <div class="tabelle__rahmen" tabindex="0" role="region" aria-label="Preistabelle, seitlich verschiebbar">
+              <table>
+                <thead><tr><th scope="col">Leistung</th>{preise.modelle.filter((m) => m.id !== 'andere').map((m) => <th scope="col">{m.id}</th>)}</tr></thead>
+                <tbody>
+                  {preise.leistungen.map((l: any) => (
+                    <tr><th scope="row">{l.name}</th>{preise.modelle.filter((m) => m.id !== 'andere').map((m) => <td>{l.nachBefund ? 'n. Befund' : l.preise[m.id] == null ? '–' : euro(l.preise[m.id])}</td>)}</tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </details>
+          <p>Alle Preise sind ab-Preise in Euro, {preise.mwst} Der genaue Preis steht nach der Fahrzeugannahme fest. Beispielpreise dieser Demo-Seite.</p>
+        </div>
+        <div class="blatt__ende" aria-hidden="true"></div>
+      </section>
+    </div>
+
+    <section class="teil" id="warum" aria-labelledby="h-warum">
+      <div class="teil__innen">
+        <div class="teil__kopf">
+          <h2 id="h-warum">Warum frei?</h2>
+          <p>Weil Sie mit dem Meister sprechen, der an Ihrem Wagen arbeitet. Drei Dinge halten wir dabei fest.</p>
+        </div>
+        <dl class="fakten">
+          {site.fakten.map((f) => <div><dt>{f.wert}</dt><dd>{f.text}</dd></div>)}
+        </dl>
+        <div class="gruende">
+          {site.warum.map((w) => <article class="grund"><h3>{w.titel}</h3><p>{w.text}</p></article>)}
+        </div>
+        {foto('werkstatt.jpg') && <figure class="foto foto--breit"><img src={`${base}img/werkstatt.jpg`} width="1600" height="900" loading="lazy" decoding="async" alt="Werkstatthalle am Abend, ein Sportwagen auf der Hebebühne im Licht der Arbeitslampen" /></figure>}
+      </div>
+    </section>
+
+    <section class="teil" id="ablauf" aria-labelledby="h-ablauf">
+      <div class="teil__innen">
+        <div class="teil__kopf">
+          <h2 id="h-ablauf">So läuft es ab</h2>
+          <p>Vier Schritte, ein Ansprechpartner.</p>
+        </div>
+        <ol class="schritte">
+          {site.ablauf.map((s) => <li><h3>{s.titel}</h3><p>{s.text}</p></li>)}
+        </ol>
+        {foto('uebergabe.jpg') && <figure class="foto foto--breit"><img src={`${base}img/uebergabe.jpg`} width="1600" height="900" loading="lazy" decoding="async" alt="Übergabe eines Sportwagens: Meister reicht dem Kunden Schlüssel und Wartungsprotokoll" /></figure>}
+      </div>
+    </section>
+
+    <section class="teil" id="werkstatt" aria-labelledby="h-faelle">
+      <div class="teil__innen">
+        <div class="teil__kopf">
+          <h2 id="h-faelle">Aus der Werkstatt</h2>
+          <p>Drei Aufträge, wie sie bei uns auf der Bühne stehen. Beispiele dieser Demo-Seite.</p>
+        </div>
+        <div class="faelle">
+          {site.faelle.map((f) => (
+            <article class="fall">
+              <div class="fall__bild">
+                <img class="fall__kader" src={`${base}img/szene/fall-${f.id}.webp`} width="640" height="400" loading="lazy" decoding="async" alt={`Schematische Darstellung: betroffene Bauteile am Fahrzeug (${f.anlass})`} />
+                {foto(f.foto) && <img src={`${base}img/${f.foto}`} width="1200" height="750" loading="lazy" decoding="async" alt={f.alt} />}
+              </div>
+              <div class="fall__text">
+                <p class="fall__auto">{f.fahrzeug}</p>
+                <h3>{f.anlass}</h3>
+                <dl>
+                  <div><dt>Befund</dt><dd>{f.befund}</dd></div>
+                  <div><dt>Arbeit</dt><dd>{f.arbeit}</dd></div>
+                </dl>
+                <div class="fall__fuss">
+                  <span class="fall__preis">{f.preis}</span>
+                  <a class="btn" href="#service" data-zeige-zone={f.zone} data-zeige-teile={JSON.stringify(f.teile)}>Am Fahrzeug zeigen</a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="teil" id="fragen" aria-labelledby="h-faq">
+      <div class="teil__innen">
+        <div class="teil__kopf"><h2 id="h-faq">Häufige Fragen</h2></div>
+        <div class="faq">
+          {site.faq.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+        </div>
+      </div>
+    </section>
+
+    <section class="teil" id="kontakt" aria-labelledby="h-kontakt">
+      <div class="teil__innen kontakt">
+        <div class="kontakt__daten">
+          <h2 id="h-kontakt">Kontakt und Termin</h2>
+          <p><a class="kontakt__tel" href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+          <p class="status" data-status>{hours}</p>
+          <dl>
+            <div><dt>Adresse</dt><dd>{site.address.street}<br />{site.address.zip} {site.address.city}<br /><a href={site.mapUrl} target="_blank" rel="noopener">Auf der Karte öffnen</a></dd></div>
+            <div><dt>Öffnungszeiten</dt><dd>{hours}<br />{site.hoursNote}</dd></div>
+            <div><dt>E-Mail</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
+            <div><dt>Inhaber</dt><dd>{site.inhaber}, {site.titel}</dd></div>
+          </dl>
+          {foto('haende.jpg') && <figure class="foto foto--breit"><img src={`${base}img/haende.jpg`} width="1200" height="900" loading="lazy" decoding="async" alt="Hände eines Mechanikers mit Drehmomentschlüssel an einem Radträger" /></figure>}
+        </div>
+        <Terminanfrage />
+      </div>
+    </section>
+  </main>
+  <script>import '../scripts/seite.ts';</script>
+</Base>

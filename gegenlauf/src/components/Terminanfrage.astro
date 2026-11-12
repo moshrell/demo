@@ -1,0 +1,160 @@
+---
+/**
+ * Terminanfrage: Formular-Standard (Kravets Webdesign), angepasst für die Werkstatt.
+ *  1. Jedes Feld: label, Beispiel-Platzhalter, autocomplete, type/inputmode.
+ *  2. Pflicht-Häkchen zur Einwilligung mit Link auf datenschutz/, Fehlermeldung.
+ *  3. Summe läuft mit (Leiste unten) und steht im Formular und in der Bestätigung.
+ *  4. Eingaben gehen nie verloren: sessionStorage, Rechtliches in neuem Tab, Häkchen wird nicht gespeichert.
+ * Die Leistungen (Checkboxen im Serviceblatt) und dieses Formular gehören zusammen: form="termin".
+ * Demo: Es wird nichts gesendet.
+ */
+import site from '../data/betrieb.json';
+import preise from '../data/preise.json';
+const base = import.meta.env.BASE_URL;
+const id = 'termin';
+---
+<div class="ta">
+  <form class="ta__form" id={id} novalidate method="get" action={`${base}#termin`}>
+    <h3 class="ta__titel">Terminanfrage</h3>
+    <fieldset class="ta__gruppe">
+      <legend>Fahrzeug</legend>
+      <div class="ta__feld">
+        <label for="f-modell">Modell</label>
+        <select id="f-modell" name="modell" autocomplete="off">
+          {preise.modelle.map((m) => <option value={m.id} selected={m.id === preise.standardModell}>{m.label}</option>)}
+        </select>
+      </div>
+      <div class="ta__zwei">
+        <div class="ta__feld">
+          <label for="f-jahr">Baujahr</label>
+          <input id="f-jahr" name="baujahr" type="text" inputmode="numeric" autocomplete="off" placeholder="z. B. 2006" maxlength="4" aria-describedby="e-jahr" />
+          <p class="ta__err" id="e-jahr" hidden>Bitte das Baujahr vierstellig angeben, z. B. 2006.</p>
+        </div>
+        <div class="ta__feld">
+          <label for="f-km">Kilometerstand</label>
+          <input id="f-km" name="km" type="text" inputmode="numeric" autocomplete="off" placeholder="z. B. 118.000" />
+        </div>
+      </div>
+      <div class="ta__feld">
+        <label for="f-vin">Fahrgestellnummer <span class="ta__opt">(optional)</span></label>
+        <input id="f-vin" name="vin" type="text" autocomplete="off" autocapitalize="characters" placeholder="17 Zeichen, steht im Fahrzeugschein" maxlength="17" />
+      </div>
+    </fieldset>
+
+    <fieldset class="ta__gruppe">
+      <legend>Ihre Auswahl</legend>
+      <ul class="ta__wahl" data-wahl aria-live="polite"></ul>
+      <p class="ta__leer" data-wahl-leer>Noch keine Leistung gewählt. Sie können auch nur beschreiben, was los ist, oder <a href="#service">oben Leistungen auswählen</a>.</p>
+      <p class="ta__summe" data-summe-zeile hidden><span>Summe <small>ab, {preise.mwst}</small></span><strong class="mono" data-summe></strong></p>
+      <p class="ta__klein">Der genaue Preis steht nach der Fahrzeugannahme fest. Zusätzliche Arbeiten nur nach Rückruf und Ihrer Zustimmung.</p>
+      <div class="ta__feld">
+        <label for="f-problem">Was ist passiert? <span class="ta__opt">(optional)</span></label>
+        <textarea id="f-problem" name="problem" rows="3" autocomplete="off" placeholder="z. B. Motorkontrollleuchte seit gestern, ruckelt beim Kaltstart"></textarea>
+      </div>
+      <div class="ta__feld">
+        <label for="f-foto">Foto <span class="ta__opt">(optional)</span></label>
+        <input id="f-foto" name="foto" type="file" accept="image/*" aria-describedby="h-foto" />
+        <p class="ta__klein" id="h-foto">Demo: Die Datei wird nicht hochgeladen.</p>
+      </div>
+    </fieldset>
+
+    <fieldset class="ta__gruppe">
+      <legend>Wunschtermin</legend>
+      <div class="ta__feld">
+        <label for="f-wunsch">Woche oder Tag</label>
+        <input id="f-wunsch" name="wunsch" type="text" autocomplete="off" placeholder="z. B. KW 48, gern Dienstag" />
+        <div class="ta__wochen" data-wochen hidden></div>
+      </div>
+      <label class="ta__check">
+        <input type="checkbox" name="holbring" value="ja" />
+        <span>Hol- und Bringservice gewünscht (Raum Hannover, Preis beim Rückruf)</span>
+      </label>
+    </fieldset>
+
+    <fieldset class="ta__gruppe">
+      <legend>Ihre Angaben</legend>
+      <div class="ta__feld">
+        <label for="f-name">Name</label>
+        <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname" required aria-describedby="e-name" />
+        <p class="ta__err" id="e-name" hidden>Bitte geben Sie Ihren Namen an.</p>
+      </div>
+      <div class="ta__feld">
+        <label for="f-tel">Telefon</label>
+        <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 030 23125 123" required aria-describedby="e-tel" />
+        <p class="ta__err" id="e-tel" hidden>Bitte geben Sie eine Telefonnummer an, unter der wir Sie zurückrufen können.</p>
+      </div>
+      <div class="ta__feld">
+        <label for="f-mail">E-Mail <span class="ta__opt">(optional)</span></label>
+        <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" aria-describedby="e-mail" />
+        <p class="ta__err" id="e-mail" hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.</p>
+      </div>
+    </fieldset>
+
+    <div class="ta__consent">
+      <label class="ta__check">
+        <input type="checkbox" name="privacy" required aria-describedby="e-privacy" />
+        <span>Ich bin einverstanden, dass {site.name} meine Angaben (Fahrzeug, Auswahl, Name, Telefon, E-Mail, Nachricht) zur Bearbeitung meiner Terminanfrage verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a></span>
+      </label>
+      <p class="ta__err" id="e-privacy" hidden>Bitte stimmen Sie zu, sonst können wir Ihre Anfrage nicht bearbeiten.</p>
+    </div>
+    <button class="btn btn--amber ta__senden" type="submit">Termin anfragen</button>
+    <p class="ta__klein">Es wird nichts gesendet (Demo).</p>
+  </form>
+
+  <div class="ta__fertig" data-fertig tabindex="-1" hidden>
+    <h3>Danke. Wir rufen Sie {site.rueckruf} zurück.</h3>
+    <dl data-fertig-liste></dl>
+    <p class="ta__klein">Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.</p>
+    <button class="btn" type="button" data-neu>Neue Anfrage</button>
+  </div>
+</div>
+
+<style is:global>
+  .ta { min-width: 0; }
+  .ta__form, .ta__fertig { display: grid; gap: var(--space-lg); padding: var(--space-lg) var(--space-md); border: 1px solid var(--color-line-2); border-radius: var(--radius); background: var(--color-bg-2); }
+  .ta__titel { font-size: var(--text-lg); }
+  .ta__gruppe { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: var(--space-md); }
+  .ta__gruppe legend { padding: 0; margin-bottom: var(--space-sm); font: 400 var(--text-xs) var(--font-mono); color: var(--color-muted); }
+  .ta__zwei { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); }
+  .ta__feld { display: grid; gap: var(--space-xs); min-width: 0; }
+  .ta__feld label { font-weight: 600; font-size: var(--text-sm); }
+  .ta__opt { font-weight: 400; color: var(--color-muted); }
+  .ta__feld input:not([type='file']), .ta__feld textarea, .ta__feld select { width: 100%; min-height: 3rem; padding: 0.65rem 0.85rem; border: 1px solid var(--color-line-2); border-radius: var(--radius); background: var(--color-bg); color: var(--color-ink); font-size: 1rem; }
+  .ta__feld input[type='file'] { font-size: var(--text-sm); color: var(--color-muted); min-height: 2.75rem; max-width: 100%; }
+  .ta__feld textarea { resize: vertical; }
+  .ta__feld ::placeholder { color: oklch(68% 0.012 85); opacity: 1; }
+  .ta__feld input:hover, .ta__feld textarea:hover, .ta__feld select:hover { border-color: var(--color-ink); }
+  .ta__feld input[aria-invalid='true'] { border-color: var(--color-alert); box-shadow: inset 0 0 0 1px var(--color-alert); }
+  .ta__err { font-size: var(--text-sm); font-weight: 600; color: var(--color-alert); }
+  .ta__err[hidden] { display: none; }
+  .ta__klein { font-size: var(--text-sm); color: var(--color-muted); }
+  .ta__klein a, .ta__leer a { color: var(--color-ink); }
+  .ta__leer { font-size: var(--text-sm); color: var(--color-muted); }
+  .ta__leer[hidden], .ta__summe[hidden] { display: none; }
+  .ta__wahl { display: grid; }
+  .ta__wahl:empty { display: none; }
+  .ta__wahl li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--space-smd); align-items: center; padding: var(--space-sm) 0; border-bottom: 1px solid var(--color-line); font-size: var(--text-sm); }
+  .ta__wahl li span:nth-child(2) { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .ta__wahl button { width: 2.75rem; height: 2.75rem; border: 1px solid var(--color-line-2); border-radius: var(--radius); background: transparent; cursor: pointer; font-size: 1.1rem; line-height: 1; }
+  .ta__wahl button:hover { border-color: var(--color-ink); }
+  .ta__summe { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-md); padding-top: var(--space-xs); font-weight: 600; }
+  .ta__summe small { font-weight: 400; color: var(--color-muted); font-size: var(--text-xs); }
+  .ta__summe strong { font-size: var(--text-xl); color: var(--color-accent); white-space: nowrap; }
+  .ta__wochen { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-xs); }
+  .ta__wochen[hidden] { display: none; }
+  .ta__wochen button { min-height: 2.75rem; padding: 0 0.8rem; border: 1px solid var(--color-line-2); border-radius: 999px; background: transparent; cursor: pointer; font: 400 var(--text-xs) var(--font-mono); white-space: nowrap; }
+  .ta__wochen button:hover { border-color: var(--color-ink); }
+  .ta__check { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-smd); align-items: start; font-size: var(--text-sm); line-height: 1.45; cursor: pointer; }
+  .ta__check input { width: 1.5rem; height: 1.5rem; margin: 0; accent-color: var(--color-accent); }
+  .ta__check a { color: var(--color-ink); }
+  .ta__check.is-invalid span { color: var(--color-alert); }
+  .ta__consent { display: grid; gap: var(--space-xs); }
+  .ta__senden { width: 100%; min-height: 3.25rem; font-size: 1.0625rem; }
+  .ta__fertig:focus { outline: 2px solid var(--color-focus); outline-offset: 3px; }
+  .ta__fertig dl { margin: 0; display: grid; }
+  .ta__fertig dl > div { display: flex; justify-content: space-between; gap: var(--space-md); padding: var(--space-sm) 0; border-bottom: 1px solid var(--color-line); font-size: var(--text-sm); }
+  .ta__fertig dt { color: var(--color-muted); }
+  .ta__fertig dd { margin: 0; text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .ta__fertig .ta__gesamt dt, .ta__fertig .ta__gesamt dd { color: var(--color-accent); font-weight: 600; }
+  @media (min-width: 40rem) { .ta__form, .ta__fertig { padding: var(--space-xl) var(--space-lg); } }
+</style>

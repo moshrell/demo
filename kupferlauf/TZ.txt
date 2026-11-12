@@ -80,10 +80,10 @@ Wartung (Hausverwaltung / хозяин):
 Главная → станция «Wartung» (последняя на трубе): цены договора в год по типу (Gas/Öl/Wärmepumpe) → выбор + месяц окна → форма → Summe/год в подтверждении.
 
 6. КАРТА СТРАНИЦ
-/ (главная, «путь воды»):
+/ (главная, ОБНОВЛЕНО 12.11.2026: вместо трубы — 3D-ванная на первом экране):
  - Шапка: wordmark, статус открыто/закрыто, Menü.
- - Hero: фото медных труб + каустика воды (шейдер), заголовок, 2 кнопки, ссылка «Wasser läuft? Erste Hilfe».
- - Труба-станции: 1 Hausanschluss (ввод воды): «Liegt Ihr Haus an unserer Leitung?» — PLZ-проверка + Einsatzgebiet; Leitungen/Wasserfilter с ценами ab. 2 Heizung: Heizungstausch (тепловой насос, гибрид, газ), цены ab «vor Förderung», Referenz, кнопка Check. Вода в трубе становится тёплой. 3 Warmwasser: Speicher, Durchlauferhitzer, Zirkulation, ab-цены. 4 Bad: Badsanierung S/M/L ab, barrierefrei, Referenzen, кнопка Baukasten. 5 Abfluss: Rohrreinigung, Kamera, Rückstauschutz, ab. 6 Wartung: договор, цены/год, окно, форма.
+ - Hero: заголовок + 3D-ванная (Baukasten mode=hero, размеры S/M/L, цена, тап по предмету меняет вариант), 2 кнопки, ссылка «Wasser läuft? Erste Hilfe».
+ - Станции (цветные блоки, без трубы; Warmwasser и Abfluss — компактно в два столбца): 1 Hausanschluss (ввод воды): «Liegt Ihr Haus an unserer Leitung?» — PLZ-проверка + Einsatzgebiet; Leitungen/Wasserfilter с ценами ab. 2 Heizung: Heizungstausch (тепловой насос, гибрид, газ), цены ab «vor Förderung», Referenz, кнопка Check. Вода в трубе становится тёплой. 3 Warmwasser: Speicher, Durchlauferhitzer, Zirkulation, ab-цены. 4 Bad: Badsanierung S/M/L ab, barrierefrei, Referenzen, кнопка Baukasten. 5 Abfluss: Rohrreinigung, Kamera, Rückstauschutz, ab. 6 Wartung: договор, цены/год, окно, форма.
  - Ablauf (как работаем): 4 шага, фото монтажника.
  - FAQ (то, что спрашивают 9 из 10): сколько ждать, осмотр платный?, Notdienst цена, берёте материал клиента?, субсидии.
  - Общая заявка с фото.

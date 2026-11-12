@@ -1,0 +1,60 @@
+---
+// Bad-Baukasten: 3D-Ansicht + Auswahl + Förderung (nur Links, keine Summen) + Anfrage mit Zusammenfassung.
+import Base from '../../layouts/Base.astro';
+import Baukasten from '../../components/Baukasten.astro';
+import Anfrage from '../../components/Anfrage.astro';
+import site from '../../data/site.json';
+import bad from '../../data/bad.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base
+  title="Bad zusammenstellen in 3D · Kehlenbrink Bad & Wärme (Demo)"
+  description="Bad in 3D zusammenstellen: Größe, Wanne oder Dusche, Waschplatz, WC, Spiegel, Fliesen, barrierefrei. Der Richtpreis rechnet mit. Demo-Seite."
+  anfrageHref={`${base}bad/#anfrage-bad`}
+  bar="bad"
+  current="bad"
+>
+  <main id="inhalt" class="bd wrap">
+    <header class="bd__head">
+      <h1>Bad zusammenstellen</h1>
+      <p class="bd__lead">Wählen Sie Größe und Ausstattung. Das Bad baut sich vor Ihnen um, der Richtpreis rechnet mit. Tippen Sie auf ein Teil, um es zu ändern.</p>
+    </header>
+
+    <Baukasten mode="full" id="bk" />
+
+    <section class="bd__foerder" id="foerderung" aria-labelledby="foerder-h">
+      <h2 id="foerder-h">Förderung prüfen wir gemeinsam</h2>
+      <p>Für barrierearme Umbauten gibt es manchmal Zuschüsse oder günstige Kredite. Ob und wie viel in Ihrem Fall möglich ist, hängt von Bedingungen ab, die sich ändern. Wir nennen deshalb keine Summen, sondern schauen im Besichtigungstermin mit Ihnen auf die aktuellen Regeln. Die offiziellen Stellen:</p>
+      <ul class="bd__links">
+        <li><a href="https://www.kfw.de/inlandsfoerderung/Privatpersonen/Bestehende-Immobilie/F%C3%B6rderprodukte/Altersgerecht-Umbauen-(159)/" target="_blank" rel="noopener">KfW: Altersgerecht Umbauen (159), Kredit für Barrierereduzierung</a></li>
+        <li><a href="https://www.foerderdatenbank.de/FDB/Content/DE/Foerderprogramm/Bund/KfW/kfw-altersgerecht-umbauen-kredit-bund.html" target="_blank" rel="noopener">Förderdatenbank des Bundes: Programm im Überblick</a></li>
+      </ul>
+      <p class="bd__stand">Stand: {bad.stand}. Keine Rechts- oder Förderberatung.</p>
+    </section>
+
+    <Anfrage
+      id="anfrage-bad"
+      title="Bad anfragen"
+      intro={`Wir rufen Sie an, gehen Ihre Zusammenstellung durch und vereinbaren bei Bedarf eine Besichtigung. ${site.besichtigung}`}
+      submitLabel="Bad anfragen"
+      purpose="meiner Badanfrage"
+      external
+      externalLabel="Ihr Bad"
+      windows={['Mo–Do vormittags', 'Mo–Do nachmittags', 'Freitag vormittags']}
+      photoLabel="Foto Ihres jetzigen Bades (optional)"
+      photoHint="Ein Foto vom Bad, wie es heute aussieht"
+      notePlaceholder="z. B. Wunschtermin, Badgröße in m², Etage, Aufzug"
+    />
+  </main>
+</Base>
+
+<style>
+  .bd { padding-block: var(--space-xl) var(--space-2xl); display: grid; gap: var(--space-xl); min-width: 0; }
+  .bd > * { min-width: 0; }
+  .bd__head h1 { font-size: var(--text-display); }
+  .bd__lead { margin-top: var(--space-sm); color: var(--color-ink-2); max-width: var(--measure); }
+  .bd__foerder { max-width: 48rem; display: grid; gap: var(--space-sm); }
+  .bd__foerder h2 { font-size: var(--text-xl); }
+  .bd__links { margin: 0; padding-left: 1.2rem; display: grid; gap: var(--space-xs); }
+  .bd__stand { margin: 0; font-size: var(--text-xs); color: var(--color-ink-2); }
+</style>

@@ -109,7 +109,12 @@ const nav = [
     </footer>
 
     <nav class={`bar bar--${bar}`} aria-label="Schnellzugriff">
-      {bar === 'notfall' ? (
+      {bar === 'bad' ? (
+        <>
+          <a class="bar__nd" href={`tel:${site.notdienstHref}`}><strong>Notdienst</strong><span>rund um die Uhr</span></a>
+          <a class="bar__req" href="#anfrage-bad"><strong data-bk-bar-sum>Zur Anfrage</strong><span data-bk-bar-sub>Bad-Anfrage</span></a>
+        </>
+      ) : bar === 'notfall' ? (
         <a class="bar__nd bar__nd--wide" href={`tel:${site.notdienstHref}`}><strong>Notdienst anrufen</strong><span>{site.notdienst}</span></a>
       ) : (
         <>
@@ -154,8 +159,7 @@ const nav = [
   @media (min-width: 48rem) { .hd__tel { display: inline; } }
 
   .ft { background: var(--color-deep); color: var(--color-on-deep); margin-top: var(--space-3xl); padding: var(--space-2xl) 0 var(--space-xl); position: relative; }
-  .ft__in::before { content: ''; position: absolute; left: var(--pipe-x); top: calc(-1 * var(--space-3xl) - var(--space-2xl)); width: var(--pipe-w); height: var(--space-3xl); transform: translateX(-50%); background: var(--color-copper); border-radius: 0 0 2px 2px; }
-  .ft__in { position: relative; max-width: 72rem; margin: 0 auto; padding: 0 var(--gutter) 0 var(--content-left); }
+  .ft__in { position: relative; max-width: 72rem; margin: 0 auto; padding: 0 var(--gutter) 0 var(--gutter); }
   .ft a { color: var(--color-copper-glow); }
   .ft__statement { font: 500 var(--text-xl)/1.25 var(--font-display); max-width: 30ch; margin-bottom: var(--space-xl); }
   .ft__cols { display: grid; gap: var(--space-xl); grid-template-columns: minmax(0, 1fr); }

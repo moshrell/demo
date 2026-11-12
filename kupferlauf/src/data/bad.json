@@ -1,0 +1,60 @@
+{
+  "stand": "November 2026",
+  "hinweis": "Richtwerte inkl. 19 % MwSt. Beispielwerte: der Betrieb setzt seine eigenen ein. Den genauen Preis nennen wir nach der Besichtigung schriftlich.",
+  "sizes": [
+    { "id": "S", "area": "bis 5 m²", "cents": 1790000, "room": { "w": 2.2, "d": 2.5 } },
+    { "id": "M", "area": "5–8 m²", "cents": 2340000, "room": { "w": 2.8, "d": 2.8 } },
+    { "id": "L", "area": "8–12 m²", "cents": 2980000, "room": { "w": 3.6, "d": 3.3 } }
+  ],
+  "barrierefrei": {
+    "label": "Barrierefrei",
+    "note": "Bodengleiche Dusche, Haltegriffe, WC auf Sitzhöhe, rutschhemmender Boden",
+    "cents": 125000
+  },
+  "zones": [
+    {
+      "id": "wanne",
+      "label": "Wanne / Dusche",
+      "variants": [
+        { "id": "wanne", "label": "Badewanne", "note": "Einbauwanne 170 cm mit Armatur", "cents": 0 },
+        { "id": "dusche", "label": "Bodengleiche Dusche", "note": "Keine Stufe, Glaswand, Ablaufrinne", "cents": 240000 },
+        { "id": "beides", "label": "Wanne + Dusche", "note": "Nur in Größe L", "cents": 390000, "only": ["L"] }
+      ]
+    },
+    {
+      "id": "waschen",
+      "label": "Waschplatz",
+      "variants": [
+        { "id": "becken", "label": "Waschbecken", "note": "Mit Säule, Einhebelmischer", "cents": 0 },
+        { "id": "tisch", "label": "Waschtisch mit Schubladen", "note": "Mehr Stauraum unter dem Becken", "cents": 68000 },
+        { "id": "doppel", "label": "Doppelwaschtisch", "note": "Zwei Becken, nur in Größe L", "cents": 145000, "only": ["L"] }
+      ]
+    },
+    {
+      "id": "wc",
+      "label": "WC",
+      "variants": [
+        { "id": "stand", "label": "Stand-WC", "note": "Klassisch, Spülkasten sichtbar", "cents": 0 },
+        { "id": "wand", "label": "Wandhängendes WC", "note": "Mit Vorwand, leichter zu reinigen", "cents": 52000 }
+      ]
+    },
+    {
+      "id": "spiegel",
+      "label": "Spiegel",
+      "variants": [
+        { "id": "basis", "label": "Spiegel", "note": "Klarglas", "cents": 0 },
+        { "id": "licht", "label": "Spiegel mit Licht", "note": "LED-Rahmen, blendfrei", "cents": 34000 }
+      ]
+    },
+    {
+      "id": "fliese",
+      "label": "Fliesen",
+      "variants": [
+        { "id": "weiss", "label": "Weiß matt", "note": "Hell, ruhig, zeitlos", "cents": 0 },
+        { "id": "stein", "label": "Steingrau", "note": "Warm, wie im Referenzbad Isernhagen", "cents": 62000 },
+        { "id": "salbei", "label": "Salbeigrün", "note": "Weich, mit Holz kombinierbar", "cents": 62000 }
+      ]
+    }
+  ],
+  "defaults": { "size": "M", "bf": false, "wanne": "wanne", "waschen": "becken", "wc": "stand", "spiegel": "basis", "fliese": "weiss" }
+}

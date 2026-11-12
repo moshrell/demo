@@ -6,7 +6,19 @@ Astro-Projekt (Demo). Адрес на портфолио: `/vorschau/handwerk/ku
     npm run build       # сборка + dist/.htaccess (CSP с хэшами, noindex)
     npm run publish     # сборка + копия в ..\kravets-site\public\vorschau\handwerk\kupferlauf
 
-Данные клиента (тексты, цены, часы) — `src/data/site.json`.
+Данные клиента (тексты, цены, часы) — `src/data/site.json`. Цены Bad-Baukasten — `src/data/bad.json`.
+
+## Механика: 3D-ванная (вместо трубы с водой)
+- Главная (первый экран) и `/bad/`: `Baukasten.astro` + `src/scripts/bad3d.ts` (three.js, изометрия, модели Kenney Furniture Kit CC0 в `public/models`, грузится лениво) + `baukasten.ts` (состояние в sessionStorage `kl:bad`, цена, сводка → форма) + `bad-layout.ts` (раскладка, проверена на 34 комбинациях: нет пересечений).
+- Без WebGL / saveData / 2g: вместо 3D фото `referenz-bad-hell`, выбор работает.
+- Фото: `public/img/*.jpg` (Gemini), webp делает `scripts/images.mjs`.
+
+## Известные недочёты (не проверено / решить)
+- Соответствие фото ↔ имена файлов подобрано по времени и пропорциям, глазами не сверено.
+- 3D проверен только в headless (swiftshader) и по стилям кадров; FPS на настоящем телефоне не измерен.
+- Цены — примерные значения (`bad.json`, `stations.json`), хозяин подставит свои; Förderung-ссылки KfW 159 / Förderdatenbank — проверить перед показом клиенту.
+- Фото людей (`paar-bad`) — ИИ-генерация: только демо, для клиента по согласованию.
+- `Impressum`/`Datenschutz`: `TODO` — данные клиента.
 Что ещё нужно от клиента — искать `TODO` в проекте.
 
 ## Правило форм (всегда, для каждого демо)

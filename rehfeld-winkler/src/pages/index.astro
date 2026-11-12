@@ -1,0 +1,157 @@
+---
+import Base from '../layouts/Base.astro';
+import Fallfinder from '../components/Fallfinder.astro';
+import Photo from '../components/Photo.astro';
+import Faq from '../components/Faq.astro';
+import site from '../data/site.json';
+import areas from '../data/areas.json';
+import team from '../data/team.json';
+import faq from '../data/faq.json';
+import steps from '../data/ablauf.json';
+const base = import.meta.env.BASE_URL;
+const tel = `tel:${site.phoneHref}`;
+const gross = (site.erstberatungNetto * (100 + site.ust)) / 100;
+const eur = (n: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(n);
+const preview = faq.general.slice(0, 4);
+---
+<Base
+  title="Rehfeld & Winkler Rechtsanwälte in Hannover | Arbeitsrecht und Mietrecht"
+  description="Rechtsanwälte in Hannover für Arbeitsrecht und Mietrecht: Kündigung, Abmahnung, Mieterhöhung, Nebenkosten. Wählen Sie Ihren Fall, sehen Sie die Frist und fragen Sie einen Termin an."
+  faq={preview}
+>
+  <main id="inhalt">
+    <section class="hero">
+      <div class="wrap hero__grid">
+        <div class="hero__text">
+          <div>
+            <p class="eyebrow">Rechtsanwälte · Hannover</p>
+            <h1>Arbeitsrecht und <em>Mietrecht</em> in Hannover</h1>
+          </div>
+          <p class="lead">Kündigung, Abmahnung, Mieterhöhung: Wir sagen Ihnen zuerst, welche Frist läuft und was Sie jetzt tun können.</p>
+          <div class="btn-row">
+            <a class="btn btn--primary" href={tel}>{site.phone}</a>
+            <a class="btn" href={`${base}kontakt/`}>Termin anfragen</a>
+          </div>
+          <div class="hero__facts">
+            <p><strong>Erstberatung</strong> für Verbraucher höchstens {eur(site.erstberatungNetto)} netto, den Preis nennen wir vorab.</p>
+            <p><strong>Erreichbar</strong> {site.openingHours}</p>
+          </div>
+        </div>
+        <Fallfinder />
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="ablauf-h">
+      <div class="wrap split">
+        <div>
+          <div class="sec-head">
+            <p class="eyebrow">Ablauf</p>
+            <h2 id="ablauf-h">Vom ersten Anruf bis zur <em>Lösung</em></h2>
+          </div>
+          <ol class="steps">
+            {steps.map((s) => <li><h3>{s.h}</h3><p>{s.t}</p></li>)}
+          </ol>
+        </div>
+        <Photo src="besprechung.jpg" ratio="43" alt="Beratungsgespräch am Tisch in einem hellen Besprechungsraum der Kanzlei (Beispielbild)" />
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="gebiete-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">Rechtsgebiete</p>
+          <h2 id="gebiete-h">Zwei Gebiete, <em>gründlich</em> bearbeitet</h2>
+        </div>
+        <div class="cards">
+          {Object.values(areas).map((a) => (
+            <a class="card" href={`${base}rechtsgebiete/${a.slug}/`}>
+              <h3>{a.label}</h3>
+              <p>{a.teaser}</p>
+              <span class="link-arrow">Mehr zum {a.label}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="team-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">Anwälte</p>
+          <h2 id="team-h">Sie sprechen mit den <em>Anwälten</em> selbst</h2>
+        </div>
+        <div class="team">
+          {team.map((p) => (
+            <article class="person">
+              <Photo src={p.photo} ratio="34" alt={p.alt} />
+              <div>
+                <h3 class="person__name">{p.name}</h3>
+                <p class="person__role">{p.role}</p>
+                <p class="mt-sm">{p.bio}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+        <p class="mt-lg"><a class="link-arrow" href={`${base}anwaelte/`}>Beide Profile ansehen</a></p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="kosten-h">
+      <div class="wrap kosten-grid">
+        <div class="sec-head sec-head--flush">
+          <p class="eyebrow">Kosten</p>
+          <h2 id="kosten-h">Was der erste Schritt <em>kostet</em></h2>
+          <p class="lead">Der Preis der Erstberatung steht vor dem Termin fest. Wie es danach weitergeht, entscheiden Sie. Rechtsschutzversicherung und Beratungshilfe klären wir mit Ihnen.</p>
+          <p><a class="link-arrow" href={`${base}kosten/`}>Ablauf und Kosten im Überblick</a></p>
+        </div>
+        <div class="price">
+          <p>Erstberatung für Verbraucher, höchstens</p>
+          <p class="price__n">{eur(site.erstberatungNetto)}<small>netto</small></p>
+          <p>{eur(gross)} mit {site.ust} % Umsatzsteuer. Gesetzliche Obergrenze nach § 34 RVG.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="bew-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">Stimmen</p>
+          <h2 id="bew-h">Bewertungen von <em>Mandanten</em></h2>
+        </div>
+        <div class="reviews">
+          <strong>Platzhalter: Hier erscheinen die echten Google-Bewertungen.</strong>
+          <p>In dieser Demo stehen bewusst keine erfundenen Stimmen. Auf einer echten Kanzleiseite werden nur tatsächliche Bewertungen gezeigt, unverändert und ohne Aussagen zu Erfolgsquoten.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="faq-h">
+      <div class="wrap split">
+        <div class="sec-head">
+          <p class="eyebrow">Häufige Fragen</p>
+          <h2 id="faq-h">Was Mandanten <em>zuerst</em> wissen wollen</h2>
+          <p><a class="link-arrow" href={`${base}faq/`}>Alle Fragen ansehen</a></p>
+        </div>
+        <Faq items={preview} name="faq-start" />
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="kontakt-h">
+      <div class="wrap contact">
+        <div class="sec-head sec-head--flush">
+          <p class="eyebrow">Kontakt</p>
+          <h2 id="kontakt-h">Rufen Sie an oder fragen Sie einen <em>Termin</em> an</h2>
+          <div class="btn-row">
+            <a class="btn btn--primary" href={`${base}kontakt/`}>Termin anfragen</a>
+            <a class="btn" href={tel}>Anrufen</a>
+          </div>
+        </div>
+        <dl>
+          <div><dt>Telefon</dt><dd><a class="tel" href={tel}>{site.phone}</a></dd></div>
+          <div><dt>Adresse</dt><dd>{site.name}<br />{site.address.street}, {site.address.zip} {site.address.city}</dd></div>
+          <div><dt>Erreichbar</dt><dd>{site.openingHours}</dd></div>
+        </dl>
+      </div>
+    </section>
+  </main>
+</Base>

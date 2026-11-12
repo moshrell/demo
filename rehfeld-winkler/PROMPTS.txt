@@ -1,0 +1,31 @@
+Rehfeld & Winkler Rechtsanwälte: Bild-Prompts für Gemini (5 Kader)
+=================================================================
+Reihenfolge einhalten. Alles im selben Gemini-Chat weiterführen (kein Anhängen nötig): so bleibt der Stil einheitlich.
+Fertige Dateien in den Ordner  D:\Webdesign\rehfeld-winkler\public\img\  legen, mit GENAU diesen Namen (jpg).
+Auf den Bildern kein Text und keine Logos. Personen sind erfunden und vollständig bekleidet.
+Wo welches Bild erscheint steht in jeder Überschrift.
+
+-----------------------------------------------------------------
+1) anwaeltin-rehfeld.jpg  |  Format 3:4  |  Startseite, Anwälte, Seite Arbeitsrecht
+-----------------------------------------------------------------
+Photorealistic editorial portrait of a fictional woman lawyer, about 45 years old, shoulder-length dark brown hair with a few natural grey strands, calm attentive expression with a slight natural smile, looking at the camera. She wears a dark slate-blue blazer over a cream blouse. Bright consultation room of a small German law office, soft daylight from a window on the left, shallow depth of field, background softly blurred: warm sand-coloured wall and a bookshelf with plain unlabeled book spines. Natural skin texture, shot on an 85mm lens, professional and approachable, upper body framing with space above the head. Colour palette: warm sand, muted bordeaux accents, slate blue, natural oak. No text, no logos, no watermark, not resembling any real person. Vertical 3:4.
+
+-----------------------------------------------------------------
+2) anwalt-winkler.jpg  |  Format 3:4  |  Startseite, Anwälte, Seite Mietrecht
+-----------------------------------------------------------------
+Photorealistic editorial portrait of a fictional man lawyer, about 38 years old, short brown hair, light stubble, friendly focused expression with a slight smile, looking at the camera. He wears a charcoal knit sweater over an open-collar light blue shirt, no tie. Bright consultation room of a small German law office, soft daylight from a window on the right, shallow depth of field, background softly blurred: warm sand-coloured wall and a corner of a light oak table. Natural skin texture, shot on an 85mm lens, professional and approachable, upper body framing with space above the head. Same look and light as the previous portrait. Colour palette: warm sand, muted bordeaux accents, slate blue, natural oak. No text, no logos, no watermark, not resembling any real person. Vertical 3:4.
+
+-----------------------------------------------------------------
+3) besprechung.jpg  |  Format 4:3  |  Startseite (Abschnitt Ablauf)
+-----------------------------------------------------------------
+Photorealistic interior photograph of a bright consultation room in a small German law office in a late-19th-century Hannover apartment building: tall windows with soft daylight, herringbone oak parquet floor, a round light-oak table with two upholstered chairs in muted bordeaux fabric, a glass carafe of water with two glasses, a closed paper folder and a notebook on the table, a built-in bookshelf with plain unlabeled book spines, warm sand-coloured walls with white stucco ceiling edge. Calm, orderly, welcoming atmosphere. No people. No readable text on any object, no logos, no watermark. Wide-angle but natural perspective, slight eye-level view. Colour palette: warm sand, muted bordeaux, slate blue, natural oak. Horizontal 4:3.
+
+-----------------------------------------------------------------
+4) schreibtisch.jpg  |  Format 1:1  |  Seite Ablauf und Kosten
+-----------------------------------------------------------------
+Photorealistic close-up photograph of a tidy oak desk in daylight, seen from slightly above at an angle: a closed cream-coloured file folder without any writing, a dark fountain pen lying diagonally on top, an open blank notebook with empty pages, a ceramic cup of coffee, a small green plant in a plain pot at the edge, soft window light from the left casting gentle shadows, shallow depth of field. No text, no printed words, no logos, no watermark, no people. Colour palette: warm sand, muted bordeaux accents, slate blue, natural oak. Square 1:1.
+
+-----------------------------------------------------------------
+5) eingang.jpg  |  Format 16:9  |  Seite Kontakt
+-----------------------------------------------------------------
+Photorealistic street-level photograph of the entrance of a late-19th-century German apartment building in Hannover: light stucco facade with tall windows, a large wooden double door with a glass panel, stone steps, a plain brass panel next to the door with blurred, unreadable bell buttons, soft overcast daylight, a bicycle leaning at the wall in the background, a few green leaves of a small tree at the edge of the frame. No people, no cars, no readable text, no signs, no logos, no watermark. Calm, inviting, slightly warm tones. Colour palette: warm sand facade, muted bordeaux door, natural oak, slate-blue sky tones. Horizontal 16:9.

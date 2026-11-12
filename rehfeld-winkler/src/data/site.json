@@ -1,0 +1,14 @@
+{
+  "name": "Rehfeld & Winkler Rechtsanwälte",
+  "short": "Rehfeld & Winkler",
+  "legalName": "Rehfeld & Winkler Rechtsanwälte Partnerschaftsgesellschaft mbB",
+  "address": { "street": "Hallerstraße 0", "zip": "30161", "city": "Hannover" },
+  "email": "kanzlei@example.com",
+  "phone": "030 23125 247",
+  "phoneHref": "+493023125247",
+  "openingHours": "Mo–Do 08:30–17:00, Fr 08:30–14:00 und nach Vereinbarung",
+  "areaServed": ["Hannover", "Region Hannover"],
+  "mapLink": "https://www.openstreetmap.org/search?query=Hallerstra%C3%9Fe%2C%2030161%20Hannover",
+  "erstberatungNetto": 190,
+  "ust": 19
+}

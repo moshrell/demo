@@ -1,0 +1,78 @@
+---
+import Base from '../layouts/Base.astro';
+import OrderForm from '../components/OrderForm.astro';
+import Photo from '../components/Photo.astro';
+import site from '../data/site.json';
+import cases from '../data/cases.json';
+const base = import.meta.env.BASE_URL;
+const tel = `tel:${site.phoneHref}`;
+const options = ['Noch unklar', ...cases.cases.map((c) => c.short), 'Anderes Anliegen'];
+---
+<Base
+  title="Kontakt und Termin | Rehfeld & Winkler Rechtsanwälte Hannover"
+  description="Termin anfragen oder anrufen: Rehfeld & Winkler Rechtsanwälte in Hannover. Telefon, Adresse, Erreichbarkeit und Terminformular für Arbeitsrecht und Mietrecht."
+  current="kontakt"
+  callbar={false}
+>
+  <main id="inhalt">
+    <section class="page-head">
+      <div class="wrap">
+        <p class="crumbs"><a href={base}>Start</a> / Kontakt</p>
+        <h1>Kontakt und <em>Termin</em></h1>
+        <p class="lead">Am schnellsten erreichen Sie uns am Telefon. Das Formular nutzen Sie für eine Terminanfrage, wir rufen Sie zurück.</p>
+      </div>
+    </section>
+
+    <section class="section section--alt">
+      <div class="wrap contact">
+        <div class="contact__info">
+          <dl>
+            <div><dt>Telefon</dt><dd><a class="tel" href={tel}>{site.phone}</a></dd></div>
+            <div><dt>Erreichbar</dt><dd>{site.openingHours}</dd></div>
+            <div><dt>Adresse</dt><dd>{site.name}<br />{site.address.street}, {site.address.zip} {site.address.city}<br /><a href={site.mapLink} target="_blank" rel="noopener">Auf der Karte ansehen (OpenStreetMap)</a></dd></div>
+            <div><dt>Anfahrt</dt><dd>Mit Stadtbahn und Bus erreichbar, Parkhaus in der Nähe, Eingang und Beratungsräume barrierefrei.</dd></div>
+          </dl>
+          <p class="notice mt-lg"><strong>Vertraulich:</strong> Senden Sie bitte keine Unterlagen und keine ausführlichen Schilderungen über das Formular. Nennen Sie nur das Nötigste, die Einzelheiten besprechen wir im Gespräch. Bei einer Frist schreiben Sie das Datum des Schreibens in die Nachricht.</p>
+        </div>
+        <div>
+          <OrderForm
+            id="termin"
+            title="Termin anfragen"
+            submitLabel="Terminanfrage senden"
+            purpose="meiner Terminanfrage"
+            options={options}
+            optionsLabel="Worum geht es?"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <Photo src="eingang.jpg" ratio="169" alt="Hauseingang eines Altbaus in Hannover mit Klingelschildern (Beispielbild)" />
+      </div>
+    </section>
+  </main>
+</Base>
+
+<script>
+  import data from '../data/cases.json';
+  // Kommt der Besucher von einer Fallkarte (?fall=…), wird „Worum geht es?“ vorgewählt und das Datum, falls schon eingegeben, in die Nachricht übernommen.
+  // Bereits Getipptes wird nie überschrieben: die Nachricht wird nur gefüllt, wenn sie leer ist.
+  window.addEventListener('DOMContentLoaded', () => {
+    const id = new URLSearchParams(location.search).get('fall');
+    const c = id ? data.cases.find((x) => x.id === id) : undefined;
+    const form = document.getElementById('termin') as HTMLFormElement | null;
+    if (!c || !form) return;
+    const radio = [...form.querySelectorAll<HTMLInputElement>('input[name=option]')].find((r) => r.value === c.short);
+    if (radio && !radio.checked) { radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
+    let dates: Record<string, string> = {};
+    try { dates = JSON.parse(sessionStorage.getItem('rw:fall:dates') || '{}'); } catch {}
+    const note = form.elements.namedItem('note') as HTMLTextAreaElement;
+    const m = dates[c.id] ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(dates[c.id]) : null;
+    if (note && m && !note.value.trim()) {
+      note.value = `Schreiben erhalten am ${m[3]}.${m[2]}.${m[1]}.`;
+      note.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  });
+</script>

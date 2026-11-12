@@ -1,0 +1,140 @@
+{
+  "groups": [
+    { "id": "arbeit", "label": "Rund um den Job", "area": "arbeitsrecht" },
+    { "id": "wohnen", "label": "Rund um die Wohnung", "area": "mietrecht" }
+  ],
+  "cases": [
+    {
+      "id": "kuendigung",
+      "group": "arbeit",
+      "label": "Ich habe eine Kündigung erhalten",
+      "short": "Kündigung erhalten",
+      "was": "Gegen eine Kündigung können Sie sich nur kurze Zeit wehren: Eine Kündigungsschutzklage muss innerhalb von drei Wochen nach Erhalt des Schreibens beim Arbeitsgericht eingehen (§ 4 Kündigungsschutzgesetz). Ob die Kündigung wirksam ist, hängt unter anderem vom Grund, von der Form und von der Betriebsgröße ab. Das lässt sich nach einem Blick in die Unterlagen meist schnell einschätzen.",
+      "frist": {
+        "kind": "kschg",
+        "label": "Wann haben Sie die Kündigung erhalten?",
+        "law": "§ 4 KSchG: drei Wochen ab Zugang"
+      },
+      "fristNone": null,
+      "tipps": [
+        "Melden Sie sich bei der Agentur für Arbeit arbeitsuchend, spätestens drei Tage nach Erhalt der Kündigung.",
+        "Bestätigen Sie den Empfang nur als Empfang, ohne weitere Erklärungen.",
+        "Notieren Sie, wann und wie Sie die Kündigung erhalten haben."
+      ],
+      "unterlagen": [
+        "Kündigungsschreiben, wenn möglich mit Umschlag",
+        "Arbeitsvertrag und Zusatzvereinbarungen",
+        "Die letzten drei Gehaltsabrechnungen",
+        "Angaben zur Rechtsschutzversicherung"
+      ]
+    },
+    {
+      "id": "aufhebungsvertrag",
+      "group": "arbeit",
+      "label": "Man legt mir einen Aufhebungsvertrag vor",
+      "short": "Aufhebungsvertrag",
+      "was": "Ein Aufhebungsvertrag beendet das Arbeitsverhältnis, sobald beide Seiten unterschrieben haben. Ein allgemeines Widerrufsrecht gibt es dafür nicht. Er kann Folgen für das Arbeitslosengeld haben, zum Beispiel eine Sperrzeit. Abfindung, Freistellung, Zeugnis und Resturlaub sollten vor der Unterschrift geklärt sein.",
+      "frist": null,
+      "fristNone": "Keine gesetzliche Frist. Oft entsteht trotzdem Zeitdruck von der Gegenseite. Sie müssen nicht sofort unterschreiben.",
+      "tipps": [
+        "Nehmen Sie das Papier mit und unterschreiben Sie nicht auf der Stelle.",
+        "Lassen Sie Abfindung, Freistellung, Zeugnis und Resturlaub prüfen.",
+        "Notieren Sie, wer Ihnen wann welche Zusagen gemacht hat."
+      ],
+      "unterlagen": [
+        "Entwurf des Aufhebungsvertrags",
+        "Arbeitsvertrag",
+        "Die letzten drei Gehaltsabrechnungen",
+        "Zeugnisse und Beurteilungen, falls vorhanden"
+      ]
+    },
+    {
+      "id": "abmahnung",
+      "group": "arbeit",
+      "label": "Ich habe eine Abmahnung bekommen",
+      "short": "Abmahnung",
+      "was": "Eine Abmahnung rügt ein bestimmtes Verhalten und warnt vor Folgen. Wiederholt sich der Vorfall, kann später eine Kündigung darauf gestützt werden. Zu Unrecht erteilte Abmahnungen lassen sich unter Umständen aus der Personalakte entfernen.",
+      "frist": null,
+      "fristNone": "Keine feste Frist für Ihre Reaktion. Je länger Sie warten, desto schwerer lässt sich der Vorgang klären.",
+      "tipps": [
+        "Sie können eine schriftliche Gegendarstellung zur Personalakte geben.",
+        "Äußern Sie sich im Gespräch nicht vorschnell, bevor die Abmahnung geprüft ist.",
+        "Halten Sie die genannten Vorfälle mit Datum und Zeugen fest."
+      ],
+      "unterlagen": [
+        "Die Abmahnung",
+        "Arbeitsvertrag",
+        "Schriftverkehr oder Nachrichten zu dem Vorfall",
+        "Namen möglicher Zeugen"
+      ]
+    },
+    {
+      "id": "mieterhoehung",
+      "group": "wohnen",
+      "label": "Mein Vermieter will die Miete erhöhen",
+      "short": "Mieterhöhung",
+      "was": "Verlangt der Vermieter mehr Miete bis zur ortsüblichen Vergleichsmiete, müssen Sie zustimmen, wenn die Erhöhung berechtigt ist. Sie braucht eine Form und eine Begründung, zum Beispiel über den Mietspiegel, und unterliegt Grenzen wie der Kappungsgrenze. Der Zeitraum zur Überlegung endet mit dem Ablauf des übernächsten Kalendermonats nach Erhalt des Schreibens (§ 558b BGB). Bei Staffel- und Indexmiete gelten andere Regeln.",
+      "frist": {
+        "kind": "mieterhoehung",
+        "label": "Wann haben Sie das Erhöhungsverlangen erhalten?",
+        "law": "§ 558b BGB: Ende des übernächsten Kalendermonats"
+      },
+      "fristNone": null,
+      "tipps": [
+        "Stimmen Sie nicht vorschnell zu und zahlen Sie nicht ohne Prüfung mehr.",
+        "Prüfen Sie Begründung, Höhe und die Zeit seit der letzten Erhöhung.",
+        "Vergleichen Sie die verlangte Miete mit dem örtlichen Mietspiegel."
+      ],
+      "unterlagen": [
+        "Erhöhungsschreiben, wenn möglich mit Umschlag",
+        "Mietvertrag",
+        "Frühere Mieterhöhungen",
+        "Angaben zu Wohnfläche, Lage und Ausstattung"
+      ]
+    },
+    {
+      "id": "nebenkosten",
+      "group": "wohnen",
+      "label": "Die Nebenkostenabrechnung sieht falsch aus",
+      "short": "Nebenkostenabrechnung",
+      "was": "Nach Erhalt der Abrechnung haben Sie zwölf Monate Zeit für Einwendungen (§ 556 Abs. 3 BGB). Sie können die Belege einsehen und Fehler rügen, etwa beim Abrechnungszeitraum, beim Verteilerschlüssel oder bei Kosten, die nicht umgelegt werden dürfen. Nachzahlungen sollten Sie erst nach einer Prüfung leisten.",
+      "frist": {
+        "kind": "nebenkosten",
+        "label": "Wann haben Sie die Abrechnung erhalten?",
+        "law": "§ 556 Abs. 3 BGB: zwölf Monate ab Zugang"
+      },
+      "fristNone": null,
+      "tipps": [
+        "Verlangen Sie die Belegeinsicht schriftlich.",
+        "Achten Sie auf Abrechnungszeitraum, Verteilerschlüssel und umlagefähige Kosten.",
+        "Erheben Sie Einwendungen schriftlich und nachweisbar."
+      ],
+      "unterlagen": [
+        "Die Nebenkostenabrechnung",
+        "Mietvertrag",
+        "Nachweise Ihrer Vorauszahlungen",
+        "Abrechnungen der Vorjahre"
+      ]
+    },
+    {
+      "id": "mangel",
+      "group": "wohnen",
+      "label": "In meiner Wohnung gibt es Schimmel oder einen Mangel",
+      "short": "Wohnungsmangel",
+      "was": "Mängel müssen Sie dem Vermieter unverzüglich anzeigen (§ 536c BGB). Bei erheblichen Mängeln kann die Miete kraft Gesetzes gemindert sein (§ 536 BGB). Wie hoch die Minderung ausfällt, hängt vom Einzelfall ab. Die Anzeige sollte schriftlich und nachweisbar erfolgen.",
+      "frist": null,
+      "fristNone": "Keine feste Frist, aber der Mangel ist unverzüglich anzuzeigen. Wer zu lange wartet, riskiert Nachteile.",
+      "tipps": [
+        "Halten Sie den Mangel mit Fotos und Datum fest.",
+        "Zeigen Sie ihn schriftlich an und setzen Sie eine Frist zur Beseitigung.",
+        "Kürzen Sie die Miete nicht auf eigene Faust, ohne die Höhe prüfen zu lassen."
+      ],
+      "unterlagen": [
+        "Mietvertrag",
+        "Fotos mit Datum",
+        "Mängelanzeige und Antwort des Vermieters",
+        "Notizen zu Heizen und Lüften"
+      ]
+    }
+  ]
+}

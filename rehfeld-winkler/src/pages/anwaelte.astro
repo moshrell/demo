@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import site from '../data/site.json';
+import team from '../data/team.json';
+const base = import.meta.env.BASE_URL;
+const tel = `tel:${site.phoneHref}`;
+---
+<Base
+  title="Anwälte | Rehfeld & Winkler Rechtsanwälte Hannover"
+  description="Dr. Katrin Rehfeld (Arbeitsrecht) und Jonas Winkler (Mietrecht): die Rechtsanwälte der Kanzlei in Hannover mit Schwerpunkten, Sprachen und Zulassung."
+  current="anwaelte"
+>
+  <main id="inhalt">
+    <section class="page-head">
+      <div class="wrap">
+        <p class="crumbs"><a href={base}>Start</a> / Anwälte</p>
+        <h1>Ihre <em>Anwälte</em> in Hannover</h1>
+        <p class="lead">Zwei Rechtsanwälte, zwei Gebiete. Sie sprechen von Anfang an mit der Person, die Ihren Fall bearbeitet.</p>
+      </div>
+    </section>
+
+    <section class="section section--alt">
+      <div class="wrap team">
+        {team.map((p) => (
+          <article class="person" id={p.id}>
+            <Photo src={p.photo} ratio="34" alt={p.alt} />
+            <div>
+              <p class="eyebrow">{p.area}</p>
+              <h2 class="person__name">{p.name}</h2>
+              <p class="person__role">{p.role}</p>
+              <p class="mt-sm">{p.bio}</p>
+              <dl class="person__facts">
+                {p.facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+              </dl>
+              <div class="btn-row mt-lg">
+                <a class="btn btn--primary" href={`${base}kontakt/`}>Termin anfragen</a>
+                <a class="btn" href={tel}>Anrufen</a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap prose">
+        <h2>Berufsrechtliche Angaben</h2>
+        <p>Beide Anwälte sind in der Bundesrepublik Deutschland zugelassen. Zuständige Kammer ist die Rechtsanwaltskammer Celle. Es gelten die Bundesrechtsanwaltsordnung (BRAO), die Berufsordnung (BORA) und das Rechtsanwaltsvergütungsgesetz (RVG). Alle Angaben finden Sie im <a href={`${base}impressum/`}>Impressum</a>.</p>
+        <p>Die Profile sind Beispielprofile: Personen, Titel und Zulassungsjahre sind erfunden.</p>
+      </div>
+    </section>
+  </main>
+</Base>

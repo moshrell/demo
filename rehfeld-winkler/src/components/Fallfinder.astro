@@ -1,0 +1,124 @@
+---
+// „Was ist passiert?“: Auswahl der Situation, Fallkarte mit Bedeutung, Frist-Rechner, Checkliste, Weg zum Termin.
+// Eingaben (Datum) bleiben im sessionStorage dieses Tabs; gesendet wird nichts.
+import data from '../data/cases.json';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const endLabel: Record<string, string> = { kschg: 'Klage spätestens am', mieterhoehung: 'Überlegungsfrist endet am', nebenkosten: 'Einwendungen spätestens bis' };
+---
+<section class="finder" aria-labelledby="finder-h" data-finder>
+  <h2 id="finder-h">Was ist passiert?</h2>
+  <p class="finder__hint">Tippen Sie auf Ihren Fall. Sie sehen, was es bedeutet, welche Frist läuft und was Sie bereithalten sollten.</p>
+  {data.groups.map((g) => (
+    <div class="finder__group">
+      <h3>{g.label}</h3>
+      {data.cases.filter((c) => c.group === g.id).map((c) => (
+        <details class="fall" id={`fall-${c.id}`} name="fall" data-case={c.id}>
+          <summary>{c.label}</summary>
+          <div class="fall__body">
+            <p class="fall__was">{c.was}</p>
+            {c.frist ? (
+              <div class="frist" data-frist={c.frist.kind} data-end-label={endLabel[c.frist.kind]}>
+                <label for={`d-${c.id}`}>{c.frist.label}</label>
+                <input id={`d-${c.id}`} type="date" autocomplete="off" data-date />
+                <p class="frist__out" aria-live="polite" data-out>Datum wählen, dann sehen Sie das Ende der Frist.</p>
+                <div class="frist__track" hidden aria-hidden="true"><span></span></div>
+                <p class="frist__law">{c.frist.law}</p>
+                <p class="frist__note">Orientierung nach den gesetzlichen Fristen, keine Rechtsberatung. Wochenenden und Feiertage in Niedersachsen sind berücksichtigt, maßgeblich ist der tatsächliche Zugang.</p>
+              </div>
+            ) : (
+              <p class="frist frist--none"><strong>Frist:</strong> {c.fristNone}</p>
+            )}
+            <div class="fall__cols">
+              <div>
+                <h4>Das können Sie jetzt tun</h4>
+                <ul>{c.tipps.map((t) => <li>{t}</li>)}</ul>
+              </div>
+              <div>
+                <h4>Das sollten Sie bereithalten</h4>
+                <ul>{c.unterlagen.map((t) => <li>{t}</li>)}</ul>
+              </div>
+            </div>
+            <div class="btn-row">
+              <a class="btn btn--primary" href={`${base}kontakt/?fall=${c.id}`} data-termin>Termin dazu anfragen</a>
+              <a class="btn" href={`tel:${site.phoneHref}`}>Anrufen</a>
+            </div>
+          </div>
+        </details>
+      ))}
+    </div>
+  ))}
+</section>
+
+<script>
+  import { calc, fmtDate, iso, parseISO, type FristKind } from '../scripts/frist';
+
+  const KEY = 'rw:fall:dates';
+  const read = (): Record<string, string> => { try { return JSON.parse(sessionStorage.getItem(KEY) || '{}'); } catch { return {}; } };
+  const write = (o: Record<string, string>) => { try { sessionStorage.setItem(KEY, JSON.stringify(o)); } catch {} };
+  const plural = (n: number) => (n === 1 ? '1 Tag' : `${n} Tage`);
+  const today = new Date();
+
+  const render = (box: HTMLElement, value: string) => {
+    const out = box.querySelector<HTMLElement>('[data-out]')!;
+    const track = box.querySelector<HTMLElement>('.frist__track')!;
+    const bar = track.firstElementChild as HTMLElement;
+    const kind = box.dataset.frist as FristKind;
+    const label = box.dataset.endLabel ?? 'Frist endet am';
+    out.classList.remove('is-late');
+    const d = parseISO(value);
+    const ready = 'Datum wählen, dann sehen Sie das Ende der Frist.';
+    if (!d) { out.textContent = ready; track.hidden = true; return; }
+    if (d.getTime() > today.getTime() + 864e5) { out.textContent = 'Das Datum liegt in der Zukunft. Bitte prüfen Sie es.'; track.hidden = true; return; }
+    const r = calc(kind, d, today);
+    out.replaceChildren();
+    const line = document.createElement('span');
+    line.append(`${label}: `);
+    const s = document.createElement('strong');
+    s.textContent = fmtDate(r.end);
+    line.append(s);
+    out.append(line);
+    const small = document.createElement('small');
+    const parts: string[] = [];
+    if (r.daysLeft > 0) parts.push(`Noch ${plural(r.daysLeft)}.`);
+    else if (r.daysLeft === 0) parts.push('Heute ist der letzte Tag. Rufen Sie jetzt an.');
+    else {
+      out.classList.add('is-late');
+      parts.push(kind === 'kschg'
+        ? 'Die Frist ist rechnerisch abgelaufen. Rufen Sie trotzdem sofort an: In Ausnahmefällen kann eine Klage nachträglich zugelassen werden.'
+        : kind === 'nebenkosten'
+        ? 'Die Frist ist rechnerisch abgelaufen. Rufen Sie trotzdem an: In Ausnahmefällen sind Einwendungen weiter möglich, etwa wenn Sie die Verspätung nicht zu vertreten haben.'
+        : 'Die Frist ist rechnerisch abgelaufen. Rufen Sie an, wir prüfen, was noch möglich ist.');
+    }
+    if (r.shifted && r.reason) parts.push(`Das Ende fällt auf einen ${r.reason}; rechnerisch verschiebt es sich auf ${fmtDate(r.shifted)}. Planen Sie sicherheitshalber mit dem früheren Datum.`);
+    small.textContent = parts.join(' ');
+    out.append(small);
+    track.hidden = false;
+    bar.style.setProperty('width', `${Math.round(r.elapsed * 100)}%`);
+  };
+
+  const saved = read();
+  document.querySelectorAll<HTMLElement>('[data-finder] .fall').forEach((fall) => {
+    const id = fall.dataset.case!;
+    const box = fall.querySelector<HTMLElement>('[data-frist]');
+    const input = box?.querySelector<HTMLInputElement>('[data-date]');
+    if (box && input) {
+      input.max = iso(today);
+      if (saved[id]) { input.value = saved[id]; render(box, saved[id]); }
+      input.addEventListener('input', () => {
+        render(box, input.value);
+        const cur = read();
+        if (input.value) cur[id] = input.value; else delete cur[id];
+        write(cur);
+      });
+    }
+  });
+
+  // Direktlink: …/#fall-kuendigung öffnet die Fallkarte
+  const openFromHash = () => {
+    const el = location.hash.startsWith('#fall-') ? document.getElementById(location.hash.slice(1)) : null;
+    if (el instanceof HTMLDetailsElement) { el.open = true; el.scrollIntoView({ block: 'start' }); }
+  };
+  openFromHash();
+  window.addEventListener('hashchange', openFromHash);
+</script>

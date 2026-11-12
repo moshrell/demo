@@ -1,0 +1,42 @@
+{
+  "arbeitsrecht": {
+    "slug": "arbeitsrecht",
+    "title": "Arbeitsrecht in Hannover",
+    "label": "Arbeitsrecht",
+    "lead": "Kündigung, Aufhebungsvertrag oder Abmahnung: Wir prüfen Ihre Unterlagen, nennen Ihnen die Frist und besprechen, welche Wege Sie haben.",
+    "teaser": "Kündigung, Aufhebungsvertrag, Abmahnung, Zeugnis.",
+    "lawyer": "rehfeld",
+    "cases": ["kuendigung", "aufhebungsvertrag", "abmahnung"],
+    "themen": [
+      { "h": "Kündigung", "t": "Wir prüfen Form, Grund und Fristen und besprechen, ob eine Kündigungsschutzklage sinnvoll ist oder eine Abfindung verhandelt werden kann." },
+      { "h": "Aufhebungsvertrag", "t": "Bevor Sie unterschreiben: Wir lesen den Vertrag, rechnen die Folgen für das Arbeitslosengeld durch und verhandeln Abfindung, Freistellung und Zeugnis." },
+      { "h": "Abmahnung", "t": "Wir klären, ob die Abmahnung berechtigt ist, und helfen bei der Gegendarstellung oder bei der Entfernung aus der Personalakte." },
+      { "h": "Arbeitszeugnis", "t": "Note, Formulierungen und Berichtigung: Wir prüfen das Zeugnis und fordern Änderungen an, wenn sie berechtigt sind." }
+    ],
+    "ablauf": [
+      "Sie schildern kurz, was passiert ist, und nennen das Datum des Schreibens.",
+      "Wir prüfen die Unterlagen und nennen Ihnen die Frist.",
+      "Sie erhalten eine Einschätzung und einen Kostenrahmen, dann entscheiden Sie."
+    ]
+  },
+  "mietrecht": {
+    "slug": "mietrecht",
+    "title": "Mietrecht in Hannover",
+    "label": "Mietrecht",
+    "lead": "Mieterhöhung, Nebenkostenabrechnung, Schimmel oder Kündigung der Wohnung: Wir prüfen die Schreiben der Vermieterseite und sagen Ihnen, was Sie darauf antworten können.",
+    "teaser": "Mieterhöhung, Nebenkosten, Mängel, Wohnungskündigung.",
+    "lawyer": "winkler",
+    "cases": ["mieterhoehung", "nebenkosten", "mangel"],
+    "themen": [
+      { "h": "Mieterhöhung", "t": "Wir prüfen Begründung, Höhe und Fristen des Erhöhungsverlangens und antworten für Sie, wenn die Erhöhung nicht berechtigt ist." },
+      { "h": "Nebenkostenabrechnung", "t": "Wir sehen die Belege ein, prüfen Verteilerschlüssel und umlagefähige Kosten und erheben die Einwendungen rechtzeitig." },
+      { "h": "Mängel und Mietminderung", "t": "Schimmel, defekte Heizung, Lärm: Wir dokumentieren den Mangel mit Ihnen, zeigen ihn an und berechnen eine mögliche Minderung." },
+      { "h": "Kündigung der Wohnung", "t": "Wir klären, ob die Kündigung des Vermieters wirksam ist, und vertreten Sie bei Räumungsklage und Verhandlung." }
+    ],
+    "ablauf": [
+      "Sie schildern kurz, worum es geht, und schicken uns das Schreiben des Vermieters.",
+      "Wir prüfen es und nennen Ihnen die Frist.",
+      "Sie erhalten eine Einschätzung und einen Kostenrahmen, dann entscheiden Sie."
+    ]
+  }
+}

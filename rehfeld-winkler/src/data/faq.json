@@ -1,0 +1,60 @@
+{
+  "general": [
+    {
+      "q": "Was kostet die Erstberatung?",
+      "a": "Für Verbraucherinnen und Verbraucher darf eine Erstberatung höchstens 190 Euro netto kosten, das sind 226,10 Euro mit 19 Prozent Umsatzsteuer (§ 34 RVG). Sie erfahren den Preis vor dem Termin. Hat Ihre Rechtsschutzversicherung die Beratung gedeckt, entfällt der Betrag bis auf eine vereinbarte Selbstbeteiligung."
+    },
+    {
+      "q": "Zahlt meine Rechtsschutzversicherung?",
+      "a": "Das hängt von Ihrem Vertrag ab. Arbeitsrecht und Mietrecht sind oft eigene Bausteine, und manche Verträge haben Wartezeiten. Wir stellen die Deckungsanfrage bei Ihrer Versicherung für Sie und sagen Ihnen vor dem ersten Schritt, was geklärt ist."
+    },
+    {
+      "q": "Wie schnell bekomme ich einen Termin?",
+      "a": "Fälle mit laufender Frist, etwa eine Kündigung, haben bei der Terminvergabe Vorrang. Nennen Sie in Ihrer Anfrage bitte das Datum, an dem Sie das Schreiben erhalten haben."
+    },
+    {
+      "q": "Muss ich in die Kanzlei kommen?",
+      "a": "Nicht unbedingt. Die erste Einschätzung ist auch am Telefon oder per Video möglich. Unterlagen können Sie uns später sicher übermitteln. Für ein Gespräch vor Ort sind wir barrierefrei erreichbar."
+    },
+    {
+      "q": "Was muss ich zum Termin mitbringen?",
+      "a": "Das Schreiben, um das es geht, wenn möglich mit Umschlag, dazu Arbeitsvertrag oder Mietvertrag und Angaben zur Rechtsschutzversicherung. Was bei Ihrem Anliegen noch hilft, sehen Sie auf der Startseite unter „Was ist passiert?“."
+    },
+    {
+      "q": "Wie lange dauert ein Verfahren?",
+      "a": "Das ist sehr unterschiedlich. Bei einer Kündigungsschutzklage soll das Arbeitsgericht nach dem Gesetz einen ersten Gütetermin innerhalb von etwa zwei Wochen nach Klageeingang ansetzen (§ 61a ArbGG). Viele Verfahren enden bereits durch einen Vergleich. Ob es länger dauert, hängt vom Fall ab."
+    },
+    {
+      "q": "Unterliegen meine Angaben der Verschwiegenheit?",
+      "a": "Ja. Rechtsanwältinnen und Rechtsanwälte sind zur Verschwiegenheit verpflichtet. Schicken Sie vertrauliche Unterlagen bitte nicht über das Kontaktformular, wir nennen Ihnen einen sicheren Weg."
+    }
+  ],
+  "arbeitsrecht": [
+    {
+      "q": "Wie lange habe ich Zeit, gegen eine Kündigung zu klagen?",
+      "a": "Drei Wochen ab Erhalt des Kündigungsschreibens. Die Klage muss in dieser Zeit beim Arbeitsgericht eingehen (§ 4 Kündigungsschutzgesetz). Danach gilt die Kündigung in der Regel als wirksam, auch wenn sie Fehler hatte."
+    },
+    {
+      "q": "Muss ich einen Aufhebungsvertrag sofort unterschreiben?",
+      "a": "Nein. Es gibt keine gesetzliche Frist. Lassen Sie den Vertrag vor der Unterschrift prüfen, vor allem wegen der Folgen für das Arbeitslosengeld."
+    },
+    {
+      "q": "Wer trägt die Anwaltskosten im Arbeitsgerichtsverfahren?",
+      "a": "In der ersten Instanz trägt jede Seite ihre eigenen Anwaltskosten, auch wenn sie gewinnt (§ 12a ArbGG). Eine Rechtsschutzversicherung kann diese Kosten übernehmen."
+    }
+  ],
+  "mietrecht": [
+    {
+      "q": "Muss ich einer Mieterhöhung zustimmen?",
+      "a": "Nur, wenn sie berechtigt ist. Das Erhöhungsverlangen braucht eine Begründung und muss Grenzen einhalten, zum Beispiel die Kappungsgrenze und die Wartezeit seit der letzten Erhöhung. Prüfen Sie es, bevor Sie zustimmen."
+    },
+    {
+      "q": "Wie lange kann ich eine Nebenkostenabrechnung beanstanden?",
+      "a": "Einwendungen sind bis zum Ablauf von zwölf Monaten nach Erhalt der Abrechnung möglich (§ 556 Abs. 3 BGB). Danach können Sie Fehler meist nicht mehr rügen."
+    },
+    {
+      "q": "Darf ich bei Schimmel die Miete mindern?",
+      "a": "Bei einem erheblichen Mangel kann die Miete kraft Gesetzes gemindert sein (§ 536 BGB), sobald Sie den Mangel angezeigt haben. Wie viel, hängt vom Einzelfall ab. Zeigen Sie den Mangel schriftlich an und halten Sie ihn mit Fotos fest."
+    }
+  ]
+}

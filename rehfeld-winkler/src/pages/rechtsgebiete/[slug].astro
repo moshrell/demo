@@ -1,0 +1,102 @@
+---
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import Faq from '../../components/Faq.astro';
+import site from '../../data/site.json';
+import areas from '../../data/areas.json';
+import team from '../../data/team.json';
+import faqData from '../../data/faq.json';
+import cases from '../../data/cases.json';
+
+export function getStaticPaths() {
+  return Object.values(areas).map((a) => ({ params: { slug: a.slug }, props: { area: a } }));
+}
+const { area } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const tel = `tel:${site.phoneHref}`;
+const lawyer = team.find((p) => p.id === area.lawyer)!;
+const faq = faqData[area.slug as 'arbeitsrecht' | 'mietrecht'];
+const myCases = area.cases.map((id) => cases.cases.find((c) => c.id === id)!);
+---
+<Base
+  title={`${area.title} | Rehfeld & Winkler Rechtsanwälte`}
+  description={`${area.title}: ${area.lead}`}
+  faq={faq}
+  current={area.slug}
+>
+  <main id="inhalt">
+    <section class="page-head">
+      <div class="wrap">
+        <p class="crumbs"><a href={base}>Start</a> / Rechtsgebiete / {area.label}</p>
+        <h1>{area.title}</h1>
+        <p class="lead">{area.lead}</p>
+        <div class="btn-row mt-lg">
+          <a class="btn btn--primary" href={`${base}kontakt/`}>Termin anfragen</a>
+          <a class="btn" href={tel}>{site.phone}</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="themen-h">
+      <div class="wrap split">
+        <div>
+          <h2 id="themen-h">Wobei wir <em>helfen</em></h2>
+          <div class="themen mt-lg">
+            {area.themen.map((t) => (
+              <article><h3>{t.h}</h3><p>{t.t}</p></article>
+            ))}
+          </div>
+        </div>
+        <aside class="person" aria-label="Ansprechpartner">
+          <Photo src={lawyer.photo} ratio="34" alt={lawyer.alt} />
+          <div>
+            <p class="eyebrow">Ihr Ansprechpartner</p>
+            <h3 class="person__name">{lawyer.name}</h3>
+            <p class="person__role">{lawyer.role}</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="fall-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">Ihr Fall</p>
+          <h2 id="fall-h">Frist und Checkliste zu <em>Ihrem</em> Anliegen</h2>
+        </div>
+        <div class="cards">
+          {myCases.map((c) => (
+            <a class="card" href={`${base}#fall-${c.id}`}>
+              <h3>{c.short}</h3>
+              <p>{c.frist ? c.frist.law : c.fristNone}</p>
+              <span class="link-arrow">Fallkarte öffnen</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="vorgehen-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">Vorgehen</p>
+          <h2 id="vorgehen-h">So gehen wir <em>vor</em></h2>
+        </div>
+        <ol class="steps">
+          {area.ablauf.map((s, i) => <li><h3>{['Schildern', 'Prüfen', 'Entscheiden'][i]}</h3><p>{s}</p></li>)}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="faq-h">
+      <div class="wrap split">
+        <div class="sec-head">
+          <p class="eyebrow">Häufige Fragen</p>
+          <h2 id="faq-h">Fragen zum <em>{area.label}</em></h2>
+          <p><a class="link-arrow" href={`${base}faq/`}>Alle Fragen ansehen</a></p>
+        </div>
+        <Faq items={faq} name={`faq-${area.slug}`} />
+      </div>
+    </section>
+  </main>
+</Base>

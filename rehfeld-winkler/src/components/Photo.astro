@@ -1,0 +1,10 @@
+---
+// Foto-Rahmen: Datei liegt in public/img/ (Gemini-Prompts: PROMPTS.txt). Fehlt sie, zeigt der Rahmen eine ruhige Fläche.
+const { src, alt, ratio = '43', width, height, eager = false } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const dims: Record<string, [number, number]> = { '34': [1200, 1600], '43': [1600, 1200], '11': [1200, 1200], '169': [1920, 1080] };
+const [w, h] = [width ?? dims[ratio][0], height ?? dims[ratio][1]];
+---
+<figure class={`photo photo--${ratio}`}>
+  <img src={`${base}img/${src}`} alt={alt} width={w} height={h} loading={eager ? 'eager' : 'lazy'} decoding="async" data-photo />
+</figure>

@@ -1,0 +1,150 @@
+---
+// SEO + KI-Sichtbarkeit (AIO) by default. Demos: noindex (index = false). Beim Kundenstart: index = true setzen.
+import '../styles/global.css';
+import site from '../data/site.json';
+const {
+  title = site.name,
+  description = '',
+  index = false,          // Demo = noindex. Echte Kundenseite: index
+  type = 'LegalService',  // Schema.org-Typ
+  faq = [],               // [{ q, a }] -> sichtbarer FAQ-Block UND FAQPage-Markup (gleicher Text)
+  image = '',
+  prices = [],
+  current = '',           // aktive Navigation: 'arbeitsrecht' | 'mietrecht' | 'anwaelte' | 'kosten' | 'faq' | 'kontakt'
+  callbar = true,         // Anruf-Leiste auf dem Telefon (auf Kontakt aus: dort klebt die Formularleiste)
+} = Astro.props;
+const base = import.meta.env.BASE_URL;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = image ? new URL(base + image.replace(/^\//, ''), Astro.site).href : undefined;
+const graph = [
+  ...(index ? [{
+    '@type': type,
+    '@id': new URL(base, Astro.site).href + '#business',
+    name: site.name,
+    url: new URL(base, Astro.site).href,
+    description,
+    telephone: site.phone,
+    email: site.email,
+    address: { '@type': 'PostalAddress', streetAddress: site.address.street, postalCode: site.address.zip, addressLocality: site.address.city, addressCountry: 'DE' },
+    ...(site.openingHours ? { openingHours: site.openingHours } : {}),
+    ...(site.areaServed ? { areaServed: site.areaServed } : {}),
+    ...(ogImage ? { image: ogImage } : {}),
+    ...(prices.length ? { makesOffer: prices.map((p) => ({ '@type': 'Offer', priceCurrency: 'EUR', price: p.price, itemOffered: { '@type': 'Service', name: p.name } })) } : {}),
+  }] : []), // Demo (index = false): keine Geschäftsdaten-Markup mit erfundener Adresse/Telefon, nur FAQPage
+  ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
+];
+const ld = { '@context': 'https://schema.org', '@graph': graph };
+const nav = [
+  { id: 'arbeitsrecht', href: `${base}rechtsgebiete/arbeitsrecht/`, label: 'Arbeitsrecht' },
+  { id: 'mietrecht', href: `${base}rechtsgebiete/mietrecht/`, label: 'Mietrecht' },
+  { id: 'anwaelte', href: `${base}anwaelte/`, label: 'Anwälte' },
+  { id: 'kosten', href: `${base}kosten/`, label: 'Ablauf & Kosten' },
+  { id: 'faq', href: `${base}faq/`, label: 'FAQ' },
+  { id: 'kontakt', href: `${base}kontakt/`, label: 'Kontakt' },
+];
+const tel = `tel:${site.phoneHref}`;
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f4eee3" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+  </head>
+  <body>
+    <a class="skip" href="#inhalt">Zum Inhalt springen</a>
+    <header class="hdr">
+      <div class="wrap hdr__in">
+        <a class="brand" href={base} aria-label={`${site.name}, Startseite`}>
+          <span class="brand__name">{site.short}</span>
+          <span class="brand__sub">Rechtsanwälte · Hannover</span>
+        </a>
+        <nav class="nav" aria-label="Hauptnavigation">
+          {nav.map((n) => <a href={n.href} aria-current={current === n.id ? 'page' : undefined}>{n.label}</a>)}
+        </nav>
+        <a class="btn btn--primary hdr__phone" href={tel}>{site.phone}</a>
+        <details class="menu">
+          <summary>Menü<span class="sr"> öffnen</span></summary>
+          <nav class="menu__panel" aria-label="Menü">
+            {nav.map((n) => <a href={n.href} aria-current={current === n.id ? 'page' : undefined}>{n.label}</a>)}
+          </nav>
+        </details>
+      </div>
+    </header>
+
+    <slot />
+
+    <footer>
+      <div class="wrap">
+        <div class="ftr">
+          <div>
+            <p class="ftr__brand">{site.name}</p>
+            <address>
+              {site.address.street}<br />{site.address.zip} {site.address.city}<br />
+              <a href={tel}>{site.phone}</a><br />
+              <a href={`mailto:${site.email}`}>{site.email}</a>
+            </address>
+            <p class="ftr__hours">{site.openingHours}</p>
+          </div>
+          <div>
+            <h2>Rechtsgebiete</h2>
+            <ul>
+              <li><a href={`${base}rechtsgebiete/arbeitsrecht/`}>Arbeitsrecht</a></li>
+              <li><a href={`${base}rechtsgebiete/mietrecht/`}>Mietrecht</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Kanzlei</h2>
+            <ul>
+              <li><a href={`${base}anwaelte/`}>Anwälte</a></li>
+              <li><a href={`${base}kosten/`}>Ablauf &amp; Kosten</a></li>
+              <li><a href={`${base}faq/`}>Häufige Fragen</a></li>
+              <li><a href={`${base}kontakt/`}>Kontakt &amp; Termin</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Rechtliches</h2>
+            <ul>
+              <li><a href={`${base}impressum/`}>Impressum</a></li>
+              <li><a href={`${base}datenschutz/`}>Datenschutz</a></li>
+            </ul>
+          </div>
+        </div>
+        {!index && (
+          <div class="ftr__demo">
+            <p>Demo-Seite, alle Angaben fiktiv. Die Kanzlei, die Personen und die Beispielfälle sind erfunden. Die Inhalte ersetzen keine Rechtsberatung.</p>
+            <p><a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihre Kanzlei? Jetzt anfragen</a></p>
+          </div>
+        )}
+      </div>
+    </footer>
+
+    {callbar && (
+      <div class="callbar" role="group" aria-label="Schnellkontakt">
+        <a class="btn" href={tel}>Anrufen</a>
+        <a class="btn btn--primary" href={`${base}kontakt/`}>Termin anfragen</a>
+      </div>
+    )}
+  </body>
+</html>
+
+<script>
+  // Fotos: Fehlt eine Bilddatei (noch nicht abgelegt), zeigt der Rahmen ruhig eine Fläche statt eines kaputten Bildes.
+  document.querySelectorAll<HTMLImageElement>('img[data-photo]').forEach((img) => {
+    const fail = () => img.closest('.photo')?.classList.add('photo--empty');
+    if (img.complete && img.naturalWidth === 0) fail();
+    img.addEventListener('error', fail);
+  });
+</script>

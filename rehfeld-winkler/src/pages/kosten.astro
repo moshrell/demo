@@ -1,0 +1,110 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import site from '../data/site.json';
+import steps from '../data/ablauf.json';
+const base = import.meta.env.BASE_URL;
+const tel = `tel:${site.phoneHref}`;
+const eur = (n: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(n);
+const net = site.erstberatungNetto;
+const ustAmount = (net * site.ust) / 100;
+const gross = net + ustAmount;
+---
+<Base
+  title="Ablauf und Kosten | Rehfeld & Winkler Rechtsanwälte Hannover"
+  description="Was die Erstberatung beim Anwalt höchstens kostet, wie Rechtsschutzversicherung und Beratungshilfe helfen und wie es von der Anfrage bis zur Lösung weitergeht."
+  current="kosten"
+>
+  <main id="inhalt">
+    <section class="page-head">
+      <div class="wrap">
+        <p class="crumbs"><a href={base}>Start</a> / Ablauf und Kosten</p>
+        <h1>Ablauf und <em>Kosten</em></h1>
+        <p class="lead">Sie erfahren den Preis des ersten Schritts, bevor Sie ihn gehen. Hier steht, womit Sie rechnen können und wer die Kosten übernehmen kann.</p>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="erst-h">
+      <div class="wrap kosten-grid">
+        <div class="sec-head sec-head--flush">
+          <p class="eyebrow">Der erste Schritt</p>
+          <h2 id="erst-h">Was die Erstberatung <em>kostet</em></h2>
+          <p class="lead">Für Verbraucherinnen und Verbraucher darf ein erstes Beratungsgespräch höchstens {eur(net)} netto kosten (§ 34 RVG). Wählen Sie Ihre Situation, dann sehen Sie, womit Sie rechnen.</p>
+        </div>
+        <div class="calc">
+          <fieldset class="chips">
+            <legend>Wie sind Sie aufgestellt?</legend>
+            <label><input type="radio" name="kc" id="kc-selbst" value="selbst" checked /><span>Ich zahle selbst</span></label>
+            <label><input type="radio" name="kc" id="kc-rs" value="rs" /><span>Ich habe eine Rechtsschutzversicherung</span></label>
+            <label><input type="radio" name="kc" id="kc-bh" value="bh" /><span>Mein Einkommen ist gering</span></label>
+          </fieldset>
+          <div class="calc__out" data-for="selbst">
+            <dl class="calc__rows">
+              <div><dt>Erstberatung, höchstens</dt><dd>{eur(net)}</dd></div>
+              <div><dt>Umsatzsteuer {site.ust} %</dt><dd>{eur(ustAmount)}</dd></div>
+            </dl>
+            <p class="calc__sum">Summe, höchstens <strong>{eur(gross)}</strong></p>
+            <p class="calc__hint">Der Betrag ist eine Obergrenze. Den tatsächlichen Preis nennen wir vor dem Termin.</p>
+          </div>
+          <div class="calc__out" data-for="rs">
+            <p class="calc__sum">Ihre Summe: <strong>Selbstbeteiligung laut Vertrag</strong></p>
+            <p class="calc__hint">Wir stellen die Deckungsanfrage bei Ihrer Versicherung. Arbeitsrecht und Mietrecht sind oft eigene Bausteine, manche Verträge haben Wartezeiten. Halten Sie Versicherungsnummer und Police bereit.</p>
+          </div>
+          <div class="calc__out" data-for="bh">
+            <dl class="calc__rows">
+              <div><dt>Eigenanteil Beratungshilfe</dt><dd>{eur(15)}</dd></div>
+            </dl>
+            <p class="calc__sum">Summe <strong>{eur(15)}</strong></p>
+            <p class="calc__hint">Beratungshilfe beantragen Sie beim Amtsgericht, auch nach dem ersten Gespräch, spätestens vier Wochen danach. Wer Bürgergeld oder Sozialhilfe bezieht, erfüllt die finanzielle Voraussetzung in der Regel. Den Eigenanteil kann die Kanzlei erlassen.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="weiter-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">Danach</p>
+          <h2 id="weiter-h">Wie es <em>weitergeht</em>, und was es kostet</h2>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <h3>Außergerichtlich</h3>
+            <p>Schreiben an die Gegenseite und Verhandlung. Die Gebühren richten sich nach dem Rechtsanwaltsvergütungsgesetz und dem Wert Ihrer Sache. Den Kostenrahmen nennen wir, bevor wir tätig werden.</p>
+          </div>
+          <div class="card">
+            <h3>Vor dem Arbeitsgericht</h3>
+            <p>In der ersten Instanz trägt jede Seite ihre eigenen Anwaltskosten, auch wenn sie gewinnt (§ 12a ArbGG). Eine Rechtsschutzversicherung kann diese Kosten übernehmen.</p>
+          </div>
+          <div class="card">
+            <h3>Vor dem Amtsgericht</h3>
+            <p>In Mietsachen trägt in der Regel die unterliegende Seite die Kosten des Verfahrens (§ 91 ZPO). Wir besprechen vorher, wie die Aussichten stehen und welches Risiko Sie eingehen.</p>
+          </div>
+          <div class="card">
+            <h3>Wenn das Geld knapp ist</h3>
+            <p>Für die Beratung gibt es Beratungshilfe. Für ein Gerichtsverfahren kann Prozesskostenhilfe möglich sein. Wir prüfen mit Ihnen, ob Sie Anspruch haben.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="ablauf-h">
+      <div class="wrap split">
+        <div>
+          <div class="sec-head">
+            <p class="eyebrow">Ablauf</p>
+            <h2 id="ablauf-h">Von der Anfrage zur <em>Lösung</em></h2>
+          </div>
+          <ol class="steps">
+            {steps.map((s) => <li><h3>{s.h}</h3><p>{s.t}</p></li>)}
+          </ol>
+          <div class="btn-row mt-lg">
+            <a class="btn btn--primary" href={`${base}kontakt/`}>Termin anfragen</a>
+            <a class="btn" href={tel}>{site.phone}</a>
+          </div>
+        </div>
+        <Photo src="schreibtisch.jpg" ratio="11" alt="Schreibtisch mit Aktenmappe, Notizbuch und Füller im Tageslicht (Beispielbild)" />
+      </div>
+    </section>
+  </main>
+</Base>

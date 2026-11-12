@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const tel = `tel:${site.phoneHref}`;
+---
+<Base title="Impressum | Rehfeld & Winkler Rechtsanwälte" description="Anbieterkennzeichnung nach § 5 DDG und berufsrechtliche Angaben der Kanzlei (Demo, alle Angaben fiktiv).">
+  <main id="inhalt">
+    <section class="page-head">
+      <div class="wrap"><h1>Impressum</h1></div>
+    </section>
+    <section class="section section--alt">
+      <div class="wrap prose">
+        <p class="notice"><strong>Demo:</strong> Alle Angaben auf dieser Seite sind fiktiv. Sie zeigen, welche Pflichtangaben eine Anwaltskanzlei im Impressum braucht. Beim echten Mandanten werden sie durch die tatsächlichen Daten ersetzt. Das Impressum ist von jeder Seite mit einem Klick erreichbar.</p>
+
+        <h2>Angaben nach § 5 DDG</h2>
+        <address>
+          {site.legalName}<br />
+          {site.address.street}<br />
+          {site.address.zip} {site.address.city}
+        </address>
+        <p>Vertretungsberechtigte Partner: Dr. Katrin Rehfeld, Rechtsanwältin; Jonas Winkler, Rechtsanwalt.</p>
+        <p>Rechtsform: Partnerschaftsgesellschaft mit beschränkter Berufshaftung. Sitz: Hannover. Partnerschaftsregister: Amtsgericht Hannover, PR 0000 (fiktiv).</p>
+
+        <h2>Kontakt</h2>
+        <p>Telefon: <a href={tel}>{site.phone}</a><br />E-Mail: <a href={`mailto:${site.email}`}>{site.email}</a></p>
+
+        <h2>Umsatzsteuer-Identifikationsnummer</h2>
+        <p>DE 000 000 000 (fiktiv)</p>
+
+        <h2>Berufsrechtliche Angaben</h2>
+        <p>Die gesetzliche Berufsbezeichnung „Rechtsanwältin“ und „Rechtsanwalt“ wurde in der Bundesrepublik Deutschland verliehen.</p>
+        <p>Zuständige Rechtsanwaltskammer: Rechtsanwaltskammer Celle.</p>
+        <p>Es gelten die Bundesrechtsanwaltsordnung (BRAO), die Berufsordnung für Rechtsanwälte (BORA), das Rechtsanwaltsvergütungsgesetz (RVG), die Fachanwaltsordnung (FAO) und die Berufsregeln der Rechtsanwälte der Europäischen Union (CCBE). Die Regelungen sind einsehbar unter <a href="https://www.brak.de" target="_blank" rel="noopener">www.brak.de</a>.</p>
+
+        <h2>Berufshaftpflichtversicherung</h2>
+        <p>Versicherer: Musterversicherung AG (fiktiv), Musterstraße 1, 00000 Musterstadt. Räumlicher Geltungsbereich: Deutschland und Europa (fiktiv).</p>
+
+        <h2>Verbraucherstreitbeilegung</h2>
+        <p>Wir sind nicht bereit und nicht verpflichtet, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen. Unberührt bleibt die Möglichkeit, sich bei Streitigkeiten aus dem Mandatsverhältnis an die Schlichtungsstelle der Rechtsanwaltschaft zu wenden.</p>
+
+        <h2>Hinweis zu dieser Beispielseite</h2>
+        <p>Beispielseite von Kravets Webdesign: Betrieb und Personen sind erfunden. Die Bilder dieser Beispielseite sind teils KI-erzeugt. Die Inhalte ersetzen keine Rechtsberatung.</p>
+
+        <p><a href={base}>← Zurück zur Startseite</a></p>
+      </div>
+    </section>
+  </main>
+</Base>

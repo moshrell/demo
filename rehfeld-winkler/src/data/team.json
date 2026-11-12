@@ -1,0 +1,30 @@
+[
+  {
+    "id": "rehfeld",
+    "name": "Dr. Katrin Rehfeld",
+    "role": "Rechtsanwältin und Fachanwältin für Arbeitsrecht",
+    "area": "Arbeitsrecht",
+    "photo": "anwaeltin-rehfeld.jpg",
+    "alt": "Porträt von Dr. Katrin Rehfeld, Rechtsanwältin für Arbeitsrecht (Beispielbild)",
+    "bio": "Katrin Rehfeld berät Beschäftigte bei Kündigung, Aufhebungsvertrag und Abmahnung. Sie verhandelt Abfindungen und führt Verfahren vor den Arbeitsgerichten in Hannover und Umgebung.",
+    "facts": [
+      ["Schwerpunkte", "Kündigungsschutz, Aufhebungsverträge, Zeugnisse"],
+      ["Sprachen", "Deutsch, Englisch"],
+      ["Zulassung", "Rechtsanwältin seit 2012"]
+    ]
+  },
+  {
+    "id": "winkler",
+    "name": "Jonas Winkler",
+    "role": "Rechtsanwalt und Fachanwalt für Miet- und Wohnungseigentumsrecht",
+    "area": "Mietrecht",
+    "photo": "anwalt-winkler.jpg",
+    "alt": "Porträt von Jonas Winkler, Rechtsanwalt für Mietrecht (Beispielbild)",
+    "bio": "Jonas Winkler vertritt Mieterinnen und Mieter bei Mieterhöhung, Nebenkostenabrechnung, Mängeln und Kündigung der Wohnung. Er prüft Schreiben der Vermieterseite und begleitet Verfahren vor dem Amtsgericht.",
+    "facts": [
+      ["Schwerpunkte", "Mieterhöhung, Nebenkosten, Mietminderung"],
+      ["Sprachen", "Deutsch, Englisch, Russisch"],
+      ["Zulassung", "Rechtsanwalt seit 2015"]
+    ]
+  }
+]

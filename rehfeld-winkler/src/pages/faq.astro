@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import site from '../data/site.json';
+import faq from '../data/faq.json';
+const base = import.meta.env.BASE_URL;
+const tel = `tel:${site.phoneHref}`;
+---
+<Base
+  title="Häufige Fragen | Rehfeld & Winkler Rechtsanwälte Hannover"
+  description="Antworten zu Erstberatung, Kosten, Rechtsschutzversicherung, Terminen und Verfahrensdauer bei Arbeitsrecht und Mietrecht in Hannover."
+  faq={faq.general}
+  current="faq"
+>
+  <main id="inhalt">
+    <section class="page-head">
+      <div class="wrap">
+        <p class="crumbs"><a href={base}>Start</a> / Häufige Fragen</p>
+        <h1>Häufige <em>Fragen</em></h1>
+        <p class="lead">Kosten, Termine, Ablauf: die Fragen, die Mandanten uns am häufigsten stellen.</p>
+      </div>
+    </section>
+    <section class="section section--alt">
+      <div class="wrap split">
+        <Faq items={faq.general} name="faq-all" />
+        <div class="card">
+          <h2 class="card__h">Ihre Frage ist nicht dabei?</h2>
+          <p>Rufen Sie an oder schreiben Sie uns. Bei Fristen nennen Sie bitte das Datum des Schreibens.</p>
+          <div class="btn-row">
+            <a class="btn btn--primary" href={`${base}kontakt/`}>Termin anfragen</a>
+            <a class="btn" href={tel}>{site.phone}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="wrap cards">
+        <a class="card" href={`${base}rechtsgebiete/arbeitsrecht/`}><h3>Arbeitsrecht</h3><p>Fragen zu Kündigung, Aufhebungsvertrag und Abmahnung.</p><span class="link-arrow">Zum Arbeitsrecht</span></a>
+        <a class="card" href={`${base}rechtsgebiete/mietrecht/`}><h3>Mietrecht</h3><p>Fragen zu Mieterhöhung, Nebenkosten und Mängeln.</p><span class="link-arrow">Zum Mietrecht</span></a>
+      </div>
+    </section>
+  </main>
+</Base>

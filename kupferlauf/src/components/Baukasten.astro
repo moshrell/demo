@@ -162,8 +162,8 @@ const startCents = data.sizes.find((s) => s.id === d.size)!.cents;
   .bk__hero { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-sm) var(--space-md); }
   .bk__price { margin: 0; display: grid; line-height: 1.05; }
   .bk__price-l { font-size: var(--text-xs); color: var(--color-ink-2); font-weight: 600; letter-spacing: 0.02em; }
-  .bk--hero .bk__stage { aspect-ratio: 4 / 3; max-height: 40svh; }
-  @media (min-width: 64rem) { .bk--hero .bk__stage { aspect-ratio: 1 / 1.02; max-height: 62svh; } }
+  .bk--hero .bk__stage { width: 100%; aspect-ratio: auto; height: min(75vw, 40svh); max-height: none; }
+  @media (min-width: 64rem) { .bk--hero .bk__stage { height: auto; aspect-ratio: 1 / 1.02; max-height: 62svh; } }
   .bk--hero .bk__price strong { font-size: var(--text-xl); white-space: nowrap; }
   .bk__price strong { font: 500 var(--text-2xl)/1.05 var(--font-display); font-variant-numeric: tabular-nums; }
   .bk__sizes--sm { width: 13.5rem; max-width: 100%; }

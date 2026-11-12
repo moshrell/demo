@@ -27,6 +27,8 @@ const {
   photoLabel = 'Foto (optional)',
   photoHint = 'z. B. das Problem, das Typenschild oder Ihr jetziges Bad',
   plz = true,
+  mail = true,
+  note = true,
   external = false,
   priced = true, // external ohne Preis (Heizungs-Check): keine Summe erfinden
   externalLabel = 'Ihre Auswahl',
@@ -101,15 +103,19 @@ const hasPrices = plans.length > 0 || (external && priced);
           <p class="err" id={`${id}-err-plz`} hidden>Bitte geben Sie eine fünfstellige PLZ an.</p>
         </div>
       )}
+      {mail && (
       <div class="field">
         <label for={`${id}-mail`}>E-Mail <span class="af__opt">(optional)</span></label>
         <input id={`${id}-mail`} name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" aria-describedby={`${id}-err-mail`} />
         <p class="err" id={`${id}-err-mail`} hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.</p>
       </div>
+      )}
+      {note && (
       <div class="field">
         <label for={`${id}-note`}>Nachricht <span class="af__opt">(optional)</span></label>
         <textarea id={`${id}-note`} name="note" rows="3" autocomplete="off" placeholder={notePlaceholder}></textarea>
       </div>
+      )}
       {photo && (
         <div class="field af__photo">
           <label for={`${id}-foto`}>{photoLabel}</label>
@@ -123,7 +129,7 @@ const hasPrices = plans.length > 0 || (external && priced);
     <div class="af__consent">
       <label class="af__check">
         <input type="checkbox" name="privacy" required aria-describedby={`${id}-err-privacy`} />
-        <span>Ich bin einverstanden, dass {site.name} meine Angaben (Name, Telefon, PLZ, E-Mail, Nachricht{photo ? ', Foto' : ''}) zur Bearbeitung {purpose} verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a> (öffnet neuen Tab, Ihre Eingaben bleiben hier erhalten)</span>
+        <span>Ich bin einverstanden, dass {site.name} meine Angaben (Name, Telefon, PLZ{mail ? ', E-Mail' : ''}{note ? ', Nachricht' : ''}{photo ? ', Foto' : ''}) zur Bearbeitung {purpose} verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a> (öffnet neuen Tab, Ihre Eingaben bleiben hier erhalten)</span>
       </label>
       <p class="err" id={`${id}-err-privacy`} hidden>Bitte stimmen Sie zu, sonst können wir Ihre Anfrage nicht bearbeiten.</p>
     </div>
@@ -170,6 +176,7 @@ const hasPrices = plans.length > 0 || (external && priced);
   .af__hint[data-zone='0'] { color: var(--color-alert); font-weight: 600; }
   .af__hint[data-zone]:not([data-zone='0']) { color: var(--color-ok); font-weight: 600; }
   .af__photo input[type='file'] { padding: 0.6rem; font-size: var(--text-sm); }
+  .af__preview[hidden] { display: none; }
   .af__preview { width: 160px; height: 120px; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--color-rule); }
   .af__consent { display: grid; gap: var(--space-2xs); }
   .af__check { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-sm); align-items: start; font-size: var(--text-sm); line-height: 1.45; cursor: pointer; }
@@ -276,7 +283,7 @@ const hasPrices = plans.length > 0 || (external && priced);
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = field('name')!, tel = field('tel')!, mail = field('email')!, priv = field('privacy')!;
+      const name = field('name')!, tel = field('tel')!, mail = field('email'), priv = field('privacy')!;
       const bad: HTMLInputElement[] = [];
       const check = (i: HTMLInputElement | null, ok: boolean) => { if (!i) return; err(i, !ok); if (!ok) bad.push(i); };
       if (external && !ext.rows.length) {
@@ -288,7 +295,7 @@ const hasPrices = plans.length > 0 || (external && priced);
       check(name, name.value.trim().length > 1);
       check(tel, tel.value.replace(/\D/g, '').length >= 6);
       check(plzIn, !plzIn || /^\d{5}$/.test(plzIn.value));
-      check(mail, mail.value.trim() === '' || mail.checkValidity());
+      check(mail, !mail || mail.value.trim() === '' || mail.checkValidity());
       check(priv, priv.checked);
       if (bad.length) { bad[0].focus(); return; }
 

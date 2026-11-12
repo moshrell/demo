@@ -110,21 +110,14 @@ const photos: Record<string, { name: string; alt: string }> = {
             <div class="st__wartung">
               {s.img && <Photo class="st__photo" name={s.img.img} alt={s.img.alt} sizes="(min-width: 64rem) 30rem, 92vw" />}
               <ul class="checks">{wartung.includes.map((x: string) => <li>{x}</li>)}</ul>
-              <Anfrage
-                  id="wartungsvertrag"
-                  title="Wartungsvertrag abschließen"
-                  intro={wartung.hint}
-                  submitLabel="Wartung anfragen"
-                  purpose="meiner Wartungsanfrage"
-                  plans={wartung.plans}
-                  plansLabel="Ihre Heizung"
-                  plansSuffix=" / Jahr"
-                  windows={wartung.windows}
-                  windowsLabel="Wunsch-Zeitfenster"
-                  photoLabel="Foto vom Typenschild (optional)"
-                  photoHint="Das Schild mit Hersteller und Baujahr, meist innen in der Verkleidung"
-                  notePlaceholder="z. B. Hersteller, Baujahr, Anzahl Wohnungen"
-                />
+              <div class="wp">
+                <h3>Wartungsvertrag pro Jahr</h3>
+                <ul>
+                  {wartung.plans.map((x: any) => <li><span>{x.name}</span><span class="price">{new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(x.cents / 100)}</span></li>)}
+                </ul>
+                <p class="mwst">{wartung.hint}</p>
+                <a class="btn btn--copper" href="#anfrage" data-topic="Wartungsvertrag">Wartung anfragen</a>
+              </div>
             </div>
           )}
         </div>
@@ -172,7 +165,9 @@ const photos: Record<string, { name: string; alt: string }> = {
         id="anfrage"
         title="Anfrage mit Foto"
         intro="Ein Foto und Ihre PLZ sparen uns beiden einen Termin: Wir sehen vorab, worum es geht, und rufen Sie einmal an – mit konkreten Antworten."
-        topics={['Bad', 'Heizung', 'Warmwasser', 'Leitung oder Abfluss', 'Sonstiges']}
+        topics={['Bad', 'Heizung', 'Wartungsvertrag', 'Leitung oder Abfluss', 'Sonstiges']}
+        mail={false}
+        note={false}
         topicsLabel="Worum geht es?"
         windows={['Vormittags', 'Nachmittags', 'Egal']}
       />
@@ -249,16 +244,20 @@ const photos: Record<string, { name: string; alt: string }> = {
   .refs__list > li { scroll-snap-align: start; min-width: 0; }
   .st__wartung { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); }
   .st__wartung > * { min-width: 0; }
+  .wp ul { list-style: none; margin: var(--space-sm) 0 0; padding: 0; border-top: 1.5px solid currentColor; }
+  .wp li { display: flex; justify-content: space-between; gap: var(--space-md); padding: var(--space-sm) 0; border-bottom: var(--rule-w) solid var(--color-rule); }
+  .wp .price { font-weight: 700; white-space: nowrap; }
+  .wp .mwst { margin: var(--space-xs) 0 var(--space-md); font-size: var(--text-xs); }
   .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-xs); }
   .checks li { padding-left: 1.6rem; position: relative; }
   .checks li::before { content: ''; position: absolute; left: 0; top: 0.55em; width: 0.9rem; height: 0.5rem; border-left: 2.5px solid var(--color-copper); border-bottom: 2.5px solid var(--color-copper); transform: rotate(-45deg); }
   @media (min-width: 64rem) {
     .st__in { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: var(--space-2xl); align-items: start; }
-    .st__head { position: sticky; top: 80px; }
     .refs, .st__wartung { grid-column: 1 / -1; }
     .refs__list { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; margin-right: 0; padding-right: 0; }
-    .st__wartung { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--space-2xl); }
-    .st__wartung > :global(.af) { grid-column: 2; grid-row: 1 / span 3; }
+    .st__wartung { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--space-2xl); align-items: start; }
+    .st__wartung > :global(.st__photo) { grid-column: 1; grid-row: 1 / span 2; }
+    .st__wartung > .checks, .st__wartung > .wp { grid-column: 2; }
     .kleine { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-2xl); }
   }
 
@@ -282,3 +281,10 @@ const photos: Record<string, { name: string; alt: string }> = {
   .faq__item p { padding-bottom: var(--space-md); color: var(--color-ink-2); }
   .anfrage-wrap { margin-top: var(--space-3xl); scroll-margin-top: 64px; }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('a[data-topic]').forEach((a) => a.addEventListener('click', () => {
+    const r = document.querySelector<HTMLInputElement>(`#anfrage input[name="topic"][value="${a.dataset.topic}"]`);
+    if (r) { r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); }
+  }));
+</script>

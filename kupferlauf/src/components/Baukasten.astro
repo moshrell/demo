@@ -18,7 +18,7 @@ const startCents = data.sizes.find((s) => s.id === d.size)!.cents;
 <section class={`bk bk--${mode}`} data-bk={mode} id={id} aria-labelledby={`${id}-h`}>
   {full && <h2 class="sr-only" id={`${id}-h`}>Bad zusammenstellen</h2>}
   <div class="bk__stage" data-bk-stage>
-    <Photo class="bk__poster" name="referenz-bad-hell" alt="" sizes="(min-width: 64rem) 40rem, 100vw" eager={mode === 'hero'} />
+    <Photo class="bk__poster" name="referenz-bad-hell" alt="" sizes="(min-width: 64rem) 40rem, 100vw" eager={false} />
     <canvas class="bk__canvas" data-bk-canvas aria-hidden="true"></canvas>
     <button type="button" class="bk__ring" data-bk-ring hidden aria-label="Tippen Sie auf ein Teil, um es zu ändern"><span class="bk__ring-dot"></span><span class="bk__ring-txt">Tippen Sie auf ein Teil</span></button>
     <p class="bk__nogl" data-bk-nogl hidden>3D-Ansicht nicht verfügbar. Die Auswahl funktioniert trotzdem.</p>
@@ -96,10 +96,10 @@ const startCents = data.sizes.find((s) => s.id === d.size)!.cents;
   .bk > * { min-width: 0; }
 
   .bk__stage { position: relative; overflow: hidden; border-radius: var(--radius); background: linear-gradient(180deg, oklch(97% 0.012 210), oklch(91.5% 0.04 205)); aspect-ratio: 1 / 1.02; min-height: 15rem; max-height: 62svh; isolation: isolate; }
-  .bk__stage :global(.bk__poster) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; transition: opacity 500ms var(--ease-out); }
+  .bk__stage :global(.bk__poster) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0; transition: opacity 500ms var(--ease-out); }
+  .bk__stage:global(.no3d) :global(.bk__poster) { opacity: 1; }
   .bk__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 1; opacity: 0; transition: opacity 500ms var(--ease-out); touch-action: pan-y; }
   .bk__stage:global(.is-3d) .bk__canvas { opacity: 1; }
-  .bk__stage:global(.is-3d) :global(.bk__poster) { opacity: 0; }
   .bk__nogl { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; margin: 0; padding: var(--space-xs) var(--space-md); font-size: var(--text-xs); background: color-mix(in oklch, var(--color-paper) 88%, transparent); color: var(--color-ink-2); }
 
   .bk__ring { position: absolute; z-index: 2; left: 50%; top: 50%; width: 0; height: 0; padding: 0; border: 0; background: none; cursor: pointer; transform: translate(0, 0); }

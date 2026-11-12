@@ -154,7 +154,8 @@ function init(root: HTMLElement) {
   const conn = (navigator as any).connection;
   const slow = !!conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ''));
   const start = async () => {
-    if (started || slow) return;
+    if (slow) { stage.classList.add('no3d'); return; }
+    if (started) return;
     started = true;
     try {
       const mod = await import('./bad3d');
@@ -168,6 +169,7 @@ function init(root: HTMLElement) {
     } catch (e) {
       console.error('baukasten: 3D nicht verfügbar', e);
       nogl.hidden = false;
+      stage.classList.add('no3d');
     }
   };
   const idle = (fn: () => void) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(fn, { timeout: 900 }) : setTimeout(fn, 250));

@@ -14,6 +14,9 @@ const store = {
 };
 
 document.documentElement.classList.add('js');
+// Страница всегда открывается сверху: браузер не восстанавливает старую прокрутку (кроме ссылок с #якорем).
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+if (!location.hash) scrollTo(0, 0);
 const szene = $('#szene')!;
 const cfg = JSON.parse(szene.dataset.config!);
 const form = $<HTMLFormElement>('#termin')!;
@@ -108,7 +111,9 @@ function setZone(z: string | null, scroll = false) {
   for (const b of zoneBlocks) b.hidden = z !== null && b.dataset.zoneBlock !== z;
   if (z) szene.dataset.gewaehlt = '1';
   const chip = zchips.find((c) => c.dataset.zone === z);
-  chip?.scrollIntoView({block: 'nearest', inline: 'center', behavior: reduced ? 'auto' : 'smooth'});
+  // Лента чипов едет только по горизонтали: scrollIntoView сдвинул бы всю страницу вниз (так страница открывалась «посередине»).
+  const row = chip?.parentElement;
+  if (chip && row && row.scrollWidth > row.clientWidth) row.scrollTo({left: chip.offsetLeft - (row.clientWidth - chip.offsetWidth) / 2, behavior: reduced ? 'auto' : 'smooth'});
   if (scroll) $('#service')!.scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block: 'start'});
   focusScene();
 }
@@ -154,6 +159,7 @@ function progress() {
 function onScroll() {
   ticking = false;
   const t = progress();
+  document.documentElement.toggleAttribute('data-nach-buehne', buehne.getBoundingClientRect().bottom < innerHeight * 0.55);
   stage?.setScroll(t);
   const r = t > 0.6;
   if (r !== roentgen) { roentgen = r; szene.dataset.roentgen = r ? '1' : '0'; if (!stage) kader(aktivZone && aktivZone !== 'ganz' ? aktivZone : null); else if (r) focusScene(); else stage.setFocus({}); }
@@ -284,6 +290,9 @@ $('[data-neu]')!.addEventListener('click', () => {
 const gemerkt: string[] = store.get('gl:leistungen', []);
 posList.forEach((li) => { if (gemerkt.includes(li.dataset.id!)) boxOf(li).checked = true; });
 setModell(modell, false);
+const fotoIn = $<HTMLInputElement>('#f-foto'), fotoName = $('[data-foto-name]');
+const fotoText = () => { if (fotoName) fotoName.textContent = fotoIn?.files?.[0]?.name || 'Keine Datei gewählt'; };
+fotoIn?.addEventListener('change', fotoText); form.addEventListener('reset', () => setTimeout(fotoText, 0));
 setZone(store.get<string | null>('gl:zone', null) ?? 'motor');
 szene.dataset.gewaehlt = gemerkt.length ? '1' : '0';
 onScroll();

@@ -22,7 +22,7 @@ async function run(name, {W, H, reduced = false, query = ''}) {
   await tick('zuendkerzen'); await page.waitForTimeout(1800); ok((await sum()) === 'ab 830 €', '+ Zündkerzen → ' + await sum());
   await page.evaluate(() => document.querySelector('.zchip[data-zone=bremsen]').click()); await tick("bremsfluessigkeit"); await page.waitForTimeout(1800);
   ok((await sum()) === 'ab 950 €', '+ Bremsflüssigkeit → ' + await sum());
-  await page.evaluate(() => document.querySelector('input[name=modell_chip][value="996"]').click()); await page.waitForTimeout(600);
+  await page.evaluate(() => document.querySelector('input[name=modell_chip][value="996"]').click()); await page.waitForTimeout(3500);
   ok((await sum()) === 'ab 1.040 €', 'модель 996 → ' + await sum());
   await page.reload(); await page.waitForFunction('window.__szeneFertig === true', null, {timeout: 180000}); await page.waitForTimeout(600);
   ok((await sum()) === 'ab 1.040 €', 'после перезагрузки выбор сохранён → ' + await sum());

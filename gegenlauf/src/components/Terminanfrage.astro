@@ -37,7 +37,7 @@ const id = 'termin';
       </div>
       <div class="ta__feld">
         <label for="f-vin">Fahrgestellnummer <span class="ta__opt">(optional)</span></label>
-        <input id="f-vin" name="vin" type="text" autocomplete="off" autocapitalize="characters" placeholder="17 Zeichen, steht im Fahrzeugschein" maxlength="17" />
+        <input id="f-vin" name="vin" type="text" autocomplete="off" autocapitalize="characters" placeholder="17 Zeichen (Fahrzeugschein)" maxlength="17" />
       </div>
     </fieldset>
 
@@ -53,7 +53,11 @@ const id = 'termin';
       </div>
       <div class="ta__feld">
         <label for="f-foto">Foto <span class="ta__opt">(optional)</span></label>
-        <input id="f-foto" name="foto" type="file" accept="image/*" aria-describedby="h-foto" />
+        <div class="ta__datei">
+          <input class="ta__datei-in" id="f-foto" name="foto" type="file" accept="image/*" aria-describedby="h-foto" />
+          <label class="btn ta__datei-btn" for="f-foto">Foto auswählen</label>
+          <span class="ta__datei-name" data-foto-name aria-live="polite">Keine Datei gewählt</span>
+        </div>
         <p class="ta__klein" id="h-foto">Demo: Die Datei wird nicht hochgeladen.</p>
       </div>
     </fieldset>
@@ -115,7 +119,7 @@ const id = 'termin';
   .ta__titel { font-size: var(--text-lg); }
   .ta__gruppe { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: var(--space-md); }
   .ta__gruppe legend { padding: 0; margin-bottom: var(--space-sm); font: 400 var(--text-xs) var(--font-mono); color: var(--color-muted); }
-  .ta__zwei { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); }
+  .ta__zwei { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: var(--space-md); }
   .ta__feld { display: grid; gap: var(--space-xs); min-width: 0; }
   .ta__feld label { font-weight: 600; font-size: var(--text-sm); }
   .ta__opt { font-weight: 400; color: var(--color-muted); }

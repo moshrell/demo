@@ -235,7 +235,8 @@ const prices = stations.flatMap((s: any) => (s.services || []).map((x: any) => (
   .st__label { font: 600 var(--text-sm)/1.2 var(--font-body); color: var(--color-ink-2); margin: 0 0 var(--space-sm) var(--space-md); min-height: 28px; display: flex; align-items: center; gap: var(--space-xs); }
   .st__label .num { color: var(--color-copper-ink); }
   .st[data-temp='kalt'] .st__label .num { color: var(--color-deep-2); }
-  .st__body { display: grid; gap: var(--space-xl); }
+  .st__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); }
+  .st__body > *, .st__wartung > * { min-width: 0; }
   .st__lead { margin-top: var(--space-md); color: var(--color-ink-2); max-width: var(--measure); }
   .st__cta { margin-top: var(--space-lg); }
   .st__prices ul { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--color-ink); }
@@ -254,7 +255,7 @@ const prices = stations.flatMap((s: any) => (s.services || []).map((x: any) => (
   .refs h3 { margin-bottom: var(--space-md); }
   .refs__list { list-style: none; margin: 0 calc(-1 * var(--gutter)) 0 0; padding: 0 var(--gutter) var(--space-xs) 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(15rem, 78%); gap: var(--space-md); overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
   .refs__list > li { scroll-snap-align: start; }
-  .st__wartung { display: grid; gap: var(--space-lg); }
+  .st__wartung { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); }
   .st__wimg { aspect-ratio: 4 / 3; max-width: 30rem; }
   .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-xs); }
   .checks li { padding-left: 1.6rem; position: relative; }

@@ -158,7 +158,7 @@ const hasPrices = plans.length > 0 || (external && priced);
   .af__chip span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-md); border: 1.5px solid var(--color-ink-2); border-radius: var(--radius-pill); cursor: pointer; white-space: nowrap; font-size: var(--text-sm); }
   .af__chip input:checked + span { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-paper); }
   .af__chip input:focus-visible + span, .af__plan input:focus-visible + span { outline: 3px solid var(--color-focus); outline-offset: 2px; }
-  .af__plans { display: grid; gap: var(--space-xs); }
+  .af__plans { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); }
   .af__plan > span { display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); min-height: 52px; padding: var(--space-sm) var(--space-md); border: 1.5px solid var(--color-rule); border-radius: var(--radius); cursor: pointer; }
   .af__plan input:checked + span { border-color: var(--color-copper); background: var(--color-copper-soft); }
   .af__ext-list { margin: 0; border-top: 1px solid var(--color-rule); }

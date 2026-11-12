@@ -92,7 +92,7 @@ const base = import.meta.env.BASE_URL;
   .hc { padding-top: var(--space-xl); }
   .hc__head { max-width: var(--measure); }
   .hc__lead { margin-top: var(--space-md); color: var(--color-ink-2); }
-  .hc__form { margin-top: var(--space-xl); max-width: 40rem; display: grid; gap: var(--space-lg); }
+  .hc__form { margin-top: var(--space-xl); max-width: 40rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); }
   .hc__progress { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
   .hc__seg { height: 7px; border-radius: 2px; background: var(--color-track); }
   .hc__seg.is-on { background: var(--color-copper); }
@@ -111,7 +111,7 @@ const base = import.meta.env.BASE_URL;
   .hc__nav { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
   :global(.js) .hc__q:not(.is-active) { display: none; }
   :global(.js) .hc__nav [data-show]:not(.is-ready) { display: none; }
-  .hc__res { margin-top: var(--space-xl); max-width: 40rem; display: grid; gap: var(--space-sm); padding: var(--space-lg); border: 1.5px solid var(--color-ink); border-radius: var(--radius); }
+  .hc__res { margin-top: var(--space-xl); max-width: 40rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-sm); padding: var(--space-lg); border: 1.5px solid var(--color-ink); border-radius: var(--radius); }
   .hc__res h3 { margin-top: var(--space-md); }
   .hc__res p { color: var(--color-ink-2); }
   .hc__badge { justify-self: start; padding: 4px 12px; border-radius: var(--radius-pill); background: var(--color-copper-soft); color: var(--color-copper-ink) !important; font-weight: 700; font-size: var(--text-sm); }
@@ -123,7 +123,7 @@ const base = import.meta.env.BASE_URL;
   .hc__law ul { margin: var(--space-sm) 0; padding-left: 1.2rem; display: grid; gap: var(--space-xs); }
   .hc__stand { font-size: var(--text-xs); }
   .hc__resnav { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-top: var(--space-md); }
-  .hc__form-wrap { margin-top: var(--space-3xl); display: grid; gap: var(--space-xl); }
+  .hc__form-wrap { margin-top: var(--space-3xl); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); }
   .hc__img { border-radius: var(--radius); aspect-ratio: 4 / 3; object-fit: cover; width: 100%; max-width: 30rem; }
   @media (min-width: 64rem) { .hc__form-wrap { grid-template-columns: minmax(0, 30rem) minmax(0, 1fr); align-items: start; column-gap: var(--space-2xl); } }
 </style>

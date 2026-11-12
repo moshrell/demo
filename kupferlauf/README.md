@@ -10,7 +10,8 @@ Astro-Projekt (Demo). Адрес на портфолио: `/vorschau/handwerk/ku
 
 ## Механика: 3D-ванная (вместо трубы с водой)
 - Главная (первый экран) и `/bad/`: `Baukasten.astro` + `src/scripts/bad3d.ts` (three.js, изометрия, модели Kenney Furniture Kit CC0 в `public/models`, грузится лениво) + `baukasten.ts` (состояние в sessionStorage `kl:bad`, цена, сводка → форма) + `bad-layout.ts` (раскладка, проверена на 34 комбинациях: нет пересечений).
-- Без WebGL / saveData / 2g: вместо 3D фото `referenz-bad-hell`, выбор работает.
+- Заставка до загрузки 3D и запасной вариант без WebGL / при saveData / 2g: скрины настоящей комнаты `public/img/bad-poster-wide.webp` (телефон/планшет) и `bad-poster-tall.webp` (ПК ≥64rem). Если меняется вид комнаты по умолчанию — переснять оба. Выбор работает и без 3D.
+- Появление блоков при прокрутке — CSS `animation-timeline: view()` (Chrome/Edge/Safari 26+; Firefox пока без анимации, контент виден сразу).
 - Фото: `public/img/*.jpg` (Gemini), webp делает `scripts/images.mjs`.
 
 ## Известные недочёты (не проверено / решить)

@@ -280,6 +280,18 @@ const photos: Record<string, { name: string; alt: string }> = {
   .faq__item[open] summary::after { content: '–'; }
   .faq__item p { padding-bottom: var(--space-md); color: var(--color-ink-2); }
   .anfrage-wrap { margin-top: var(--space-3xl); scroll-margin-top: 64px; }
+
+  /* Einblenden beim Scrollen: nur CSS (Chrome, Edge, Safari 26+); sonst steht alles sofort da. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .st__head, .st :global(.st__photo), .st .ref, .st__prices, .st__tool, .kl, .ablauf__list li {
+        animation: rise linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 45%;
+      }
+      @keyframes rise { from { opacity: 0; translate: 0 28px; } to { opacity: 1; translate: 0 0; } }
+    }
+  }
 </style>
 
 <script>

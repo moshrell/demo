@@ -39,6 +39,8 @@ try {
 <IfModule mod_headers.c>
   Header always set Content-Security-Policy "${csp}"
   Header always set X-Robots-Tag "noindex, nofollow"
+  # Hauptseite sperrt die Kamera (camera=()); dieses Demo braucht sie für die Anprobe, nur auf der eigenen Seite
+  Header always set Permissions-Policy "camera=(self), microphone=(), geolocation=()"
   <If "%{REQUEST_URI} =~ m#/_astro/#">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </If>

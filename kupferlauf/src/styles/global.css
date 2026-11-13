@@ -41,13 +41,13 @@ a:hover { text-decoration-thickness: 2px; }
   font: 600 var(--text-md)/1 var(--font-body); text-decoration: none; white-space: nowrap; cursor: pointer;
 }
 .btn--ghost { background: transparent; color: var(--color-ink); }
-.btn--copper { background: var(--color-copper); border-color: var(--color-copper); color: var(--color-ink); }
+.btn--copper { background: var(--color-copper-ink); border-color: var(--color-copper-ink); color: #fff; }
 .btn:active { transform: translateY(1px); }
 .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
 @media (hover: hover) {
   .btn:hover { background: var(--color-deep-2); border-color: var(--color-deep-2); }
   .btn--ghost:hover { background: var(--color-paper-2); border-color: var(--color-ink); }
-  .btn--copper:hover { background: var(--color-copper-glow); border-color: var(--color-copper-glow); }
+  .btn--copper:hover { background: oklch(42% 0.11 45); border-color: oklch(42% 0.11 45); }
 }
 @media (prefers-reduced-motion: no-preference) { .btn { transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); } }
 

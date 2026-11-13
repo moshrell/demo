@@ -225,7 +225,7 @@ const photos: Record<string, { name: string; alt: string }> = {
   .ref p, .ref figcaption strong { display: block; margin-top: var(--space-sm); }
   .st__prices ul { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid currentColor; }
   .st__prices li { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-md); padding: var(--space-sm) 0; border-bottom: var(--rule-w) solid color-mix(in oklch, currentColor 22%, transparent); }
-  .st__prices small { font-size: var(--text-xs); opacity: 0.8; }
+  .st__prices small { font-size: var(--text-xs); }
   .st__prices .price { font-weight: 700; white-space: nowrap; }
   .st__prices .mwst { margin-top: var(--space-xs); font-size: var(--text-xs); }
   .st__tool h3 { margin-bottom: var(--space-md); }
@@ -234,10 +234,12 @@ const photos: Record<string, { name: string; alt: string }> = {
   .st--hausanschluss .st__label { color: var(--color-deep-2); }
   .st--heizung { background: var(--color-deep); color: var(--color-on-deep); }
   .st--heizung .st__label { color: var(--color-copper-glow); }
-  .st--heizung .st__lead, .st--heizung .ref ul { color: var(--color-on-deep-2); }
-  .st--heizung :global(.st__bg) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; }
-  .st--heizung::before { content: ''; position: absolute; inset: 0; z-index: 0; background: linear-gradient(to bottom, oklch(30% 0.06 225 / 0.7), oklch(30% 0.06 225 / 0.92)); }
-  .st--heizung .st__in { z-index: 1; }
+  .st--heizung .st__lead, .st--heizung .ref ul, .st--heizung .mwst { color: var(--color-on-deep); }
+  .st--heizung .btn--copper { border-color: var(--color-copper-glow); }
+  .st--heizung .st__prices small { opacity: 1; color: var(--color-on-deep-2); }
+  .st--heizung :global(.st__bg) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; z-index: 0; }
+  .st--heizung::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to bottom, oklch(30% 0.06 225 / 0.7), oklch(30% 0.06 225 / 0.92)); }
+  .st--heizung .st__in { z-index: 2; }
   .st--bad { background: var(--color-copper-soft); }
   .st--wartung { background: var(--color-paper-2); }
   .st--wartung .st__head h2 { max-width: 30ch; }

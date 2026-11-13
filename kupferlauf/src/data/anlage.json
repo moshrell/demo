@@ -1,0 +1,40 @@
+{
+  "stand": "November 2026",
+  "hinweis": "Richtwerte inkl. 19 % MwSt., vor Förderung, für ein Einfamilienhaus. Beispielwerte: der Betrieb setzt seine eigenen ein. Den genauen Preis nennen wir nach der Besichtigung schriftlich.",
+  "zones": [
+    {
+      "id": "anlage",
+      "label": "Wärmeerzeuger",
+      "variants": [
+        { "id": "gas", "label": "Gas-Brennwertkessel", "note": "Kessel tauschen, Abgasrohr, Anschluss an die vorhandenen Heizkörper", "cents": 1190000 },
+        { "id": "wp", "label": "Luft-Wasser-Wärmepumpe", "note": "Außengerät, Innengerät, komplett angeschlossen", "cents": 2790000 },
+        { "id": "hybrid", "label": "Hybrid: Wärmepumpe + Gas", "note": "Die Wärmepumpe heizt, der Kessel springt bei Frost ein", "cents": 2150000 }
+      ]
+    },
+    {
+      "id": "speicher",
+      "label": "Warmwasser",
+      "variants": [
+        { "id": "aus", "label": "Wie bisher", "note": "Warmwasser bleibt, wie es ist", "cents": 0 },
+        { "id": "ja", "label": "Warmwasserspeicher 200–300 l", "note": "Genug heißes Wasser für Bad und Küche", "cents": 240000 }
+      ]
+    },
+    {
+      "id": "zirk",
+      "label": "Zirkulation",
+      "variants": [
+        { "id": "aus", "label": "Ohne", "note": "Das Wasser läuft, bis es warm ist", "cents": 0 },
+        { "id": "ja", "label": "Zirkulationsleitung", "note": "Warmes Wasser sofort am Hahn, weniger Wartezeit", "cents": 115000 }
+      ]
+    },
+    {
+      "id": "abgleich",
+      "label": "Abgleich",
+      "variants": [
+        { "id": "aus", "label": "Ohne", "note": "Heizkörper bleiben, wie eingestellt", "cents": 0 },
+        { "id": "ja", "label": "Hydraulischer Abgleich", "note": "Jeder Heizkörper bekommt genau die Wassermenge, die er braucht", "cents": 69000 }
+      ]
+    }
+  ],
+  "defaults": { "anlage": "wp", "speicher": "aus", "zirk": "aus", "abgleich": "aus" }
+}

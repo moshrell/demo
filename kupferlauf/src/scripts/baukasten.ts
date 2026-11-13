@@ -106,7 +106,10 @@ function init(root: HTMLElement) {
     if (!scene || hinted) { ring.hidden = true; return; }
     const p = scene.project('wanne');
     if (!p) { ring.hidden = true; return; }
-    ring.style.left = `${p.x}px`; ring.style.top = `${p.y}px`; ring.hidden = false;
+    ring.hidden = false;
+    const W = stage.clientWidth, H = stage.clientHeight;
+    const half = (ring.querySelector<HTMLElement>('.bk__ring-txt')?.offsetWidth ?? 170) / 2 + 8;
+    ring.style.left = `${Math.min(Math.max(p.x, half), W - half)}px`; ring.style.top = `${Math.min(Math.max(p.y, 40), H - 70)}px`; ring.hidden = false;
   };
   const dismissHint = () => { hinted = true; ring.hidden = true; };
 

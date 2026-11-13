@@ -1,0 +1,57 @@
+---
+// Heizungs-Baukasten: 3D-Heizungsraum + Auswahl + Anfrage mit Zusammenfassung. Rechts-/Förderhinweise nur als Links.
+import Base from '../../../layouts/Base.astro';
+import Heizraum from '../../../components/Heizraum.astro';
+import Anfrage from '../../../components/Anfrage.astro';
+import site from '../../../data/site.json';
+import anlage from '../../../data/anlage.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base
+  title="Heizung zusammenstellen in 3D · Kehlenbrink Bad & Wärme (Demo)"
+  description="Heizung in 3D zusammenstellen: Gas-Brennwert, Wärmepumpe oder Hybrid, Warmwasserspeicher, Zirkulation, hydraulischer Abgleich. Der Richtwert rechnet mit. Demo-Seite."
+  anfrageHref={`${base}heizung/anlage/#anfrage-bad`}
+  bar="bad"
+  current="heizung"
+>
+  <main id="inhalt" class="hz wrap">
+    <header class="hz__head">
+      <h1>Heizung zusammenstellen</h1>
+      <p class="hz__lead">Wählen Sie, womit Ihr Haus künftig heizt. Das Wasser läuft im Bild durch die Kupferrohre, der Richtwert rechnet mit. Tippen Sie auf die Anlage, um sie zu wechseln.</p>
+    </header>
+
+    <Heizraum id="hz" />
+
+    <section class="hz__check" aria-labelledby="hz-check-h">
+      <h2 id="hz-check-h">Nicht sicher, was passt?</h2>
+      <p>Ob eine Wärmepumpe zu Ihrem Haus passt, hängt von Dämmung, Heizkörpern und Vorlauftemperatur ab. Der Heizungs-Check sortiert das in zwei Minuten vor.</p>
+      <a class="btn" href={`${base}heizung/`}>Heizungs-Check starten</a>
+      <p class="hz__stand">Förderung und Gesetz (GModG): <a href={`${base}heizung/#recht`}>Hinweise und offizielle Links</a>. Stand: {anlage.stand}. Keine Rechts- oder Förderberatung.</p>
+    </section>
+
+    <Anfrage
+      id="anfrage-bad"
+      title="Heizung anfragen"
+      intro={`Wir rufen Sie an, gehen Ihre Zusammenstellung durch und vereinbaren eine Besichtigung. ${site.besichtigung}`}
+      submitLabel="Heizung anfragen"
+      purpose="meiner Heizungsanfrage"
+      external
+      externalLabel="Ihre Heizung"
+      windows={['Mo–Do vormittags', 'Mo–Do nachmittags', 'Freitag vormittags']}
+      photoLabel="Foto Ihrer jetzigen Heizung bzw. des Typenschilds (optional)"
+      photoHint="Das Schild mit Hersteller und Baujahr, meist am Kessel"
+      mail={false}
+      note={false}
+    />
+  </main>
+</Base>
+
+<style>
+  .hz { padding-block: var(--space-xl) var(--space-2xl); display: grid; gap: var(--space-xl); min-width: 0; }
+  .hz > * { min-width: 0; }
+  .hz__head h1 { font-size: var(--text-display); }
+  .hz__lead { margin-top: var(--space-sm); color: var(--color-ink-2); max-width: var(--measure); }
+  .hz__check { max-width: 48rem; display: grid; gap: var(--space-sm); justify-items: start; }
+  .hz__check h2 { font-size: var(--text-xl); }
+  .hz__stand { margin: 0; font-size: var(--text-xs); color: var(--color-ink-2); }
+</style>

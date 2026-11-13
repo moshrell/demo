@@ -14,6 +14,11 @@ Astro-Projekt (Demo). Адрес на портфолио: `/vorschau/handwerk/ku
 - Появление блоков при прокрутке — CSS `animation-timeline: view()` (Chrome/Edge/Safari 26+; Firefox пока без анимации, контент виден сразу).
 - Фото: `public/img/*.jpg` (Gemini), webp делает `scripts/images.mjs`.
 
+## 3D-Heizung (`/heizung/anlage/`)
+- `Heizraum.astro` + `src/scripts/heiz3d.ts` (three.js, всё из простых тел кодом: котёл, тепловой насос с вращающимся наружным блоком, бак, радиатор, медные трубы с бегущей водой) + `heiz.ts` (состояние `kl:heiz`, цена, сводка → форма). Данные и цены: `src/data/anlage.json`. Готовых CC0-моделей отопления не нашлось (poly.pizza недоступен из облака, у Kenney их нет), поэтому формы условные, не копия реальной модели.
+- Заставка до 3D и без WebGL: `public/img/heiz-poster-wide.webp` / `heiz-poster-tall.webp` (скрины сцены по умолчанию; переснять при смене вида).
+- Не проверено: FPS на реальном телефоне; цены — примерные значения.
+
 ## Vorher/Nachher
 - `Vergleich.astro`: слайдер «до/после» с ручкой-вентилем у референсов Bad. Фото «до» = `<имя>-vorher.jpg` (`referenz-bad-hell-vorher.jpg`, `-stein-`, `-klein-`) в `public/img/`; промпты — `PROMPTS-vorher.txt`. Пока файла нет, показывается обычное фото «после».
 

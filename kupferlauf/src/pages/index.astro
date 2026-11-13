@@ -55,7 +55,12 @@ const photos: Record<string, { name: string; alt: string }> = {
             <p class="st__label">{s.label}</p>
             <h2 id={`${s.id}-h`}>{s.title}</h2>
             <p class="st__lead">{s.lead}</p>
-            {s.cta && <a class={`btn ${s.id === 'heizung' ? 'btn--copper' : ''}`} href={`${base}${s.cta.href}`}>{s.cta.label}</a>}
+            {s.cta && (
+              <div class="st__ctas">
+                <a class={`btn ${s.id === 'heizung' ? 'btn--copper' : ''}`} href={`${base}${s.cta.href}`}>{s.cta.label}</a>
+                {s.cta2 && <a class="btn btn--ghost-light" href={`${base}${s.cta2.href}`}>{s.cta2.label}</a>}
+              </div>
+            )}
           </header>
 
           <div class="st__main">
@@ -209,7 +214,8 @@ const photos: Record<string, { name: string; alt: string }> = {
   .st__main { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); align-content: start; }
   .st__label { margin: 0 0 var(--space-xs); font: 700 var(--text-sm)/1.2 var(--font-body); color: var(--color-copper-ink); }
   .st__lead { margin-top: var(--space-md); max-width: var(--measure); }
-  .st__head .btn { margin-top: var(--space-lg); }
+  .st__ctas { margin-top: var(--space-lg); display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+  .btn--ghost-light { background: transparent; border: 1.5px solid currentColor; color: inherit; }
   .st :global(.st__photo) { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); }
   .st :global(.st__photo--tall) { aspect-ratio: 3 / 4; }
   .st__paar { margin: 0; display: grid; gap: var(--space-sm); max-width: 24rem; }

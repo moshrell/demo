@@ -62,8 +62,27 @@ const ld = { '@context': 'https://schema.org', '@graph': graph };
   <body>
     <slot />
     <footer class="fuss">
-      <p class="fuss__marke">{site.kurz}</p>
-      <p>{site.name} · {site.address.street} · {site.address.zip} {site.address.city} · <a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+      <section class="heft" aria-label="Kontakt und Öffnungszeiten">
+        <div class="heft__kopf">
+          <div>
+            <p class="heft__label">Serviceheft</p>
+            <p class="fuss__marke">{site.kurz}</p>
+          </div>
+          <svg class="heft__stempel" viewBox="0 0 160 160" role="img" aria-label="Stempel: Gegenlauf Sportwagenservice, Hannover, Demo">
+            <defs><path id="stempel-kreis" d="M80 80 m-58 0 a58 58 0 1 1 116 0 a58 58 0 1 1 -116 0" /></defs>
+            <circle cx="80" cy="80" r="74" fill="none" stroke="currentColor" stroke-width="3" />
+            <circle cx="80" cy="80" r="40" fill="none" stroke="currentColor" stroke-width="1.5" />
+            <text class="heft__kreis" font-size="11.5"><textPath href="#stempel-kreis" startOffset="0" textLength="358" lengthAdjust="spacing">GEGENLAUF · SPORTWAGENSERVICE · HANNOVER ·</textPath></text>
+            <text x="80" y="87" text-anchor="middle" class="heft__demo" font-size="21">DEMO</text>
+          </svg>
+        </div>
+        <dl class="heft__zeilen">
+          <div><dt>Werkstatt</dt><dd>{site.name}<br />{site.address.street}, {site.address.zip} {site.address.city}</dd></div>
+          <div><dt>Telefon</dt><dd><a href={`tel:${site.phoneHref}`}>{site.phone}</a></dd></div>
+          <div><dt>Annahme</dt><dd>{site.hours.map((h) => `${h.label} ${h.open}–${h.close} Uhr`).join(', ')}<br />{site.hoursNote}</dd></div>
+          <div><dt>E-Mail</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
+        </dl>
+      </section>
       <p>{site.markenhinweis} „Porsche“, „911“, „Boxster“ und „Cayman“ sind Marken der Dr. Ing. h.c. F. Porsche AG und werden hier nur zur Beschreibung der betreuten Fahrzeuge genannt.</p>
       <nav aria-label="Rechtliches">
         <a href={`${base}impressum/`}>Impressum</a>

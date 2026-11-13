@@ -37,18 +37,19 @@ def paper():
     c=base[None,None]*(1-0.10*r[...,None]**2); n=np.random.default_rng(1).normal(0,0.006,(H,W,1)); return (c+n).astype(np.float32)
 def build(nr,ne,ng,seed=7):
     rnd=random.Random(seed); items=[]
-    # Rosen: Goldener Winkel Spirale
-    for i in range(nr):
-        ang=i*137.508; rad=0.0+ 21*math.sqrt(i+0.6)*1.0
-        r=rad*1.0*(W/1400)*5.2
-        items.append(('rose',650*0 + W/2+r*math.cos(math.radians(ang)),H/2+r*math.sin(math.radians(ang)),
-                      rnd.uniform(255,300),rnd.uniform(0,360),rnd.random()<.5, (rnd.randint(-4,3),rnd.uniform(.85,1.05),rnd.uniform(.88,1.05)),0.55+0.4*(1-r/ (W*.2))))
+    cx,cy=W/2,H/2
+    # Zentrum-Gruen: Eukalyptus mit Ansatz unter den Rosen, nur Spitzen ragen heraus
     for i in range(ne):
-        a=i*360/ne+rnd.uniform(-12,12); r=340+rnd.uniform(-20,40)
-        items.append(('euk',W/2+r*math.cos(math.radians(a)),H/2+r*math.sin(math.radians(a)),rnd.uniform(430,500),a+90+rnd.uniform(-18,18)-180+180,rnd.random()<.5,(0,1,1),0.15))
+        a=i*360/ne+rnd.uniform(-10,10); r=rnd.uniform(110,170)
+        items.append(('euk',cx+r*math.cos(math.radians(a)),cy+r*math.sin(math.radians(a)),rnd.uniform(520,600),a+90,rnd.random()<.5,(0,1,1),0.12))
     for i in range(ng):
-        a=i*360/max(ng,1)+40; r=rnd.uniform(200,330)
-        items.append(('gyp',W/2+r*math.cos(math.radians(a)),H/2+r*math.sin(math.radians(a)),rnd.uniform(430,520),rnd.uniform(0,360),rnd.random()<.5,(0,1,1),0.8))
+        a=i*360/max(ng,1)+25; r=rnd.uniform(120,230)
+        items.append(('gyp',cx+r*math.cos(math.radians(a)),cy+r*math.sin(math.radians(a)),rnd.uniform(380,470),rnd.uniform(0,360),rnd.random()<.5,(0,1,1),0.75))
+    # Rosen: Goldener Winkel, dichter, kleiner
+    for i in range(nr):
+        ang=i*137.508; r=36*math.sqrt(i+0.8)*1.55
+        sz=rnd.uniform(150,185)*(1.0-0.18*(r/330))
+        items.append(('rose',cx+r*math.cos(math.radians(ang)),cy+r*math.sin(math.radians(ang)),sz,rnd.uniform(0,360),rnd.random()<.5,(rnd.randint(-4,3),rnd.uniform(.85,1.05),rnd.uniform(.88,1.05)),0.45+0.5*(1-r/330)))
     return items
 order={'euk':0,'gyp':1,'rose':2}
 def render(items,path,crop=None):
@@ -61,7 +62,7 @@ def render(items,path,crop=None):
     if crop: x0,y0,x1,y1=crop; img=cv2.resize(img[y0:y1,x0:x1],(1000,1000),interpolation=cv2.INTER_AREA)
     else: img=cv2.resize(img,(1000,1000),interpolation=cv2.INTER_AREA)
     cv2.imwrite(path,img)
-full=build(9,5,3)
+full=build(24,6,4)
 render(full,'/tmp/w/f1_voll.png')
-render(build(3,2,1,seed=3),'/tmp/w/f2_wenig.png')
-render(full,'/tmp/w/f3_nah.png',crop=(450,450,950,950))
+render(build(6,2,1,seed=3),'/tmp/w/f2_wenig.png')
+render(full,'/tmp/w/f3_nah.png',crop=(400,400,1000,1000))

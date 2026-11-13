@@ -170,10 +170,16 @@ export async function createHeiz(canvas: HTMLCanvasElement, opts: Opts): Promise
 
     if (state.speicher === 'ja') { groups.speicher.add(speicher()); tag(groups.speicher, 'speicher'); }
     if (state.zirk === 'ja') {
-      const gz = groups.zirk;
-      pipe(gz, [[0.5, 1.5, 1.2], [0.5, 1.7, 0.1], [2.5, 1.7, 0.08]], 0.011, M.copper, 'hot');
-      gz.add(cyl(0.07, 0.16, M.ink, 1.4, 1.62, 0.1).rotateZ(Math.PI / 2));
-      gz.add(cyl(0.012, 0.18, M.copper, 2.5, 1.55, 0.08));
+      // Warmwasser-Kreis: Quelle (Speicher, sonst Erzeuger) → Zapfstelle (Waschbecken an der Rückwand) → Pumpe → zurück
+      const gz = groups.zirk; const tx = 2.3;
+      const src: P = state.speicher === 'ja' ? [0.5, 1.56, 1.5] : [gx + 0.2, state.anlage === 'gas' ? 1.36 : 1.78, state.anlage === 'gas' ? 0.17 : 0.36];
+      const sx2 = src[0] + 0.07;
+      pipe(gz, [src, [src[0], 1.88, src[2]], [src[0], 1.88, 0.08], [tx, 1.88, 0.08], [tx, 1.3, 0.08]], 0.011, M.copper, 'hot');
+      pipe(gz, [[tx + 0.08, 1.12, 0.08], [tx + 0.08, 1.78, 0.14], [sx2, 1.78, 0.14], [sx2, 1.78, src[2]], [sx2, src[1] - 0.02, src[2]]], 0.011, M.copper, 'cold');
+      gz.add(box(0.55, 0.09, 0.32, M.clay, tx, 0.96, 0.16));            // Waschbecken-Platte
+      gz.add(cyl(0.012, 0.16, M.copper, tx, 1.05, 0.06));                // Hahn
+      gz.add(box(0.012, 0.012, 0.1, M.copper, tx, 1.2, 0.11));           // Auslauf
+      const pump = cyl(0.07, 0.14, M.ink, 1.3, 1.71, 0.14); pump.rotation.z = Math.PI / 2; gz.add(pump);
       tag(gz, 'zirk');
     }
     for (const k of ['speicher', 'zirk', 'abgleich']) if (!groups[k].children.length) items.remove(groups[k]);

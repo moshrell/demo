@@ -1,0 +1,235 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const anliegen = [
+  { id: 'sehtest', name: 'Sehtest und neue Brille' },
+  { id: 'linsen', name: 'Kontaktlinsen' },
+  { id: 'glaeser', name: 'Neue Gläser in meine Fassung' },
+  { id: 'service', name: 'Reparatur oder Anpassen' },
+  { id: 'anderes', name: 'Etwas anderes' },
+];
+const zeiten = [
+  { id: 'vormittag', name: 'Vormittag', sub: 'bis 12 Uhr' },
+  { id: 'mittag', name: 'Mittag', sub: '12 bis 15 Uhr' },
+  { id: 'nachmittag', name: 'Nachmittag', sub: 'ab 15 Uhr' },
+];
+---
+<Base
+  title="Termin anfragen: Fernpunkt Augenoptik Hannover"
+  description="Sehtest, Kontaktlinsen oder neue Gläser: Wunschtag wählen, wir bestätigen den Termin telefonisch. Ihre gemerkten Fassungen legen wir bereit."
+  current="termin"
+  cta={{ label: 'Anrufen', href: `tel:${site.phoneHref}` }}
+>
+  <main class="te wrap">
+    <div class="te__kopf">
+      <h1>Wann passt es Ihnen?</h1>
+      <p>Sie wählen Tag und Tageszeit, wir rufen zurück und machen die Uhrzeit fest. Meist noch am selben Werktag.</p>
+    </div>
+
+    <form class="te__form" id="termin" data-termin novalidate data-hours={JSON.stringify(site.hours)}>
+      <fieldset>
+        <legend>Worum geht es?</legend>
+        <div class="wahl">
+          {anliegen.map((a, i) => <label><input type="radio" name="anliegen" value={a.id} data-name={a.name} checked={i === 0} /><span>{a.name}</span></label>)}
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Wunschtag</legend>
+        <div class="te__tage" data-tage role="radiogroup" aria-label="Wunschtag"></div>
+        <noscript><p class="klein">Bitte nennen Sie Ihren Wunschtag im Feld „Nachricht“.</p></noscript>
+        <div class="wahl" data-zeiten>
+          {zeiten.map((z, i) => <label><input type="radio" name="zeit" value={z.id} data-name={`${z.name}, ${z.sub}`} checked={i === 0} /><span>{z.name}<b>{z.sub}</b></span></label>)}
+        </div>
+      </fieldset>
+
+      <fieldset class="te__auswahl" data-auswahl hidden>
+        <legend>Das legen wir für Sie bereit</legend>
+        <dl data-auswahl-liste></dl>
+        <p class="te__summe" data-summe-zeile hidden><span>Summe laut Rechner</span><strong class="zahl" data-summe></strong></p>
+        <p class="klein"><a href={`${base}anprobe/`}>Fassungen ändern</a> <a href={`${base}glaeser/`}>Gläser ändern</a></p>
+      </fieldset>
+      <p class="te__leer klein" data-leer>Noch nichts vorgemerkt. Sie können vorher <a href={`${base}anprobe/`}>Fassungen anprobieren</a> oder den <a href={`${base}glaeser/`}>Glaspreis ausrechnen</a>; nötig ist das nicht.</p>
+
+      <fieldset>
+        <legend>Ihre Angaben</legend>
+        <div class="te__feld">
+          <label for="t-name">Name</label>
+          <input id="t-name" name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname" required aria-describedby="t-err-name" />
+          <p class="te__err" id="t-err-name" hidden>Bitte geben Sie Ihren Namen an.</p>
+        </div>
+        <div class="te__feld">
+          <label for="t-tel">Telefon</label>
+          <input id="t-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 030 23125 123" required aria-describedby="t-err-tel" />
+          <p class="te__err" id="t-err-tel" hidden>Bitte geben Sie eine Telefonnummer an, unter der wir Sie erreichen.</p>
+        </div>
+        <div class="te__feld">
+          <label for="t-mail">E-Mail <span>(optional)</span></label>
+          <input id="t-mail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" aria-describedby="t-err-mail" />
+          <p class="te__err" id="t-err-mail" hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.</p>
+        </div>
+        <div class="te__feld">
+          <label for="t-note">Nachricht <span>(optional)</span></label>
+          <textarea id="t-note" name="note" rows="3" autocomplete="off" placeholder="z. B. Ich trage seit Jahren Gleitsicht und komme mit der Nähe nicht mehr zurecht."></textarea>
+        </div>
+      </fieldset>
+
+      <div class="te__zusage">
+        <label class="te__haken">
+          <input type="checkbox" name="privacy" required aria-describedby="t-err-privacy" />
+          <span>Ich bin einverstanden, dass {site.name} meine Angaben (Name, Telefon, E-Mail, Nachricht, Auswahl) zur Bearbeitung meiner Terminanfrage verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a></span>
+        </label>
+        <p class="te__err" id="t-err-privacy" hidden>Bitte stimmen Sie zu, sonst können wir Ihre Anfrage nicht bearbeiten.</p>
+      </div>
+
+      <div class="te__senden">
+        <button class="knopf knopf--voll" type="submit">Termin anfragen</button>
+        <p class="klein">Lieber gleich sprechen? <a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+      </div>
+    </form>
+
+    <!-- Подтверждение в виде «Brillenpass» (карточка с данными, какую выдают оптики) -->
+    <section class="te__pass" data-fertig tabindex="-1" hidden aria-labelledby="pass-h">
+      <p class="te__passkopf"><span>Fernpunkt</span><span>Terminzettel</span></p>
+      <h2 id="pass-h">Danke, Ihre Anfrage ist angekommen.</h2>
+      <p>Wir rufen Sie zurück und machen die Uhrzeit fest.</p>
+      <dl data-fertig-liste></dl>
+      <p class="te__demo">Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.</p>
+      <a class="knopf" href={base}>Zur Startseite</a>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .te { padding: clamp(7rem, 14vw, 9.5rem) 0 0; display: grid; gap: var(--space-lg); max-width: 48rem; }
+  .te__kopf { display: grid; gap: var(--space-smd); }
+  .te__kopf h1 { font-size: var(--text-2xl); }
+  .te__form { display: grid; gap: var(--space-lg); }
+  fieldset { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: var(--space-smd); }
+  legend { padding: 0; margin-bottom: var(--space-smd); font-family: var(--font-display); font-size: 1.75rem; line-height: 1.12; }
+  .wahl span { gap: 0.5rem; }
+  .wahl b { font-weight: 400; opacity: 0.72; }
+  .te__tage { display: flex; gap: 0.5rem; overflow-x: auto; margin-inline: calc(var(--gutter) * -1); padding: 0.3rem var(--gutter) 0.6rem; scrollbar-width: none; scroll-snap-type: x proximity; }
+  .te__tage::-webkit-scrollbar { display: none; }
+  .te__tage :global(label) { position: relative; flex: none; scroll-snap-align: start; cursor: pointer; }
+  .te__tage :global(input) { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .te__tage :global(span) { display: grid; justify-items: center; align-content: center; gap: 0.1rem; width: 4.4rem; height: 5.4rem; border: 1.5px solid var(--linie); border-radius: 44% 44% 50% 50% / 34% 34% 66% 66%; background: var(--papier); font-size: var(--text-xs); color: var(--tinte-2); }
+  .te__tage :global(b) { font-family: var(--font-display); font-weight: 500; font-size: 1.75rem; line-height: 1; color: var(--tinte); }
+  .te__tage :global(input:checked + span) { background: var(--tinte); border-color: var(--tinte); color: var(--hell-2); }
+  .te__tage :global(input:checked + span b) { color: var(--hell); }
+  .te__tage :global(input:focus-visible + span) { outline: 3px solid var(--focus); outline-offset: 3px; }
+  .wahl :global(input:disabled + span) { opacity: 0.4; cursor: not-allowed; }
+  .te__auswahl { padding: clamp(1.25rem, 4vw, 2rem); border-radius: 1.25rem; background: var(--papier); border: 1.5px solid var(--linie); }
+  .te__auswahl dl { margin: 0; display: grid; }
+  .te__auswahl :global(dl > div) { display: flex; justify-content: space-between; gap: 1rem; padding: 0.5rem 0; border-bottom: 1px solid var(--linie); }
+  .te__auswahl :global(dd) { margin: 0; white-space: nowrap; font-weight: 600; }
+  .te__summe { max-width: none; display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .te__summe strong { font-family: var(--font-display); font-weight: 500; font-size: 2.25rem; line-height: 1; }
+  .te__auswahl .klein { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+  .te__auswahl .klein a, .te__leer a { display: inline-block; padding-block: 0.35rem; }
+  .te__feld { display: grid; gap: var(--space-xs); min-width: 0; }
+  .te__feld label { font-weight: 600; font-size: var(--text-sm); }
+  .te__feld label span { font-weight: 400; color: var(--tinte-2); }
+  .te__feld input, .te__feld textarea { width: 100%; min-height: 3.25rem; padding: 0.75rem 1rem; border: 1.5px solid var(--tinte); border-radius: 0.9rem; background: var(--papier); color: var(--tinte); font: inherit; }
+  .te__feld textarea { resize: vertical; }
+  .te__feld input::placeholder, .te__feld textarea::placeholder { color: var(--tinte-2); opacity: 0.85; }
+  .te__feld input[aria-invalid='true'] { border-color: var(--alert); box-shadow: inset 0 0 0 1px var(--alert); }
+  .te__err { font-size: var(--text-sm); font-weight: 600; color: var(--alert); }
+  .te__zusage { display: grid; gap: var(--space-xs); }
+  .te__haken { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.85rem; align-items: start; font-size: var(--text-sm); line-height: 1.45; cursor: pointer; }
+  .te__haken input { width: 1.5rem; height: 1.5rem; margin: 0.1rem 0 0; accent-color: var(--tinte); }
+  .te__haken.falsch span { color: var(--alert); }
+  .te__senden { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-smd) var(--space-md); }
+  .te__senden a { font-weight: 600; display: inline-block; padding-block: 0.35rem; }
+  @media (max-width: 26rem) { .te__senden .knopf { width: 100%; } }
+
+  .te__pass { background: var(--papier); border: 1.5px solid var(--tinte); border-radius: 1.25rem; padding: clamp(1.4rem, 5vw, 2.75rem); display: grid; gap: var(--space-smd); justify-items: start; }
+  .te__pass:focus { outline: 3px solid var(--focus); outline-offset: 3px; }
+  .te__passkopf { max-width: none; width: 100%; display: flex; justify-content: space-between; gap: 1rem; padding-bottom: var(--space-sm); border-bottom: 1.5px solid var(--tinte); font-family: var(--font-display); font-size: 1.25rem; }
+  .te__pass dl { margin: 0; width: 100%; display: grid; }
+  .te__pass :global(dl > div) { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 1rem; padding: 0.55rem 0; border-bottom: 1px dashed var(--linie); }
+  .te__pass :global(dt) { color: var(--tinte-2); }
+  .te__pass :global(dd) { margin: 0; font-weight: 600; }
+  .te__demo { font-size: var(--text-sm); color: var(--tinte-2); }
+</style>
+
+<script>
+  import { FRAMES } from '../lib/frames';
+  const form = document.querySelector<HTMLFormElement>('[data-termin]');
+  if (form) {
+    const fertig = document.querySelector<HTMLElement>('[data-fertig]')!;
+    const liste = fertig.querySelector<HTMLElement>('[data-fertig-liste]')!;
+    const hours = JSON.parse(form.dataset.hours || '[]') as { days: number[]; from: string; to: string }[];
+    const field = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
+    const row = (k: string, v: string) => { const d = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; d.append(dt, dd); return d; };
+
+    // Ближайшие дни, когда открыто (по берлинскому времени)
+    const tage = form.querySelector<HTMLElement>('[data-tage]')!;
+    const fmt = new Intl.DateTimeFormat('de-DE', { timeZone: 'Europe/Berlin', weekday: 'short', day: 'numeric', month: 'short' });
+    const wd = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', weekday: 'short' });
+    const idx = (d: Date) => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(wd.format(d));
+    let n = 0;
+    for (let i = 1; n < 9 && i < 30; i++) {
+      const d = new Date(Date.now() + i * 864e5); const day = idx(d); const h = hours.find((x) => x.days.includes(day));
+      if (!h || !h.from) continue;
+      const p = Object.fromEntries(fmt.formatToParts(d).map((x) => [x.type, x.value]));
+      const l = document.createElement('label'), inp = document.createElement('input'), s = document.createElement('span'), b = document.createElement('b');
+      inp.type = 'radio'; inp.name = 'tag'; inp.value = `${p.weekday} ${p.day}. ${p.month}`; inp.dataset.kurz = h.to <= '15:00' ? '1' : '0'; inp.checked = n === 0;
+      b.textContent = p.day; s.append(p.weekday.replace('.', ''), b, p.month.replace('.', ''));
+      l.append(inp, s); tage.append(l); n++;
+    }
+    const zeitFix = () => { // суббота закрывается в 14:00: «после 15» недоступно
+      const t = form.querySelector<HTMLInputElement>('input[name=tag]:checked'); const kurz = t?.dataset.kurz === '1';
+      const nm = form.querySelector<HTMLInputElement>('input[name=zeit][value=nachmittag]')!;
+      nm.disabled = kurz; if (kurz && nm.checked) form.querySelector<HTMLInputElement>('input[name=zeit][value=vormittag]')!.checked = true;
+    };
+
+    // Выбор из примерки и калькулятора
+    const read = (k: string) => { try { return JSON.parse(sessionStorage.getItem(k) || 'null'); } catch { return null; } };
+    const merk = (read('fp:merk') || []) as { f: string; p: string }[];
+    const glas = read('fp:glas') as { rows: [string, number][]; sum: number; dpt: string } | null;
+    const auswahl: [string, string][] = [];
+    // Отложенные оправы идут без цены («лежит наготове»): цены и сумма только из калькулятора, чтобы итог сходился со строками.
+    merk.forEach((m) => { const f = FRAMES.find((x) => x.id === m.f); const p = f?.paints.find((x) => x.id === m.p); if (f) auswahl.push([`Zur Anprobe: ${f.name}, ${p?.name ?? ''}`, 'liegt bereit']); });
+    if (glas) glas.rows.forEach(([k, v]) => auswahl.push([k, v ? `${v.toLocaleString('de-DE')} €` : /suche ich/.test(k) ? 'offen' : 'inklusive']));
+    const box = form.querySelector<HTMLElement>('[data-auswahl]')!;
+    if (auswahl.length) {
+      box.hidden = false; form.querySelector<HTMLElement>('[data-leer]')!.hidden = true;
+      box.querySelector('[data-auswahl-liste]')!.replaceChildren(...auswahl.map(([k, v]) => row(k, v)));
+      if (glas) { box.querySelector<HTMLElement>('[data-summe-zeile]')!.hidden = false; box.querySelector('[data-summe]')!.textContent = `${glas.sum.toLocaleString('de-DE')} €`; }
+    }
+    const qa = new URLSearchParams(location.search).get('anliegen');
+
+    // Проверка и подтверждение
+    const err = (i: HTMLInputElement, show: boolean) => { const e = document.getElementById(i.getAttribute('aria-describedby') || ''); if (e) e.hidden = !show; i.setAttribute('aria-invalid', show ? 'true' : 'false'); i.closest('.te__haken')?.classList.toggle('falsch', show); };
+    ['name', 'tel', 'email'].forEach((x) => field(x).addEventListener('input', () => err(field(x), false)));
+    field('privacy').addEventListener('change', () => err(field('privacy'), false));
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = field('name'), tel = field('tel'), mail = field('email'), priv = field('privacy');
+      const bad: HTMLInputElement[] = []; const check = (i: HTMLInputElement, ok: boolean) => { err(i, !ok); if (!ok) bad.push(i); };
+      check(name, name.value.trim().length > 1); check(tel, tel.value.replace(/\D/g, '').length >= 6); check(mail, mail.value.trim() === '' || mail.checkValidity()); check(priv, priv.checked);
+      if (bad.length) { bad[0].focus(); return; }
+      const pick = (nm: string) => form.querySelector<HTMLInputElement>(`input[name=${nm}]:checked`);
+      const rows = [row('Anliegen', pick('anliegen')?.dataset.name ?? '')];
+      if (pick('tag')) rows.push(row('Wunschtag', `${pick('tag')!.value}, ${pick('zeit')?.dataset.name ?? ''}`));
+      auswahl.forEach(([k, v]) => rows.push(row(k, v)));
+      if (glas) rows.push(row('Summe laut Rechner', `${glas.sum.toLocaleString('de-DE')} €`));
+      rows.push(row('Name', name.value.trim()), row('Telefon', tel.value.trim()));
+      liste.replaceChildren(...rows);
+      form.hidden = true; document.querySelector<HTMLElement>('.te__kopf')!.hidden = true; fertig.hidden = false; fertig.focus(); scrollTo({ top: 0 });
+      try { ['fp:merk', 'fp:glas', 'fp:rechner', KEY].forEach((k) => sessionStorage.removeItem(k)); } catch {}
+    });
+
+    // Ввод не теряется: sessionStorage, согласие не сохраняется
+    const KEY = `form:${location.pathname}:termin`;
+    const els = () => [...form.elements].filter((el): el is HTMLInputElement => (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && !!el.name && el.name !== 'privacy');
+    const save = () => { try { const d: Record<string, string> = {}; els().forEach((el) => { if (el.type === 'radio') { if (el.checked) d[el.name] = el.value; } else d[el.name] = el.value; }); sessionStorage.setItem(KEY, JSON.stringify(d)); } catch {} };
+    try { const d = JSON.parse(sessionStorage.getItem(KEY) || 'null'); if (d) els().forEach((el) => { if (!(el.name in d)) return; if (el.type === 'radio') { if (el.value === d[el.name]) el.checked = true; } else el.value = String(d[el.name]); }); } catch {}
+    if (qa) { const a = form.querySelector<HTMLInputElement>(`input[name=anliegen][value="${CSS.escape(qa)}"]`); if (a) a.checked = true; }
+    zeitFix();
+    form.addEventListener('input', save);
+    form.addEventListener('change', () => { zeitFix(); save(); });
+  }
+</script>

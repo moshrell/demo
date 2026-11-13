@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Buehne from '../components/Buehne.astro';
+const base = import.meta.env.BASE_URL;
+const tipps = [
+  { t: 'Licht von vorn', d: 'Stellen Sie sich mit dem Gesicht zum Fenster. Gegenlicht macht das Bild dunkel.' },
+  { t: 'Eigene Brille ab', d: 'Sonst sitzen zwei Fassungen übereinander. Halten Sie das Telefon dafür etwas näher.' },
+  { t: 'Telefon auf Augenhöhe', d: 'Gerade hineinschauen, dann den Kopf langsam nach links und rechts drehen.' },
+];
+---
+<Base
+  title="Brille online anprobieren: Fernpunkt Augenoptik Hannover"
+  description="Sechs Fassungen aus der Werkstattkollektion direkt am Telefon anprobieren: am Modell oder mit der eigenen Kamera. Das Kamerabild bleibt auf Ihrem Gerät."
+  current="anprobe"
+  dark
+>
+  <main class="stu">
+    <div class="wrap">
+      <div class="stu__kopf">
+        <h1>Anprobe</h1>
+        <p>Wählen Sie Fassung und Farbe. Was Ihnen gefällt, merken Sie sich, und wir legen es zum Termin bereit.</p>
+      </div>
+      <Buehne studio />
+    </div>
+    <section class="stu__tipps wrap" aria-labelledby="tipps-h">
+      <h2 id="tipps-h">Damit die Kamera-Anprobe gut aussieht</h2>
+      <ul>
+        {tipps.map((t) => <li><strong>{t.t}</strong><span>{t.d}</span></li>)}
+      </ul>
+      <p class="stu__ehrlich">Die Anprobe zeigt Form, Farbe und Proportion. Ob eine Fassung wirklich sitzt, merken Sie erst auf der Nase: Wir messen im Laden nach und passen Bügel und Nasenauflage an.</p>
+      <a class="knopf knopf--hell knopf--voll" href={`${base}termin/`}>Termin anfragen</a>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .stu { background: var(--pflaume); color: var(--hell); padding: 6.5rem 0 var(--space-xl); border-radius: 0 0 1.75rem 1.75rem; }
+  .stu__kopf { display: grid; gap: var(--space-sm); margin-bottom: var(--space-md); }
+  .stu__kopf h1 { font-size: var(--text-2xl); }
+  .stu__kopf p { color: var(--hell-2); }
+  .stu__tipps { margin-top: var(--space-xl); display: grid; gap: var(--space-md); justify-items: start; }
+  .stu__tipps ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); width: 100%; }
+  .stu__tipps li { display: grid; gap: 0.3rem; padding-top: var(--space-smd); border-top: 1px solid rgb(255 255 255 / 0.25); }
+  .stu__tipps strong { font-family: var(--font-display); font-weight: 500; font-size: 1.5rem; line-height: 1.15; }
+  .stu__tipps span, .stu__ehrlich { color: var(--hell-2); }
+  @media (min-width: 60rem) { .stu { padding-top: 7.5rem; } }
+</style>

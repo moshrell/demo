@@ -1,0 +1,234 @@
+---
+import Base from '../layouts/Base.astro';
+import Sehfeld from '../components/Sehfeld.astro';
+import g from '../data/glaeser.json';
+import { FRAMES } from '../lib/frames';
+const base = import.meta.env.BASE_URL;
+const prices = g.arten.map((a) => ({ name: `Brillengläser ${a.name}, Paar`, price: a.preis }));
+---
+<Base
+  title="Was kosten Brillengläser? Preisrechner von Fernpunkt Augenoptik Hannover"
+  description="Glaspreise selbst ausrechnen: Einstärken, Gleitsicht oder Arbeitsplatz, dünneres Material, Tönung. Die Summe läuft mit, ohne Anmeldung."
+  current="glaeser"
+  prices={prices}
+  cta={{ label: 'Summe', href: 'termin/' }}
+>
+  <main class="re wrap">
+    <div class="re__kopf">
+      <h1>Was kosten meine Gläser?</h1>
+      <p>Vier Angaben, dann steht die Summe da. Alle Preise gelten für ein Paar Gläser mit Sehtest, Einschleifen und Anpassen.</p>
+    </div>
+
+    <form class="re__form" data-rechner novalidate>
+      <fieldset>
+        <legend>Welches Glas brauchen Sie?</legend>
+        <div class="re__karten">
+          {g.arten.map((a, i) => (
+            <label class="re__karte">
+              <input type="radio" name="art" value={a.id} data-preis={a.preis} data-name={a.name} checked={i === 0} />
+              <span><strong>{a.name}</strong><em class="zahl">{a.preis} €</em><small>{a.info}</small></span>
+            </label>
+          ))}
+        </div>
+        <div class="re__sehfeld" data-gleit hidden><Sehfeld id="re" /></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Wie stark ist Ihre Brille ungefähr?</legend>
+        <p class="klein">Steht im Brillenpass unter „Sph“. Wenn Sie es nicht wissen, lassen Sie den Regler stehen: Wir messen ohnehin nach.</p>
+        <div class="re__staerke">
+          <div class="re__regler">
+            <label for="dpt">Stärke: <output for="dpt" data-dpt-out class="zahl">−2,50 dpt</output></label>
+            <input id="dpt" name="dpt" type="range" min="-8" max="6" step="0.25" value="-2.5" />
+            <p class="re__skala klein" aria-hidden="true"><span>−8 kurzsichtig</span><span>0</span><span>weitsichtig +6</span></p>
+          </div>
+          <figure class="re__schnitt">
+            <svg viewBox="0 0 84 112" role="img" aria-labelledby="schnitt-t" data-schnitt>
+              <title id="schnitt-t">Querschnitt durch das Brillenglas</title>
+              <path data-geist fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2.5 2.5" opacity="0.5" />
+              <path data-glas />
+            </svg>
+            <figcaption data-dicke class="klein zahl"></figcaption>
+          </figure>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Wie dünn soll das Glas sein?</legend>
+        <div class="wahl">
+          {g.index.map((x, i) => (
+            <label><input type="radio" name="index" value={x.id} data-n={x.n} data-preis={x.preis} data-name={x.name} checked={i === 0} /><span>{x.name}<b class="zahl">{x.preis ? `+${x.preis} €` : 'inklusive'}</b></span></label>
+          ))}
+        </div>
+        <p class="re__tipp klein" data-tipp></p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Extras, wenn Sie mögen</legend>
+        <div class="wahl">
+          {g.extras.map((x) => (
+            <label><input type="checkbox" name="extra" value={x.id} data-preis={x.preis} data-name={x.name} /><span>{x.name}<b class="zahl">+{x.preis} €</b></span></label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Und die Fassung?</legend>
+        <div class="re__feld">
+          <label for="fassung" class="sr">Fassung</label>
+          <select id="fassung" name="fassung">
+            <option value="offen" data-preis="0" data-name="Fassung suche ich im Laden aus">Suche ich im Laden aus (Preis kommt dazu)</option>
+            <option value="eigene" data-preis="0" data-name="Eigene Fassung, neue Gläser">Ich bringe meine Fassung mit</option>
+            {FRAMES.map((f) => <option value={f.id} data-preis={f.price} data-name={`Fassung ${f.name}`}>{f.name}, {f.form}: {f.price} €</option>)}
+          </select>
+        </div>
+        <p class="klein"><a href={`${base}anprobe/`}>Fassungen erst anprobieren</a></p>
+      </fieldset>
+
+      <section class="re__summe" aria-labelledby="summe-h">
+        <h2 id="summe-h">Ihre Brille</h2>
+        <dl data-zeilen></dl>
+        <p class="re__total"><span>Summe</span><strong class="zahl" data-summe aria-live="polite">89 €</strong></p>
+        <ul class="re__inkl">
+          {g.inklusive.map((t) => <li>{t}</li>)}
+        </ul>
+        <a class="knopf knopf--hell knopf--voll" href={`${base}termin/`} data-weiter>Mit dieser Auswahl Termin anfragen</a>
+        <p class="re__klein">Richtpreise dieser Beispielseite. Den verbindlichen Preis nennen wir nach dem Sehtest, vor der Bestellung.</p>
+      </section>
+    </form>
+  </main>
+</Base>
+
+<style>
+  .re { padding: clamp(7rem, 14vw, 9.5rem) 0 0; display: grid; gap: var(--space-lg); }
+  .re__kopf { display: grid; gap: var(--space-smd); }
+  .re__kopf h1 { font-size: var(--text-2xl); }
+  .re__form { display: grid; gap: var(--space-lg); }
+  fieldset { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: var(--space-smd); }
+  legend { padding: 0; margin-bottom: var(--space-smd); font-family: var(--font-display); font-size: 1.75rem; line-height: 1.12; }
+  .re__karten { display: grid; gap: var(--space-sm); grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+  .re__karte { position: relative; cursor: pointer; }
+  .re__karte input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+  .re__karte span { height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.2rem 0.75rem; align-content: start; padding: 1rem 1.1rem; border: 1.5px solid var(--linie); border-radius: 1rem; background: var(--papier); }
+  .re__karte strong { font-weight: 650; }
+  .re__karte em { font-style: normal; font-weight: 650; }
+  .re__karte small { grid-column: 1 / -1; font-size: var(--text-sm); color: var(--tinte-2); }
+  .re__karte input:checked + span { background: var(--tinte); border-color: var(--tinte); color: var(--hell); }
+  .re__karte input:checked + span small { color: var(--hell-2); }
+  .re__karte input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 3px; }
+  .re__sehfeld { margin-top: var(--space-sm); max-width: 44rem; }
+  .re__staerke { display: grid; gap: var(--space-md); align-items: center; grid-template-columns: minmax(0, 1fr) 7rem; }
+  .re__regler { display: grid; gap: 0.5rem; min-width: 0; }
+  .re__regler label { font-weight: 600; }
+  .re__regler output { font-family: var(--font-display); font-size: 1.75rem; font-weight: 500; margin-left: 0.3rem; }
+  input[type='range'] { width: 100%; height: 2.75rem; margin: 0; accent-color: var(--tinte); cursor: pointer; }
+  .re__skala { max-width: none; display: flex; justify-content: space-between; }
+  .re__schnitt { display: grid; gap: 0.3rem; justify-items: center; text-align: center; color: var(--tinte); }
+  .re__schnitt svg { width: 5.25rem; height: auto; overflow: visible; }
+  .re__schnitt :global([data-glas]) { fill: color-mix(in srgb, var(--reflex-b) 55%, #fff); stroke: var(--tinte); stroke-width: 1.2; stroke-linejoin: round; }
+  .re__schnitt figcaption { line-height: 1.3; }
+  .wahl span { gap: 0.6rem; }
+  .wahl b { font-weight: 500; opacity: 0.72; }
+  .re__tipp { min-height: 1.5em; }
+  .re__feld select { width: 100%; max-width: 30rem; min-height: 3.25rem; padding: 0.6rem 2.5rem 0.6rem 1rem; border: 1.5px solid var(--tinte); border-radius: 999px; background: var(--papier); color: var(--tinte); font: inherit; font-weight: 500; text-overflow: ellipsis; }
+  .re__summe { background: var(--pflaume); color: var(--hell); border-radius: 1.5rem; padding: clamp(1.5rem, 5vw, 3rem); display: grid; gap: var(--space-smd); }
+  .re__summe h2 { font-size: var(--text-xl); }
+  .re__summe dl { display: grid; margin: 0; }
+  .re__summe :global(dl > div) { display: flex; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; border-bottom: 1px solid rgb(255 255 255 / 0.16); }
+  .re__summe :global(dd) { margin: 0; white-space: nowrap; }
+  .re__total { max-width: none; display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .re__total strong { font-family: var(--font-display); font-weight: 500; font-size: clamp(3rem, 14vw, 5rem); line-height: 1; }
+  .re__inkl { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .re__inkl li { padding: 0.25rem 0.75rem; border: 1px solid rgb(255 255 255 / 0.3); border-radius: 999px; font-size: var(--text-xs); }
+  .re__summe .knopf { white-space: normal; text-align: center; justify-self: start; }
+  .re__klein { font-size: var(--text-xs); color: var(--hell-2); }
+  @media (max-width: 30rem) { .re__summe .knopf { justify-self: stretch; } }
+  @media (min-width: 64rem) {
+    .re__form { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); column-gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+    .re__form fieldset { grid-column: 1; }
+    .re__summe { grid-column: 2; grid-row: 1 / span 5; position: sticky; top: 5.5rem; }
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-rechner]');
+  if (form) {
+    const KEY = 'fp:glas', SAVE = 'fp:rechner';
+    const de = (n: number) => n.toLocaleString('de-DE');
+    const $ = <T extends Element>(s: string) => form.querySelector<T>(s)!;
+    const dpt = $<HTMLInputElement>('#dpt'), sel = $<HTMLSelectElement>('#fassung');
+    const cta = document.querySelector<HTMLElement>('[data-cta]');
+    const R = 25, PX = 2, TX = 6; // радиус линзы 25 мм; масштаб по высоте и по толщине
+
+    function profil(D: number, n: number) {
+      const k = 1 / (2000 * (n - 1));
+      const Fv = D >= 0 ? D + 4 : 3;           // передняя кривизна
+      const Fh = Fv - D;                        // задняя (вогнутая)
+      const sv = (y: number) => y * y * Fv * k, sh = (y: number) => y * y * Fh * k;
+      const rand0 = sh(R) - sv(R);              // край минус центр
+      const mitte = rand0 >= 0 ? 1.5 : 1.2 - rand0, rand = mitte + rand0;
+      const v: string[] = [], h: string[] = [];
+      for (let y = -R; y <= R; y += 2.5) { v.push(`${(8 + sv(y) * TX).toFixed(1)} ${(56 + y * PX).toFixed(1)}`); h.unshift(`${(8 + (mitte + sh(y)) * TX).toFixed(1)} ${(56 + y * PX).toFixed(1)}`); }
+      return { d: 'M' + v.join('L') + 'L' + h.join('L') + 'Z', mitte, rand };
+    }
+
+    function restore() {
+      try {
+        const d = JSON.parse(sessionStorage.getItem(SAVE) || 'null'); if (!d) return;
+        form.querySelectorAll<HTMLInputElement>('input[name=art],input[name=index]').forEach((i) => { i.checked = i.value === d[i.name]; });
+        form.querySelectorAll<HTMLInputElement>('input[name=extra]').forEach((i) => { i.checked = (d.extra || []).includes(i.value); });
+        if (d.dpt != null) dpt.value = d.dpt; if (d.fassung) sel.value = d.fassung;
+      } catch {}
+    }
+    const q = new URLSearchParams(location.search).get('f');
+
+    function update() {
+      const art = $<HTMLInputElement>('input[name=art]:checked'), idx = $<HTMLInputElement>('input[name=index]:checked');
+      const extras = [...form.querySelectorAll<HTMLInputElement>('input[name=extra]:checked')];
+      const fas = sel.selectedOptions[0];
+      const D = Number(dpt.value), n = Number(idx.dataset.n);
+      // Sehfeld только для Gleitsicht
+      const gleit = art.value.startsWith('gleit');
+      const box = $<HTMLElement>('[data-gleit]'); box.hidden = !gleit;
+      if (gleit) { const sf = box.querySelector<HTMLElement>('[data-sehfeld]')!; const st = art.value.replace('gleit-', ''); sf.dataset.stufe = st; sf.querySelectorAll<HTMLInputElement>('input[type=radio]').forEach((r) => { r.checked = r.value === st; }); }
+      // толщина
+      $('[data-dpt-out]').textContent = `${D > 0 ? '+' : D < 0 ? '−' : ''}${Math.abs(D).toFixed(2).replace('.', ',')} dpt`;
+      const p = profil(D, n), p0 = profil(D, 1.5);
+      $('[data-glas]').setAttribute('d', p.d); $('[data-geist]').setAttribute('d', n > 1.5 ? p0.d : '');
+      const mm = (v: number) => v.toFixed(1).replace('.', ',');
+      const ort = D < 0 ? 'Randdicke' : 'Mittendicke', w = D < 0 ? p.rand : p.mitte, w0 = D < 0 ? p0.rand : p0.mitte;
+      $('[data-dicke]').textContent = Math.abs(D) < 0.25 ? 'Ohne Stärke: überall etwa 1,5 mm' : `${ort} etwa ${mm(w)} mm` + (n > 1.5 ? `, statt ${mm(w0)} mm` : '');
+      const a = Math.abs(D); const rat = a < 2 ? '1.5' : a < 4 ? '1.6' : a < 6 ? '1.67' : '1.74';
+      const ratName = form.querySelector<HTMLInputElement>(`input[name=index][value="${rat}"]`)!.dataset.name;
+      $('[data-tipp]').textContent = rat === '1.5' ? 'Bei dieser Stärke reicht das Standardglas völlig.' : `Bei dieser Stärke empfehlen wir ${ratName}: Das Glas wird sichtbar dünner und leichter.`;
+      // сумма
+      const rows: [string, number][] = [[`Gläser ${art.dataset.name}`, Number(art.dataset.preis)]];
+      if (Number(idx.dataset.preis)) rows.push([idx.dataset.name!, Number(idx.dataset.preis)]);
+      extras.forEach((x) => rows.push([x.dataset.name!, Number(x.dataset.preis)]));
+      rows.push([fas.dataset.name!, Number(fas.dataset.preis)]);
+      const sum = rows.reduce((s, r) => s + r[1], 0);
+      $('[data-zeilen]').replaceChildren(...rows.map(([k, v]) => { const d = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v ? `${de(v)} €` : fas.value === 'offen' && k === fas.dataset.name ? 'offen' : 'inklusive'; d.append(dt, dd); return d; }));
+      $('[data-summe]').textContent = `${de(sum)} €`;
+      if (cta) { cta.replaceChildren(Object.assign(document.createElement('small'), { textContent: 'Summe' }), Object.assign(document.createElement('b'), { textContent: `${de(sum)} €` })); cta.setAttribute('aria-label', `Summe ${de(sum)} €, weiter zur Terminanfrage`); cta.classList.add('brille__glas--summe'); }
+      try {
+        sessionStorage.setItem(SAVE, JSON.stringify({ art: art.value, index: idx.value, extra: extras.map((x) => x.value), dpt: dpt.value, fassung: sel.value }));
+        sessionStorage.setItem(KEY, JSON.stringify({ rows, sum, dpt: $('[data-dpt-out]').textContent }));
+      } catch {}
+    }
+    restore();
+    if (q && [...sel.options].some((o) => o.value === q)) sel.value = q;
+    form.addEventListener('change', (e) => { // выбор в схеме Sehfeld переключает и само стекло
+      const t = e.target as HTMLInputElement;
+      if (t.name === 're-stufe') { const a = form.querySelector<HTMLInputElement>(`input[name=art][value="gleit-${t.value}"]`); if (a) a.checked = true; }
+      update();
+    });
+    form.addEventListener('input', (e) => { if ((e.target as HTMLInputElement).name !== 're-stufe') update(); });
+    update();
+  }
+</script>
+
+<style is:global>
+  .brille__glas--summe { grid-auto-flow: row; gap: 0.05rem; align-content: center; }
+  .brille__glas--summe small { font-size: 0.6875rem; font-weight: 500; opacity: 0.8; line-height: 1; }
+  .brille__glas--summe b { font-size: 1.05rem; line-height: 1; }
+</style>

@@ -1,0 +1,22 @@
+{
+  "arten": [
+    { "id": "einst", "name": "Einstärken", "preis": 89, "info": "Eine Stärke für die Ferne oder zum Lesen." },
+    { "id": "gleit-basis", "name": "Gleitsicht Basis", "preis": 289, "info": "Ferne, Bildschirm und Lesen in einem Glas. Schmalere Sehzonen." },
+    { "id": "gleit-komfort", "name": "Gleitsicht Komfort", "preis": 449, "info": "Breitere Zonen, kürzere Eingewöhnung. Unsere häufigste Wahl." },
+    { "id": "gleit-indiv", "name": "Gleitsicht Individuell", "preis": 689, "info": "Auf Ihre Fassung, Haltung und Ihren Alltag berechnet." },
+    { "id": "arbeit", "name": "Arbeitsplatz", "preis": 249, "info": "Für Bildschirm und Schreibtisch, 40 cm bis 2 m." }
+  ],
+  "index": [
+    { "id": "1.5", "n": 1.5, "name": "Standard 1,5", "preis": 0 },
+    { "id": "1.6", "n": 1.6, "name": "Dünn 1,6", "preis": 60 },
+    { "id": "1.67", "n": 1.67, "name": "Extra dünn 1,67", "preis": 120 },
+    { "id": "1.74", "n": 1.74, "name": "Dünnstes 1,74", "preis": 220 }
+  ],
+  "extras": [
+    { "id": "blau", "name": "Blaulichtfilter", "preis": 40, "info": "Für lange Bildschirmtage." },
+    { "id": "toen", "name": "Selbsttönend", "preis": 110, "info": "Wird draußen dunkel, drinnen klar." },
+    { "id": "sonne", "name": "Sonnentönung", "preis": 30, "info": "Feste Tönung in Braun, Grau oder Grün." },
+    { "id": "pol", "name": "Polarisierend", "preis": 90, "info": "Nimmt Spiegelungen auf Wasser und Straße." }
+  ],
+  "inklusive": ["Superentspiegelung", "Hartschicht gegen Kratzer", "Schmutz abweisende Oberfläche", "Sehtest und Zentrierung", "Anpassung und Nachstellen, so oft Sie möchten"]
+}

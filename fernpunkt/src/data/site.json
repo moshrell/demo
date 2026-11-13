@@ -1,0 +1,28 @@
+{
+  "name": "Fernpunkt Augenoptik",
+  "short": "Fernpunkt",
+  "legalName": "Fernpunkt Augenoptik e. K.",
+  "owner": "Henrike Brandhorst",
+  "ownerTitle": "Augenoptikermeisterin",
+  "since": 2009,
+  "address": { "street": "Jakobistraße 0", "zip": "30163", "city": "Hannover", "district": "List" },
+  "email": "hallo@example.com",
+  "phone": "030 23125 418",
+  "phoneHref": "+493023125418",
+  "mapLink": "https://www.openstreetmap.org/search?query=Jakobistra%C3%9Fe%2C%2030163%20Hannover",
+  "openingHours": "Mo-Fr 09:30-18:30, Sa 10:00-14:00",
+  "hours": [
+    { "days": [1, 2, 3, 4, 5], "label": "Montag bis Freitag", "from": "09:30", "to": "18:30" },
+    { "days": [6], "label": "Samstag", "from": "10:00", "to": "14:00" },
+    { "days": [0], "label": "Sonntag", "from": "", "to": "" }
+  ],
+  "areaServed": ["Hannover", "Region Hannover"],
+  "leistungen": [
+    { "name": "Sehtest mit Beratung", "preis": "29 €", "info": "30 Minuten. Wird beim Brillenkauf angerechnet." },
+    { "name": "Führerschein-Sehtest", "preis": "6,43 €", "info": "Ohne Termin, Bescheinigung zum Mitnehmen." },
+    { "name": "Kontaktlinsen anpassen", "preis": "ab 59 €", "info": "Mit Probelinsen und Nachkontrolle nach zwei Wochen." },
+    { "name": "Brille richten und reinigen", "preis": "kostenlos", "info": "Auch für Brillen, die nicht von uns sind." },
+    { "name": "Reparatur in der Werkstatt", "preis": "ab 9 €", "info": "Schraube, Nasenpad, Bügel. Meist am selben Tag." },
+    { "name": "Neue Gläser in Ihre Fassung", "preis": "ab 89 €", "info": "Wir prüfen vorher, ob die Fassung das mitmacht." }
+  ]
+}

@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import DatenschutzForm from '../components/DatenschutzForm.astro';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Datenschutz: Fernpunkt Augenoptik" description="Datenschutzhinweise der Beispielseite Fernpunkt Augenoptik: Terminanfrage und Kamera-Anprobe.">
+  <main class="text wrap">
+    <h1>Datenschutz</h1>
+    <h2>Kamera-Anprobe</h2>
+    <p><strong>Was passiert:</strong> Wenn Sie auf „Kamera einschalten“ tippen, fragt Ihr Browser nach der Erlaubnis für die Kamera. Das Bild wird nur auf Ihrem Gerät verarbeitet: Ein Programm im Browser (MediaPipe) erkennt die Lage von Augen und Nase, damit die Fassung an der richtigen Stelle erscheint.</p>
+    <p><strong>Was nicht passiert:</strong> Es wird kein Bild und kein Messwert an uns oder an Dritte übertragen, nichts wird gespeichert, und es findet keine Wiedererkennung von Personen statt. Das Programm und sein Rechenmodell werden von diesem Server geladen, nicht von fremden Diensten.</p>
+    <p><strong>Beenden:</strong> Mit „Kamera ausschalten“, beim Wechsel der Seite oder beim Schließen des Tabs endet der Kamerazugriff sofort. Die Erlaubnis können Sie jederzeit in den Einstellungen Ihres Browsers zurücknehmen. Ohne Kamera probieren Sie die Fassungen am Modell an.</p>
+    <DatenschutzForm formName="Terminanfrage" data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Nachricht (freiwillig), Anliegen, Wunschtag sowie die vorgemerkten Fassungen und Gläser" purpose="Wir rufen Sie zurück, vereinbaren die Uhrzeit und legen Ihre Auswahl bereit." />
+    <h2>Merkliste und Preisrechner</h2>
+    <p>Gemerkte Fassungen und Ihre Auswahl im Preisrechner liegen nur im Zwischenspeicher dieses Browser-Tabs (sessionStorage). Sie werden nicht übertragen und verschwinden, wenn Sie den Tab schließen oder die Terminanfrage absenden.</p>
+    <h2>Server, Schriften, Karten</h2>
+    <p>Diese Seite setzt keine Cookies und bindet keine fremden Dienste ein: Schriften und Bilder kommen vom eigenen Server, der Kartenlink öffnet OpenStreetMap erst nach Ihrem Klick in einem neuen Tab.</p>
+    <p><a href={base}>Zur Startseite</a></p>
+  </main>
+</Base>

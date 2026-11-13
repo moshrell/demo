@@ -1,0 +1,222 @@
+---
+import Base from '../layouts/Base.astro';
+import Sehtafel from '../components/Sehtafel.astro';
+import Buehne from '../components/Buehne.astro';
+import Sehfeld from '../components/Sehfeld.astro';
+import site from '../data/site.json';
+import glaeser from '../data/glaeser.json';
+const base = import.meta.env.BASE_URL;
+const faq = [
+  { q: 'Brauche ich einen Termin?', a: 'Für Sehtest und Kontaktlinsen bitte ja, dann haben wir 30 Minuten nur für Sie. Zum Richten, Reinigen, für kleine Reparaturen und den Führerschein-Sehtest kommen Sie einfach vorbei.' },
+  { q: 'Was kostet der Sehtest?', a: 'Der Sehtest mit Beratung kostet 29 €. Kaufen Sie danach eine Brille bei uns, rechnen wir den Betrag an.' },
+  { q: 'Wie lange dauert es, bis meine Brille fertig ist?', a: 'Einstärkengläser sind meist nach drei bis fünf Werktagen da, Gleitsichtgläser nach sieben bis zehn. Wir schleifen die Gläser in der eigenen Werkstatt ein und rufen Sie an, sobald die Brille fertig ist.' },
+  { q: 'Was passiert bei der Online-Anprobe mit meinem Kamerabild?', a: 'Nichts verlässt Ihr Gerät. Die Anprobe läuft vollständig in Ihrem Browser, es wird kein Bild übertragen oder gespeichert. Wer die Kamera nicht einschalten möchte, probiert die Fassungen am Modell an.' },
+  { q: 'Zahlt die Krankenkasse etwas dazu?', a: 'Bei Erwachsenen beteiligen sich die gesetzlichen Kassen nur in bestimmten Fällen, zum Beispiel bei sehr hohen Stärken. Bringen Sie Ihre Verordnung mit, wir rechnen den Festbetrag direkt mit der Kasse ab.' },
+];
+const prices = [
+  ...glaeser.arten.map((a) => ({ name: `Brillengläser ${a.name}, Paar`, price: a.preis })),
+  { name: 'Sehtest mit Beratung', price: 29 },
+];
+const ablauf = [
+  { t: 'Vorgespräch', d: 'Wofür brauchen Sie die Brille: Auto, Bildschirm, Lesen, Sport?' },
+  { t: 'Messung', d: 'Erst misst das Gerät, dann vergleichen Sie selbst: besser so oder so?' },
+  { t: 'Probetragen', d: 'Die ermittelte Stärke tragen Sie ein paar Minuten in der Messbrille durch den Laden.' },
+  { t: 'Ergebnis', d: 'Sie bekommen Ihre Werte ausgedruckt. Ohne Kaufzwang.' },
+];
+---
+<Base
+  title="Fernpunkt Augenoptik in Hannover-List: Brillen online anprobieren, Sehtest, Gläser mit Preis"
+  description="Augenoptik-Meisterbetrieb in Hannover-List. Fassungen direkt am Telefon anprobieren, Glaspreise selbst ausrechnen, Sehtest-Termin online anfragen."
+  image="img/sehtest.webp"
+  faq={faq}
+  prices={prices}
+>
+  <main>
+    <Sehtafel />
+
+    <section class="anp" id="anprobe">
+      <div class="wrap">
+        <div class="anp__kopf">
+          <h2>Sechs Fassungen aus unserer Werkstatt. Setzen Sie eine auf.</h2>
+          <p>Tippen Sie eine Fassung an, das Modell trägt sie sofort. Mit der Kamera Ihres Telefons sehen Sie dieselbe Fassung an sich selbst.</p>
+        </div>
+        <Buehne />
+      </div>
+    </section>
+
+    <section class="seh" id="sehtest">
+      <figure class="seh__foto">
+        <img src={`${base}img/sehtest.webp`} alt="Eine Brille wird vor eine Sehtafel gehalten; durch die Gläser sind die Zeichen scharf" width="1400" height="934" loading="lazy" decoding="async" />
+      </figure>
+      <div class="seh__text wrap">
+        <h2>Der Sehtest dauert 30 Minuten. Die meisten sind überrascht, was sie verpasst haben.</h2>
+        <ol class="seh__ablauf">
+          {ablauf.map((a) => <li><strong>{a.t}</strong><span>{a.d}</span></li>)}
+        </ol>
+        <div class="seh__fuss">
+          <p class="seh__preis"><strong class="zahl">29 €</strong><span>wird beim Brillenkauf angerechnet</span></p>
+          <a class="knopf knopf--voll" href={`${base}termin/?anliegen=sehtest`}>Sehtest anfragen</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="gla" id="glaeser">
+      <div class="wrap">
+        <h2 class="gla__h">Gleitsicht ist nicht gleich Gleitsicht. Sehen Sie selbst.</h2>
+        <div class="gla__feld"><Sehfeld id="start" /></div>
+        <div class="gla__liste">
+          <ul>
+            {glaeser.arten.map((a) => (
+              <li><span class="gla__name">{a.name}</span><span class="gla__info">{a.info}</span><span class="gla__preis zahl">ab {a.preis} €</span></li>
+            ))}
+          </ul>
+          <div class="gla__seite">
+            <p>Alle Preise gelten für ein Paar Gläser, immer mit Superentspiegelung, Hartschicht, Sehtest und Anpassung.</p>
+            <a class="knopf knopf--voll" href={`${base}glaeser/`}>Preis für meine Brille ausrechnen</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wer" id="werkstatt">
+      <div class="wer__in wrap">
+        <div class="wer__text">
+          <h2>Die Werkstatt ist zehn Schritte hinter dem Tresen.</h2>
+          <p>Gläser einschleifen, Bügel richten, Schrauben ersetzen: Das machen wir selbst und meistens, während Sie warten. Auch bei Brillen, die Sie woanders gekauft haben.</p>
+          <dl class="wer__preise">
+            {site.leistungen.map((l) => (
+              <div><dt>{l.name}<span>{l.info}</span></dt><dd class="zahl">{l.preis}</dd></div>
+            ))}
+          </dl>
+        </div>
+        <figure class="wer__foto">
+          <img src={`${base}img/werkstatt.webp`} alt="Brille mit braunem Rahmen auf der Werkbank, daneben Ersatzschrauben und Kleinteile" width="1400" height="1047" loading="lazy" decoding="async" />
+        </figure>
+      </div>
+    </section>
+
+    <section class="lad" id="laden">
+      <div class="lad__in wrap">
+        <div class="lad__fotos">
+          <img class="lad__f1" src={`${base}img/fassungen.webp`} alt="Auslage mit Brillenfassungen in vielen Formen und Farben" width="1400" height="1050" loading="lazy" decoding="async" />
+          <img class="lad__f2" src={`${base}img/laden.webp`} alt="Beleuchtetes Regal mit Brillen im Laden" width="1080" height="1350" loading="lazy" decoding="async" />
+        </div>
+        <div class="lad__text">
+          <h2>{site.address.street.replace(/ 0$/, '')}, zwischen Bäcker und Buchladen.</h2>
+          <p>{site.owner} ist {site.ownerTitle} und führt den Laden seit {site.since}. Die Werkstattkollektion von dieser Seite ist nur ein Teil: Im Laden liegen außerdem Fassungen kleiner, unabhängiger Hersteller.</p>
+          <dl class="lad__zeiten">
+            {site.hours.map((h) => <div data-tage={h.days.join(',')}><dt>{h.label}</dt><dd class="zahl">{h.from ? `${h.from} bis ${h.to} Uhr` : 'geschlossen'}</dd></div>)}
+          </dl>
+          <p class="lad__jetzt" data-offen></p>
+          <div class="lad__tun">
+            <a class="knopf knopf--voll" href={`tel:${site.phoneHref}`}>{site.phone}</a>
+            <a class="knopf" href={site.mapLink} target="_blank" rel="noopener">Weg anzeigen</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fra wrap" aria-labelledby="fra-h">
+      <h2 id="fra-h">Was Kundinnen und Kunden vorher fragen</h2>
+      <div class="fra__liste">
+        {faq.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style>
+  section { scroll-margin-top: 1rem; }
+
+  /* Примерка: тёмная сцена во всю ширину */
+  .anp { background: var(--pflaume); color: var(--hell); padding: var(--space-xl) 0; border-radius: 1.75rem 1.75rem 0 0; }
+  .anp__kopf { display: grid; gap: var(--space-smd); margin-bottom: var(--space-lg); max-width: 46rem; }
+  .anp__kopf h2 { font-size: var(--text-2xl); }
+  .anp__kopf p { color: var(--hell-2); }
+
+  /* Sehtest: фото во всю ширину, текст наезжает карточкой */
+  .seh { background: var(--pflaume); padding-bottom: var(--space-xl); }
+  .seh__foto { overflow: hidden; }
+  .seh__foto img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+  .seh__text { position: relative; margin-top: -3.5rem; background: var(--papier); border-radius: 1.25rem; padding: clamp(1.5rem, 5vw, 3.5rem); display: grid; gap: var(--space-md); }
+  .seh__ablauf { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: var(--space-smd); }
+  .seh__ablauf li { counter-increment: s; display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); gap: 0 0.6rem; align-items: baseline; }
+  .seh__ablauf li::before { content: counter(s); grid-row: span 2; font-family: var(--font-display); font-size: 2.1rem; line-height: 1; color: var(--tinte-2); }
+  .seh__ablauf strong { font-weight: 650; }
+  .seh__ablauf span { color: var(--tinte-2); }
+  .seh__fuss { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-smd); padding-top: var(--space-md); border-top: 1px solid var(--linie); }
+  .seh__preis { display: grid; }
+  .seh__preis strong { font-family: var(--font-display); font-weight: 500; font-size: 2.75rem; line-height: 1; }
+  .seh__preis span { color: var(--tinte-2); font-size: var(--text-sm); }
+  @media (min-width: 60rem) {
+    .seh { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; padding-bottom: var(--space-xl); }
+    .seh__foto { border-radius: 0 1.25rem 1.25rem 0; align-self: stretch; }
+    .seh__foto img { height: 100%; aspect-ratio: auto; min-height: 34rem; }
+    .seh__text { margin: 0 var(--gutter) 0 -5rem; width: auto; }
+    .seh__ablauf { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Gläser */
+  .gla { padding: var(--space-xl) 0; }
+  .gla__h { font-size: var(--text-2xl); max-width: 18ch; }
+  .gla__feld { margin: var(--space-lg) auto; max-width: 58rem; }
+  .gla__liste { display: grid; gap: var(--space-lg); }
+  .gla__liste ul { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--tinte); }
+  .gla__liste li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.1rem 1rem; padding: 0.9rem 0; border-bottom: 1px solid var(--linie); }
+  .gla__name { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.15; }
+  .gla__preis { grid-row: 1; grid-column: 2; align-self: baseline; font-weight: 650; white-space: nowrap; }
+  .gla__info { grid-column: 1 / -1; color: var(--tinte-2); font-size: var(--text-sm); }
+  .gla__seite { display: grid; gap: var(--space-smd); align-content: start; justify-items: start; }
+  @media (max-width: 26rem) { .gla__seite .knopf { width: 100%; white-space: normal; text-align: center; } }
+  @media (min-width: 60rem) {
+    .gla__liste { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 6rem); }
+    .gla__seite { position: sticky; top: 6rem; }
+  }
+
+  /* Werkstatt */
+  .wer { background: var(--papier); padding: var(--space-xl) 0; }
+  .wer__in { display: grid; gap: var(--space-lg); }
+  .wer__text { display: grid; gap: var(--space-md); align-content: start; }
+  .wer__preise { display: grid; }
+  .wer__preise > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem; align-items: baseline; padding: 0.8rem 0; border-bottom: 1px dashed var(--linie); }
+  .wer__preise dt { font-weight: 600; }
+  .wer__preise dt span { display: block; font-weight: 400; font-size: var(--text-sm); color: var(--tinte-2); }
+  .wer__preise dd { font-weight: 650; white-space: nowrap; }
+  .wer__foto img { width: 100%; border-radius: 50% 50% 1.25rem 1.25rem / 32% 32% 1.25rem 1.25rem; aspect-ratio: 4 / 5; object-fit: cover; }
+  @media (min-width: 60rem) {
+    .wer__in { grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.8fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+  }
+
+  /* Laden */
+  .lad { padding: var(--space-xl) 0 0; }
+  .lad__in { display: grid; gap: var(--space-lg); }
+  .lad__fotos { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: end; }
+  .lad__f1 { grid-column: 1 / 10; grid-row: 1; border-radius: 1.25rem; aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+  .lad__f2 { grid-column: 8 / 13; grid-row: 1; translate: 0 2.5rem; border-radius: 999px 999px 1.25rem 1.25rem; border: 6px solid var(--glas); aspect-ratio: 4 / 5; object-fit: cover; width: 100%; }
+  .lad__text { display: grid; gap: var(--space-md); align-content: start; padding-top: 2rem; }
+  .lad__zeiten { display: grid; max-width: 26rem; }
+  .lad__zeiten > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 1rem; padding: 0.5rem 0; border-bottom: 1px solid var(--linie); color: var(--tinte-2); }
+  .lad__zeiten :global(.ist-heute) { color: var(--tinte); font-weight: 650; }
+  .lad__jetzt { font-weight: 650; color: var(--ok); min-height: 1.5em; }
+  .lad__tun { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+  @media (min-width: 60rem) {
+    .lad__in { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+    .lad__text { padding-top: 0; }
+  }
+
+  /* Fragen */
+  .fra { padding: var(--space-xl) 0 0; display: grid; gap: var(--space-lg); }
+  .fra__liste { border-top: 1.5px solid var(--tinte); max-width: 52rem; }
+  .fra details { border-bottom: 1px solid var(--linie); }
+  .fra summary { display: flex; justify-content: space-between; gap: 1rem; align-items: center; min-height: 3.75rem; padding: 0.7rem 0; font-weight: 600; cursor: pointer; list-style: none; }
+  .fra summary::-webkit-details-marker { display: none; }
+  .fra summary::after { content: ''; flex: none; width: 0.9rem; height: 0.9rem; border-radius: 50%; border: 2px solid var(--tinte); transition: background-color 0.2s; }
+  .fra details[open] summary::after { background: var(--tinte); }
+  .fra details p { padding: 0 0 1.1rem; color: var(--tinte-2); }
+  @media (min-width: 60rem) { .fra { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr); } }
+</style>

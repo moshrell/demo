@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const bilder = [
+  ['Sehtafel mit Brille (Sehtest)', 'David Travis'],
+  ['Auslage mit Fassungen', 'wu yi'],
+  ['Brille mit Schrauben (Werkstatt)', 'Josue Acevedo Maldonado'],
+  ['Regal im Laden', 'Joylynn Goh'],
+  ['Blick aus dem Auto (Gleitsicht-Schema)', 'Tim Foster'],
+  ['Modell 1 der Anprobe', 'Aiony Haust'],
+  ['Modell 2 der Anprobe', 'Alyona Grishina'],
+];
+---
+<Base title="Impressum: Fernpunkt Augenoptik" description="Impressum und Bildnachweis der Beispielseite Fernpunkt Augenoptik.">
+  <main class="text wrap">
+    <h1>Impressum</h1>
+    <p><strong>Beispielseite von Kravets Webdesign.</strong> Betrieb, Personen, Adresse, Telefonnummer und Preise sind erfunden. Einen Augenoptiker „Fernpunkt“ in Hannover gibt es nicht.</p>
+    <h2>Angaben gemäß § 5 DDG (so stünden sie bei einem echten Betrieb)</h2>
+    <p>{site.legalName}<br />Inhaberin: {site.owner}, {site.ownerTitle}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+    <p>Telefon: {site.phone}<br />E-Mail: {site.email}</p>
+    <p>Berufsbezeichnung: Augenoptikermeisterin (verliehen in Deutschland). Zuständige Kammer: Handwerkskammer Hannover. Umsatzsteuer-ID und Registereintrag: bei einem echten Betrieb hier.</p>
+    <h2 id="bilder">Bildnachweis</h2>
+    <p>Alle Fotos stammen von Unsplash und stehen unter der Unsplash-Lizenz (freie Nutzung, auch gewerblich). Die abgebildeten Personen sind Modelle und haben mit dem erfundenen Betrieb nichts zu tun.</p>
+    <ul>
+      {bilder.map(([was, wer]) => <li>{was}: Foto von {wer} auf Unsplash</li>)}
+    </ul>
+    <p>Die Fassungen der Anprobe sind Zeichnungen, keine Produktfotos. Die Gesichtserkennung der Kamera-Anprobe nutzt MediaPipe (Google, Apache-Lizenz 2.0) und läuft nur im Browser.</p>
+    <p><a href={base}>Zur Startseite</a></p>
+  </main>
+</Base>

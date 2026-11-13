@@ -1,0 +1,268 @@
+---
+// SEO + KI-Sichtbarkeit (AIO) by default. Demos: noindex (index = false). Beim Kundenstart: index = true setzen.
+import '../styles/global.css';
+import site from '../data/site.json';
+const {
+  title = site.name,
+  description = '',
+  index = false,          // Demo = noindex. Echte Kundenseite: index
+  type = 'Optician',      // Schema.org-Typ
+  faq = [],               // [{ q, a }] -> sichtbarer FAQ-Block UND FAQPage-Markup
+  image = '',             // OG-Bild, relativ zu public/
+  prices = [],            // [{ name, price }] -> makesOffer
+  current = '',           // aktive Seite im Menü
+  cta = { label: 'Termin', href: 'termin/' }, // rechtes Glas der Navigation
+  dark = false,           // dunkler Seitenanfang: Marke hell
+} = Astro.props;
+const base = import.meta.env.BASE_URL;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = image ? new URL(base + image.replace(/^\//, ''), Astro.site).href : undefined;
+const graph = [
+  ...(index ? [{
+    '@type': type,
+    '@id': new URL(base, Astro.site).href + '#business',
+    name: site.name,
+    url: new URL(base, Astro.site).href,
+    description,
+    telephone: site.phone,
+    email: site.email,
+    address: { '@type': 'PostalAddress', streetAddress: site.address.street, postalCode: site.address.zip, addressLocality: site.address.city, addressCountry: 'DE' },
+    ...(site.openingHours ? { openingHours: site.openingHours } : {}),
+    ...(site.areaServed ? { areaServed: site.areaServed } : {}),
+    ...(ogImage ? { image: ogImage } : {}),
+    ...(prices.length ? { makesOffer: prices.map((p) => ({ '@type': 'Offer', priceCurrency: 'EUR', price: p.price, itemOffered: { '@type': 'Service', name: p.name } })) } : {}),
+  }] : []), // Demo (index = false): keine Geschäftsdaten-Markup mit erfundener Adresse/Telefon, nur FAQPage
+  ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
+];
+const ld = { '@context': 'https://schema.org', '@graph': graph };
+// Меню как таблица для проверки зрения: строки становятся мельче сверху вниз.
+const nav = [
+  { key: 'anprobe', href: 'anprobe/', label: 'Anprobe', visus: '0,1' },
+  { key: 'glaeser', href: 'glaeser/', label: 'Gläser & Preise', visus: '0,2' },
+  { key: 'termin', href: 'termin/', label: 'Termin anfragen', visus: '0,4' },
+  { key: 'sehtest', href: '#sehtest', label: 'Sehtest', visus: '0,6' },
+  { key: 'werkstatt', href: '#werkstatt', label: 'Werkstatt & Service', visus: '0,8' },
+  { key: 'laden', href: '#laden', label: 'Laden & Öffnungszeiten', visus: '1,0' },
+];
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
+    <meta name="theme-color" content={dark ? '#331c3b' : '#f1eff5'} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+  </head>
+  <body class={dark ? 'dunkel-oben' : undefined}>
+    <a class="skip" href="#inhalt">Zum Inhalt</a>
+    <header class="kopf">
+      <a class="marke" href={base} aria-label={`${site.name}, Startseite`}>
+        <span class="marke__name">Fernpunkt</span>
+        <span class="marke__sub">Augenoptik in Hannover-List</span>
+      </a>
+    </header>
+
+    <!-- Навигация в форме очков: левое стекло открывает меню, правое ведёт к записи (или показывает сумму) -->
+    <nav class="brille" aria-label="Hauptnavigation">
+      <span class="brille__buegel" aria-hidden="true"></span>
+      <button class="brille__glas" type="button" data-tafel-auf aria-haspopup="dialog" aria-controls="tafel">Menü</button>
+      <span class="brille__steg" aria-hidden="true"></span>
+      <a class="brille__glas brille__glas--voll" href={cta.href.startsWith('tel:') ? cta.href : base + cta.href} data-cta>{cta.label}</a>
+      <span class="brille__buegel" aria-hidden="true"></span>
+    </nav>
+
+    <dialog class="tafel" id="tafel" aria-label="Menü">
+      <div class="tafel__in">
+        <button class="tafel__zu" type="button" data-tafel-zu>Schließen</button>
+        <ul class="tafel__liste">
+          {nav.map((n, i) => (
+            <li style={`--i:${i}`}>
+              <span class="tafel__visus zahl" aria-hidden="true">{n.visus}</span>
+              <a href={base + n.href} aria-current={current === n.key ? 'page' : undefined}>{n.label}</a>
+            </li>
+          ))}
+        </ul>
+        <p class="tafel__fuss"><a href={`tel:${site.phoneHref}`}>{site.phone}</a><span data-offen>{site.openingHours}</span></p>
+      </div>
+    </dialog>
+
+    <div id="inhalt"><slot /></div>
+
+    <!-- Футер: салфетка для очков с зубчатым краем, на ней «напечатаны» адрес и часы -->
+    <footer class="fuss">
+      <div class="tuch">
+        <div class="tuch__in">
+          <p class="tuch__marke">Fernpunkt</p>
+          <div class="tuch__spalten">
+            <div>
+              <h2>Besuch</h2>
+              <p>{site.address.street}<br />{site.address.zip} {site.address.city}-{site.address.district}</p>
+              <p><a href={site.mapLink} target="_blank" rel="noopener">Auf der Karte ansehen</a></p>
+            </div>
+            <div>
+              <h2>Geöffnet</h2>
+              <dl class="tuch__zeiten">
+                {site.hours.map((h) => (
+                  <div data-tage={h.days.join(',')}><dt>{h.label}</dt><dd class="zahl">{h.from ? `${h.from} bis ${h.to}` : 'geschlossen'}</dd></div>
+                ))}
+              </dl>
+              <p class="tuch__jetzt" data-offen></p>
+            </div>
+            <div>
+              <h2>Kontakt</h2>
+              <p><a href={`tel:${site.phoneHref}`}>{site.phone}</a><br /><a href={`mailto:${site.email}`}>{site.email}</a></p>
+              <p><a href={`${base}termin/`}>Termin anfragen</a></p>
+            </div>
+          </div>
+          <p class="tuch__recht">
+            <a href={`${base}impressum/`}>Impressum</a>
+            <a href={`${base}datenschutz/`}>Datenschutz</a>
+            <a href={`${base}impressum/#bilder`}>Bildnachweis</a>
+          </p>
+          {!index && <p class="tuch__demo">Demo-Seite: Betrieb, Personen und Preise sind erfunden. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihr Geschäft? Jetzt anfragen</a></p>}
+        </div>
+      </div>
+      <p class="fuss__zeile">Wenn Sie diese Zeile mühelos lesen, sehen Sie gut. Wir freuen uns trotzdem über Ihren Besuch.</p>
+    </footer>
+
+    <script define:vars={{ hours: site.hours }}>
+      if ('scrollRestoration' in history && !location.hash) history.scrollRestoration = 'manual';
+      // «Сейчас открыто»: время по Берлину, без запросов.
+      (() => {
+        const parts = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date()).map((p) => [p.type, p.value]));
+        const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(parts.weekday);
+        const now = Number(parts.hour) * 60 + Number(parts.minute);
+        const min = (t) => Number(t.slice(0, 2)) * 60 + Number(t.slice(3));
+        const of = (d) => hours.find((h) => h.days.includes(d));
+        const today = of(day);
+        const names = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+        let text;
+        if (today && today.from && now >= min(today.from) && now < min(today.to)) text = `Jetzt geöffnet, heute bis ${today.to} Uhr`;
+        else if (today && today.from && now < min(today.from)) text = `Heute ab ${today.from} Uhr geöffnet`;
+        else { let d = day, n = null; for (let i = 1; i <= 7; i++) { d = (day + i) % 7; if (of(d) && of(d).from) { n = of(d); break; } } text = n ? `Geschlossen. ${names[d]} ab ${n.from} Uhr wieder da` : ''; }
+        document.querySelectorAll('[data-offen]').forEach((e) => { e.textContent = text; });
+        document.querySelectorAll('[data-tage]').forEach((e) => { if (e.dataset.tage.split(',').includes(String(day))) e.classList.add('ist-heute'); });
+      })();
+      // Меню-таблица
+      (() => {
+        const d = document.getElementById('tafel');
+        const auf = document.querySelector('[data-tafel-auf]');
+        auf.addEventListener('click', () => { if (d.showModal) d.showModal(); else d.setAttribute('open', ''); });
+        d.querySelector('[data-tafel-zu]').addEventListener('click', () => d.close());
+        d.addEventListener('click', (e) => { if (e.target === d || e.target.closest('a')) d.close(); });
+      })();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .skip { position: absolute; left: -999rem; top: 0.5rem; z-index: 100; padding: 0.6rem 1rem; background: var(--tinte); color: var(--hell); border-radius: 999px; }
+  .skip:focus { left: 0.5rem; }
+
+  /* Шапка: только марка, она уезжает со страницей */
+  .kopf { position: absolute; inset: 0 0 auto 0; z-index: 20; padding: 1.1rem var(--gutter) 0; pointer-events: none; }
+  .marke { pointer-events: auto; display: inline-grid; gap: 0.1rem; text-decoration: none; color: var(--tinte); }
+  .marke__name { font-family: var(--font-display); font-size: 1.7rem; font-weight: 600; line-height: 1; letter-spacing: -0.01em; }
+  .marke__sub { font-size: var(--text-xs); color: var(--tinte-2); letter-spacing: 0.01em; }
+  .dunkel-oben .marke, .dunkel-oben .marke__sub { color: var(--hell); }
+
+  /* Навигация-очки */
+  .brille {
+    position: fixed; z-index: 40; left: 0; right: 0; bottom: calc(0.85rem + env(safe-area-inset-bottom));
+    display: flex; align-items: center; justify-content: center; pointer-events: none;
+  }
+  .brille__glas {
+    pointer-events: auto; flex: none; display: grid; place-items: center;
+    width: clamp(6.9rem, 34vw, 8.25rem); height: 3.5rem; padding: 0 0.75rem;
+    border: 2px solid var(--tinte); border-radius: 44% 44% 50% 50% / 40% 40% 60% 60%;
+    background: color-mix(in srgb, var(--papier) 82%, transparent);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3); backdrop-filter: blur(14px) saturate(1.3);
+    box-shadow: 0 0 0 1.5px rgb(255 255 255 / 0.6), 0 10px 24px -12px rgb(42 23 48 / 0.55);
+    color: var(--tinte); font-weight: 650; font-size: var(--text-sm); line-height: 1; text-decoration: none; white-space: nowrap; cursor: pointer;
+   
+  }
+  .brille__glas--voll { background: var(--tinte); color: var(--hell); }
+  .brille__steg { flex: none; width: 1.15rem; height: 0.8rem; margin: -1.1rem -2px 0; border-top: 2.5px solid var(--tinte); border-radius: 50% 50% 0 0 / 100% 100% 0 0; filter: drop-shadow(0 1.5px 0 rgb(255 255 255 / 0.6)); }
+  .brille__buegel { flex: 1 1 0; height: 2.5px; margin-top: -1.15rem; background: var(--tinte); box-shadow: 0 1.5px 0 rgb(255 255 255 / 0.6); }
+  .brille__buegel:first-child { border-radius: 0 2px 2px 0; margin-right: -1px; }
+  .brille__buegel:last-child { margin-left: -1px; }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .brille__glas { transition: transform 0.2s cubic-bezier(0.3, 1.4, 0.5, 1), background-color 0.2s; }
+    .brille__glas:hover { transform: translateY(-2px); }
+  }
+  @media (min-width: 60rem) {
+    .brille { bottom: auto; top: 1.1rem; justify-content: flex-end; }
+    .brille__buegel:first-child { flex: 0 0 2.2rem; }
+    .brille__buegel:last-child { flex: 0 0 var(--gutter); }
+    .brille__glas { width: 8.25rem; height: 3.25rem; }
+  }
+  @media (max-height: 30rem) and (max-width: 59.99rem) { /* телефон боком: очки компактнее */
+    .brille__glas { height: 2.9rem; width: 6.5rem; }
+    :root { --nav-h: 4.25rem; }
+  }
+
+  /* Меню: таблица зрения */
+  .tafel { width: 100%; max-width: none; height: 100%; max-height: none; margin: 0; padding: 0; border: 0; background: var(--pflaume); color: var(--hell); overflow: auto; }
+  .tafel::backdrop { background: var(--pflaume); }
+  .tafel__in { min-height: 100%; display: grid; grid-template-rows: auto 1fr auto; gap: var(--space-md); padding: 1.1rem var(--gutter) calc(1.5rem + env(safe-area-inset-bottom)); }
+  .tafel__zu { justify-self: end; min-height: 3rem; padding: 0.5rem 1.2rem; border: 1.5px solid var(--hell); border-radius: 999px; background: none; color: var(--hell); font-weight: 600; cursor: pointer; }
+  .tafel__liste { list-style: none; margin: 0; padding: 0; align-self: center; display: grid; gap: clamp(0.5rem, 2.2vh, 1.4rem); justify-items: center; text-align: center; }
+  .tafel__liste li { position: relative; width: 100%; display: grid; justify-items: center; font-size: calc(clamp(2rem, 11.5vw, 5.6rem) * (1 - var(--i) * 0.125)); }
+  .tafel__liste a { display: inline-block; padding: 0.12em 0.2em; min-height: 2.75rem; font-family: var(--font-display); font-weight: 500; line-height: 1.02; letter-spacing: 0.01em; text-decoration: none; }
+  .tafel__liste a[aria-current='page'] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.16em; }
+  .tafel__visus { position: absolute; left: 0; top: 50%; translate: 0 -50%; font-family: var(--font-text); font-size: var(--text-xs); color: var(--hell-2); }
+  .tafel__fuss { max-width: none; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; font-size: var(--text-sm); color: var(--hell-2); }
+  .tafel__fuss a { color: var(--hell); font-weight: 600; min-height: 2.75rem; display: inline-flex; align-items: center; }
+  .tafel__fuss span { display: inline-flex; align-items: center; }
+  @media (max-width: 26rem) { .tafel__visus { display: none; } }
+  @media (hover: hover) { .tafel__liste a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.16em; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .tafel[open] .tafel__liste li { animation: tafel-scharf 0.55s both; animation-delay: calc(var(--i) * 55ms); }
+    @keyframes tafel-scharf { from { filter: blur(calc(4px + var(--i) * 3px)); opacity: 0.2; } to { filter: blur(0); opacity: 1; } }
+  }
+
+  /* Футер-салфетка */
+  .fuss { padding: var(--space-xl) 0 var(--space-md); overflow-x: clip; }
+  .tuch {
+    --zack: 14px;
+    width: min(100% - 1.25rem, 70rem); margin-inline: auto; rotate: -1.2deg;
+    color: var(--hell);
+    background:
+      repeating-linear-gradient(45deg, rgb(255 255 255 / 0.04) 0 1px, transparent 1px 5px),
+      repeating-linear-gradient(-45deg, rgb(0 0 0 / 0.1) 0 1px, transparent 1px 5px),
+      linear-gradient(160deg, var(--pflaume-2), var(--pflaume) 55%);
+    -webkit-mask:
+      conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / var(--zack) 51% repeat-x,
+      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--zack) 51% repeat-x;
+    mask:
+      conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / var(--zack) 51% repeat-x,
+      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--zack) 51% repeat-x;
+  }
+  .tuch__in { padding: clamp(2.5rem, 7vw, 4.5rem) clamp(1.4rem, 5vw, 4rem) clamp(2.25rem, 6vw, 3.5rem); display: grid; gap: var(--space-lg); }
+  .tuch__marke { max-width: none; font-family: var(--font-display); font-weight: 500; font-size: clamp(3.2rem, 16vw, 11rem); line-height: 0.86; letter-spacing: -0.03em; color: var(--hell); opacity: 0.94; }
+  .tuch__spalten { display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14.5rem), 1fr)); }
+  .tuch__spalten > div { display: grid; gap: var(--space-sm); align-content: start; }
+  .tuch h2 { font-family: var(--font-text); font-size: var(--text-sm); font-weight: 600; letter-spacing: 0; color: var(--hell-2); line-height: 1.3; }
+  .tuch a { display: inline-block; padding-block: 0.3rem; }
+  .tuch__zeiten { display: grid; gap: 0.2rem; }
+  .tuch__zeiten > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 1rem; max-width: 22rem; color: var(--hell-2); }
+  .tuch__zeiten .ist-heute { color: var(--hell); font-weight: 600; }
+  .tuch__jetzt { color: var(--reflex-a); font-weight: 600; min-height: 1.5em; }
+  .tuch__recht { max-width: none; display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; padding-top: var(--space-md); border-top: 1px solid rgb(255 255 255 / 0.18); font-size: var(--text-sm); }
+  .tuch__recht a { min-height: 2.75rem; display: inline-flex; align-items: center; }
+  .tuch__demo { font-size: var(--text-sm); color: var(--hell-2); max-width: none; }
+  .tuch__demo a { color: var(--hell); }
+  .fuss__zeile { max-width: none; margin-top: var(--space-lg); padding-inline: var(--gutter); text-align: center; font-size: 0.6875rem; letter-spacing: 0.02em; color: var(--tinte-2); }
+</style>

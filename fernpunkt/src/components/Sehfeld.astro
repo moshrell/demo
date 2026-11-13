@@ -1,0 +1,59 @@
+---
+// Наглядно: чем дороже прогрессивное стекло (Gleitsicht), тем шире резкие зоны. Размытая копия фото лежит поверх резкой,
+// маска вырезает в ней три зоны: даль (сверху), средняя дистанция, близь (снизу).
+const { id = 'sf', stufe = 'komfort' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const stufen = [
+  { id: 'basis', name: 'Basis' },
+  { id: 'komfort', name: 'Komfort' },
+  { id: 'indiv', name: 'Individuell' },
+];
+---
+<figure class="sf" data-sehfeld data-stufe={stufe}>
+  <div class="sf__bild">
+    <img src={`${base}img/strasse.webp`} alt="Blick aus dem Auto auf eine Landstraße: oben die Ferne, in der Mitte das Armaturenbrett, unten die Hand am Lenkrad" width="1400" height="934" loading="lazy" decoding="async" />
+    <img class="sf__weich" src={`${base}img/strasse.webp`} alt="" aria-hidden="true" width="1400" height="934" loading="lazy" decoding="async" />
+    <ul class="sf__zonen" aria-hidden="true"><li>Ferne</li><li>Bildschirm, Tacho</li><li>Lesen</li></ul>
+  </div>
+  <div class="sf__unten">
+    <div class="wahl" role="radiogroup" aria-label="Gleitsichtglas wählen">
+      {stufen.map((s) => (
+        <label><input type="radio" name={`${id}-stufe`} value={s.id} checked={s.id === stufe} /><span>{s.name}</span></label>
+      ))}
+    </div>
+    <figcaption class="klein">Schematische Darstellung. Jedes Gleitsichtglas hat am Rand unscharfe Bereiche; bei besseren Gläsern sind sie kleiner und die Eingewöhnung fällt leichter.</figcaption>
+  </div>
+</figure>
+
+<style>
+  .sf { display: grid; gap: var(--space-smd); }
+  .sf[data-stufe='basis'] { --z1: 46%; --z2: 11%; --z3: 22%; }
+  .sf[data-stufe='komfort'] { --z1: 66%; --z2: 18%; --z3: 34%; }
+  .sf[data-stufe='indiv'] { --z1: 92%; --z2: 29%; --z3: 50%; }
+  .sf__bild { position: relative; overflow: hidden; border-radius: 46% 46% 50% 50% / 38% 38% 62% 62%; aspect-ratio: 3 / 2; background: var(--pflaume); border: 3px solid var(--tinte); }
+  .sf__bild img { width: 100%; height: 100%; object-fit: cover; }
+  .sf__weich {
+    position: absolute; inset: 0; filter: blur(7px) saturate(0.9); scale: 1.04;
+    -webkit-mask-image:
+      radial-gradient(ellipse var(--z1) 30% at 50% 24%, transparent 58%, #000 100%),
+      radial-gradient(ellipse var(--z2) 36% at 50% 56%, transparent 58%, #000 100%),
+      radial-gradient(ellipse var(--z3) 26% at 50% 84%, transparent 58%, #000 100%);
+    mask-image:
+      radial-gradient(ellipse var(--z1) 30% at 50% 24%, transparent 58%, #000 100%),
+      radial-gradient(ellipse var(--z2) 36% at 50% 56%, transparent 58%, #000 100%),
+      radial-gradient(ellipse var(--z3) 26% at 50% 84%, transparent 58%, #000 100%);
+    -webkit-mask-composite: source-in; mask-composite: intersect;
+  }
+  @media (prefers-reduced-motion: no-preference) { .sf { transition: --z1 0.6s ease, --z2 0.6s ease, --z3 0.6s ease; } }
+  .sf__zonen { list-style: none; margin: 0; padding: 0; position: absolute; inset: 14% auto 9% 50%; translate: -50% 0; display: grid; align-content: space-between; justify-items: center; pointer-events: none; }
+  .sf__zonen li { padding: 0.12rem 0.6rem; border-radius: 999px; background: rgb(23 16 27 / 0.7); color: #fff; font-size: var(--text-xs); font-weight: 600; white-space: nowrap; }
+  .sf__unten { display: grid; gap: var(--space-sm); justify-items: center; text-align: center; }
+  .sf__unten .wahl { justify-content: center; }
+  .sf figcaption { max-width: 44rem; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-sehfeld]').forEach((sf) => {
+    sf.addEventListener('change', (e) => { const i = e.target as HTMLInputElement; if (i.type === 'radio') sf.dataset.stufe = i.value; });
+  });
+</script>

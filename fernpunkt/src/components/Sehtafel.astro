@@ -1,0 +1,120 @@
+---
+// Первый экран: заголовок набран как таблица для проверки зрения. Нижние строки размыты, как видит их близорукий;
+// круглая линза (её можно двигать пальцем) делает резким всё, что под ней.
+const base = import.meta.env.BASE_URL;
+const zeilen = [
+  { v: '0,1', t: 'GUT' },
+  { v: '0,2', t: 'SEHEN.' },
+  { v: '0,4', t: 'GUT AUSSEHEN.' },
+  { v: '0,8', t: 'BRILLEN, GLÄSER UND SEHTEST' },
+  { v: '1,0', t: 'AUS EINER WERKSTATT IN HANNOVER-LIST' },
+];
+---
+<section class="st">
+  <div class="st__tafel" data-tafel>
+    <!-- размытая копия: только для вида -->
+    <div class="st__lage st__lage--weich" aria-hidden="true">
+      {zeilen.map((z, i) => <span class={`st__z st__z--${i + 1}`}><i class="st__v zahl">{z.v}</i>{z.t}</span>)}
+    </div>
+    <!-- резкая копия: настоящий заголовок, видна внутри линзы -->
+    <h1 class="st__lage st__lage--scharf">
+      {zeilen.map((z, i) => <span class={`st__z st__z--${i + 1}`}><i class="st__v zahl" aria-hidden="true">{z.v}</i>{z.t} </span>)}
+    </h1>
+    <div class="st__linse" data-linse aria-hidden="true"><span>verschieben</span></div>
+  </div>
+  <div class="st__tun wrap">
+    <p class="st__satz">Probieren Sie unsere Fassungen gleich hier an. Den Sehtest und das Anpassen machen wir dann in Ruhe im Laden.</p>
+    <div class="st__knoepfe">
+      <a class="knopf knopf--voll" href={`${base}anprobe/`}>Brille anprobieren</a>
+      <a class="knopf" href={`${base}termin/`}>Sehtest-Termin</a>
+    </div>
+    <p class="klein" data-offen></p>
+  </div>
+</section>
+
+<style>
+  .st { min-height: calc(100svh - var(--nav-h)); display: grid; grid-template-rows: 1fr auto; gap: var(--space-md); padding: 5.5rem 0 var(--space-lg); }
+  .st__tafel { --r: clamp(4.6rem, 23vw, 8rem); position: relative; align-self: center; width: 100%; padding: 0.5rem 0; touch-action: pan-y; }
+  .st__lage { margin: 0; display: grid; justify-items: center; gap: clamp(0.35rem, 1.6vw, 1.1rem); text-align: center; font-family: var(--font-display); font-weight: 600; line-height: 0.94; letter-spacing: 0.035em; color: var(--tinte); text-wrap: nowrap; }
+  .st__z { position: relative; display: block; width: 100%; white-space: nowrap; }
+  .st__z--1 { font-size: clamp(5.2rem, 31vw, 17rem); letter-spacing: 0.06em; }
+  .st__z--2 { font-size: clamp(3rem, 17.5vw, 9.6rem); }
+  .st__z--3 { font-size: clamp(1.5rem, 8.3vw, 4.6rem); letter-spacing: 0.06em; }
+  .st__z--4 { font-size: clamp(0.7rem, 3.45vw, 2.2rem); letter-spacing: 0.1em; font-weight: 500; }
+  .st__z--5 { font-size: clamp(0.5rem, 2.5vw, 1.6rem); letter-spacing: 0.12em; font-weight: 500; }
+  .st__v { position: absolute; left: var(--gutter); top: 50%; translate: 0 -50%; font-family: var(--font-text); font-style: normal; font-weight: 400; font-size: 0.6875rem; letter-spacing: 0; color: var(--tinte-2); }
+  .st__lage--weich .st__z--3 { filter: blur(0.9px); }
+  .st__lage--weich .st__z--4 { filter: blur(2px); }
+  .st__lage--weich .st__z--5 { filter: blur(3px); }
+  .st__lage--weich .st__v { opacity: 0.7; }
+  /* резкий слой лежит поверх и обрезан кругом линзы; внутри немного увеличен */
+  .st__lage--scharf {
+    position: absolute; inset: 0; padding: 0.5rem 0; background: var(--glas);
+    clip-path: circle(var(--r) at var(--lx) var(--ly));
+    transform-origin: var(--lx) var(--ly); transform: scale(1.14);
+  }
+  .st__linse {
+    position: absolute; left: var(--lx); top: var(--ly); width: calc(var(--r) * 2.28); aspect-ratio: 1; translate: -50% -50%;
+    border-radius: 50%; border: 2.5px solid var(--tinte); cursor: grab; touch-action: none;
+    background:
+      radial-gradient(circle at 28% 22%, rgb(255 255 255 / 0.5), transparent 34%),
+      linear-gradient(135deg, color-mix(in srgb, var(--reflex-a) 16%, transparent), transparent 45%, color-mix(in srgb, var(--reflex-b) 24%, transparent));
+    box-shadow: inset 0 0 0 5px rgb(255 255 255 / 0.4), 0 22px 44px -20px rgb(42 23 48 / 0.6);
+  }
+  .st__linse:active { cursor: grabbing; }
+  .st__linse span { position: absolute; left: 50%; bottom: 7%; translate: -50% 0; padding: 0.15rem 0.6rem; border-radius: 999px; background: var(--tinte); color: var(--hell); font-size: 0.6875rem; font-weight: 600; white-space: nowrap; transition: opacity 0.3s; }
+  .st__tafel.bewegt .st__linse span { opacity: 0; }
+  .st__tun { margin-top: var(--space-sm); display: grid; gap: var(--space-smd); justify-items: center; text-align: center; }
+  .st__satz { max-width: 34rem; font-size: var(--text-md); }
+  .st__knoepfe { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-sm); }
+  .st__tun .klein { min-height: 1.5em; }
+  @media (max-width: 22.5rem) { .st__knoepfe .knopf { width: 100%; } }
+  @media (min-width: 60rem) {
+    /* на широком экране таблица подстраивается и под высоту окна, чтобы кнопки оставались на первом экране */
+    .st { padding-top: 6.5rem; min-height: 100svh; --k: min(1vw, 1.45svh); }
+    .st__tafel { --r: clamp(6rem, calc(var(--k) * 9.5), 9.5rem); }
+    .st__z--1 { font-size: calc(var(--k) * 19); }
+    .st__z--2 { font-size: calc(var(--k) * 10.6); }
+    .st__z--3 { font-size: calc(var(--k) * 5.1); }
+    .st__z--4 { font-size: calc(var(--k) * 2.45); }
+    .st__z--5 { font-size: calc(var(--k) * 1.8); }
+  }
+  @media (max-height: 34rem) { /* телефон боком: таблица ниже ростом */
+    .st { min-height: 0; padding-top: 4.5rem; }
+    .st__tafel { --r: 4.2rem; }
+    .st__z--1 { font-size: clamp(3rem, 15vw, 8rem); }
+    .st__z--2 { font-size: clamp(2rem, 8.5vw, 5rem); }
+    .st__z--3 { font-size: clamp(1.2rem, 4.2vw, 2.4rem); }
+    .st__z--4 { font-size: clamp(0.7rem, 2vw, 1.2rem); }
+    .st__z--5 { font-size: clamp(0.56rem, 1.5vw, 0.9rem); }
+  }
+</style>
+
+<script>
+  // Линза: перетаскивание пальцем/мышью, стрелки не нужны (текст доступен и без неё).
+  const tafel = document.querySelector<HTMLElement>('[data-tafel]');
+  const linse = tafel?.querySelector<HTMLElement>('[data-linse]');
+  if (tafel && linse) {
+    const set = (x: number, y: number) => { tafel.style.setProperty('--lx', x.toFixed(2) + '%'); tafel.style.setProperty('--ly', y.toFixed(2) + '%'); };
+    const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
+    let drag = false, ox = 0, oy = 0, cx = 50, cy = 78;
+    const from = (e: PointerEvent) => { const r = tafel.getBoundingClientRect(); return [((e.clientX - r.left) / r.width) * 100, ((e.clientY - r.top) / r.height) * 100]; };
+    linse.addEventListener('pointerdown', (e) => { drag = true; linse.setPointerCapture(e.pointerId); const [x, y] = from(e); ox = x - cx; oy = y - cy; tafel.classList.add('bewegt'); e.preventDefault(); });
+    linse.addEventListener('pointermove', (e) => { if (!drag) return; const [x, y] = from(e); cx = clamp(x - ox, 6, 94); cy = clamp(y - oy, 4, 96); set(cx, cy); });
+    const end = () => { drag = false; };
+    linse.addEventListener('pointerup', end); linse.addEventListener('pointercancel', end);
+    // Вход: линза приезжает справа сверху на мелкие строки. Один раз, без движения при reduced motion.
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const t0 = performance.now(), ax = 88, ay = 24, D = 1300;
+      set(ax, ay);
+      const step = (t: number) => {
+        if (drag) return;
+        const k = Math.min(1, (t - t0 - 250) / D); if (k < 0) { requestAnimationFrame(step); return; }
+        const e = 1 - Math.pow(1 - k, 4);
+        cx = ax + (50 - ax) * e; cy = ay + (78 - ay) * e; set(cx, cy);
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+  }
+</script>

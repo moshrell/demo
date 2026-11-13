@@ -30,7 +30,7 @@ small { font-size: var(--text-xs); }
 
 .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 3rem; padding: 0.6rem 1.4rem; border: 1.5px solid currentColor; border-radius: var(--radius); background: transparent; color: inherit; font: inherit; font-weight: 600; line-height: 1.2; text-align: center; text-decoration: none; cursor: pointer; transition: background-color 0.18s, color 0.18s, border-color 0.18s; }
 .btn--main { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-.btn--warm { background: var(--warm); border-color: var(--warm); color: var(--stage); }
+.btn--warm { background: #b3391d; border-color: #b3391d; color: #fff; white-space: nowrap; }
 @media (hover: hover) { .btn:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); } .btn--main:hover { background: transparent; color: var(--ink); } .btn--warm:hover { background: var(--on-stage); border-color: var(--on-stage); color: var(--stage); } }
 
 .seg { display: inline-flex; flex-wrap: wrap; border: 1.5px solid var(--stage-rule); border-radius: var(--radius); overflow: hidden; }
@@ -308,6 +308,8 @@ html:not(.js) .rxout__item + .rxout__item { margin-top: var(--space-md); }
 .af__field label { font-weight: 600; font-size: var(--text-sm); }
 .af__opt { font-weight: 400; color: var(--ink-2); }
 .af__field input, .af__field textarea, .af__field select { width: 100%; min-height: 3rem; padding: 0.65rem 0.85rem; border: 1.5px solid var(--ink-2); border-radius: var(--radius); background: var(--paper); color: var(--ink); font: inherit; }
+.af__field select { appearance: none; -webkit-appearance: none; padding-right: 2.75rem; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%23555' stroke-width='2'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1.1rem center; }
+[data-theme='nacht'] .af__field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%23c9d2d9' stroke-width='2'/%3E%3C/svg%3E"); }
 .af__field textarea { resize: vertical; }
 .af__field input::placeholder, .af__field textarea::placeholder { color: var(--ink-2); opacity: 1; }
 .af__field input[aria-invalid='true'] { border-color: var(--alert); box-shadow: inset 0 0 0 1px var(--alert); }

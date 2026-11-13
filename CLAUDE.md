@@ -2,6 +2,8 @@
 
 Один проект = одна папка в корне (`architekt/`, ...). Новый проект создаётся из `_template/` (Astro). Скиллы в `.claude/skills/`: свои `demo-site-workflow`, `client-brief`, `scroll-bake-hero`, `mechanism-3d` (3D-механизм кодом, образец `boxer-lab/`) и сторонний `hallmark` (MIT, github.com/Nutlope/hallmark, лицензия в папке). `firecrawl-website-design-clone` в репозиторий не коммитится (`.gitignore`): лежит в `D:\Webdesign\.claude\skills\`.
 
+Перед концептом нового демо прочитать `_briefs/ПОДХОД_уникальные_демо.txt` (как сделан `fernpunkt/` и чего избегать).
+
 Брифы серий: `_briefs/` (`_briefs/handwerk/`: `00_ОБЩЕЕ_читать_первым.txt` + 6 демо; `_briefs/bau/`: строительные фирмы; `_briefs/_module/`: переиспользуемые модули, напр. участок по адресу). В облачной сессии папка проекта = `<slug>/` в корне этого репозитория, а не `D:\Webdesign\<slug>`; `leads.csv` лежит только на компьютере Степана, без него разведку делать веб-поиском.
 
 Папка `_template` и папки, начинающиеся с `_`, на GitHub Pages не публикуются.

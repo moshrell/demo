@@ -1,63 +1,70 @@
-/* Hallmark · custom theme «Wärme & Kälte» · genre: playful/atmospheric · structure: bespoke (Ziel-Hero → Messgerät → ein Termin)
- * pre-emit critique: P4 H4 E4 S5 R4 V5
- * Farblogik aus der Praxis: Glut = Wärme, Spannung, Handlung. Eis = Kühle, gelöst, Orientierung. Grundton = Haut. */
+/* Hallmark · custom theme «Befund» · genre: editorial/clinical · structure: bespoke, jeder Block ein Gegenstand der Praxis (Anatomie-Tafel, Rezept, Maßband, Quittung, Namensschild, Karteikarte, Terminkarte, Liegenpapier; Navigation als Winkelmesser, Menü als Sprossenwand)
+ * pre-emit critique: P4 H4 E4 S5 R4 V4
+ * Ruhige Praxisfarben: Porzellan, Tintenblau-Schwarz. Eine einzige warme Farbe zeigt, wo es wehtut. */
 :root {
-  --paper: #f6e1da;      /* Haut hell: Seitengrund */
-  --paper-2: #efd3c9;    /* Haut dunkler: Wechselflächen */
-  --paper-3: #fbefea;    /* angehoben: Formular, Felder */
-  --ink: #2a141b;        /* Text */
-  --ink-2: #6a4750;      /* Nebentext */
-  --rule: #d9b3a7;
-  --glut: #ff5a3c;       /* Tape, Hauptaktion (Text darauf: --on-glut) */
-  --glut-deep: #b8301a;  /* Glut als Textfarbe auf Haut */
-  --on-glut: #2a141b;
-  --eis: #a9d3ee;
-  --eis-deep: #1f5f8b;   /* Eis als Text- und Fokusfarbe auf Haut */
-  --dark: #2a141b;       /* immer dunkle Flächen */
-  --dark-2: #3b2029;
-  --dark-3: #5b3742;     /* Skalenbahn auf dunkler Fläche */
-  --on-dark: #f6e1da;
-  --on-dark-2: #d3aea8;
-  --focus: #1f5f8b;
-  --alert: #a81e14;
+  --paper: #f1f3f4;
+  --paper-2: #e5e9ec;
+  --surface: #ffffff;
+  --ink: #14202b;
+  --ink-2: #4d5b67;
+  --rule: #c7cfd6;
+  --warm: #d8482a;        /* gewählte Körperregion */
+  --warm-ink: #ad3a20;    /* dieselbe Farbe als Text auf hellem Grund */
+  --stage: #121c25;       /* dunkle Bühne der Figur, Tag und Nacht gleich */
+  --stage-2: #1b2834;
+  --stage-rule: #3a4a58;
+  --on-stage: #eef2f4;
+  --on-stage-2: #aab7c1;
+  --fig-skin: #d9b8a2;    /* Figur: Haut */
+  --fig-cloth: #2c3b46;   /* Figur: Hose */
+  --fig-eye: #e3cdbd;
+  --fig-hot: #ff4a22;     /* Figur: warme Markierung */
+  --ok: #6fcf97;          /* Punkt «jetzt erreichbar» */
+  --rosa: #f7dadd;        /* Rezeptpapier */
+  --rosa-line: #d97a8a;   /* Formularlinien */
+  --rosa-ink: #96283d;    /* Formularschrift */
+  --band: #f3c62f;        /* Maßband */
+  --band-ink: #1b1a12;
+  --holz: #c8a26c;        /* Sprossenwand */
+  --focus: #1f6fb2;
+  --alert: #a3231a;
 
-  --font-display: 'Bricolage Grotesque Variable', 'Arial Narrow', system-ui, sans-serif;
-  --font-text: 'Instrument Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Literata Variable', Georgia, 'Times New Roman', serif;
+  --font-text: 'Hanken Grotesk Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-print: 'Courier Prime', 'Courier New', monospace; /* Nadeldrucker: alles, was «eingetragen» ist */
 
   --text-xs: 0.8125rem;
   --text-sm: 0.9375rem;
   --text-md: 1.0625rem;
-  --text-lg: clamp(1.2rem, 0.9rem + 1.1vw, 1.5rem);
-  --text-h3: clamp(1.45rem, 1.1rem + 1.6vw, 2.1rem);
-  --text-h2: clamp(2.2rem, 1.2rem + 5vw, 4.6rem);
-  --text-hero: clamp(3rem, 1rem + 11vw, 8.5rem);
+  --text-lg: clamp(1.15rem, 1rem + 0.6vw, 1.35rem);
+  --text-h3: clamp(1.25rem, 1.1rem + 0.7vw, 1.6rem);
+  --text-h2: clamp(1.9rem, 1.4rem + 2.2vw, 3rem);
+  --text-h1: clamp(2.1rem, 1.5rem + 3vw, 3.6rem);
 
   --space-xs: 0.375rem;
   --space-sm: 0.75rem;
   --space-md: 1.25rem;
   --space-lg: 2rem;
-  --space-xl: 3.5rem;
-  --space-2xl: clamp(4.5rem, 3rem + 7vw, 9rem);
+  --space-xl: 3.25rem;
+  --space-2xl: clamp(4rem, 3rem + 5vw, 7.5rem);
   --gutter: clamp(1.125rem, 0.5rem + 3.2vw, 3.5rem);
   --max: 76rem;
-  --radius: 0.9rem;
-  --pill: 999px;
-  --bar: 0px; /* Höhe der unteren Aktionsleiste (mobil) */
+  --radius: 0.4rem;
+  --bar: 0px;
   --ease: cubic-bezier(0.22, 0.8, 0.26, 1);
 }
 :root[data-theme='nacht'] {
-  --paper: #1c0e14;
-  --paper-2: #27151c;
-  --paper-3: #311c25;
-  --ink: #f6e1da;
-  --ink-2: #cfa9a3;
-  --rule: #553640;
-  --glut-deep: #ff8266;
-  --eis-deep: #a9d3ee;
-  --dark: #311c25;
-  --dark-2: #40262f;
-  --dark-3: #63414c;
-  --focus: #a9d3ee;
+  --paper: #0f1820;
+  --paper-2: #16222c;
+  --surface: #1b2833;
+  --ink: #e9eef1;
+  --ink-2: #a7b4be;
+  --rule: #33424f;
+  --warm-ink: #ff8e6e;
+  --rosa: #33222a;
+  --rosa-line: #8f4c5a;
+  --rosa-ink: #f2b3bf;
+  --focus: #8cc4f0;
   --alert: #ff9483;
 }
-@media (max-width: 899px) { :root { --bar: 4rem; } }
+@media (max-width: 899px) { :root { --bar: 4.75rem; } }

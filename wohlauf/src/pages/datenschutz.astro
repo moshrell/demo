@@ -3,23 +3,22 @@ import Base from '../layouts/Base.astro';
 import DatenschutzForm from '../components/DatenschutzForm.astro';
 const base = import.meta.env.BASE_URL;
 ---
-<Base title="Datenschutz · Wohlauf" description="Datenschutzhinweise der Beispielseite Wohlauf, Praxis für Physiotherapie.">
+<Base title="Datenschutz · Wohlauf" description="Datenschutzhinweise der Beispielseite Wohlauf, Zentrum für Physiotherapie.">
   <header class="apphead"><a href={base}><span aria-hidden="true">←</span> Zur Startseite</a></header>
   <main class="legal">
     <h1 class="stretch">Datenschutz</h1>
     <p>Diese Seite lädt keine Inhalte von fremden Servern: keine Schriften, Karten, Videos oder Statistik-Dienste. Es werden keine Cookies gesetzt.</p>
     <DatenschutzForm formName="Terminanfrage"
-      data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Nachricht (freiwillig), Ihr Anliegen, Art der Abrechnung, Wunschzeiten und, nur wenn Sie es anhaken, die Messwerte aus dem Beweglichkeits-Check"
+      data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Nachricht (freiwillig), Ihr Anliegen, Art der Abrechnung und Wunschzeiten"
       purpose="Wir bearbeiten Ihre Terminanfrage und melden uns mit einem Terminvorschlag." />
-    <p><strong>Gesundheitsdaten:</strong> Angaben zu Beschwerden und die Messwerte aus dem Check sind Gesundheitsdaten (Art. 9 DSGVO). Wir verarbeiten sie nur mit Ihrer ausdrücklichen Einwilligung per Häkchen (Art. 9 Abs. 2 lit. a DSGVO) und nur für Ihre Terminanfrage. Sie können die Anfrage auch ohne diese Angaben stellen und alles Weitere am Telefon besprechen.</p>
-    <h2>Beweglichkeits-Check</h2>
-    <p><strong>Bewegungssensoren:</strong> Für die Messung liest die Seite die Lagesensoren Ihres Handys. Auf dem iPhone fragt der Browser dafür Ihre Erlaubnis ab. Die Sensorwerte werden nur während der Messung in Ihrem Browser verrechnet und nicht übertragen.</p>
-    <p><strong>Ergebnis:</strong> Die gemessenen Winkel werden auf Ihrem Gerät gespeichert (localStorage, Eintrag „wohlauf:check“), damit Sie sie später an eine Anfrage anhängen oder mit einer neuen Messung vergleichen können. Sie löschen den Eintrag, indem Sie die Website-Daten in Ihrem Browser löschen. An uns gelangt das Ergebnis nur, wenn Sie im Formular das Häkchen „Ergebnis anhängen“ setzen.</p>
+    <p><strong>Gesundheitsdaten:</strong> Angaben zu Beschwerden sind Gesundheitsdaten (Art. 9 DSGVO). Wir verarbeiten sie nur mit Ihrer ausdrücklichen Einwilligung per Häkchen (Art. 9 Abs. 2 lit. a DSGVO) und nur für Ihre Terminanfrage. Sie können die Anfrage auch ohne diese Angaben stellen und alles Weitere am Telefon besprechen.</p>
+    <h2>Figur zur Wahl der Körperregion</h2>
+    <p>Welche Körperregion Sie an der Figur wählen, wird nur in Ihrem Browser verarbeitet und nicht übertragen. Erst wenn Sie das Formular absenden, gehört die gewählte Region zu Ihrer Anfrage.</p>
     <h2>Einstellungen in Ihrem Browser</h2>
-    <p>Die gewählte Ansicht (Tag oder Nacht) und das gewählte Ziel auf der Startseite werden nur für diesen Tab gemerkt (sessionStorage) und beim Schließen des Tabs gelöscht.</p>
+    <p>Die gewählte Ansicht (Tag oder Nacht) und der Stand des Formulars werden nur für diesen Tab gemerkt (sessionStorage) und beim Schließen des Tabs gelöscht.</p>
     <h2>Hosting</h2>
-    <p>Bei einer echten Praxis stehen hier der Hosting-Anbieter, die Server-Protokolle (IP-Adresse, Zeitpunkt, abgerufene Seite) und deren Speicherdauer.</p>
+    <p>Bei einem echten Zentrum stehen hier der Hosting-Anbieter, die Server-Protokolle (IP-Adresse, Zeitpunkt, abgerufene Seite) und deren Speicherdauer.</p>
     <h2>English summary</h2>
-    <p lang="en">Demo: nothing is sent or stored on a server. No cookies, no trackers, no third-party content. The mobility check reads your phone's orientation sensors in the browser only; the result stays on your device (localStorage) unless you tick “attach result” in the request form. What you state about your complaints is health data and is processed only with your explicit consent.</p>
+    <p lang="en">Demo: nothing is sent or stored on a server. No cookies, no trackers, no third-party content. Choosing a body region on the figure happens in your browser only. What you state about your complaints is health data and is processed only with your explicit consent.</p>
   </main>
 </Base>

@@ -1,23 +1,58 @@
 {
   "name": "Wohlauf",
-  "claim": "Praxis für Physiotherapie",
-  "legalName": "Wohlauf · Praxis für Physiotherapie, Inhaberin Ronja Dreesen",
+  "claim": "Zentrum für Physiotherapie",
+  "legalName": "Wohlauf · Zentrum für Physiotherapie, Inhaberin Ronja Dreesen",
   "owner": "Ronja Dreesen",
-  "address": { "street": "Maschwiesenweg 4", "zip": "30173", "city": "Hannover", "district": "Südstadt" },
+  "address": {
+    "street": "Maschwiesenweg 4",
+    "zip": "30173",
+    "city": "Hannover",
+    "district": "Südstadt"
+  },
   "email": "praxis@example.com",
   "phone": "030 23125 164",
   "phoneHref": "+493023125164",
   "openingHours": "Mo-Th 07:30-20:00, Fr 07:30-16:00",
   "hours": [
     null,
-    ["07:30", "20:00"],
-    ["07:30", "20:00"],
-    ["07:30", "20:00"],
-    ["07:30", "20:00"],
-    ["07:30", "16:00"],
+    [
+      "07:30",
+      "20:00"
+    ],
+    [
+      "07:30",
+      "20:00"
+    ],
+    [
+      "07:30",
+      "20:00"
+    ],
+    [
+      "07:30",
+      "20:00"
+    ],
+    [
+      "07:30",
+      "16:00"
+    ],
     null
   ],
-  "night": { "from": 22, "to": 6 },
-  "nextSlot": { "inWorkdays": 3, "time": "18:30" },
-  "areaServed": ["Hannover"]
+  "night": {
+    "from": 22,
+    "to": 6
+  },
+  "nextSlot": {
+    "inWorkdays": 3,
+    "time": "18:30"
+  },
+  "areaServed": [
+    "Hannover"
+  ],
+  "kassePreise": {
+    "KG": 27.4,
+    "MT": 32.9,
+    "KGG": 55.0,
+    "MLD": 29.9
+  },
+  "kasseGebuehr": 10
 }

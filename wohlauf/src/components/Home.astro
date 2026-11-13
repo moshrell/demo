@@ -1,36 +1,37 @@
 ---
-// Startseite (DE und EN). Texte: src/data/<lang>.json, Stammdaten: site.json. Fotos: public/img/<name>.jpg; fehlt eines, fällt der Bildplatz weg.
+// Startseite (DE und EN). Texte: src/data/<lang>.json, Stammdaten: site.json, Regionen der Figur: zones.json.
+// Jeder Block ist einem Gegenstand aus der Praxis nachgebaut: Anatomie-Tafel, Rezept, Maßband, Quittung, Namensschild, Karteikarte, Terminkarte, Liegenpapier, Winkelmesser (Navigation), Sprossenwand (Menü).
+// Fotos: public/img/<name>.jpg; fehlt eines, fällt der Bildplatz weg.
 import site from '../data/site.json';
+import zones from '../data/zones.json';
 import { has, src } from '../lib/img';
+import fs from 'node:fs';
 const { t } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const de = t.lang === 'de';
 const home = de ? base : `${base}en/`;
 const other = de ? `${base}en/` : base;
-const check = `${home}check/`;
-const g0 = t.hero.goals[0];
-const js = { status: t.status, lang: t.lang, hours: site.hours, slot: site.nextSlot, goals: t.hero.goals, night: t.night, check: t.check, form: t.form, app: { sideLeft: t.app.sideLeft, sideRight: t.app.sideRight, armLeft: t.app.armLeft, armRight: t.app.armRight, tests: t.app.tests.map((x: any) => ({ id: x.id, h: x.h })), savedAt: t.app.savedAt }, nav: { night: t.nav.night, day: t.nav.day } };
+const posterOk = fs.existsSync('public/model/poster.webp');
+const who = (id: string) => t.praxis.team.filter((p: any) => p.zones.includes(id)).map((p: any) => p.n).join(', ');
+const zname = (id: string) => t.zones.find((z: any) => z.id === id)?.short ?? id;
+const rx = [...t.leistungen.rezept, ...t.leistungen.erg];
+const c = t.kosten.calc;
+const single = t.kosten.list.filter((x: any) => !x.pack);
+const js = { status: t.status, lang: t.lang, hours: site.hours, slot: site.nextSlot, nav: { night: t.nav.night, day: t.nav.day }, zones, names: Object.fromEntries(t.zones.map((z: any) => [z.id, z.name])), model: `${base}model/body.bin`, form: t.form,
+  kasse: site.kassePreise, fee: site.kasseGebuehr, calc: c, list: t.kosten.list, rxNames: Object.fromEntries(t.leistungen.rezept.map((x: any) => [x.k, x.h])) };
+const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin', t.nav.termin], ['#kosten', t.nav.kosten], ['#team', 'Team'], ['#fragen', t.nav.fragen], ['#anfrage', t.nav.anfrage]];
 ---
 <a class="skip" href="#main">{de ? 'Zum Inhalt' : 'Skip to content'}</a>
 <header class="head">
-  <a class="mark" href={home} aria-label={`${site.name}: ${t.nav.home}`}>{site.name}</a>
+  <a class="mark" href={home} aria-label={`${site.name}: ${t.nav.home}`}><span class="mark__n">{site.name}</span><span class="mark__c">{t.claim}</span></a>
   <p class="head__status" data-status></p>
-  <nav class="head__nav" aria-label={de ? 'Abschnitte' : 'Sections'}>
-    <a href="#termin">{t.nav.termin}</a>
-    <a href="#hilfe">{t.nav.hilfe}</a>
-    <a href="#kosten">{t.nav.kosten}</a>
-    <a href="#praxis">{t.nav.praxis}</a>
-  </nav>
-  <div class="head__tools">
-    <button class="tool" type="button" data-theme-toggle aria-label={t.nav.themeLabel}><span data-theme-label>{t.nav.night}</span></button>
-    <a class="tool" href={other} data-lang-link lang={de ? 'en' : 'de'} aria-label={t.nav.lang}>{t.nav.langShort}</a>
-  </div>
+  <a class="head__tel" href={`tel:${site.phoneHref}`}>{site.phone}</a>
 </header>
 
 <main id="main" data-home data-t={JSON.stringify(js)}>
   <!-- Nachtansicht: nur bei data-theme="nacht" sichtbar -->
   <section class="nacht" aria-labelledby="nacht-h">
-    <h2 class="nacht__h stretch" id="nacht-h">{t.night.title}</h2>
+    <h2 id="nacht-h">{t.night.title}</h2>
     <p class="nacht__lead">{t.night.lead}</p>
     <ul class="nacht__tips">
       {t.night.tips.map((x: any, i: number) => (
@@ -41,144 +42,182 @@ const js = { status: t.status, lang: t.lang, hours: site.hours, slot: site.nextS
         </li>
       ))}
     </ul>
-    <div class="breath" data-breath>
-      <div class="breath__ring" aria-hidden="true"><span data-breath-word></span></div>
-      <div class="breath__side">
-        <button class="btn btn--main" type="button" data-breath-btn>{t.night.breath}</button>
-        <p class="breath__msg" data-breath-msg role="status"></p>
-      </div>
-    </div>
     <p class="nacht__contact">{t.night.contact} <a href="#anfrage">{t.nav.anfrage}</a></p>
     <p class="nacht__warn">{t.night.warn}</p>
   </section>
 
-  <section class="hero" aria-labelledby="hero-h">
-    <h1 class="hero__h" id="hero-h">
-      <span class="hero__lead">{t.hero.lead}</span>
-      <span class="word" data-word>{g0.word.split('|').map((l: string) => <span class="word__tape">{l}</span>)}</span>
-    </h1>
-    <p class="hero__pull" data-pull-hint aria-hidden="true">{t.hero.pull} <span>↔</span></p>
-    <p class="hero__sub" data-goal-sub aria-live="polite">{g0.sub}</p>
-    <div class="chips" role="group" aria-label={t.hero.chipsLabel}>
-      {t.hero.goals.map((g: any, i: number) => <button class="chip" type="button" data-goal={g.id} aria-pressed={i === 0 ? 'true' : 'false'}>{g.chip}</button>)}
+  <!-- 1 · Anatomie-Tafel -->
+  <section class="stage" id="figur" aria-labelledby="stage-h" data-chart>
+    <div class="stage__head">
+      <h1 id="stage-h">{t.hero.h}</h1>
+      <p>{t.hero.p}</p>
     </div>
-    <div class="hero__cta">
-      <a class="btn btn--main btn--two" href={check}><span>{t.hero.ctaCheck}</span><small>{t.hero.ctaCheckNote}</small></a>
-      <a class="btn" href="#anfrage">{t.hero.ctaTermin}</a>
+    <div class="chart">
+      <div class="chart__map" data-map>
+        <ol class="chart__labels" aria-label={t.hero.pick}>
+          {t.zones.map((z: any, i: number) => <li><a class="zl" href={`#z-${z.id}`} data-zone={z.id} aria-pressed="false" role="button"><span class="zl__n">{i + 1}</span><span class="zl__t">{z.short}</span></a></li>)}
+        </ol>
+        <div class="figure" data-figure>
+          {posterOk && <img class="figure__poster" src={`${base}model/poster.webp`} alt="" width="480" height="1100" decoding="async" />}
+          <canvas class="figure__canvas" data-canvas aria-hidden="true"></canvas>
+        </div>
+        <svg class="chart__lines" data-lines aria-hidden="true"></svg>
+      </div>
+      <div class="chart__ctl">
+        <div class="seg" role="group" aria-label={t.hero.turn}>
+          <button type="button" data-face="front" aria-pressed="true">{t.hero.front}</button>
+          <button type="button" data-face="back" aria-pressed="false">{t.hero.back}</button>
+        </div>
+        <p class="chart__hint" data-drag-hint>{t.hero.drag}</p>
+      </div>
+      <div class="panel" id="panel" data-panel>
+        <div class="panel__empty" data-panel-empty>
+          <p>{t.hero.empty}</p>
+          <p class="panel__other">{t.hero.other} <a href="#anfrage" data-ask="">{t.hero.otherCta}</a></p>
+        </div>
+        {t.zones.map((z: any, i: number) => (
+          <article class="zp" id={`z-${z.id}`} data-zone-panel={z.id} tabindex="-1">
+            <p class="zp__n">{i + 1}</p>
+            <h2>{z.name}</h2>
+            <p class="zp__s">{z.s}</p>
+            <h3>{t.hero.typ}</h3>
+            <ul>{z.typ.map((x: string) => <li>{x}</li>)}</ul>
+            <h3>{t.hero.wir}</h3>
+            <p>{z.wir}</p>
+            <h3>{t.hero.rez}</h3>
+            <p>{z.rez}</p>
+            {who(z.id) && <><h3>{t.hero.who}</h3><p>{who(z.id)}</p></>}
+            <a class="btn btn--warm" href="#anfrage" data-ask={z.name}>{t.hero.cta.replace('{z}', z.name)}</a>
+          </article>
+        ))}
+      </div>
     </div>
-    <dl class="hero__meta">
-      <div class="slot"><dt>{t.hero.slot}</dt><dd><span data-slot>–</span> <small>({t.hero.slotNote})</small></dd></div>
-      {t.hero.facts.map((f: string) => <div class="fact"><dd>{f}</dd></div>)}
+    <dl class="facts">
+      {t.hero.facts.map((f: any) => <div><dt>{f.n}</dt><dd>{f.t}</dd></div>)}
+      <div class="facts__slot"><dt data-slot>–</dt><dd>{t.hero.slot} <small>({t.hero.slotNote})</small></dd></div>
     </dl>
   </section>
 
-  <section class="tool-sec" id="check" aria-labelledby="check-h">
-    <div class="tool-sec__text">
-      <p class="kicker">{t.check.kicker}</p>
-      <h2 class="stretch" id="check-h" data-stretch>{t.check.title}</h2>
-      <p>{t.check.p}</p>
-      <a class="btn btn--main" href={check}>{t.check.cta}</a>
-      <p class="fine">{t.check.note}</p>
+  <!-- 2 · Rezept -->
+  <section class="sec rezept" id="leistungen" aria-labelledby="leistungen-h" data-rezept>
+    <div class="sec__head"><h2 id="leistungen-h">{t.leistungen.title}</h2><p class="lead">{t.leistungen.p}</p></div>
+    <div class="rezept__grid">
+      <div class="slip">
+        <p class="slip__top"><span>{t.leistungen.slip.title}</span><span class="slip__sample">{t.leistungen.slip.sample}</span></p>
+        <div class="slip__field slip__field--wide"><p class="slip__l">{t.leistungen.slip.heil}</p>
+          <div class="slip__chips">{t.leistungen.rezept.map((x: any, i: number) => <button type="button" class="rxk" data-rx-btn={x.k} aria-pressed={i === 0 ? 'true' : 'false'}>{x.k}</button>)}</div>
+        </div>
+        <div class="slip__field slip__field--wide"><p class="slip__l">{t.leistungen.slip.erg}</p>
+          <div class="slip__chips">{t.leistungen.erg.map((x: any) => <button type="button" class="rxk" data-rx-btn={x.k} aria-pressed="false">{x.k}</button>)}</div>
+        </div>
+        <div class="slip__field"><p class="slip__l">{t.leistungen.slip.menge}</p><p class="print">{t.leistungen.slip.mengeVal}</p></div>
+        <div class="slip__field"><p class="slip__l">{t.leistungen.slip.freq}</p><p class="print">{t.leistungen.slip.freqVal}</p></div>
+        <div class="slip__field"><p class="slip__l">{t.leistungen.slip.issued}</p><p class="print" data-rx-issued>–</p></div>
+        <div class="slip__field"><p class="slip__l">{t.leistungen.slip.start}</p><p class="print print--mark" data-rx-start>–</p></div>
+      </div>
+      <div class="rxout" aria-live="polite">
+        {rx.map((x: any, i: number) => (
+          <div class:list={['rxout__item', i === 0 && 'is-on']} data-rx={x.k}>
+            <p class="print rxout__k">{x.k}</p>
+            <h3>{x.h}</h3>
+            <p>{x.p}</p>
+          </div>
+        ))}
+        <p class="fine rxout__note">{t.leistungen.slip.startNote}</p>
+      </div>
     </div>
-    <div class="dial" data-dial>
-      <p class="dial__label">{t.check.dialLabel}</p>
-      <div class="dial__svg" data-dial-svg></div>
-      <p class="dial__hint" data-dial-hint>{t.check.dialHint} <span aria-hidden="true">↔</span></p>
-      <label class="sr" for="dial-range">{t.check.dialLabel} ({t.check.right})</label>
-      <input class="dial__range" id="dial-range" type="range" min="0" max="90" value="52" data-dial-range />
+    <div class="ohne">
+      <h3>{t.leistungen.ohneTitle}</h3>
+      <ul>{t.leistungen.ohne.map((x: any) => <li><strong>{x.h}</strong><span>{x.p}</span></li>)}</ul>
     </div>
   </section>
 
-  <section class="termin" id="termin" aria-labelledby="termin-h" data-termin>
-    <div class="termin__head">
-      <h2 class="stretch" id="termin-h" data-stretch>{t.termin.title}</h2>
-      <p class="lead">{t.termin.p}</p>
-    </div>
-    <div class="termin__clock" aria-hidden="true">
-      <svg viewBox="0 0 120 120"><circle class="clock__track" cx="60" cy="60" r="52" /><circle class="clock__fill" cx="60" cy="60" r="52" pathLength="100" data-clock /></svg>
-      <p class="clock__n"><span data-clock-n>1</span>/{t.termin.stages.length}</p>
-      <p class="clock__t" data-clock-t>{t.termin.stages[0].h}</p>
-    </div>
-    <ol class="termin__stages">
+  <!-- 3 · Maßband -->
+  <section class="sec sec--alt" id="termin" aria-labelledby="termin-h">
+    <div class="sec__head"><h2 id="termin-h">{t.termin.title}</h2><p class="lead">{t.termin.p}</p></div>
+    <ol class="tape">
       {t.termin.stages.map((s: any, i: number) => (
-        <li class="stage" data-stage={i} data-title={s.h}>
-          <p class="stage__n">{t.termin.progress} {i + 1}</p>
-          <h3>{s.h}</h3>
-          <p>{s.p}</p>
-          <ul>{s.li.map((x: string) => <li>{x}</li>)}</ul>
-          {has(`termin-${i + 1}`) && <img src={src(`termin-${i + 1}`)} alt="" width="1200" height="896" loading="lazy" decoding="async" />}
+        <li data-dur={s.to - s.from}>
+          <div class="tape__band" aria-hidden="true"><span>{s.from}</span>{i === t.termin.stages.length - 1 && <span class="tape__end">{s.to}</span>}</div>
+          <div class="tape__body">
+            <p class="print tape__t">{s.from}–{s.to} {t.termin.min}</p>
+            <h3>{s.h}</h3>
+            <p>{s.p}</p>
+            <ul>{s.li.map((x: string) => <li>{x}</li>)}</ul>
+            {has(`termin-${i + 1}`) && <img src={src(`termin-${i + 1}`)} alt="" width="1200" height="896" loading="lazy" decoding="async" />}
+          </div>
         </li>
       ))}
     </ol>
+    <p class="fine tape__note">{t.termin.note}</p>
   </section>
 
-  <section class="hilfe" id="hilfe" aria-labelledby="hilfe-h">
-    <h2 class="stretch" id="hilfe-h" data-stretch>{t.hilfe.title}</h2>
-    <p class="lead">{t.hilfe.p}</p>
-    <div class="acc">
-      {t.hilfe.items.map((x: any) => (
-        <details class="acc__item">
-          <summary><span class="acc__h">{x.h}</span><span class="acc__s">{x.s}</span><span class="acc__x" aria-hidden="true"></span></summary>
-          <dl class="acc__body">
-            <div><dt>{t.hilfe.labels.typisch}</dt><dd>{x.typisch}</dd></div>
-            <div><dt>{t.hilfe.labels.wir}</dt><dd>{x.wir}</dd></div>
-            <div><dt>{t.hilfe.labels.rezept}</dt><dd>{x.rezept}</dd></div>
-          </dl>
-        </details>
-      ))}
-    </div>
-  </section>
-
-  <section class="kosten" id="kosten" aria-labelledby="kosten-h">
-    <h2 class="stretch" id="kosten-h" data-stretch>{t.kosten.title}</h2>
-    <p class="lead">{t.kosten.p}</p>
-    <div class="tabs" data-tabs>
-      <div class="tabs__list" role="tablist" aria-label={t.kosten.title}>
-        {t.kosten.tabs.map((x: any, i: number) => <button class="tabs__tab" type="button" role="tab" id={`tab-${x.id}`} aria-controls={`panel-${x.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>{x.tab}</button>)}
-      </div>
-      {t.kosten.tabs.map((x: any, i: number) => (
-        <div class="tabs__panel" role="tabpanel" id={`panel-${x.id}`} aria-labelledby={`tab-${x.id}`} hidden={i !== 0}>
-          <h3>{x.h}</h3>
-          <p>{x.p}</p>
-          {x.li.length > 0 && <ul class="ticks">{x.li.map((l: string) => <li>{l}</li>)}</ul>}
-          {x.id === 'selbst' && <a class="btn" href="#preise">{t.kosten.listTitle}</a>}
+  <!-- 4 · Quittung -->
+  <section class="sec" id="kosten" aria-labelledby="kosten-h" data-calc>
+    <div class="sec__head"><h2 id="kosten-h">{t.kosten.title}</h2><p class="lead">{t.kosten.p}</p></div>
+    <div class="calc">
+      <div class="calc__in">
+        <p class="calc__q">{c.way}</p>
+        <div class="seg seg--light" role="tablist" aria-label={c.way}>
+          {t.kosten.tabs.map((x: any, i: number) => <button type="button" role="tab" id={`way-${x.id}`} aria-controls={`wayp-${x.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-way={x.id}>{x.tab}</button>)}
         </div>
-      ))}
-    </div>
-    <div class="preise" id="preise">
-      <div class="preise__list">
-        <h3>{t.kosten.listTitle}</h3>
-        <ul>
-          {t.kosten.list.map((x: any) => <li><span class="p__n">{x.n}{x.tax && <sup>*</sup>}</span><span class="p__d">{x.d}</span><span class="p__p">{x.p}</span></li>)}
-        </ul>
-        <p class="fine"><sup>*</sup> {t.kosten.tax} {t.kosten.demo}</p>
+        {t.kosten.tabs.map((x: any, i: number) => (
+          <div class="calc__panel" role="tabpanel" id={`wayp-${x.id}`} aria-labelledby={`way-${x.id}`} hidden={i !== 0}>
+            <h3>{x.h}</h3>
+            <p>{x.p}</p>
+            {x.li.length > 0 && <ul class="ticks">{x.li.map((l: string) => <li>{l}</li>)}</ul>}
+            {x.id === 'kasse' && (
+              <fieldset class="calc__set"><legend>{c.heil}</legend>
+                <div class="af__chips">{Object.keys(site.kassePreise).map((k, j) => <label class="af__chip"><input type="radio" name="kheil" value={k} checked={j === 0} /><span>{k}</span></label>)}</div>
+              </fieldset>
+            )}
+            {x.id === 'selbst' && (
+              <fieldset class="calc__set"><legend>{c.leist}</legend>
+                <div class="plist">{t.kosten.list.map((p: any, j: number) => <label class="plist__row"><input type="radio" name="sleist" value={j} checked={j === 0} /><span class="p__n">{p.n}</span><span class="p__d">{p.d}</span><span class="p__p">{p.p}</span></label>)}</div>
+              </fieldset>
+            )}
+            {x.id !== 'privat' && (
+              <div class="step" data-step={x.id}>
+                <p id={`step-l-${x.id}`}>{c.anz}</p>
+                <div class="step__ctl" role="group" aria-labelledby={`step-l-${x.id}`}>
+                  <button type="button" data-step-dec aria-label={c.less}>−</button>
+                  <output data-step-val>{x.id === 'kasse' ? 6 : 1}</output>
+                  <button type="button" data-step-inc aria-label={c.more}>+</button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
-      <div class="bon">
-        <h3>{t.kosten.inside.h}</h3>
-        <ul>{t.kosten.inside.li.map((x: string) => <li>{x}</li>)}</ul>
-        <p class="bon__sum"><span>{t.kosten.inside.sum}</span><strong>{t.kosten.list[0].p}</strong></p>
+      <div class="bon" aria-live="polite">
+        <p class="bon__h">{site.name} · {c.bon}</p>
+        <dl class="bon__lines" data-bon-lines>
+          <div><dt>{c.fee}</dt><dd>10,00 €</dd></div>
+        </dl>
+        <p class="bon__sum"><span>{c.sum}</span><strong data-bon-sum>–</strong></p>
+        <p class="bon__note" data-bon-note>{c.kasseNote}</p>
+        <a class="btn btn--main" href="#anfrage" data-bon-ask>{c.cta}</a>
       </div>
     </div>
   </section>
 
-  <section class="praxis" id="praxis" aria-labelledby="praxis-h">
-    <h2 class="stretch" id="praxis-h" data-stretch>{t.praxis.title}</h2>
-    <p class="lead">{t.praxis.p}</p>
-    <ul class="team">
+  <!-- 5 · Namensschilder -->
+  <section class="sec sec--alt" id="team" aria-labelledby="team-h">
+    <div class="sec__head"><h2 id="team-h">{t.praxis.title}</h2><p class="lead">{t.praxis.p}</p></div>
+    <ul class="badges">
       {t.praxis.team.map((p: any) => (
-        <li class:list={['team__p', has(p.img) && 'has-img']}>
-          {has(p.img) && <img src={src(p.img)} alt={p.n} width="896" height="1200" loading="lazy" decoding="async" />}
-          <div>
-            <h3>{p.n}</h3>
-            <p class="team__r">{p.r}</p>
-            <ul>{p.q.map((q: string) => <li>{q}</li>)}</ul>
-          </div>
+        <li class="badge">
+          {has(p.img) && <img src={src(p.img)} alt="" width="896" height="1200" loading="lazy" decoding="async" />}
+          <h3>{p.n}</h3>
+          <p class="badge__r">{p.r}</p>
+          <p class="badge__q">{p.q}</p>
+          <p class="badge__z"><span>{t.praxis.focus}</span>{p.zones.map((z: string) => <a href="#figur" data-goto-zone={z}>{zname(z)}</a>)}</p>
         </li>
       ))}
     </ul>
     {has('praxis-raum') && <img class="praxis__img" src={src('praxis-raum')} alt="" width="1600" height="900" loading="lazy" decoding="async" />}
     <div class="praxis__facts">
-      <div><h3>{t.praxis.roomTitle}</h3><ul>{t.praxis.room.map((x: string) => <li>{x}</li>)}</ul></div>
+      <div><h3>{t.praxis.roomTitle}</h3><ul class="ticks">{t.praxis.room.map((x: string) => <li>{x}</li>)}</ul></div>
       <div>
         <h3>{t.praxis.hoursTitle}</h3>
         <dl class="hours">{t.praxis.hours.map((h: string[]) => <div><dt>{h[0]}</dt><dd>{h[1]}</dd></div>)}</dl>
@@ -187,28 +226,39 @@ const js = { status: t.status, lang: t.lang, hours: site.hours, slot: site.nextS
       </div>
       <div>
         <h3>{t.footer.address}</h3>
-        <address>{site.name}<br />{site.address.street}<br />{site.address.zip} {site.address.city}-{site.address.district}<br /><a href={`mailto:${site.email}`}>{site.email}</a></address>
+        <address>{site.name} · {t.claim}<br />{site.address.street}<br />{site.address.zip} {site.address.city}-{site.address.district}<br /><a href={`mailto:${site.email}`}>{site.email}</a></address>
       </div>
     </div>
   </section>
 
-  <section class="faq" id="fragen" aria-labelledby="faq-h">
-    <h2 class="stretch" id="faq-h" data-stretch>{t.faq.title}</h2>
-    <div class="acc acc--faq">
-      {t.faq.items.map((x: any) => (
-        <details class="acc__item"><summary><span class="acc__h">{x.q}</span><span class="acc__x" aria-hidden="true"></span></summary><p class="acc__body">{x.a}</p></details>
+  <!-- 6 · Karteikarten -->
+  <section class="sec" id="fragen" aria-labelledby="faq-h">
+    <div class="sec__head"><h2 id="faq-h">{t.faq.title}</h2></div>
+    <div class="kartei">
+      {t.faq.items.map((x: any, i: number) => (
+        <details class="kk"><summary><span class="kk__tab print">{t.faq.kicker} {String.fromCharCode(65 + i)}</span><span class="kk__q">{x.q}</span><span class="kk__x" aria-hidden="true"></span></summary><p class="kk__a">{x.a}</p></details>
       ))}
     </div>
   </section>
 
-  <section class="anfrage" id="anfrage" aria-labelledby="anfrage-h">
-    <div class="anfrage__in">
-      <h2 class="stretch" id="anfrage-h" data-stretch>{t.form.title}</h2>
-      <p class="lead">{t.form.p}</p>
+  <!-- 7 · Terminkarte -->
+  <section class="sec sec--alt anfrage" id="anfrage" aria-labelledby="anfrage-h">
+    <div class="karte">
+      <div class="karte__head">
+        <p class="karte__brand"><span>{site.name}</span><span class="print">{t.form.card}</span></p>
+        <h2 id="anfrage-h">{t.form.title}</h2>
+        <p class="lead">{t.form.p}</p>
+        <dl class="karte__lines" aria-hidden="true"><div><dt>{t.form.cardDate}</dt><dd></dd></div><div><dt>{t.form.cardTime}</dt><dd></dd></div></dl>
+        <p class="fine">{t.form.cardNote}</p>
+      </div>
       <form class="af" id="af" novalidate data-af>
-        <fieldset><legend>{t.form.area}</legend>
-          <div class="af__chips">{t.form.areas.map((o: string, i: number) => <label class="af__chip"><input type="radio" name="area" value={o} checked={i === 0} /><span>{o}</span></label>)}</div>
-        </fieldset>
+        <div class="af__field"><label for="af-area">{t.form.area}</label>
+          <select id="af-area" name="area">
+            {t.zones.map((z: any) => <option value={z.name}>{z.name}</option>)}
+            <option value={t.form.areaOp}>{t.form.areaOp}</option>
+            <option value={t.form.areaOther} selected>{t.form.areaOther}</option>
+          </select>
+        </div>
         <fieldset><legend>{t.form.ins}</legend>
           <div class="af__chips">{t.form.insOpts.map((o: string, i: number) => <label class="af__chip"><input type="radio" name="ins" value={o} checked={i === 0} /><span>{o}</span></label>)}</div>
         </fieldset>
@@ -221,9 +271,6 @@ const js = { status: t.status, lang: t.lang, hours: site.hours, slot: site.nextS
           <div class="af__field"><label for="af-mail">{t.form.mail} <span class="af__opt">{t.form.optional}</span></label><input id="af-mail" name="email" type="email" autocomplete="email" inputmode="email" placeholder={t.form.mailPh} aria-describedby="af-err-mail" /><p class="af__err" id="af-err-mail" hidden>{t.form.mailErr}</p></div>
           <div class="af__field"><label for="af-note">{t.form.note} <span class="af__opt">{t.form.optional}</span></label><textarea id="af-note" name="note" rows="3" autocomplete="off" placeholder={t.form.notePh}></textarea></div>
         </fieldset>
-        <div class="af__result" data-af-result hidden>
-          <label class="af__check"><input type="checkbox" name="attach" /><span>{t.form.result}<br /><small data-af-result-text></small></span></label>
-        </div>
         <div class="af__consent">
           <label class="af__check"><input type="checkbox" name="privacy" required aria-describedby="af-err-privacy" /><span>{t.form.consent} <a href={`${base}datenschutz/`} target="_blank" rel="noopener">{t.form.consentLink}</a></span></label>
           <p class="af__err" id="af-err-privacy" hidden>{t.form.consentErr}</p>
@@ -233,16 +280,18 @@ const js = { status: t.status, lang: t.lang, hours: site.hours, slot: site.nextS
       <div class="af__done" data-af-done tabindex="-1" hidden>
         <h3>{t.form.done}</h3>
         <p>{t.form.doneP}</p>
-        <dl data-af-list></dl>
+        <dl class="print" data-af-list></dl>
         <p class="fine">{t.form.doneDemo}</p>
       </div>
     </div>
   </section>
 </main>
 
-<footer class="foot">
-  <p class="foot__mark">{site.name}</p>
-  <div class="foot__cols">
+<!-- Liegenpapier -->
+<footer class="rolle">
+  <p class="rolle__tear" aria-hidden="true">{t.footer.tear}</p>
+  <div class="rolle__in">
+    <div><p class="rolle__mark">{site.name}</p><p>{t.claim}</p></div>
     <address>{site.address.street}<br />{site.address.zip} {site.address.city}<br /><a href={`tel:${site.phoneHref}`}>{site.phone}</a><br /><a href={`mailto:${site.email}`}>{site.email}</a></address>
     <ul>
       <li><a href={`${base}impressum/`}>{t.footer.legal[0]}</a></li>
@@ -250,14 +299,33 @@ const js = { status: t.status, lang: t.lang, hours: site.hours, slot: site.nextS
       <li><a href={other} data-lang-link lang={de ? 'en' : 'de'}>{t.nav.lang}</a></li>
     </ul>
   </div>
-  <p class="foot__demo">{t.footer.demo} <a href="https://kravets-webdesign.de/kontakt/">{t.footer.demoCta}</a></p>
+  <p class="rolle__demo">{t.footer.demo} {t.hero.model} <a href="https://kravets-webdesign.de/kontakt/">{t.footer.demoCta}</a></p>
 </footer>
 
-<nav class="bar" aria-label={de ? 'Schnellzugriff' : 'Quick actions'}>
-  <a href={`tel:${site.phoneHref}`}>{t.nav.call}</a>
-  <a href={check}>{t.nav.check}</a>
-  <a class="bar__main" href="#anfrage">{t.nav.anfrage}</a>
+<!-- Navigation in Form eines Winkelmessers: zwei Schenkel (Menü, Termin), in der Mitte die Skala; der Zeiger folgt dem Scrollen -->
+<nav class="gonio" aria-label={de ? 'Hauptnavigation' : 'Main navigation'}>
+  <button class="gonio__arm gonio__arm--l" type="button" data-menu-open aria-expanded="false" aria-controls="wand">{t.nav.menu}</button>
+  <a class="gonio__dial" href="#figur" aria-label={t.nav.toFigure}>
+    <svg viewBox="0 0 64 64" aria-hidden="true"><circle class="gonio__ring" cx="32" cy="32" r="29" /><path class="gonio__ticks" d="M32 6v6M13.6 13.6l4.3 4.3M6 32h6M50.4 13.6l-4.3 4.3M58 32h-6" /><line class="gonio__needle" x1="32" y1="32" x2="32" y2="10" data-needle /><circle class="gonio__pin" cx="32" cy="32" r="4" /></svg>
+  </a>
+  <a class="gonio__arm gonio__arm--r" href="#anfrage">{t.nav.anfrage}</a>
 </nav>
+
+<!-- Menü als Sprossenwand -->
+<div class="wand" id="wand" data-menu hidden>
+  <div class="wand__in" role="dialog" aria-modal="true" aria-label={t.nav.menu}>
+    <button class="wand__close" type="button" data-menu-close>{t.nav.close}</button>
+    <ul class="wand__rungs">
+      {menu.map(([href, label]) => <li><a href={href} data-menu-link>{label}</a></li>)}
+    </ul>
+    <div class="wand__foot">
+      <a href={`tel:${site.phoneHref}`}>{site.phone}</a>
+      <button type="button" data-theme-toggle aria-label={t.nav.themeLabel}><span data-theme-label>{t.nav.night}</span></button>
+      <a href={other} data-lang-link lang={de ? 'en' : 'de'}>{t.nav.lang}</a>
+    </div>
+  </div>
+</div>
+<a class="peek" href="#panel" data-peek hidden><strong data-peek-name></strong><span>{t.hero.more} <span aria-hidden="true">↓</span></span></a>
 <script>
   import '../scripts/site';
 </script>

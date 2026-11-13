@@ -1,7 +1,9 @@
 ---
 // Demo = noindex. Beim Kundenstart: index = true, dann kommt auch das Geschäftsdaten-Markup.
-import '@fontsource-variable/bricolage-grotesque/wdth.css';
-import '@fontsource-variable/instrument-sans/wght.css';
+import '@fontsource-variable/literata/wght.css';
+import '@fontsource-variable/hanken-grotesk/wght.css';
+import '@fontsource/courier-prime/latin-400.css';
+import '@fontsource/courier-prime/latin-700.css';
 import '../styles/tokens.css';
 import '../styles/global.css';
 import site from '../data/site.json';
@@ -25,7 +27,7 @@ const graph = [
     <link rel="canonical" href={canonical} />
     {alt && <link rel="alternate" hreflang={lang === 'de' ? 'en' : 'de'} href={new URL(alt, Astro.site).href} />}
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
-    <meta name="theme-color" content="#f6e1da" />
+    <meta name="theme-color" content="#121c25" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

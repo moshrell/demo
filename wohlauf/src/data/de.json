@@ -1,13 +1,11 @@
 {
   "lang": "de",
   "meta": {
-    "title": "Wohlauf · Physiotherapie in Hannover-Südstadt",
-    "description": "Physiotherapie in der Südstadt, vier Minuten vom Maschsee. Alle Kassen, privat und ohne Rezept. Mit Beweglichkeits-Check fürs Handy.",
-    "checkTitle": "Beweglichkeits-Check · Wohlauf",
-    "checkDescription": "In 90 Sekunden messen Sie mit dem Handy, wie weit sich Nacken, Schultern und Rumpf bewegen."
+    "title": "Wohlauf · Zentrum für Physiotherapie in Hannover-Südstadt",
+    "description": "Zentrum für Physiotherapie in Hannover-Südstadt. Sechs Therapeutinnen und Therapeuten, alle Kassen, privat und ohne Rezept. Wählen Sie an der Figur, wo Sie Beschwerden haben."
   },
+  "claim": "Zentrum für Physiotherapie",
   "nav": {
-    "check": "Check",
     "termin": "Erster Termin",
     "hilfe": "Beschwerden",
     "kosten": "Kosten",
@@ -19,7 +17,14 @@
     "night": "Nacht",
     "day": "Tag",
     "themeLabel": "Ansicht wechseln: Tag oder Nacht",
-    "home": "Zur Startseite"
+    "home": "Zur Startseite",
+    "leistungen": "Leistungen",
+    "menu": "Menü",
+    "close": "Schließen",
+    "figur": "Körperregion wählen",
+    "fragen": "Fragen",
+    "rezept": "Rezept verstehen",
+    "toFigure": "Zur Figur"
   },
   "status": {
     "open": "Heute bis {t} Uhr erreichbar",
@@ -37,95 +42,225 @@
     "tomorrow": "morgen"
   },
   "hero": {
-    "lead": "Ich will wieder",
-    "goals": [
-      {
-        "id": "laufen",
-        "word": "10 km|laufen.",
-        "chip": "10 km laufen",
-        "sub": "Vom ersten schmerzarmen Kilometer bis zur Runde um den Maschsee: Wir bauen die Belastung Schritt für Schritt auf."
-      },
-      {
-        "id": "schlafen",
-        "word": "durch-|schlafen.",
-        "chip": "durchschlafen",
-        "sub": "Wenn Schulter oder Rücken nachts wecken, suchen wir die Ursache und zeigen Ihnen Lagerungen, die entlasten."
-      },
-      {
-        "id": "tragen",
-        "word": "mein Kind|tragen.",
-        "chip": "mein Kind tragen",
-        "sub": "Heben, tragen, stillen: Wir machen Rücken und Schultern für Ihren Alltag belastbar."
-      },
-      {
-        "id": "sitzen",
-        "word": "lange|sitzen.",
-        "chip": "lange sitzen",
-        "sub": "Acht Stunden am Schreibtisch sind viel. Wir lösen, was fest ist, und geben Ihnen Übungen, die in eine Kaffeepause passen."
-      },
-      {
-        "id": "treppen",
-        "word": "Treppen|steigen.",
-        "chip": "Treppen steigen",
-        "sub": "Nach einer Knie- oder Hüftoperation begleiten wir Sie vom ersten Schritt bis zur dritten Etage."
-      },
-      {
-        "id": "tennis",
-        "word": "Tennis|spielen.",
-        "chip": "Tennis spielen",
-        "sub": "Schulter, Ellenbogen, Sprunggelenk: Wir bringen Sie zurück auf den Platz und prüfen, was die Belastung verträgt."
-      }
-    ],
-    "chipsLabel": "Was möchten Sie wieder können?",
-    "pull": "Ziehen Sie am Wort",
-    "ctaCheck": "Beweglichkeit testen",
-    "ctaCheckNote": "90 Sekunden, mit dem Handy",
-    "ctaTermin": "Termin anfragen",
+    "h": "Wo haben Sie Beschwerden?",
+    "p": "Wählen Sie eine Körperregion. Sie sehen, was typisch ist, wie wir behandeln und wie Sie einen Termin bekommen.",
+    "pick": "Körperregion wählen",
+    "front": "Vorderseite",
+    "back": "Rückseite",
+    "turn": "Figur drehen",
+    "drag": "Zum Drehen ziehen",
+    "empty": "Wählen Sie links eine Region oder tippen Sie auf die Figur.",
+    "typ": "Typische Beschwerden",
+    "wir": "So behandeln wir",
+    "rez": "Häufige Verordnung",
+    "cta": "Termin wegen {z} anfragen",
+    "other": "Etwas anderes oder nach einer Operation?",
+    "otherCta": "Allgemein anfragen",
     "slot": "Nächster freier Ersttermin",
     "slotNote": "Beispieldaten",
     "facts": [
-      "Alle Kassen und privat",
-      "Auch ohne Rezept",
-      "4 Minuten zum Maschsee"
-    ]
-  },
-  "night": {
-    "title": "Schmerzen und kein Schlaf?",
-    "lead": "Jetzt ist die Praxis zu. Zwei Dinge können Sie sofort versuchen.",
-    "tips": [
       {
-        "h": "Auf dem Rücken",
-        "p": "Ein dickes Kissen unter die Knie. Das entlastet den unteren Rücken."
+        "n": "6",
+        "t": "Therapeutinnen und Therapeuten"
       },
       {
-        "h": "Auf der Seite",
-        "p": "Ein Kissen zwischen die Knie, das obere Bein leicht angewinkelt. Bei Schulterschmerz auf die andere Seite."
+        "n": "Alle Kassen",
+        "t": "und privat versichert"
+      },
+      {
+        "n": "Ohne Rezept",
+        "t": "direkt zu uns möglich"
       }
     ],
-    "breath": "Eine Minute ruhig atmen",
-    "breathIn": "Einatmen",
-    "breathOut": "Ausatmen",
-    "breathStop": "Beenden",
-    "breathDone": "Eine Minute ist um. Wenn es gutgetan hat, einfach noch einmal.",
-    "contact": "Schreiben Sie uns jetzt, wir rufen zurück, sobald wir da sind.",
-    "warn": "Bei Taubheit, Lähmung, Fieber oder nach einem Sturz bitte nicht warten: ärztlicher Bereitschaftsdienst 116 117, im Notfall 112.",
-    "toDay": "Zur Tagesansicht"
+    "model": "3D-Figur: MakeHuman-Basismodell (CC0).",
+    "more": "Details ansehen",
+    "who": "Bei uns zuständig"
   },
-  "check": {
-    "kicker": "Beweglichkeits-Check",
-    "title": "Ihr Handy ist ein Winkelmesser.",
-    "p": "Physiotherapeuten messen Gelenke in Grad. Die Sensoren in Ihrem Handy können das auch. In 90 Sekunden sehen Sie, wie weit sich Nacken, Schultern und Rumpf bewegen, links und rechts im Vergleich.",
-    "cta": "Check starten",
-    "desktop": "Am besten auf dem Handy. Am Rechner stellen Sie die Winkel von Hand ein.",
-    "dialHint": "Probieren Sie es: ziehen",
-    "dialLabel": "Kopfdrehung",
-    "left": "links",
-    "right": "rechts",
-    "note": "Orientierung, keine Diagnose. Die Messwerte bleiben auf Ihrem Gerät."
+  "zones": [
+    {
+      "id": "kopf",
+      "name": "Kopf und Kiefer",
+      "s": "Kiefergelenk (CMD), Spannungskopfschmerz",
+      "typ": [
+        "Knacken oder Schmerz vor dem Ohr",
+        "Pressen oder Knirschen in der Nacht",
+        "Kopfschmerz, der im Nacken beginnt"
+      ],
+      "wir": "Kiefer, Halswirbelsäule und Haltung gemeinsam untersuchen, Muskulatur entspannen, Eigenübungen anleiten.",
+      "rez": "Krankengymnastik (KG) oder Manuelle Therapie (MT), oft vom Zahnarzt verordnet",
+      "short": "Kopf, Kiefer"
+    },
+    {
+      "id": "nacken",
+      "name": "Nacken",
+      "s": "Verspannung, Blockade, Schleudertrauma",
+      "typ": [
+        "Steifer Hals am Morgen",
+        "Schmerz beim Schulterblick",
+        "Ausstrahlung in Arm oder Hinterkopf"
+      ],
+      "wir": "Beweglichkeit im Seitenvergleich messen, Gelenke mobilisieren, tiefe Nackenmuskeln kräftigen, Arbeitsplatz besprechen.",
+      "rez": "KG, MT",
+      "short": "Nacken"
+    },
+    {
+      "id": "schulter",
+      "name": "Schulter",
+      "s": "Engpass, Kalkschulter, steife Schulter",
+      "typ": [
+        "Schmerz beim Anziehen und über Kopf",
+        "Nachts auf der Seite nicht liegen können",
+        "Kraftverlust beim Heben"
+      ],
+      "wir": "Schulterblatt und Brustwirbelsäule einbeziehen, Beweglichkeit schrittweise erweitern, Rotatoren kräftigen.",
+      "rez": "KG, MT, nach Operation auch KG am Gerät (KGG)",
+      "short": "Schulter"
+    },
+    {
+      "id": "ruecken",
+      "name": "Rücken",
+      "s": "Hexenschuss, Bandscheibe, chronischer Rückenschmerz",
+      "typ": [
+        "Schmerz nach langem Sitzen oder Stehen",
+        "Morgens steif, tagsüber besser",
+        "Ausstrahlung ins Gesäß oder Bein"
+      ],
+      "wir": "Wirbelsäule und Hüfte untersuchen, Nerven testen, Gelenke mobilisieren, Rumpf gezielt kräftigen.",
+      "rez": "KG, MT, KGG",
+      "short": "Rücken"
+    },
+    {
+      "id": "arm",
+      "name": "Ellenbogen und Hand",
+      "s": "Tennisarm, Sehnenreizung, nach Brüchen",
+      "typ": [
+        "Schmerz beim Greifen und Drehen",
+        "Kribbeln in den Fingern",
+        "Steifes Handgelenk nach Gips"
+      ],
+      "wir": "Sehnen dosiert belasten, Handgelenk und Finger mobilisieren, Nervengleiten, Hilfen für Arbeit und Sport.",
+      "rez": "KG, MT",
+      "short": "Arm, Hand"
+    },
+    {
+      "id": "huefte",
+      "name": "Hüfte",
+      "s": "Arthrose, Schleimbeutel, nach Gelenkersatz",
+      "typ": [
+        "Anlaufschmerz nach dem Sitzen",
+        "Schmerz in der Leiste",
+        "Hinken nach längeren Wegen"
+      ],
+      "wir": "Beweglichkeit und Kraft messen, Gangbild schulen, nach Operation nach dem Schema der Klinik aufbauen.",
+      "rez": "KG, KGG, Manuelle Lymphdrainage (MLD) nach Operation",
+      "short": "Hüfte"
+    },
+    {
+      "id": "knie",
+      "name": "Knie",
+      "s": "Meniskus, Kreuzband, Arthrose, vorderer Knieschmerz",
+      "typ": [
+        "Schmerz treppab und in der Hocke",
+        "Schwellung nach Belastung",
+        "Unsicherheit, das Knie gibt nach"
+      ],
+      "wir": "Beinachse und Kraft prüfen, Streckung und Beugung in Grad dokumentieren, Belastung in Stufen steigern.",
+      "rez": "KG, KGG, MLD",
+      "short": "Knie"
+    },
+    {
+      "id": "fuss",
+      "name": "Fuß und Sprunggelenk",
+      "s": "Umknicken, Achillessehne, Fersenschmerz",
+      "typ": [
+        "Schmerz bei den ersten Schritten am Morgen",
+        "Instabilität nach dem Umknicken",
+        "Schmerz an der Ferse beim Laufen"
+      ],
+      "wir": "Sprunggelenk stabilisieren, Wade und Fuß kräftigen, Belastung für Alltag und Sport planen.",
+      "rez": "KG, MT",
+      "short": "Fuß"
+    }
+  ],
+  "leistungen": {
+    "title": "Ihr Rezept, übersetzt",
+    "p": "Auf der Verordnung stehen Kürzel. Tippen Sie eines an und lesen Sie, was dahintersteckt.",
+    "slip": {
+      "title": "Verordnung von Heilmitteln",
+      "sample": "Beispiel",
+      "heil": "Heilmittel",
+      "erg": "Ergänzendes Heilmittel",
+      "menge": "Behandlungen",
+      "mengeVal": "6",
+      "freq": "Frequenz",
+      "freqVal": "1–2× wöchentlich",
+      "issued": "Ausgestellt am",
+      "start": "Beginnen bis",
+      "startNote": "Spätestens 28 Tage nach Ausstellung. Steht „dringlicher Behandlungsbedarf“ auf dem Rezept, sind es 14 Tage."
+    },
+    "rezept": [
+      {
+        "k": "KG",
+        "h": "Krankengymnastik",
+        "p": "Aktive und passive Techniken für Beweglichkeit, Kraft und Koordination. Die häufigste Verordnung."
+      },
+      {
+        "k": "MT",
+        "h": "Manuelle Therapie",
+        "p": "Gezielte Handgriffe an Gelenken, Muskeln und Nerven nach genauer Untersuchung."
+      },
+      {
+        "k": "KGG",
+        "h": "Krankengymnastik am Gerät",
+        "p": "Kraftaufbau an Trainingsgeräten in kleinen Gruppen, mit eigenem Plan und Aufsicht."
+      },
+      {
+        "k": "MLD",
+        "h": "Manuelle Lymphdrainage",
+        "p": "Sanfte Grifftechnik gegen Schwellungen, zum Beispiel nach Operationen oder Verletzungen."
+      },
+      {
+        "k": "CMD",
+        "h": "Kiefergelenk-Behandlung",
+        "p": "Auf dem Rezept der Zahnarztpraxis steht meist KG oder MT mit dem Zusatz CMD. Wir behandeln Kiefer, Kaumuskulatur und Halswirbelsäule gemeinsam."
+      }
+    ],
+    "erg": [
+      {
+        "k": "Wärme",
+        "h": "Wärmetherapie",
+        "p": "Fango oder Heißluft vor der Behandlung. Lockert die Muskulatur und bereitet das Gewebe vor."
+      },
+      {
+        "k": "Kälte",
+        "h": "Kältetherapie",
+        "p": "Kühlen nach Operationen und bei akuten Reizungen, gegen Schwellung und Schmerz."
+      },
+      {
+        "k": "Elektro",
+        "h": "Elektrotherapie",
+        "p": "Reizstrom gegen Schmerz und zum Aktivieren geschwächter Muskeln."
+      }
+    ],
+    "ohneTitle": "Ohne Rezept",
+    "ohne": [
+      {
+        "h": "Befund und Behandlung",
+        "p": "Direkt zu uns, ohne ärztliche Verordnung. Sie zahlen selbst."
+      },
+      {
+        "h": "Lauf-Analyse mit Video",
+        "p": "Laufstil, Kraft- und Sprungtests, Plan für die Rückkehr in den Sport."
+      },
+      {
+        "h": "Reha-Begleitung nach Operationen",
+        "p": "Zusätzliche Termine neben dem Rezept, mit Bericht für die Kontrolle."
+      }
+    ]
   },
   "termin": {
     "title": "So läuft Ihr erster Termin",
-    "p": "Vier Schritte, eine Therapeutin. Sie wissen danach, was los ist und wie es weitergeht.",
+    "p": "Vier Schritte. Danach wissen Sie, was los ist und wie es weitergeht.",
     "progress": "Schritt",
     "stages": [
       {
@@ -135,7 +270,9 @@
           "Rezept, Arztberichte und Bilder ansehen",
           "Alltag, Arbeit, Sport",
           "Ihr Ziel in einem Satz"
-        ]
+        ],
+        "from": 0,
+        "to": 10
       },
       {
         "h": "Wir schauen genau hin",
@@ -144,7 +281,9 @@
           "Haltung und Gang",
           "Beweglichkeit in Grad, links und rechts",
           "Kraft, Stabilität, Nerventests"
-        ]
+        ],
+        "from": 10,
+        "to": 30
       },
       {
         "h": "Hände und Bewegung",
@@ -153,7 +292,9 @@
           "Manuelle Therapie und Weichteiltechniken",
           "Aktive Übungen, genau dosiert",
           "Sie sagen jederzeit, wie es sich anfühlt"
-        ]
+        ],
+        "from": 30,
+        "to": 50
       },
       {
         "h": "Ihr Plan für zu Hause",
@@ -162,62 +303,13 @@
           "Übungen mit Bild und Dosierung",
           "Was Sie schonen, was Sie belasten dürfen",
           "Der nächste Termin und was dann geprüft wird"
-        ]
+        ],
+        "from": 50,
+        "to": 60
       }
-    ]
-  },
-  "hilfe": {
-    "title": "Wobei wir helfen",
-    "p": "Die häufigsten Gründe, warum Menschen zu uns kommen.",
-    "labels": {
-      "typisch": "Typisch",
-      "wir": "Was wir tun",
-      "rezept": "Häufige Verordnung"
-    },
-    "items": [
-      {
-        "h": "Rücken und Nacken",
-        "s": "Verspannung, Hexenschuss, Bandscheibe",
-        "typisch": "Schmerz nach langem Sitzen, morgens steif, ausstrahlend in Arm oder Bein.",
-        "wir": "Wirbelsäule und Hüfte untersuchen, Gelenke mobilisieren, Rumpf kräftigen, Arbeitsplatz besprechen.",
-        "rezept": "Krankengymnastik (KG), Manuelle Therapie (MT)"
-      },
-      {
-        "h": "Schulter",
-        "s": "Engpass, Kalkschulter, steife Schulter",
-        "typisch": "Schmerz beim Anziehen, über Kopf und nachts auf der Seite.",
-        "wir": "Schulterblatt und Brustwirbelsäule einbeziehen, Beweglichkeit schrittweise erweitern, Rotatoren kräftigen.",
-        "rezept": "KG, MT"
-      },
-      {
-        "h": "Knie und Hüfte",
-        "s": "Arthrose, Meniskus, vorderer Knieschmerz",
-        "typisch": "Anlaufschmerz, Treppen abwärts, Schmerz nach Belastung.",
-        "wir": "Beinachse und Kraft prüfen, gezielt aufbauen, Belastung so steuern, dass das Gelenk mitkommt.",
-        "rezept": "KG, Krankengymnastik am Gerät (KGG)"
-      },
-      {
-        "h": "Nach einer Operation",
-        "s": "Kreuzband, Gelenkersatz, Schulter, Bandscheibe",
-        "typisch": "Schwellung, eingeschränkte Streckung oder Beugung, Unsicherheit bei Belastung.",
-        "wir": "Nach dem Schema Ihrer Operateurin oder Ihres Operateurs arbeiten, Fortschritt in Grad dokumentieren, Bericht für die Kontrolle.",
-        "rezept": "KG, Manuelle Lymphdrainage (MLD), KGG"
-      },
-      {
-        "h": "Laufen und Sport",
-        "s": "Läuferknie, Achillessehne, Sprunggelenk",
-        "typisch": "Schmerz ab einem bestimmten Kilometer, nach Tempo oder am Morgen danach.",
-        "wir": "Lauf-Analyse mit Video, Kraft- und Sprungtests, Trainingsplan mit klaren Stufen zurück in den Sport.",
-        "rezept": "KG, Selbstzahler-Leistung Lauf-Analyse"
-      },
-      {
-        "h": "Kiefer und Kopf",
-        "s": "Kiefergelenk (CMD), Spannungskopfschmerz",
-        "typisch": "Knacken, Pressen in der Nacht, Schmerz vor dem Ohr, Kopfschmerz vom Nacken.",
-        "wir": "Kiefer, Halswirbelsäule und Haltung zusammen betrachten, Muskulatur entspannen, Eigenübungen.",
-        "rezept": "KG oder MT, oft vom Zahnarzt verordnet"
-      }
-    ]
+    ],
+    "note": "Zeiten für einen ersten Termin von 60 Minuten. Mit Rezept richtet sich die Dauer nach der Verordnung, die Reihenfolge bleibt gleich.",
+    "min": "Min."
   },
   "kosten": {
     "title": "Was es kostet",
@@ -258,33 +350,41 @@
       {
         "n": "Befund und Behandlung",
         "d": "60 Min.",
-        "p": "98 €"
+        "p": "98 €",
+        "v": 98
       },
       {
         "n": "Behandlung",
         "d": "45 Min.",
-        "p": "76 €"
+        "p": "76 €",
+        "v": 76
       },
       {
         "n": "Behandlung",
         "d": "30 Min.",
-        "p": "52 €"
+        "p": "52 €",
+        "v": 52
       },
       {
         "n": "Lauf-Analyse mit Video",
         "d": "75 Min.",
         "p": "129 €",
-        "tax": true
+        "tax": true,
+        "v": 129
       },
       {
         "n": "Paket Rücken und Nacken",
         "d": "Befund + 5 × 30 Min. + Übungsplan",
-        "p": "338 €"
+        "p": "338 €",
+        "v": 338,
+        "pack": true
       },
       {
         "n": "Paket Zurück zum Laufen",
         "d": "Lauf-Analyse + Befund + 6 × 45 Min.",
-        "p": "649 €"
+        "p": "649 €",
+        "v": 649,
+        "pack": true
       }
     ],
     "tax": "Heilbehandlungen sind umsatzsteuerfrei (§ 4 Nr. 14 UStG). Die Lauf-Analyse ist eine Präventionsleistung, Preis inkl. 19 % MwSt.",
@@ -298,37 +398,97 @@
       ],
       "sum": "Befund und Behandlung, 60 Min."
     },
-    "demo": "Beispielpreise dieser Demo-Seite."
+    "demo": "Beispielpreise dieser Demo-Seite.",
+    "calc": {
+      "way": "Wie kommen Sie zu uns?",
+      "heil": "Heilmittel auf dem Rezept",
+      "anz": "Anzahl Behandlungen",
+      "leist": "Leistung",
+      "less": "Eine weniger",
+      "more": "Eine mehr",
+      "bon": "Was Sie zahlen",
+      "fee": "Verordnungsgebühr",
+      "share": "10 % der Behandlungskosten",
+      "sum": "Summe",
+      "kasseNote": "Beispielrechnung mit Beispielpreisen. Es gelten die Preise Ihrer Kasse am Tag der Behandlung; wir nennen den Betrag vor dem ersten Termin.",
+      "selbstNote": "Beispielpreise dieser Demo-Seite. Heilbehandlungen sind umsatzsteuerfrei (§ 4 Nr. 14 UStG); die Lauf-Analyse ist eine Präventionsleistung, Preis inkl. 19 % MwSt.",
+      "privatLine": "Kostenvoranschlag",
+      "privatVal": "vorab, kostenlos",
+      "cta": "Mit dieser Auswahl anfragen",
+      "privatSum": "je nach Tarif"
+    }
   },
   "praxis": {
-    "title": "Wer Sie behandelt",
-    "p": "Eine kleine Praxis. Sie haben von Anfang bis Ende dieselbe Therapeutin oder denselben Therapeuten.",
+    "title": "Ihr Team",
+    "p": "Sie werden von Anfang bis Ende von derselben Person behandelt. Bei Urlaub oder Krankheit übernimmt jemand, der Ihre Akte kennt.",
     "team": [
       {
         "n": "Ronja Dreesen",
-        "r": "Inhaberin, Physiotherapeutin seit 2007",
-        "q": [
-          "Manuelle Therapie",
-          "Sportphysiotherapie",
-          "Sektorale Heilpraktikerin für Physiotherapie"
-        ],
-        "img": "team-ronja"
+        "r": "Leitung, Physiotherapeutin seit 2007",
+        "q": "Manuelle Therapie, Sportphysiotherapie, sektorale Heilpraktikerin für Physiotherapie",
+        "img": "team-1",
+        "zones": [
+          "schulter",
+          "knie",
+          "fuss"
+        ]
       },
       {
         "n": "Malte Ahrendt",
+        "r": "Stellvertretende Leitung, Physiotherapeut",
+        "q": "Krankengymnastik am Gerät, Reha nach Knie- und Hüftoperationen",
+        "img": "team-2",
+        "zones": [
+          "knie",
+          "huefte"
+        ]
+      },
+      {
+        "n": "Hanna Lührs",
+        "r": "Physiotherapeutin",
+        "q": "Kiefergelenk (CMD), Manuelle Therapie, Kopfschmerz",
+        "img": "team-3",
+        "zones": [
+          "kopf",
+          "nacken"
+        ]
+      },
+      {
+        "n": "Tomasz Wolny",
         "r": "Physiotherapeut",
-        "q": [
-          "Krankengymnastik am Gerät",
-          "Manuelle Lymphdrainage",
-          "Reha nach Knie- und Hüftoperationen"
-        ],
-        "img": "team-malte"
+        "q": "Manuelle Lymphdrainage, Schulter, Nachbehandlung nach Brüchen",
+        "img": "team-4",
+        "zones": [
+          "schulter",
+          "arm"
+        ]
+      },
+      {
+        "n": "Kira Baumgart",
+        "r": "Physiotherapeutin, Sportwissenschaftlerin",
+        "q": "Lauf-Analyse, Sprunggelenk und Achillessehne",
+        "img": "team-5",
+        "zones": [
+          "fuss",
+          "knie"
+        ]
+      },
+      {
+        "n": "Emre Tunç",
+        "r": "Physiotherapeut",
+        "q": "Wirbelsäule, Krankengymnastik am Gerät",
+        "img": "team-6",
+        "zones": [
+          "ruecken",
+          "nacken",
+          "huefte"
+        ]
       }
     ],
     "roomTitle": "Die Praxis",
     "room": [
       "Erdgeschoss, stufenloser Zugang",
-      "Drei Behandlungsräume, ein Trainingsraum",
+      "Acht Behandlungsräume, Trainingsfläche mit Geräten",
       "Stadtbahn Geibelstraße, 3 Minuten zu Fuß",
       "Fahrradständer vor der Tür"
     ],
@@ -343,14 +503,15 @@
         "7:30 bis 16:00 Uhr"
       ]
     ],
-    "hoursNote": "Behandlung nach Termin."
+    "hoursNote": "Behandlung nach Termin.",
+    "focus": "Schwerpunkt"
   },
   "faq": {
     "title": "Häufige Fragen",
     "items": [
       {
         "q": "Brauche ich ein Rezept?",
-        "a": "Nein. Mit Rezept rechnen wir mit Ihrer Kasse oder Versicherung ab. Ohne Rezept kommen Sie als Selbstzahlerin oder Selbstzahler direkt zu Ronja Dreesen, die als sektorale Heilpraktikerin für Physiotherapie ohne ärztliche Verordnung behandeln darf."
+        "a": "Nein. Mit Rezept rechnen wir mit Ihrer Kasse oder Versicherung ab. Ohne Rezept kommen Sie als Selbstzahlerin oder Selbstzahler direkt zu uns: Unsere Leiterin Ronja Dreesen darf als sektorale Heilpraktikerin für Physiotherapie ohne ärztliche Verordnung untersuchen und behandeln."
       },
       {
         "q": "Was bringe ich zum ersten Termin mit?",
@@ -367,25 +528,14 @@
       {
         "q": "Ich muss absagen. Was tun?",
         "a": "Bitte sagen Sie spätestens 24 Stunden vorher ab, telefonisch oder per E-Mail. Kurzfristig ausgefallene Termine stellen wir in Rechnung, weil wir die Zeit nicht mehr vergeben können."
-      },
-      {
-        "q": "Was misst der Beweglichkeits-Check?",
-        "a": "Die Lagesensoren Ihres Handys messen, wie weit Sie Kopf, Arm und Oberkörper bewegen. Die Werte sind auf etwa 5 bis 10 Grad genau und ersetzen keinen Befund. Sie bleiben auf Ihrem Gerät, bis Sie sie selbst an eine Anfrage anhängen."
       }
-    ]
+    ],
+    "kicker": "Kartei"
   },
   "form": {
     "title": "Termin anfragen",
     "p": "Wir melden uns innerhalb eines Werktags mit einem Terminvorschlag.",
     "area": "Worum geht es?",
-    "areas": [
-      "Rücken oder Nacken",
-      "Schulter",
-      "Knie oder Hüfte",
-      "Nach einer Operation",
-      "Sport",
-      "Etwas anderes"
-    ],
     "ins": "Wie kommen Sie zu uns?",
     "insOpts": [
       "Mit Rezept, gesetzlich",
@@ -414,9 +564,7 @@
     "note": "Nachricht",
     "notePh": "z. B. seit wann, was Sie wieder können möchten",
     "optional": "(optional)",
-    "result": "Ergebnis aus dem Beweglichkeits-Check anhängen",
-    "resultNone": "",
-    "consent": "Ich bin einverstanden, dass Wohlauf meine Angaben (Name, Telefon, E-Mail, Nachricht) und meine Angaben zu Beschwerden einschließlich angehängter Messwerte (Gesundheitsdaten) verwendet, um meine Terminanfrage zu bearbeiten.",
+    "consent": "Ich bin einverstanden, dass Wohlauf meine Angaben (Name, Telefon, E-Mail, Nachricht) und meine Angaben zu Beschwerden (Gesundheitsdaten) verwendet, um meine Terminanfrage zu bearbeiten.",
     "consentLink": "Hinweise zum Datenschutz",
     "consentErr": "Bitte stimmen Sie zu, sonst können wir Ihre Anfrage nicht bearbeiten.",
     "demo": "Es wird nichts gesendet (Demo).",
@@ -429,9 +577,30 @@
       "ins": "Abrechnung",
       "time": "Zeit",
       "name": "Name",
-      "tel": "Telefon",
-      "result": "Check-Ergebnis"
-    }
+      "tel": "Telefon"
+    },
+    "areaOp": "Nach einer Operation",
+    "areaOther": "Etwas anderes",
+    "card": "Terminkarte",
+    "cardNote": "Datum und Uhrzeit tragen wir ein und melden uns bei Ihnen.",
+    "cardDate": "Datum",
+    "cardTime": "Uhrzeit"
+  },
+  "night": {
+    "title": "Schmerzen und kein Schlaf?",
+    "lead": "Das Zentrum ist jetzt geschlossen. Zwei Dinge können Sie sofort versuchen.",
+    "tips": [
+      {
+        "h": "Auf dem Rücken",
+        "p": "Ein dickes Kissen unter die Knie. Das entlastet den unteren Rücken."
+      },
+      {
+        "h": "Auf der Seite",
+        "p": "Ein Kissen zwischen die Knie, das obere Bein leicht angewinkelt. Bei Schulterschmerz auf die andere Seite."
+      }
+    ],
+    "contact": "Schreiben Sie uns jetzt, wir rufen zurück, sobald wir da sind.",
+    "warn": "Bei Taubheit, Lähmung, Fieber oder nach einem Sturz bitte nicht warten: ärztlicher Bereitschaftsdienst 116 117, im Notfall 112."
   },
   "footer": {
     "address": "Adresse",
@@ -439,79 +608,9 @@
       "Impressum",
       "Datenschutz"
     ],
-    "demo": "Demo-Seite von Kravets Webdesign: Praxis und Personen sind erfunden.",
-    "demoCta": "Eine solche Website für Ihre Praxis? Jetzt anfragen"
-  },
-  "app": {
-    "back": "Zur Praxis-Seite",
-    "title": "Beweglichkeits-Check",
-    "introH": "Drei Bewegungen, 90 Sekunden.",
-    "introP": "Sie halten das Handy an Stirn, Hand und Brust. Die Lagesensoren messen den Winkel. Bewegen Sie sich langsam und nur so weit, wie es sich gut anfühlt.",
-    "introList": [
-      "Nacken: Kopf nach links und rechts drehen",
-      "Schultern: Arm nach vorn oben heben",
-      "Rumpf: zur Seite neigen"
-    ],
-    "start": "Mit Sensor messen",
-    "manual": "Winkel von Hand einstellen",
-    "manualAuto": "Dieses Gerät meldet keine Lagesensoren. Sie können die Winkel von Hand einstellen.",
-    "denied": "Ohne Freigabe der Bewegungssensoren kann das Handy nicht messen. Sie können die Winkel von Hand einstellen.",
-    "safety": "Bitte nicht in den Schmerz hinein bewegen. Bei Schwindel abbrechen. Nach einer Operation oder einem Unfall diesen Check bitte auslassen.",
-    "privacy": "Gemessen wird nur auf Ihrem Gerät. Nichts wird übertragen.",
-    "step": "Messung {n} von {m}",
-    "ready": "Bereit",
-    "holdStill": "Kurz still halten",
-    "measuring": "Messung läuft",
-    "finish": "Fertig",
-    "skip": "Überspringen",
-    "again": "Noch einmal messen",
-    "next": "Weiter",
-    "toResult": "Ergebnis ansehen",
-    "tests": [
-      {
-        "id": "nacken",
-        "h": "Nacken",
-        "how": "Handy hochkant an die Stirn, Display nach vorn. Aufrecht sitzen.",
-        "do": "Kopf langsam nach links drehen, zurück zur Mitte, dann nach rechts. Schultern bleiben ruhig.",
-        "end": "Danach Handy herunternehmen oder Fertig tippen.",
-        "manualQ": "Wie weit dreht sich Ihr Kopf?",
-        "ref": "Orientierung: 60 bis 80° je Seite"
-      },
-      {
-        "id": "schulter",
-        "h": "Schultern",
-        "how": "Handy fest in die Hand, Arm hängt locker. Erst links, dann rechts.",
-        "do": "Gestreckten Arm langsam nach vorn oben heben, so weit es geht, und wieder senken.",
-        "end": "Arm unten: Fertig tippen, dann die andere Seite.",
-        "manualQ": "Wie hoch heben Sie den Arm?",
-        "ref": "Orientierung: 150 bis 170°",
-        "sides": true
-      },
-      {
-        "id": "rumpf",
-        "h": "Rumpf",
-        "how": "Handy hochkant flach an das Brustbein, Display nach vorn. Hüftbreit stehen.",
-        "do": "Oberkörper langsam nach links neigen, zurück zur Mitte, dann nach rechts. Nicht nach vorn kippen.",
-        "end": "Danach Fertig tippen.",
-        "manualQ": "Wie weit neigen Sie sich zur Seite?",
-        "ref": "Orientierung: 30 bis 40° je Seite"
-      }
-    ],
-    "sideLeft": "Links",
-    "sideRight": "Rechts",
-    "armLeft": "Linker Arm",
-    "armRight": "Rechter Arm",
-    "resultH": "Ihr Bewegungsumfang",
-    "resultP": "So weit haben Sie sich heute bewegt. Ein Unterschied zwischen links und rechts ist oft der interessanteste Wert.",
-    "diff": "Unterschied links/rechts",
-    "even": "Links und rechts sind ähnlich.",
-    "uneven": "Deutlicher Unterschied zwischen links und rechts. Das schauen wir uns im Befund gezielt an.",
-    "skipped": "Nicht gemessen",
-    "disclaimer": "Orientierung, keine Diagnose. Die Werte sind auf etwa 5 bis 10° genau. Die Spannen stammen aus der Neutral-Null-Methode und gelten für gesunde Erwachsene; Alter und Körperbau verändern sie.",
-    "send": "Mit Ergebnis Termin anfragen",
-    "sendNote": "Die Werte werden erst mit Ihrer Zustimmung im Formular angehängt.",
-    "restart": "Check wiederholen",
-    "savedAt": "Gemessen am {d}",
-    "noscript": "Für den Check braucht Ihr Browser JavaScript. Sie erreichen uns unter"
+    "demo": "Demo-Seite von Kravets Webdesign: Zentrum und Personen sind erfunden.",
+    "demoCta": "Eine solche Website für Ihre Praxis oder Ihr Zentrum? Jetzt anfragen",
+    "tear": "Bitte hier abreißen",
+    "roll": "Liegenpapier, frisch für Sie aufgelegt."
   }
 }

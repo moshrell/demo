@@ -1,8 +1,0 @@
----
-import Base from '../../layouts/Base.astro';
-import CheckApp from '../../components/CheckApp.astro';
-import t from '../../data/de.json';
----
-<Base title={t.meta.checkTitle} description={t.meta.checkDescription} lang="de" alt={`${import.meta.env.BASE_URL}en/check/`} app>
-  <CheckApp t={t} />
-</Base>

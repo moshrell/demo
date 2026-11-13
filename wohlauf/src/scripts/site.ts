@@ -1,32 +1,45 @@
-// Startseite: Status, Tag/Nacht, Ziel-Wort (dehnbar), Winkelmesser-Probe, Termin-Uhr, Tabs, Atem-Minute, Formular.
-import { gaugeSvg, SPECS } from './gauge';
-
+// Startseite: Status, Tag/Nacht, Körper-Tafel (Liste steuert, 3D-Figur zeigt), Tabs, Formular.
 const main = document.querySelector<HTMLElement>('[data-home]');
 const doc = document.documentElement;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = <E extends HTMLElement>(s: string, r: ParentNode = document) => r.querySelector<E>(s);
 const $$ = <E extends HTMLElement>(s: string, r: ParentNode = document) => [...r.querySelectorAll<E>(s)];
-const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
 if (main) {
   const T = JSON.parse(main.dataset.t!);
 
-  // ---------- Tag / Nacht ----------
+  // ---------- Tag / Nacht (Knopf im Menü) ----------
   const themeBtn = $('[data-theme-toggle]')!, themeLabel = $('[data-theme-label]')!;
   const paintTheme = () => {
     const night = doc.dataset.theme === 'nacht';
     themeLabel.textContent = night ? T.nav.day : T.nav.night;
     themeBtn.setAttribute('aria-pressed', String(night));
-    $('meta[name="theme-color"]')?.setAttribute('content', night ? '#1c0e14' : '#f6e1da');
   };
   themeBtn.addEventListener('click', () => {
     doc.dataset.theme = doc.dataset.theme === 'nacht' ? 'tag' : 'nacht';
     try { sessionStorage.setItem('wohlauf:theme', doc.dataset.theme!); } catch {}
     paintTheme();
+    closeMenu();
     window.scrollTo({ top: 0 });
-    fitWord();
   });
   paintTheme();
+
+  // ---------- Menü (Sprossenwand) ----------
+  const wand = $('[data-menu]')!, menuBtn = $<HTMLButtonElement>('[data-menu-open]')!;
+  function closeMenu() { if (wand.hidden) return; wand.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); doc.classList.remove('is-menu'); menuBtn.focus({ preventScroll: true }); }
+  menuBtn.addEventListener('click', () => { wand.hidden = false; menuBtn.setAttribute('aria-expanded', 'true'); doc.classList.add('is-menu'); $<HTMLButtonElement>('[data-menu-close]')!.focus(); });
+  $('[data-menu-close]')!.addEventListener('click', closeMenu);
+  $$('[data-menu-link]').forEach((a) => a.addEventListener('click', () => { wand.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); doc.classList.remove('is-menu'); }));
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+
+  // ---------- Winkelmesser: der Zeiger zeigt, wie weit die Seite gelesen ist ----------
+  {
+    const needle = document.querySelector<SVGLineElement>('[data-needle]')!;
+    let raf = 0;
+    const turn = () => { raf = 0; const max = doc.scrollHeight - innerHeight; const p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0; needle.setAttribute('transform', `rotate(${(-90 + 180 * p).toFixed(1)} 32 32)`); };
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(turn); }, { passive: true });
+    turn();
+  }
 
   // ---------- Erreichbarkeit (Zeit in Berlin) ----------
   const berlin = () => {
@@ -56,138 +69,163 @@ if (main) {
     $('[data-slot]')!.textContent = `${date}, ${T.slot.time}${T.lang === 'de' ? ' Uhr' : ''}`;
   }
 
-  // ---------- Ziel-Wort: zwei Tape-Zeilen, dehnbar ----------
-  const word = $('[data-word]')!, sub = $('[data-goal-sub]')!;
-  const lines = (w: string) => w.split('|').map((l) => `<span class="word__tape">${l.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</span>`).join('');
-  word.innerHTML = lines(T.goals[0].word);
-  function fitWord() {
-    // Schriftgröße so, dass die breiteste Zeile aller Ziele bei voller Dehnung (wdth 100) in die Spalte passt
-    const probe = document.createElement('span');
-    probe.className = 'word word--probe';
-    probe.innerHTML = T.goals.map((g: any) => lines(g.word)).join('');
-    word.parentElement!.append(probe);
-    const w = Math.max(...$$('.word__tape', probe).map((e) => e.getBoundingClientRect().width));
-    probe.remove();
-    const col = word.parentElement!.getBoundingClientRect().width;
-    if (w > 0 && col > 0) word.style.setProperty('--fs', Math.min(parseFloat(getComputedStyle(doc).fontSize) * 9.5, innerHeight * (innerHeight < 520 ? 0.16 : 0.24), (100 * col) / w * 0.985).toFixed(1) + 'px');
-  }
-  fitWord();
-  (document as any).fonts?.ready.then(fitWord);
-  let rz = 0;
-  addEventListener('resize', () => { clearTimeout(rz); rz = window.setTimeout(fitWord, 120); });
-
-  const chips = $$<HTMLButtonElement>('[data-goal]');
-  const setGoal = (id: string, user: boolean) => {
-    const g = T.goals.find((x: any) => x.id === id);
-    if (!g) return;
-    chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.goal === id)));
-    const swap = () => { word.innerHTML = lines(g.word); sub.textContent = g.sub; };
-    if (reduce || !user) return swap();
-    word.classList.add('is-out');
-    setTimeout(() => { swap(); word.classList.remove('is-out'); word.classList.add('is-snap'); requestAnimationFrame(() => requestAnimationFrame(() => word.classList.remove('is-snap'))); }, 170);
-    try { sessionStorage.setItem('wohlauf:goal', id); } catch {}
-  };
-  chips.forEach((c) => c.addEventListener('click', () => setGoal(c.dataset.goal!, true)));
-  try { const g = sessionStorage.getItem('wohlauf:goal'); if (g) setGoal(g, false); } catch {}
-
-  // Ziehen: Breite der Schrift (wdth 80 → 100), darüber hinaus leichte Dehnung, loslassen federt zurück
+  // ---------- Körper-Tafel ----------
+  const form = $<HTMLFormElement>('[data-af]')!;
   {
-    let x0 = 0, active = false;
-    const hint = $('[data-pull-hint]');
-    const set = (dx: number) => {
-      const a = Math.abs(dx), p = clamp(a / 150, 0, 1), over = clamp((a - 150) / 260, 0, 1);
-      word.style.setProperty('--wdth', String(80 + 20 * p));
-      word.style.setProperty('--sx', String(1 + 0.07 * over));
+    const chart = $('[data-chart]')!, map = $('[data-map]')!, fig = $('[data-figure]')!, canvas = $<HTMLCanvasElement>('[data-canvas]')!, svg = map.querySelector<SVGSVGElement>('[data-lines]')!;
+    const labels = $$<HTMLAnchorElement>('[data-zone]', chart), panels = $$('[data-zone-panel]', chart), empty = $('[data-panel-empty]')!, panel = $('[data-panel]')!;
+    const faces = $$<HTMLButtonElement>('[data-face]', chart);
+    let body: Awaited<ReturnType<typeof import('./body').createBody>> | null = null;
+    let current: string | null = null;
+    chart.classList.add('is-live'); // ab jetzt zeigt das Feld nur die gewählte Region
+    const paintFace = (back: boolean) => faces.forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.face === 'back') === back)));
+    const select = (id: string | null, fromUser = true) => {
+      current = id;
+      labels.forEach((l) => l.setAttribute('aria-pressed', String(l.dataset.zone === id)));
+      panels.forEach((p) => (p.hidden = p.dataset.zonePanel !== id));
+      empty.hidden = !!id;
+      body?.select(id);
+      const z = T.zones.find((x: any) => x.id === id);
+      if (z) paintFace(z.view === 'back');
+      drawLines();
+      paintPeek();
     };
-    word.addEventListener('pointerdown', (e) => { if (e.button) return; active = true; x0 = e.clientX; word.classList.add('is-drag'); word.setPointerCapture?.(e.pointerId); });
-    word.addEventListener('pointermove', (e) => { if (active) { set(e.clientX - x0); if (Math.abs(e.clientX - x0) > 30 && hint) hint.dataset.done = '1'; } });
-    const end = () => { if (!active) return; active = false; word.classList.remove('is-drag'); word.style.removeProperty('--wdth'); word.style.removeProperty('--sx'); };
-    word.addEventListener('pointerup', end);
-    word.addEventListener('pointercancel', end);
-    word.addEventListener('lostpointercapture', end);
+    // Handy: das Feld liegt unter der Figur. Statt wegzurollen (dann sähe man die Markierung nicht), erscheint ein Hinweis über der Aktionsleiste.
+    const peek = $<HTMLAnchorElement>('[data-peek]')!, peekName = $('[data-peek-name]')!;
+    function paintPeek() {
+      const show = !!current && panel.getBoundingClientRect().top > innerHeight * 0.78;
+      if (show) peekName.textContent = T.names[current!];
+      peek.hidden = !show;
+    }
+    addEventListener('scroll', paintPeek, { passive: true });
+    addEventListener('resize', paintPeek);
+    panels.forEach((p) => (p.hidden = true));
+    labels.forEach((l) => {
+      l.addEventListener('click', (e) => { e.preventDefault(); select(l.dataset.zone === current ? null : l.dataset.zone!); });
+      l.addEventListener('keydown', (e) => { if (e.key === ' ') { e.preventDefault(); l.click(); } });
+    });
+    faces.forEach((b) => b.addEventListener('click', () => { body?.face(b.dataset.face as 'front' | 'back'); paintFace(b.dataset.face === 'back'); }));
+
+    $$<HTMLAnchorElement>('[data-goto-zone]').forEach((a) => a.addEventListener('click', () => { if (current !== a.dataset.gotoZone) select(a.dataset.gotoZone!); }));
+    // Terminwunsch aus dem Feld ins Formular übernehmen
+    $$<HTMLAnchorElement>('[data-ask]').forEach((a) => a.addEventListener('click', () => {
+      const sel = form.elements.namedItem('area') as HTMLSelectElement;
+      if (a.dataset.ask) sel.value = a.dataset.ask;
+      sel.dispatchEvent(new Event('change', { bubbles: true }));
+    }));
+
+    // Hinweislinien von den Namen zur Figur (aus den projizierten 3D-Punkten)
+    let pts: Record<string, [number, number, boolean]> = {};
+    const NS = 'http://www.w3.org/2000/svg';
+    const lines = Object.fromEntries(labels.map((l) => { const g = document.createElementNS(NS, 'g'); g.innerHTML = '<path/><circle r="3.5"/>'; svg.append(g); return [l.dataset.zone!, g]; }));
+    function drawLines() {
+      const mr = map.getBoundingClientRect(), fr = fig.getBoundingClientRect();
+      svg.setAttribute('viewBox', `0 0 ${mr.width} ${mr.height}`);
+      labels.forEach((l) => {
+        const id = l.dataset.zone!, g = lines[id], p = pts[id];
+        if (!p) { g.style.display = 'none'; return; }
+        g.style.display = '';
+        const lr = l.getBoundingClientRect(), x1 = lr.right - mr.left, y1 = lr.bottom - mr.top - 1, x2 = p[0] + fr.left - mr.left, y2 = p[1] + fr.top - mr.top;
+        const mx = x1 + Math.max(10, (x2 - x1) * 0.35);
+        g.firstElementChild!.setAttribute('d', `M${x1.toFixed(1)} ${y1.toFixed(1)}H${mx.toFixed(1)}L${x2.toFixed(1)} ${y2.toFixed(1)}`);
+        const c = g.lastElementChild!; c.setAttribute('cx', x2.toFixed(1)); c.setAttribute('cy', y2.toFixed(1));
+        g.setAttribute('class', `${id === current ? 'is-on' : ''} ${p[2] ? '' : 'is-far'}`);
+      });
+    }
+
+    const start = async () => {
+      try {
+        const { createBody } = await import('./body');
+        const css = getComputedStyle(doc);
+        body = await createBody({
+          canvas, model: T.model, zones: T.zones, reduce, skin: css.getPropertyValue('--fig-skin').trim(), hot: css.getPropertyValue('--fig-hot').trim(), cloth: css.getPropertyValue('--fig-cloth').trim(), eye: css.getPropertyValue('--fig-eye').trim(),
+          onPick: (id) => select(id),
+          onFrame: (project) => {
+            // Ankerpunkt je Region: das Kapselende, das auf dem Bildschirm am weitesten links liegt (zur Namensliste hin)
+            for (const z of T.zones) {
+              let best: [number, number, boolean] | null = null;
+              for (const c of z.caps) { const p = project([c[0], c[1], c[2]]); if (!best || p[0] < best[0]) best = p; }
+              pts[z.id] = best!;
+            }
+            drawLines();
+            paintFaceQuiet();
+          },
+        });
+        fig.classList.add('is-ready');
+        (window as any).__body = body;
+        if (current) body.select(current);
+      } catch (e) { fig.classList.add('is-failed'); }
+    };
+    let lastBack = false;
+    const paintFaceQuiet = () => { const b = body!.isBack(); if (b !== lastBack) { lastBack = b; paintFace(b); } };
+    canvas.addEventListener('pointerdown', () => { const h = $('[data-drag-hint]'); if (h) h.dataset.done = '1'; }, { once: true });
+    addEventListener('resize', drawLines);
+    if ('requestIdleCallback' in window) (window as any).requestIdleCallback(start, { timeout: 1200 }); else setTimeout(start, 200);
+    const hash = location.hash.match(/^#z-(\w+)$/);
+    if (hash) select(hash[1], false);
   }
 
-  // ---------- Überschriften dehnen sich einmal beim Erscheinen ----------
-  const heads = $$('[data-stretch]');
-  if (reduce || !('IntersectionObserver' in window)) heads.forEach((h) => h.classList.add('is-in'));
-  else {
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px' });
-    heads.forEach((h) => io.observe(h));
-  }
-
-  // ---------- Winkelmesser zum Anfassen ----------
+  // ---------- Rezept: Kürzel antippen, Fristen aus dem heutigen Datum ----------
   {
-    const box = $('[data-dial-svg]')!, range = $<HTMLInputElement>('[data-dial-range]')!, hint = $('[data-dial-hint]')!;
-    const labels = { l: T.check.left, r: T.check.right };
-    const draw = () => { box.innerHTML = gaugeSvg(SPECS.nacken, { l: 71, r: Number(range.value) }, labels, { handle: true, title: T.check.dialLabel }); };
-    draw();
-    range.addEventListener('input', draw);
-    let on = false;
-    const at = (e: PointerEvent) => {
-      const svg = box.querySelector('svg')!, r = svg.getBoundingClientRect();
-      const x = ((e.clientX - r.left) / r.width) * 320 - 160, y = ((e.clientY - r.top) / r.height) * 196 - 172;
-      const a = (Math.atan2(x, -y) * 180) / Math.PI;
-      range.value = String(Math.round(clamp(a, 4, 90)));
-      draw();
-      hint.dataset.done = '1';
-    };
-    box.addEventListener('pointerdown', (e) => { on = true; box.setPointerCapture?.(e.pointerId); at(e); });
-    box.addEventListener('pointermove', (e) => { if (on) at(e); });
-    const off = () => { on = false; };
-    box.addEventListener('pointerup', off);
-    box.addEventListener('pointercancel', off);
+    const btns = $$<HTMLButtonElement>('[data-rx-btn]'), items = $$('[data-rx]');
+    btns.forEach((b) => b.addEventListener('click', () => {
+      btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      items.forEach((x) => x.classList.toggle('is-on', x.dataset.rx === b.dataset.rxBtn));
+    }));
+    const fmt = new Intl.DateTimeFormat(T.lang === 'de' ? 'de-DE' : 'en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
+    const d0 = new Date(Date.UTC(now.y, now.m - 1, now.d, 12)), d1 = new Date(d0); d1.setUTCDate(d1.getUTCDate() + 28);
+    $('[data-rx-issued]')!.textContent = fmt.format(d0);
+    $('[data-rx-start]')!.textContent = fmt.format(d1);
   }
 
-  // ---------- Erster Termin: Uhr läuft mit dem Scrollen ----------
+  // ---------- Kosten: Rechner mit Quittung ----------
   {
-    const sec = $('[data-termin]')!, ring = sec.querySelector<SVGCircleElement>('[data-clock]')!, n = $('[data-clock-n]', sec)!, tt = $('[data-clock-t]', sec)!;
-    const stages = $$('[data-stage]', sec), list = stages[0].parentElement!;
-    let raf = 0, cur = -1;
-    const tick = () => {
-      raf = 0;
-      const vh = innerHeight, r = list.getBoundingClientRect();
-      const p = clamp((vh * 0.6 - r.top) / r.height, 0, 1);
-      ring.style.strokeDashoffset = String(100 - p * 100);
-      let ix = 0;
-      stages.forEach((s, i) => { if (s.getBoundingClientRect().top < vh * 0.6) ix = i; });
-      if (ix !== cur) { cur = ix; n.textContent = String(ix + 1); tt.textContent = stages[ix].dataset.title!; stages.forEach((s, i) => s.classList.toggle('is-now', i === ix)); }
+    const box = $('[data-calc]')!, tabs = $$<HTMLButtonElement>('[data-way]', box), lines = $('[data-bon-lines]')!, sum = $('[data-bon-sum]')!, note = $('[data-bon-note]')!;
+    const eur = new Intl.NumberFormat(T.lang === 'de' ? 'de-DE' : 'en-GB', { style: 'currency', currency: 'EUR' });
+    const n: Record<string, number> = { kasse: 6, selbst: 1 };
+    let way = 'kasse';
+    const row = (k: string, v: string) => { const d = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; d.append(dt, dd); return d; };
+    const paint = () => {
+      const C = T.calc;
+      if (way === 'kasse') {
+        const k = (box.querySelector<HTMLInputElement>('input[name=kheil]:checked')!).value, p = T.kasse[k], share = 0.1 * n.kasse * p;
+        lines.replaceChildren(row(C.fee, eur.format(T.fee)), row(`${C.share}: ${n.kasse} × ${k} (${eur.format(p)})`, eur.format(share)));
+        sum.textContent = eur.format(T.fee + share); note.textContent = C.kasseNote;
+      } else if (way === 'selbst') {
+        const it = T.list[Number((box.querySelector<HTMLInputElement>('input[name=sleist]:checked')!).value)];
+        if (it.pack) n.selbst = 1;
+        lines.replaceChildren(row(`${n.selbst} × ${it.n}, ${it.d}`, eur.format(n.selbst * it.v)));
+        sum.textContent = eur.format(n.selbst * it.v); note.textContent = C.selbstNote;
+        const st = box.querySelector<HTMLElement>('[data-step="selbst"]')!; st.classList.toggle('is-off', !!it.pack);
+        st.querySelectorAll('button').forEach((b) => (b.disabled = !!it.pack));
+      } else {
+        lines.replaceChildren(row(C.privatLine, C.privatVal));
+        sum.textContent = C.privatSum; note.textContent = '';
+      }
+      $$('[data-step]', box).forEach((s) => { $('[data-step-val]', s)!.textContent = String(n[s.dataset.step!]); });
     };
-    const req = () => { if (!raf) raf = requestAnimationFrame(tick); };
-    addEventListener('scroll', req, { passive: true });
-    addEventListener('resize', req);
-    tick();
-  }
-
-  // ---------- Tabs (Kosten) ----------
-  $$('[data-tabs]').forEach((box) => {
-    const tabs = $$<HTMLButtonElement>('[role=tab]', box);
     const pick = (t: HTMLButtonElement, focus = false) => {
+      way = t.dataset.way!;
       tabs.forEach((x) => { const on = x === t; x.setAttribute('aria-selected', String(on)); x.tabIndex = on ? 0 : -1; document.getElementById(x.getAttribute('aria-controls')!)!.hidden = !on; });
       if (focus) t.focus();
+      paint();
     };
     tabs.forEach((t, i) => {
       t.addEventListener('click', () => pick(t));
-      t.addEventListener('keydown', (e) => {
-        const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-        if (d) { e.preventDefault(); pick(tabs[(i + d + tabs.length) % tabs.length], true); }
-      });
+      t.addEventListener('keydown', (e) => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (d) { e.preventDefault(); pick(tabs[(i + d + tabs.length) % tabs.length], true); } });
     });
-  });
-
-  // ---------- Atem-Minute (Nachtansicht) ----------
-  {
-    const box = $('[data-breath]')!, btn = $<HTMLButtonElement>('[data-breath-btn]')!, w = $('[data-breath-word]')!, msg = $('[data-breath-msg]')!;
-    let timers: number[] = [], running = false;
-    const stop = (done: boolean) => { timers.forEach(clearTimeout); timers = []; running = false; box.dataset.phase = ''; w.textContent = ''; btn.textContent = T.night.breath; msg.textContent = done ? T.night.breathDone : ''; };
-    btn.addEventListener('click', () => {
-      if (running) return stop(false);
-      running = true; btn.textContent = T.night.breathStop; msg.textContent = '';
-      for (let i = 0; i < 6; i++) {
-        timers.push(window.setTimeout(() => { box.dataset.phase = 'in'; w.textContent = T.night.breathIn; }, i * 10000 + 50));
-        timers.push(window.setTimeout(() => { box.dataset.phase = 'out'; w.textContent = T.night.breathOut; }, i * 10000 + 4000));
-      }
-      timers.push(window.setTimeout(() => stop(true), 60000));
+    $$('[data-step]', box).forEach((s) => {
+      const id = s.dataset.step!;
+      $('[data-step-dec]', s)!.addEventListener('click', () => { n[id] = Math.max(1, n[id] - 1); paint(); });
+      $('[data-step-inc]', s)!.addEventListener('click', () => { n[id] = Math.min(id === 'kasse' ? 18 : 12, n[id] + 1); paint(); });
     });
+    box.addEventListener('change', paint);
+    $('[data-bon-ask]')!.addEventListener('click', () => {
+      const ix = { kasse: 0, privat: 1, selbst: 2 }[way]!;
+      const r = form.querySelectorAll<HTMLInputElement>('input[name=ins]')[ix];
+      r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    paint();
   }
 
   // ---------- Sprache wechseln, Stelle behalten ----------
@@ -195,7 +233,7 @@ if (main) {
 
   // ---------- Anfrage ----------
   {
-    const form = $<HTMLFormElement>('[data-af]')!, done = $('[data-af-done]')!, list = $('[data-af-list]')!;
+    const done = $('[data-af-done]')!, list = $('[data-af-list]')!;
     const F = T.form;
     const field = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
     const err = (input: HTMLInputElement, show: boolean) => {
@@ -203,30 +241,19 @@ if (main) {
       if (e) e.hidden = !show;
       input.setAttribute('aria-invalid', show ? 'true' : 'false');
     };
-    // Check-Ergebnis: liegt nur auf diesem Gerät; angehängt wird es erst mit Häkchen
-    let resultText = '';
-    try {
-      const raw = localStorage.getItem('wohlauf:check');
-      if (raw) {
-        const c = JSON.parse(raw), v = (x: number | null) => (x == null ? '–' : x + '°');
-        resultText = T.app.tests.map((t: any) => `${t.h} ${v(c.res[t.id].l)} / ${v(c.res[t.id].r)}`).join(' · ');
-        const when = new Intl.DateTimeFormat(T.lang === 'de' ? 'de-DE' : 'en-GB', { day: 'numeric', month: 'long' }).format(new Date(c.at));
-        $('[data-af-result-text]')!.textContent = `${resultText} (${T.app.sideLeft} / ${T.app.sideRight}). ${T.app.savedAt.replace('{d}', when)}`;
-        $('[data-af-result]')!.hidden = false;
-        if (sessionStorage.getItem('wohlauf:attach') === '1') field('attach').checked = true;
-      }
-    } catch {}
     ['name', 'tel', 'email'].forEach((n) => field(n).addEventListener('input', () => err(field(n), false)));
     field('privacy').addEventListener('change', () => err(field('privacy'), false));
 
     const KEY = `form:${location.pathname}:af`;
-    const els = () => [...form.elements].filter((el): el is HTMLInputElement => (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && !!el.name && el.name !== 'privacy');
+    type El = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+    const els = () => [...form.elements].filter((el): el is El => (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement) && !!el.name && el.name !== 'privacy');
     const save = () => {
       try {
         const d: Record<string, any> = {};
         els().forEach((el) => {
-          if (el.type === 'radio') { if (el.checked) d[el.name] = el.value; }
-          else if (el.type === 'checkbox') { if (el.name === 'time') (d.time ??= []), el.checked && d.time.push(el.value); else d[el.name] = el.checked; }
+          const i = el as HTMLInputElement;
+          if (i.type === 'radio') { if (i.checked) d[i.name] = i.value; }
+          else if (i.type === 'checkbox') { (d.time ??= []), i.checked && d.time.push(i.value); }
           else d[el.name] = el.value;
         });
         sessionStorage.setItem(KEY, JSON.stringify(d));
@@ -237,9 +264,10 @@ if (main) {
       if (raw) {
         const d = JSON.parse(raw);
         els().forEach((el) => {
+          const i = el as HTMLInputElement;
           if (!(el.name in d)) return;
-          if (el.type === 'radio') el.checked = el.value === d[el.name];
-          else if (el.type === 'checkbox') el.checked = el.name === 'time' ? d.time.includes(el.value) : !!d[el.name];
+          if (i.type === 'radio') i.checked = i.value === d[i.name];
+          else if (i.type === 'checkbox') i.checked = d.time.includes(i.value);
           else el.value = String(d[el.name]);
         });
       }
@@ -259,15 +287,14 @@ if (main) {
       if (bad.length) { bad[0].focus(); return; }
       const val = (n: string) => form.querySelector<HTMLInputElement>(`input[name=${n}]:checked`)?.value ?? '';
       const times = $$<HTMLInputElement>('input[name=time]:checked', form).map((x) => x.value).join(', ');
-      const rows: [string, string][] = [[F.rows.area, val('area')], [F.rows.ins, val('ins')]];
+      const rows: [string, string][] = [[F.rows.area, field('area').value], [F.rows.ins, val('ins')]];
       if (times) rows.push([F.rows.time, times]);
       rows.push([F.rows.name, name.value.trim()], [F.rows.tel, tel.value.trim()]);
-      if (resultText && field('attach').checked) rows.push([F.rows.result, resultText]);
       list.replaceChildren(...rows.map(([k, v]) => { const d = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; d.append(dt, dd); return d; }));
       form.hidden = true;
       done.hidden = false;
       done.focus();
-      try { sessionStorage.removeItem(KEY); sessionStorage.removeItem('wohlauf:attach'); } catch {}
+      try { sessionStorage.removeItem(KEY); } catch {}
     });
   }
 }

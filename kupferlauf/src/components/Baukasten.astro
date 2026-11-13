@@ -32,7 +32,7 @@ const startCents = data.sizes.find((s) => s.id === d.size)!.cents;
       <fieldset class="bk__sizes bk__sizes--sm">
         <legend class="sr-only">Größe</legend>
         {data.sizes.map((s) => (
-          <label class="bk__size"><input type="radio" name={`${id}-size`} value={s.id} checked={s.id === d.size} data-bk-size /><span><strong>{s.id}</strong><small>{s.area}</small></span></label>
+          <label class="bk__size" data-s={s.id}><input type="radio" name={`${id}-size`} value={s.id} checked={s.id === d.size} data-bk-size /><span><i class="bk__iso" aria-hidden="true"></i><strong>{s.id}</strong><small>{s.area}</small></span></label>
         ))}
       </fieldset>
       <p class="bk__cap" data-bk-cap aria-live="polite"></p>
@@ -44,7 +44,7 @@ const startCents = data.sizes.find((s) => s.id === d.size)!.cents;
       <fieldset class="bk__sizes">
         <legend class="bk__legend">Größe</legend>
         {data.sizes.map((s) => (
-          <label class="bk__size"><input type="radio" name={`${id}-size`} value={s.id} checked={s.id === d.size} data-bk-size /><span><strong>{s.id}</strong><small>{s.area}</small></span></label>
+          <label class="bk__size" data-s={s.id}><input type="radio" name={`${id}-size`} value={s.id} checked={s.id === d.size} data-bk-size /><span><i class="bk__iso" aria-hidden="true"></i><strong>{s.id}</strong><small>{s.area}</small></span></label>
         ))}
       </fieldset>
 
@@ -68,7 +68,8 @@ const startCents = data.sizes.find((s) => s.id === d.size)!.cents;
           {z.variants.map((v: any) => (
             <label class="bk__opt">
               <input type="radio" name={`${id}-${z.id}`} value={v.id} checked={v.id === (d as any)[z.id]} data-bk-opt={z.id} data-only={v.only ? v.only.join(',') : ''} />
-              <span class="bk__optin">
+              <span class={`bk__optin${v.swatch ? ' bk__optin--sw' : ''}`}>
+                {v.swatch && <i class="bk__sw" style={`--sw:${v.swatch}`} aria-hidden="true"></i>}
                 <strong>{v.label}</strong>
                 <small>{v.note}</small>
                 <span class="bk__delta">{v.cents ? `+ ${eur(v.cents)}` : 'inklusive'}</span>
@@ -113,6 +114,8 @@ const startCents = data.sizes.find((s) => s.id === d.size)!.cents;
   }
 
   /* Größe */
+  .bk__panel { display: grid; gap: var(--space-md); min-width: 0; }
+  .bk__panel > * { min-width: 0; }
   .bk__sizes { border: 0; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-xs); min-width: 0; }
   .bk__legend { font: 600 var(--text-sm)/1.2 var(--font-body); color: var(--color-ink-2); padding: 0; margin-bottom: var(--space-xs); }
   .bk__size input { position: absolute; opacity: 0; pointer-events: none; }
@@ -180,4 +183,25 @@ const startCents = data.sizes.find((s) => s.id === d.size)!.cents;
   @media (max-width: 63.99rem) {
     .bk--full .bk__stage { position: sticky; top: 60px; z-index: 6; aspect-ratio: auto; height: min(40svh, 24rem); min-height: 14rem; box-shadow: 0 8px 18px -10px oklch(30% 0.05 225 / 0.35); }
   }
+
+  /* Thematische Bedienelemente: Boden-Raute je Größe (Fliesenraster), Ventil-Ring bei Optionen, Fliesen-Muster */
+  .bk__size span { border-radius: 1.75rem; }
+  .bk__iso { --w: 2.2rem; display: block; width: var(--w); aspect-ratio: 2 / 1; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background:
+      linear-gradient(26.57deg, transparent 47.5%, oklch(30% 0.05 225 / 0.5) 47.5% 52.5%, transparent 52.5%),
+      linear-gradient(-26.57deg, transparent 47.5%, oklch(30% 0.05 225 / 0.5) 47.5% 52.5%, transparent 52.5%),
+      var(--color-water-soft); transition: background-color 200ms; }
+  [data-s='S'] .bk__iso { --w: 1.6rem; }
+  [data-s='L'] .bk__iso { --w: 2.9rem; }
+  .bk__size input:checked + span .bk__iso { background-color: var(--color-copper-glow, var(--color-copper)); }
+  .bk__optin { position: relative; padding-left: 3.1rem; border-radius: 1.75rem; }
+  .bk__optin::before { content: ''; position: absolute; left: 1rem; top: 50%; translate: 0 -50%; width: 1.35rem; height: 1.35rem; border-radius: 50%; border: 2px solid var(--color-ink-2); background: var(--color-paper); transition: background 180ms, border-color 180ms; }
+  .bk__opt input:checked + .bk__optin::before { border-color: var(--color-copper); background: radial-gradient(circle, var(--color-copper) 0 38%, var(--color-paper) 42%); }
+  .bk__optin--sw::before { display: none; }
+  .bk__sw { position: absolute; left: 0.8rem; top: 50%; translate: 0 -50%; width: 1.9rem; height: 1.9rem; border-radius: 0.5rem; border: 1.5px solid oklch(30% 0.05 225 / 0.45); background:
+      linear-gradient(90deg, transparent 47%, oklch(30% 0.05 225 / 0.35) 47% 53%, transparent 53%),
+      linear-gradient(0deg, transparent 47%, oklch(30% 0.05 225 / 0.35) 47% 53%, transparent 53%), var(--sw); }
+  .bk__sizes--sm .bk__size span { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: var(--space-2xs); border-radius: 999px; }
+  .bk__sizes--sm .bk__iso { --w: 1.5rem; }
+  .bk__sizes--sm [data-s='S'] .bk__iso { --w: 1.1rem; }
+  .bk__sizes--sm [data-s='L'] .bk__iso { --w: 1.9rem; }
 </style>

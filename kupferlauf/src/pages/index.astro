@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Anfrage from '../components/Anfrage.astro';
 import PlzCheck from '../components/PlzCheck.astro';
 import Photo from '../components/Photo.astro';
+import Vergleich from '../components/Vergleich.astro';
 import Baukasten from '../components/Baukasten.astro';
 import site from '../data/site.json';
 import stations from '../data/stations.json';
@@ -97,7 +98,7 @@ const photos: Record<string, { name: string; alt: string }> = {
               <ul class="refs__list">
                 {s.referenzen.map((r: any) => (
                   <li class="ref">
-                    <Photo class="st__photo" name={r.img} alt={r.alt} sizes="(min-width: 64rem) 22rem, 78vw" />
+                    <Vergleich nachher={r.img} vorher={r.img.replace('.jpg', '-vorher.jpg')} alt={r.alt} ort={r.ort} sizes="(min-width: 64rem) 22rem, 92vw" />
                     <p><strong>{r.ort}</strong></p>
                     <ul>{r.facts.map((f: string) => <li>{f}</li>)}</ul>
                   </li>
@@ -240,8 +241,8 @@ const photos: Record<string, { name: string; alt: string }> = {
   .kl .st__prices { margin-top: var(--space-md); }
 
   .refs h3 { margin-bottom: var(--space-md); }
-  .refs__list { list-style: none; margin: 0 calc(-1 * var(--gutter)) 0 0; padding: 0 var(--gutter) var(--space-xs) 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(15rem, 78%); gap: var(--space-md); overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
-  .refs__list > li { scroll-snap-align: start; min-width: 0; }
+  .refs__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-lg); grid-template-columns: minmax(0, 1fr); }
+  .refs__list > li { min-width: 0; }
   .st__wartung { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); }
   .st__wartung > * { min-width: 0; }
   .wp ul { list-style: none; margin: var(--space-sm) 0 0; padding: 0; border-top: 1.5px solid currentColor; }
@@ -254,7 +255,7 @@ const photos: Record<string, { name: string; alt: string }> = {
   @media (min-width: 64rem) {
     .st__in { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: var(--space-2xl); align-items: start; }
     .refs, .st__wartung { grid-column: 1 / -1; }
-    .refs__list { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; margin-right: 0; padding-right: 0; }
+    .refs__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .st__wartung { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--space-2xl); align-items: start; }
     .st__wartung > :global(.st__photo) { grid-column: 1; grid-row: 1 / span 2; }
     .st__wartung > .checks, .st__wartung > .wp { grid-column: 2; }

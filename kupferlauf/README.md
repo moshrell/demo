@@ -14,6 +14,9 @@ Astro-Projekt (Demo). Адрес на портфолио: `/vorschau/handwerk/ku
 - Появление блоков при прокрутке — CSS `animation-timeline: view()` (Chrome/Edge/Safari 26+; Firefox пока без анимации, контент виден сразу).
 - Фото: `public/img/*.jpg` (Gemini), webp делает `scripts/images.mjs`.
 
+## Vorher/Nachher
+- `Vergleich.astro`: слайдер «до/после» с ручкой-вентилем у референсов Bad. Фото «до» = `<имя>-vorher.jpg` (`referenz-bad-hell-vorher.jpg`, `-stein-`, `-klein-`) в `public/img/`; промпты — `PROMPTS-vorher.txt`. Пока файла нет, показывается обычное фото «после».
+
 ## Известные недочёты (не проверено / решить)
 - Соответствие фото ↔ имена файлов подобрано по времени и пропорциям, глазами не сверено.
 - 3D проверен только в headless (swiftshader) и по стилям кадров; FPS на настоящем телефоне не измерен.

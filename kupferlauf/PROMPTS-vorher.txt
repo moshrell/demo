@@ -1,0 +1,18 @@
+PROMPTS «Vorher» (до ремонта) — Kehlenbrink Bad & Wärme (kupferlauf)
+Для слайдера «Vorher / Nachher» на главной. 3 кадра. ВАЖНО: делай в ТОМ ЖЕ чате Gemini, где были сделаны кадры 04, 05, 06 (referenz-bad-hell, -stein, -klein): так Gemini помнит комнату. Каждый промпт ниже ссылается на соответствующий кадр «после» из этого чата.
+Готовые файлы положить в D:\Webdesign\kupferlauf\public\img\ под указанными именами (в облаке: kupferlauf/public/img/). Пока файла нет, слайдер не показывается: остаётся обычное фото «после».
+
+────────────────────────────────────────
+V1 · referenz-bad-hell-vorher.jpg · формат 4:3
+────────────────────────────────────────
+Take the bright renovated bathroom from image 04 (referenz-bad-hell) and show the very same room BEFORE the renovation: exactly the same camera position, same lens, same window in the same place, same room proportions and same ceiling height, but dated and worn: a built-in bathtub with a faded cream-coloured enamel finish and a shower curtain on a rail, small beige 1980s wall tiles with yellowed grout and a decorative brown border strip, a worn light-brown floor tile, an old pedestal washbasin with chrome taps showing limescale, a low-mounted toilet with a visible cistern, a plain old radiator under the window, a single ceiling lamp with a plain white shade, slightly dull and flat daylight from the same window. Same documentary photographic style as the first images, eye-level view, no text, no logos, no people.
+
+────────────────────────────────────────
+V2 · referenz-bad-stein-vorher.jpg · формат 4:3
+────────────────────────────────────────
+Take the warm stone-grey bathroom from image 05 (referenz-bad-stein) and show the very same room BEFORE the renovation: exactly the same camera position, same lens, same side window in the same place, same room proportions, but dated: a corner bathtub with a pale green 1990s enamel finish, glossy dark-green wall tiles with a floral decor row, a white tiled floor with grey stained grout, an old oval washbasin on a plain cupboard in chipboard with a peeling edge, a round old mirror with a plastic frame, a white panel radiator, harsh yellowish ceiling light, slightly cramped and cluttered with ordinary bottles and a laundry basket. Same documentary photographic style as the first images, eye-level view, no text, no logos, no people.
+
+────────────────────────────────────────
+V3 · referenz-bad-klein-vorher.jpg · формат 4:3
+────────────────────────────────────────
+Take the small renovated guest bathroom from image 06 (referenz-bad-klein) and show the very same room BEFORE the renovation: exactly the same camera position, same lens, same small window in the same place, same tiny room proportions (about 3 square metres), but dated and awkward: a low-mounted floor-standing toilet with a plastic seat, a small old washbasin with a mounted wall tap and a limescale-stained edge, small cream-and-brown 1970s wall tiles up to shoulder height with plain painted plaster above, a worn linoleum-look floor, an old white radiator, a bare ceiling bulb, cramped and slightly dark, daylight dull. Same documentary photographic style as the first images, slightly elevated eye-level view, no text, no logos, no people.

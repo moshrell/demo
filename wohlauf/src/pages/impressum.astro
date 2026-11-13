@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Impressum · Wohlauf" description="Impressum der Beispielseite Wohlauf, Praxis für Physiotherapie.">
+  <header class="apphead"><a href={base}><span aria-hidden="true">←</span> Zur Startseite</a></header>
+  <main class="legal">
+    <h1 class="stretch">Impressum</h1>
+    <p class="legal__demo"><strong>Beispielseite von Kravets Webdesign.</strong> Praxis, Personen, Adresse, Telefonnummer, Termine und Preise sind erfunden. Eine Physiotherapie-Praxis „Wohlauf“ in Hannover gibt es nicht. Die Bilder dieser Beispielseite sind, soweit vorhanden, KI-erzeugt.</p>
+    <h2>Angaben gemäß § 5 DDG (so stünden sie bei einer echten Praxis)</h2>
+    <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+    <p>Telefon: {site.phone}<br />E-Mail: {site.email}</p>
+    <h2>Berufsbezeichnung und berufsrechtliche Regelungen</h2>
+    <p>Berufsbezeichnung: Physiotherapeutin (verliehen in der Bundesrepublik Deutschland). Es gilt das Gesetz über die Berufe in der Physiotherapie (Masseur- und Physiotherapeutengesetz, MPhG), einsehbar unter gesetze-im-internet.de.</p>
+    <p>Zusätzlich: Erlaubnis zur Ausübung der Heilkunde, beschränkt auf das Gebiet der Physiotherapie (sektorale Heilpraktikererlaubnis nach dem Heilpraktikergesetz), erteilt durch die zuständige Gesundheitsbehörde.</p>
+    <p>Zuständige Aufsichtsbehörde: Gesundheitsamt der Region Hannover. Institutionskennzeichen (IK) und Umsatzsteuer-Angaben: bei einer echten Praxis hier.</p>
+    <h2>Hinweis zum Beweglichkeits-Check</h2>
+    <p>Der Check ist eine Orientierung und kein Medizinprodukt. Er stellt keine Diagnose und ersetzt keine Untersuchung.</p>
+    <h2>English summary</h2>
+    <p lang="en">This is a demo website by Kravets Webdesign. The practice, people, address, phone number, appointments and prices are fictional. The mobility check is a rough guide, not a medical device and not a diagnosis.</p>
+  </main>
+</Base>

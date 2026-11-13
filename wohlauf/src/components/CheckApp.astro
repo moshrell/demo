@@ -1,0 +1,84 @@
+---
+// Beweglichkeits-Check als eigene Seite (DE und EN). Texte: src/data/<lang>.json → app
+import site from '../data/site.json';
+const { t } = Astro.props;
+const a = t.app;
+const base = import.meta.env.BASE_URL;
+const home = t.lang === 'de' ? base : `${base}en/`;
+const other = t.lang === 'de' ? `${base}en/check/` : `${base}check/`;
+---
+<header class="apphead">
+  <a class="apphead__back" href={home}><span aria-hidden="true">←</span> {a.back}</a>
+  <a class="apphead__lang" href={other} lang={t.lang === 'de' ? 'en' : 'de'} aria-label={t.nav.lang}>{t.nav.langShort}</a>
+</header>
+<main class="app" data-check data-home={home} data-t={JSON.stringify(a)}>
+  <section class="app__screen" data-screen="intro">
+    <p class="kicker">{a.title}</p>
+    <h1 class="app__h stretch" tabindex="-1" data-focus>{a.introH}</h1>
+    <p class="app__lead">{a.introP}</p>
+    <ol class="app__list">{a.introList.map((x: string) => <li>{x}</li>)}</ol>
+    <p class="app__safety">{a.safety}</p>
+    <p class="app__msg" data-intro-msg role="status" hidden></p>
+    <div class="app__actions">
+      <button class="btn btn--main" type="button" data-start>{a.start}</button>
+      <button class="btn" type="button" data-start-manual>{a.manual}</button>
+    </div>
+    <p class="app__fine" data-desk hidden>{t.check.desktop}</p>
+    <p class="app__fine">{a.privacy}</p>
+    <noscript><p class="app__msg">{a.noscript} <a href={`tel:${site.phoneHref}`}>{site.phone}</a>.</p></noscript>
+  </section>
+
+  <section class="app__screen" data-screen="step" hidden>
+    <p class="kicker" data-step-count></p>
+    <h1 class="app__h stretch" tabindex="-1" data-focus data-step-h></h1>
+    <div class="app__gauge" data-step-gauge></div>
+    <p class="app__ref" data-step-ref></p>
+    <p class="app__how" data-step-how></p>
+    <p class="app__do" data-step-do></p>
+
+    <div data-sensor>
+      <p class="app__fine" data-step-end></p>
+      <button class="btn btn--main btn--big" type="button" data-go>{a.ready}</button>
+      <div class="live" data-meter hidden>
+        <p class="live__state" data-meter-state role="status"></p>
+        <p class="live__num" data-meter-num aria-hidden="true">0°</p>
+        <button class="btn btn--main btn--big" type="button" data-finish>{a.finish}</button>
+      </div>
+      <div class="app__actions" data-step-after hidden>
+        <button class="btn btn--main" type="button" data-next>{a.next}</button>
+        <button class="btn" type="button" data-again>{a.again}</button>
+      </div>
+    </div>
+
+    <div class="manual" data-manual hidden>
+      <p class="manual__q" data-manual-q></p>
+      {['l', 'r'].map((s) => (
+        <div class="manual__row" data-row={s}>
+          <label for={`m-${s}`} data-row-label></label>
+          <input id={`m-${s}`} type="range" min="0" max="90" step="1" />
+          <output for={`m-${s}`}></output>
+        </div>
+      ))}
+    </div>
+    <div class="app__actions">
+      <button class="btn btn--main" type="button" data-step-next hidden>{a.next}</button>
+      <button class="btn btn--quiet" type="button" data-skip>{a.skip}</button>
+    </div>
+  </section>
+
+  <section class="app__screen" data-screen="result" hidden>
+    <p class="kicker">{a.title}</p>
+    <h1 class="app__h stretch" tabindex="-1" data-focus>{a.resultH}</h1>
+    <p class="app__lead">{a.resultP}</p>
+    <ul class="app__results" data-result-list></ul>
+    <p class="app__fine">{a.disclaimer}</p>
+    <div class="app__actions">
+      <a class="btn btn--main" data-send href={`${home}#anfrage`}>{a.send}</a>
+      <button class="btn" type="button" data-restart>{a.restart}</button>
+    </div>
+    <p class="app__fine">{a.sendNote}</p>
+  </section>
+</main>
+<script>
+  import '../scripts/check';
+</script>

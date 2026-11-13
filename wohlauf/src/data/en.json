@@ -1,0 +1,517 @@
+{
+  "lang": "en",
+  "meta": {
+    "title": "Wohlauf · Physiotherapy in Hannover-Südstadt",
+    "description": "Physiotherapy in Hannover's Südstadt, four minutes from the Maschsee. Statutory and private insurance, or without a prescription. With a mobility check for your phone.",
+    "checkTitle": "Mobility check · Wohlauf",
+    "checkDescription": "In 90 seconds your phone measures how far your neck, shoulders and trunk move."
+  },
+  "nav": {
+    "check": "Check",
+    "termin": "First visit",
+    "hilfe": "Complaints",
+    "kosten": "Costs",
+    "praxis": "Practice",
+    "anfrage": "Request a visit",
+    "call": "Call",
+    "lang": "Deutsch",
+    "langShort": "DE",
+    "night": "Night",
+    "day": "Day",
+    "themeLabel": "Switch view: day or night",
+    "home": "Go to home page"
+  },
+  "status": {
+    "open": "Reachable today until {t}",
+    "closedToday": "Reachable today from {t}",
+    "closedNext": "Reachable again: {d}, {t}",
+    "days": [
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
+    ],
+    "tomorrow": "tomorrow"
+  },
+  "hero": {
+    "lead": "I want to",
+    "goals": [
+      {
+        "id": "laufen",
+        "word": "run|10 k again.",
+        "chip": "run 10 k",
+        "sub": "From the first easy kilometre to a full lap of the Maschsee: we build the load back up step by step."
+      },
+      {
+        "id": "schlafen",
+        "word": "sleep|all night.",
+        "chip": "sleep all night",
+        "sub": "When a shoulder or your back wakes you at night, we look for the cause and show you positions that take the pressure off."
+      },
+      {
+        "id": "tragen",
+        "word": "carry|my child.",
+        "chip": "carry my child",
+        "sub": "Lifting, carrying, nursing: we get your back and shoulders ready for everyday life."
+      },
+      {
+        "id": "sitzen",
+        "word": "sit for|hours.",
+        "chip": "sit for hours",
+        "sub": "Eight hours at a desk is a lot. We release what is stiff and give you exercises that fit into a coffee break."
+      },
+      {
+        "id": "treppen",
+        "word": "climb|stairs.",
+        "chip": "climb stairs",
+        "sub": "After knee or hip surgery we stay with you from the first step to the third floor."
+      },
+      {
+        "id": "tennis",
+        "word": "play|tennis.",
+        "chip": "play tennis",
+        "sub": "Shoulder, elbow, ankle: we get you back on court and test how much load it takes."
+      }
+    ],
+    "chipsLabel": "What do you want to do again?",
+    "pull": "Pull the word",
+    "ctaCheck": "Test your mobility",
+    "ctaCheckNote": "90 seconds, with your phone",
+    "ctaTermin": "Request a visit",
+    "slot": "Next free first visit",
+    "slotNote": "Sample data",
+    "facts": [
+      "Statutory and private insurance",
+      "No prescription needed",
+      "4 minutes to the Maschsee"
+    ]
+  },
+  "night": {
+    "title": "In pain and can't sleep?",
+    "lead": "The practice is closed right now. Two things you can try straight away.",
+    "tips": [
+      {
+        "h": "On your back",
+        "p": "A thick pillow under your knees. This takes load off the lower back."
+      },
+      {
+        "h": "On your side",
+        "p": "A pillow between your knees, top leg slightly bent. With shoulder pain, lie on the other side."
+      }
+    ],
+    "breath": "Breathe calmly for one minute",
+    "breathIn": "Breathe in",
+    "breathOut": "Breathe out",
+    "breathStop": "Stop",
+    "breathDone": "That was one minute. If it felt good, go again.",
+    "contact": "Write to us now and we will call you back as soon as we are in.",
+    "warn": "With numbness, paralysis, fever or after a fall, do not wait: medical on-call service 116 117, emergencies 112.",
+    "toDay": "Switch to day view"
+  },
+  "check": {
+    "kicker": "Mobility check",
+    "title": "Your phone is a goniometer.",
+    "p": "Physiotherapists measure joints in degrees. The sensors in your phone can do that too. In 90 seconds you see how far your neck, shoulders and trunk move, left compared with right.",
+    "cta": "Start the check",
+    "desktop": "Works best on a phone. On a computer you set the angles by hand.",
+    "dialHint": "Try it: drag",
+    "dialLabel": "Head rotation",
+    "left": "left",
+    "right": "right",
+    "note": "A rough guide, not a diagnosis. The readings stay on your device."
+  },
+  "termin": {
+    "title": "What happens at your first visit",
+    "p": "Four steps, one therapist. Afterwards you know what is going on and what comes next.",
+    "progress": "Step",
+    "stages": [
+      {
+        "h": "You talk",
+        "p": "Since when, doing what, what helps and what doesn't. And what you want to be able to do again. The goal sets the route.",
+        "li": [
+          "Prescription, doctor's letters and scans",
+          "Daily life, work, sport",
+          "Your goal in one sentence"
+        ]
+      },
+      {
+        "h": "We look closely",
+        "p": "The assessment: how do you move, what triggers the pain, what differs from one side to the other?",
+        "li": [
+          "Posture and gait",
+          "Range of motion in degrees, left and right",
+          "Strength, stability, nerve tests"
+        ]
+      },
+      {
+        "h": "Hands and movement",
+        "p": "We treat what the assessment shows: with manual techniques and with exercises you control yourself.",
+        "li": [
+          "Manual therapy and soft-tissue work",
+          "Active exercises at the right dose",
+          "You tell us how it feels at any time"
+        ]
+      },
+      {
+        "h": "Your plan for home",
+        "p": "Two or three exercises that fit your day. Sent to your phone as photos, so nothing gets lost at home.",
+        "li": [
+          "Exercises with pictures and dosage",
+          "What to rest and what to load",
+          "The next visit and what we check then"
+        ]
+      }
+    ]
+  },
+  "hilfe": {
+    "title": "What we help with",
+    "p": "The most common reasons people come to us.",
+    "labels": {
+      "typisch": "Typical",
+      "wir": "What we do",
+      "rezept": "Usual prescription"
+    },
+    "items": [
+      {
+        "h": "Back and neck",
+        "s": "Tension, lumbago, slipped disc",
+        "typisch": "Pain after long sitting, stiff in the morning, radiating into an arm or leg.",
+        "wir": "Examine spine and hips, mobilise joints, strengthen the trunk, talk through your desk setup.",
+        "rezept": "Physiotherapy (KG), manual therapy (MT)"
+      },
+      {
+        "h": "Shoulder",
+        "s": "Impingement, calcific tendinitis, frozen shoulder",
+        "typisch": "Pain when dressing, reaching overhead and at night lying on that side.",
+        "wir": "Include shoulder blade and upper back, widen the range step by step, strengthen the rotator cuff.",
+        "rezept": "KG, MT"
+      },
+      {
+        "h": "Knee and hip",
+        "s": "Osteoarthritis, meniscus, front-of-knee pain",
+        "typisch": "Pain on the first steps, going downstairs, after load.",
+        "wir": "Check leg alignment and strength, build up specifically, dose the load so the joint keeps up.",
+        "rezept": "KG, equipment-based physiotherapy (KGG)"
+      },
+      {
+        "h": "After surgery",
+        "s": "Cruciate ligament, joint replacement, shoulder, disc",
+        "typisch": "Swelling, limited bending or straightening, feeling unsure under load.",
+        "wir": "Follow your surgeon's protocol, document progress in degrees, write a report for your check-up.",
+        "rezept": "KG, manual lymph drainage (MLD), KGG"
+      },
+      {
+        "h": "Running and sport",
+        "s": "Runner's knee, Achilles tendon, ankle",
+        "typisch": "Pain from a certain kilometre, after speed work or the morning after.",
+        "wir": "Video running analysis, strength and jump tests, a training plan with clear stages back to sport.",
+        "rezept": "KG, running analysis as a self-pay service"
+      },
+      {
+        "h": "Jaw and head",
+        "s": "Jaw joint (TMD), tension headache",
+        "typisch": "Clicking, clenching at night, pain in front of the ear, headache coming from the neck.",
+        "wir": "Look at jaw, neck and posture together, relax the muscles, home exercises.",
+        "rezept": "KG or MT, often prescribed by a dentist"
+      }
+    ]
+  },
+  "kosten": {
+    "title": "What it costs",
+    "p": "Three ways to come to us. You know the exact amount before your first visit.",
+    "tabs": [
+      {
+        "id": "kasse",
+        "tab": "Prescription, statutory",
+        "h": "You only pay the statutory co-payment",
+        "p": "€10 per prescription plus 10% of the treatment costs. We work out the amount for your prescription and tell you on the phone.",
+        "li": [
+          "No co-payment under 18",
+          "Please bring your exemption card",
+          "Treatment must start within 28 days of the prescription"
+        ]
+      },
+      {
+        "id": "privat",
+        "tab": "Private insurance",
+        "h": "Invoiced by our price list",
+        "p": "Before we start you receive a cost estimate for your insurer or Beihilfe. What is reimbursed depends on your plan.",
+        "li": [
+          "Private prescription or one issued by our Heilpraktikerin",
+          "Monthly invoice by post or e-mail",
+          "Beihilfe: we know the caps and tell you what remains"
+        ]
+      },
+      {
+        "id": "selbst",
+        "tab": "No prescription",
+        "h": "Straight to us",
+        "p": "Ronja Dreesen holds the sectoral Heilpraktiker licence for physiotherapy and may examine and treat you without a doctor's prescription. You pay yourself; private supplementary insurance may reimburse depending on your plan.",
+        "li": []
+      }
+    ],
+    "listTitle": "Self-pay prices",
+    "list": [
+      {
+        "n": "Assessment and treatment",
+        "d": "60 min",
+        "p": "€98"
+      },
+      {
+        "n": "Treatment",
+        "d": "45 min",
+        "p": "€76"
+      },
+      {
+        "n": "Treatment",
+        "d": "30 min",
+        "p": "€52"
+      },
+      {
+        "n": "Video running analysis",
+        "d": "75 min",
+        "p": "€129",
+        "tax": true
+      },
+      {
+        "n": "Back and neck package",
+        "d": "Assessment + 5 × 30 min + exercise plan",
+        "p": "€338"
+      },
+      {
+        "n": "Back to running package",
+        "d": "Running analysis + assessment + 6 × 45 min",
+        "p": "€649"
+      }
+    ],
+    "tax": "Medical treatment is exempt from VAT (§ 4 No. 14 UStG). The running analysis is a prevention service, price incl. 19% VAT.",
+    "inside": {
+      "h": "What 60 minutes include",
+      "li": [
+        "Conversation and assessment",
+        "Treatment",
+        "Exercise plan with photos on your phone",
+        "Short report for your doctor, if you wish"
+      ],
+      "sum": "Assessment and treatment, 60 min"
+    },
+    "demo": "Sample prices of this demo site."
+  },
+  "praxis": {
+    "title": "Who treats you",
+    "p": "A small practice. You have the same therapist from start to finish.",
+    "team": [
+      {
+        "n": "Ronja Dreesen",
+        "r": "Owner, physiotherapist since 2007",
+        "q": [
+          "Manual therapy",
+          "Sports physiotherapy",
+          "Sectoral Heilpraktiker licence for physiotherapy"
+        ],
+        "img": "team-ronja"
+      },
+      {
+        "n": "Malte Ahrendt",
+        "r": "Physiotherapist",
+        "q": [
+          "Equipment-based physiotherapy",
+          "Manual lymph drainage",
+          "Rehab after knee and hip surgery"
+        ],
+        "img": "team-malte"
+      }
+    ],
+    "roomTitle": "The practice",
+    "room": [
+      "Ground floor, step-free access",
+      "Three treatment rooms, one training room",
+      "Tram stop Geibelstraße, 3 minutes on foot",
+      "Bike stands at the door"
+    ],
+    "hoursTitle": "Reachable",
+    "hours": [
+      [
+        "Monday to Thursday",
+        "7:30 to 20:00"
+      ],
+      [
+        "Friday",
+        "7:30 to 16:00"
+      ]
+    ],
+    "hoursNote": "Treatment by appointment."
+  },
+  "faq": {
+    "title": "Common questions",
+    "items": [
+      {
+        "q": "Do I need a prescription?",
+        "a": "No. With a prescription we bill your statutory or private insurer. Without one you come directly to Ronja Dreesen as a self-pay patient; her sectoral Heilpraktiker licence for physiotherapy allows treatment without a doctor's prescription."
+      },
+      {
+        "q": "What do I bring to the first visit?",
+        "a": "Your prescription, your insurance card, any doctor's letters or scans, and comfortable clothes. We have a towel for you."
+      },
+      {
+        "q": "How soon can I get an appointment?",
+        "a": "That depends on the week. The next free first visit is shown at the top of the page. After surgery or with acute complaints please call, and we will try to make something possible."
+      },
+      {
+        "q": "How long is a treatment?",
+        "a": "With a prescription the length follows the prescription. For self-pay patients we offer 30, 45 and 60 minutes; we recommend 60 minutes for the first visit so there is time for the assessment."
+      },
+      {
+        "q": "I need to cancel. What now?",
+        "a": "Please cancel at least 24 hours ahead, by phone or e-mail. We charge for appointments missed at short notice because we can no longer give the time to someone else."
+      },
+      {
+        "q": "What does the mobility check measure?",
+        "a": "The orientation sensors in your phone measure how far you move your head, arm and upper body. The values are accurate to about 5 to 10 degrees and do not replace an assessment. They stay on your device until you attach them to a request yourself."
+      }
+    ]
+  },
+  "form": {
+    "title": "Request a visit",
+    "p": "We reply within one working day with a suggested time.",
+    "area": "What is it about?",
+    "areas": [
+      "Back or neck",
+      "Shoulder",
+      "Knee or hip",
+      "After surgery",
+      "Sport",
+      "Something else"
+    ],
+    "ins": "How are you coming to us?",
+    "insOpts": [
+      "Prescription, statutory",
+      "Private insurance",
+      "No prescription",
+      "Not sure yet"
+    ],
+    "time": "When suits you?",
+    "times": [
+      "Morning",
+      "Midday",
+      "Afternoon",
+      "Evening"
+    ],
+    "timeHint": "Choose several",
+    "you": "Your details",
+    "name": "Name",
+    "namePh": "First and last name",
+    "nameErr": "Please enter your name.",
+    "tel": "Phone",
+    "telPh": "e.g. 030 23125 123",
+    "telErr": "Please enter a phone number we can reach you on.",
+    "mail": "E-mail",
+    "mailPh": "name@example.com",
+    "mailErr": "Please check the e-mail address, e.g. name@example.com.",
+    "note": "Message",
+    "notePh": "e.g. since when, what you want to do again",
+    "optional": "(optional)",
+    "result": "Attach my mobility check result",
+    "resultNone": "",
+    "consent": "I agree that Wohlauf uses my details (name, phone, e-mail, message) and what I state about my complaints, including attached readings (health data), to handle my request.",
+    "consentLink": "Privacy notice (German)",
+    "consentErr": "Please agree, otherwise we cannot handle your request.",
+    "demo": "Nothing is sent (demo).",
+    "submit": "Send request",
+    "done": "Thank you, your request has arrived.",
+    "doneP": "We reply within one working day.",
+    "doneDemo": "Demo: this form is a showcase. Nothing was sent or stored.",
+    "rows": {
+      "area": "Concern",
+      "ins": "Billing",
+      "time": "Time",
+      "name": "Name",
+      "tel": "Phone",
+      "result": "Check result"
+    }
+  },
+  "footer": {
+    "address": "Address",
+    "legal": [
+      "Legal notice",
+      "Privacy"
+    ],
+    "demo": "Demo site by Kravets Webdesign: practice and people are fictional.",
+    "demoCta": "A website like this for your practice? Get in touch"
+  },
+  "app": {
+    "back": "Back to the practice",
+    "title": "Mobility check",
+    "introH": "Three movements, 90 seconds.",
+    "introP": "You hold the phone to your forehead, in your hand and on your chest. The orientation sensors measure the angle. Move slowly and only as far as feels good.",
+    "introList": [
+      "Neck: turn your head left and right",
+      "Shoulders: raise your arm forwards and up",
+      "Trunk: bend to the side"
+    ],
+    "start": "Measure with sensors",
+    "manual": "Set the angles by hand",
+    "manualAuto": "This device reports no orientation sensors. You can set the angles by hand.",
+    "denied": "Without access to the motion sensors the phone cannot measure. You can set the angles by hand.",
+    "safety": "Do not move into pain. Stop if you feel dizzy. Skip this check after surgery or an accident.",
+    "privacy": "Measured on your device only. Nothing is transmitted.",
+    "step": "Measurement {n} of {m}",
+    "ready": "Ready",
+    "holdStill": "Hold still for a moment",
+    "measuring": "Measuring",
+    "finish": "Done",
+    "skip": "Skip",
+    "again": "Measure again",
+    "next": "Next",
+    "toResult": "See result",
+    "tests": [
+      {
+        "id": "nacken",
+        "h": "Neck",
+        "how": "Phone upright against your forehead, screen facing forwards. Sit tall.",
+        "do": "Slowly turn your head left, back to the middle, then right. Keep your shoulders still.",
+        "end": "Then take the phone down or tap Done.",
+        "manualQ": "How far does your head turn?",
+        "ref": "Guide: 60 to 80° each side"
+      },
+      {
+        "id": "schulter",
+        "h": "Shoulders",
+        "how": "Phone firmly in your hand, arm hanging loose. Left first, then right.",
+        "do": "Slowly raise your straight arm forwards and up as far as it goes, then lower it.",
+        "end": "Arm down: tap Done, then the other side.",
+        "manualQ": "How high do you raise your arm?",
+        "ref": "Guide: 150 to 170°",
+        "sides": true
+      },
+      {
+        "id": "rumpf",
+        "h": "Trunk",
+        "how": "Phone upright and flat against your breastbone, screen facing forwards. Feet hip-width apart.",
+        "do": "Slowly bend your upper body left, back to the middle, then right. Do not tip forwards.",
+        "end": "Then tap Done.",
+        "manualQ": "How far do you bend sideways?",
+        "ref": "Guide: 30 to 40° each side"
+      }
+    ],
+    "sideLeft": "Left",
+    "sideRight": "Right",
+    "armLeft": "Left arm",
+    "armRight": "Right arm",
+    "resultH": "Your range of motion",
+    "resultP": "This is how far you moved today. A difference between left and right is often the most interesting value.",
+    "diff": "Difference left/right",
+    "even": "Left and right are similar.",
+    "uneven": "A clear difference between left and right. We look at that specifically in the assessment.",
+    "skipped": "Not measured",
+    "disclaimer": "A rough guide, not a diagnosis. Values are accurate to about 5 to 10°. The ranges come from the neutral-zero method and apply to healthy adults; age and build change them.",
+    "send": "Request a visit with this result",
+    "sendNote": "The values are only attached in the form with your consent.",
+    "restart": "Repeat the check",
+    "savedAt": "Measured on {d}",
+    "noscript": "Your browser needs JavaScript for the check. You can reach us on"
+  }
+}

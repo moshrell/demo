@@ -1,0 +1,517 @@
+{
+  "lang": "de",
+  "meta": {
+    "title": "Wohlauf · Physiotherapie in Hannover-Südstadt",
+    "description": "Physiotherapie in der Südstadt, vier Minuten vom Maschsee. Alle Kassen, privat und ohne Rezept. Mit Beweglichkeits-Check fürs Handy.",
+    "checkTitle": "Beweglichkeits-Check · Wohlauf",
+    "checkDescription": "In 90 Sekunden messen Sie mit dem Handy, wie weit sich Nacken, Schultern und Rumpf bewegen."
+  },
+  "nav": {
+    "check": "Check",
+    "termin": "Erster Termin",
+    "hilfe": "Beschwerden",
+    "kosten": "Kosten",
+    "praxis": "Praxis",
+    "anfrage": "Termin anfragen",
+    "call": "Anrufen",
+    "lang": "English",
+    "langShort": "EN",
+    "night": "Nacht",
+    "day": "Tag",
+    "themeLabel": "Ansicht wechseln: Tag oder Nacht",
+    "home": "Zur Startseite"
+  },
+  "status": {
+    "open": "Heute bis {t} Uhr erreichbar",
+    "closedToday": "Heute ab {t} Uhr erreichbar",
+    "closedNext": "Wieder erreichbar: {d}, {t} Uhr",
+    "days": [
+      "So",
+      "Mo",
+      "Di",
+      "Mi",
+      "Do",
+      "Fr",
+      "Sa"
+    ],
+    "tomorrow": "morgen"
+  },
+  "hero": {
+    "lead": "Ich will wieder",
+    "goals": [
+      {
+        "id": "laufen",
+        "word": "10 km|laufen.",
+        "chip": "10 km laufen",
+        "sub": "Vom ersten schmerzarmen Kilometer bis zur Runde um den Maschsee: Wir bauen die Belastung Schritt für Schritt auf."
+      },
+      {
+        "id": "schlafen",
+        "word": "durch-|schlafen.",
+        "chip": "durchschlafen",
+        "sub": "Wenn Schulter oder Rücken nachts wecken, suchen wir die Ursache und zeigen Ihnen Lagerungen, die entlasten."
+      },
+      {
+        "id": "tragen",
+        "word": "mein Kind|tragen.",
+        "chip": "mein Kind tragen",
+        "sub": "Heben, tragen, stillen: Wir machen Rücken und Schultern für Ihren Alltag belastbar."
+      },
+      {
+        "id": "sitzen",
+        "word": "lange|sitzen.",
+        "chip": "lange sitzen",
+        "sub": "Acht Stunden am Schreibtisch sind viel. Wir lösen, was fest ist, und geben Ihnen Übungen, die in eine Kaffeepause passen."
+      },
+      {
+        "id": "treppen",
+        "word": "Treppen|steigen.",
+        "chip": "Treppen steigen",
+        "sub": "Nach einer Knie- oder Hüftoperation begleiten wir Sie vom ersten Schritt bis zur dritten Etage."
+      },
+      {
+        "id": "tennis",
+        "word": "Tennis|spielen.",
+        "chip": "Tennis spielen",
+        "sub": "Schulter, Ellenbogen, Sprunggelenk: Wir bringen Sie zurück auf den Platz und prüfen, was die Belastung verträgt."
+      }
+    ],
+    "chipsLabel": "Was möchten Sie wieder können?",
+    "pull": "Ziehen Sie am Wort",
+    "ctaCheck": "Beweglichkeit testen",
+    "ctaCheckNote": "90 Sekunden, mit dem Handy",
+    "ctaTermin": "Termin anfragen",
+    "slot": "Nächster freier Ersttermin",
+    "slotNote": "Beispieldaten",
+    "facts": [
+      "Alle Kassen und privat",
+      "Auch ohne Rezept",
+      "4 Minuten zum Maschsee"
+    ]
+  },
+  "night": {
+    "title": "Schmerzen und kein Schlaf?",
+    "lead": "Jetzt ist die Praxis zu. Zwei Dinge können Sie sofort versuchen.",
+    "tips": [
+      {
+        "h": "Auf dem Rücken",
+        "p": "Ein dickes Kissen unter die Knie. Das entlastet den unteren Rücken."
+      },
+      {
+        "h": "Auf der Seite",
+        "p": "Ein Kissen zwischen die Knie, das obere Bein leicht angewinkelt. Bei Schulterschmerz auf die andere Seite."
+      }
+    ],
+    "breath": "Eine Minute ruhig atmen",
+    "breathIn": "Einatmen",
+    "breathOut": "Ausatmen",
+    "breathStop": "Beenden",
+    "breathDone": "Eine Minute ist um. Wenn es gutgetan hat, einfach noch einmal.",
+    "contact": "Schreiben Sie uns jetzt, wir rufen zurück, sobald wir da sind.",
+    "warn": "Bei Taubheit, Lähmung, Fieber oder nach einem Sturz bitte nicht warten: ärztlicher Bereitschaftsdienst 116 117, im Notfall 112.",
+    "toDay": "Zur Tagesansicht"
+  },
+  "check": {
+    "kicker": "Beweglichkeits-Check",
+    "title": "Ihr Handy ist ein Winkelmesser.",
+    "p": "Physiotherapeuten messen Gelenke in Grad. Die Sensoren in Ihrem Handy können das auch. In 90 Sekunden sehen Sie, wie weit sich Nacken, Schultern und Rumpf bewegen, links und rechts im Vergleich.",
+    "cta": "Check starten",
+    "desktop": "Am besten auf dem Handy. Am Rechner stellen Sie die Winkel von Hand ein.",
+    "dialHint": "Probieren Sie es: ziehen",
+    "dialLabel": "Kopfdrehung",
+    "left": "links",
+    "right": "rechts",
+    "note": "Orientierung, keine Diagnose. Die Messwerte bleiben auf Ihrem Gerät."
+  },
+  "termin": {
+    "title": "So läuft Ihr erster Termin",
+    "p": "Vier Schritte, eine Therapeutin. Sie wissen danach, was los ist und wie es weitergeht.",
+    "progress": "Schritt",
+    "stages": [
+      {
+        "h": "Sie erzählen",
+        "p": "Seit wann, wobei, was hilft, was nicht. Und was Sie wieder können möchten. Das Ziel bestimmt den Weg.",
+        "li": [
+          "Rezept, Arztberichte und Bilder ansehen",
+          "Alltag, Arbeit, Sport",
+          "Ihr Ziel in einem Satz"
+        ]
+      },
+      {
+        "h": "Wir schauen genau hin",
+        "p": "Der Befund: Wie bewegen Sie sich, was löst den Schmerz aus, was ist im Seitenvergleich anders?",
+        "li": [
+          "Haltung und Gang",
+          "Beweglichkeit in Grad, links und rechts",
+          "Kraft, Stabilität, Nerventests"
+        ]
+      },
+      {
+        "h": "Hände und Bewegung",
+        "p": "Wir behandeln, was der Befund zeigt: mit manuellen Techniken und mit Übungen, die Sie selbst steuern.",
+        "li": [
+          "Manuelle Therapie und Weichteiltechniken",
+          "Aktive Übungen, genau dosiert",
+          "Sie sagen jederzeit, wie es sich anfühlt"
+        ]
+      },
+      {
+        "h": "Ihr Plan für zu Hause",
+        "p": "Zwei oder drei Übungen, die in Ihren Tag passen. Als Fotos auf Ihr Handy, damit zu Hause nichts verloren geht.",
+        "li": [
+          "Übungen mit Bild und Dosierung",
+          "Was Sie schonen, was Sie belasten dürfen",
+          "Der nächste Termin und was dann geprüft wird"
+        ]
+      }
+    ]
+  },
+  "hilfe": {
+    "title": "Wobei wir helfen",
+    "p": "Die häufigsten Gründe, warum Menschen zu uns kommen.",
+    "labels": {
+      "typisch": "Typisch",
+      "wir": "Was wir tun",
+      "rezept": "Häufige Verordnung"
+    },
+    "items": [
+      {
+        "h": "Rücken und Nacken",
+        "s": "Verspannung, Hexenschuss, Bandscheibe",
+        "typisch": "Schmerz nach langem Sitzen, morgens steif, ausstrahlend in Arm oder Bein.",
+        "wir": "Wirbelsäule und Hüfte untersuchen, Gelenke mobilisieren, Rumpf kräftigen, Arbeitsplatz besprechen.",
+        "rezept": "Krankengymnastik (KG), Manuelle Therapie (MT)"
+      },
+      {
+        "h": "Schulter",
+        "s": "Engpass, Kalkschulter, steife Schulter",
+        "typisch": "Schmerz beim Anziehen, über Kopf und nachts auf der Seite.",
+        "wir": "Schulterblatt und Brustwirbelsäule einbeziehen, Beweglichkeit schrittweise erweitern, Rotatoren kräftigen.",
+        "rezept": "KG, MT"
+      },
+      {
+        "h": "Knie und Hüfte",
+        "s": "Arthrose, Meniskus, vorderer Knieschmerz",
+        "typisch": "Anlaufschmerz, Treppen abwärts, Schmerz nach Belastung.",
+        "wir": "Beinachse und Kraft prüfen, gezielt aufbauen, Belastung so steuern, dass das Gelenk mitkommt.",
+        "rezept": "KG, Krankengymnastik am Gerät (KGG)"
+      },
+      {
+        "h": "Nach einer Operation",
+        "s": "Kreuzband, Gelenkersatz, Schulter, Bandscheibe",
+        "typisch": "Schwellung, eingeschränkte Streckung oder Beugung, Unsicherheit bei Belastung.",
+        "wir": "Nach dem Schema Ihrer Operateurin oder Ihres Operateurs arbeiten, Fortschritt in Grad dokumentieren, Bericht für die Kontrolle.",
+        "rezept": "KG, Manuelle Lymphdrainage (MLD), KGG"
+      },
+      {
+        "h": "Laufen und Sport",
+        "s": "Läuferknie, Achillessehne, Sprunggelenk",
+        "typisch": "Schmerz ab einem bestimmten Kilometer, nach Tempo oder am Morgen danach.",
+        "wir": "Lauf-Analyse mit Video, Kraft- und Sprungtests, Trainingsplan mit klaren Stufen zurück in den Sport.",
+        "rezept": "KG, Selbstzahler-Leistung Lauf-Analyse"
+      },
+      {
+        "h": "Kiefer und Kopf",
+        "s": "Kiefergelenk (CMD), Spannungskopfschmerz",
+        "typisch": "Knacken, Pressen in der Nacht, Schmerz vor dem Ohr, Kopfschmerz vom Nacken.",
+        "wir": "Kiefer, Halswirbelsäule und Haltung zusammen betrachten, Muskulatur entspannen, Eigenübungen.",
+        "rezept": "KG oder MT, oft vom Zahnarzt verordnet"
+      }
+    ]
+  },
+  "kosten": {
+    "title": "Was es kostet",
+    "p": "Drei Wege zu uns. Den genauen Betrag kennen Sie vor dem ersten Termin.",
+    "tabs": [
+      {
+        "id": "kasse",
+        "tab": "Mit Rezept, gesetzlich",
+        "h": "Sie zahlen nur die gesetzliche Zuzahlung",
+        "p": "10 € je Verordnung plus 10 % der Behandlungskosten. Wir rechnen den Betrag für Ihr Rezept aus und nennen ihn am Telefon.",
+        "li": [
+          "Unter 18 Jahren zuzahlungsfrei",
+          "Befreiungsausweis bitte mitbringen",
+          "Das Rezept muss innerhalb von 28 Tagen begonnen werden"
+        ]
+      },
+      {
+        "id": "privat",
+        "tab": "Privat versichert",
+        "h": "Rechnung nach unserer Preisliste",
+        "p": "Sie erhalten vor Beginn einen Kostenvoranschlag für Ihre Versicherung oder Beihilfe. Was erstattet wird, hängt von Ihrem Tarif ab.",
+        "li": [
+          "Privatrezept oder Verordnung der Heilpraktikerin",
+          "Rechnung monatlich, per Post oder E-Mail",
+          "Beihilfe: Wir kennen die Höchstsätze und sagen, was offen bleibt"
+        ]
+      },
+      {
+        "id": "selbst",
+        "tab": "Ohne Rezept",
+        "h": "Direkt zu uns, ohne Umweg",
+        "p": "Ronja Dreesen ist sektorale Heilpraktikerin für Physiotherapie und darf Sie ohne ärztliche Verordnung untersuchen und behandeln. Die Kosten tragen Sie selbst; private Zusatzversicherungen erstatten je nach Tarif.",
+        "li": []
+      }
+    ],
+    "listTitle": "Preise für Selbstzahler",
+    "list": [
+      {
+        "n": "Befund und Behandlung",
+        "d": "60 Min.",
+        "p": "98 €"
+      },
+      {
+        "n": "Behandlung",
+        "d": "45 Min.",
+        "p": "76 €"
+      },
+      {
+        "n": "Behandlung",
+        "d": "30 Min.",
+        "p": "52 €"
+      },
+      {
+        "n": "Lauf-Analyse mit Video",
+        "d": "75 Min.",
+        "p": "129 €",
+        "tax": true
+      },
+      {
+        "n": "Paket Rücken und Nacken",
+        "d": "Befund + 5 × 30 Min. + Übungsplan",
+        "p": "338 €"
+      },
+      {
+        "n": "Paket Zurück zum Laufen",
+        "d": "Lauf-Analyse + Befund + 6 × 45 Min.",
+        "p": "649 €"
+      }
+    ],
+    "tax": "Heilbehandlungen sind umsatzsteuerfrei (§ 4 Nr. 14 UStG). Die Lauf-Analyse ist eine Präventionsleistung, Preis inkl. 19 % MwSt.",
+    "inside": {
+      "h": "Was in 60 Minuten steckt",
+      "li": [
+        "Gespräch und Befund",
+        "Behandlung",
+        "Übungsplan mit Fotos aufs Handy",
+        "Kurzbericht für Ihre Ärztin oder Ihren Arzt, wenn Sie möchten"
+      ],
+      "sum": "Befund und Behandlung, 60 Min."
+    },
+    "demo": "Beispielpreise dieser Demo-Seite."
+  },
+  "praxis": {
+    "title": "Wer Sie behandelt",
+    "p": "Eine kleine Praxis. Sie haben von Anfang bis Ende dieselbe Therapeutin oder denselben Therapeuten.",
+    "team": [
+      {
+        "n": "Ronja Dreesen",
+        "r": "Inhaberin, Physiotherapeutin seit 2007",
+        "q": [
+          "Manuelle Therapie",
+          "Sportphysiotherapie",
+          "Sektorale Heilpraktikerin für Physiotherapie"
+        ],
+        "img": "team-ronja"
+      },
+      {
+        "n": "Malte Ahrendt",
+        "r": "Physiotherapeut",
+        "q": [
+          "Krankengymnastik am Gerät",
+          "Manuelle Lymphdrainage",
+          "Reha nach Knie- und Hüftoperationen"
+        ],
+        "img": "team-malte"
+      }
+    ],
+    "roomTitle": "Die Praxis",
+    "room": [
+      "Erdgeschoss, stufenloser Zugang",
+      "Drei Behandlungsräume, ein Trainingsraum",
+      "Stadtbahn Geibelstraße, 3 Minuten zu Fuß",
+      "Fahrradständer vor der Tür"
+    ],
+    "hoursTitle": "Erreichbar",
+    "hours": [
+      [
+        "Montag bis Donnerstag",
+        "7:30 bis 20:00 Uhr"
+      ],
+      [
+        "Freitag",
+        "7:30 bis 16:00 Uhr"
+      ]
+    ],
+    "hoursNote": "Behandlung nach Termin."
+  },
+  "faq": {
+    "title": "Häufige Fragen",
+    "items": [
+      {
+        "q": "Brauche ich ein Rezept?",
+        "a": "Nein. Mit Rezept rechnen wir mit Ihrer Kasse oder Versicherung ab. Ohne Rezept kommen Sie als Selbstzahlerin oder Selbstzahler direkt zu Ronja Dreesen, die als sektorale Heilpraktikerin für Physiotherapie ohne ärztliche Verordnung behandeln darf."
+      },
+      {
+        "q": "Was bringe ich zum ersten Termin mit?",
+        "a": "Das Rezept, Ihre Versichertenkarte, vorhandene Arztberichte oder Bilder und bequeme Kleidung. Ein Handtuch haben wir für Sie."
+      },
+      {
+        "q": "Wie schnell bekomme ich einen Termin?",
+        "a": "Das hängt von der Woche ab. Den nächsten freien Ersttermin sehen Sie oben auf der Seite. Nach einer Operation oder bei akuten Beschwerden rufen Sie bitte an, wir versuchen etwas möglich zu machen."
+      },
+      {
+        "q": "Wie lange dauert eine Behandlung?",
+        "a": "Mit Rezept richtet sich die Dauer nach der Verordnung. Für Selbstzahler bieten wir 30, 45 und 60 Minuten an; den ersten Termin empfehlen wir mit 60 Minuten, damit Zeit für den Befund bleibt."
+      },
+      {
+        "q": "Ich muss absagen. Was tun?",
+        "a": "Bitte sagen Sie spätestens 24 Stunden vorher ab, telefonisch oder per E-Mail. Kurzfristig ausgefallene Termine stellen wir in Rechnung, weil wir die Zeit nicht mehr vergeben können."
+      },
+      {
+        "q": "Was misst der Beweglichkeits-Check?",
+        "a": "Die Lagesensoren Ihres Handys messen, wie weit Sie Kopf, Arm und Oberkörper bewegen. Die Werte sind auf etwa 5 bis 10 Grad genau und ersetzen keinen Befund. Sie bleiben auf Ihrem Gerät, bis Sie sie selbst an eine Anfrage anhängen."
+      }
+    ]
+  },
+  "form": {
+    "title": "Termin anfragen",
+    "p": "Wir melden uns innerhalb eines Werktags mit einem Terminvorschlag.",
+    "area": "Worum geht es?",
+    "areas": [
+      "Rücken oder Nacken",
+      "Schulter",
+      "Knie oder Hüfte",
+      "Nach einer Operation",
+      "Sport",
+      "Etwas anderes"
+    ],
+    "ins": "Wie kommen Sie zu uns?",
+    "insOpts": [
+      "Mit Rezept, gesetzlich",
+      "Privat versichert",
+      "Ohne Rezept",
+      "Weiß ich noch nicht"
+    ],
+    "time": "Wann passt es Ihnen?",
+    "times": [
+      "Morgens",
+      "Mittags",
+      "Nachmittags",
+      "Abends"
+    ],
+    "timeHint": "Mehrere möglich",
+    "you": "Ihre Angaben",
+    "name": "Name",
+    "namePh": "Vor- und Nachname",
+    "nameErr": "Bitte geben Sie Ihren Namen an.",
+    "tel": "Telefon",
+    "telPh": "z. B. 030 23125 123",
+    "telErr": "Bitte geben Sie eine Telefonnummer an, unter der wir Sie erreichen.",
+    "mail": "E-Mail",
+    "mailPh": "name@example.com",
+    "mailErr": "Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.",
+    "note": "Nachricht",
+    "notePh": "z. B. seit wann, was Sie wieder können möchten",
+    "optional": "(optional)",
+    "result": "Ergebnis aus dem Beweglichkeits-Check anhängen",
+    "resultNone": "",
+    "consent": "Ich bin einverstanden, dass Wohlauf meine Angaben (Name, Telefon, E-Mail, Nachricht) und meine Angaben zu Beschwerden einschließlich angehängter Messwerte (Gesundheitsdaten) verwendet, um meine Terminanfrage zu bearbeiten.",
+    "consentLink": "Hinweise zum Datenschutz",
+    "consentErr": "Bitte stimmen Sie zu, sonst können wir Ihre Anfrage nicht bearbeiten.",
+    "demo": "Es wird nichts gesendet (Demo).",
+    "submit": "Anfrage senden",
+    "done": "Danke, Ihre Anfrage ist angekommen.",
+    "doneP": "Wir melden uns innerhalb eines Werktags.",
+    "doneDemo": "Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.",
+    "rows": {
+      "area": "Anliegen",
+      "ins": "Abrechnung",
+      "time": "Zeit",
+      "name": "Name",
+      "tel": "Telefon",
+      "result": "Check-Ergebnis"
+    }
+  },
+  "footer": {
+    "address": "Adresse",
+    "legal": [
+      "Impressum",
+      "Datenschutz"
+    ],
+    "demo": "Demo-Seite von Kravets Webdesign: Praxis und Personen sind erfunden.",
+    "demoCta": "Eine solche Website für Ihre Praxis? Jetzt anfragen"
+  },
+  "app": {
+    "back": "Zur Praxis-Seite",
+    "title": "Beweglichkeits-Check",
+    "introH": "Drei Bewegungen, 90 Sekunden.",
+    "introP": "Sie halten das Handy an Stirn, Hand und Brust. Die Lagesensoren messen den Winkel. Bewegen Sie sich langsam und nur so weit, wie es sich gut anfühlt.",
+    "introList": [
+      "Nacken: Kopf nach links und rechts drehen",
+      "Schultern: Arm nach vorn oben heben",
+      "Rumpf: zur Seite neigen"
+    ],
+    "start": "Mit Sensor messen",
+    "manual": "Winkel von Hand einstellen",
+    "manualAuto": "Dieses Gerät meldet keine Lagesensoren. Sie können die Winkel von Hand einstellen.",
+    "denied": "Ohne Freigabe der Bewegungssensoren kann das Handy nicht messen. Sie können die Winkel von Hand einstellen.",
+    "safety": "Bitte nicht in den Schmerz hinein bewegen. Bei Schwindel abbrechen. Nach einer Operation oder einem Unfall diesen Check bitte auslassen.",
+    "privacy": "Gemessen wird nur auf Ihrem Gerät. Nichts wird übertragen.",
+    "step": "Messung {n} von {m}",
+    "ready": "Bereit",
+    "holdStill": "Kurz still halten",
+    "measuring": "Messung läuft",
+    "finish": "Fertig",
+    "skip": "Überspringen",
+    "again": "Noch einmal messen",
+    "next": "Weiter",
+    "toResult": "Ergebnis ansehen",
+    "tests": [
+      {
+        "id": "nacken",
+        "h": "Nacken",
+        "how": "Handy hochkant an die Stirn, Display nach vorn. Aufrecht sitzen.",
+        "do": "Kopf langsam nach links drehen, zurück zur Mitte, dann nach rechts. Schultern bleiben ruhig.",
+        "end": "Danach Handy herunternehmen oder Fertig tippen.",
+        "manualQ": "Wie weit dreht sich Ihr Kopf?",
+        "ref": "Orientierung: 60 bis 80° je Seite"
+      },
+      {
+        "id": "schulter",
+        "h": "Schultern",
+        "how": "Handy fest in die Hand, Arm hängt locker. Erst links, dann rechts.",
+        "do": "Gestreckten Arm langsam nach vorn oben heben, so weit es geht, und wieder senken.",
+        "end": "Arm unten: Fertig tippen, dann die andere Seite.",
+        "manualQ": "Wie hoch heben Sie den Arm?",
+        "ref": "Orientierung: 150 bis 170°",
+        "sides": true
+      },
+      {
+        "id": "rumpf",
+        "h": "Rumpf",
+        "how": "Handy hochkant flach an das Brustbein, Display nach vorn. Hüftbreit stehen.",
+        "do": "Oberkörper langsam nach links neigen, zurück zur Mitte, dann nach rechts. Nicht nach vorn kippen.",
+        "end": "Danach Fertig tippen.",
+        "manualQ": "Wie weit neigen Sie sich zur Seite?",
+        "ref": "Orientierung: 30 bis 40° je Seite"
+      }
+    ],
+    "sideLeft": "Links",
+    "sideRight": "Rechts",
+    "armLeft": "Linker Arm",
+    "armRight": "Rechter Arm",
+    "resultH": "Ihr Bewegungsumfang",
+    "resultP": "So weit haben Sie sich heute bewegt. Ein Unterschied zwischen links und rechts ist oft der interessanteste Wert.",
+    "diff": "Unterschied links/rechts",
+    "even": "Links und rechts sind ähnlich.",
+    "uneven": "Deutlicher Unterschied zwischen links und rechts. Das schauen wir uns im Befund gezielt an.",
+    "skipped": "Nicht gemessen",
+    "disclaimer": "Orientierung, keine Diagnose. Die Werte sind auf etwa 5 bis 10° genau. Die Spannen stammen aus der Neutral-Null-Methode und gelten für gesunde Erwachsene; Alter und Körperbau verändern sie.",
+    "send": "Mit Ergebnis Termin anfragen",
+    "sendNote": "Die Werte werden erst mit Ihrer Zustimmung im Formular angehängt.",
+    "restart": "Check wiederholen",
+    "savedAt": "Gemessen am {d}",
+    "noscript": "Für den Check braucht Ihr Browser JavaScript. Sie erreichen uns unter"
+  }
+}

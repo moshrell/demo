@@ -1,0 +1,8 @@
+---
+import Base from '../layouts/Base.astro';
+import Home from '../components/Home.astro';
+import t from '../data/de.json';
+---
+<Base title={t.meta.title} description={t.meta.description} faq={t.faq.items} lang="de" alt={`${import.meta.env.BASE_URL}en/`}>
+  <Home t={t} />
+</Base>

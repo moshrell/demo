@@ -1,0 +1,48 @@
+PROMPTS: фото для демо «Wohlauf» (физиотерапия), 9 кадров
+Генерировать в одном чате Gemini по порядку. Готовые файлы положить в D:\Webdesign\wohlauf\public\img\ под указанными именами (jpg). Кадра нет: блок на сайте просто без картинки, заглушек нет.
+Единый стиль: тёплый утренний свет из окна, мягкие тени, спокойная палитра (телесные и песочные тона, тёмное дерево, белый лён), без синих медицинских халатов. Документальная фотография, 35 мм, естественные цвета. Люди одеты в спортивную или повседневную одежду, нейтральные позы. Без текста, логотипов и брендов.
+
+------------------------------------------------------------------
+1. termin-1.jpg — формат 4:3
+------------------------------------------------------------------
+Documentary photograph, 35mm lens, warm morning window light. A female physiotherapist in her early forties, dark blonde hair tied back, wearing a plain dark polo shirt, sits on a stool facing a female patient in her thirties in a grey sweatshirt who sits on the edge of a treatment table. They are talking; the patient gestures towards her own knee, the therapist listens with a notepad on her lap. Bright small treatment room, white linen on the table, light wooden floor, one green plant by the window. Calm, attentive mood. Natural colours, soft shadows, shallow depth of field. No text, no logos, no brand names.
+
+------------------------------------------------------------------
+2. termin-2.jpg — формат 4:3
+------------------------------------------------------------------
+Documentary photograph, 35mm lens, warm morning window light. Close view of a physiotherapist's hands holding a transparent plastic goniometer against the bent knee of a patient who lies on a treatment table in dark sports shorts and a grey t-shirt. The therapist wears a plain dark polo shirt; only her forearms and hands are in frame, the patient's face is out of frame. White linen, light wooden floor in the blurred background. Natural skin tones, soft shadows, shallow depth of field. No text, no logos, no brand names, no readable numbers.
+
+------------------------------------------------------------------
+3. termin-3.jpg — формат 4:3
+------------------------------------------------------------------
+Documentary photograph, 35mm lens, warm morning window light. A physiotherapist in a plain dark polo shirt stands behind a seated male patient in his fifties wearing a light grey t-shirt and treats his shoulder with both hands: one hand supports the shoulder blade, the other guides the upper arm. The patient looks relaxed, eyes ahead. Bright treatment room, white linen on the table, a green plant out of focus. Natural colours, soft shadows, shallow depth of field. No text, no logos, no brand names.
+
+------------------------------------------------------------------
+4. termin-4.jpg — формат 4:3
+------------------------------------------------------------------
+Documentary photograph, 35mm lens, warm morning window light. A female patient in her thirties in a grey sweatshirt and black leggings does a standing exercise with a red elastic resistance band in a small training room, while a physiotherapist in a plain dark polo shirt stands beside her and takes a photo of the exercise with a smartphone. Wall bars made of light wood in the background, light wooden floor. Friendly, focused mood. Natural colours, soft shadows. The phone screen is not visible. No text, no logos, no brand names.
+
+------------------------------------------------------------------
+5. team-ronja.jpg — формат 3:4
+------------------------------------------------------------------
+Portrait photograph, 50mm lens, soft warm window light from the left. A female physiotherapist in her early forties with dark blonde hair tied back, wearing a plain dark polo shirt, stands with relaxed arms in a bright treatment room and looks into the camera with a calm, friendly expression. Blurred background with a treatment table with white linen and a green plant. Chest-up framing, natural skin tones, shallow depth of field. No text, no logos, no name badge, no brand names.
+
+------------------------------------------------------------------
+6. team-malte.jpg — формат 3:4
+------------------------------------------------------------------
+Portrait photograph, 50mm lens, soft warm window light from the left. A male physiotherapist in his mid thirties with short brown hair and a short beard, wearing a plain dark polo shirt, stands with relaxed arms in a small training room and looks into the camera with a calm, friendly expression. Blurred background with wall bars made of light wood. Chest-up framing, natural skin tones, shallow depth of field. No text, no logos, no name badge, no brand names.
+
+------------------------------------------------------------------
+7. praxis-raum.jpg — формат 16:9
+------------------------------------------------------------------
+Interior photograph, 24mm lens, warm morning light through a large window. An empty, tidy physiotherapy treatment room: a treatment table with white linen in the centre, a stool, a small wooden shelf with rolled towels, light wooden floor, off-white walls, one large green plant, a red elastic resistance band hanging on a wall hook. No people. Calm and inviting, natural colours, soft shadows. No text, no logos, no posters with writing, no brand names.
+
+------------------------------------------------------------------
+8. lagerung-ruecken.jpg — формат 4:3
+------------------------------------------------------------------
+Photograph from a high side angle, 35mm lens, dim warm bedside lamp light at night. An adult in a long-sleeved cotton pyjama lies on their back on a bed with white linen, a thick pillow under both knees, arms resting beside the body, head on a flat pillow, eyes closed. The whole body is in frame and fully clothed. Dark, quiet bedroom, deep warm shadows, calm mood. No text, no logos, no brand names.
+
+------------------------------------------------------------------
+9. lagerung-seite.jpg — формат 4:3
+------------------------------------------------------------------
+Photograph from a high side angle, 35mm lens, dim warm bedside lamp light at night. An adult in a long-sleeved cotton pyjama lies on their side on a bed with white linen, a pillow between the knees, the upper leg slightly bent, head on a pillow, eyes closed. The whole body is in frame and fully clothed. Dark, quiet bedroom, deep warm shadows, calm mood. No text, no logos, no brand names.

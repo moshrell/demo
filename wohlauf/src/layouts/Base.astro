@@ -1,0 +1,52 @@
+---
+// Demo = noindex. Beim Kundenstart: index = true, dann kommt auch das Geschäftsdaten-Markup.
+import '@fontsource-variable/bricolage-grotesque/wdth.css';
+import '@fontsource-variable/instrument-sans/wght.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import site from '../data/site.json';
+const { title = site.name, description = '', index = false, faq = [], lang = 'de', alt = '', app = false } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const graph = [
+  ...(index ? [{ '@type': 'Physiotherapy', '@id': new URL(base, Astro.site).href + '#business', name: site.name, url: new URL(base, Astro.site).href, description, telephone: site.phone, email: site.email,
+    address: { '@type': 'PostalAddress', streetAddress: site.address.street, postalCode: site.address.zip, addressLocality: site.address.city, addressCountry: 'DE' }, openingHours: site.openingHours }] : []),
+  ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f: any) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
+];
+---
+<!doctype html>
+<html lang={lang} data-night={`${site.night.from},${site.night.to}`}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
+    <link rel="canonical" href={canonical} />
+    {alt && <link rel="alternate" hreflang={lang === 'de' ? 'en' : 'de'} href={new URL(alt, Astro.site).href} />}
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <meta name="theme-color" content="#f6e1da" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })} />}
+    <script is:inline>
+      // Tag oder Nacht vor dem ersten Bild setzen: eigene Wahl (dieser Tab) vor Uhrzeit in Berlin.
+      (function () {
+        var d = document.documentElement, t = null;
+        try { t = sessionStorage.getItem('wohlauf:theme'); } catch (e) {}
+        if (!t) {
+          var n = d.getAttribute('data-night').split(',').map(Number), h = 12;
+          try { h = Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Berlin' }).format(new Date())); } catch (e) {}
+          t = h >= n[0] || h < n[1] ? 'nacht' : 'tag';
+        }
+        d.setAttribute('data-theme', t);
+        d.classList.add('js');
+        if ('scrollRestoration' in history && !location.hash) history.scrollRestoration = 'manual';
+      })();
+    </script>
+  </head>
+  <body class:list={[app && 'is-app']}>
+    <slot />
+  </body>
+</html>

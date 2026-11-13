@@ -42,6 +42,15 @@ try {
   <If "%{REQUEST_URI} =~ m#/_astro/#">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </If>
+  <If "%{REQUEST_URI} =~ m#/mp/#">
+    Header set Cache-Control "public, max-age=2592000"
+  </If>
+</IfModule>
+<IfModule mod_mime.c>
+  AddType application/wasm .wasm
+</IfModule>
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE application/wasm application/javascript text/javascript text/css image/svg+xml
 </IfModule>
 `);
   console.log(`[htaccess] ${files.length} страниц: ${scripts.size} скриптов, ${styles.size} стилей → dist/.htaccess`);

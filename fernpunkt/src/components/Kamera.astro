@@ -1,0 +1,115 @@
+---
+// Anprobe mit der Kamera auf dem ganzen Bildschirm. Öffnet sich per Knopf [data-kamera-auf] direkt auf der Seite.
+import { statSync } from 'node:fs';
+// Größen der Dateien (unkomprimiert) für die Fortschrittsanzeige
+const mb = (f: string) => { try { return statSync(`public/mp/${f}`).size; } catch { return 0; } };
+const bytes = { wasm: mb('vision_wasm_internal.wasm'), js: mb('vision_wasm_internal.js'), task: mb('face_landmarker.task') };
+const base = import.meta.env.BASE_URL;
+---
+<dialog class="ka" data-ka data-base={base} data-bytes={JSON.stringify(bytes)} aria-label="Anprobe mit Kamera">
+  <div class="ka__buehne">
+    <video class="ka__video" data-ka-video playsinline muted></video>
+    <canvas class="ka__canvas" data-ka-canvas aria-hidden="true"></canvas>
+  </div>
+
+  <div class="ka__oben">
+    <button class="ka__rund" type="button" data-ka-zu aria-label="Kamera schließen">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></svg>
+    </button>
+    <p class="ka__titel"><strong data-ka-name></strong><span data-ka-info></span></p>
+    <button class="ka__rund" type="button" data-ka-merken aria-pressed="false" aria-label="Fassung merken">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /></svg>
+    </button>
+  </div>
+
+  <div class="ka__laden" data-ka-laden role="status">
+    <div class="ka__ringbox">
+      <svg class="ka__ring" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="42" pathLength="100" class="ka__ring-bg" />
+        <circle cx="50" cy="50" r="42" pathLength="100" class="ka__ring-an" data-ka-ring />
+      </svg>
+      <p class="ka__prozent zahl" data-ka-prozent aria-hidden="true"></p>
+    </div>
+    <p class="ka__text" data-ka-text>Kamera wird gestartet …</p>
+    <p class="ka__tipp">Licht von vorn, eigene Brille ab, Telefon auf Augenhöhe. Das Bild bleibt auf Ihrem Gerät.</p>
+  </div>
+
+  <div class="ka__fehler" data-ka-fehler role="alert" hidden>
+    <p data-ka-fehler-text></p>
+    <div class="ka__fehler-knoepfe">
+      <button class="knopf knopf--hell knopf--voll" type="button" data-ka-nochmal>Noch einmal versuchen</button>
+      <button class="knopf knopf--hell" type="button" data-ka-modell>Am Modell anprobieren</button>
+    </div>
+  </div>
+
+  <p class="ka__hinweis" data-ka-hinweis role="status" hidden></p>
+
+  <div class="ka__unten">
+    <div class="ka__farben" data-ka-farben role="group" aria-label="Farbe wählen"></div>
+    <div class="ka__reihe" data-ka-reihe role="group" aria-label="Fassung wählen"></div>
+  </div>
+</dialog>
+
+<style>
+  .ka { position: fixed; inset: 0; width: 100%; max-width: none; height: 100%; max-height: none; margin: 0; padding: 0; border: 0; overflow: hidden; background: #0c0710; color: #fff; }
+  .ka::backdrop { background: #0c0710; }
+  .ka:not([open]) { display: none; }
+  .ka__buehne { position: absolute; inset: 0; transform: scaleX(-1); } /* Selfie-Spiegelbild: Video und Fassung zusammen */
+  .ka__video, .ka__canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ka__video { background: #0c0710; }
+  .ka__canvas { pointer-events: none; }
+
+  .ka__oben { position: absolute; inset: 0 0 auto 0; z-index: 2; display: grid; grid-template-columns: 3rem 1fr 3rem; align-items: center; gap: 0.5rem; padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right)) 1.5rem max(0.75rem, env(safe-area-inset-left)); background: linear-gradient(to bottom, rgb(12 7 16 / 0.7), transparent); }
+  .ka__rund { width: 3rem; height: 3rem; display: grid; place-items: center; padding: 0; border: 1.5px solid rgb(255 255 255 / 0.55); border-radius: 50%; background: rgb(12 7 16 / 0.55); color: #fff; cursor: pointer; backdrop-filter: blur(6px); }
+  .ka__rund[aria-pressed='true'] { background: #fff; color: var(--rot); border-color: #fff; }
+  .ka__rund[aria-pressed='true'] svg path { fill: currentColor; }
+  .ka__titel { margin: 0 auto; max-width: 100%; display: grid; justify-items: center; text-align: center; line-height: 1.15; text-shadow: 0 1px 8px rgb(0 0 0 / 0.6); }
+  .ka__titel strong { font-family: var(--font-display); font-weight: 700; font-variation-settings: 'opsz' 8; font-size: 1.6rem; }
+  .ka__titel span { font-size: var(--text-sm); color: #fff; }
+
+  .ka__laden, .ka__fehler { position: absolute; inset: 0; z-index: 1; display: grid; place-content: center; justify-items: center; gap: 0.9rem; padding: 5rem 1.5rem 9rem; text-align: center; background: #0c0710; }
+  .ka__laden[hidden], .ka__fehler[hidden] { display: none; }
+  .ka__ringbox { position: relative; width: 6.5rem; height: 6.5rem; }
+  .ka__ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ka__ring circle { fill: none; stroke-width: 6; }
+  .ka__ring-bg { stroke: rgb(255 255 255 / 0.18); }
+  .ka__ring-an { stroke: var(--reflex-a); stroke-linecap: round; stroke-dasharray: var(--p, 6) 100; }
+  .ka__ring-an[data-warten] { animation: ka-dreh 1.4s linear infinite; transform-origin: 50% 50%; stroke-dasharray: 22 100; }
+  @keyframes ka-dreh { to { transform: rotate(360deg); } }
+  .ka__prozent { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-variation-settings: 'opsz' 8; font-size: 1.5rem; line-height: 1; }
+  .ka__text { font-size: var(--text-lg); font-weight: 600; max-width: 22rem; }
+  .ka__tipp { color: var(--hell-2); font-size: var(--text-sm); max-width: 22rem; }
+  .ka__fehler p { max-width: 24rem; font-size: var(--text-md); }
+  .ka__fehler-knoepfe { display: grid; gap: 0.75rem; width: min(100%, 20rem); }
+  .ka__fehler-knoepfe .knopf { white-space: normal; text-align: center; }
+
+  .ka__hinweis { position: absolute; z-index: 2; left: 50%; translate: -50% 0; top: max(4.9rem, calc(env(safe-area-inset-top) + 4.2rem)); max-width: calc(100% - 2rem); width: max-content; padding: 0.55rem 1rem; border-radius: 999px; background: rgb(12 7 16 / 0.8); font-size: var(--text-sm); line-height: 1.3; text-align: center; }
+
+  .ka__unten { position: absolute; inset: auto 0 0 0; z-index: 2; background: linear-gradient(to top, rgb(12 7 16 / 0.82) 55%, transparent); padding-top: 1.5rem; }
+  .ka__reihe { display: flex; gap: 0.75rem; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; padding: 0.5rem max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left)); overscroll-behavior-x: contain; }
+  .ka__reihe::-webkit-scrollbar { display: none; }
+  .ka__reihe > :global(:first-child) { margin-left: auto; }
+  .ka__reihe > :global(:last-child) { margin-right: auto; }
+  .ka__reihe :global(button) { flex: 0 0 auto; scroll-snap-align: center; width: 4.25rem; height: 4.25rem; display: grid; place-items: center; padding: 0.7rem 0.45rem; border: 2px solid transparent; border-radius: 50%; background: #f6f3fa; color: var(--tinte); cursor: pointer; }
+  .ka__reihe :global(button[aria-pressed='true']) { border-color: var(--reflex-b); box-shadow: 0 0 0 3px #fff; }
+  .ka__reihe :global(svg) { width: 100%; height: auto; }
+  .ka__farben { position: absolute; bottom: 100%; left: 0; margin-bottom: -0.35rem; display: flex; flex-direction: column-reverse; align-items: center; gap: 0.6rem; padding-bottom: 0.2rem; }
+  .ka__farben :global(button) { width: 2.75rem; height: 2.75rem; padding: 0; border: 2px solid rgb(255 255 255 / 0.7); border-radius: 50%; cursor: pointer; box-shadow: 0 1px 6px rgb(0 0 0 / 0.5); }
+  .ka__farben :global(button[aria-pressed='true']) { border-color: #fff; box-shadow: 0 0 0 3px var(--reflex-b); }
+  @media (max-height: 30rem) {
+    .ka__reihe :global(button) { width: 3.5rem; height: 3.5rem; padding: 0.55rem 0.35rem; }
+    .ka__farben { gap: 0.4rem; }
+    .ka__farben :global(button) { width: 2.5rem; height: 2.5rem; }
+    .ka__laden, .ka__fehler { padding-top: 3.5rem; padding-bottom: 5.5rem; gap: 0.5rem; }
+    .ka__ringbox { width: 4.5rem; height: 4.5rem; }
+    .ka__prozent { font-size: 1.1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .ka__ring-an[data-warten] { animation: none; } }
+</style>
+<style is:global>
+  html:has(dialog.ka[open]) { overflow: hidden; }
+</style>
+
+<script>
+  import '../scripts/kamera';
+</script>

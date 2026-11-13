@@ -25,7 +25,7 @@ const zeilen = [
   <div class="st__tun wrap">
     <p class="st__satz">Probieren Sie unsere Fassungen gleich hier an. Den Sehtest und das Anpassen machen wir dann in Ruhe im Laden.</p>
     <div class="st__knoepfe">
-      <a class="knopf knopf--voll" href={`${base}anprobe/`}>Brille anprobieren</a>
+      <button class="knopf knopf--voll" type="button" data-kamera-auf>Brille anprobieren</button>
       <a class="knopf" href={`${base}termin/`}>Sehtest-Termin</a>
     </div>
     <p class="klein" data-offen></p>
@@ -35,13 +35,13 @@ const zeilen = [
 <style>
   .st { min-height: calc(100svh - var(--nav-h)); display: grid; grid-template-rows: 1fr auto; gap: var(--space-md); padding: 5.5rem 0 var(--space-lg); }
   .st__tafel { --r: clamp(4.6rem, 23vw, 8rem); position: relative; align-self: center; width: 100%; padding: 0.5rem 0; touch-action: pan-y; }
-  .st__lage { margin: 0; display: grid; justify-items: center; gap: clamp(0.35rem, 1.6vw, 1.1rem); text-align: center; font-family: var(--font-display); font-weight: 600; line-height: 0.94; letter-spacing: 0.035em; color: var(--tinte); text-wrap: nowrap; }
+  .st__lage { margin: 0; display: grid; justify-items: center; gap: clamp(0.35rem, 1.6vw, 1.1rem); text-align: center; font-family: var(--font-display); font-weight: 700; font-variation-settings: 'opsz' 8; line-height: 0.94; letter-spacing: 0.035em; color: var(--tinte); text-wrap: nowrap; }
   .st__z { position: relative; display: block; width: 100%; white-space: nowrap; }
   .st__z--1 { font-size: clamp(5.2rem, 31vw, 17rem); letter-spacing: 0.06em; }
   .st__z--2 { font-size: clamp(3rem, 17.5vw, 9.6rem); }
   .st__z--3 { font-size: clamp(1.5rem, 8.3vw, 4.6rem); letter-spacing: 0.06em; }
-  .st__z--4 { font-size: clamp(0.7rem, 3.45vw, 2.2rem); letter-spacing: 0.1em; font-weight: 500; }
-  .st__z--5 { font-size: clamp(0.5rem, 2.5vw, 1.6rem); letter-spacing: 0.12em; font-weight: 500; }
+  .st__z--4 { font-size: clamp(0.7rem, 3.45vw, 2.2rem); letter-spacing: 0.1em; font-weight: 600; }
+  .st__z--5 { font-size: clamp(0.5rem, 2.5vw, 1.6rem); letter-spacing: 0.12em; font-weight: 600; }
   .st__v { position: absolute; left: var(--gutter); top: 50%; translate: 0 -50%; font-family: var(--font-text); font-style: normal; font-weight: 400; font-size: 0.6875rem; letter-spacing: 0; color: var(--tinte-2); }
   .st__lage--weich .st__z--3 { filter: blur(0.9px); }
   .st__lage--weich .st__z--4 { filter: blur(2px); }

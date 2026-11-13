@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Sehtafel from '../components/Sehtafel.astro';
 import Buehne from '../components/Buehne.astro';
+import Kamera from '../components/Kamera.astro';
 import Sehfeld from '../components/Sehfeld.astro';
 import site from '../data/site.json';
 import glaeser from '../data/glaeser.json';
@@ -128,6 +129,7 @@ const ablauf = [
       </div>
     </section>
   </main>
+  <Kamera />
 </Base>
 
 <style>
@@ -146,12 +148,12 @@ const ablauf = [
   .seh__text { position: relative; margin-top: -3.5rem; background: var(--papier); border-radius: 1.25rem; padding: clamp(1.5rem, 5vw, 3.5rem); display: grid; gap: var(--space-md); }
   .seh__ablauf { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: var(--space-smd); }
   .seh__ablauf li { counter-increment: s; display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); gap: 0 0.6rem; align-items: baseline; }
-  .seh__ablauf li::before { content: counter(s); grid-row: span 2; font-family: var(--font-display); font-size: 2.1rem; line-height: 1; color: var(--tinte-2); }
+  .seh__ablauf li::before { content: counter(s); grid-row: span 2; font-family: var(--font-display); font-weight: 700; font-variation-settings: 'opsz' 8; font-size: 2.1rem; line-height: 1; color: var(--tinte-2); }
   .seh__ablauf strong { font-weight: 650; }
   .seh__ablauf span { color: var(--tinte-2); }
   .seh__fuss { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-smd); padding-top: var(--space-md); border-top: 1px solid var(--linie); }
   .seh__preis { display: grid; }
-  .seh__preis strong { font-family: var(--font-display); font-weight: 500; font-size: 2.75rem; line-height: 1; }
+  .seh__preis strong { font-family: var(--font-display); font-weight: 700; font-variation-settings: 'opsz' 10; font-size: 2.75rem; line-height: 1; }
   .seh__preis span { color: var(--tinte-2); font-size: var(--text-sm); }
   @media (min-width: 60rem) {
     .seh { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; padding-bottom: var(--space-xl); }
@@ -168,7 +170,7 @@ const ablauf = [
   .gla__liste { display: grid; gap: var(--space-lg); }
   .gla__liste ul { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--tinte); }
   .gla__liste li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.1rem 1rem; padding: 0.9rem 0; border-bottom: 1px solid var(--linie); }
-  .gla__name { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.15; }
+  .gla__name { font-family: var(--font-display); font-weight: 700; font-variation-settings: 'opsz' 8; font-size: 1.5rem; line-height: 1.15; }
   .gla__preis { grid-row: 1; grid-column: 2; align-self: baseline; font-weight: 650; white-space: nowrap; }
   .gla__info { grid-column: 1 / -1; color: var(--tinte-2); font-size: var(--text-sm); }
   .gla__seite { display: grid; gap: var(--space-smd); align-content: start; justify-items: start; }

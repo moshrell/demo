@@ -82,7 +82,7 @@ const prices = g.arten.map((a) => ({ name: `Brillengläser ${a.name}, Paar`, pri
             {FRAMES.map((f) => <option value={f.id} data-preis={f.price} data-name={`Fassung ${f.name}`}>{f.name}, {f.form}: {f.price} €</option>)}
           </select>
         </div>
-        <p class="klein"><a href={`${base}anprobe/`}>Fassungen erst anprobieren</a></p>
+        <p class="klein"><a href={`${base}#anprobe`}>Fassungen erst anprobieren</a></p>
       </fieldset>
 
       <section class="re__summe" aria-labelledby="summe-h">
@@ -105,7 +105,7 @@ const prices = g.arten.map((a) => ({ name: `Brillengläser ${a.name}, Paar`, pri
   .re__kopf h1 { font-size: var(--text-2xl); }
   .re__form { display: grid; gap: var(--space-lg); }
   fieldset { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: var(--space-smd); }
-  legend { padding: 0; margin-bottom: var(--space-smd); font-family: var(--font-display); font-size: 1.75rem; line-height: 1.12; }
+  legend { padding: 0; margin-bottom: var(--space-smd); font-family: var(--font-display); font-weight: 700; font-variation-settings: 'opsz' 8; font-size: 1.75rem; line-height: 1.12; }
   .re__karten { display: grid; gap: var(--space-sm); grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
   .re__karte { position: relative; cursor: pointer; }
   .re__karte input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
@@ -120,7 +120,7 @@ const prices = g.arten.map((a) => ({ name: `Brillengläser ${a.name}, Paar`, pri
   .re__staerke { display: grid; gap: var(--space-md); align-items: center; grid-template-columns: minmax(0, 1fr) 7rem; }
   .re__regler { display: grid; gap: 0.5rem; min-width: 0; }
   .re__regler label { font-weight: 600; }
-  .re__regler output { font-family: var(--font-display); font-size: 1.75rem; font-weight: 500; margin-left: 0.3rem; }
+  .re__regler output { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; font-variation-settings: 'opsz' 8; margin-left: 0.3rem; }
   input[type='range'] { width: 100%; height: 2.75rem; margin: 0; accent-color: var(--tinte); cursor: pointer; }
   .re__skala { max-width: none; display: flex; justify-content: space-between; }
   .re__schnitt { display: grid; gap: 0.3rem; justify-items: center; text-align: center; color: var(--tinte); }
@@ -137,7 +137,7 @@ const prices = g.arten.map((a) => ({ name: `Brillengläser ${a.name}, Paar`, pri
   .re__summe :global(dl > div) { display: flex; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; border-bottom: 1px solid rgb(255 255 255 / 0.16); }
   .re__summe :global(dd) { margin: 0; white-space: nowrap; }
   .re__total { max-width: none; display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-  .re__total strong { font-family: var(--font-display); font-weight: 500; font-size: clamp(3rem, 14vw, 5rem); line-height: 1; }
+  .re__total strong { font-family: var(--font-display); font-weight: 700; font-variation-settings: 'opsz' 12; font-size: clamp(3rem, 14vw, 5rem); line-height: 1; }
   .re__inkl { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem; }
   .re__inkl li { padding: 0.25rem 0.75rem; border: 1px solid rgb(255 255 255 / 0.3); border-radius: 999px; font-size: var(--text-xs); }
   .re__summe .knopf { white-space: normal; text-align: center; justify-self: start; }

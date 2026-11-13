@@ -48,9 +48,9 @@ const zeiten = [
         <legend>Das legen wir für Sie bereit</legend>
         <dl data-auswahl-liste></dl>
         <p class="te__summe" data-summe-zeile hidden><span>Summe laut Rechner</span><strong class="zahl" data-summe></strong></p>
-        <p class="klein"><a href={`${base}anprobe/`}>Fassungen ändern</a> <a href={`${base}glaeser/`}>Gläser ändern</a></p>
+        <p class="klein"><a href={`${base}#anprobe`}>Fassungen ändern</a> <a href={`${base}glaeser/`}>Gläser ändern</a></p>
       </fieldset>
-      <p class="te__leer klein" data-leer>Noch nichts vorgemerkt. Sie können vorher <a href={`${base}anprobe/`}>Fassungen anprobieren</a> oder den <a href={`${base}glaeser/`}>Glaspreis ausrechnen</a>; nötig ist das nicht.</p>
+      <p class="te__leer klein" data-leer>Noch nichts vorgemerkt. Sie können vorher <a href={`${base}#anprobe`}>Fassungen anprobieren</a> oder den <a href={`${base}glaeser/`}>Glaspreis ausrechnen</a>; nötig ist das nicht.</p>
 
       <fieldset>
         <legend>Ihre Angaben</legend>
@@ -107,7 +107,7 @@ const zeiten = [
   .te__kopf h1 { font-size: var(--text-2xl); }
   .te__form { display: grid; gap: var(--space-lg); }
   fieldset { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: var(--space-smd); }
-  legend { padding: 0; margin-bottom: var(--space-smd); font-family: var(--font-display); font-size: 1.75rem; line-height: 1.12; }
+  legend { padding: 0; margin-bottom: var(--space-smd); font-family: var(--font-display); font-weight: 700; font-variation-settings: 'opsz' 8; font-size: 1.75rem; line-height: 1.12; }
   .wahl span { gap: 0.5rem; }
   .wahl b { font-weight: 400; opacity: 0.72; }
   .te__tage { display: flex; gap: 0.5rem; overflow-x: auto; margin-inline: calc(var(--gutter) * -1); padding: 0.3rem var(--gutter) 0.6rem; scrollbar-width: none; scroll-snap-type: x proximity; }
@@ -115,7 +115,7 @@ const zeiten = [
   .te__tage :global(label) { position: relative; flex: none; scroll-snap-align: start; cursor: pointer; }
   .te__tage :global(input) { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
   .te__tage :global(span) { display: grid; justify-items: center; align-content: center; gap: 0.1rem; width: 4.4rem; height: 5.4rem; border: 1.5px solid var(--linie); border-radius: 44% 44% 50% 50% / 34% 34% 66% 66%; background: var(--papier); font-size: var(--text-xs); color: var(--tinte-2); }
-  .te__tage :global(b) { font-family: var(--font-display); font-weight: 500; font-size: 1.75rem; line-height: 1; color: var(--tinte); }
+  .te__tage :global(b) { font-family: var(--font-display); font-weight: 700; font-variation-settings: 'opsz' 8; font-size: 1.75rem; line-height: 1; color: var(--tinte); }
   .te__tage :global(input:checked + span) { background: var(--tinte); border-color: var(--tinte); color: var(--hell-2); }
   .te__tage :global(input:checked + span b) { color: var(--hell); }
   .te__tage :global(input:focus-visible + span) { outline: 3px solid var(--focus); outline-offset: 3px; }
@@ -125,7 +125,7 @@ const zeiten = [
   .te__auswahl :global(dl > div) { display: flex; justify-content: space-between; gap: 1rem; padding: 0.5rem 0; border-bottom: 1px solid var(--linie); }
   .te__auswahl :global(dd) { margin: 0; white-space: nowrap; font-weight: 600; }
   .te__summe { max-width: none; display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-  .te__summe strong { font-family: var(--font-display); font-weight: 500; font-size: 2.25rem; line-height: 1; }
+  .te__summe strong { font-family: var(--font-display); font-weight: 700; font-variation-settings: 'opsz' 8; font-size: 2.25rem; line-height: 1; }
   .te__auswahl .klein { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
   .te__auswahl .klein a, .te__leer a { display: inline-block; padding-block: 0.35rem; }
   .te__feld { display: grid; gap: var(--space-xs); min-width: 0; }
@@ -146,7 +146,7 @@ const zeiten = [
 
   .te__pass { background: var(--papier); border: 1.5px solid var(--tinte); border-radius: 1.25rem; padding: clamp(1.4rem, 5vw, 2.75rem); display: grid; gap: var(--space-smd); justify-items: start; }
   .te__pass:focus { outline: 3px solid var(--focus); outline-offset: 3px; }
-  .te__passkopf { max-width: none; width: 100%; display: flex; justify-content: space-between; gap: 1rem; padding-bottom: var(--space-sm); border-bottom: 1.5px solid var(--tinte); font-family: var(--font-display); font-size: 1.25rem; }
+  .te__passkopf { max-width: none; width: 100%; display: flex; justify-content: space-between; gap: 1rem; padding-bottom: var(--space-sm); border-bottom: 1.5px solid var(--tinte); font-family: var(--font-display); font-weight: 700; font-variation-settings: 'opsz' 8; font-size: 1.25rem; }
   .te__pass dl { margin: 0; width: 100%; display: grid; }
   .te__pass :global(dl > div) { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 1rem; padding: 0.55rem 0; border-bottom: 1px dashed var(--linie); }
   .te__pass :global(dt) { color: var(--tinte-2); }

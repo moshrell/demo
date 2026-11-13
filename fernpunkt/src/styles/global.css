@@ -62,13 +62,15 @@ body {
   padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom));
   -webkit-font-smoothing: antialiased;
 }
+/* Bodoni: Haarlinien bei großen Größen werden unlesbar dünn. Wir fixieren die gröbere optische Größe (opsz) und nehmen mehr Gewicht. */
+html { font-optical-sizing: none; font-variation-settings: 'opsz' 14; }
 @media (min-width: 60rem) { body { padding-bottom: 0; } }
 img, svg, canvas, video { display: block; max-width: 100%; }
 img { height: auto; }
 h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; }
-h1, h2, h3 { font-family: var(--font-display); font-weight: 500; font-style: normal; line-height: 1.04; letter-spacing: -0.012em; font-optical-sizing: auto; overflow-wrap: break-word; text-wrap: balance; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; font-style: normal; line-height: 1.04; letter-spacing: -0.012em; overflow-wrap: break-word; text-wrap: balance; }
 h2 { font-size: var(--text-xl); }
-h3 { font-size: var(--text-lg); line-height: 1.2; letter-spacing: 0; }
+h3 { font-size: var(--text-lg); line-height: 1.2; letter-spacing: 0; font-weight: 700; font-variation-settings: 'opsz' 8; }
 p { max-width: 62ch; text-wrap: pretty; }
 a { color: inherit; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
 button { font: inherit; color: inherit; }
@@ -110,5 +112,5 @@ button { font: inherit; color: inherit; }
 /* Текстовые страницы (Impressum, Datenschutz) */
 .text { padding: clamp(7rem, 14vw, 10rem) 0 var(--space-xl); }
 .text h1 { font-size: var(--text-2xl); margin-bottom: var(--space-lg); }
-.text h2 { font-size: var(--text-lg); margin: var(--space-lg) 0 var(--space-sm); line-height: 1.2; }
+.text h2 { font-size: var(--text-lg); margin: var(--space-lg) 0 var(--space-sm); line-height: 1.2; font-weight: 700; font-variation-settings: 'opsz' 8; }
 .text p, .text li { margin-bottom: var(--space-sm); }

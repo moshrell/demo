@@ -37,7 +37,7 @@ const graph = [
 const ld = { '@context': 'https://schema.org', '@graph': graph };
 // Меню как таблица для проверки зрения: строки становятся мельче сверху вниз.
 const nav = [
-  { key: 'anprobe', href: 'anprobe/', label: 'Anprobe', visus: '0,1' },
+  { key: 'anprobe', href: '#anprobe', label: 'Anprobe', visus: '0,1' },
   { key: 'glaeser', href: 'glaeser/', label: 'Gläser & Preise', visus: '0,2' },
   { key: 'termin', href: 'termin/', label: 'Termin anfragen', visus: '0,4' },
   { key: 'sehtest', href: '#sehtest', label: 'Sehtest', visus: '0,6' },
@@ -174,7 +174,7 @@ const nav = [
   /* Шапка: только марка, она уезжает со страницей */
   .kopf { position: absolute; inset: 0 0 auto 0; z-index: 20; padding: 1.1rem var(--gutter) 0; pointer-events: none; }
   .marke { pointer-events: auto; display: inline-grid; gap: 0.1rem; text-decoration: none; color: var(--tinte); }
-  .marke__name { font-family: var(--font-display); font-size: 1.7rem; font-weight: 600; line-height: 1; letter-spacing: -0.01em; }
+  .marke__name { font-family: var(--font-display); font-variation-settings: 'opsz' 8; font-size: 1.7rem; font-weight: 700; line-height: 1; letter-spacing: -0.01em; }
   .marke__sub { font-size: var(--text-xs); color: var(--tinte-2); letter-spacing: 0.01em; }
   .dunkel-oben .marke, .dunkel-oben .marke__sub { color: var(--hell); }
 
@@ -220,7 +220,7 @@ const nav = [
   .tafel__zu { justify-self: end; min-height: 3rem; padding: 0.5rem 1.2rem; border: 1.5px solid var(--hell); border-radius: 999px; background: none; color: var(--hell); font-weight: 600; cursor: pointer; }
   .tafel__liste { list-style: none; margin: 0; padding: 0; align-self: center; display: grid; gap: clamp(0.5rem, 2.2vh, 1.4rem); justify-items: center; text-align: center; }
   .tafel__liste li { position: relative; width: 100%; display: grid; justify-items: center; font-size: calc(clamp(2rem, 11.5vw, 5.6rem) * (1 - var(--i) * 0.125)); }
-  .tafel__liste a { display: inline-block; padding: 0.12em 0.2em; min-height: 2.75rem; font-family: var(--font-display); font-weight: 500; line-height: 1.02; letter-spacing: 0.01em; text-decoration: none; }
+  .tafel__liste a { display: inline-block; padding: 0.12em 0.2em; min-height: 2.75rem; font-family: var(--font-display); font-weight: 600; font-variation-settings: 'opsz' 10; line-height: 1.02; letter-spacing: 0.01em; text-decoration: none; }
   .tafel__liste a[aria-current='page'] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.16em; }
   .tafel__visus { position: absolute; left: 0; top: 50%; translate: 0 -50%; font-family: var(--font-text); font-size: var(--text-xs); color: var(--hell-2); }
   .tafel__fuss { max-width: none; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; font-size: var(--text-sm); color: var(--hell-2); }
@@ -251,7 +251,7 @@ const nav = [
       conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--zack) 51% repeat-x;
   }
   .tuch__in { padding: clamp(2.5rem, 7vw, 4.5rem) clamp(1.4rem, 5vw, 4rem) clamp(2.25rem, 6vw, 3.5rem); display: grid; gap: var(--space-lg); }
-  .tuch__marke { max-width: none; font-family: var(--font-display); font-weight: 500; font-size: clamp(3.2rem, 16vw, 11rem); line-height: 0.86; letter-spacing: -0.03em; color: var(--hell); opacity: 0.94; }
+  .tuch__marke { max-width: none; font-family: var(--font-display); font-weight: 600; font-size: clamp(3.2rem, 16vw, 11rem); line-height: 0.86; letter-spacing: -0.03em; color: var(--hell); opacity: 0.94; }
   .tuch__spalten { display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14.5rem), 1fr)); }
   .tuch__spalten > div { display: grid; gap: var(--space-sm); align-content: start; }
   .tuch h2 { font-family: var(--font-text); font-size: var(--text-sm); font-weight: 600; letter-spacing: 0; color: var(--hell-2); line-height: 1.3; }

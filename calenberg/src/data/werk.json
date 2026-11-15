@@ -1,0 +1,41 @@
+{
+  "stations": [
+    { "at": 0.10, "nr": "01", "title": "Aufzug und Federhaus", "text": "Die Krone spannt über Kron- und Sperrrad die Zugfeder. Voll aufgezogen läuft das Werk 60 Stunden.", "fig": "60 h", "figLabel": "Gangreserve" },
+    { "at": 0.36, "nr": "02", "title": "Räderwerk", "text": "Drei Räder aus Roségold übersetzen die langsame Drehung des Federhauses, bis das Sekundenrad genau einmal pro Minute umläuft.", "fig": "60 s", "figLabel": "pro Umlauf des Sekundenrads" },
+    { "at": 0.60, "nr": "03", "title": "Hemmung", "text": "Anker und Ankerrad geben die Kraft in winzigen Portionen frei. Zwei Rubinpaletten fangen jeden Zahn.", "fig": "21 600", "figLabel": "Halbschwingungen pro Stunde" },
+    { "at": 0.86, "nr": "04", "title": "Unruh und Schwanenhals", "text": "Die Unruh mit 16 Goldschrauben gibt den Takt. Reguliert wird in fünf Lagen über die Schwanenhalsfeder.", "fig": "3 Hz", "figLabel": "Frequenz" }
+  ],
+  "daten": [
+    ["Kaliber", "C 01, Handaufzug"],
+    ["Durchmesser", "30,6 mm"],
+    ["Höhe", "4,9 mm"],
+    ["Steine", "21, davon 5 in verschraubten und gepressten Goldchatons"],
+    ["Frequenz", "21 600 A/h (3 Hz)"],
+    ["Gangreserve", "60 Stunden"],
+    ["Regulierung", "Schwanenhals-Feinregulierung, in fünf Lagen"],
+    ["Brücken", "Neusilber, rhodiniert, Genfer Streifen, Kanten von Hand angliert"],
+    ["Platine", "anthrazit, Perlage"],
+    ["Schrauben", "thermisch gebläut"],
+    ["Gravuren", "von Hand, roségold ausgelegt; Neues Rathaus auf dem Unruhkloben"]
+  ],
+  "finissage": [
+    { "img": "macro_balance", "title": "Der Unruhkloben", "text": "Schwanenhalsfeder, Deckstein im Goldchaton und, kaum größer als ein Reiskorn, das Neue Rathaus von Hannover." },
+    { "img": "macro_train", "title": "Kanten, die das Licht fangen", "text": "Jede Brückenkante wird von Hand gebrochen und poliert. Das dauert pro Werk länger als sein Zusammenbau." },
+    { "img": "macro_winding", "title": "Sonnenschliff", "text": "Kron- und Sperrrad tragen einen Sonnenschliff. Beim Aufziehen wandert das Licht über die Zähne." }
+  ],
+  "konfig": [
+    { "id": "gehaeuse", "label": "Gehäuse, 39 mm", "options": [
+      { "id": "stahl", "name": "Edelstahl", "eur": 12400 },
+      { "id": "rose", "name": "Roségold 5N", "eur": 27900 } ] },
+    { "id": "blatt", "label": "Zifferblatt", "options": [
+      { "id": "silber", "name": "Silber, gekörnt", "eur": 0 },
+      { "id": "anthrazit", "name": "Anthrazit", "eur": 0 },
+      { "id": "email", "name": "Email, weiß gebrannt", "eur": 1900 } ] },
+    { "id": "band", "label": "Band", "options": [
+      { "id": "kalb", "name": "Kalbsleder, schwarz", "eur": 0 },
+      { "id": "cordovan", "name": "Shell Cordovan, cognac", "eur": 280 } ] },
+    { "id": "gravur", "label": "Gravur auf dem Unruhkloben", "options": [
+      { "id": "rathaus", "name": "Neues Rathaus", "eur": 0 },
+      { "id": "initialen", "name": "Ihre Initialen", "eur": 450 } ] }
+  ]
+}

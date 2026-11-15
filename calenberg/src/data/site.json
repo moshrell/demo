@@ -1,0 +1,9 @@
+{
+  "name": "Calenberg Uhrenmanufaktur",
+  "legalName": "Calenberg Uhrenmanufaktur GmbH (fiktiv)",
+  "address": { "street": "Musterweg 1", "zip": "30159", "city": "Hannover" },
+  "email": "atelier@calenberg-uhren.example",
+  "phone": "0511 1234567",
+  "openingHours": "Di-Fr 10:00-18:00",
+  "areaServed": ["Hannover"]
+}

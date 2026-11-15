@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import DatenschutzForm from '../components/DatenschutzForm.astro';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Datenschutz | Calenberg">
+  <main class="legal">
+    <h1>Datenschutz</h1>
+    <p>Diese Seite lädt keine Inhalte von fremden Servern, setzt keine Cookies und verwendet keine Analyse-Werkzeuge. Schriften und Bilder liegen auf dem eigenen Server.</p>
+    <DatenschutzForm formName="Subskriptions-Formular" data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Nachricht (freiwillig) und Ihre Konfiguration der Uhr" purpose="Wir bearbeiten Ihre Subskriptions-Anfrage und melden uns für ein persönliches Gespräch bei Ihnen." />
+    <p><a href={base}>← Zurück zur Startseite</a></p>
+  </main>
+</Base>

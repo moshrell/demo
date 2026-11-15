@@ -1,0 +1,21 @@
+{
+  "name": "calenberg",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --open",
+    "build": "astro build && node scripts/ki-hinweis.mjs && node scripts/htaccess.mjs",
+    "preview": "astro preview --open",
+    "publish": "npm run build && node scripts/publish.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/hanken-grotesk": "^5.2.0",
+    "@fontsource/instrument-serif": "^5.2.0",
+    "astro": "^7.3.5"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.58.2",
+    "sharp": "^0.35.5"
+  }
+}

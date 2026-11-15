@@ -1,0 +1,460 @@
+---
+import Base from '../layouts/Base.astro';
+import werk from '../data/werk.json';
+const base = import.meta.env.BASE_URL;
+const eur = (n: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
+---
+<Base title="Calenberg | Uhrenmanufaktur Hannover, Kaliber C 01" description="Calenberg baut in Hannover eine Uhr um ein eigenes Handaufzugswerk: Kaliber C 01. Ziehen Sie es auf, öffnen Sie es Schicht für Schicht und subskribieren Sie eine von 50 Uhren der ersten Serie." image="img/top-900.webp">
+  <a class="skip" href="#finissage">Zum Inhalt</a>
+  <button class="krone" type="button" aria-expanded="false" aria-controls="menue" aria-label="Menü öffnen">
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="24" r="22.5" fill="none" stroke="currentColor" stroke-width="1" />
+      {Array.from({ length: 12 }, (_, i) => <line x1="24" y1="4" x2="24" y2={i % 3 === 0 ? 9 : 7} stroke="currentColor" stroke-width="1" transform={`rotate(${i * 30} 24 24)`} />)}
+      <line class="krone__zeiger" x1="24" y1="28" x2="24" y2="7.5" stroke="var(--rose)" stroke-width="1.6" stroke-linecap="round" />
+      <circle cx="24" cy="24" r="1.8" fill="var(--rose)" />
+    </svg>
+  </button>
+  <nav class="menue" id="menue" hidden aria-label="Hauptmenü">
+    <ol>
+      <li><a href="#werk"><span>I</span>Das Werk aufziehen</a></li>
+      <li><a href="#finissage"><span>II</span>Finissage</a></li>
+      <li><a href="#daten"><span>III</span>Datenblatt C 01</a></li>
+      <li><a href="#subskription"><span>IV</span>Subskription</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section class="film" id="werk" aria-label="Kaliber C 01">
+      <div class="buehne">
+        <p class="marke">Calenberg<small>Uhrenmanufaktur Hannover</small></p>
+        <div class="bild">
+          <img class="poster" src={`${base}seq/run_000.webp`} width="800" height="1000" alt="Das Handaufzugswerk Kaliber C 01 von Calenberg: rhodinierte Brücken mit Genfer Streifen, Räder aus Roségold, gebläute Schrauben" fetchpriority="high" />
+          <canvas width="800" height="1000" aria-hidden="true"></canvas>
+        </div>
+        <div class="text">
+          <div class="held" data-held>
+            <h1>Es steht still, bis Sie es aufziehen.</h1>
+            <div class="aufzug">
+              <button class="aufzug__knopf" type="button" data-wind aria-describedby="aufzug-status">
+                <span class="aufzug__ring" aria-hidden="true"></span>
+                <span class="aufzug__txt" data-wind-label>Gedrückt halten</span>
+              </button>
+              <p class="aufzug__status" id="aufzug-status" aria-live="polite"><span data-status>Kaliber C 01 · Gangreserve</span> <strong data-reserve>0 h</strong></p>
+            </div>
+            <p class="weiter" aria-hidden="true">Nach unten wischen: das Werk öffnet sich</p>
+          </div>
+          {werk.stations.map((s) => (
+            <article class="station" data-station>
+              <p class="station__nr">{s.nr} / 04</p>
+              <h2>{s.title}</h2>
+              <p class="station__txt">{s.text}</p>
+              <p class="station__fig"><strong>{s.fig}</strong> {s.figLabel}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="fin" id="finissage">
+      <header class="kopf">
+        <h2>Was man nur mit der Lupe sieht</h2>
+        <p>Ein Uhrwerk muss nicht schön sein, um zu laufen. Unseres ist es trotzdem, auch dort, wo später nie jemand hinschaut.</p>
+      </header>
+      {werk.finissage.map((f, i) => (
+        <figure class={`fin__stueck fin__stueck--${i % 2 ? 'r' : 'l'}`}>
+          <img src={`${base}img/${f.img}-900.webp`} srcset={`${base}img/${f.img}-900.webp 900w, ${base}img/${f.img}-1800.webp 1800w`} sizes="(min-width: 900px) 62vw, 100vw" width="1800" height="1200" loading="lazy" decoding="async" alt={`Makroaufnahme des Kalibers C 01: ${f.title}`} />
+          <figcaption><h3>{f.title}</h3><p>{f.text}</p></figcaption>
+        </figure>
+      ))}
+    </section>
+
+    <section class="daten" id="daten">
+      <div class="daten__bild"><img src={`${base}img/top-900.webp`} srcset={`${base}img/top-900.webp 900w, ${base}img/top-1500.webp 1500w`} sizes="(min-width: 900px) 44vw, 92vw" width="1500" height="1500" loading="lazy" decoding="async" alt="Kaliber C 01 in der Aufsicht" /></div>
+      <div class="daten__blatt">
+        <h2>Datenblatt C 01</h2>
+        <dl>{werk.daten.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+      </div>
+    </section>
+
+    <section class="sub" id="subskription">
+      <header class="kopf">
+        <h2>Calenberg Eins. Erste Serie: 50 Uhren.</h2>
+        <p>Die Eins ist die Uhr zum Kaliber C 01: 39 mm, Saphirglasboden, kleine Sekunde. Stellen Sie Ihre zusammen und fragen Sie einen Platz in der ersten Serie an. Das Zifferblatt zeigen wir Subskribenten zuerst, persönlich im Atelier.</p>
+      </header>
+      <form class="f" id="sub-form" novalidate data-form>
+        {werk.konfig.map((g) => (
+          <fieldset class="f__gruppe">
+            <legend>{g.label}</legend>
+            <div class="f__wahl">
+              {g.options.map((o, i) => (
+                <label class="f__opt">
+                  <input type="radio" name={g.id} value={o.id} data-eur={o.eur} data-name={o.name} checked={i === 0} />
+                  <span><b>{o.name}</b><i>{g.id === 'gehaeuse' ? eur(o.eur) : o.eur ? `+ ${eur(o.eur)}` : 'inklusive'}</i></span>
+                </label>
+              ))}
+            </div>
+            {g.id === 'gravur' && (
+              <p class="f__feld f__ini" data-ini hidden>
+                <label for="f-ini">Initialen (bis 3 Buchstaben)</label>
+                <input id="f-ini" name="initialen" type="text" maxlength="3" placeholder="z. B. MK" autocomplete="off" autocapitalize="characters" />
+              </p>
+            )}
+          </fieldset>
+        ))}
+        <div class="f__summe" aria-live="polite"><span>Summe inkl. MwSt.</span><strong data-sum>{eur(start)}</strong></div>
+
+        <fieldset class="f__gruppe">
+          <legend>Ihre Kontaktdaten</legend>
+          <p class="f__feld"><label for="f-name">Name</label><input id="f-name" name="name" type="text" placeholder="Vor- und Nachname" autocomplete="name" required aria-describedby="e-name" /><span class="f__err" id="e-name" hidden>Bitte geben Sie Ihren Namen an.</span></p>
+          <p class="f__feld"><label for="f-tel">Telefon</label><input id="f-tel" name="tel" type="tel" inputmode="tel" placeholder="z. B. 0511 1234567" autocomplete="tel" required aria-describedby="e-tel" /><span class="f__err" id="e-tel" hidden>Bitte geben Sie eine Telefonnummer an, unter der wir Sie erreichen.</span></p>
+          <p class="f__feld"><label for="f-mail">E-Mail <em>(freiwillig)</em></label><input id="f-mail" name="mail" type="email" inputmode="email" placeholder="name@example.com" autocomplete="email" aria-describedby="e-mail" /><span class="f__err" id="e-mail" hidden>Diese E-Mail-Adresse sieht unvollständig aus.</span></p>
+          <p class="f__feld"><label for="f-msg">Nachricht <em>(freiwillig)</em></label><textarea id="f-msg" name="msg" rows="3" placeholder="z. B. Wunschtermin für einen Besuch im Atelier"></textarea></p>
+        </fieldset>
+        <p class="f__ok">
+          <label><input type="checkbox" name="consent" required aria-describedby="e-consent" /><span>Ich bin einverstanden, dass Calenberg meine Angaben zur Bearbeitung meiner Subskriptions-Anfrage verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a> (öffnet in neuem Tab).</span></label>
+          <span class="f__err" id="e-consent" hidden>Bitte stimmen Sie der Verwendung Ihrer Angaben zu, sonst dürfen wir die Anfrage nicht bearbeiten.</span>
+        </p>
+        <button class="f__senden" type="submit">Platz in der ersten Serie anfragen</button>
+        <p class="f__hin">Unverbindlich. Wir rufen Sie zurück und vereinbaren einen Termin im Atelier.</p>
+      </form>
+      <div class="schein" data-schein hidden tabindex="-1">
+        <p class="schein__kopf">Subskriptionsschein</p>
+        <h3>Vielen Dank, <span data-s-name></span>.</h3>
+        <dl data-s-list></dl>
+        <p class="schein__summe"><span>Summe inkl. MwSt.</span><strong data-s-sum></strong></p>
+        <p>Wir melden uns unter <span data-s-tel></span> und vereinbaren einen Termin im Atelier.</p>
+        <p class="schein__demo">Demo: Es wurde nichts gesendet und nichts gespeichert.</p>
+        <button type="button" class="schein__neu" data-neu>Neue Anfrage</button>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style is:global>
+  .skip { position: absolute; left: 8px; top: 8px; clip-path: inset(50%); background: var(--ink); color: var(--bg); padding: 0.6rem 1rem; z-index: 60; border-radius: 6px; }
+  .skip:focus { clip-path: none; }
+  .krone { position: fixed; top: max(12px, env(safe-area-inset-top)); right: 12px; z-index: 50; width: 52px; height: 52px; padding: 4px; border: 0; border-radius: 50%; background: rgba(8, 9, 10, 0.72); color: var(--ink); cursor: pointer; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  .krone svg { display: block; width: 100%; height: 100%; }
+  .krone__zeiger { transform-origin: 24px 24px; }
+  .menue { position: fixed; inset: 0; z-index: 45; background: rgba(8, 9, 10, 0.96); display: grid; place-items: center; padding: 80px var(--gutter) 40px; overflow: auto; }
+  .menue[hidden] { display: none; }
+  .menue ol { list-style: none; margin: 0; padding: 0; width: min(100%, 520px); }
+  .menue a { display: grid; grid-template-columns: 3rem 1fr; align-items: baseline; padding: 1rem 0; border-bottom: 1px solid var(--rule); text-decoration: none; font-family: var(--serif); font-size: clamp(1.7rem, 7vw, 2.6rem); line-height: 1.1; }
+  .menue a span { font-family: var(--sans); font-size: 0.95rem; color: var(--rose); }
+
+  /* ---------- film: hero + scroll explode on one sticky stage ---------- */
+  .film { height: 620svh; position: relative; }
+  .buehne { position: sticky; top: 0; height: 100svh; display: grid; grid-template-rows: auto minmax(0, 1fr); justify-items: center; overflow: hidden; }
+  .marke { position: absolute; z-index: 3; top: max(18px, env(safe-area-inset-top)); left: var(--gutter); font-family: var(--serif); font-size: 1.75rem; line-height: 1; letter-spacing: 0.01em; }
+  .marke small { display: block; font-family: var(--sans); font-size: 0.8rem; color: var(--muted); margin-top: 0.35rem; letter-spacing: 0.02em; }
+  .bild { position: relative; height: min(125vw, 60svh); aspect-ratio: 4 / 5; margin-top: clamp(0px, 4svh, 40px);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
+    -webkit-mask-composite: source-in; mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%); mask-composite: intersect; }
+  .bild img, .bild canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .text { position: relative; width: 100%; max-width: 560px; padding: 0 var(--gutter) max(16px, env(safe-area-inset-bottom)); display: grid; align-content: center; }
+  .text > * { grid-area: 1 / 1; align-self: center; }
+  .held h1 { font-size: clamp(1.9rem, 8.2vw, 3.4rem); }
+  .aufzug { display: flex; align-items: center; gap: 1.2rem; padding-left: 8px; margin-top: clamp(0.8rem, 2.4svh, 1.6rem); }
+  .aufzug__knopf { position: relative; flex: none; width: 92px; height: 92px; border-radius: 50%; border: 0; background: radial-gradient(circle at 35% 30%, #2a2d31, #121416 70%); cursor: pointer; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; display: grid; place-items: center; }
+  .aufzug__ring { position: absolute; inset: -5px; border-radius: 50%; background: conic-gradient(var(--rose) calc(var(--r, 0) * 1turn), #2b2d30 0); -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 4px), #000 calc(100% - 3px)); mask: radial-gradient(closest-side, transparent calc(100% - 4px), #000 calc(100% - 3px)); }
+  .aufzug__txt { font-size: 0.86rem; line-height: 1.15; font-weight: 600; max-width: 76px; text-align: center; }
+  .aufzug__knopf::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 1px solid var(--rose); opacity: 0; animation: puls 2.2s ease-out infinite; }
+  .aufzug__knopf.ist-an::after, .laeuft .aufzug__knopf::after { animation: none; }
+  .aufzug__knopf.ist-an { transform: scale(0.96); }
+  @keyframes puls { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.45); opacity: 0; } }
+  .aufzug__status { color: var(--muted); font-size: 0.98rem; line-height: 1.35; }
+  .aufzug__status strong { display: block; color: var(--ink); font-family: var(--serif); font-weight: 400; font-size: 1.9rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .weiter { margin-top: clamp(0.6rem, 2svh, 1.2rem); color: var(--muted); font-size: 0.95rem; }
+  .weiter::before { content: '↓'; display: inline-block; margin-right: 0.5rem; color: var(--rose); animation: runter 1.8s ease-in-out infinite; }
+  @keyframes runter { 50% { transform: translateY(4px); } }
+  .station__nr { color: var(--rose); font-size: 0.95rem; font-variant-numeric: tabular-nums; margin-bottom: 0.4rem; }
+  .station h2 { font-size: clamp(1.9rem, 8vw, 3rem); }
+  .station__txt { margin-top: 0.7rem; color: #d6d2c9; max-width: 34em; }
+  .station__fig { margin-top: 0.8rem; color: var(--muted); font-size: 0.95rem; }
+  .station__fig strong { font-family: var(--serif); font-weight: 400; font-size: 1.7rem; color: var(--ink); margin-right: 0.5rem; font-variant-numeric: tabular-nums; }
+  .js .held, .js .station { transition: opacity 0.35s ease, transform 0.35s ease; }
+  .js .held:not(.ist-da), .js .station:not(.ist-da) { opacity: 0; transform: translateY(14px); visibility: hidden; transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s; }
+  html:not(.js) .film { height: auto; }
+  html:not(.js) .buehne { position: static; height: auto; }
+  html:not(.js) .text > * { grid-area: auto; margin-bottom: 2rem; }
+  html:not(.js) .bild canvas, html:not(.js) .aufzug, html:not(.js) .weiter { display: none; }
+  @media (min-aspect-ratio: 1/1) {
+    .buehne { grid-template-rows: 1fr; grid-template-columns: auto minmax(280px, 560px); justify-content: center; align-items: center; column-gap: clamp(8px, 3vw, 56px); }
+    .bild { height: min(100svh, 78vw); margin-top: 0; }
+    .text { padding-left: 0; }
+  }
+  @media (min-width: 1100px) and (min-height: 700px) {
+    .text { max-width: 640px; font-size: 1.15rem; }
+    .held h1, .station h2 { font-size: clamp(3rem, 4.4vw, 4.6rem); }
+    .aufzug__knopf { width: 108px; height: 108px; } .aufzug__txt { font-size: 0.95rem; }
+    .marke { font-size: 2.1rem; }
+  }
+  @media (min-aspect-ratio: 1/1) and (max-height: 520px) {
+    .held h1, .station h2 { font-size: clamp(1.5rem, 7svh, 2.2rem); }
+    .aufzug__knopf { width: 72px; height: 72px; } .aufzug__txt { font-size: 0.75rem; }
+    .station__txt { font-size: 0.95rem; margin-top: 0.4rem; } .marke small { display: none; }
+    .marke { font-size: 1.3rem; }
+  }
+
+  /* ---------- sections ---------- */
+  .kopf { padding: 0 var(--gutter); max-width: 900px; margin: 0 auto clamp(2rem, 6vw, 4rem); }
+  .kopf h2 { font-size: clamp(2.3rem, 9vw, 4.6rem); }
+  .kopf p { margin-top: 1.1rem; color: #d6d2c9; max-width: 38em; font-size: 1.08rem; }
+  .fin { padding: clamp(4rem, 12vw, 9rem) 0 0; }
+  .fin__stueck { margin: 0 0 clamp(3rem, 9vw, 7rem); display: grid; gap: 1.2rem; }
+  .fin__stueck img { width: 100%; }
+  .fin__stueck figcaption { padding: 0 var(--gutter); }
+  .fin__stueck h3 { font-size: clamp(1.7rem, 6.5vw, 2.6rem); }
+  .fin__stueck p { margin-top: 0.6rem; color: #d6d2c9; max-width: 30em; }
+  @media (min-width: 900px) {
+    .fin__stueck { grid-template-columns: 62fr 38fr; align-items: end; gap: 0; }
+    .fin__stueck--r img { order: 2; }
+    .fin__stueck figcaption { padding: 0 clamp(24px, 4vw, 64px) 3rem; }
+  }
+  .daten { padding: clamp(3rem, 9vw, 7rem) var(--gutter); display: grid; gap: 2rem; max-width: 1280px; margin: auto; }
+  .daten__bild img { width: min(100%, 560px); margin: auto; border-radius: 50%; }
+  .daten h2 { font-size: clamp(2.1rem, 8vw, 3.6rem); margin-bottom: 1.2rem; }
+  .daten dl { margin: 0; }
+  .daten dl div { display: grid; grid-template-columns: minmax(6.5rem, 9rem) 1fr; gap: 0.9rem; padding: 0.7rem 0; border-top: 1px solid var(--rule); }
+  .daten dt { color: var(--muted); }
+  .daten dd { margin: 0; }
+  @media (min-width: 900px) { .daten { grid-template-columns: 44fr 56fr; align-items: center; gap: 4rem; } }
+
+  .sub { padding: clamp(4rem, 12vw, 9rem) 0 2rem; }
+  .f, .schein { max-width: 720px; margin: auto; padding: 0 var(--gutter); }
+  .f__gruppe { border: 0; padding: 0; margin: 0 0 2rem; min-width: 0; }
+  .f__gruppe legend { font-family: var(--serif); font-size: 1.6rem; padding: 0; margin-bottom: 0.8rem; }
+  .f__wahl { display: grid; gap: 0.6rem; }
+  @media (min-width: 560px) { .f__wahl { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); } }
+  .f__opt { position: relative; display: block; cursor: pointer; }
+  .f__opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+  .f__opt span { display: flex; flex-direction: column; gap: 0.15rem; min-height: 64px; justify-content: center; padding: 0.7rem 1rem; border: 1px solid var(--rule); border-radius: 10px; background: var(--bg2); }
+  .f__opt b { font-weight: 600; }
+  .f__opt i { font-style: normal; color: var(--muted); font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+  .f__opt input:checked + span { border-color: var(--rose); box-shadow: inset 0 0 0 1px var(--rose); }
+  .f__opt input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 3px; }
+  .f__feld { display: grid; gap: 0.35rem; margin: 0 0 1rem; }
+  .f__ini { margin-top: 0.9rem; max-width: 260px; }
+  .f__feld label em { font-style: normal; color: var(--muted); }
+  .f input[type='text'], .f input[type='tel'], .f input[type='email'], .f textarea { width: 100%; font: inherit; color: var(--ink); background: var(--bg2); border: 1px solid #44474b; border-radius: 8px; padding: 0.8rem 0.9rem; min-height: 52px; }
+  .f ::placeholder { color: #8d8a83; opacity: 1; }
+  .f [aria-invalid='true'] { border-color: var(--alert); }
+  .f__err { color: var(--alert); font-size: 0.95rem; }
+  .f__err[hidden] { display: none; }
+  .f__summe { position: sticky; bottom: 0; z-index: 5; display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 0 calc(var(--gutter) * -1) 2rem; padding: 0.8rem var(--gutter) calc(0.8rem + env(safe-area-inset-bottom)); background: rgba(16, 18, 20, 0.94); border-top: 1px solid var(--rose); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  .f__summe span { color: var(--muted); }
+  .f__summe strong { font-family: var(--serif); font-weight: 400; font-size: 1.9rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .f__ok { margin: 0 0 1.4rem; }
+  .f__ok label { display: grid; grid-template-columns: 28px 1fr; gap: 0.8rem; align-items: start; cursor: pointer; }
+  .f__ok input { width: 24px; height: 24px; margin: 2px 0 0; accent-color: var(--rose); }
+  .f__senden, .schein__neu { width: 100%; min-height: 58px; border: 0; border-radius: 10px; background: var(--ink); color: var(--bg); font-weight: 700; font-size: 1.05rem; cursor: pointer; padding: 0.8rem 1rem; }
+  .schein__neu { background: transparent; color: var(--ink); border: 1px solid #55585c; margin-top: 1.4rem; }
+  .f__hin { margin-top: 0.8rem; color: var(--muted); font-size: 0.95rem; text-align: center; }
+  .schein > * { margin-bottom: 0.9rem; }
+  .schein { border: 1px solid var(--rose); border-radius: 14px; padding: clamp(22px, 5vw, 40px); max-width: min(720px, calc(100% - 2 * var(--gutter))); background: linear-gradient(160deg, #15171a, #0b0c0d); }
+  .schein[hidden] { display: none; }
+  .schein__kopf { color: var(--rose); }
+  .schein h3 { font-size: clamp(1.9rem, 7vw, 2.8rem); overflow-wrap: anywhere; }
+  .schein dl { margin: 1rem 0; }
+  .schein dl div { display: grid; grid-template-columns: minmax(6rem, 10rem) 1fr; gap: 0.8rem; padding: 0.5rem 0; border-top: 1px solid var(--rule); }
+  .schein dt { color: var(--muted); } .schein dd { margin: 0; overflow-wrap: anywhere; }
+  .schein__summe { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--rose); padding-top: 0.8rem; }
+  .schein__summe strong { font-family: var(--serif); font-weight: 400; font-size: 1.9rem; }
+  .schein__demo { color: var(--muted); font-size: 0.95rem; }
+  @media (prefers-reduced-motion: reduce) { .aufzug__knopf::after, .weiter::before { animation: none; } .js .held, .js .station { transition: none; } }
+</style>
+
+<script>
+  document.documentElement.classList.add('js');
+  const BASE = import.meta.env.BASE_URL;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- menu + running seconds hand ---------- */
+  const krone = document.querySelector<HTMLButtonElement>('.krone')!;
+  const menue = document.getElementById('menue')!;
+  const zeiger = document.querySelector<SVGLineElement>('.krone__zeiger')!;
+  const setMenu = (open: boolean) => { menue.hidden = !open; krone.setAttribute('aria-expanded', String(open)); krone.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen'); };
+  krone.addEventListener('click', () => setMenu(menue.hidden));
+  menue.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setMenu(false); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menue.hidden) { setMenu(false); krone.focus(); } });
+
+  /* ---------- frame sequences ---------- */
+  const N = { run: 24, wind: 12, explode: 72 } as const;
+  type Seq = keyof typeof N;
+  const frames: Record<Seq, (HTMLImageElement | null)[]> = { run: [], wind: [], explode: [] };
+  const url = (s: Seq, i: number) => `${BASE}seq/${s}_${String(i).padStart(3, '0')}.webp`;
+  function load(s: Seq, i: number) {
+    return new Promise<void>((res) => {
+      if (frames[s][i]) return res();
+      const im = new Image(); im.decoding = 'async';
+      im.onload = () => { frames[s][i] = im; dirty = true; res(); };
+      im.onerror = () => res();
+      im.src = url(s, i);
+    });
+  }
+  async function loadSeq(s: Seq, par = 4) {
+    let next = 0;
+    await Promise.all(Array.from({ length: par }, async () => { while (next < N[s]) await load(s, next++); }));
+  }
+  const canvas = document.querySelector<HTMLCanvasElement>('.bild canvas')!;
+  const ctx = canvas.getContext('2d')!;
+  let dirty = true, shown = '';
+  function draw(s: Seq, i: number) {
+    let im = frames[s][i];
+    if (!im) { for (let k = i; k >= 0 && !im; k--) im = frames[s][k]; }   // nearest loaded earlier frame
+    if (!im) return;
+    const key = im.src;
+    if (key === shown && !dirty) return;
+    ctx.drawImage(im, 0, 0, canvas.width, canvas.height); shown = key; dirty = false;
+  }
+
+  /* ---------- state ---------- */
+  const film = document.querySelector<HTMLElement>('.film')!;
+  const held = document.querySelector<HTMLElement>('[data-held]')!;
+  const stations = [...document.querySelectorAll<HTMLElement>('[data-station]')];
+  const knopf = document.querySelector<HTMLButtonElement>('[data-wind]')!;
+  const lbl = document.querySelector<HTMLElement>('[data-wind-label]')!;
+  const resEl = document.querySelector<HTMLElement>('[data-reserve]')!;
+  const statEl = document.querySelector<HTMLElement>('[data-status]')!;
+  let mode: 'stopped' | 'winding' | 'running' = 'stopped';
+  let pressed = false, reserve = 0, fWind = 0, fRun = 0, cur = 0, target = 0, prog = 0, last = 0;
+  const FULL = 60;
+
+  function ui() {
+    knopf.style.setProperty('--r', String(reserve / FULL));
+    resEl.textContent = `${Math.floor(reserve)} h`;
+    const full = reserve >= FULL;
+    statEl.textContent = full ? 'Voll aufgezogen · Gangreserve' : mode === 'stopped' ? 'Kaliber C 01 · Gangreserve' : 'Das Werk läuft · Gangreserve';
+    lbl.textContent = full ? 'Voll aufgezogen' : pressed ? 'Aufziehen …' : mode === 'stopped' ? 'Gedrückt halten' : 'Weiter aufziehen';
+    held.classList.toggle('laeuft', mode !== 'stopped');
+  }
+  function press(on: boolean) {
+    if (on === pressed) return;
+    pressed = on; knopf.classList.toggle('ist-an', on);
+    if (on && reserve < FULL) mode = 'winding';
+    ui();
+  }
+  knopf.addEventListener('pointerdown', (e) => { e.preventDefault(); try { knopf.setPointerCapture(e.pointerId); } catch {} press(true); });
+  for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture']) knopf.addEventListener(ev, () => press(false));
+  knopf.addEventListener('contextmenu', (e) => e.preventDefault());
+  knopf.addEventListener('keydown', (e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); press(true); } });
+  knopf.addEventListener('keyup', (e) => { if (e.key === ' ' || e.key === 'Enter') press(false); });
+  knopf.addEventListener('blur', () => press(false));
+
+  function onScroll() {
+    const r = film.getBoundingClientRect();
+    prog = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - innerHeight)));
+    const t = Math.min(1, Math.max(0, (prog - 0.05) / 0.83));
+    target = t * (N.explode - 1);
+    const hero = prog < 0.05;
+    held.classList.toggle('ist-da', hero);
+    const cuts = [0, 0.25, 0.5, 0.75, 1.01];
+    stations.forEach((el, i) => { const on = !hero && t >= cuts[i] && t < cuts[i + 1]; el.classList.toggle('ist-da', on); el.setAttribute('aria-hidden', String(!on)); });
+    held.setAttribute('aria-hidden', String(!hero));
+    if (!hero) press(false);
+  }
+  addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll);
+
+  let accW = 0, accR = 0;
+  function tick(now: number) {
+    const dt = Math.min(0.1, (now - last) / 1000 || 0); last = now;
+    const s = new Date(); zeiger.style.transform = `rotate(${(s.getSeconds() + s.getMilliseconds() / 1000) * 6}deg)`;
+    const exploding = cur > 0.5 || target > 0.5;
+    if (!exploding) {
+      if (mode === 'winding') {
+        if (pressed && reserve < FULL) {
+          accW += dt * 18; reserve = Math.min(FULL, reserve + dt * 7);
+          while (accW >= 1) { accW -= 1; fWind = (fWind + 1) % N.wind; if (fWind === 0 && navigator.vibrate) navigator.vibrate(6); }
+          ui();
+        } else if (fWind !== 0) { accW += dt * 18; while (accW >= 1 && fWind !== 0) { accW -= 1; fWind = (fWind + 1) % N.wind; } }
+        else { mode = 'running'; ui(); }
+        draw('wind', fWind);
+      } else if (mode === 'running' && !reduce) {
+        accR += dt * 24; while (accR >= 1) { accR -= 1; fRun = (fRun + 1) % N.run; }
+        draw('run', fRun);
+      } else draw('run', 0);
+      cur += (target - cur) * 0.3;
+    } else {
+      // let the running loop come to rest at frame 0, then hand over to the exploded sequence
+      if (mode === 'running' && fRun !== 0 && cur < 1.5 && !reduce) {
+        accR += dt * 24; while (accR >= 1 && fRun !== 0) { accR -= 1; fRun = (fRun + 1) % N.run; }
+        draw('run', fRun);
+      } else {
+        fRun = 0; fWind = 0; if (mode === 'winding') { mode = reserve > 0 ? 'running' : 'stopped'; ui(); }
+        cur += (target - cur) * (reduce ? 1 : 0.22);
+        if (Math.abs(target - cur) < 0.02) cur = target;
+        draw('explode', Math.round(cur));
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  held.classList.add('ist-da'); ui(); onScroll();
+  load('run', 0).then(() => { requestAnimationFrame(tick); return loadSeq('wind'); }).then(() => loadSeq('run')).then(() => loadSeq('explode', 5));
+
+  /* ---------- Subskription form ---------- */
+  const form = document.querySelector<HTMLFormElement>('[data-form]')!;
+  const schein = document.querySelector<HTMLElement>('[data-schein]')!;
+  const sumEl = form.querySelector<HTMLElement>('[data-sum]')!;
+  const ini = form.querySelector<HTMLElement>('[data-ini]')!;
+  const KEY = 'calenberg-sub';
+  const eur = (n: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+  const picks = () => [...form.querySelectorAll<HTMLInputElement>('input[type=radio]:checked')];
+  const total = () => picks().reduce((s, r) => s + Number(r.dataset.eur), 0);
+  function refresh() {
+    sumEl.textContent = eur(total());
+    ini.hidden = (form.elements.namedItem('gravur') as RadioNodeList).value !== 'initialen';
+  }
+  function save() {
+    const d: Record<string, string> = {};
+    new FormData(form).forEach((v, k) => { if (k !== 'consent') d[k] = String(v); });
+    try { sessionStorage.setItem(KEY, JSON.stringify(d)); } catch {}
+  }
+  try {
+    const d = JSON.parse(sessionStorage.getItem(KEY) || '{}');
+    for (const [k, v] of Object.entries(d)) {
+      const el = form.elements.namedItem(k);
+      if (el instanceof RadioNodeList) el.value = String(v); else if (el && 'value' in el) (el as HTMLInputElement).value = String(v);
+    }
+  } catch {}
+  refresh();
+  form.addEventListener('input', () => { refresh(); save(); });
+  const fields: [string, (v: string) => boolean][] = [
+    ['name', (v) => v.trim().length >= 2],
+    ['tel', (v) => v.replace(/\D/g, '').length >= 6],
+    ['mail', (v) => v.trim() === '' || /^\S+@\S+\.\S+$/.test(v.trim())],
+  ];
+  function check(name: string, ok: boolean) {
+    const el = form.elements.namedItem(name) as HTMLInputElement;
+    const err = document.getElementById(`e-${name}`)!;
+    el.setAttribute('aria-invalid', String(!ok)); err.hidden = ok;
+    return ok ? null : el;
+  }
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let first: HTMLElement | null = null;
+    for (const [n, fn] of fields) { const bad = check(n, fn((form.elements.namedItem(n) as HTMLInputElement).value)); first ||= bad; }
+    const c = form.elements.namedItem('consent') as HTMLInputElement;
+    first ||= check('consent', c.checked);
+    if (first) { first.focus(); first.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' }); return; }
+    const fd = new FormData(form);
+    schein.querySelector('[data-s-name]')!.textContent = String(fd.get('name')).trim();
+    schein.querySelector('[data-s-tel]')!.textContent = String(fd.get('tel')).trim();
+    const list = schein.querySelector('[data-s-list]')!; list.textContent = '';
+    for (const r of picks()) {
+      const row = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd');
+      dt.textContent = r.closest('fieldset')!.querySelector('legend')!.textContent;
+      const iniV = String(fd.get('initialen') || '').trim().toUpperCase();
+      dd.textContent = r.dataset.name + (r.value === 'initialen' && iniV ? `: ${iniV}` : '');
+      row.append(dt, dd); list.append(row);
+    }
+    schein.querySelector('[data-s-sum]')!.textContent = eur(total());
+    try { sessionStorage.removeItem(KEY); } catch {}
+    form.hidden = true; schein.hidden = false; schein.focus(); schein.scrollIntoView({ block: 'center' });
+  });
+  form.addEventListener('focusout', (e) => {
+    const t = e.target as HTMLInputElement; const f = fields.find(([n]) => n === t.name);
+    if (f && t.getAttribute('aria-invalid') === 'true') check(f[0], f[1](t.value));
+  });
+  schein.querySelector('[data-neu]')!.addEventListener('click', () => { form.reset(); refresh(); schein.hidden = true; form.hidden = false; form.scrollIntoView({ block: 'start' }); });
+</script>

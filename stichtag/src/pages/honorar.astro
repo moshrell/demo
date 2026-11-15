@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import h from '../data/honorar.json';
+import opt from '../data/optionen.json';
+const base = import.meta.env.BASE_URL;
+const eur = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+const lohn = Object.entries(h.lohn);
+---
+<Base title="Honorar | Ollenhauer & Brink Steuerberater (Demo)" description="Richtwerte für Buchhaltung, Lohn, Abschluss und Steuererklärungen. Verbindlich ist Ihr Angebot in Textform." current="honorar">
+  <section class="z z--kopf"><div class="z__b kopf-z"><h1>Honorar</h1><p>Das sind Richtwerte einer Beispielrechnung. Verbindlich ist allein Ihr Angebot in Textform, das wir vor Beginn mit Ihnen vereinbaren (§ 4 StBVV, die Steuerberatervergütungsverordnung). Ihre eigene Summe rechnet <a href={`${base}#leistungen-blatt`}>Ihr Blatt</a> aus.</p></div></section>
+  <section class="z"><div class="z__b"><h2>Laufende Buchhaltung, pro Monat</h2>
+    <table class="tab"><thead><tr><th scope="col">Belege pro Monat</th><th scope="col" class="r">Richtwert</th></tr></thead><tbody>
+      {opt.bel.map((b) => (<tr><th scope="row">{b.label}</th><td class="r">{b.id === 'bmehr' ? 'ab ' : ''}{eur.format((h.fibu as Record<string, number>)[b.id])}</td></tr>))}
+    </tbody></table></div></section>
+  <section class="z"><div class="z__b"><h2>Weitere Leistungen im Monat</h2>
+    <table class="tab"><thead><tr><th scope="col">Leistung</th><th scope="col" class="r">Richtwert</th></tr></thead><tbody>
+      <tr><th scope="row">Umsatzsteuer-Voranmeldung</th><td class="r">{eur.format(h.ustva)}</td></tr>
+      {lohn.map(([k, v]) => (<tr><th scope="row">Lohnabrechnung, {k} Mitarbeitende<br /><small>Rechenbeispiel {v.personen} Personen zu je {v.je} €</small></th><td class="r">{eur.format(v.personen * v.je)}</td></tr>))}
+    </tbody></table></div></section>
+  <section class="z"><div class="z__b"><h2>Einmal im Jahr</h2>
+    <table class="tab"><thead><tr><th scope="col">Rechtsform und Leistung</th><th scope="col" class="r">Richtwert</th></tr></thead><tbody>
+      {opt.rf.map((r) => (<>
+        <tr><th scope="row">{r.label}: {(h.abschluss as any)[r.id].label}</th><td class="r">{eur.format((h.abschluss as any)[r.id].eur)}</td></tr>
+        <tr><th scope="row">{r.label}: {(h.erklaerung as any)[r.id].label}</th><td class="r">{eur.format((h.erklaerung as any)[r.id].eur)}</td></tr>
+      </>))}
+    </tbody></table></div></section>
+  <section class="z"><div class="z__b"><h2>Nach Aufwand</h2>
+    <p><strong>{h.gruendung.label}:</strong> einmalig {eur.format(h.gruendung.eur)}.</p>
+    <p><strong>{h.pruefung.label}:</strong> {h.pruefung.text}.</p>
+    <p class="muted">{h.hinweis} Alle Beträge sind Nettobeträge zuzüglich Umsatzsteuer, soweit nicht anders angegeben (Demo-Annahme).</p>
+    <a class="btn" href={`${base}#leistungen-blatt`}>Meine Summe berechnen</a></div></section>
+</Base>

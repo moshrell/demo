@@ -1,0 +1,43 @@
+{
+ "alle": [
+  "Letzter Steuerbescheid und alle Vorauszahlungsbescheide",
+  "Steuernummer und Identifikationsnummer",
+  "Kontoauszüge des Geschäftskontos für den Zeitraum der Buchhaltung",
+  "Eingangs- und Ausgangsrechnungen, sortiert nach Monat",
+  "Bisherige Auswertungen (BWA) oder der letzte Jahresabschluss"
+ ],
+ "rf": {
+  "einzel": [
+   "Gewerbeanmeldung",
+   "Kassenbuch oder Kassenberichte, falls Bargeld im Betrieb"
+  ],
+  "gmbh": [
+   "Gesellschaftsvertrag und Handelsregisterauszug",
+   "Geschäftsführervertrag und Gesellschafterbeschlüsse",
+   "Darlehensverträge mit Gesellschaftern"
+  ],
+  "pers": [
+   "Gesellschaftsvertrag",
+   "Gesellschafterliste mit Beteiligungsquoten"
+  ],
+  "frei": [
+   "Nachweis der freiberuflichen Tätigkeit (z. B. Zulassung, Eintragung)",
+   "Verträge mit größeren Auftraggebern"
+  ],
+  "gruend": [
+   "Gründungskonzept oder Businessplan, falls vorhanden",
+   "Geplante Umsätze und Kosten der ersten zwölf Monate",
+   "Entwurf des Gesellschaftsvertrags, falls eine GmbH oder UG geplant ist"
+  ]
+ },
+ "ma": [
+  "Arbeitsverträge und Stundenzettel",
+  "Sozialversicherungsnummern und Krankenkassen der Mitarbeitenden",
+  "Lohnsteuer-Anmeldungen und Lohnkonten des laufenden Jahres"
+ ],
+ "bel": {
+  "bmehr": [
+   "Eine Kassen- oder Warenwirtschaftsschnittstelle, falls vorhanden, damit Belege nicht doppelt erfasst werden"
+  ]
+ }
+}

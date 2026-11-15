@@ -1,0 +1,47 @@
+{
+ "vorteile": [
+  {
+   "k": "Zwei Tage mobil",
+   "v": "Zwei Tage pro Woche mobil arbeiten, sobald die Einarbeitung abgeschlossen ist."
+  },
+  {
+   "k": "Fortbildung",
+   "v": "Fünf bezahlte Fortbildungstage im Jahr; Prüfungsgebühren für Steuerfachwirt und Bilanzbuchhalter übernehmen wir."
+  },
+  {
+   "k": "Feste Teams",
+   "v": "Jede Person betreut einen festen Kreis von Mandaten. Das Mandat bleibt bei Ihnen, wenn es wächst."
+  },
+  {
+   "k": "Arbeitszeit",
+   "v": "Gleitzeit von 7 bis 19 Uhr. In der Hochsaison zählen Überstunden als Freizeit, nicht als Pauschale."
+  }
+ ],
+ "stellen": [
+  {
+   "titel": "Steuerfachangestellte/r",
+   "von": 3100,
+   "bis": 3900,
+   "text": "Laufende Buchhaltung für Handwerks- und Baubetriebe."
+  },
+  {
+   "titel": "Lohnbuchhalter/in",
+   "von": 3000,
+   "bis": 3700,
+   "text": "Lohn- und Baulohnabrechnung für 20 bis 40 Mandate."
+  },
+  {
+   "titel": "Bilanzbuchhalter/in",
+   "von": 4200,
+   "bis": 5200,
+   "text": "Jahresabschlüsse für GmbH und Personengesellschaften."
+  },
+  {
+   "titel": "Auszubildende/r Steuerfachangestellte/r",
+   "von": null,
+   "bis": null,
+   "text": "Beginn jeweils am 1. August, drei Jahre; Bewerbung bis Ende Januar."
+  }
+ ],
+ "hinweis": "Alle Angaben dieser Demoseite sind fiktiv. Die Gehaltsbänder dienen der Veranschaulichung."
+}

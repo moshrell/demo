@@ -108,3 +108,7 @@ C «Textmarker» (маркер-выделитель)
 
 ПРОВЕРКА
 tools/pagecheck.mjs на телефоне, узком телефоне, планшете, альбомной, ПК. Отдельно сценарии: три выбора → лист → печать; ссылка с параметрами открывает тот же лист; смена выбора пересчитывает сумму; форма переживает reload и уход на Datenschutz. Print-CSS посмотреть в PDF. Вид первого экрана и листа года — одним скриншотом с телефона (спросить Степана).
+
+
+STAND: Palette A gewählt, Demo gebaut in stichtag/.
+KORREKTUR StBVV: § 14 (Pauschalvergütung) ist laut Änderung vom 19.12.2025 gestrichen; Vergütungsvereinbarung in Textform (§ 4). Am Originaltext prüfen.

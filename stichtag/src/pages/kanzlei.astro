@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import team from '../data/team.json';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Kanzlei | Ollenhauer & Brink Steuerberater (Demo)" description="Wer bei uns zuständig ist: Partner, Teamleitungen und direkte Durchwahlen." current="kanzlei">
+  <section class="z z--kopf"><div class="z__b kopf-z"><h1>Kanzlei</h1><p>Seit {site.founded} in Hannover, heute {site.staff} Mitarbeitende. Sie haben eine feste Ansprechperson mit direkter Durchwahl.</p></div></section>
+  <section class="z"><div class="z__b"><h2>Zeichnungsberechtigt</h2>
+    <ul class="team-liste">
+      {team.map((p) => (
+        <li><b>{p.name}</b><span>{p.rolle}. {p.schwerpunkt}. Seit {p.seit} in der Kanzlei.</span><a href={`tel:+49${p.tel.replace(/\D/g, '').replace(/^0/, '')}`}>{p.tel}</a></li>
+      ))}
+    </ul></div></section>
+  <section class="z"><div class="z__b"><h2>Berufsrechtliche Angaben</h2>
+    <dl class="dl fakten">
+      <div><dt>Rechtsform</dt><dd>Partnerschaftsgesellschaft mit beschränkter Berufshaftung (PartG mbB)</dd></div>
+      <div><dt>Berufskammer</dt><dd>Steuerberaterkammer Niedersachsen, Adenauerallee 20, 30175 Hannover</dd></div>
+      <div><dt>Berufsrecht</dt><dd>Steuerberatungsgesetz (StBerG), Berufsordnung (BOStB), Steuerberatervergütungsverordnung (StBVV)</dd></div>
+    </dl>
+    <p class="muted">Demo: Firma, Personen und Angaben sind fiktiv.</p>
+    <a class="btn" href={`${base}kontakt/`}>Erstgespräch anfragen</a></div></section>
+</Base>

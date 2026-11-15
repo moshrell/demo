@@ -1,0 +1,46 @@
+{
+ "schritte": [
+  {
+   "woche": "Woche 1",
+   "titel": "Erstgespräch und Angebot",
+   "wir": "Wir hören zu, prüfen Ihre letzte Auswertung und schicken Ihnen ein Angebot in Textform.",
+   "sie": "Beantworten Sie ein paar Fragen und schicken Sie uns den letzten Jahresabschluss."
+  },
+  {
+   "woche": "Woche 2",
+   "titel": "Vollmacht und Kündigung",
+   "wir": "Wir legen die Vollmacht beim Finanzamt an und bereiten das Kündigungsschreiben für Ihren bisherigen Berater vor.",
+   "sie": "Unterschreiben Sie die Vollmacht und das Kündigungsschreiben. Die Kündigungsfrist steht in Ihrem bisherigen Vertrag."
+  },
+  {
+   "woche": "Woche 3",
+   "titel": "Datenübernahme",
+   "wir": "Wir bitten Ihren bisherigen Berater um die Buchhaltungsdaten und legen offene Fristen in eine Liste.",
+   "sie": "Nichts. Ihr bisheriger Berater ist verpflichtet, uns die Unterlagen zu übergeben."
+  },
+  {
+   "woche": "Woche 4",
+   "titel": "Erste Buchung",
+   "wir": "Wir buchen den ersten Monat, prüfen offene Posten und schicken Ihnen die erste Auswertung.",
+   "sie": "Legen Sie die Belege im gemeinsamen Ordner ab. Ab jetzt läuft alles in einem Takt."
+  }
+ ],
+ "faq": [
+  {
+   "q": "Wann ist der beste Zeitpunkt für den Wechsel?",
+   "a": "Zum Jahreswechsel, weil dann ein ganzes Jahr bei einem Berater liegt. Ein Wechsel mitten im Jahr funktioniert aber genauso; dann zählt der letzte volle Monat als Stichtag."
+  },
+  {
+   "q": "Muss ich meinem bisherigen Berater die Kündigung selbst schreiben?",
+   "a": "Nein, wir bereiten das Schreiben vor. Sie unterschreiben es und prüfen die Kündigungsfrist in Ihrem Vertrag."
+  },
+  {
+   "q": "Was passiert mit meinen offenen Fristen?",
+   "a": "Wir legen sie in der ersten Woche in einer Liste an und melden Fristverlängerungen, wo nötig, noch vor dem Wechsel."
+  },
+  {
+   "q": "Verliere ich beim Wechsel Daten?",
+   "a": "Wir übernehmen die Daten elektronisch und gleichen sie mit Ihrer letzten Auswertung ab. Abweichungen melden wir Ihnen, bevor wir weiterbuchen."
+  }
+ ]
+}

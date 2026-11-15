@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import StichtagForm from '../components/StichtagForm.astro';
+import site from '../data/site.json';
+---
+<Base title="Kontakt und Erstgespräch | Ollenhauer & Brink (Demo)" description="Erstgespräch anfragen, anrufen oder schreiben. Wir melden uns innerhalb eines Werktags." current="kontakt" fixedNav={false}>
+  <section class="z z--kopf"><div class="z__b kopf-z"><h1>Erstgespräch anfragen</h1>
+    <p>Wir melden uns innerhalb eines Werktags. Lieber anrufen? <a href={`tel:${site.phoneHref}`}>{site.phone}</a>, Montag bis Freitag, 8 bis 17 Uhr.</p>
+    <p class="tel-zeile">{site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}. <a href={`mailto:${site.email}`}>{site.email}</a></p></div></section>
+  <section class="z"><div class="z__b">
+    <StichtagForm id="anfrage" title="Ihre Anfrage" submitLabel="Erstgespräch anfragen" purpose="Ihrer Anfrage zum Erstgespräch" options={['Buchhaltung und Lohn', 'Jahresabschluss und Steuererklärungen', 'Gründung', 'Wechsel des Steuerberaters', 'Betriebsprüfung', 'Nachfolge']} optionsLabel="Worum geht es?" />
+  </div></section>
+  <script>import '../scripts/kontakt.ts';</script>
+</Base>

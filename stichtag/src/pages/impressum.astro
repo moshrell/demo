@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Impressum | Ollenhauer & Brink (Demo)" current="">
+  <section class="z z--kopf"><div class="z__b kopf-z"><h1>Impressum</h1><p><strong>Demo-Seite.</strong> Firma, Personen, Adresse, Nummern und Versicherungsangaben sind fiktiv.</p></div></section>
+  <section class="z"><div class="z__b"><h2>Anbieter</h2>
+    <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+    <p>Telefon {site.phone}<br />E-Mail {site.email}</p>
+    <p>Partnerschaftsgesellschaft mit beschränkter Berufshaftung, eingetragen im Partnerschaftsregister des Amtsgerichts Hannover, Registernummer PR 00000 (fiktiv).</p>
+    <p>Vertretungsberechtigte Partner: Dr. Mathilde Ollenhauer, Jan Brink, Yasemin Koçak (alle Steuerberater).</p>
+    <p>Umsatzsteuer-Identifikationsnummer: DE000000000 (fiktiv).</p></div></section>
+  <section class="z"><div class="z__b"><h2>Berufsrechtliche Angaben</h2>
+    <p>Berufsbezeichnung: Steuerberater, verliehen in der Bundesrepublik Deutschland.</p>
+    <p>Zuständige Kammer: Steuerberaterkammer Niedersachsen, Adenauerallee 20, 30175 Hannover.</p>
+    <p>Es gelten das Steuerberatungsgesetz (StBerG), die Berufsordnung (BOStB) und die Steuerberatervergütungsverordnung (StBVV). Die Regelungen sind bei der Steuerberaterkammer und im Bundesgesetzblatt einsehbar.</p>
+    <p>Berufshaftpflichtversicherung: Beispielversicherung AG (fiktiv), Beispielstraße 1, 00000 Beispielstadt. Räumlicher Geltungsbereich: Deutschland und Europa. Haftung der Partnerschaft auf berufliche Fehler beschränkt (PartG mbB).</p></div></section>
+  <section class="z"><div class="z__b"><h2>Streitbeilegung</h2>
+    <p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+    <p><a href={base}>Zurück zur Startseite</a></p></div></section>
+</Base>

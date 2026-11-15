@@ -1,0 +1,121 @@
+---
+// SEO + KI-Sichtbarkeit (AIO) by default. Demos: noindex (index = false). Beim Kundenstart: index = true setzen.
+import '../styles/global.css';
+import site from '../data/site.json';
+import team from '../data/team.json';
+const {
+  title = site.name,
+  description = '',
+  index = false,
+  type = 'AccountingService',
+  faq = [],
+  image = '',
+  prices = [],
+  current = '',
+  fixedNav = true, // false: Registerleiste steht am Seitenende (Seiten mit klebender Formularleiste)
+} = Astro.props;
+const base = import.meta.env.BASE_URL;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = image ? new URL(base + image.replace(/^\//, ''), Astro.site).href : undefined;
+const graph = [
+  ...(index ? [{
+    '@type': type,
+    '@id': new URL(base, Astro.site).href + '#business',
+    name: site.legalName,
+    url: new URL(base, Astro.site).href,
+    description,
+    telephone: site.phone,
+    email: site.email,
+    address: { '@type': 'PostalAddress', streetAddress: site.address.street, postalCode: site.address.zip, addressLocality: site.address.city, addressCountry: 'DE' },
+    ...(site.openingHours ? { openingHours: site.openingHours } : {}),
+    ...(site.areaServed ? { areaServed: site.areaServed } : {}),
+    ...(ogImage ? { image: ogImage } : {}),
+    ...(prices.length ? { makesOffer: prices.map((p) => ({ '@type': 'Offer', priceCurrency: 'EUR', price: p.price, itemOffered: { '@type': 'Service', name: p.name } })) } : {}),
+  }] : []),
+  ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
+];
+const ld = { '@context': 'https://schema.org', '@graph': graph };
+const reg = [
+  { id: 'start', label: 'Start', href: base },
+  { id: 'leistungen', label: 'Leistungen', href: `${base}leistungen/` },
+  { id: 'wechsel', label: 'Wechsel', href: `${base}wechsel/` },
+  { id: 'honorar', label: 'Honorar', href: `${base}honorar/` },
+  { id: 'kanzlei', label: 'Kanzlei', href: `${base}kanzlei/` },
+  { id: 'karriere', label: 'Karriere', href: `${base}karriere/`, extra: true },
+  { id: 'kontakt', label: 'Kontakt', href: `${base}kontakt/`, extra: true },
+];
+const partner = team.slice(0, 3);
+---
+<!doctype html>
+<html lang="de" data-base={base}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
+    <meta name="theme-color" content="#ecede9" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Crect width=%2716%27 height=%2716%27 fill=%27%23ecede9%27/%3E%3Cpath d=%27M3 8l3 3 7-7%27 stroke=%27%231d4d3a%27 stroke-width=%272%27 fill=none/%3E%3C/svg%3E" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+  </head>
+  <body class={fixedNav ? 'has-nav' : ''}>
+    <a class="skip" href="#inhalt">Zum Inhalt springen</a>
+    <div class="page">
+      <div class="sheet">
+        <header class="kopf">
+          <a class="kopf__name" href={base}>{site.name}<small>Steuerberater PartG mbB, Hannover</small></a>
+          <a class="kopf__tel" href={`tel:${site.phoneHref}`}>{site.phone}</a>
+          <a class="kopf__kontakt" href={`${base}kontakt/`}>Kontakt</a>
+        </header>
+        <main id="inhalt">
+          <slot />
+        </main>
+        <footer class="sig">
+          <div class="sig__row">
+            {partner.map((p) => (
+              <div class="sig__p"><span class="sig__n">{p.name}</span><small>{p.rolle}</small></div>
+            ))}
+          </div>
+          <ul class="sig__nav">
+            <li><a href={`${base}karriere/`}>Karriere</a></li>
+            <li><a href={`${base}kontakt/`}>Kontakt</a></li>
+            <li><a href={`${base}impressum/`}>Impressum</a></li>
+            <li><a href={`${base}datenschutz/`}>Datenschutz</a></li>
+          </ul>
+          <p>{site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}. Berufsbezeichnung Steuerberater, verliehen in Deutschland. Zuständige Kammer: Steuerberaterkammer Niedersachsen.</p>
+          {!index && <p>Demo-Seite, alle Angaben fiktiv. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihr Unternehmen? Jetzt anfragen</a></p>}
+          {!fixedNav && (
+            <nav aria-label="Hauptnavigation, Seitenende">
+              <ul class="register register--static">
+                {reg.filter((r) => !r.extra).map((r) => (
+                  <li><a href={r.href} aria-current={current === r.id ? 'page' : undefined}>{r.label}</a></li>
+                ))}
+              </ul>
+            </nav>
+          )}
+        </footer>
+      </div>
+      {(fixedNav || true) && (
+        <nav aria-label="Hauptnavigation" class={fixedNav ? '' : 'nav-desk'}>
+          <ul class="register">
+            {reg.map((r) => (
+              <li class={r.extra ? 'reg-extra' : ''}><a href={r.href} aria-current={current === r.id ? 'page' : undefined}>{r.label}</a></li>
+            ))}
+          </ul>
+        </nav>
+      )}
+    </div>
+  </body>
+</html>
+<style is:global>
+  /* Seiten mit klebender Formularleiste: die feste Leiste unten entfällt auf dem Telefon, am Seitenende steht sie im Fluss */
+  @media (max-width: 69.99rem) { .nav-desk { display: none; } }
+</style>

@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import w from '../data/wechsel.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Steuerberater wechseln in vier Wochen | Ollenhauer & Brink (Demo)" description="So läuft der Wechsel zu uns: vier Wochen, wir erledigen Vollmacht, Datenübernahme und das Kündigungsschreiben." faq={w.faq} current="wechsel">
+  <section class="z z--kopf"><div class="z__b kopf-z"><h1>Steuerberater wechseln in vier Wochen</h1><p>Sie müssen nicht zum Jahreswechsel wechseln und nichts allein regeln. Hier steht, was wir und was Sie in jeder Woche tun.</p></div></section>
+  {w.schritte.map((s) => (
+    <section class="z"><div class="z__b schritt">
+      <p class="schritt__k">{s.woche}<small>{s.titel}</small></p>
+      <div><h2 style="font-size:1rem">Wir</h2><p>{s.wir}</p></div>
+      <div><h2 style="font-size:1rem">Sie</h2><p>{s.sie}</p></div>
+    </div></section>
+  ))}
+  <section class="z"><div class="z__b faq"><h2>Häufige Fragen zum Wechsel</h2>
+    {w.faq.map((f) => (<details><summary>{f.q}</summary><p>{f.a}</p></details>))}
+  </div></section>
+  <section class="z"><div class="z__b"><a class="btn" href={`${base}kontakt/`}>Erstgespräch anfragen</a></div></section>
+</Base>

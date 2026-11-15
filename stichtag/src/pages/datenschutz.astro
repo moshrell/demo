@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import DatenschutzForm from '../components/DatenschutzForm.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Datenschutz | Ollenhauer & Brink (Demo)" current="">
+  <section class="z z--kopf"><div class="z__b kopf-z"><h1>Datenschutz</h1><p><strong>Demo-Seite:</strong> Es wird nichts gesendet und nichts gespeichert. Die Angaben zeigen, was bei einem echten Betrieb stehen muss.</p></div></section>
+  <section class="z"><div class="z__b"><h2>Verantwortlicher</h2>
+    <p>{site.legalName}, {site.address.street}, {site.address.zip} {site.address.city} (fiktiv). Kontakt: {site.email}</p>
+    <h2>Diese Website</h2>
+    <p>Die Seite lädt keine Schriften, Skripte oder Karten von fremden Servern und setzt keine Cookies und keine Tracker. Ihre Eingaben im Steuerjahr-Blatt (Rechtsform, Mitarbeitende, Belege) bleiben in Ihrem Browser (sessionStorage und Adresszeile) und werden nicht übertragen. Wenn Sie den Link zum Blatt teilen, steht diese Auswahl in der Adresse.</p></div></section>
+  <section class="z"><div class="z__b">
+    <DatenschutzForm formName="Anfrage-, Kontakt- und Bewerbungsformular" data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Nachricht (freiwillig), Ihre Auswahl und, bei einer Anfrage, die Angaben aus Ihrem Blatt" purpose="Wir bearbeiten Ihre Anfrage oder Bewerbung und melden uns bei Ihnen." />
+    <p><a href={base}>Zurück zur Startseite</a></p></div></section>
+</Base>

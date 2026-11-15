@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import l from '../data/leistungen.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Leistungen | Ollenhauer & Brink Steuerberater (Demo)" description="Buchhaltung, Lohn, Abschluss, Steuererklärungen, Gründung, Betriebsprüfung und Nachfolge: was wir tun, was wir von Ihnen brauchen und wer bei uns zuständig ist." current="leistungen">
+  <section class="z z--kopf"><div class="z__b kopf-z"><h1>Leistungen</h1><p>Zu jeder Leistung: was wir tun, was wir von Ihnen brauchen und wer bei uns zuständig ist. Ihr Honorar-Richtwert steht <a href={`${base}#leistungen-blatt`}>auf Ihrem Blatt</a>.</p></div></section>
+  {l.map((x) => (
+    <section class="z"><div class="z__b">
+      <details class="lz" open={x.id === 'fibu'}>
+        <summary><span class="lz__n">{x.name}</span><span class="lz__r">{x.rhythmus}</span></summary>
+        <dl class="dl dl--3">
+          <div><dt>Was wir tun</dt><dd>{x.was}</dd></div>
+          <div><dt>Was wir von Ihnen brauchen</dt><dd>{x.brauchen}</dd></div>
+          <div><dt>Wer bei uns</dt><dd>{x.wer}</dd></div>
+        </dl>
+      </details>
+    </div></section>
+  ))}
+</Base>

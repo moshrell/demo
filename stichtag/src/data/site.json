@@ -1,0 +1,21 @@
+{
+ "name": "Ollenhauer & Brink",
+ "legalName": "Ollenhauer & Brink Steuerberater PartG mbB",
+ "tagline": "Steuerberatung für Handwerk, Bau und GmbH",
+ "address": {
+  "street": "Theaterstraße 0",
+  "zip": "30159",
+  "city": "Hannover"
+ },
+ "email": "kanzlei@example.com",
+ "phone": "030 23125 123",
+ "phoneHref": "+4903023125123",
+ "openingHours": "Mo-Fr 08:00-17:00",
+ "areaServed": [
+  "Hannover",
+  "Region Hannover",
+  "Calenberger Land"
+ ],
+ "founded": 1998,
+ "staff": 16
+}

@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+import opt from '../data/optionen.json';
+import faq from '../data/faq.json';
+const base = import.meta.env.BASE_URL;
+const fragen = [
+  { name: 'rf', titel: 'Welche Rechtsform hat Ihr Unternehmen?', liste: opt.rf },
+  { name: 'ma', titel: 'Wie viele Mitarbeitende haben Sie?', liste: opt.ma },
+  { name: 'bel', titel: 'Wie viele Belege fallen im Monat an?', liste: opt.bel },
+];
+---
+<Base
+  title="Steuerberater Hannover: Ihr Steuerjahr auf einem Blatt | Ollenhauer & Brink (Demo)"
+  description="Drei Angaben, dann sehen Sie Ihre Fristen 2027, ein Honorar-Richtwert und Ihre Unterlagenliste. Demo einer Steuerkanzlei in Hannover."
+  faq={faq}
+  current="start"
+>
+  <section class="z z--kopf" style="--i:0">
+    <div class="z__b kopf-z">
+      <h1>Ihr Steuerjahr 2027 auf einem Blatt</h1>
+      <p>Drei Angaben genügen. Dann sehen Sie, wann was fällig ist, was wir für Sie übernehmen würden und welche Unterlagen Sie für das Erstgespräch brauchen.</p>
+      <p class="tel-zeile">Lieber sprechen? <a href={`tel:${site.phoneHref}`}>{site.phone}</a>, {site.openingHours === 'Mo-Fr 08:00-17:00' ? 'Montag bis Freitag, 8 bis 17 Uhr' : site.openingHours}.</p>
+    </div>
+  </section>
+  <form id="blatt-form" onsubmit="return false">
+    {fragen.map((f) => (
+      <section class="z" style="--i:0">
+        <div class="z__b">
+          <fieldset class="frage">
+            <legend>{f.titel}</legend>
+            <div class="chips">
+              {f.liste.map((o) => (
+                <label class="chip"><input type="radio" name={f.name} value={o.id} /><span>{o.label}</span></label>
+              ))}
+            </div>
+          </fieldset>
+        </div>
+      </section>
+    ))}
+  </form>
+  <div id="ergebnis" aria-live="polite"></div>
+  <noscript>
+    <section class="z"><div class="z__b">
+      <h2>Ohne JavaScript</h2>
+      <p>Das Blatt braucht JavaScript. Die Fristen, das Honorar und die Unterlagen finden Sie auch hier: <a href={`${base}honorar/`}>Honorar</a>, <a href={`${base}leistungen/`}>Leistungen</a>, <a href={`${base}kontakt/`}>Kontakt</a>.</p>
+    </div></section>
+  </noscript>
+  <script>
+    import '../scripts/blatt.ts';
+  </script>
+</Base>

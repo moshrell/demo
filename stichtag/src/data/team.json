@@ -1,0 +1,44 @@
+[
+ {
+  "name": "Dr. Mathilde Ollenhauer",
+  "rolle": "Steuerberaterin, Partnerin",
+  "seit": 1998,
+  "schwerpunkt": "Handwerk, Bau, Nachfolge",
+  "tel": "030 23125 110"
+ },
+ {
+  "name": "Jan Brink",
+  "rolle": "Steuerberater, Partner",
+  "seit": 2006,
+  "schwerpunkt": "Betriebsprüfung, Lohn und Baulohn",
+  "tel": "030 23125 120"
+ },
+ {
+  "name": "Yasemin Koçak",
+  "rolle": "Steuerberaterin, Partnerin",
+  "seit": 2013,
+  "schwerpunkt": "Gründung, GmbH, Rechtsformwahl",
+  "tel": "030 23125 130"
+ },
+ {
+  "name": "Hannes Stielow",
+  "rolle": "Steuerfachwirt, Teamleitung Lohn",
+  "seit": 2009,
+  "schwerpunkt": "Lohn und Baulohn",
+  "tel": "030 23125 140"
+ },
+ {
+  "name": "Sibel Aydın",
+  "rolle": "Bilanzbuchhalterin, Teamleitung Jahresabschluss",
+  "seit": 2011,
+  "schwerpunkt": "Jahresabschluss GmbH",
+  "tel": "030 23125 150"
+ },
+ {
+  "name": "Lena Sörensen",
+  "rolle": "Steuerfachangestellte, Teamleitung Buchhaltung",
+  "seit": 2015,
+  "schwerpunkt": "Laufende Buchhaltung Handwerk",
+  "tel": "030 23125 160"
+ }
+]

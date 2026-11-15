@@ -1,0 +1,65 @@
+{
+ "rf": [
+  {
+   "id": "einzel",
+   "label": "Einzelunternehmen"
+  },
+  {
+   "id": "gmbh",
+   "label": "GmbH / UG"
+  },
+  {
+   "id": "pers",
+   "label": "GbR / OHG / KG"
+  },
+  {
+   "id": "frei",
+   "label": "Freiberufler"
+  },
+  {
+   "id": "gruend",
+   "label": "in Gründung"
+  }
+ ],
+ "ma": [
+  {
+   "id": "0",
+   "label": "keine"
+  },
+  {
+   "id": "1-5",
+   "label": "1 bis 5"
+  },
+  {
+   "id": "6-20",
+   "label": "6 bis 20"
+  },
+  {
+   "id": "21-60",
+   "label": "21 bis 60"
+  }
+ ],
+ "bel": [
+  {
+   "id": "b50",
+   "label": "bis 50"
+  },
+  {
+   "id": "b150",
+   "label": "51 bis 150"
+  },
+  {
+   "id": "b400",
+   "label": "151 bis 400"
+  },
+  {
+   "id": "bmehr",
+   "label": "mehr als 400"
+  }
+ ],
+ "default": {
+  "rf": "gmbh",
+  "ma": "6-20",
+  "bel": "b150"
+ }
+}

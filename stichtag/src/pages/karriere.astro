@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import StichtagForm from '../components/StichtagForm.astro';
+import k from '../data/karriere.json';
+const eur = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+---
+<Base title="Karriere | Ollenhauer & Brink Steuerberater (Demo)" description="Offene Stellen mit Gehaltsband und Bewerbung in zwei Minuten." current="karriere" fixedNav={false}>
+  <section class="z z--kopf"><div class="z__b kopf-z"><h1>Karriere</h1><p>Wir nennen das Gehaltsband zur Stelle. Bewerben geht ohne Anschreiben: Name, Telefon, Stelle, fertig.</p></div></section>
+  <section class="z"><div class="z__b"><h2>Offene Stellen</h2>
+    <table class="tab"><thead><tr><th scope="col">Stelle</th><th scope="col" class="r">Brutto im Monat</th></tr></thead><tbody>
+      {k.stellen.map((s) => (<tr><th scope="row">{s.titel}<br /><small>{s.text}</small></th><td class="r">{s.von ? `${eur.format(s.von)} bis ${eur.format(s.bis)}` : 'nach Tarif'}</td></tr>))}
+    </tbody></table>
+    <p class="muted">{k.hinweis}</p></div></section>
+  <section class="z"><div class="z__b"><h2>Was Sie bei uns haben</h2>
+    <dl class="dl dl--3">{k.vorteile.map((v) => (<div><dt>{v.k}</dt><dd>{v.v}</dd></div>))}</dl></div></section>
+  <section class="z"><div class="z__b">
+    <StichtagForm id="bewerbung" title="Bewerbung in 2 Minuten" submitLabel="Bewerbung senden" purpose="Ihrer Bewerbung" options={k.stellen.map((s) => s.titel)} optionsLabel="Auf welche Stelle?" />
+  </div></section>
+</Base>

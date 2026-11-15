@@ -1,0 +1,66 @@
+[
+ {
+  "id": "fibu",
+  "name": "Laufende Buchhaltung",
+  "rhythmus": "monatlich",
+  "was": "Wir buchen Ihre Belege und Kontoumsätze, stimmen offene Posten ab und liefern monatlich eine Auswertung (BWA).",
+  "brauchen": "Belege bis zum 5. des Folgemonats im Belegordner, Zugriff auf das Geschäftskonto zum Abgleich.",
+  "wer": "Buchhaltungsteam unter Ihrer festen Ansprechperson."
+ },
+ {
+  "id": "lohn",
+  "name": "Lohn- und Baulohnabrechnung",
+  "rhythmus": "monatlich",
+  "was": "Lohnabrechnung inklusive Meldungen an Krankenkassen, Finanzamt und, bei Baubetrieben, an die Sozialkasse.",
+  "brauchen": "Änderungen bis zum 15. des Monats: Eintritte, Austritte, Stunden, Zuschläge.",
+  "wer": "Lohnteam, Teamleitung Hannes Stielow."
+ },
+ {
+  "id": "ustva",
+  "name": "Umsatzsteuer-Voranmeldung",
+  "rhythmus": "monatlich oder vierteljährlich",
+  "was": "Wir melden die Umsatzsteuer fristgerecht und weisen Sie vor jeder Zahlung auf die Zahllast hin.",
+  "brauchen": "Vollständige Belege des Zeitraums. Fehlende Belege melden wir Ihnen vor der Abgabe.",
+  "wer": "Buchhaltungsteam, Freigabe durch Ihre Ansprechperson."
+ },
+ {
+  "id": "abschluss",
+  "name": "Jahresabschluss",
+  "rhythmus": "einmal im Jahr",
+  "was": "Bilanz mit Gewinn- und Verlustrechnung und, bei der GmbH, Anhang; bei kleineren Betrieben die Einnahmenüberschussrechnung.",
+  "brauchen": "Inventurlisten, Anlageverzeichnis, Verträge über Darlehen und Leasing.",
+  "wer": "Jahresabschluss-Team, Teamleitung Sibel Aydın (Bilanzbuchhalterin)."
+ },
+ {
+  "id": "erklaerung",
+  "name": "Steuererklärungen",
+  "rhythmus": "einmal im Jahr",
+  "was": "Einkommen- oder Körperschaftsteuer, Gewerbesteuer und Umsatzsteuer. Wir prüfen jeden Bescheid auf Fehler und legen bei Bedarf Einspruch ein.",
+  "brauchen": "Vollständige Jahresunterlagen bis Ende Januar.",
+  "wer": "Partner Ihres Mandats unterschreiben jede Erklärung."
+ },
+ {
+  "id": "gruendung",
+  "name": "Gründung und Rechtsform",
+  "rhythmus": "einmalig",
+  "was": "Wir vergleichen Einzelunternehmen, GbR, UG und GmbH für Ihre Zahlen, füllen den Fragebogen zur steuerlichen Erfassung aus und begleiten das erste Jahr.",
+  "brauchen": "Ihre Planzahlen und die Frage, wer haften soll und wer mitentscheidet.",
+  "wer": "Partnerin Yasemin Koçak."
+ },
+ {
+  "id": "pruefung",
+  "name": "Betriebsprüfung",
+  "rhythmus": "bei Ankündigung",
+  "was": "Wir bereiten die Unterlagen vor, sind beim Termin dabei und führen die Gespräche mit dem Prüfer.",
+  "brauchen": "Die Prüfungsanordnung, sobald sie eintrifft. Rufen Sie uns an, bevor Sie dem Prüfer etwas senden.",
+  "wer": "Partner Jan Brink."
+ },
+ {
+  "id": "nachfolge",
+  "name": "Nachfolge und Verkauf",
+  "rhythmus": "nach Vereinbarung",
+  "was": "Wir bewerten den Betrieb, rechnen die Steuerfolgen von Verkauf, Übergabe und Verpachtung durch und begleiten den Wechsel.",
+  "brauchen": "Die letzten drei Jahresabschlüsse und Ihren Zeitplan.",
+  "wer": "Partnerin Dr. Mathilde Ollenhauer."
+ }
+]

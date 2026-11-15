@@ -1,0 +1,76 @@
+{
+ "hinweis": "Beispielrechnung. Verbindlich ist allein Ihr schriftliches Angebot in Textform.",
+ "fibu": {
+  "b50": 89,
+  "b150": 189,
+  "b400": 349,
+  "bmehr": 590
+ },
+ "ustva": 29,
+ "lohn": {
+  "1-5": {
+   "personen": 3,
+   "je": 26
+  },
+  "6-20": {
+   "personen": 12,
+   "je": 22
+  },
+  "21-60": {
+   "personen": 35,
+   "je": 18
+  }
+ },
+ "abschluss": {
+  "einzel": {
+   "label": "Einnahmenüberschussrechnung (EÜR)",
+   "eur": 690
+  },
+  "frei": {
+   "label": "Einnahmenüberschussrechnung (EÜR)",
+   "eur": 590
+  },
+  "pers": {
+   "label": "Gewinnermittlung (EÜR oder Bilanz)",
+   "eur": 1190
+  },
+  "gmbh": {
+   "label": "Jahresabschluss mit Bilanz, GuV und Anhang",
+   "eur": 1890
+  },
+  "gruend": {
+   "label": "Erste Gewinnermittlung",
+   "eur": 790
+  }
+ },
+ "erklaerung": {
+  "einzel": {
+   "label": "Einkommen-, Gewerbe- und Umsatzsteuererklärung",
+   "eur": 490
+  },
+  "frei": {
+   "label": "Einkommen- und Umsatzsteuererklärung",
+   "eur": 390
+  },
+  "pers": {
+   "label": "Feststellungs-, Gewerbe- und Umsatzsteuererklärung",
+   "eur": 690
+  },
+  "gmbh": {
+   "label": "Körperschaft-, Gewerbe- und Umsatzsteuererklärung",
+   "eur": 640
+  },
+  "gruend": {
+   "label": "Steuererklärungen des ersten Jahres",
+   "eur": 490
+  }
+ },
+ "gruendung": {
+  "label": "Gründungsberatung: Rechtsform, Fragebogen zur steuerlichen Erfassung",
+  "eur": 390
+ },
+ "pruefung": {
+  "label": "Begleitung einer Betriebsprüfung",
+  "text": "nach Aufwand, Zeitgebühr vorab abgestimmt"
+ }
+}

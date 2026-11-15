@@ -1,0 +1,227 @@
+[
+ {
+  "id": "ustva",
+  "label": "Umsatzsteuer-Voranmeldung",
+  "rf": "alle",
+  "ma": false,
+  "was": "Sie melden dem Finanzamt die Umsatzsteuer des Vormonats und überweisen die Zahllast. Ob monatlich oder vierteljährlich, legt das Finanzamt anhand Ihrer Vorjahreswerte fest.",
+  "wer": "Buchhaltungsteam, Freigabe durch Ihre feste Ansprechperson.",
+  "brauchen": "Alle Belege des Monats bis zum 5. des Folgemonats im Belegordner.",
+  "dates": [
+   {
+    "d": "2027-01-11",
+    "note": "für Dezember 2026"
+   },
+   {
+    "d": "2027-02-10",
+    "note": "für Januar 2027"
+   },
+   {
+    "d": "2027-03-10",
+    "note": "für Februar 2027"
+   },
+   {
+    "d": "2027-04-12",
+    "note": "für März 2027"
+   },
+   {
+    "d": "2027-05-10",
+    "note": "für April 2027"
+   },
+   {
+    "d": "2027-06-10",
+    "note": "für Mai 2027"
+   },
+   {
+    "d": "2027-07-12",
+    "note": "für Juni 2027"
+   },
+   {
+    "d": "2027-08-10",
+    "note": "für Juli 2027"
+   },
+   {
+    "d": "2027-09-10",
+    "note": "für August 2027"
+   },
+   {
+    "d": "2027-10-11",
+    "note": "für September 2027"
+   },
+   {
+    "d": "2027-11-10",
+    "note": "für Oktober 2027"
+   },
+   {
+    "d": "2027-12-10",
+    "note": "für November 2027"
+   }
+  ]
+ },
+ {
+  "id": "lohn",
+  "label": "Lohnsteuer-Anmeldung",
+  "rf": "alle",
+  "ma": true,
+  "was": "Sie melden die einbehaltene Lohnsteuer Ihrer Mitarbeitenden und führen sie ab. Der Rhythmus (monatlich oder vierteljährlich) hängt von der Lohnsteuer des Vorjahres ab.",
+  "wer": "Lohnteam; die Abrechnungen liegen nach der Abrechnung im Portal.",
+  "brauchen": "Änderungen bis zum 15. des Monats: Eintritte, Austritte, Stunden, Zuschläge.",
+  "dates": [
+   {
+    "d": "2027-01-11",
+    "note": "für Dezember 2026"
+   },
+   {
+    "d": "2027-02-10",
+    "note": "für Januar 2027"
+   },
+   {
+    "d": "2027-03-10",
+    "note": "für Februar 2027"
+   },
+   {
+    "d": "2027-04-12",
+    "note": "für März 2027"
+   },
+   {
+    "d": "2027-05-10",
+    "note": "für April 2027"
+   },
+   {
+    "d": "2027-06-10",
+    "note": "für Mai 2027"
+   },
+   {
+    "d": "2027-07-12",
+    "note": "für Juni 2027"
+   },
+   {
+    "d": "2027-08-10",
+    "note": "für Juli 2027"
+   },
+   {
+    "d": "2027-09-10",
+    "note": "für August 2027"
+   },
+   {
+    "d": "2027-10-11",
+    "note": "für September 2027"
+   },
+   {
+    "d": "2027-11-10",
+    "note": "für Oktober 2027"
+   },
+   {
+    "d": "2027-12-10",
+    "note": "für November 2027"
+   }
+  ]
+ },
+ {
+  "id": "est",
+  "label": "Einkommensteuer-Vorauszahlung",
+  "rf": [
+   "einzel",
+   "frei",
+   "gruend"
+  ],
+  "ma": false,
+  "was": "Vorauszahlung auf Ihre Einkommensteuer, wenn das Finanzamt einen Vorauszahlungsbescheid erlassen hat. Die Höhe steht im Bescheid.",
+  "wer": "Wir prüfen den Bescheid und beantragen bei geänderten Zahlen eine Anpassung.",
+  "brauchen": "Den Vorauszahlungsbescheid, sobald er bei Ihnen im Briefkasten liegt.",
+  "dates": [
+   {
+    "d": "2027-03-10",
+    "note": "1. Quartal"
+   },
+   {
+    "d": "2027-06-10",
+    "note": "2. Quartal"
+   },
+   {
+    "d": "2027-09-10",
+    "note": "3. Quartal"
+   },
+   {
+    "d": "2027-12-10",
+    "note": "4. Quartal"
+   }
+  ]
+ },
+ {
+  "id": "kst",
+  "label": "Körperschaftsteuer-Vorauszahlung",
+  "rf": [
+   "gmbh"
+  ],
+  "ma": false,
+  "was": "Vorauszahlung der GmbH auf die Körperschaftsteuer, wenn ein Vorauszahlungsbescheid vorliegt.",
+  "wer": "Wir prüfen den Bescheid und beantragen bei geänderter Ertragslage eine Anpassung.",
+  "brauchen": "Den Vorauszahlungsbescheid und eine kurze Einschätzung zum laufenden Jahr.",
+  "dates": [
+   {
+    "d": "2027-03-10",
+    "note": "1. Quartal"
+   },
+   {
+    "d": "2027-06-10",
+    "note": "2. Quartal"
+   },
+   {
+    "d": "2027-09-10",
+    "note": "3. Quartal"
+   },
+   {
+    "d": "2027-12-10",
+    "note": "4. Quartal"
+   }
+  ]
+ },
+ {
+  "id": "gewst",
+  "label": "Gewerbesteuer-Vorauszahlung",
+  "rf": [
+   "einzel",
+   "gmbh",
+   "pers",
+   "gruend"
+  ],
+  "ma": false,
+  "was": "Vorauszahlung an Ihre Gemeinde, wenn ein Vorauszahlungsbescheid vorliegt. In Hannover gilt ein Hebesatz von 480 Prozent.",
+  "wer": "Wir prüfen den Messbescheid und den Hebesatz Ihrer Gemeinde.",
+  "brauchen": "Den Gewerbesteuerbescheid Ihrer Gemeinde.",
+  "dates": [
+   {
+    "d": "2027-02-15",
+    "note": "1. Quartal"
+   },
+   {
+    "d": "2027-05-18",
+    "note": "2. Quartal"
+   },
+   {
+    "d": "2027-08-16",
+    "note": "3. Quartal"
+   },
+   {
+    "d": "2027-11-15",
+    "note": "4. Quartal"
+   }
+  ]
+ },
+ {
+  "id": "jahr",
+  "label": "Jahreserklärungen 2025 (mit Steuerberater)",
+  "rf": "alle",
+  "ma": false,
+  "was": "Einkommen- oder Körperschaftsteuer, Gewerbesteuer und Umsatzsteuer für 2025. Wer die Erklärungen selbst macht, hatte dafür den 31. Juli 2026.",
+  "wer": "Jahresabschluss-Team, Unterschrift Ihrer Ansprechperson.",
+  "brauchen": "Vollständige Unterlagen bis Ende Januar, damit wir Rückfragen in Ruhe klären können.",
+  "dates": [
+   {
+    "d": "2027-03-01",
+    "note": "28.02. ist ein Sonntag"
+   }
+  ]
+ }
+]

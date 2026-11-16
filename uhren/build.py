@@ -542,8 +542,26 @@ def engrave_shape(target, name, g, ztop, depth=0.04):
     return fo
 
 _ck_slab = shape_obj('balance_cock', ck_h, Z_CK0, Z_CK1, BEV, GENEVA)
-RH = (13.05, 0.35)
-engrave_shape(_ck_slab, 'engraving_rathaus', affinity.translate(affinity.rotate(rathaus(1.5), -12, origin=(0, 0)), *RH), Z_CK1)
+def place_rathaus(slab, near=(13.05, 0.35), w=1.5, ang=-12):
+    """Put the Rathaus fully ON the cock: every point at least 0.2 mm inside the polished bevel,
+    clear of the cock screw and of the regulator. Picks the spot with the largest clearance near `near`;
+    shrinks the motif if nothing fits. (v1 sat on the edge and one wing hung in the air.)"""
+    safe = slab.buffer(-(BEV + 0.2)).difference(circ(CKS[0], CKS[1], 1.0 + 0.75)).difference(circ(BC[0], BC[1], 3.3))
+    while w > 0.7:
+        base = affinity.rotate(rathaus(w), ang, origin=(0, 0)); best = None
+        for i in range(-30, 31):
+            for j in range(-30, 31):
+                g = affinity.translate(base, near[0] + i * 0.1, near[1] + j * 0.1)
+                if safe.contains(g):
+                    d = g.distance(safe.boundary) - 0.02 * math.hypot(i, j) * 0.1
+                    if best is None or d > best[0]: best = (d, g, (near[0] + i * 0.1, near[1] + j * 0.1))
+        if best and best[0] > 0.12:
+            print('RATHAUS placed at', best[2], 'width', round(w, 2), 'clearance', round(best[0], 3)); return best[1]
+        w *= 0.92
+    raise RuntimeError('Rathaus engraving does not fit on the balance cock')
+_rh = place_rathaus(ck_h)
+assert slab_ok if (slab_ok := ck_h.buffer(-BEV).contains(_rh)) else False, 'Rathaus outside the cock'
+engrave_shape(_ck_slab, 'engraving_rathaus', _rh, Z_CK1)
 balance_cock = join([_ck_slab,
                      shape_obj('ck_ft', ck_foot.difference(circ(CKS[0], CKS[1], 1.0)), 0.0, Z_CK0 + BEV + 0.002, 0.08, GENEVA)], 'balance_cock')
 

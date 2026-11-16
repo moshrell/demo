@@ -56,29 +56,51 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
       </div>
     </section>
 
-    <section class="fin" id="finissage">
-      <header class="kopf">
+    <section class="satz" aria-label="Das Werk in Zahlen">
+      <p class="satz__zeile"><span>21 Steine.</span> <span>16 Goldschrauben.</span> <span>Ein Rathaus.</span></p>
+      <p class="satz__klein">Auf dem Unruhkloben jedes C 01 sitzt, kaum größer als ein Reiskorn, das Neue Rathaus von Hannover. Von Hand graviert, mit Roségold ausgelegt.</p>
+    </section>
+
+    <section class="fin stoff" id="finissage">
+      <header class="kopf zeig">
+        <p class="kopf__nr" aria-hidden="true">II</p>
         <h2>Was man nur mit der Lupe sieht</h2>
         <p>Ein Uhrwerk muss nicht schön sein, um zu laufen. Unseres ist es trotzdem, auch dort, wo später nie jemand hinschaut.</p>
       </header>
       {werk.finissage.map((f, i) => (
-        <figure class={`fin__stueck fin__stueck--${i % 2 ? 'r' : 'l'}`}>
-          <img src={`${base}img/${f.img}-900.webp`} srcset={`${base}img/${f.img}-900.webp 900w, ${base}img/${f.img}-1800.webp 1800w`} sizes="(min-width: 900px) 62vw, 100vw" width="1800" height="1200" loading="lazy" decoding="async" alt={`Makroaufnahme des Kalibers C 01: ${f.title}`} />
-          <figcaption><h3>{f.title}</h3><p>{f.text}</p></figcaption>
+        <figure class={`fin__stueck fin__stueck--${i % 2 ? 'r' : 'l'} zeig`}>
+          <div class="lupe" data-lupe data-gross={`${base}img/${f.img}-1800.webp`}>
+            <img src={`${base}img/${f.img}-900.webp`} srcset={`${base}img/${f.img}-900.webp 900w, ${base}img/${f.img}-1800.webp 1800w`} sizes="(min-width: 900px) 62vw, 100vw" width="1800" height="1200" loading="lazy" decoding="async" alt={`Makroaufnahme des Kalibers C 01: ${f.title}`} />
+            <span class="lupe__glas" aria-hidden="true"></span>
+            <span class="lupe__tipp" aria-hidden="true">Lupe: Finger auflegen und ziehen</span>
+          </div>
+          <figcaption>
+            <p class="fin__nr" aria-hidden="true">{['a', 'b', 'c'][i]}</p>
+            <h3>{f.title}</h3>
+            <p>{f.text}</p>
+          </figcaption>
         </figure>
       ))}
     </section>
 
     <section class="daten" id="daten">
-      <div class="daten__bild"><img src={`${base}img/top-900.webp`} srcset={`${base}img/top-900.webp 900w, ${base}img/top-1500.webp 1500w`} sizes="(min-width: 900px) 44vw, 92vw" width="1500" height="1500" loading="lazy" decoding="async" alt="Kaliber C 01 in der Aufsicht" /></div>
-      <div class="daten__blatt">
+      <div class="daten__bild zeig" data-dreh>
+        <svg class="daten__ring" viewBox="0 0 400 400" aria-hidden="true">
+          <circle cx="200" cy="200" r="197" fill="none" stroke="var(--rule)" />
+          {Array.from({ length: 60 }, (_, i) => <line x1="200" y1="6" x2="200" y2={i % 5 === 0 ? 20 : 13} stroke={i % 5 === 0 ? 'var(--rose)' : '#5a5d61'} stroke-width={i % 5 === 0 ? 1.6 : 1} transform={`rotate(${i * 6} 200 200)`} />)}
+        </svg>
+        <img src={`${base}img/top-900.webp`} srcset={`${base}img/top-900.webp 900w, ${base}img/top-1500.webp 1500w`} sizes="(min-width: 900px) 40vw, 80vw" width="1500" height="1500" loading="lazy" decoding="async" alt="Kaliber C 01 in der Aufsicht" />
+      </div>
+      <div class="daten__blatt zeig">
+        <p class="kopf__nr" aria-hidden="true">III</p>
         <h2>Datenblatt C 01</h2>
         <dl>{werk.daten.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
       </div>
     </section>
 
-    <section class="sub" id="subskription">
-      <header class="kopf">
+    <section class="sub stoff" id="subskription">
+      <header class="kopf zeig">
+        <p class="kopf__nr" aria-hidden="true">IV</p>
         <h2>Calenberg Eins. Erste Serie: 50 Uhren.</h2>
         <p>Die Eins ist die Uhr zum Kaliber C 01: 39 mm, Saphirglasboden, kleine Sekunde. Stellen Sie Ihre zusammen und fragen Sie einen Platz in der ersten Serie an. Das Zifferblatt zeigen wir Subskribenten zuerst, persönlich im Atelier.</p>
       </header>
@@ -90,7 +112,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
               {g.options.map((o, i) => (
                 <label class="f__opt">
                   <input type="radio" name={g.id} value={o.id} data-eur={o.eur} data-name={o.name} checked={i === 0} />
-                  <span><b>{o.name}</b><i>{g.id === 'gehaeuse' ? eur(o.eur) : o.eur ? `+ ${eur(o.eur)}` : 'inklusive'}</i></span>
+                  <span><em class="f__farbe" style={`--sw:${o.sw}`} aria-hidden="true"></em><b>{o.name}</b><i>{g.id === 'gehaeuse' ? eur(o.eur) : o.eur ? `+ ${eur(o.eur)}` : 'inklusive'}</i></span>
                 </label>
               ))}
             </div>
@@ -144,7 +166,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .menue a span { font-family: var(--sans); font-size: 0.95rem; color: var(--rose); }
 
   /* ---------- film: hero + scroll explode on one sticky stage ---------- */
-  .film { height: 620svh; position: relative; }
+  .film { height: 470svh; position: relative; }
   .buehne { position: sticky; top: 0; height: 100svh; display: grid; grid-template-rows: auto minmax(0, 1fr); justify-items: center; overflow: hidden; }
   .marke { position: absolute; z-index: 3; top: max(18px, env(safe-area-inset-top)); left: var(--gutter); font-family: var(--serif); font-size: 1.75rem; line-height: 1; letter-spacing: 0.01em; }
   .marke small { display: block; font-family: var(--sans); font-size: 0.8rem; color: var(--muted); margin-top: 0.35rem; letter-spacing: 0.02em; }
@@ -199,28 +221,65 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   }
 
   /* ---------- sections ---------- */
+  .stoff { position: relative; isolation: isolate; }
+  .stoff::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0.55;
+    background-image: radial-gradient(circle at 50% 50%, transparent 0 9px, rgba(255, 255, 255, 0.05) 9.5px 10px, transparent 10.5px), radial-gradient(circle at 50% 50%, transparent 0 9px, rgba(255, 255, 255, 0.05) 9.5px 10px, transparent 10.5px);
+    background-size: 26px 26px; background-position: 0 0, 13px 13px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent); }
+  .zeig { opacity: 1; }
+  .js .zeig { opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .js .zeig.ist-da { opacity: 1; transform: none; }
   .kopf { padding: 0 var(--gutter); max-width: 900px; margin: 0 auto clamp(2rem, 6vw, 4rem); }
+  .kopf__nr { font-family: var(--serif); font-size: 1.5rem; color: var(--rose); display: flex; align-items: center; gap: 0.9rem; margin-bottom: 0.9rem; }
+  .kopf__nr::after { content: ''; height: 1px; flex: 0 1 140px; background: linear-gradient(to right, var(--rose), transparent); }
   .kopf h2 { font-size: clamp(2.3rem, 9vw, 4.6rem); }
-  .kopf p { margin-top: 1.1rem; color: #d6d2c9; max-width: 38em; font-size: 1.08rem; }
+  .kopf p:not(.kopf__nr) { margin-top: 1.1rem; color: #d6d2c9; max-width: 38em; font-size: 1.08rem; }
+
+  .satz { padding: clamp(3rem, 10vw, 7rem) var(--gutter) clamp(1rem, 4vw, 3rem); max-width: 1180px; margin: auto; }
+  .satz__zeile { font-family: var(--serif); font-size: clamp(2.6rem, 11.5vw, 7.2rem); line-height: 1.02; letter-spacing: -0.01em; }
+  .satz__zeile span { display: block; background: linear-gradient(100deg, #f4eee2 0%, #c9c4b8 38%, #7d7a73 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .satz__zeile span:last-child { background-image: linear-gradient(100deg, #f1c3a1 0%, #d39a74 45%, #8a5a3d 100%); }
+  .satz__klein { margin-top: 1.4rem; max-width: 32em; color: #d6d2c9; font-size: 1.08rem; }
+  @media (min-width: 900px) { .satz__zeile span { display: inline; } .satz__zeile { max-width: 12em; } }
+
   .fin { padding: clamp(4rem, 12vw, 9rem) 0 0; }
-  .fin__stueck { margin: 0 0 clamp(3rem, 9vw, 7rem); display: grid; gap: 1.2rem; }
-  .fin__stueck img { width: 100%; }
-  .fin__stueck figcaption { padding: 0 var(--gutter); }
+  .fin__stueck { margin: 0 0 clamp(3.5rem, 10vw, 8rem); display: grid; }
+  .lupe { position: relative; overflow: hidden; touch-action: pan-y; cursor: zoom-in; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+    box-shadow: 0 40px 80px -30px #000, inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
+  .lupe img { width: 100%; transform: scale(calc(1.14 - var(--p, 0.5) * 0.14)) translateY(calc((var(--p, 0.5) - 0.5) * -5%)); will-change: transform; -webkit-user-drag: none; }
+  .lupe::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, rgba(8, 9, 10, 0.5), transparent 22%, transparent 70%, rgba(8, 9, 10, 0.75)); }
+  .lupe__glas { position: absolute; z-index: 2; left: 0; top: 0; width: 168px; height: 168px; margin: -84px 0 0 -84px; border-radius: 50%; pointer-events: none; opacity: 0; transform: translate(var(--x, 50%), var(--y, 50%)); transition: opacity 0.18s ease;
+    background-repeat: no-repeat; box-shadow: 0 0 0 2px #1b1d20, 0 0 0 4px #d39a74, 0 0 0 5px #1b1d20, 0 24px 50px rgba(0, 0, 0, 0.7), inset 0 0 26px rgba(0, 0, 0, 0.55), inset 6px 8px 18px rgba(255, 255, 255, 0.12); }
+  .lupe.ist-an .lupe__glas { opacity: 1; }
+  .lupe__tipp { position: absolute; z-index: 1; left: var(--gutter); bottom: 14px; font-size: 0.88rem; color: #d6d2c9; padding-left: 26px; transition: opacity 0.3s; }
+  .lupe__tipp::before { content: ''; position: absolute; left: 0; top: 50%; width: 16px; height: 16px; margin-top: -9px; border: 1.5px solid var(--rose); border-radius: 50%; box-shadow: 7px 7px 0 -6.2px var(--rose); }
+  .lupe.war-an .lupe__tipp { opacity: 0; }
+  @media (hover: hover) and (pointer: fine) { .lupe__tipp { font-size: 0; } .lupe__tipp::after { content: 'Lupe: Maus über das Bild bewegen'; font-size: 0.88rem; } }
+  .fin__stueck figcaption { position: relative; z-index: 3; margin: -34px var(--gutter) 0; padding: 1.3rem 1.3rem 1.4rem; background: linear-gradient(160deg, rgba(27, 29, 32, 0.94), rgba(13, 14, 16, 0.96)); border: 1px solid var(--rule); border-top-color: #4a4d51; border-radius: 12px; box-shadow: 0 24px 50px -20px #000; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  .fin__nr { font-family: var(--serif); color: var(--rose); font-size: 1.25rem; margin-bottom: 0.3rem; }
   .fin__stueck h3 { font-size: clamp(1.7rem, 6.5vw, 2.6rem); }
-  .fin__stueck p { margin-top: 0.6rem; color: #d6d2c9; max-width: 30em; }
+  .fin__stueck figcaption p:last-child { margin-top: 0.6rem; color: #d6d2c9; max-width: 30em; }
   @media (min-width: 900px) {
-    .fin__stueck { grid-template-columns: 62fr 38fr; align-items: end; gap: 0; }
-    .fin__stueck--r img { order: 2; }
-    .fin__stueck figcaption { padding: 0 clamp(24px, 4vw, 64px) 3rem; }
+    .fin__stueck { grid-template-columns: repeat(12, 1fr); align-items: end; max-width: 1500px; margin-inline: auto; }
+    .fin__stueck .lupe { grid-row: 1; grid-column: 1 / 9; }
+    .fin__stueck figcaption { grid-row: 1; grid-column: 8 / 12; margin: 0 0 3.2rem; padding: 2rem 2.2rem 2.2rem; }
+    .fin__stueck--r .lupe { grid-column: 5 / 13; }
+    .fin__stueck--r figcaption { grid-column: 2 / 6; }
   }
-  .daten { padding: clamp(3rem, 9vw, 7rem) var(--gutter); display: grid; gap: 2rem; max-width: 1280px; margin: auto; }
-  .daten__bild img { width: min(100%, 560px); margin: auto; border-radius: 50%; }
+
+  .daten { padding: clamp(3rem, 9vw, 7rem) var(--gutter); display: grid; gap: 2.5rem; max-width: 1280px; margin: auto; }
+  .daten__bild { position: relative; isolation: isolate; width: min(100%, 560px); margin: auto; aspect-ratio: 1; display: grid; place-items: center; }
+  .daten__bild::before { content: ''; position: absolute; inset: -12%; z-index: -1; background: radial-gradient(closest-side, rgba(211, 154, 116, 0.2), transparent 72%); }
+  .daten__ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(calc(var(--p, 0.5) * -40deg)); will-change: transform; }
+  .daten__bild img { width: 86%; border-radius: 50%; transform: rotate(calc((var(--p, 0.5) - 0.5) * 50deg)); will-change: transform; box-shadow: 0 30px 70px -10px #000, 0 0 0 1px #000; }
+  .daten__blatt { position: relative; padding: clamp(1.4rem, 5vw, 2.6rem); border: 1px solid #3a3d41; border-radius: 14px; overflow: hidden; box-shadow: 0 30px 70px -30px #000, inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    background: repeating-linear-gradient(112deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 34px, rgba(0, 0, 0, 0.25) 34px 35px, transparent 35px 68px), linear-gradient(160deg, #1a1c1f, #0d0e10); }
   .daten h2 { font-size: clamp(2.1rem, 8vw, 3.6rem); margin-bottom: 1.2rem; }
   .daten dl { margin: 0; }
-  .daten dl div { display: grid; grid-template-columns: minmax(6.5rem, 9rem) 1fr; gap: 0.9rem; padding: 0.7rem 0; border-top: 1px solid var(--rule); }
-  .daten dt { color: var(--muted); }
+  .daten dl div { display: grid; grid-template-columns: minmax(6.5rem, 9rem) 1fr; gap: 0.9rem; padding: 0.7rem 0; border-top: 1px solid rgba(255, 255, 255, 0.09); }
+  .daten dt { color: var(--rose); }
   .daten dd { margin: 0; }
-  @media (min-width: 900px) { .daten { grid-template-columns: 44fr 56fr; align-items: center; gap: 4rem; } }
+  @media (min-width: 900px) { .daten { grid-template-columns: 44fr 56fr; align-items: center; gap: 4.5rem; } }
 
   .sub { padding: clamp(4rem, 12vw, 9rem) 0 2rem; }
   .f, .schein { max-width: 720px; margin: auto; padding: 0 var(--gutter); }
@@ -230,10 +289,11 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   @media (min-width: 560px) { .f__wahl { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); } }
   .f__opt { position: relative; display: block; cursor: pointer; }
   .f__opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
-  .f__opt span { display: flex; flex-direction: column; gap: 0.15rem; min-height: 64px; justify-content: center; padding: 0.7rem 1rem; border: 1px solid var(--rule); border-radius: 10px; background: var(--bg2); }
+  .f__opt span { position: relative; display: flex; flex-direction: column; gap: 0.15rem; min-height: 72px; justify-content: center; padding: 0.8rem 1rem 0.8rem 4.3rem; border: 1px solid var(--rule); border-radius: 12px; background: linear-gradient(160deg, #191b1e, #0e0f11); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05); transition: border-color 0.2s, box-shadow 0.2s; }
+  .f__farbe { position: absolute; left: 0.9rem; top: 50%; width: 44px; height: 44px; margin-top: -22px; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18), inset -5px -7px 12px rgba(0, 0, 0, 0.45), 0 6px 14px rgba(0, 0, 0, 0.5); }
   .f__opt b { font-weight: 600; }
   .f__opt i { font-style: normal; color: var(--muted); font-size: 0.95rem; font-variant-numeric: tabular-nums; }
-  .f__opt input:checked + span { border-color: var(--rose); box-shadow: inset 0 0 0 1px var(--rose); }
+  .f__opt input:checked + span { border-color: var(--rose); box-shadow: inset 0 0 0 1px var(--rose), 0 14px 30px -14px rgba(211, 154, 116, 0.45); }
   .f__opt input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 3px; }
   .f__feld { display: grid; gap: 0.35rem; margin: 0 0 1rem; }
   .f__ini { margin-top: 0.9rem; max-width: 260px; }
@@ -263,7 +323,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .schein__summe { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--rose); padding-top: 0.8rem; }
   .schein__summe strong { font-family: var(--serif); font-weight: 400; font-size: 1.9rem; }
   .schein__demo { color: var(--muted); font-size: 0.95rem; }
-  @media (prefers-reduced-motion: reduce) { .aufzug__knopf::after, .weiter::before { animation: none; } .js .held, .js .station { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .js .zeig { opacity: 1; transform: none; transition: none; } .lupe img, .daten__ring, .daten__bild img { transform: none; } .aufzug__knopf::after, .weiter::before { animation: none; } .js .held, .js .station { transition: none; } }
 </style>
 
 <script>
@@ -316,8 +376,6 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     await Promise.all(Array.from({ length: par }, async () => { while (next < names.length) await load(names[next++]); }));
   }
   const range = (s: string, a: number, b: number) => Array.from({ length: b - a + 1 }, (_, i) => nm(s, a + i));
-  const coarse: string[] = [];          // scroll frames: every 16th first, then the gaps, so a fast scroll always finds a frame nearby
-  for (const step of [16, 8, 4, 2, 1]) for (let i = step; i < EXP; i += step) { const n = nm('explode', i); if (!coarse.includes(n)) coarse.push(n); }
   const runNames = range('run', 1, RUN);
   const heroNames = [...range('wind', 1, WIND - 1), 'rs', ...runNames, 'f4', 't3'];
   let ready = false;
@@ -333,13 +391,28 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     const w = s.w * K, h = s.h * K;
     c.drawImage(im, (i % s.cols) * w, Math.floor(i / s.cols) * h, w, h, s.x * K, s.y * K, w, h);
   }
-  function explodeFrame(i: number) {
-    for (let d = 0; d < EXP; d++) { const im = img[nm('explode', i - d)] || img[nm('explode', i + d)]; if (im) return im; }
-    return null;
+  // nearest loaded scroll frame at or below / at or above a position: the film is blended between the two,
+  // so it stays continuous while frames are still arriving and between frames on a slow finger
+  function below(i: number) { for (let k = Math.min(EXP - 1, i); k >= 0; k--) if (img[nm('explode', k)]) return k; return -1; }
+  function above(i: number) { for (let k = Math.max(0, i); k < EXP; k++) if (img[nm('explode', k)]) return k; return -1; }
+  // loader: coarse grid first (every 16th, 8th, ...), inside each level the frame closest to where the visitor is
+  const pending = new Set<number>();
+  function nextFrame() {
+    for (const step of [16, 8, 4, 2, 1]) {
+      let best = -1, bd = 1e9;
+      for (let i = step; i < EXP; i += step) {
+        if (img[nm('explode', i)] || pending.has(i)) continue;
+        const d = Math.abs(i - target); if (d < bd) { bd = d; best = i; }
+      }
+      if (best >= 0) return best;
+    }
+    return -1;
   }
+  async function filmLoader() { for (let i = nextFrame(); i >= 0; i = nextFrame()) { pending.add(i); await load(nm('explode', i)); pending.delete(i); } }
 
   /* ---------- state ---------- */
   const film = document.querySelector<HTMLElement>('.film')!;
+  const buehne = document.querySelector<HTMLElement>('.buehne')!;
   const held = document.querySelector<HTMLElement>('[data-held]')!;
   const stations = [...document.querySelectorAll<HTMLElement>('[data-station]')];
   const knopf = document.querySelector<HTMLButtonElement>('[data-wind]')!;
@@ -372,11 +445,12 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   knopf.addEventListener('blur', () => press(false));
 
   function onScroll() {
-    const r = film.getBoundingClientRect();
-    const prog = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - innerHeight)));
-    const t = Math.min(1, Math.max(0, (prog - 0.05) / 0.83));
+    // measured against the sticky stage (svh), not innerHeight: the phone's address bar sliding in and out must not move the film
+    const span = Math.max(1, film.offsetHeight - buehne.offsetHeight);
+    const prog = Math.min(1, Math.max(0, -film.getBoundingClientRect().top / span));
+    const t = Math.min(1, Math.max(0, (prog - 0.012) / 0.9));
     target = t * (EXP - 1);
-    const hero = prog < 0.05;
+    const hero = prog < 0.03;
     held.classList.toggle('ist-da', hero);
     const cuts = [0, 0.25, 0.5, 0.75, 1.01];      // the same quarters the film is cut in (uhren/film.py)
     stations.forEach((el, i) => { const on = !hero && t >= cuts[i] && t < cuts[i + 1]; el.classList.toggle('ist-da', on); el.setAttribute('aria-hidden', String(!on)); });
@@ -400,16 +474,21 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     }
     ctx.globalAlpha = 1; shown = key; dirty = false;
   }
-  function drawExplode(i: number) {
-    const im = explodeFrame(i); if (!im) return;
-    if (im.src === shown && !dirty) return;
-    ctx.globalAlpha = 1; ctx.drawImage(im, 0, 0, CW, CH); shown = im.src; dirty = false;
+  function drawExplode(x: number) {
+    let lo = below(Math.floor(x)), hi = above(Math.ceil(x));
+    if (lo < 0) lo = hi; if (hi < 0) hi = lo; if (lo < 0) return;
+    const a = hi > lo ? Math.round(Math.min(1, Math.max(0, (x - lo) / (hi - lo))) * 32) / 32 : 0;
+    const key = `e${lo}|${hi}|${a}`;
+    if (key === shown && !dirty) return;
+    ctx.globalAlpha = 1; ctx.drawImage(img[nm('explode', lo)], 0, 0, CW, CH);
+    if (a > 0) { ctx.globalAlpha = a; ctx.drawImage(img[nm('explode', hi)], 0, 0, CW, CH); ctx.globalAlpha = 1; }
+    shown = key; dirty = false;
   }
 
   function tick(now: number) {
     const dt = Math.min(0.1, (now - last) / 1000 || 0); last = now;
     const s = new Date(); zeiger.style.transform = `rotate(${(s.getSeconds() + s.getMilliseconds() / 1000) * 6}deg)`;
-    const exploding = cur > 0.5 || target > 0.5;
+    const exploding = cur > 0.04 || target > 0.04;
     // winding: one tooth per loop; after release the click still drops into the next tooth
     if (!exploding && pressed && reserve < FULL) {
       reserve = Math.min(FULL, reserve + dt * 7); ui();
@@ -420,20 +499,56 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     runA = Math.min(1, Math.max(0, runA + (runs ? dt / 0.4 : -dt / 0.4)));
     if (runA > 0) { accR += dt * 24; while (accR >= 1) { accR -= 1; runT++; } }
     if (!exploding) {
-      heroA = Math.min(1, heroA + dt / 0.2); cur += (target - cur) * 0.3;
+      heroA = Math.min(1, heroA + dt / 0.2); cur = target;
       drawHero();
-    } else if (heroA > 0 && cur < 0.5) {
-      heroA = reduce ? 0 : Math.max(0, heroA - dt / 0.16);      // the moving layers fade into the still frame, then the scroll film takes over
+    } else if (heroA > 0 && cur < 0.04) {
+      heroA = reduce ? 0 : Math.max(0, heroA - dt / 0.1);      // the moving layers fade into the still frame, then the scroll film takes over
       drawHero();
     } else {
-      heroA = 0; cur += (target - cur) * (reduce ? 1 : 0.22);
-      if (Math.abs(target - cur) < 0.02) cur = target;
-      drawExplode(Math.round(cur));
+      // glide towards the finger: time-based, so it feels the same at 60 and 120 Hz; a fast flick runs through the film without steps
+      heroA = 0; cur += (target - cur) * (reduce ? 1 : 1 - Math.exp(-dt * 11));
+      if (Math.abs(target - cur) < 0.004) cur = target;
+      drawExplode(cur);
     }
     requestAnimationFrame(tick);
   }
   held.classList.add('ist-da'); ui(); onScroll();
-  load(nm('explode', 0)).then(() => { requestAnimationFrame(tick); queue(coarse, 3); return queue(heroNames, 3); });
+  load(nm('explode', 0)).then(() => { requestAnimationFrame(tick); filmLoader(); filmLoader(); filmLoader(); return queue(heroNames, 3); });
+
+  /* ---------- reveal, parallax, loupe ---------- */
+  const io = new IntersectionObserver((es) => { for (const e of es) if (e.isIntersecting) { e.target.classList.add('ist-da'); io.unobserve(e.target); } }, { rootMargin: '0px 0px -12% 0px' });
+  document.querySelectorAll('.zeig').forEach((el) => io.observe(el));
+  const movers = [...document.querySelectorAll<HTMLElement>('[data-lupe], [data-dreh]')];
+  const near = new Set<HTMLElement>();
+  const io2 = new IntersectionObserver((es) => { for (const e of es) e.isIntersecting ? near.add(e.target as HTMLElement) : near.delete(e.target as HTMLElement); par(); }, { rootMargin: '10% 0px' });
+  movers.forEach((el) => io2.observe(el));
+  let parQ = false;
+  function par() {
+    if (parQ || reduce) return; parQ = true;
+    requestAnimationFrame(() => { parQ = false; const vh = innerHeight;
+      for (const el of near) { const r = el.getBoundingClientRect(); el.style.setProperty('--p', Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height))).toFixed(4)); } });
+  }
+  addEventListener('scroll', par, { passive: true });
+  for (const box of document.querySelectorAll<HTMLElement>('[data-lupe]')) {
+    const glas = box.querySelector<HTMLElement>('.lupe__glas')!; const Z = 2.4; let got = false;
+    const move = (e: PointerEvent) => {
+      const r = box.getBoundingClientRect(), x = Math.min(r.width, Math.max(0, e.clientX - r.left)), y = Math.min(r.height, Math.max(0, e.clientY - r.top));
+      const lift = e.pointerType === 'touch' ? 96 : 0;        // on a phone the glass sits above the finger
+      box.style.setProperty('--x', `${x}px`); box.style.setProperty('--y', `${Math.max(40, y - lift)}px`);
+      const g = glas.offsetWidth;
+      glas.style.backgroundSize = `${r.width * Z}px ${r.height * Z}px`;
+      glas.style.backgroundPosition = `${g / 2 - x * Z}px ${g / 2 - y * Z}px`;
+    };
+    const on = (e: PointerEvent) => {
+      if (!got) { got = true; glas.style.backgroundImage = `url("${box.dataset.gross}")`; }
+      move(e); box.classList.add('ist-an', 'war-an');
+    };
+    const offL = () => box.classList.remove('ist-an');
+    box.addEventListener('pointerdown', on); box.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') on(e); });
+    box.addEventListener('pointermove', (e) => { if (box.classList.contains('ist-an')) move(e); });
+    for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) box.addEventListener(ev, offL);
+    box.addEventListener('contextmenu', (e) => e.preventDefault());
+  }
 
   /* ---------- Subskription form ---------- */
   const form = document.querySelector<HTMLFormElement>('[data-form]')!;

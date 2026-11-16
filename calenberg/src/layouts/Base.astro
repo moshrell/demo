@@ -1,7 +1,7 @@
 ---
 // SEO + KI-Sichtbarkeit (AIO) by default. Demos: noindex (index = false). Beim Kundenstart: index = true setzen.
-import '@fontsource/instrument-serif/400.css';
-import '@fontsource-variable/hanken-grotesk';
+import '@fontsource/libre-caslon-display/400.css';
+import '@fontsource-variable/schibsted-grotesk';
 import '../styles/global.css';
 import site from '../data/site.json';
 const {
@@ -41,7 +41,7 @@ const ld = { '@context': 'https://schema.org', '@graph': graph };
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
-    <meta name="theme-color" content="#08090a" />
+    <meta name="theme-color" content="#ecedea" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
@@ -57,17 +57,12 @@ const ld = { '@context': 'https://schema.org', '@graph': graph };
   </head>
   <body>
     <slot />
-    <footer class="karte">
-      <div class="karte__in">
-        <p class="karte__marke">Calenberg</p>
-        <dl>
-          <div><dt>Atelier</dt><dd>{site.address.street}, {site.address.zip} {site.address.city}</dd></div>
-          <div><dt>Besuch</dt><dd>Di bis Fr, 10 bis 18 Uhr, nach Anmeldung</dd></div>
-          <div><dt>Telefon</dt><dd>{site.phone}</dd></div>
-          <div><dt>E-Mail</dt><dd>{site.email}</dd></div>
-        </dl>
-        <p class="karte__links"><a href={base}>Start</a><a href={`${base}impressum/`}>Impressum</a><a href={`${base}datenschutz/`}>Datenschutz</a></p>
-        {!index && <p class="karte__demo">Demo-Seite: Marke, Werk und alle Angaben sind erfunden, die Bilder sind am Computer gerendert. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihr Unternehmen? Jetzt anfragen</a></p>}
+    <footer class="fuss">
+      <div class="fuss__in">
+        <p class="fuss__marke">Calenberg</p>
+        <p class="fuss__zeile">Uhrenmanufaktur in Hannover. {site.address.street}, {site.address.zip} {site.address.city}.</p>
+        <p class="fuss__unten"><a href={base}>Startseite</a><a href={`${base}impressum/`}>Impressum</a><a href={`${base}datenschutz/`}>Datenschutz</a></p>
+        {!index && <p class="fuss__demo">Demo-Seite: Marke, Werk und alle Angaben sind erfunden, die Bilder sind am Computer gerendert. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihr Unternehmen? Jetzt anfragen</a></p>}
       </div>
     </footer>
   </body>

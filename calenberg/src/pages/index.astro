@@ -1,33 +1,36 @@
 ---
 import Base from '../layouts/Base.astro';
 import werk from '../data/werk.json';
+import site from '../data/site.json';
 const base = import.meta.env.BASE_URL;
 const eur = (n: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
 const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
 ---
 <Base title="Calenberg | Uhrenmanufaktur Hannover, Kaliber C 01" description="Calenberg baut in Hannover eine Uhr um ein eigenes Handaufzugswerk: Kaliber C 01. Ziehen Sie es auf, öffnen Sie es Schicht für Schicht und subskribieren Sie eine von 50 Uhren der ersten Serie." image="img/top-900.webp">
   <a class="skip" href="#finissage">Zum Inhalt</a>
-  <button class="krone" type="button" aria-expanded="false" aria-controls="menue" aria-label="Menü öffnen">
-    <svg viewBox="0 0 48 48" aria-hidden="true">
-      <circle cx="24" cy="24" r="22.5" fill="none" stroke="currentColor" stroke-width="1" />
-      {Array.from({ length: 12 }, (_, i) => <line x1="24" y1="4" x2="24" y2={i % 3 === 0 ? 9 : 7} stroke="currentColor" stroke-width="1" transform={`rotate(${i * 30} 24 24)`} />)}
-      <line class="krone__zeiger" x1="24" y1="28" x2="24" y2="7.5" stroke="var(--rose)" stroke-width="1.6" stroke-linecap="round" />
-      <circle cx="24" cy="24" r="1.8" fill="var(--rose)" />
-    </svg>
-  </button>
-  <nav class="menue" id="menue" hidden aria-label="Hauptmenü">
-    <ol>
-      <li><a href="#werk"><span>I</span>Das Werk aufziehen</a></li>
-      <li><a href="#finissage"><span>II</span>Finissage</a></li>
-      <li><a href="#daten"><span>III</span>Datenblatt C 01</a></li>
-      <li><a href="#subskription"><span>IV</span>Subskription</a></li>
-    </ol>
+  <header class="kz">
+    <a class="kz__logo" href={base} aria-label="Calenberg, Startseite">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="1.5" />
+        {Array.from({ length: 12 }, (_, i) => <line x1="24" y1="4.5" x2="24" y2={i % 3 === 0 ? 10 : 8} stroke="currentColor" stroke-width="1.5" transform={`rotate(${i * 30} 24 24)`} />)}
+        <line class="krone__zeiger" x1="24" y1="29" x2="24" y2="8" stroke="var(--stahl)" stroke-width="2" stroke-linecap="round" />
+        <circle cx="24" cy="24" r="2.2" fill="var(--stahl)" />
+      </svg>
+      <span>Calenberg</span>
+    </a>
+    <nav class="kz__nav" aria-label="Hauptmenü">
+      <a href="#werk">Das Werk</a><a href="#finissage">Finissage</a><a href="#daten">Datenblatt</a><a href="#eins">Die Uhr</a><a href="#atelier">Atelier</a>
+    </nav>
+    <a class="knopf knopf--klein" href="#eins"><span class="nur-breit">Platz anfragen</span><span class="nur-schmal">Anfragen</span></a>
+    <button class="kz__menue krone" type="button" aria-expanded="false" aria-controls="menue" aria-label="Menü öffnen">Menü</button>
+  </header>
+  <nav class="menue" id="menue" hidden aria-label="Menü">
+    <a href="#werk">Das Werk</a><a href="#finissage">Finissage</a><a href="#daten">Datenblatt C 01</a><a href="#eins">Die Uhr: Calenberg Eins</a><a href="#atelier">Atelier und Besuch</a>
   </nav>
 
   <main>
     <section class="film" id="werk" aria-label="Kaliber C 01">
       <div class="buehne">
-        <p class="marke">Calenberg<small>Uhrenmanufaktur Hannover</small></p>
         <div class="bild">
           <picture><source media="(min-width: 700px) and (min-height: 880px)" srcset={`${base}seq/hd/explode_000.webp`} /><img class="poster" src={`${base}seq/explode_000.webp`} width="800" height="1000" alt="Das Handaufzugswerk Kaliber C 01 von Calenberg: rhodinierte Brücken mit Genfer Streifen, Räder aus Roségold, gebläute Schrauben" fetchpriority="high" /></picture>
           <canvas width="800" height="1000" aria-hidden="true"></canvas>
@@ -35,6 +38,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
         <div class="text">
           <div class="held" data-held>
             <h1>Es steht still, bis Sie es aufziehen.</h1>
+            <p class="held__lede">Kaliber C 01: das erste eigene Handaufzugswerk von Calenberg, gebaut in Hannover.</p>
             <div class="aufzug">
               <button class="aufzug__knopf" type="button" data-wind aria-describedby="aufzug-status">
                 <span class="aufzug__ring" aria-hidden="true"></span>
@@ -46,7 +50,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
           </div>
           {werk.stations.map((s) => (
             <article class="station" data-station>
-              <p class="station__nr">{s.nr} / 04</p>
+              <p class="station__nr">{s.nr} von 04</p>
               <h2>{s.title}</h2>
               <p class="station__txt">{s.text}</p>
               <p class="station__fig"><strong>{s.fig}</strong> {s.figLabel}</p>
@@ -56,89 +60,92 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
       </div>
     </section>
 
-    <section class="satz" aria-label="Das Werk in Zahlen">
-      <p class="satz__zeile"><span>21 Steine.</span> <span>16 Goldschrauben.</span> <span>Ein Rathaus.</span></p>
-      <p class="satz__klein">Auf dem Unruhkloben jedes C 01 sitzt, kaum größer als ein Reiskorn, das Neue Rathaus von Hannover. Von Hand graviert, mit Roségold ausgelegt.</p>
+    <section class="satz">
+      <h2 class="satz__zeile">21 Steine. 16 Goldschrauben. Ein Rathaus.</h2>
+      <div class="satz__text">
+        <p>Auf dem Unruhkloben jedes C 01 sitzt, kaum größer als ein Reiskorn, das Neue Rathaus von Hannover. Von Hand graviert, mit Roségold ausgelegt.</p>
+        <p>Wir sind eine kleine Werkstatt. Pro Jahr verlassen uns höchstens 50 Uhren, jede von einem Uhrmacher zusammengesetzt, reguliert und unterschrieben.</p>
+        <a class="textlink" href="#eins">Zur Subskription der ersten Serie</a>
+      </div>
     </section>
 
-    <section class="fin stoff" id="finissage">
-      <header class="kopf zeig">
-        <p class="kopf__nr" aria-hidden="true">II</p>
+    <section class="fin" id="finissage">
+      <header class="kopf">
         <h2>Was man nur mit der Lupe sieht</h2>
-        <p>Ein Uhrwerk muss nicht schön sein, um zu laufen. Unseres ist es trotzdem, auch dort, wo später nie jemand hinschaut.</p>
+        <p>Ein Uhrwerk muss nicht schön sein, um zu laufen. Unseres ist es trotzdem, auch dort, wo später nie jemand hinschaut. Probieren Sie die Lupe aus.</p>
       </header>
       {werk.finissage.map((f, i) => (
-        <figure class={`fin__stueck fin__stueck--${i % 2 ? 'r' : 'l'} zeig`}>
+        <figure class={`tafel tafel--${i % 2 ? 'r' : 'l'}`}>
           <div class="lupe" data-lupe data-gross={`${base}img/${f.img}-1800.webp`}>
             <img src={`${base}img/${f.img}-900.webp`} srcset={`${base}img/${f.img}-900.webp 900w, ${base}img/${f.img}-1800.webp 1800w`} sizes="(min-width: 900px) 62vw, 100vw" width="1800" height="1200" loading="lazy" decoding="async" alt={`Makroaufnahme des Kalibers C 01: ${f.title}`} />
             <span class="lupe__glas" aria-hidden="true"></span>
             <span class="lupe__tipp" aria-hidden="true">Lupe: Finger auflegen und ziehen</span>
           </div>
-          <figcaption>
-            <p class="fin__nr" aria-hidden="true">{['a', 'b', 'c'][i]}</p>
-            <h3>{f.title}</h3>
-            <p>{f.text}</p>
-          </figcaption>
+          <figcaption><h3>{f.title}</h3><p>{f.text}</p></figcaption>
         </figure>
       ))}
     </section>
 
     <section class="daten" id="daten">
-      <div class="daten__bild zeig" data-dreh>
+      <div class="daten__bild" data-dreh>
         <svg class="daten__ring" viewBox="0 0 400 400" aria-hidden="true">
-          <circle cx="200" cy="200" r="197" fill="none" stroke="var(--rule)" />
-          {Array.from({ length: 60 }, (_, i) => <line x1="200" y1="6" x2="200" y2={i % 5 === 0 ? 20 : 13} stroke={i % 5 === 0 ? 'var(--rose)' : '#5a5d61'} stroke-width={i % 5 === 0 ? 1.6 : 1} transform={`rotate(${i * 6} 200 200)`} />)}
+          {Array.from({ length: 60 }, (_, i) => <line x1="200" y1="4" x2="200" y2={i % 5 === 0 ? 18 : 11} stroke="currentColor" stroke-width={i % 5 === 0 ? 2 : 1} transform={`rotate(${i * 6} 200 200)`} />)}
         </svg>
-        <img src={`${base}img/top-900.webp`} srcset={`${base}img/top-900.webp 900w, ${base}img/top-1500.webp 1500w`} sizes="(min-width: 900px) 40vw, 80vw" width="1500" height="1500" loading="lazy" decoding="async" alt="Kaliber C 01 in der Aufsicht" />
+        <img src={`${base}img/top-900.webp`} srcset={`${base}img/top-900.webp 900w, ${base}img/top-1500.webp 1500w`} sizes="(min-width: 900px) 36vw, 76vw" width="1500" height="1500" loading="lazy" decoding="async" alt="Kaliber C 01 in der Aufsicht" />
       </div>
-      <div class="daten__blatt zeig">
-        <p class="kopf__nr" aria-hidden="true">III</p>
+      <div class="daten__blatt">
         <h2>Datenblatt C 01</h2>
         <dl>{werk.daten.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
       </div>
     </section>
 
-    <section class="sub stoff" id="subskription">
-      <header class="kopf zeig">
-        <p class="kopf__nr" aria-hidden="true">IV</p>
+    <section class="sub" id="eins">
+      <header class="kopf">
         <h2>Calenberg Eins. Erste Serie: 50 Uhren.</h2>
         <p>Die Eins ist die Uhr zum Kaliber C 01: 39 mm, Saphirglasboden, kleine Sekunde. Stellen Sie Ihre zusammen und fragen Sie einen Platz in der ersten Serie an. Das Zifferblatt zeigen wir Subskribenten zuerst, persönlich im Atelier.</p>
       </header>
       <form class="f" id="sub-form" novalidate data-form>
-        {werk.konfig.map((g) => (
+        <div class="f__wahlen" id="subskription">
+          {werk.konfig.map((g) => (
+            <fieldset class="f__gruppe">
+              <legend>{g.label}</legend>
+              <div class="f__wahl">
+                {g.options.map((o, i) => (
+                  <label class="f__opt">
+                    <input type="radio" name={g.id} value={o.id} data-eur={o.eur} data-name={o.name} checked={i === 0} />
+                    <span><em class="f__farbe" style={`--sw:${o.sw}`} aria-hidden="true"></em><b>{o.name}</b><i>{g.id === 'gehaeuse' ? eur(o.eur) : o.eur ? `+ ${eur(o.eur)}` : 'inklusive'}</i></span>
+                  </label>
+                ))}
+              </div>
+              {g.id === 'gravur' && (
+                <p class="f__feld f__ini" data-ini hidden>
+                  <label for="f-ini">Initialen (bis 3 Buchstaben)</label>
+                  <input id="f-ini" name="initialen" type="text" maxlength="3" placeholder="z. B. MK" autocomplete="off" autocapitalize="characters" />
+                </p>
+              )}
+            </fieldset>
+          ))}
+        </div>
+        <aside class="f__summe" aria-live="polite">
+          <p class="f__summe-titel">Ihre Calenberg Eins</p>
+          <ul class="f__summe-liste" data-wahl></ul>
+          <p class="f__summe-zeile"><span>Summe inkl. MwSt.</span><strong data-sum>{eur(start)}</strong></p>
+        </aside>
+        <div class="f__kontakt">
           <fieldset class="f__gruppe">
-            <legend>{g.label}</legend>
-            <div class="f__wahl">
-              {g.options.map((o, i) => (
-                <label class="f__opt">
-                  <input type="radio" name={g.id} value={o.id} data-eur={o.eur} data-name={o.name} checked={i === 0} />
-                  <span><em class="f__farbe" style={`--sw:${o.sw}`} aria-hidden="true"></em><b>{o.name}</b><i>{g.id === 'gehaeuse' ? eur(o.eur) : o.eur ? `+ ${eur(o.eur)}` : 'inklusive'}</i></span>
-                </label>
-              ))}
-            </div>
-            {g.id === 'gravur' && (
-              <p class="f__feld f__ini" data-ini hidden>
-                <label for="f-ini">Initialen (bis 3 Buchstaben)</label>
-                <input id="f-ini" name="initialen" type="text" maxlength="3" placeholder="z. B. MK" autocomplete="off" autocapitalize="characters" />
-              </p>
-            )}
+            <legend>Ihre Kontaktdaten</legend>
+            <p class="f__feld"><label for="f-name">Name</label><input id="f-name" name="name" type="text" placeholder="Vor- und Nachname" autocomplete="name" required aria-describedby="e-name" /><span class="f__err" id="e-name" hidden>Bitte geben Sie Ihren Namen an.</span></p>
+            <p class="f__feld"><label for="f-tel">Telefon</label><input id="f-tel" name="tel" type="tel" inputmode="tel" placeholder="z. B. 0511 1234567" autocomplete="tel" required aria-describedby="e-tel" /><span class="f__err" id="e-tel" hidden>Bitte geben Sie eine Telefonnummer an, unter der wir Sie erreichen.</span></p>
+            <p class="f__feld"><label for="f-mail">E-Mail <em>(freiwillig)</em></label><input id="f-mail" name="mail" type="email" inputmode="email" placeholder="name@example.com" autocomplete="email" aria-describedby="e-mail" /><span class="f__err" id="e-mail" hidden>Diese E-Mail-Adresse sieht unvollständig aus.</span></p>
+            <p class="f__feld"><label for="f-msg">Nachricht <em>(freiwillig)</em></label><textarea id="f-msg" name="msg" rows="3" placeholder="z. B. Wunschtermin für einen Besuch im Atelier"></textarea></p>
           </fieldset>
-        ))}
-        <div class="f__summe" aria-live="polite"><span>Summe inkl. MwSt.</span><strong data-sum>{eur(start)}</strong></div>
-
-        <fieldset class="f__gruppe">
-          <legend>Ihre Kontaktdaten</legend>
-          <p class="f__feld"><label for="f-name">Name</label><input id="f-name" name="name" type="text" placeholder="Vor- und Nachname" autocomplete="name" required aria-describedby="e-name" /><span class="f__err" id="e-name" hidden>Bitte geben Sie Ihren Namen an.</span></p>
-          <p class="f__feld"><label for="f-tel">Telefon</label><input id="f-tel" name="tel" type="tel" inputmode="tel" placeholder="z. B. 0511 1234567" autocomplete="tel" required aria-describedby="e-tel" /><span class="f__err" id="e-tel" hidden>Bitte geben Sie eine Telefonnummer an, unter der wir Sie erreichen.</span></p>
-          <p class="f__feld"><label for="f-mail">E-Mail <em>(freiwillig)</em></label><input id="f-mail" name="mail" type="email" inputmode="email" placeholder="name@example.com" autocomplete="email" aria-describedby="e-mail" /><span class="f__err" id="e-mail" hidden>Diese E-Mail-Adresse sieht unvollständig aus.</span></p>
-          <p class="f__feld"><label for="f-msg">Nachricht <em>(freiwillig)</em></label><textarea id="f-msg" name="msg" rows="3" placeholder="z. B. Wunschtermin für einen Besuch im Atelier"></textarea></p>
-        </fieldset>
-        <p class="f__ok">
-          <label><input type="checkbox" name="consent" required aria-describedby="e-consent" /><span>Ich bin einverstanden, dass Calenberg meine Angaben zur Bearbeitung meiner Subskriptions-Anfrage verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a> (öffnet in neuem Tab).</span></label>
-          <span class="f__err" id="e-consent" hidden>Bitte stimmen Sie der Verwendung Ihrer Angaben zu, sonst dürfen wir die Anfrage nicht bearbeiten.</span>
-        </p>
-        <button class="f__senden" type="submit">Platz in der ersten Serie anfragen</button>
-        <p class="f__hin">Unverbindlich. Wir rufen Sie zurück und vereinbaren einen Termin im Atelier.</p>
+          <p class="f__ok">
+            <label><input type="checkbox" name="consent" required aria-describedby="e-consent" /><span>Ich bin einverstanden, dass Calenberg meine Angaben zur Bearbeitung meiner Subskriptions-Anfrage verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a> (öffnet in neuem Tab).</span></label>
+            <span class="f__err" id="e-consent" hidden>Bitte stimmen Sie der Verwendung Ihrer Angaben zu, sonst dürfen wir die Anfrage nicht bearbeiten.</span>
+          </p>
+          <button class="knopf f__senden" type="submit">Platz in der ersten Serie anfragen</button>
+          <p class="f__hin">Unverbindlich. Wir rufen Sie zurück und vereinbaren einen Termin im Atelier.</p>
+        </div>
       </form>
       <div class="schein" data-schein hidden tabindex="-1">
         <p class="schein__kopf">Subskriptionsschein</p>
@@ -147,183 +154,234 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
         <p class="schein__summe"><span>Summe inkl. MwSt.</span><strong data-s-sum></strong></p>
         <p>Wir melden uns unter <span data-s-tel></span> und vereinbaren einen Termin im Atelier.</p>
         <p class="schein__demo">Demo: Es wurde nichts gesendet und nichts gespeichert.</p>
-        <button type="button" class="schein__neu" data-neu>Neue Anfrage</button>
+        <button type="button" class="knopf knopf--linie schein__neu" data-neu>Neue Anfrage</button>
       </div>
+    </section>
+
+    <section class="atelier" id="atelier">
+      <div class="atelier__weg">
+        <h2>Von der Anfrage bis zur Uhr</h2>
+        <ol>
+          <li><h3>Anfrage</h3><p>Sie stellen Ihre Eins zusammen und fragen einen Platz an. Das kostet nichts und verpflichtet zu nichts.</p></li>
+          <li><h3>Besuch im Atelier</h3><p>Wir zeigen Ihnen Werk, Zifferblätter und Gehäuse im Original. Erst danach entscheiden Sie.</p></li>
+          <li><h3>Fertigung</h3><p>Ihr Werk wird gebaut, in fünf Lagen reguliert und graviert. Nach etwa acht Monaten holen Sie Ihre Uhr ab.</p></li>
+        </ol>
+      </div>
+      <address class="atelier__ort">
+        <h2>Atelier</h2>
+        <p>{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+        <p>Dienstag bis Freitag, 10 bis 18 Uhr<br />Besuch nach Anmeldung</p>
+        <p><a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a><br /><a href={`mailto:${site.email}`}>{site.email}</a></p>
+      </address>
     </section>
   </main>
 </Base>
 
 <style is:global>
-  .skip { position: absolute; left: 8px; top: 8px; clip-path: inset(50%); background: var(--ink); color: var(--bg); padding: 0.6rem 1rem; z-index: 60; border-radius: 6px; }
+  /* Hallmark · macrostructure: Catalogue (dark film plate + paper sheets) · tone: Werkskatalog, sachlich · anchor hue: gebläuter Stahl 265
+   * nav: N1b · footer: Ft5 statement · theme: custom (paper silver-grey · blued-steel accent · Libre Caslon Display + Schibsted Grotesk)
+   * pre-emit critique: P4 H4 E4 S5 R4 V4 */
+  .skip { position: absolute; left: 8px; top: 8px; z-index: 80; background: var(--tinte); color: var(--weiss); padding: 0.6rem 1rem; border-radius: var(--r); clip-path: inset(50%); }
   .skip:focus { clip-path: none; }
-  .krone { position: fixed; top: max(12px, env(safe-area-inset-top)); right: 12px; z-index: 50; width: 52px; height: 52px; padding: 4px; border: 0; border-radius: 50%; background: rgba(8, 9, 10, 0.72); color: var(--ink); cursor: pointer; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-  .krone svg { display: block; width: 100%; height: 100%; }
-  .krone__zeiger { transform-origin: 24px 24px; }
-  .menue { position: fixed; inset: 0; z-index: 45; background: rgba(8, 9, 10, 0.96); display: grid; place-items: center; padding: 80px var(--gutter) 40px; overflow: auto; }
-  .menue[hidden] { display: none; }
-  .menue ol { list-style: none; margin: 0; padding: 0; width: min(100%, 520px); }
-  .menue a { display: grid; grid-template-columns: 3rem 1fr; align-items: baseline; padding: 1rem 0; border-bottom: 1px solid var(--rule); text-decoration: none; font-family: var(--serif); font-size: clamp(1.7rem, 7vw, 2.6rem); line-height: 1.1; }
-  .menue a span { font-family: var(--sans); font-size: 0.95rem; color: var(--rose); }
+  .nur-schmal { display: none; }
 
-  /* ---------- film: hero + scroll explode on one sticky stage ---------- */
-  .film { height: 470svh; position: relative; }
-  .buehne { position: sticky; top: 0; height: 100svh; display: grid; grid-template-rows: auto minmax(0, 1fr); justify-items: center; overflow: hidden; }
-  .marke { position: absolute; z-index: 3; top: max(18px, env(safe-area-inset-top)); left: var(--gutter); font-family: var(--serif); font-size: 1.75rem; line-height: 1; letter-spacing: 0.01em; }
-  .marke small { display: block; font-family: var(--sans); font-size: 0.8rem; color: var(--muted); margin-top: 0.35rem; letter-spacing: 0.02em; }
-  .bild { position: relative; height: min(125vw, 60svh); aspect-ratio: 4 / 5; margin-top: clamp(0px, 4svh, 40px);
+  /* ---------- header ---------- */
+  .kz { position: sticky; top: 0; z-index: 50; height: var(--kh); display: flex; align-items: center; gap: 0.75rem; padding: 0 var(--gutter); background: var(--papier); border-bottom: 1px solid var(--linie); }
+  .kz__logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; font-family: var(--serif); font-size: 1.55rem; line-height: 1; white-space: nowrap; margin-right: auto; padding: 0.5rem 0; }
+  .kz__logo svg { width: 30px; height: 30px; flex: none; }
+  .krone__zeiger { transform-origin: 24px 24px; }
+  .kz__nav { display: none; }
+  .kz__menue { min-height: 44px; padding: 0 0.9rem; border: 1px solid var(--tinte); border-radius: var(--r); background: transparent; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .menue { position: fixed; z-index: 49; inset: var(--kh) 0 auto 0; max-height: calc(100dvh - var(--kh)); overflow: auto; background: var(--papier); border-bottom: 1px solid var(--tinte); padding: 0.5rem var(--gutter) 1.5rem; box-shadow: 0 30px 60px -20px var(--schatten); }
+  .menue[hidden] { display: none; }
+  .menue a { display: block; padding: 1rem 0; border-bottom: 1px solid var(--linie); text-decoration: none; font-family: var(--serif); font-size: 1.7rem; line-height: 1.15; }
+  .knopf { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0.7rem 1.4rem; border: 1px solid var(--stahl); border-radius: var(--r); background: var(--stahl); color: var(--weiss); font-weight: 600; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color 0.15s, border-color 0.15s; }
+  .knopf:hover { background: var(--stahl-tief); border-color: var(--stahl-tief); }
+  .knopf:active { transform: translateY(1px); }
+  .knopf--klein { min-height: 44px; padding: 0.4rem 1rem; }
+  .knopf--linie { background: transparent; color: var(--tinte); border-color: var(--tinte); }
+  .knopf--linie:hover { background: var(--tinte); color: var(--weiss); border-color: var(--tinte); }
+  .textlink { display: inline-block; padding: 0.6rem 0; color: var(--stahl); font-weight: 600; text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
+  @media (max-width: 420px) { .nur-breit { display: none; } .nur-schmal { display: inline; } }
+  @media (max-width: 370px) { .kz { gap: 0.5rem; } .kz__logo svg { display: none; } .kz__logo { font-size: 1.4rem; } .kz .knopf--klein, .kz__menue { padding-inline: 0.7rem; } }
+  @media (min-width: 960px) {
+    .kz__nav { display: flex; gap: clamp(1rem, 2.4vw, 2.4rem); margin-right: clamp(1rem, 3vw, 3rem); }
+    .kz__nav a { text-decoration: none; padding: 0.8rem 0; white-space: nowrap; border-bottom: 1px solid transparent; }
+    .kz__nav a:hover { border-bottom-color: var(--tinte); }
+    .kz__menue, .menue { display: none; }
+  }
+
+  /* ---------- film plate: hero + scroll explode on one sticky stage (dark) ---------- */
+  .film { height: 470svh; position: relative; background: var(--nacht); color: var(--hell); }
+  .buehne { position: sticky; top: var(--kh); height: calc(100svh - var(--kh)); display: grid; grid-template-rows: auto minmax(0, 1fr); justify-items: center; overflow: hidden; }
+  .bild { position: relative; height: min(125vw, 56svh); aspect-ratio: 4 / 5; margin-top: clamp(0px, 2svh, 24px);
     -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
     -webkit-mask-composite: source-in; mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%); mask-composite: intersect; }
   .bild picture { display: contents; }
   .bild img, .bild canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .text { position: relative; width: 100%; max-width: 560px; padding: 0 var(--gutter) max(16px, env(safe-area-inset-bottom)); display: grid; align-content: center; }
+  .text { position: relative; width: 100%; max-width: 580px; padding: 0 var(--gutter) max(16px, env(safe-area-inset-bottom)); display: grid; align-content: center; }
   .text > * { grid-area: 1 / 1; align-self: center; }
-  .held h1 { font-size: clamp(1.9rem, 8.2vw, 3.4rem); }
+  .held h1 { font-size: clamp(2rem, 8.4vw, 3.4rem); }
+  .held__lede { margin-top: 0.7rem; color: var(--hell-2); max-width: 30em; }
   .aufzug { display: flex; align-items: center; gap: 1.2rem; padding-left: 8px; margin-top: clamp(0.8rem, 2.4svh, 1.6rem); }
-  .aufzug__knopf { position: relative; flex: none; width: 92px; height: 92px; border-radius: 50%; border: 0; background: radial-gradient(circle at 35% 30%, #2a2d31, #121416 70%); cursor: pointer; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; display: grid; place-items: center; }
-  .aufzug__ring { position: absolute; inset: -5px; border-radius: 50%; background: conic-gradient(var(--rose) calc(var(--r, 0) * 1turn), #2b2d30 0); -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 4px), #000 calc(100% - 3px)); mask: radial-gradient(closest-side, transparent calc(100% - 4px), #000 calc(100% - 3px)); }
+  .aufzug__knopf { position: relative; flex: none; width: 92px; height: 92px; border-radius: 50%; border: 0; color: var(--hell); background: radial-gradient(circle at 35% 30%, var(--nacht-3), var(--nacht-2) 70%); cursor: pointer; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; display: grid; place-items: center; }
+  .aufzug__ring { position: absolute; inset: -5px; border-radius: 50%; background: conic-gradient(var(--rose-hell) calc(var(--r, 0) * 1turn), var(--nacht-3) 0); -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 4px), #000 calc(100% - 3px)); mask: radial-gradient(closest-side, transparent calc(100% - 4px), #000 calc(100% - 3px)); }
   .aufzug__txt { font-size: 0.86rem; line-height: 1.15; font-weight: 600; max-width: 76px; text-align: center; }
-  .aufzug__knopf::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 1px solid var(--rose); opacity: 0; animation: puls 2.2s ease-out infinite; }
+  .aufzug__knopf::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 1px solid var(--rose-hell); opacity: 0; animation: puls 2.2s ease-out infinite; }
   .aufzug__knopf.ist-an::after, .laeuft .aufzug__knopf::after { animation: none; }
   .aufzug__knopf.ist-an { transform: scale(0.96); }
   @keyframes puls { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.45); opacity: 0; } }
-  .aufzug__status { color: var(--muted); font-size: 0.98rem; line-height: 1.35; }
-  .aufzug__status strong { display: block; color: var(--ink); font-family: var(--serif); font-weight: 400; font-size: 1.9rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
-  .weiter { margin-top: clamp(0.6rem, 2svh, 1.2rem); color: var(--muted); font-size: 0.95rem; }
-  .weiter::before { content: '↓'; display: inline-block; margin-right: 0.5rem; color: var(--rose); animation: runter 1.8s ease-in-out infinite; }
+  .aufzug__status { color: var(--hell-2); font-size: 0.98rem; line-height: 1.35; }
+  .aufzug__status strong { display: block; color: var(--hell); font-family: var(--serif); font-weight: 400; font-size: 2rem; line-height: 1.1; font-variant-numeric: lining-nums; }
+  .weiter { margin-top: clamp(0.6rem, 2svh, 1.2rem); color: var(--hell-2); font-size: 0.95rem; }
+  .weiter::before { content: '↓'; display: inline-block; margin-right: 0.5rem; color: var(--rose-hell); animation: runter 1.8s ease-in-out infinite; }
   @keyframes runter { 50% { transform: translateY(4px); } }
-  .station__nr { color: var(--rose); font-size: 0.95rem; font-variant-numeric: tabular-nums; margin-bottom: 0.4rem; }
+  .station__nr { color: var(--rose-hell); font-size: 0.95rem; margin-bottom: 0.4rem; }
   .station h2 { font-size: clamp(1.9rem, 8vw, 3rem); }
-  .station__txt { margin-top: 0.7rem; color: #d6d2c9; max-width: 34em; }
-  .station__fig { margin-top: 0.8rem; color: var(--muted); font-size: 0.95rem; }
-  .station__fig strong { font-family: var(--serif); font-weight: 400; font-size: 1.7rem; color: var(--ink); margin-right: 0.5rem; font-variant-numeric: tabular-nums; }
+  .station__txt { margin-top: 0.7rem; color: var(--hell-2); max-width: 34em; }
+  .station__fig { margin-top: 0.8rem; color: var(--hell-2); font-size: 0.95rem; }
+  .station__fig strong { font-family: var(--serif); font-weight: 400; font-size: 1.8rem; color: var(--hell); margin-right: 0.5rem; font-variant-numeric: lining-nums; }
   .js .held, .js .station { transition: opacity 0.35s ease, transform 0.35s ease; }
   .js .held:not(.ist-da), .js .station:not(.ist-da) { opacity: 0; transform: translateY(14px); visibility: hidden; transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s; }
   html:not(.js) .film { height: auto; }
   html:not(.js) .buehne { position: static; height: auto; }
   html:not(.js) .text > * { grid-area: auto; margin-bottom: 2rem; }
   html:not(.js) .bild canvas, html:not(.js) .aufzug, html:not(.js) .weiter { display: none; }
+  @media (max-height: 700px) and (max-aspect-ratio: 1/1) { .held__lede { display: none; } }
   @media (min-aspect-ratio: 1/1) {
-    .buehne { grid-template-rows: 1fr; grid-template-columns: auto minmax(280px, 560px); justify-content: center; align-items: center; column-gap: clamp(8px, 3vw, 56px); }
-    .bild { height: min(100svh, 78vw); margin-top: 0; }
-    .text { padding-left: 0; }
+    .buehne { grid-template-rows: 1fr; grid-template-columns: minmax(280px, 600px) auto; justify-content: center; align-items: center; column-gap: clamp(8px, 3vw, 56px); }
+    .bild { height: min(calc(100svh - var(--kh)), 74vw); margin-top: 0; grid-column: 2; grid-row: 1; }
+    .text { grid-column: 1; grid-row: 1; padding-right: 0; }
   }
   @media (min-width: 1100px) and (min-height: 700px) {
-    .text { max-width: 640px; font-size: 1.15rem; }
+    .text { max-width: 640px; }
     .held h1, .station h2 { font-size: clamp(3rem, 4.4vw, 4.6rem); }
+    .held__lede, .station__txt { font-size: 1.15rem; }
     .aufzug__knopf { width: 108px; height: 108px; } .aufzug__txt { font-size: 0.95rem; }
-    .marke { font-size: 2.1rem; }
   }
   @media (min-aspect-ratio: 1/1) and (max-height: 520px) {
     .held h1, .station h2 { font-size: clamp(1.5rem, 7svh, 2.2rem); }
+    .held__lede { display: none; }
     .aufzug__knopf { width: 72px; height: 72px; } .aufzug__txt { font-size: 0.75rem; }
-    .station__txt { font-size: 0.95rem; margin-top: 0.4rem; } .marke small { display: none; }
-    .marke { font-size: 1.3rem; }
+    .station__txt { font-size: 0.95rem; margin-top: 0.4rem; }
   }
 
-  /* ---------- sections ---------- */
-  .stoff { position: relative; isolation: isolate; }
-  .stoff::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0.55;
-    background-image: radial-gradient(circle at 50% 50%, transparent 0 9px, rgba(255, 255, 255, 0.05) 9.5px 10px, transparent 10.5px), radial-gradient(circle at 50% 50%, transparent 0 9px, rgba(255, 255, 255, 0.05) 9.5px 10px, transparent 10.5px);
-    background-size: 26px 26px; background-position: 0 0, 13px 13px;
-    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent); }
-  .zeig { opacity: 1; }
-  .js .zeig { opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
-  .js .zeig.ist-da { opacity: 1; transform: none; }
-  .kopf { padding: 0 var(--gutter); max-width: 900px; margin: 0 auto clamp(2rem, 6vw, 4rem); }
-  .kopf__nr { font-family: var(--serif); font-size: 1.5rem; color: var(--rose); display: flex; align-items: center; gap: 0.9rem; margin-bottom: 0.9rem; }
-  .kopf__nr::after { content: ''; height: 1px; flex: 0 1 140px; background: linear-gradient(to right, var(--rose), transparent); }
-  .kopf h2 { font-size: clamp(2.3rem, 9vw, 4.6rem); }
-  .kopf p:not(.kopf__nr) { margin-top: 1.1rem; color: #d6d2c9; max-width: 38em; font-size: 1.08rem; }
+  /* ---------- paper sheets ---------- */
+  main > section:not(.film) { padding: clamp(4rem, 10vw, 8.5rem) var(--gutter); scroll-margin-top: var(--kh); }
+  .kopf { max-width: var(--breit); margin: 0 auto clamp(2rem, 5vw, 4rem); }
+  .kopf h2, .daten h2, .atelier h2 { font-size: clamp(2.3rem, 7.5vw, 4.4rem); max-width: 16em; overflow-wrap: anywhere; }
+  .kopf p { margin-top: 1.1rem; color: var(--tinte-2); max-width: 36em; font-size: 1.1rem; }
 
-  .satz { padding: clamp(3rem, 10vw, 7rem) var(--gutter) clamp(1rem, 4vw, 3rem); max-width: 1180px; margin: auto; }
-  .satz__zeile { font-family: var(--serif); font-size: clamp(2.6rem, 11.5vw, 7.2rem); line-height: 1.02; letter-spacing: -0.01em; }
-  .satz__zeile span { display: block; background: linear-gradient(100deg, #f4eee2 0%, #c9c4b8 38%, #7d7a73 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .satz__zeile span:last-child { background-image: linear-gradient(100deg, #f1c3a1 0%, #d39a74 45%, #8a5a3d 100%); }
-  .satz__klein { margin-top: 1.4rem; max-width: 32em; color: #d6d2c9; font-size: 1.08rem; }
-  @media (min-width: 900px) { .satz__zeile span { display: inline; } .satz__zeile { max-width: 12em; } }
+  .satz { display: grid; gap: 1.6rem; max-width: var(--breit); margin: auto; box-sizing: content-box; }
+  .satz__zeile { font-size: clamp(2.7rem, 10.5vw, 6.6rem); line-height: 1; letter-spacing: -0.012em; max-width: 9em; }
+  .satz__text { display: grid; gap: 1rem; max-width: 30em; color: var(--tinte-2); font-size: 1.1rem; align-content: end; }
+  @media (min-width: 960px) { .satz { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 4rem; align-items: end; } }
 
-  .fin { padding: clamp(4rem, 12vw, 9rem) 0 0; }
-  .fin__stueck { margin: 0 0 clamp(3.5rem, 10vw, 8rem); display: grid; }
-  .lupe { position: relative; overflow: hidden; touch-action: pan-y; cursor: zoom-in; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
-    box-shadow: 0 40px 80px -30px #000, inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
-  .lupe img { width: 100%; transform: scale(calc(1.14 - var(--p, 0.5) * 0.14)) translateY(calc((var(--p, 0.5) - 0.5) * -5%)); will-change: transform; -webkit-user-drag: none; }
-  .lupe::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, rgba(8, 9, 10, 0.5), transparent 22%, transparent 70%, rgba(8, 9, 10, 0.75)); }
-  .lupe__glas { position: absolute; z-index: 2; left: 0; top: 0; width: 168px; height: 168px; margin: -84px 0 0 -84px; border-radius: 50%; pointer-events: none; opacity: 0; transform: translate(var(--x, 50%), var(--y, 50%)); transition: opacity 0.18s ease;
-    background-repeat: no-repeat; box-shadow: 0 0 0 2px #1b1d20, 0 0 0 4px #d39a74, 0 0 0 5px #1b1d20, 0 24px 50px rgba(0, 0, 0, 0.7), inset 0 0 26px rgba(0, 0, 0, 0.55), inset 6px 8px 18px rgba(255, 255, 255, 0.12); }
+  .fin { background: var(--papier-2); }
+  .tafel { max-width: var(--breit); margin: 0 auto clamp(3rem, 8vw, 6.5rem); display: grid; gap: 1.2rem; }
+  .tafel:last-child { margin-bottom: 0; }
+  .lupe { position: relative; overflow: hidden; background: var(--nacht); margin-inline: calc(var(--gutter) * -1); touch-action: pan-y; cursor: zoom-in; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-shadow: 0 40px 70px -40px var(--schatten); }
+  .lupe img { width: 100%; transform: scale(calc(1.1 - var(--p, 0.5) * 0.1)); will-change: transform; -webkit-user-drag: none; }
+  .lupe__glas { position: absolute; z-index: 2; left: 0; top: 0; width: 168px; height: 168px; margin: -84px 0 0 -84px; border-radius: 50%; pointer-events: none; opacity: 0; transform: translate(var(--x, 50%), var(--y, 50%)); transition: opacity 0.18s ease; background-repeat: no-repeat;
+    box-shadow: 0 0 0 2px var(--nacht-2), 0 0 0 5px var(--papier), 0 0 0 6px var(--nacht-2), 0 24px 50px var(--schatten), inset 0 0 26px var(--schatten); }
   .lupe.ist-an .lupe__glas { opacity: 1; }
-  .lupe__tipp { position: absolute; z-index: 1; left: var(--gutter); bottom: 14px; font-size: 0.88rem; color: #d6d2c9; padding-left: 26px; transition: opacity 0.3s; }
-  .lupe__tipp::before { content: ''; position: absolute; left: 0; top: 50%; width: 16px; height: 16px; margin-top: -9px; border: 1.5px solid var(--rose); border-radius: 50%; box-shadow: 7px 7px 0 -6.2px var(--rose); }
+  .lupe__tipp { position: absolute; z-index: 1; left: 14px; bottom: 12px; padding: 0.35rem 0.7rem; border-radius: var(--r); background: var(--nacht-glas); color: var(--hell); font-size: 0.88rem; transition: opacity 0.3s; }
   .lupe.war-an .lupe__tipp { opacity: 0; }
   @media (hover: hover) and (pointer: fine) { .lupe__tipp { font-size: 0; } .lupe__tipp::after { content: 'Lupe: Maus über das Bild bewegen'; font-size: 0.88rem; } }
-  .fin__stueck figcaption { position: relative; z-index: 3; margin: -34px var(--gutter) 0; padding: 1.3rem 1.3rem 1.4rem; background: linear-gradient(160deg, rgba(27, 29, 32, 0.94), rgba(13, 14, 16, 0.96)); border: 1px solid var(--rule); border-top-color: #4a4d51; border-radius: 12px; box-shadow: 0 24px 50px -20px #000; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-  .fin__nr { font-family: var(--serif); color: var(--rose); font-size: 1.25rem; margin-bottom: 0.3rem; }
-  .fin__stueck h3 { font-size: clamp(1.7rem, 6.5vw, 2.6rem); }
-  .fin__stueck figcaption p:last-child { margin-top: 0.6rem; color: #d6d2c9; max-width: 30em; }
-  @media (min-width: 900px) {
-    .fin__stueck { grid-template-columns: repeat(12, 1fr); align-items: end; max-width: 1500px; margin-inline: auto; }
-    .fin__stueck .lupe { grid-row: 1; grid-column: 1 / 9; }
-    .fin__stueck figcaption { grid-row: 1; grid-column: 8 / 12; margin: 0 0 3.2rem; padding: 2rem 2.2rem 2.2rem; }
-    .fin__stueck--r .lupe { grid-column: 5 / 13; }
-    .fin__stueck--r figcaption { grid-column: 2 / 6; }
+  .tafel h3 { font-size: clamp(1.8rem, 6vw, 2.7rem); }
+  .tafel figcaption p { margin-top: 0.6rem; color: var(--tinte-2); max-width: 28em; }
+  @media (min-width: 960px) {
+    .tafel { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 2.5rem; align-items: end; }
+    .tafel .lupe { grid-row: 1; grid-column: 1 / 9; margin-inline: 0; }
+    .tafel figcaption { grid-row: 1; grid-column: 9 / 13; padding-bottom: 1.5rem; border-bottom: 1px solid var(--tinte); }
+    .tafel--r .lupe { grid-column: 5 / 13; }
+    .tafel--r figcaption { grid-column: 1 / 5; }
   }
 
-  .daten { padding: clamp(3rem, 9vw, 7rem) var(--gutter); display: grid; gap: 2.5rem; max-width: 1280px; margin: auto; }
-  .daten__bild { position: relative; isolation: isolate; width: min(100%, 560px); margin: auto; aspect-ratio: 1; display: grid; place-items: center; }
-  .daten__bild::before { content: ''; position: absolute; inset: -12%; z-index: -1; background: radial-gradient(closest-side, rgba(211, 154, 116, 0.2), transparent 72%); }
+  .daten { display: grid; gap: 2.5rem; max-width: var(--breit); margin: auto; box-sizing: content-box; }
+  .daten__bild { position: relative; width: min(100%, 460px); margin: auto; aspect-ratio: 1; display: grid; place-items: center; color: var(--tinte); }
   .daten__ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(calc(var(--p, 0.5) * -40deg)); will-change: transform; }
-  .daten__bild img { width: 86%; border-radius: 50%; transform: rotate(calc((var(--p, 0.5) - 0.5) * 50deg)); will-change: transform; box-shadow: 0 30px 70px -10px #000, 0 0 0 1px #000; }
-  .daten__blatt { position: relative; padding: clamp(1.4rem, 5vw, 2.6rem); border: 1px solid #3a3d41; border-radius: 14px; overflow: hidden; box-shadow: 0 30px 70px -30px #000, inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    background: repeating-linear-gradient(112deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 34px, rgba(0, 0, 0, 0.25) 34px 35px, transparent 35px 68px), linear-gradient(160deg, #1a1c1f, #0d0e10); }
-  .daten h2 { font-size: clamp(2.1rem, 8vw, 3.6rem); margin-bottom: 1.2rem; }
-  .daten dl { margin: 0; }
-  .daten dl div { display: grid; grid-template-columns: minmax(6.5rem, 9rem) 1fr; gap: 0.9rem; padding: 0.7rem 0; border-top: 1px solid rgba(255, 255, 255, 0.09); }
-  .daten dt { color: var(--rose); }
-  .daten dd { margin: 0; }
-  @media (min-width: 900px) { .daten { grid-template-columns: 44fr 56fr; align-items: center; gap: 4.5rem; } }
+  .daten__bild img { width: 86%; border-radius: 50%; transform: rotate(calc((var(--p, 0.5) - 0.5) * 50deg)); will-change: transform; box-shadow: 0 30px 60px -20px var(--schatten); }
+  .daten h2 { margin-bottom: 1.5rem; }
+  .daten dl { margin: 0; border-bottom: 1px solid var(--tinte); }
+  .daten dl div { display: grid; grid-template-columns: minmax(6.5rem, 10rem) minmax(0, 1fr); gap: 1rem; padding: 0.8rem 0; border-top: 1px solid var(--linie); }
+  .daten dl div:first-child { border-top-color: var(--tinte); }
+  .daten dt { color: var(--tinte-2); }
+  .daten dd { margin: 0; font-variant-numeric: lining-nums; }
+  @media (min-width: 960px) { .daten { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: start; gap: 5rem; } .daten__bild { position: sticky; top: calc(var(--kh) + 3rem); } }
 
-  .sub { padding: clamp(4rem, 12vw, 9rem) 0 2rem; }
-  .f, .schein { max-width: 720px; margin: auto; padding: 0 var(--gutter); }
-  .f__gruppe { border: 0; padding: 0; margin: 0 0 2rem; min-width: 0; }
-  .f__gruppe legend { font-family: var(--serif); font-size: 1.6rem; padding: 0; margin-bottom: 0.8rem; }
+  .sub { background: var(--papier-2); }
+  .f, .schein { max-width: var(--breit); margin: auto; }
+  .f { display: grid; gap: 0 4rem; }
+  .f__gruppe { border: 0; padding: 0; margin: 0 0 2.2rem; min-width: 0; }
+  .f__gruppe legend { font-family: var(--serif); font-size: 1.7rem; padding: 0; margin-bottom: 0.9rem; }
   .f__wahl { display: grid; gap: 0.6rem; }
-  @media (min-width: 560px) { .f__wahl { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); } }
+  @media (min-width: 560px) { .f__wahl { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
   .f__opt { position: relative; display: block; cursor: pointer; }
   .f__opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
-  .f__opt span { position: relative; display: flex; flex-direction: column; gap: 0.15rem; min-height: 72px; justify-content: center; padding: 0.8rem 1rem 0.8rem 4.3rem; border: 1px solid var(--rule); border-radius: 12px; background: linear-gradient(160deg, #191b1e, #0e0f11); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05); transition: border-color 0.2s, box-shadow 0.2s; }
-  .f__farbe { position: absolute; left: 0.9rem; top: 50%; width: 44px; height: 44px; margin-top: -22px; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18), inset -5px -7px 12px rgba(0, 0, 0, 0.45), 0 6px 14px rgba(0, 0, 0, 0.5); }
+  .f__opt span { position: relative; display: flex; flex-direction: column; gap: 0.1rem; min-height: 72px; justify-content: center; padding: 0.8rem 1rem 0.8rem 4.3rem; border: 1px solid var(--linie); border-radius: var(--r); background: var(--weiss); transition: border-color 0.15s, box-shadow 0.15s; }
+  .f__farbe { position: absolute; left: 0.9rem; top: 50%; width: 44px; height: 44px; margin-top: -22px; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 1px var(--kante), inset -5px -7px 12px var(--kante), 0 4px 10px -4px var(--schatten); }
   .f__opt b { font-weight: 600; }
-  .f__opt i { font-style: normal; color: var(--muted); font-size: 0.95rem; font-variant-numeric: tabular-nums; }
-  .f__opt input:checked + span { border-color: var(--rose); box-shadow: inset 0 0 0 1px var(--rose), 0 14px 30px -14px rgba(211, 154, 116, 0.45); }
-  .f__opt input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 3px; }
+  .f__opt i { font-style: normal; color: var(--tinte-2); font-size: 0.95rem; }
+  .f__opt:hover span { border-color: var(--tinte-2); }
+  .f__opt input:checked + span { border-color: var(--stahl); box-shadow: inset 0 0 0 1px var(--stahl); }
+  .f__opt input:focus-visible + span { outline: 2px solid var(--fokus); outline-offset: 3px; }
   .f__feld { display: grid; gap: 0.35rem; margin: 0 0 1rem; }
   .f__ini { margin-top: 0.9rem; max-width: 260px; }
-  .f__feld label em { font-style: normal; color: var(--muted); }
-  .f input[type='text'], .f input[type='tel'], .f input[type='email'], .f textarea { width: 100%; font: inherit; color: var(--ink); background: var(--bg2); border: 1px solid #44474b; border-radius: 8px; padding: 0.8rem 0.9rem; min-height: 52px; }
-  .f ::placeholder { color: #8d8a83; opacity: 1; }
-  .f [aria-invalid='true'] { border-color: var(--alert); }
-  .f__err { color: var(--alert); font-size: 0.95rem; }
+  .f__feld label { font-weight: 600; }
+  .f__feld label em { font-style: normal; font-weight: 400; color: var(--tinte-2); }
+  .f input[type='text'], .f input[type='tel'], .f input[type='email'], .f textarea { width: 100%; font: inherit; color: var(--tinte); background: var(--weiss); border: 1px solid var(--tinte-2); border-radius: var(--r); padding: 0.8rem 0.9rem; min-height: 52px; }
+  .f ::placeholder { color: var(--platzhalter); opacity: 1; }
+  .f [aria-invalid='true'] { border-color: var(--rubin); box-shadow: inset 0 0 0 1px var(--rubin); }
+  .f__err { color: var(--rubin); font-size: 0.95rem; font-weight: 600; }
   .f__err[hidden] { display: none; }
-  .f__summe { position: sticky; bottom: 0; z-index: 5; display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 0 calc(var(--gutter) * -1) 2rem; padding: 0.8rem var(--gutter) calc(0.8rem + env(safe-area-inset-bottom)); background: rgba(16, 18, 20, 0.94); border-top: 1px solid var(--rose); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-  .f__summe span { color: var(--muted); }
-  .f__summe strong { font-family: var(--serif); font-weight: 400; font-size: 1.9rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .f__summe { position: sticky; bottom: 0; z-index: 5; margin: 0 calc(var(--gutter) * -1) 2.2rem; padding: 0.7rem var(--gutter) calc(0.7rem + env(safe-area-inset-bottom)); background: var(--tinte); color: var(--weiss); }
+  .f__summe-titel, .f__summe-liste { display: none; }
+  .f__summe-zeile { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .f__summe-zeile span { color: var(--hell-2); }
+  .f__summe-zeile strong { font-family: var(--serif); font-weight: 400; font-size: 1.9rem; font-variant-numeric: lining-nums; white-space: nowrap; }
   .f__ok { margin: 0 0 1.4rem; }
-  .f__ok label { display: grid; grid-template-columns: 28px 1fr; gap: 0.8rem; align-items: start; cursor: pointer; }
-  .f__ok input { width: 24px; height: 24px; margin: 2px 0 0; accent-color: var(--rose); }
-  .f__senden, .schein__neu { width: 100%; min-height: 58px; border: 0; border-radius: 10px; background: var(--ink); color: var(--bg); font-weight: 700; font-size: 1.05rem; cursor: pointer; padding: 0.8rem 1rem; }
-  .schein__neu { background: transparent; color: var(--ink); border: 1px solid #55585c; margin-top: 1.4rem; }
-  .f__hin { margin-top: 0.8rem; color: var(--muted); font-size: 0.95rem; text-align: center; }
+  .f__ok label { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 0.8rem; align-items: start; cursor: pointer; }
+  .f__ok input { width: 24px; height: 24px; margin: 2px 0 0; accent-color: var(--stahl); }
+  .f__ok a { color: var(--stahl); }
+  .f__senden { width: 100%; min-height: 58px; font-size: 1.05rem; white-space: normal; text-align: center; }
+  .f__hin { margin-top: 0.8rem; color: var(--tinte-2); font-size: 0.95rem; }
+  @media (min-width: 1000px) {
+    .f { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; }
+    .f__wahlen, .f__kontakt { grid-column: 1; }
+    .f__summe { grid-column: 2; grid-row: 1 / span 2; position: sticky; top: calc(var(--kh) + 2rem); bottom: auto; margin: 0; padding: 2rem; border-radius: var(--r); }
+    .f__summe-titel { display: block; font-family: var(--serif); font-size: 1.9rem; margin-bottom: 1.2rem; }
+    .f__summe-liste { display: block; list-style: none; margin: 0 0 1.2rem; padding: 0; }
+    .f__summe-liste li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.6rem 0; border-top: 1px solid var(--tinte-linie); }
+    .f__summe-liste li span:last-child { color: var(--hell-2); white-space: nowrap; }
+    .f__summe-zeile { border-top: 1px solid var(--weiss); padding-top: 1rem; }
+    .f__summe-zeile strong { font-size: 2.6rem; }
+  }
+  .schein { border: 1px solid var(--tinte); border-radius: var(--r); padding: clamp(22px, 5vw, 48px); max-width: 760px; background: var(--weiss); }
   .schein > * { margin-bottom: 0.9rem; }
-  .schein { border: 1px solid var(--rose); border-radius: 14px; padding: clamp(22px, 5vw, 40px); max-width: min(720px, calc(100% - 2 * var(--gutter))); background: linear-gradient(160deg, #15171a, #0b0c0d); }
   .schein[hidden] { display: none; }
-  .schein__kopf { color: var(--rose); }
+  .schein__kopf { color: var(--stahl); font-weight: 600; }
   .schein h3 { font-size: clamp(1.9rem, 7vw, 2.8rem); overflow-wrap: anywhere; }
   .schein dl { margin: 1rem 0; }
-  .schein dl div { display: grid; grid-template-columns: minmax(6rem, 10rem) 1fr; gap: 0.8rem; padding: 0.5rem 0; border-top: 1px solid var(--rule); }
-  .schein dt { color: var(--muted); } .schein dd { margin: 0; overflow-wrap: anywhere; }
-  .schein__summe { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--rose); padding-top: 0.8rem; }
-  .schein__summe strong { font-family: var(--serif); font-weight: 400; font-size: 1.9rem; }
-  .schein__demo { color: var(--muted); font-size: 0.95rem; }
-  @media (prefers-reduced-motion: reduce) { .js .zeig { opacity: 1; transform: none; transition: none; } .lupe img, .daten__ring, .daten__bild img { transform: none; } .aufzug__knopf::after, .weiter::before { animation: none; } .js .held, .js .station { transition: none; } }
+  .schein dl div { display: grid; grid-template-columns: minmax(6rem, 12rem) minmax(0, 1fr); gap: 0.8rem; padding: 0.55rem 0; border-top: 1px solid var(--linie); }
+  .schein dt { color: var(--tinte-2); } .schein dd { margin: 0; overflow-wrap: anywhere; }
+  .schein__summe { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--tinte); padding-top: 0.8rem; }
+  .schein__summe strong { font-family: var(--serif); font-weight: 400; font-size: 2rem; font-variant-numeric: lining-nums; }
+  .schein__demo { color: var(--tinte-2); font-size: 0.95rem; }
+
+  .atelier { display: grid; gap: 3.5rem; max-width: var(--breit); margin: auto; box-sizing: content-box; }
+  .atelier h2 { font-size: clamp(2rem, 6vw, 3.2rem); margin-bottom: 1.5rem; }
+  .atelier ol { list-style: none; margin: 0; padding: 0; counter-reset: weg; display: grid; gap: 0; }
+  .atelier li { counter-increment: weg; display: grid; grid-template-columns: 3.2rem minmax(0, 1fr); column-gap: 0.5rem; padding: 1.3rem 0; border-top: 1px solid var(--linie); }
+  .atelier li:first-child { border-top-color: var(--tinte); }
+  .atelier li::before { content: counter(weg); grid-row: 1 / span 2; font-family: var(--serif); font-size: 2.6rem; line-height: 1; color: var(--stahl); font-variant-numeric: lining-nums; }
+  .atelier li h3 { font-size: 1.6rem; }
+  .atelier li p { grid-column: 2; margin-top: 0.3rem; color: var(--tinte-2); max-width: 32em; }
+  .atelier__ort { font-style: normal; display: grid; gap: 1rem; align-content: start; font-size: 1.1rem; }
+  .atelier__ort a { color: var(--stahl); display: inline-block; padding: 0.3rem 0; overflow-wrap: anywhere; }
+  @media (min-width: 960px) { .atelier { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 5rem; } }
+
+  @media (prefers-reduced-motion: reduce) { .aufzug__knopf::after, .weiter::before { animation: none; } .js .held, .js .station { transition: none; } .lupe img, .daten__ring, .daten__bild img { transform: none; } }
 </style>
 
 <script>
@@ -336,7 +394,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   const krone = document.querySelector<HTMLButtonElement>('.krone')!;
   const menue = document.getElementById('menue')!;
   const zeiger = document.querySelector<SVGLineElement>('.krone__zeiger')!;
-  const setMenu = (open: boolean) => { menue.hidden = !open; krone.setAttribute('aria-expanded', String(open)); krone.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen'); };
+  const setMenu = (open: boolean) => { menue.hidden = !open; krone.setAttribute('aria-expanded', String(open)); krone.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen'); krone.textContent = open ? 'Schließen' : 'Menü'; };
   krone.addEventListener('click', () => setMenu(menue.hidden));
   menue.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setMenu(false); });
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menue.hidden) { setMenu(false); krone.focus(); } });
@@ -559,8 +617,11 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   const eur = (n: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
   const picks = () => [...form.querySelectorAll<HTMLInputElement>('input[type=radio]:checked')];
   const total = () => picks().reduce((s, r) => s + Number(r.dataset.eur), 0);
+  const wahl = form.querySelector<HTMLElement>('[data-wahl]')!;
   function refresh() {
     sumEl.textContent = eur(total());
+    wahl.textContent = '';
+    for (const r of picks()) { const li = document.createElement('li'), n = document.createElement('span'), e = document.createElement('span'); n.textContent = r.dataset.name!; const v = Number(r.dataset.eur); e.textContent = r.name === 'gehaeuse' ? eur(v) : v ? `+ ${eur(v)}` : 'inklusive'; li.append(n, e); wahl.append(li); }
     ini.hidden = (form.elements.namedItem('gravur') as RadioNodeList).value !== 'initialen';
   }
   function save() {

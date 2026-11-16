@@ -21,11 +21,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 argv = sys.argv[sys.argv.index('--') + 1:]
 BUDGET = 1e9      # seconds
 if '--budget' in argv: i = argv.index('--budget'); BUDGET = float(argv[i + 1]); del argv[i:i + 2]
+N_OVR = None      # --n N: number of explode frames (default 97)
+if '--n' in argv: i = argv.index('--n'); N_OVR = int(argv[i + 1]); del argv[i:i + 2]
 FLAGS = [x for x in argv if x.startswith('--')]; a = [x for x in argv if not x.startswith('--')]
 JOB, OUT = a[0], os.path.abspath(a[1])
 W, H, SAMPLES = (int(a[2]), int(a[3]), int(a[4])) if len(a) > 4 else (1200, 1500, 256)
 NB = 12                                   # frames per beat (24 fps -> two beats per second: slow motion 1:3)
 NFR = {'explode': 97, 'wind': 12, 'run': 73, 'f4': 60, 't3': 150, 'rs': 90}[JOB]
+if JOB == 'explode' and N_OVR: NFR = N_OVR
 def _frames(s):
     if s == 'all': return None
     if '-' in s: lo, hi = s.split('-'); return list(range(int(lo), int(hi) + 1))
@@ -196,20 +199,23 @@ def explode(t):
 cam = bpy.data.cameras.new('cam_film'); co = bpy.data.objects.new('cam_film', cam); S.collection.objects.link(co)
 S.camera = co; cam.lens = 60; cam.clip_start = 1; cam.clip_end = 20000; cam.dof.use_dof = True
 AZ = math.atan2(-47.3, 33.4)
-#          target               dist  elev  focus point            aperture radius (mm)
-CAMK = [((0.4, -0.4, -1.0),     74.0, 33.0, (3.0, -3.0, 2.5),      0.50),      # hero = frame 0
-        ((-2.6, 5.2, 9.5),      62.0, 30.0, (-5.2, 5.6, 8.0),      0.40),      # 1 winding works and barrel
-        ((-0.9, -4.4, 3.6),     48.0, 31.0, (-0.7, -5.0, 2.8),     0.36),      # 2 going train
-        ((5.2, -7.2, 2.0),      27.0, 32.0, (5.3, -7.2, 2.1),      0.20),      # 3 escapement
-        ((8.5, -2.9, 14.9),     38.0, 28.0, (8.0, -3.5, 13.2),     0.30)]      # 4 balance and swan neck
+# Calm camera: ONE slow pull-back over the whole film (no flights to the stations). Only the focus travels from station to station.
+#        target               dist  elev
+CAM0 = ((0.4, -0.4, -1.0),    74.0, 33.0)      # hero = frame 0 (must not change: wind / run / sprites are cut from this frame)
+CAM1 = ((2.0, -2.4, 2.6),     77.0, 29.0)      # end of the film
+#        focus point            aperture radius (mm)
+FOCK = [((3.0, -3.0, 2.5),      0.50),          # hero
+        ((-5.2, 5.6, 3.5),      0.30),          # 1 winding works and barrel
+        ((-0.7, -5.0, 3.5),     0.30),          # 2 going train
+        ((5.3, -7.2, 2.6),      0.30),          # 3 escapement
+        ((8.0, -3.5, 12.6),     0.30)]          # 4 balance and swan neck
 def camera(t):
-    q = min(int(t * 4), 3); u = t * 4 - q
-    k = ease(u / 0.60); a, b = CAMK[q], CAMK[q + 1]
-    mix = lambda x, y: x + (y - x) * k
-    tgt = Vector(a[0]).lerp(Vector(b[0]), k); foc = Vector(a[3]).lerp(Vector(b[3]), k)
-    dist = mix(a[1], b[1]) * (1.0 - 0.035 * max(0.0, (u - 0.60) / 0.40)); el = rad(mix(a[2], b[2])); ap = mix(a[4], b[4])
+    k = t * t * t * (t * (6 * t - 15) + 10)                  # smootherstep over the whole film
+    tgt = Vector(CAM0[0]).lerp(Vector(CAM1[0]), k); dist = CAM0[1] + (CAM1[1] - CAM0[1]) * k; el = rad(CAM0[2] + (CAM1[2] - CAM0[2]) * k)
     loc = tgt + Vector((math.cos(AZ) * math.cos(el), math.sin(AZ) * math.cos(el), math.sin(el))) * dist
     co.location = loc; co.rotation_euler = (tgt - loc).to_track_quat('-Z', 'Y').to_euler()
+    q = min(int(t * 4), 3); u = ease((t * 4 - q) / 0.60); a, b = FOCK[q], FOCK[q + 1]
+    foc = Vector(a[0]).lerp(Vector(b[0]), u); ap = a[1] + (b[1] - a[1]) * u
     cam.dof.focus_distance = (foc - loc).length; cam.dof.aperture_fstop = cam.lens / (2 * ap)
 for c in bpy.data.collections:
     if c.name.startswith('rig_'):
@@ -272,6 +278,39 @@ def bake(fn, frame=10, span=0.375, step=0.125):
             for kp in fc.keyframe_points: kp.interpolation = 'LINEAR'
     S.frame_set(frame)
 
+# ---- explode timing: frames are spaced by equal CHANGE ON SCREEN, not by equal time. The parts move in bursts (first part of each
+#      quarter) and rest in between; equal time steps would give big jumps in the bursts and identical frames in the rests.
+#      Measure: the fastest visible bounding-box corner, in pixels of an 800x1000 frame. The table goes to <out>/explode_t.json;
+#      the site maps scroll position -> t -> frame with it, so both frame sets (any N) show the same choreography at the same scroll position. ----
+def explode_times(n, grid=1600):
+    pts_prev = None; S_ = [0.0]
+    names = MOV + ['mainplate']
+    for i in range(grid + 1):
+        t = i / grid; pose.clear(); hairspring(0.0); escapement(0.0, running=False); explode(t); apply(); camera(t); bpy.context.view_layer.update()
+        pts = []
+        for nme in names:
+            o = O[nme]; mw = o.matrix_world
+            for c in o.bound_box:
+                v = world_to_camera_view(S, co, mw @ Vector(c)); pts.append((v.x * 800.0, v.y * 1000.0, -0.05 < v.x < 1.05 and -0.05 < v.y < 1.05))
+        if pts_prev is not None:
+            d = max([math.hypot(a[0] - b[0], a[1] - b[1]) for a, b in zip(pts, pts_prev) if a[2] or b[2]] or [0.0])
+            S_.append(S_[-1] + d)
+        pts_prev = pts
+    out = []; j = 0
+    for f in range(n):
+        s_ = S_[-1] * f / (n - 1)
+        while j < grid - 1 and S_[j + 1] < s_: j += 1
+        seg_ = S_[j + 1] - S_[j]; out.append(min(1.0, (j + ((s_ - S_[j]) / seg_ if seg_ > 0 else 0.0)) / grid))
+    out[0] = 0.0; out[-1] = 1.0
+    print('EXPLODE path', round(S_[-1], 1), 'px, per frame', round(S_[-1] / (n - 1), 2), 'px', flush=True)
+    return out
+if JOB == 'explode':
+    import json
+    _tf = os.path.join(OUT, 'explode_t.json')          # kept between portions; delete it after changing explode() or camera()
+    if os.path.exists(_tf) and json.load(open(_tf))['n'] == NFR: T_EXP = json.load(open(_tf))['t']
+    else:
+        T_EXP = [round(x, 5) for x in explode_times(NFR)]; json.dump({'n': NFR, 't': T_EXP}, open(_tf, 'w'))
+
 if '--nofast' in FLAGS:
     for n in FAST: O[n].hide_render = True
 
@@ -283,7 +322,7 @@ for f in (ONLY if ONLY is not None else range(NFR)):
     if os.path.exists(fp): continue
     pose.clear(); hairspring(0.0); S.render.use_motion_blur = False
     if JOB == 'explode':
-        t = f / (NFR - 1); escapement(0.0, running=False); explode(t); apply(); camera(t)
+        t = T_EXP[f]; escapement(0.0, running=False); explode(t); apply(); camera(t)
     elif JOB == 'wind':
         escapement(0.0, running=False); winding(PITCH * f / NFR, screw=False); apply(); camera(0.0)
         S.render.image_settings.color_mode = 'RGBA'; border(G_RATCHET + ['crown_wheel', 'click', 'click_spring'] + G_STEM, 0.045)     # outside the border: alpha 0 = still frame

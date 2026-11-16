@@ -29,7 +29,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
       <div class="buehne">
         <p class="marke">Calenberg<small>Uhrenmanufaktur Hannover</small></p>
         <div class="bild">
-          <img class="poster" src={`${base}seq/run_000.webp`} width="800" height="1000" alt="Das Handaufzugswerk Kaliber C 01 von Calenberg: rhodinierte Brücken mit Genfer Streifen, Räder aus Roségold, gebläute Schrauben" fetchpriority="high" />
+          <picture><source media="(min-width: 700px) and (min-height: 880px)" srcset={`${base}seq/hd/explode_000.webp`} /><img class="poster" src={`${base}seq/explode_000.webp`} width="800" height="1000" alt="Das Handaufzugswerk Kaliber C 01 von Calenberg: rhodinierte Brücken mit Genfer Streifen, Räder aus Roségold, gebläute Schrauben" fetchpriority="high" /></picture>
           <canvas width="800" height="1000" aria-hidden="true"></canvas>
         </div>
         <div class="text">
@@ -151,6 +151,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .bild { position: relative; height: min(125vw, 60svh); aspect-ratio: 4 / 5; margin-top: clamp(0px, 4svh, 40px);
     -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
     -webkit-mask-composite: source-in; mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%); mask-composite: intersect; }
+  .bild picture { display: contents; }
   .bild img, .bild canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
   .text { position: relative; width: 100%; max-width: 560px; padding: 0 var(--gutter) max(16px, env(safe-area-inset-bottom)); display: grid; align-content: center; }
   .text > * { grid-area: 1 / 1; align-self: center; }
@@ -267,6 +268,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
 
 <script>
   document.documentElement.classList.add('js');
+  import seq from '../data/seq.json';
   const BASE = import.meta.env.BASE_URL;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -279,34 +281,61 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   menue.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setMenu(false); });
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menue.hidden) { setMenu(false); krone.focus(); } });
 
-  /* ---------- frame sequences ---------- */
-  const N = { run: 24, wind: 12, explode: 72 } as const;
-  type Seq = keyof typeof N;
-  const frames: Record<Seq, (HTMLImageElement | null)[]> = { run: [], wind: [], explode: [] };
-  const url = (s: Seq, i: number) => `${BASE}seq/${s}_${String(i).padStart(3, '0')}.webp`;
-  function load(s: Seq, i: number) {
-    return new Promise<void>((res) => {
-      if (frames[s][i]) return res();
-      const im = new Image(); im.decoding = 'async';
-      im.onload = () => { frames[s][i] = im; dirty = true; res(); };
-      im.onerror = () => res();
-      im.src = url(s, i);
-    });
-  }
-  async function loadSeq(s: Seq, par = 4) {
-    let next = 0;
-    await Promise.all(Array.from({ length: par }, async () => { while (next < N[s]) await load(s, next++); }));
-  }
+  /* ---------- film: one still frame + moving layers (tools/seq.mjs writes the files and src/data/seq.json) ----------
+     still        explode_000: the movement at rest. Every layer below is drawn on top of it.
+     wind_NNN     rectangles around the winding works and the crown, one ratchet tooth per loop
+     rs           sprite sheet: ratchet screw, 2 deg per cell (the slot keeps the angle the ratchet has been wound to)
+     run_NNN      rectangles around balance and escapement, loop 1..72 = six beats; third and fourth wheel are missing in it
+     t3, f4       sprite sheets: third wheel (0.4 deg per cell) and fourth wheel (1 deg per cell, one cell per beat)
+     explode_NNN  full frames for the scroll */
   const canvas = document.querySelector<HTMLCanvasElement>('.bild canvas')!;
   const ctx = canvas.getContext('2d')!;
-  let dirty = true, shown = '';
-  function draw(s: Seq, i: number) {
-    let im = frames[s][i];
-    if (!im) { for (let k = i; k >= 0 && !im; k--) im = frames[s][k]; }   // nearest loaded earlier frame
-    if (!im) return;
-    const key = im.src;
-    if (key === shown && !dirty) return;
-    ctx.drawImage(im, 0, 0, canvas.width, canvas.height); shown = key; dirty = false;
+  const conn = (navigator as any).connection;
+  const slow = !!conn && (conn.saveData || /2g|3g/.test(conn.effectiveType || ''));
+  const HD = innerWidth >= 700 && canvas.clientWidth * devicePixelRatio > 880 && !slow;   // phones and slow lines get 800x1000, large screens 1200x1500
+  const K = HD ? 1 : seq.small.w / seq.w, DIR = `${BASE}seq/${HD ? 'hd/' : ''}`;
+  const CW = Math.round(seq.w * K), CH = Math.round(seq.h * K);
+  canvas.width = CW; canvas.height = CH;
+  const off = document.createElement('canvas'); off.width = CW; off.height = CH; const octx = off.getContext('2d')!;
+  const RUN = seq.run.n - 1, WIND = seq.wind.n, EXP = seq.explode.n, BEAT = 12, PITCH = 360 / 58;
+
+  const img: Record<string, HTMLImageElement> = {};
+  const nm = (s: string, i: number) => `${s}_${String(i).padStart(3, '0')}`;
+  let dirty = true;
+  function load(name: string) {
+    return new Promise<void>((res) => {
+      if (img[name]) return res();
+      const im = new Image(); im.decoding = 'async';
+      im.onload = () => { img[name] = im; dirty = true; res(); };
+      im.onerror = () => res();
+      im.src = `${DIR}${name}.webp`;
+    });
+  }
+  async function queue(names: string[], par: number) {
+    let next = 0;
+    await Promise.all(Array.from({ length: par }, async () => { while (next < names.length) await load(names[next++]); }));
+  }
+  const range = (s: string, a: number, b: number) => Array.from({ length: b - a + 1 }, (_, i) => nm(s, a + i));
+  const coarse: string[] = [];          // scroll frames: every 16th first, then the gaps, so a fast scroll always finds a frame nearby
+  for (const step of [16, 8, 4, 2, 1]) for (let i = step; i < EXP; i += step) { const n = nm('explode', i); if (!coarse.includes(n)) coarse.push(n); }
+  const runNames = range('run', 1, RUN);
+  const heroNames = [...range('wind', 1, WIND - 1), 'rs', ...runNames, 'f4', 't3'];
+  let ready = false;
+  const runReady = () => ready || (ready = !!img.f4 && !!img.t3 && runNames.every((n) => img[n]));
+
+  type Rect = { x: number; y: number; w: number; h: number; sy: number };
+  function patch(c: CanvasRenderingContext2D, s: 'wind' | 'run', i: number) {
+    const im = img[nm(s, i)]; if (!im) return;
+    for (const r of seq[s].rects as Rect[]) c.drawImage(im, 0, r.sy * K, r.w * K, r.h * K, r.x * K, r.y * K, r.w * K, r.h * K);
+  }
+  function sprite(c: CanvasRenderingContext2D, key: 'f4' | 't3' | 'rs', i: number) {
+    const im = img[key], s = seq[key]; if (!im) return;
+    const w = s.w * K, h = s.h * K;
+    c.drawImage(im, (i % s.cols) * w, Math.floor(i / s.cols) * h, w, h, s.x * K, s.y * K, w, h);
+  }
+  function explodeFrame(i: number) {
+    for (let d = 0; d < EXP; d++) { const im = img[nm('explode', i - d)] || img[nm('explode', i + d)]; if (im) return im; }
+    return null;
   }
 
   /* ---------- state ---------- */
@@ -317,23 +346,23 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   const lbl = document.querySelector<HTMLElement>('[data-wind-label]')!;
   const resEl = document.querySelector<HTMLElement>('[data-reserve]')!;
   const statEl = document.querySelector<HTMLElement>('[data-status]')!;
-  let mode: 'stopped' | 'winding' | 'running' = 'stopped';
-  let pressed = false, reserve = 0, fWind = 0, fRun = 0, cur = 0, target = 0, prog = 0, last = 0;
   const FULL = 60;
+  let pressed = false, reserve = 0, cur = 0, target = 0, last = 0;
+  let windF = 0, teeth = 0, accW = 0;          // winding: frame inside the tooth, teeth wound so far
+  let runT = 0, accR = 0, runA = 0, heroA = 1;  // running: frames played in total, fade of the running layers, fade of all hero layers
+  let shown = '';
 
   function ui() {
     knopf.style.setProperty('--r', String(reserve / FULL));
     resEl.textContent = `${Math.floor(reserve)} h`;
-    const full = reserve >= FULL;
-    statEl.textContent = full ? 'Voll aufgezogen · Gangreserve' : mode === 'stopped' ? 'Kaliber C 01 · Gangreserve' : 'Das Werk läuft · Gangreserve';
-    lbl.textContent = full ? 'Voll aufgezogen' : pressed ? 'Aufziehen …' : mode === 'stopped' ? 'Gedrückt halten' : 'Weiter aufziehen';
-    held.classList.toggle('laeuft', mode !== 'stopped');
+    const full = reserve >= FULL, runs = reserve > 0;
+    statEl.textContent = full ? 'Voll aufgezogen · Gangreserve' : runs ? (reduce ? 'Das Werk läuft · Gangreserve' : 'Das Werk läuft, hier in Zeitlupe · Gangreserve') : 'Kaliber C 01 · Gangreserve';
+    lbl.textContent = full ? 'Voll aufgezogen' : pressed ? 'Aufziehen …' : runs ? 'Weiter aufziehen' : 'Gedrückt halten';
+    held.classList.toggle('laeuft', runs);
   }
   function press(on: boolean) {
     if (on === pressed) return;
-    pressed = on; knopf.classList.toggle('ist-an', on);
-    if (on && reserve < FULL) mode = 'winding';
-    ui();
+    pressed = on; knopf.classList.toggle('ist-an', on); ui();
   }
   knopf.addEventListener('pointerdown', (e) => { e.preventDefault(); try { knopf.setPointerCapture(e.pointerId); } catch {} press(true); });
   for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture']) knopf.addEventListener(ev, () => press(false));
@@ -344,53 +373,67 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
 
   function onScroll() {
     const r = film.getBoundingClientRect();
-    prog = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - innerHeight)));
+    const prog = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - innerHeight)));
     const t = Math.min(1, Math.max(0, (prog - 0.05) / 0.83));
-    target = t * (N.explode - 1);
+    target = t * (EXP - 1);
     const hero = prog < 0.05;
     held.classList.toggle('ist-da', hero);
-    const cuts = [0, 0.25, 0.5, 0.75, 1.01];
+    const cuts = [0, 0.25, 0.5, 0.75, 1.01];      // the same quarters the film is cut in (uhren/film.py)
     stations.forEach((el, i) => { const on = !hero && t >= cuts[i] && t < cuts[i + 1]; el.classList.toggle('ist-da', on); el.setAttribute('aria-hidden', String(!on)); });
     held.setAttribute('aria-hidden', String(!hero));
     if (!hero) press(false);
   }
   addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll);
 
-  let accW = 0, accR = 0;
+  function drawHero() {
+    const still = img[nm('explode', 0)]; if (!still) return;
+    const j = 1 + (runT % RUN), beat = Math.floor(runT / BEAT) + (runT % BEAT >= 1 ? 1 : 0);
+    const rs = Math.round((teeth + windF / WIND) * PITCH / 2) % seq.rs.n;
+    const a = heroA * runA, key = `h${windF}|${rs}|${a > 0 ? j : 0}|${a.toFixed(2)}|${heroA.toFixed(2)}`;
+    if (key === shown && !dirty) return;
+    ctx.globalAlpha = 1; ctx.drawImage(still, 0, 0, CW, CH);
+    if (heroA > 0 && (windF || rs)) { ctx.globalAlpha = heroA; if (windF) patch(ctx, 'wind', windF); if (rs) sprite(ctx, 'rs', rs); }
+    if (a > 0) {
+      patch(octx, 'run', j); sprite(octx, 't3', Math.floor(beat / 3) % seq.t3.n); sprite(octx, 'f4', beat % seq.f4.n);
+      ctx.globalAlpha = a;
+      for (const r of seq.run.rects as Rect[]) ctx.drawImage(off, r.x * K, r.y * K, r.w * K, r.h * K, r.x * K, r.y * K, r.w * K, r.h * K);
+    }
+    ctx.globalAlpha = 1; shown = key; dirty = false;
+  }
+  function drawExplode(i: number) {
+    const im = explodeFrame(i); if (!im) return;
+    if (im.src === shown && !dirty) return;
+    ctx.globalAlpha = 1; ctx.drawImage(im, 0, 0, CW, CH); shown = im.src; dirty = false;
+  }
+
   function tick(now: number) {
     const dt = Math.min(0.1, (now - last) / 1000 || 0); last = now;
     const s = new Date(); zeiger.style.transform = `rotate(${(s.getSeconds() + s.getMilliseconds() / 1000) * 6}deg)`;
     const exploding = cur > 0.5 || target > 0.5;
+    // winding: one tooth per loop; after release the click still drops into the next tooth
+    if (!exploding && pressed && reserve < FULL) {
+      reserve = Math.min(FULL, reserve + dt * 7); ui();
+      if (!reduce) { accW += dt * 18; while (accW >= 1) { accW -= 1; windF++; if (windF === WIND) { windF = 0; teeth++; if (navigator.vibrate) navigator.vibrate(6); } } }
+    } else if (windF !== 0) { accW += dt * 18; while (accW >= 1 && windF !== 0) { accW -= 1; windF = (windF + 1) % WIND; if (windF === 0) teeth++; } }
+    // running: starts with the first hour of reserve
+    const runs = reserve > 0 && !reduce && runReady();
+    runA = Math.min(1, Math.max(0, runA + (runs ? dt / 0.4 : -dt / 0.4)));
+    if (runA > 0) { accR += dt * 24; while (accR >= 1) { accR -= 1; runT++; } }
     if (!exploding) {
-      if (mode === 'winding') {
-        if (pressed && reserve < FULL) {
-          accW += dt * 18; reserve = Math.min(FULL, reserve + dt * 7);
-          while (accW >= 1) { accW -= 1; fWind = (fWind + 1) % N.wind; if (fWind === 0 && navigator.vibrate) navigator.vibrate(6); }
-          ui();
-        } else if (fWind !== 0) { accW += dt * 18; while (accW >= 1 && fWind !== 0) { accW -= 1; fWind = (fWind + 1) % N.wind; } }
-        else { mode = 'running'; ui(); }
-        draw('wind', fWind);
-      } else if (mode === 'running' && !reduce) {
-        accR += dt * 24; while (accR >= 1) { accR -= 1; fRun = (fRun + 1) % N.run; }
-        draw('run', fRun);
-      } else draw('run', 0);
-      cur += (target - cur) * 0.3;
+      heroA = Math.min(1, heroA + dt / 0.2); cur += (target - cur) * 0.3;
+      drawHero();
+    } else if (heroA > 0 && cur < 0.5) {
+      heroA = reduce ? 0 : Math.max(0, heroA - dt / 0.16);      // the moving layers fade into the still frame, then the scroll film takes over
+      drawHero();
     } else {
-      // let the running loop come to rest at frame 0, then hand over to the exploded sequence
-      if (mode === 'running' && fRun !== 0 && cur < 1.5 && !reduce) {
-        accR += dt * 24; while (accR >= 1 && fRun !== 0) { accR -= 1; fRun = (fRun + 1) % N.run; }
-        draw('run', fRun);
-      } else {
-        fRun = 0; fWind = 0; if (mode === 'winding') { mode = reserve > 0 ? 'running' : 'stopped'; ui(); }
-        cur += (target - cur) * (reduce ? 1 : 0.22);
-        if (Math.abs(target - cur) < 0.02) cur = target;
-        draw('explode', Math.round(cur));
-      }
+      heroA = 0; cur += (target - cur) * (reduce ? 1 : 0.22);
+      if (Math.abs(target - cur) < 0.02) cur = target;
+      drawExplode(Math.round(cur));
     }
     requestAnimationFrame(tick);
   }
   held.classList.add('ist-da'); ui(); onScroll();
-  load('run', 0).then(() => { requestAnimationFrame(tick); return loadSeq('wind'); }).then(() => loadSeq('run')).then(() => loadSeq('explode', 5));
+  load(nm('explode', 0)).then(() => { requestAnimationFrame(tick); queue(coarse, 3); return queue(heroNames, 3); });
 
   /* ---------- Subskription form ---------- */
   const form = document.querySelector<HTMLFormElement>('[data-form]')!;

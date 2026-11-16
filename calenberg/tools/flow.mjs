@@ -2,7 +2,7 @@
 import {chromium} from 'playwright-core'; import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path';
 const root = path.resolve('dist');
 const srv = http.createServer((q, r) => { let f = path.join(root, decodeURIComponent(q.url.split('?')[0])); if (fs.existsSync(f) && fs.statSync(f).isDirectory()) f = path.join(f, 'index.html'); if (!fs.existsSync(f)) { r.writeHead(404); return r.end(); } r.writeHead(200, {'content-type': f.endsWith('.html') ? 'text/html' : f.endsWith('.js') ? 'text/javascript' : f.endsWith('.css') ? 'text/css' : f.endsWith('.webp') ? 'image/webp' : f.endsWith('.svg') ? 'image/svg+xml' : 'application/octet-stream'}); fs.createReadStream(f).pipe(r); }).listen(0);
-const b = await chromium.launch({executablePath: '/usr/bin/google-chrome', args: ['--no-sandbox']});
+const b = await chromium.launch({executablePath: process.env.CHROME || '/usr/bin/google-chrome', args: ['--no-sandbox']});
 const ctx = await b.newContext({viewport: {width: 390, height: 844}, hasTouch: true, isMobile: true});
 const p = await ctx.newPage(); const logs = []; p.on('pageerror', (e) => logs.push(e.message)); p.on('console', (m) => m.type() === 'error' && logs.push(m.text()));
 await p.goto(`http://127.0.0.1:${srv.address().port}/`); await p.waitForTimeout(2500);

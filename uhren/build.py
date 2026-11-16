@@ -60,8 +60,12 @@ def metal(name, color, kind='plain', top_r=0.2, edge_r=0.05, aniso=0.7, bump=0.2
     p.inputs['Metallic'].default_value = 1.0
     p.inputs['Roughness'].default_value = top_r
     if kind == 'plain':
-        tc = nt.nodes.new('ShaderNodeTexCoord')
-        nz = noise(nt, tc.outputs['Object'], k.get('nscale', 2.2), 4.0)
+        tc = nt.nodes.new('ShaderNodeTexCoord'); vec = tc.outputs['Object']
+        if k.get('axial'):      # parts that turn on their own axis: noise depends on radius and height only, so any rotation looks the same
+            sp = nt.nodes.new('ShaderNodeSeparateXYZ'); nt.links.new(vec, sp.inputs[0])
+            rr_ = M(nt, 'SQRT', M(nt, 'ADD', M(nt, 'MULTIPLY', sp.outputs[0], sp.outputs[0]), M(nt, 'MULTIPLY', sp.outputs[1], sp.outputs[1])))
+            vec = combine(nt, rr_, 0.0, sp.outputs[2])
+        nz = noise(nt, vec, k.get('nscale', 2.2), 4.0)
         nt.links.new(M(nt, 'ADD', M(nt, 'MULTIPLY', M(nt, 'POWER', nz, 2.0), k.get('nvar', 0.07)), top_r * 0.7), p.inputs['Roughness'])
         return m
     tc = nt.nodes.new('ShaderNodeTexCoord')
@@ -112,10 +116,14 @@ def metal(name, color, kind='plain', top_r=0.2, edge_r=0.05, aniso=0.7, bump=0.2
         ang = M(nt, 'ARCTAN2', Y, X)
         r = M(nt, 'MAXIMUM', M(nt, 'SQRT', M(nt, 'ADD', M(nt, 'MULTIPLY', X, X), M(nt, 'MULTIPLY', Y, Y))), 1e-4)
         if kind == 'sunray':
-            scr = noise(nt, combine(nt, M(nt, 'MULTIPLY', ang, k.get('n', 80.0)), M(nt, 'MULTIPLY', r, 0.15)), 1.0, 3.0)
+            if k.get('per'):    # streaks repeat every tooth (per = tooth count): one tooth further gives the identical picture
+                cc = k.get('n', 80.0) / k['per']; pa = M(nt, 'MULTIPLY', ang, float(k['per']))
+                scr = noise(nt, combine(nt, M(nt, 'MULTIPLY', M(nt, 'COSINE', pa), cc), M(nt, 'MULTIPLY', M(nt, 'SINE', pa), cc), M(nt, 'MULTIPLY', r, 0.15)), 1.0, 3.0)
+            else:
+                scr = noise(nt, combine(nt, M(nt, 'MULTIPLY', ang, k.get('n', 80.0)), M(nt, 'MULTIPLY', r, 0.15)), 1.0, 3.0)
             tx, ty = M(nt, 'DIVIDE', M(nt, 'MULTIPLY', Y, -1.0), r), M(nt, 'DIVIDE', X, r)
         else:
-            scr = noise(nt, combine(nt, M(nt, 'MULTIPLY', r, k.get('n', 45.0)), M(nt, 'MULTIPLY', ang, 0.4)), 1.0, 3.0)
+            scr = noise(nt, combine(nt, M(nt, 'MULTIPLY', r, k.get('n', 45.0)), 0.0), 1.0, 3.0)      # pure rings: rotation-invariant
             tx, ty = M(nt, 'DIVIDE', X, r), M(nt, 'DIVIDE', Y, r)
         h = scr; rvar = M(nt, 'MULTIPLY', scr, 0.08)
     elif kind == 'grain':
@@ -173,7 +181,9 @@ ROSE = metal('rose_gold_circular', C_ROSE, 'circular', top_r=0.2, aniso=0.6, bum
 ROSEP = metal('rose_gold_polished', C_ROSE, top_r=0.05)
 ROSEFILL = metal('rose_gold_fill', (0.80, 0.36, 0.14), top_r=0.5); ROSEFILL.node_tree.nodes['Principled BSDF'].inputs['Metallic'].default_value = 0.55
 STEEL = metal('steel_black_polish', C_STEEL, top_r=0.035)
-STEEL_SUN = metal('steel_sunray', (0.62, 0.63, 0.66), 'sunray', top_r=0.22, aniso=0.85, bump=0.3, n=110.0)
+STEEL_AX = metal('steel_black_polish_axial', C_STEEL, top_r=0.035, axial=True)      # turning parts
+STEEL_SUN = metal('steel_sunray', (0.62, 0.63, 0.66), 'sunray', top_r=0.22, aniso=0.85, bump=0.3, n=116.0, per=58)   # ratchet, 58 teeth
+STEEL_SUN_CW = metal('steel_sunray_crown', (0.62, 0.63, 0.66), 'sunray', top_r=0.22, aniso=0.85, bump=0.3, n=96.0, per=32)   # crown wheel, 32 teeth
 STEEL_GRAIN = metal('steel_grained', C_STEEL, 'grain', top_r=0.24, aniso=0.7, bump=0.15, ang=rad(-60))
 BLUE = metal('steel_blued', (0.018, 0.045, 0.36), top_r=0.05)
 BLUE_HS = metal('hairspring_blued', (0.03, 0.07, 0.42), top_r=0.18)
@@ -341,7 +351,7 @@ def jewel(name, x, y, ztop, rj=0.5, rc=1.0, depth=0.5, cap=False, hole=0.085, ma
         lathe(name + '_ruby', prof, RUBY, (x, y, ztop), closed=True)
 
 def arbor(name, x, y, z0, z1, r=0.13):
-    return lathe(name, [(0, z0), (r, z0), (r, z1 - 0.34), (0.065, z1 - 0.32), (0.065, z1 - 0.07), (0.035, z1 - 0.03), (0, z1 - 0.03)], STEEL, (x, y, 0), segs=24)
+    return lathe(name, [(0, z0), (r, z0), (r, z1 - 0.34), (0.065, z1 - 0.32), (0.065, z1 - 0.07), (0.035, z1 - 0.03), (0, z1 - 0.03)], STEEL_AX, (x, y, 0), segs=24)
 
 # ---- engraving ----
 FONT = None
@@ -560,10 +570,10 @@ for i in range(3):   # screwed chaton on the centre wheel
 # going train
 # =====================================================================
 def wheel(name, c, r, n, z0, th, spokes=5, mat=None, rot=0.0, **kw):
-    return shape_obj(name, gear(r, n, **kw), z0, z0 + th, 0.03, mat or ROSE, c, rot)
+    return shape_obj(name, gear(r, n, spokes=spokes, **kw), z0, z0 + th, 0.03, mat or ROSE, c, rot)
 
 def pinion(name, c, r, n, z0, z1):
-    return shape_obj(name, gear(r, n, tooth=r * 0.42, spokes=0), z0, z1, 0.02, STEEL, c)
+    return shape_obj(name, gear(r, n, tooth=r * 0.42, spokes=0), z0, z1, 0.02, STEEL_AX, c)
 
 # barrel
 shape_obj('barrel_teeth', gear(5.9, 96, tooth=0.3, spokes=0), 0.12, 0.42, 0.03, BARREL, B)
@@ -571,25 +581,31 @@ lathe('barrel_drum', [(0, 0.12), (5.5, 0.12), (5.5, 0.98), (5.42, 1.06), (1.2, 1
 join([bpy.data.objects['barrel_teeth'], bpy.data.objects['barrel_drum']], 'barrel')
 arbor('barrel_arbor', B[0], B[1], 0.0, Z_BR1 + 0.3, r=0.6)
 
-wheel('centre_wheel', C0, 4.7, 80, 1.15, 0.2, tooth=0.22, rim=0.5, hub=0.75, spoke_w=0.5, rot=0.25)
+# Ratios (21 600 A/h, escape wheel 15 teeth -> 12 deg per beat):
+#   barrel 96 : centre pinion 12 = 8      (barrel: one turn in 8 h, 7.5 turns = 60 h reserve)
+#   centre 80 : third pinion 10  = 8      (centre: one turn per hour)
+#   third 90  : fourth pinion 12 = 7.5    (8 x 7.5 = 60)
+#   fourth 84 : escape pinion 7  = 12     (fourth = seconds wheel: 1 deg per beat, one turn per minute)
+# Six spokes everywhere: the fourth wheel (84 teeth) looks identical every 60 deg = 60 beats, the third (90 teeth) every 450 beats.
+wheel('centre_wheel', C0, 4.7, 80, 1.15, 0.2, spokes=6, tooth=0.22, rim=0.5, hub=0.75, spoke_w=0.5, rot=0.25)
 pinion('centre_pinion', C0, 1.74, 12, 0.14, 0.55)
 arbor('centre_arbor', 0, 0, -0.3, Z_BR1)
-wheel('third_wheel', T, 3.9, 75, 0.55, 0.18, tooth=0.2, rim=0.45, hub=0.65, spoke_w=0.42, rot=0.5)
+wheel('third_wheel', T, 3.9, 90, 0.55, 0.18, spokes=6, tooth=0.19, rim=0.45, hub=0.65, spoke_w=0.42, rot=0.5)
 pinion('third_pinion', T, 1.0, 10, 1.08, 1.45)
 arbor('third_arbor', T[0], T[1], -0.3, Z_BR1)
-wheel('fourth_wheel', F, 3.4, 80, 1.0, 0.16, tooth=0.17, rim=0.4, hub=0.55, spoke_w=0.36, rot=0.1)
-pinion('fourth_pinion', F, 0.6, 8, 0.5, 0.8)
+wheel('fourth_wheel', F, 3.4, 84, 1.0, 0.16, spokes=6, tooth=0.17, rim=0.4, hub=0.55, spoke_w=0.36, rot=0.1)
+pinion('fourth_pinion', F, 0.6, 12, 0.5, 0.8)
 arbor('fourth_arbor', F[0], F[1], -0.3, Z_BR1)
 
 # escape wheel (club teeth), polished steel
 def escape_wheel_geom(n=15):
-    tooth = Polygon([pol(1.5, -7), pol(1.5, 6), pol(2.0, 15), pol(2.17, 17), pol(2.2, 9), pol(1.98, 5.5)])
+    tooth = Polygon([pol(1.5, 7), pol(1.5, -6), pol(2.0, -15), pol(2.17, -17), pol(2.2, -9), pol(1.98, -5.5)])
     parts = [affinity.rotate(tooth, 360.0 * i / n, origin=(0, 0)) for i in range(n)]
     ring = circ(0, 0, 1.56).difference(circ(0, 0, 1.24))
-    spokes = [affinity.rotate(box(0, -0.11, 1.3, 0.11), 90 * i, origin=(0, 0)) for i in range(4)]
+    spokes = [affinity.rotate(box(0, -0.1, 1.3, 0.1), 72 * i, origin=(0, 0)) for i in range(5)]
     g = unary_union(parts + [ring, circ(0, 0, 0.4)] + spokes)
     return g.difference(rounded(circ(0, 0, 1.24).difference(unary_union(spokes + [circ(0, 0, 0.4)])), 0.08)) if False else g
-shape_obj('escape_wheel', escape_wheel_geom(), 0.5, 0.63, 0.02, STEEL, E, 0.2)
+shape_obj('escape_wheel', escape_wheel_geom(), 0.5, 0.63, 0.02, STEEL_AX, E, -0.2)
 pinion('escape_pinion', E, 0.5, 7, 0.95, 1.22)
 arbor('escape_arbor', E[0], E[1], -0.3, Z_LO1, r=0.09)
 
@@ -612,10 +628,10 @@ ZW = Z_BR1 + 0.04
 rat = gear(RAT_R, 58, tooth=0.3, spokes=0, profile='wolf').difference(circ(0, 0, 0.95))
 shape_obj('ratchet_wheel', rat, ZW, ZW + 0.36, 0.045, STEEL_SUN, B)
 crw = gear(CRW_R, 32, tooth=0.3, spokes=0).difference(circ(0, 0, 0.85))
-shape_obj('crown_wheel', crw, ZW, ZW + 0.36, 0.045, STEEL_SUN, CW, 0.06)
-lathe('ratchet_core', [(0.5, 0), (1.5, 0), (1.5, 0.44), (1.42, 0.5), (0.5, 0.5)], STEEL, (B[0], B[1], ZW), closed=True)
+shape_obj('crown_wheel', crw, ZW, ZW + 0.36, 0.045, STEEL_SUN_CW, CW, 0.06)
+lathe('ratchet_core', [(0.5, 0), (1.5, 0), (1.5, 0.44), (1.42, 0.5), (0.5, 0.5)], STEEL_AX, (B[0], B[1], ZW), closed=True)
 lathe('crown_core', [(0.42, 0), (1.25, 0), (1.25, 0.44), (1.18, 0.5), (0.42, 0.5)], STEEL, (CW[0], CW[1], ZW), closed=True)
-screw('screw_ratchet', B[0], B[1], ZW + 0.56, r=0.95, ang=1.2, mat=STEEL, h=0.3)
+screw('screw_ratchet', B[0], B[1], ZW + 0.56, r=0.95, ang=1.2, mat=STEEL_AX, h=0.3)
 screw('screw_crown_wheel', CW[0], CW[1], ZW + 0.56, r=0.72, ang=2.4, mat=STEEL, h=0.3)
 # click + spring
 CLP = tuple(Vector(B) + Vector(pol(5.75, 204)))
@@ -633,8 +649,15 @@ shape_obj('click_spring', spring.difference(circ(*sf, 0.3)), ZW, ZW + 0.2, 0.03,
 screw('screw_click_spring', sf[0], sf[1], ZW + 0.24, r=0.3, ang=1.9, h=0.14)
 # winding stem
 st_a = math.atan2(CW[1], CW[0])
-lathe('winding_stem', [(0, 0), (0.5, 0), (0.5, 2.4), (0.62, 2.5), (0.62, 3.0), (0.42, 3.1), (0.42, 5.2), (0.36, 5.3), (0, 5.3)], STEEL,
+lathe('winding_stem', [(0, 0), (0.5, 0), (0.5, 2.4), (0.62, 2.5), (0.62, 3.0), (0.42, 3.1), (0.42, 5.2), (0.36, 5.3), (0, 5.3)], STEEL_AX,
       (13.0 * math.cos(st_a), 13.0 * math.sin(st_a), -0.55), segs=32, rot=(0, math.pi / 2, st_a))
+# crown: 36 flutes, so the winding loop (one ratchet tooth = 30 deg of the stem, winding pinion 12 leaves) closes on a whole number of flutes
+CROWN_R = 2.15; CROWN_D = 19.55
+crown_g = fillet(gear(CROWN_R, 36, tooth=0.16, spokes=0), 0.03)
+cr = shape_obj('winding_crown', crown_g, -0.95, 0.95, 0.14, STEEL_AX)
+cr.location = (CROWN_D * math.cos(st_a), CROWN_D * math.sin(st_a), -0.55); cr.rotation_euler = (0, math.pi / 2, st_a)
+lathe('winding_crown_cap', [(0, 0.9), (1.55, 0.9), (1.5, 1.02), (0.6, 1.1), (0, 1.11)], STEEL_AX,
+      (CROWN_D * math.cos(st_a), CROWN_D * math.sin(st_a), -0.55), segs=48, rot=(0, math.pi / 2, st_a))
 
 # =====================================================================
 # balance assembly
@@ -706,10 +729,13 @@ lathe('micrometer_screw', [(0, 0), (0.05, 0.02), (0.09, 0.1), (0.09, 1.3), (0.2,
 # =====================================================================
 # stage, light, cameras
 # =====================================================================
-bpy.ops.mesh.primitive_plane_add(size=600, location=(0, 0, -1.5))
+FLOOR_Z = -4.3
+bpy.ops.mesh.primitive_plane_add(size=9000, location=(0, 0, FLOOR_Z))
 fl = bpy.context.object; fl.name = 'stage_floor'
 fm = metal('floor', (0.010, 0.010, 0.012), top_r=0.16); fm.node_tree.nodes['Principled BSDF'].inputs['Metallic'].default_value = 0.0
 fl.data.materials.append(fm)
+pm = metal('plinth', (0.012, 0.012, 0.014), top_r=0.3); pm.node_tree.nodes['Principled BSDF'].inputs['Metallic'].default_value = 0.0
+lathe('stage_plinth', [(0, FLOOR_Z), (13.2, FLOOR_Z), (13.2, -1.62), (13.08, -1.5), (0, -1.5)], pm, (0, 0, 0), segs=128)
 _fp = fm.node_tree.nodes['Principled BSDF']
 for _l in list(_fp.inputs['Roughness'].links): fm.node_tree.links.remove(_l)
 _fp.inputs['Roughness'].default_value = 0.16

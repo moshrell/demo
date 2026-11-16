@@ -103,7 +103,6 @@ const strings = { locale: t.locale, lang, help0: b.help0, help1: b.help1, noWind
     </section>
 
     <section class="sheet" id="hours">
-      <p class="eyebrow">{t.hours.eyebrow}</p>
       <h2>{t.hours.title}</h2>
       <figure class="profile">
         <svg viewBox="0 0 340 186" role="img" aria-label={t.hours.aria}>
@@ -127,7 +126,6 @@ const strings = { locale: t.locale, lang, help0: b.help0, help1: b.help1, noWind
     </section>
 
     <section class="sheet" id="reserve">
-      <p class="eyebrow">{b.eyebrow}</p>
       <h2>{b.title}</h2>
       <p class="lede">{fill(b.lede, { seat: eur(flight.seatPrice), capsule: eur(flight.capsulePrice) })}</p>
 
@@ -215,7 +213,6 @@ const strings = { locale: t.locale, lang, help0: b.help0, help1: b.help1, noWind
     </section>
 
     <section class="sheet" id="questions">
-      <p class="eyebrow">{t.faq.eyebrow}</p>
       <h2>{t.faq.title}</h2>
       <div class="faq">
         {t.faq.items.map((f) => (

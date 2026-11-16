@@ -262,16 +262,35 @@ legend { display: flex; align-items: center; gap: 12px; padding: 0; margin-botto
 .plain main p strong { color: var(--ink); font-weight: 400; }
 .back { display: inline-flex; align-items: center; min-height: 44px; }
 
+@media (max-width: 359px) {
+  .dawn__meta { white-space: normal; }
+  .gauges { gap: 6px; }
+  .gauges b { font-size: 0.76rem; }
+}
+@media (max-height: 700px) and (orientation: portrait) {
+  .hint { display: none; }
+  .station { padding-bottom: 74px; }
+}
 @media (max-width: 479px) {
   .plan-open { min-width: 40px; justify-content: center; }
   .plan-open span { display: none; }
 }
 @media (min-width: 900px) {
   :root { --tape: 70px; }
+  .station__in { max-width: 38rem; }
+  .station h2 { max-width: 12em; }
+  .station__in::before { inset: -120px -12vw -40svh -100vw; background: linear-gradient(90deg, rgba(4, 7, 16, 0.66) 55%, rgba(4, 7, 16, 0)); -webkit-mask-image: linear-gradient(transparent, #000 150px); mask-image: linear-gradient(transparent, #000 150px); }
+  .station--float .station__in::before { inset: -40svh -12vw -120px -100vw; -webkit-mask-image: linear-gradient(#000 60%, transparent); mask-image: linear-gradient(#000 60%, transparent); }
   .station { padding-bottom: 120px; }
   .tape { right: 24px; }
   .gauges { inset: auto auto 0 0; gap: 44px; border-top: 0; padding-bottom: 26px; }
-  #reserve { max-width: 66rem; }
+  #reserve, #hours, #questions { max-width: 66rem; }
+  #hours { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); column-gap: 72px; align-items: start; }
+  #hours h2 { grid-column: 1 / -1; max-width: 16em; }
+  #hours .profile { margin-top: 44px; }
+  #hours .legs { margin-top: 36px; }
+  .faq { columns: 2; column-gap: 72px; border-bottom: 0; }
+  .faq details { break-inside: avoid; border-top: 0; border-bottom: 1px solid var(--line); }
   .book { grid-template-columns: 1fr 1fr; column-gap: 72px; }
   .incl { max-width: 47rem; }
   .guest, .sum { grid-column: 1 / -1; }

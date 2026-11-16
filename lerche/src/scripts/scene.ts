@@ -15,6 +15,11 @@ const CAM_DIST = [72, 46, 34, 36, 4.3, 32, 62];
 const CAM_Y = [0.6, -3, 8.8, 2, 0.3, 2, 19.1];
 const TGT_Y = [-4.2, 3.5, 6, 6, -0.9, 4.2, 10.5];
 const CAM_YAW = [0, 6, 14, 26, 62, 30, 0];
+// широкий экран: аппарат справа и крупнее, текст слева
+const CAM_DIST_W = [37, 38, 32, 34, 4.6, 30, 56];
+const CAM_Y_W = [0.6, -3, 8.8, 2, 0.3, 2, 14.8];
+const TGT_Y_W = [8.2, 5.5, 6, 6, -0.2, 5, 7];
+const SHIFT_W = [0.2, 0.2, 0.19, 0.19, 0.2, 0.19, 0.1];
 const SUN_AZ = [-6, -6, -5.5, -5.5, -40, -30, -34]; // азимут солнца относительно взгляда, градусы
 
 const SKY_VERT = /* glsl */ `
@@ -38,8 +43,9 @@ vec3 tone(vec3 c, float e){ c = 1.0 - exp(-c * e); c = pow(c, vec3(1.0/2.2)); c 
 const SKY_FRAG = /* glsl */ `
 precision highp float;
 varying vec3 vDir; varying vec2 vNdc;
-uniform float uH, uTime, uExp, uTwi, uCurve;
-uniform vec3 uSun, uSunCol, uAmb, uDisc;
+uniform float uH, uTime, uExp, uTwi, uCurve, uLow, uGroundY;
+uniform vec3 uSun, uSunCol, uAmb, uDisc, uCirrus, uCam;
+const vec3 LAMP = vec3(1.0, 0.7, 0.4);
 const float RP = ${RP.toFixed(1)}, HR = 6.5, HM = 1.2, CL = ${CLOUD.toFixed(1)};
 const vec3 BR = vec3(${BR.join(',')}); const float BM = 5e-3;
 ${NOISE}
@@ -93,7 +99,48 @@ void main(){
       surf = mix(surf, cc, dens);
     }
     col = col * 0.62 + surf * ext;
+    if(uLow > 0.0){
+      // стартовое поле: вереск, туман в низинах, прожекторы и разметка площадки под капсулой
+      float tp = (uGroundY - uCam.y) / min(d.y, -1e-4);
+      vec2 P = uCam.xz + d.xz * tp; float r = length(P);
+      float patchy = noise(P*0.07)*0.6 + noise(P*0.4)*0.4;
+      vec3 skyLight = uAmb*2.0 + uSunCol*0.6;
+      // с высоты: лес темнее, поля светлее, в низинах туман, река отражает небо
+      float wood = smoothstep(0.45, 0.6, noise(P*0.011 + 2.0)*0.7 + noise(P*0.045)*0.3);
+      vec3 heath = (mix(vec3(0.05, 0.055, 0.045), vec3(0.014, 0.022, 0.02), wood) + 0.02*patchy) * skyLight;
+      vec3 mistC = uAmb*1.5 + uTwi*vec3(0.42, 0.24, 0.22) + uSunCol*0.5;
+      float pool = smoothstep(0.4, 0.8, noise(P*0.006 + 7.0)*0.75 + noise(P*0.03)*0.25);
+      heath = mix(heath, mistC*0.5, pool*0.75);
+      float river = smoothstep(0.022, 0.006, abs(noise(P*0.0028 + 11.0) - 0.5)) * smoothstep(8.0, 30.0, r);
+      heath = mix(heath, (scatR*(uSunCol*0.6 + uAmb) + uTwi*dawn*0.5)*1.1 + uCirrus*0.12, river*0.85);
+      float padGlow = exp(-r*r/7.0)*1.5 + exp(-r*r/140.0)*0.22;
+      float ring = smoothstep(0.07, 0.0, abs(r - 2.3)) + smoothstep(0.05, 0.0, abs(r - 0.9))*0.6;
+      heath += LAMP * (padGlow*(0.35 + 0.5*patchy) + ring*(0.25 + padGlow));
+      float far = 1.0 - exp(-tp*0.0011);
+      vec3 hz = scatR*(uSunCol*0.6 + uAmb) + uTwi*dawn*(0.25 + 0.75*pow(az, 6.0))*scatR.b*0.75 + mistC*0.12;
+      col = mix(col, mix(heath, hz, far), uLow);
+    }
   } else {
+    if(uH < 8.5){
+      // перистые облака на 9 км: на заре они уже в солнце, когда поле ещё в тени
+      float tt = sph(o, d, RP + 9.0).y; vec2 q = (o + d*tt).xz*vec2(0.011, 0.042) + wind*0.6;
+      q += 0.45 * vec2(noise(q*2.0 + 1.7), noise(q*2.0 - 8.3));
+      float f = fbm(q);
+      f = f*0.75 + noise(q*7.0 + 3.0)*0.25;
+      float dens = smoothstep(0.52, 0.8, f) * 0.46 * exp(-tt*0.016) * smoothstep(8.5, 6.0, uH);
+      col = mix(col, uCirrus*(0.55 + 0.7*f), dens);
+    }
+    if(uLow > 0.0){
+      vec3 mistC = uAmb*1.5 + uTwi*vec3(0.42, 0.24, 0.22) + uSunCol*0.5;
+      col += mistC * exp(-max(el, 0.0)*60.0) * 0.16 * uLow;
+      // дальние гряды: два силуэта, ближний темнее
+      float azr = atan(d.z, d.x); float sink = uLow / (1.0 + uH*6.0);
+      float r1 = (0.010 + 0.018*noise(vec2(azr*8.0, 1.3)) + 0.004*noise(vec2(azr*55.0, 4.0))) * sink;
+      float r2 = (0.003 + 0.010*noise(vec2(azr*15.0, 9.1)) + 0.0028*noise(vec2(azr*170.0, 2.0))) * sink;
+      vec3 dark = vec3(0.016, 0.018, 0.024) * (uAmb.b*3.0 + 0.25);
+      col = mix(col, mix(dark, col, 0.62), smoothstep(r1, r1 - 0.0012, el));
+      col = mix(col, mix(dark, col, 0.3), smoothstep(r2, r2 - 0.0010, el));
+    }
     if(uH <= CL && tcl > 0.0){
       vec2 cq = (o + d*tcl).xz*0.045 + wind;
       float dens = smoothstep(0.40, 0.72, fbm(cq)) * exp(-tcl*0.03);
@@ -123,7 +170,8 @@ void main(){
 }`;
 
 const LIGHT = /* glsl */ `
-uniform vec3 uSun, uSunCol, uSky, uGround, uRim; uniform float uExp, uFog; uniform vec3 uFogCol;
+uniform vec3 uSun, uSunCol, uSky, uGround, uRim, uCirrus; uniform float uExp, uFog, uLow; uniform vec3 uFogCol;
+const vec3 LAMP = vec3(1.0, 0.7, 0.4);
 vec3 envAt(vec3 r){ return mix(uGround, uSky, smoothstep(-0.25, 0.3, r.y)) + uRim * exp(-abs(r.y + 0.12)*9.0); }
 `;
 
@@ -149,6 +197,9 @@ void main(){
   vec3 col = film * (envAt(N)*0.55 + uSunCol*(lit*0.55 + thru*0.95));
   col += envAt(reflect(-V, N)) * fres * 0.9;
   col += uSunCol * pow(max(dot(reflect(-uSun, N), V), 0.0), 70.0) * 1.4;
+  // у земли: прожекторы снизу и первый свет на макушке
+  col += film * LAMP * uLow * (0.25 + 0.75*max(-N.y, 0.0) + 0.3*fres) * (0.12 + 1.5*exp(-vW.y*0.2));
+  col += film * uCirrus * uLow * 0.5 * smoothstep(5.0, 16.0, vW.y) * (0.35 + 0.65*fres + 0.5*thru);
   col *= 1.0 - seam * 0.28;
   float a = mix(0.20, 0.92, fres);
   a = mix(max(a, 0.86), a, vInfl);
@@ -175,7 +226,7 @@ void main(){
     col = lamp * (1.0 - f) + vec3(0.004,0.006,0.01) + envAt(R) * (0.1 + 0.9*f) + uSunCol*spec*3.0;
   } else {
     vec3 hemi = mix(uGround, uSky, N.y*0.5 + 0.5);
-    col = uBase * (hemi*0.8 + uSunCol*max(dot(N,uSun),0.0)) + envAt(R)*(0.04 + f*0.6)*uGloss + uSunCol*spec*uGloss;
+    col = uBase * (hemi*0.8 + uSunCol*max(dot(N,uSun),0.0) + LAMP*uLow*(0.25 + 0.9*max(-N.y*0.6 + 0.4, 0.0))) + envAt(R)*(0.04 + f*0.6)*uGloss + uSunCol*spec*uGloss;
   }
   col = tone(col, uExp);
   col = mix(col, uFogCol, uFog);
@@ -206,7 +257,7 @@ export function initScene(canvas: HTMLCanvasElement, state: () => SceneState, st
   const light = {
     uSun: { value: new THREE.Vector3(0, 1, 0) }, uSunCol: { value: new THREE.Vector3() },
     uSky: { value: new THREE.Vector3() }, uGround: { value: new THREE.Vector3() }, uRim: { value: new THREE.Vector3() },
-    uExp: { value: 1.25 }, uFog: { value: 0 }, uFogCol: { value: new THREE.Vector3() },
+    uExp: { value: 1.25 }, uFog: { value: 0 }, uFogCol: { value: new THREE.Vector3() }, uLow: { value: 1 }, uCirrus: { value: new THREE.Vector3() },
   };
 
   // небо
@@ -214,6 +265,7 @@ export function initScene(canvas: HTMLCanvasElement, state: () => SceneState, st
     uProjInv: { value: new THREE.Matrix4() }, uCamWorld: { value: new THREE.Matrix4() },
     uH: { value: 0 }, uTime: { value: 0 }, uExp: light.uExp, uTwi: { value: 0 }, uCurve: { value: 0 },
     uSun: light.uSun, uSunCol: light.uSunCol, uAmb: { value: new THREE.Vector3() }, uDisc: { value: new THREE.Vector3() },
+    uLow: light.uLow, uCirrus: light.uCirrus, uCam: { value: new THREE.Vector3() }, uGroundY: { value: 0 },
   };
   const tri = new THREE.BufferGeometry();
   tri.setAttribute('position', new THREE.Float32BufferAttribute([-1, -1, 0, 3, -1, 0, -1, 3, 0], 3));
@@ -300,6 +352,14 @@ export function initScene(canvas: HTMLCanvasElement, state: () => SceneState, st
   const back = new THREE.Mesh(env, film(THREE.BackSide)); back.renderOrder = 1; back.frustumCulled = false; craft.add(back);
   const front = new THREE.Mesh(env, film(THREE.FrontSide)); front.renderOrder = 2; front.frustumCulled = false; craft.add(front);
 
+  // проблесковый маяк под капсулой
+  const dot = document.createElement('canvas'); dot.width = dot.height = 64;
+  const g2 = dot.getContext('2d')!; const gr = g2.createRadialGradient(32, 32, 0, 32, 32, 32);
+  gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.25, 'rgba(255,255,255,0.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  g2.fillStyle = gr; g2.fillRect(0, 0, 64, 64);
+  const beacon = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(dot), color: 0xff3524, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+  beacon.position.set(0, -0.47, 0); beacon.renderOrder = 3; craft.add(beacon);
+
   const fog = new THREE.Mesh(tri, new THREE.ShaderMaterial({ vertexShader: 'void main(){ gl_Position = vec4(position.xy, 0.0, 1.0); }', fragmentShader: FOG_FRAG, uniforms: light, transparent: true, depthTest: false, depthWrite: false }));
   fog.frustumCulled = false; fog.renderOrder = 10; scene.add(fog);
 
@@ -312,8 +372,10 @@ export function initScene(canvas: HTMLCanvasElement, state: () => SceneState, st
     camera.aspect = w / h;
     // широкий экран: то же поле зрения по короткой стороне, чтобы шар не становился гигантским
     camera.fov = w > h ? 2 * Math.atan(Math.tan(20 * DEG) * Math.min(1, h / w * 1.25)) / DEG : 40;
+    wide = w / h > 1.15; vw = w; vh = h;
     camera.updateProjectionMatrix();
   }
+  let wide = false, vw = 1, vh = 1;
   window.addEventListener('resize', resize); resize();
 
   const set = (u: { value: THREE.Vector3 }, r: number, g: number, b: number) => u.value.set(r, g, b);
@@ -357,6 +419,12 @@ export function initScene(canvas: HTMLCanvasElement, state: () => SceneState, st
     const rim = 0.25 + 0.75 * tw;
     set(light.uRim, rim * (0.3 * amb + sc[0] * 0.35 + skyU.uTwi.value * 0.25), rim * (0.42 * amb + sc[1] * 0.35 + skyU.uTwi.value * 0.1), rim * (0.7 * amb + sc[2] * 0.35));
     glowU.value = 0.03 + 1.7 * (1 - day);
+    light.uLow.value = 1 - THREE.MathUtils.smoothstep(h, 0.4, 2.4);
+    const e9 = (elev + Math.acos(RP / (RP + 9))) / DEG; // солнце, каким его видят облака на 9 км
+    const lit9 = THREE.MathUtils.smoothstep(e9, -5, 2), warm9 = 1 - THREE.MathUtils.smoothstep(e9, 2, 10);
+    set(light.uCirrus, 0.4 * amb + lit9 * (warm9 * 1.35 + (1 - warm9) * 1.4), 0.6 * amb + lit9 * (warm9 * 0.56 + (1 - warm9) * 1.3), 1.2 * amb + lit9 * (warm9 * 0.46 + (1 - warm9) * 1.2));
+    const flash = still ? 0.3 : Math.pow(Math.max(0, Math.sin(t * 3.4)), 60);
+    beacon.scale.setScalar(0.25 + 1.5 * flash); beacon.material.opacity = (0.3 + 0.7 * flash) * (1 - 0.6 * day);
 
     // облачный слой: аппарат проходит сквозь него
     const k = (h - CLOUD) / 0.55; light.uFog.value = 0.9 * Math.exp(-k * k);
@@ -372,9 +440,14 @@ export function initScene(canvas: HTMLCanvasElement, state: () => SceneState, st
     capsule.rotation.y = -t * 0.05;
 
     // камера
-    const dist = track(CAM_DIST, alt), cy = track(CAM_Y, alt);
+    const dist = track(wide ? CAM_DIST_W : CAM_DIST, alt), cy = track(wide ? CAM_Y_W : CAM_Y, alt);
     camera.position.set(Math.sin(yawCam) * dist, cy, Math.cos(yawCam) * dist);
-    tgt.set(0, track(TGT_Y, alt), 0); camera.lookAt(tgt); camera.updateMatrixWorld();
+    // низкий портретный экран: на старте капсула выше, чтобы текст её не закрывал
+    const lift = !wide && vh < 700 ? 3.2 * (1 - THREE.MathUtils.smoothstep(alt, 0, 1200)) : 0;
+    tgt.set(0, track(wide ? TGT_Y_W : TGT_Y, alt) - lift, 0); camera.lookAt(tgt);
+    if (wide) camera.setViewOffset(vw, vh, -track(SHIFT_W, alt) * vw, 0, vw, vh); else if (camera.view) camera.clearViewOffset();
+    camera.updateMatrixWorld();
+    skyU.uCam.value.copy(camera.position); skyU.uGroundY.value = -alt / 10 - 0.45;
     skyU.uProjInv.value.copy(camera.projectionMatrixInverse); skyU.uCamWorld.value.copy(camera.matrixWorld);
 
     renderer.render(scene, camera);

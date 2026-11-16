@@ -10,9 +10,9 @@ await p.goto(`http://127.0.0.1:${srv.address().port}/`); await p.waitForTimeout(
 const sample = () => p.evaluate(() => { const c = document.querySelector('.bild canvas'); const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; const o = []; for (let i = 0; i < d.length; i += 4 * 997) o.push(d[i]); return o; });
 const diff = (a, b) => a.reduce((s, v, i) => s + Math.abs(v - b[i]), 0) / a.length;
 let prev = await sample(), changed = 0, steps = 0, max = 0; const ds = [];
-for (let y = 60; y < 60 + 3 * 220; y += 3) { await p.evaluate((y) => scrollTo(0, y), y); await p.waitForTimeout(34); const s = await sample(); const d = diff(prev, s); ds.push(d); if (d > 0) changed++; max = Math.max(max, d); steps++; prev = s; }
+for (let y = 60; y < 60 + 3 * 220; y += 3) { await p.evaluate((y) => scrollTo(0, y), y); await p.waitForTimeout(34); const s = await sample(); const d = diff(prev, s); ds.push(d); if (d > 0) changed++; if (d > max) { max = d; globalThis.at = y; } steps++; prev = s; }
 const sorted = [...ds].sort((a, b) => a - b), med = sorted[sorted.length >> 1];
-console.log(JSON.stringify({view: `${W}x${H}`, slowSteps: steps, stepsWithChange: changed, medianDiff: +med.toFixed(3), maxDiff: +max.toFixed(3), jumpRatio: +(max / (med || 1)).toFixed(1)}));
+console.log(JSON.stringify({view: `${W}x${H}`, slowSteps: steps, stepsWithChange: changed, medianDiff: +med.toFixed(3), maxDiff: +max.toFixed(3), jumpRatio: +(max / (med || 1)).toFixed(1), maxAtY: globalThis.at, changes: ds.map((d, i) => d > 0 ? `${60 + i * 3}:${d.toFixed(0)}` : "").filter(Boolean).join(" ")}));
 // быстрый бросок: от начала к 80 % плёнки, смотрим, что кадр доезжает плавно (много промежуточных состояний)
 const span = await p.evaluate(() => document.querySelector('.film').offsetHeight - innerHeight);
 await p.evaluate((y) => scrollTo(0, y), Math.round(span * 0.8)); let mids = 0; prev = await sample();

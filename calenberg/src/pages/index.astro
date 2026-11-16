@@ -8,7 +8,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
 ---
 <Base title="Calenberg | Uhrenmanufaktur Hannover, Kaliber C 01" description="Calenberg baut in Hannover eine Uhr um ein eigenes Handaufzugswerk: Kaliber C 01. Ziehen Sie es auf, öffnen Sie es Schicht für Schicht und subskribieren Sie eine von 50 Uhren der ersten Serie." image="img/top-900.webp">
   <a class="skip" href="#finissage">Zum Inhalt</a>
-  <header class="kz">
+  <header class="kz auf-film">
     <a class="kz__logo" href={base} aria-label="Calenberg, Startseite">
       <svg viewBox="0 0 48 48" aria-hidden="true">
         <circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="1.5" />
@@ -186,7 +186,13 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .nur-schmal { display: none; }
 
   /* ---------- header ---------- */
-  .kz { position: sticky; top: 0; z-index: 50; height: var(--kh); display: flex; align-items: center; gap: 0.75rem; padding: 0 var(--gutter); background: var(--papier); border-bottom: 1px solid var(--linie); }
+  .kz { position: fixed; inset: 0 0 auto 0; z-index: 50; height: var(--kh); display: flex; align-items: center; gap: 0.75rem; padding: 0 var(--gutter); background: var(--papier); border-bottom: 1px solid var(--linie); transition: background-color 0.25s, color 0.25s, border-color 0.25s; }
+  .kz.auf-film { background: linear-gradient(to bottom, var(--nacht-glas), transparent); color: var(--hell); border-bottom-color: transparent; }
+  .kz.auf-film .kz__menue { border-color: var(--hell-2); }
+  .kz.auf-film .krone__zeiger, .kz.auf-film .kz__logo circle:last-of-type { stroke: var(--rose-hell); }
+  .kz.auf-film .kz__logo circle:last-of-type { fill: var(--rose-hell); stroke: none; }
+  .kz.auf-film .kz__nav a:hover { border-bottom-color: var(--hell); }
+  .kz.auf-film :focus-visible { outline-color: var(--hell); }
   .kz__logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; font-family: var(--serif); font-size: 1.55rem; line-height: 1; white-space: nowrap; margin-right: auto; padding: 0.5rem 0; }
   .kz__logo svg { width: 30px; height: 30px; flex: none; }
   .krone__zeiger { transform-origin: 24px 24px; }
@@ -212,8 +218,8 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   }
 
   /* ---------- film plate: hero + scroll explode on one sticky stage (dark) ---------- */
-  .film { height: 470svh; position: relative; background: var(--nacht); color: var(--hell); }
-  .buehne { position: sticky; top: var(--kh); height: calc(100svh - var(--kh)); display: grid; grid-template-rows: auto minmax(0, 1fr); justify-items: center; overflow: hidden; }
+  .film { height: 340svh; position: relative; background: var(--nacht); color: var(--hell); }
+  .buehne { position: sticky; top: 0; height: 100svh; padding-top: var(--kh); display: grid; grid-template-rows: auto minmax(0, 1fr); justify-items: center; overflow: hidden; }
   .bild { position: relative; height: min(125vw, 56svh); aspect-ratio: 4 / 5; margin-top: clamp(0px, 2svh, 24px);
     -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
     -webkit-mask-composite: source-in; mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%); mask-composite: intersect; }
@@ -391,10 +397,11 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- menu + running seconds hand ---------- */
+  const kz = document.querySelector<HTMLElement>('.kz')!;
   const krone = document.querySelector<HTMLButtonElement>('.krone')!;
   const menue = document.getElementById('menue')!;
   const zeiger = document.querySelector<SVGLineElement>('.krone__zeiger')!;
-  const setMenu = (open: boolean) => { menue.hidden = !open; krone.setAttribute('aria-expanded', String(open)); krone.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen'); krone.textContent = open ? 'Schließen' : 'Menü'; };
+  const setMenu = (open: boolean) => { menue.hidden = !open; krone.setAttribute('aria-expanded', String(open)); krone.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen'); krone.textContent = open ? 'Schließen' : 'Menü'; kz.classList.toggle('auf-film', !open && document.querySelector('.film')!.getBoundingClientRect().bottom > kz.offsetHeight); };
   krone.addEventListener('click', () => setMenu(menue.hidden));
   menue.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setMenu(false); });
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menue.hidden) { setMenu(false); krone.focus(); } });
@@ -514,6 +521,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     stations.forEach((el, i) => { const on = !hero && t >= cuts[i] && t < cuts[i + 1]; el.classList.toggle('ist-da', on); el.setAttribute('aria-hidden', String(!on)); });
     held.setAttribute('aria-hidden', String(!hero));
     if (!hero) press(false);
+    kz.classList.toggle('auf-film', menue.hidden && film.getBoundingClientRect().bottom > kz.offsetHeight);
   }
   addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll);
 
@@ -532,15 +540,12 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     }
     ctx.globalAlpha = 1; shown = key; dirty = false;
   }
+  // whole frames only: blending two renders gives double contours, which reads as a cheap dissolve
   function drawExplode(x: number) {
-    let lo = below(Math.floor(x)), hi = above(Math.ceil(x));
-    if (lo < 0) lo = hi; if (hi < 0) hi = lo; if (lo < 0) return;
-    const a = hi > lo ? Math.round(Math.min(1, Math.max(0, (x - lo) / (hi - lo))) * 32) / 32 : 0;
-    const key = `e${lo}|${hi}|${a}`;
+    const i = Math.round(x); let k = below(i); if (k < 0) k = above(i); if (k < 0) return;
+    const key = `e${k}`;
     if (key === shown && !dirty) return;
-    ctx.globalAlpha = 1; ctx.drawImage(img[nm('explode', lo)], 0, 0, CW, CH);
-    if (a > 0) { ctx.globalAlpha = a; ctx.drawImage(img[nm('explode', hi)], 0, 0, CW, CH); ctx.globalAlpha = 1; }
-    shown = key; dirty = false;
+    ctx.globalAlpha = 1; ctx.drawImage(img[nm('explode', k)], 0, 0, CW, CH); shown = key; dirty = false;
   }
 
   function tick(now: number) {
@@ -564,14 +569,20 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
       drawHero();
     } else {
       // glide towards the finger: time-based, so it feels the same at 60 and 120 Hz; a fast flick runs through the film without steps
-      heroA = 0; cur += (target - cur) * (reduce ? 1 : 1 - Math.exp(-dt * 11));
-      if (Math.abs(target - cur) < 0.004) cur = target;
+      heroA = 0; cur += (target - cur) * (reduce ? 1 : 1 - Math.exp(-dt * 16));
+      if (Math.abs(target - cur) < 0.05) cur = target;
       drawExplode(cur);
     }
     requestAnimationFrame(tick);
   }
   held.classList.add('ist-da'); ui(); onScroll();
-  load(nm('explode', 0)).then(() => { requestAnimationFrame(tick); filmLoader(); filmLoader(); filmLoader(); return queue(heroNames, 3); });
+  let filmOn = false;
+  function startFilm() { if (filmOn) return; filmOn = true; for (let i = 0; i < 4; i++) filmLoader(); }
+  // order matters on a phone line: the winding button must answer first, then the running works, the scroll film last;
+  // a visitor who scrolls before that gets the film at once
+  load(nm('explode', 0)).then(() => { requestAnimationFrame(tick); return queue([...range('wind', 1, WIND - 1), 'rs'], 6); })
+    .then(() => queue(['f4', 't3', ...runNames], 5)).then(startFilm);
+  addEventListener('scroll', () => { if (scrollY > 8) startFilm(); }, { passive: true, once: false });
 
   /* ---------- reveal, parallax, loupe ---------- */
   const io = new IntersectionObserver((es) => { for (const e of es) if (e.isIntersecting) { e.target.classList.add('ist-da'); io.unobserve(e.target); } }, { rootMargin: '0px 0px -12% 0px' });

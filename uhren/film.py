@@ -115,7 +115,7 @@ S.camera = co; cam.lens = 60; cam.clip_start = 1; cam.clip_end = 900; cam.dof.us
 AZ = math.atan2(-47.3, 33.4)
 def camera(t):
     k = ease(t)
-    dist = 74 + 30 * k; el = rad(33 - 13 * k); tz = -1.0 + 9.5 * k
+    dist = 74 + 13 * k; el = rad(33 - 13 * k); tz = -1.0 + 9.0 * k
     tgt = Vector((0.4, -0.4, tz))
     loc = tgt + Vector((math.cos(AZ) * math.cos(el), math.sin(AZ) * math.cos(el), math.sin(el))) * dist
     co.location = loc; co.rotation_euler = (tgt - loc).to_track_quat('-Z', 'Y').to_euler()

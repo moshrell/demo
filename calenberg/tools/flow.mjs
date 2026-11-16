@@ -1,0 +1,24 @@
+// Сценарий: завод кнопкой -> ход -> скролл-разбор -> форма. node tools/flow.mjs (после DEMO_BASE=/ npx astro build)
+import {chromium} from 'playwright-core'; import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path';
+const root = path.resolve('dist');
+const srv = http.createServer((q, r) => { let f = path.join(root, decodeURIComponent(q.url.split('?')[0])); if (fs.existsSync(f) && fs.statSync(f).isDirectory()) f = path.join(f, 'index.html'); if (!fs.existsSync(f)) { r.writeHead(404); return r.end(); } r.writeHead(200, {'content-type': f.endsWith('.html') ? 'text/html' : f.endsWith('.js') ? 'text/javascript' : f.endsWith('.css') ? 'text/css' : f.endsWith('.webp') ? 'image/webp' : f.endsWith('.svg') ? 'image/svg+xml' : 'application/octet-stream'}); fs.createReadStream(f).pipe(r); }).listen(0);
+const b = await chromium.launch({executablePath: '/usr/bin/google-chrome', args: ['--no-sandbox']});
+const ctx = await b.newContext({viewport: {width: 390, height: 844}, hasTouch: true, isMobile: true});
+const p = await ctx.newPage(); const logs = []; p.on('pageerror', (e) => logs.push(e.message)); p.on('console', (m) => m.type() === 'error' && logs.push(m.text()));
+await p.goto(`http://127.0.0.1:${srv.address().port}/`); await p.waitForTimeout(2500);
+const hash = () => p.evaluate(() => { const c = document.querySelector('.bild canvas'); const d = c.getContext('2d').getImageData(300, 400, 200, 200).data; let s = 0; for (let i = 0; i < d.length; i += 97) s = (s * 31 + d[i]) >>> 0; return s; });
+const out = {h0: await hash()};
+const k = p.locator('[data-wind]'); const bb = await k.boundingBox();
+await p.mouse.move(bb.x + 40, bb.y + 40); await p.mouse.down(); await p.waitForTimeout(3000);
+out.reserveHeld = await p.textContent('[data-reserve]'); out.labelHeld = await p.textContent('[data-wind-label]');
+await p.mouse.up(); await p.waitForTimeout(1200);
+out.status = await p.textContent('[data-status]'); const a = await hash(); await p.waitForTimeout(260); out.runs = a !== await hash();
+await p.evaluate(() => scrollTo(0, innerHeight * 2.6)); await p.waitForTimeout(1500);
+out.station = await p.evaluate(() => [...document.querySelectorAll('[data-station].ist-da h2')].map((e) => e.textContent)); out.heldHidden = await p.evaluate(() => !document.querySelector('[data-held]').classList.contains('ist-da'));
+await p.evaluate(() => document.querySelector('#sub-form').scrollIntoView()); await p.locator('input[value=rose]').check({force: true}); await p.locator('input[value=initialen]').check({force: true});
+out.sum = await p.textContent('[data-sum]'); await p.fill('#f-ini', 'mk'); await p.fill('#f-name', 'Max Muster');
+await p.click('.f__senden'); out.errTel = await p.isVisible('#e-tel'); out.errConsent = await p.isVisible('#e-consent');
+await p.reload(); await p.waitForTimeout(800); out.restoredName = await p.inputValue('#f-name'); out.restoredSum = await p.textContent('[data-sum]'); out.consentRestored = await p.isChecked('input[name=consent]');
+await p.fill('#f-tel', '0511 1234567'); await p.locator('input[name=consent]').check(); await p.click('.f__senden'); await p.waitForTimeout(300);
+out.schein = await p.evaluate(() => document.querySelector('[data-schein]').innerText.replace(/\n+/g, ' | ')); out.stored = await p.evaluate(() => sessionStorage.getItem('calenberg-sub'));
+out.logs = logs; console.log(JSON.stringify(out, null, 1)); await b.close(); srv.close();

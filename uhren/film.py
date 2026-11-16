@@ -135,21 +135,24 @@ def train(n):
     P(G_BARREL, rot=rad(DEG['barrel'] * n), pivot=B)
 
 # ---- winding: psi = ratchet angle in degrees (clockwise seen from the bridge side) ----
-def _away(sg): return ((Matrix.Rotation(sg * 0.05, 2) @ ((B + pol(4.18, 186)) - CLP) + CLP) - B).length
+def _away(sg): return ((Matrix.Rotation(sg * 0.05, 2) @ ((B + pol(4.13, 161.5)) - CLP) + CLP) - B).length
 CL_SIGN = 1 if _away(1) > _away(-1) else -1
+CLICK_LIFT = [(0.0, 0.0), (0.0625, 0.05), (0.729, 4.2), (0.885, 4.2), (0.9, 4.1), (0.9167, 3.15), (0.9375, 1.62), (0.9583, 0.05), (1.0, 0.0)]
+def _interp(x, tab):
+    for (x0, y0), (x1, y1) in zip(tab, tab[1:]):
+        if x <= x1: return y0 + (y1 - y0) * (x - x0) / (x1 - x0)
+    return tab[-1][1]
 def winding(psi, screw=True):
     P(G_RATCHET, rot=-rad(psi), pivot=B)
     if screw: P(G_RSCREW, rot=-rad(psi), pivot=B)
     P('crown_wheel', rot=rad(psi * 58 / 32), pivot=CW)
     P(G_STEM, rot=rad(psi * 58 / 12), pivot=tuple(base['winding_stem'].translation), axis=ST_U)     # winding pinion: 12 leaves
-    fr = (0.967 + psi / PITCH) % 1.0       # the click rides up a tooth flank and drops behind its tip
-    if fr < 0.1: h = 0.0
-    elif fr < 0.78: h = (fr - 0.1) / 0.68
-    elif fr < 0.93: h = 1.0
-    else: h = 1.0 - ease((fr - 0.93) / 0.035)
-    ca = CL_SIGN * rad(6.5) * h
+    # the click rides up the flank of a tooth and drops behind its tip. Angles (deg) = smallest lift that keeps its tooth out of the
+    # ratchet, measured in 2D on the outlines of build.py, plus 0.1 deg of air.
+    fr = (psi / PITCH) % 1.0
+    ca = CL_SIGN * rad(_interp(fr, CLICK_LIFT))
     P('click', rot=ca, pivot=CLP)
-    tip = TAIL + pol(0.36, 160); tip2 = Matrix.Rotation(ca, 2) @ (tip - CLP) + CLP     # the spring stays on the tail of the click
+    tip = TAIL + pol(0.385, 160); tip2 = Matrix.Rotation(ca, 2) @ (tip - CLP) + CLP     # the spring stays on the tail of the click
     v0, v1 = tip - SF, tip2 - SF
     P('click_spring', rot=math.atan2(v0.x * v1.y - v0.y * v1.x, v0.dot(v1)), pivot=SF)
 
@@ -182,8 +185,8 @@ def explode(t):
     lift(t, ['screw_balance_cock'], [(17.5, 0.50, 0.60), (1.5, *Q4)], screw=True)
     lift(t, G_COCK, [(14.0, 0.505, 0.62), (1.0, *Q4)])
     lift(t, G_BAL + ['hairspring'], [(9.6, 0.515, 0.63), (1.5, *Q4)])
-    lift(t, ['screw_escape_cock', 'screw_pallet_bridge_1', 'screw_pallet_bridge_2'], [(12.0, 0.52, 0.62)], screw=True)
-    lift(t, ['escape_wheel_cock', 'pallet_bridge'] + pre('jewel_escape', 'jewel_pallet'), [(9.0, 0.535, 0.64)])
+    lift(t, ['screw_escape_cock', 'screw_pallet_bridge_1', 'screw_pallet_bridge_2'], [(15.0, 0.52, 0.62)], screw=True)
+    lift(t, ['escape_wheel_cock', 'pallet_bridge'] + pre('jewel_escape', 'jewel_pallet'), [(12.0, 0.535, 0.64)])
     lift(t, G_ESC + G_FORK, [(1.5, 0.555, 0.65)])
     # 4  Unruh: the balance turns a little while the camera rises to it
     th = rad(-75) * seg(t, 0.77, 1.0)

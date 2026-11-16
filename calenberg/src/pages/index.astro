@@ -76,7 +76,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
       </header>
       {werk.finissage.map((f, i) => (
         <figure class={`tafel tafel--${i % 2 ? 'r' : 'l'}`}>
-          <div class="lupe" data-lupe data-gross={`${base}img/${f.img}-1800.webp`}>
+          <div class="lupe" data-lupe data-gross={`${base}img/${f.img}-3000.webp`}>
             <img src={`${base}img/${f.img}-900.webp`} srcset={`${base}img/${f.img}-900.webp 900w, ${base}img/${f.img}-1800.webp 1800w`} sizes="(min-width: 900px) 62vw, 100vw" width="1800" height="1200" loading="lazy" decoding="async" alt={`Makroaufnahme des Kalibers C 01: ${f.title}`} />
             <span class="lupe__glas" aria-hidden="true"></span>
             <span class="lupe__tipp" aria-hidden="true">Lupe: Finger auflegen und ziehen</span>

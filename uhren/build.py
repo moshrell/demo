@@ -433,7 +433,8 @@ NBd = Vector((-NB.y, NB.x))                 # direction along that edge (pointin
 
 Z_BR0, Z_BR1 = 1.75, 2.65           # bridge slab
 Z_CK0, Z_CK1 = 2.55, 3.35           # balance cock arm
-Z_LO0, Z_LO1 = 0.85, 1.28           # low cocks (escape, pallet)
+Z_LO0, Z_LO1 = 0.85, 1.28           # low cock (pallet)
+Z_EC0, Z_EC1 = 1.30, 1.72           # escape-wheel cock: above the fourth wheel (top 1.16) and the escape pinion (top 1.22)
 BEV = 0.16                          # anglage width on bridges
 
 # ---- balance cock outline ----
@@ -445,17 +446,17 @@ CKS = (11.5, 2.9)                   # cock screw
 dc = (Vector(CK_A) - Vector(BC)).normalized(); CK_ANG = math.atan2(dc.y, dc.x)
 
 # ---- barrel bridge ----
-S_BB = [(-11.7, -3.0), (-3.9, 12.0), (10.9, 6.4), (5.0, 6.7), (-12.9, 4.4)]
+S_BB = [(-11.7, -3.0), (-3.9, 12.0), (10.9, 6.4), (5.0, 6.7), (-12.21, 4.16)]     # last one moved in: its countersink broke through the bridge edge
 bb = DISC.intersection(unary_union([halfplane(NB.x, NB.y, 1.9), box(-60, 4.7, 60, 60)]))
 bb = rounded(bb.difference(cock_g.buffer(0.4)), 0.8)
 bb_feet = unary_union([bb.intersection(DISC.difference(circ(0, 0, 13.55))).difference(circ(B[0], B[1], 6.25))] +
-                      [circ(x, y, 1.45) for x, y in S_BB]).intersection(bb)
+                      [circ(x, y, 1.45) for x, y in S_BB]).intersection(bb).difference(circ(B[0], B[1], 6.25))     # no foot inside the barrel recess
 bb_h = bb
 for x, y in S_BB: bb_h = bb_h.difference(circ(x, y, 0.85))
 bb_h = bb_h.difference(circ(B[0], B[1], 0.7)).difference(circ(CW[0], CW[1], 0.5))
 
 # ---- train bridge (centre + third) ----
-S_TB = [(-6.6, -10.0), (-9.0, -7.9)]
+S_TB = [(-6.6, -10.0), (-8.84, -8.07)]      # second one 0.2 away from the cut edge (countersink touched the bevel)
 tb = fillet(unary_union([capsule(C0, T, 1.6), capsule(C0, (1.6, 0.8), 1.45), MultiPoint([T] + S_TB).convex_hull.buffer(1.6)]), 1.2)
 tb = tb.intersection(DISC).difference(halfplane(NB.x, NB.y, 1.5)).difference(circ(BC[0], BC[1], BR + 0.9))
 tb = rounded(tb, 0.6)
@@ -470,9 +471,9 @@ fc = fillet(unary_union([circ(FF[0], FF[1], 1.45), circ(F[0], F[1], 1.4), capsul
 fc_feet = circ(FF[0], FF[1], 1.6).intersection(fc)
 fc_h = fc.difference(circ(F[0], F[1], 1.03)).difference(circ(FF[0], FF[1], 0.85))
 EF = (6.2, -11.4)
-ec = fillet(unary_union([circ(EF[0], EF[1], 1.25), circ(E[0], E[1], 1.0), capsule(EF, E, 0.68)]), 0.5)
+ec = fillet(unary_union([circ(EF[0], EF[1], 1.25), circ(E[0], E[1], 0.9), capsule(EF, E, 0.68)]), 0.5)
 ec_feet = circ(EF[0], EF[1], 1.3).intersection(ec)
-ec_h = ec.difference(circ(E[0], E[1], 0.74)).difference(circ(EF[0], EF[1], 0.68))
+ec_h = ec.difference(circ(E[0], E[1], 0.65)).difference(circ(EF[0], EF[1], 0.68))
 de = (Vector(BC) - Vector(E)).normalized(); pe = Vector((-de.y, de.x))
 PB1 = tuple(Vector(PF) + pe * 2.6); PB2 = tuple(Vector(PF) - pe * 2.6)
 pb = fillet(unary_union([circ(*PB1, 0.85), circ(*PB2, 0.85), circ(*PF, 0.8), capsule(PB1, PB2, 0.5)]), 0.4)
@@ -480,6 +481,13 @@ pb_feet = unary_union([circ(*PB1, 0.85), circ(*PB2, 0.85)])
 pb_h = pb.difference(circ(*PF, 0.42)).difference(circ(*PB1, 0.5)).difference(circ(*PB2, 0.5))
 
 all_feet = unary_union([bb_feet, tb_feet, fc_feet, ec_feet, pb_feet, ck_foot])
+# every screw hole with its countersink lies inside the flat of its bridge (not through the bevel or the edge)
+for _n, _g, _hs, _b in (('barrel bridge', bb, [(x, y, 0.85) for x, y in S_BB], BEV), ('train bridge', tb, [(x, y, 0.85) for x, y in S_TB], BEV),
+                        ('fourth cock', fc, [(FF[0], FF[1], 0.85)], BEV), ('escape cock', ec, [(EF[0], EF[1], 0.68)], 0.09),
+                        ('pallet bridge', pb, [(PB1[0], PB1[1], 0.5), (PB2[0], PB2[1], 0.5)], 0.08), ('balance cock', cock_g, [(CKS[0], CKS[1], 0.89)], BEV)):
+    for _x, _y, _r in _hs:
+        _m = _g.buffer(-_b).exterior.distance(Point(_x, _y)) - (_r + _b)
+        print('HOLE', _n, (_x, _y), 'margin', round(_m, 3), '' if _m > 0.02 and _g.contains(Point(_x, _y)) else '<-- BREAKS THE EDGE')
 
 # =====================================================================
 # mainplate
@@ -519,9 +527,9 @@ train_bridge = bridge('train_bridge', tb_h, tb_feet, Z_BR0, Z_BR1, engr=[
     dict(name='engraving_jewels', text='21 STEINE', size=0.46,
          straight=(tm.x, tm.y, math.atan2(T[1] - S_TB[0][1], T[0] - S_TB[0][0])), track=0.3)])
 fourth_cock = bridge('fourth_wheel_cock', fc_h, fc_feet, Z_BR0, Z_BR1)
-escape_cock = bridge('escape_wheel_cock', ec_h, ec_feet, Z_LO0, Z_LO1, bev=0.09)
+escape_cock = bridge('escape_wheel_cock', ec_h, ec_feet, Z_EC0, Z_EC1, bev=0.09)
 pallet_bridge = bridge('pallet_bridge', pb_h, pb_feet, Z_LO0, Z_LO1, mat=STEEL_GRAIN, bev=0.08)
-ck_h = cock_g.difference(circ(BC[0], BC[1], 0.55)).difference(circ(CKS[0], CKS[1], 1.0))
+ck_h = cock_g.difference(circ(BC[0], BC[1], 0.55)).difference(circ(CKS[0], CKS[1], 0.89))      # hole 0.01 under the screw head: no see-through gap
 def rathaus(w=1.5):
     """Stylised silhouette of the Neues Rathaus Hannover: dome with lantern, wings, corner turrets."""
     dome = affinity.scale(circ(0, 0, 1.0, 16), 0.34, 0.44).intersection(box(-1, 0, 1, 1))
@@ -542,11 +550,13 @@ def engrave_shape(target, name, g, ztop, depth=0.04):
     return fo
 
 _ck_slab = shape_obj('balance_cock', ck_h, Z_CK0, Z_CK1, BEV, GENEVA)
-def place_rathaus(slab, near=(13.05, 0.35), w=1.5, ang=-12):
-    """Put the Rathaus fully ON the cock: every point at least 0.2 mm inside the polished bevel,
-    clear of the cock screw and of the regulator. Picks the spot with the largest clearance near `near`;
+def place_rathaus(slab, near=(13.05, 0.35), w=1.5, ang=40):
+    """Put the Rathaus fully ON the cock: every point at least 0.2 mm inside the polished bevel (0.14 keep-out + 0.06 clearance),
+    clear of the cock screw and of the regulator group. `ang` turns the dome upright for the hero and macro cameras. Picks the spot with the largest clearance near `near`;
     shrinks the motif if nothing fits. (v1 sat on the edge and one wing hung in the air.)"""
-    safe = slab.buffer(-(BEV + 0.2)).difference(circ(CKS[0], CKS[1], 1.0 + 0.75)).difference(circ(BC[0], BC[1], 3.3))
+    safe = slab.buffer(-(BEV + 0.14)).difference(circ(CKS[0], CKS[1], 0.89 + BEV + 0.3)).difference(circ(BC[0], BC[1], 3.3))
+    _n = Vector((-dc.y, dc.x))          # keep-out: regulator pointer, swan-neck spring with its screw, micrometer block and screw
+    safe = safe.difference(Polygon([tuple(Vector(BC) + dc * x + _n * y) for x, y in ((-2, -2.2), (6.4, -2.2), (6.4, 1.7), (-2, 1.7))]))
     while w > 0.7:
         base = affinity.rotate(rathaus(w), ang, origin=(0, 0)); best = None
         for i in range(-30, 31):
@@ -555,21 +565,21 @@ def place_rathaus(slab, near=(13.05, 0.35), w=1.5, ang=-12):
                 if safe.contains(g):
                     d = g.distance(safe.boundary) - 0.02 * math.hypot(i, j) * 0.1
                     if best is None or d > best[0]: best = (d, g, (near[0] + i * 0.1, near[1] + j * 0.1))
-        if best and best[0] > 0.12:
+        if best and best[0] > 0.06:
             print('RATHAUS placed at', best[2], 'width', round(w, 2), 'clearance', round(best[0], 3)); return best[1]
-        w *= 0.92
+        w *= 0.97
     raise RuntimeError('Rathaus engraving does not fit on the balance cock')
 _rh = place_rathaus(ck_h)
 assert slab_ok if (slab_ok := ck_h.buffer(-BEV).contains(_rh)) else False, 'Rathaus outside the cock'
 engrave_shape(_ck_slab, 'engraving_rathaus', _rh, Z_CK1)
 balance_cock = join([_ck_slab,
-                     shape_obj('ck_ft', ck_foot.difference(circ(CKS[0], CKS[1], 1.0)), 0.0, Z_CK0 + BEV + 0.002, 0.08, GENEVA)], 'balance_cock')
+                     shape_obj('ck_ft', ck_foot.difference(circ(CKS[0], CKS[1], 0.89)), 0.0, Z_CK0 + BEV + 0.002, 0.08, GENEVA)], 'balance_cock')
 
 # bridge screws
 for i, (x, y) in enumerate(S_BB): screw(f'screw_barrel_bridge_{i+1}', x, y, Z_BR1 + 0.04, ang=0.5 + i * 1.3)
 for i, (x, y) in enumerate(S_TB): screw(f'screw_train_bridge_{i+1}', x, y, Z_BR1 + 0.04, ang=1.1 + i * 0.9)
 screw('screw_fourth_cock', FF[0], FF[1], Z_BR1 + 0.04, ang=2.2)
-screw('screw_escape_cock', EF[0], EF[1], Z_LO1 + 0.03, r=0.6, ang=0.2)
+screw('screw_escape_cock', EF[0], EF[1], Z_EC1 + 0.03, r=0.6, ang=0.2)
 screw('screw_pallet_bridge_1', *PB1, Z_LO1 + 0.03, r=0.42, ang=1.0)
 screw('screw_pallet_bridge_2', *PB2, Z_LO1 + 0.03, r=0.42, ang=2.6)
 screw('screw_balance_cock', CKS[0], CKS[1], Z_CK1 + 0.04, r=0.9, ang=0.9)
@@ -578,7 +588,7 @@ screw('screw_balance_cock', CKS[0], CKS[1], Z_CK1 + 0.04, r=0.9, ang=0.9)
 jewel('jewel_centre', 0, 0, Z_BR1, rj=0.58, rc=1.12)
 jewel('jewel_third', T[0], T[1], Z_BR1, rc=1.12)
 jewel('jewel_fourth', F[0], F[1], Z_BR1, rc=1.12)
-jewel('jewel_escape', E[0], E[1], Z_LO1, rj=0.36, rc=0.79, depth=0.4, hole=0.06)
+jewel('jewel_escape', E[0], E[1], Z_EC1, rj=0.36, rc=0.7, depth=0.4, hole=0.06)
 jewel('jewel_pallet', PF[0], PF[1], Z_LO1, rj=0.24, rc=0.4, depth=0.38, hole=0.05, mat_ch=STEEL)
 for i in range(3):   # screwed chaton on the centre wheel
     q = pol(1.5, 100 + 120 * i)
@@ -623,19 +633,25 @@ def escape_wheel_geom(n=15):
     spokes = [affinity.rotate(box(0, -0.1, 1.3, 0.1), 72 * i, origin=(0, 0)) for i in range(5)]
     g = unary_union(parts + [ring, circ(0, 0, 0.4)] + spokes)
     return g.difference(rounded(circ(0, 0, 1.24).difference(unary_union(spokes + [circ(0, 0, 0.4)])), 0.08)) if False else g
-shape_obj('escape_wheel', escape_wheel_geom(), 0.5, 0.63, 0.02, STEEL_AX, E, -0.2)
+shape_obj('escape_wheel', escape_wheel_geom(), 0.5, 0.63, 0.02, STEEL_AX, E, rad(8.5))     # phase: see the pallet stones below
 pinion('escape_pinion', E, 0.5, 7, 0.95, 1.22)
-arbor('escape_arbor', E[0], E[1], -0.3, Z_LO1, r=0.09)
+arbor('escape_arbor', E[0], E[1], -0.3, Z_EC1, r=0.09)
 
 # pallet fork: local +x towards the balance
 FK_ANG = math.atan2(de.y, de.x)
 fork = unary_union([capsule((0, 0), (2.2, 0), 0.15), circ(0, 0, 0.3),
                     capsule((2.2, 0), (2.62, 0.26), 0.08), capsule((2.2, 0), (2.62, -0.26), 0.08),
-                    capsule((0, 0), (-0.95, 1.05), 0.17), capsule((0, 0), (-0.95, -1.05), 0.17)])
+                    capsule((0, 0), (-0.55, 1.45), 0.17), capsule((0, 0), (-0.55, -1.45), 0.17)])     # arms hold the outer end of the stones and stay outside the tip circle (2.2) of the escape wheel
 fork = fillet(fork, 0.12)
 shape_obj('pallet_fork', fork, 0.5, 0.64, 0.02, STEEL, PF, FK_ANG)
-for i, s in enumerate((1, -1)):
-    st = affinity.translate(affinity.rotate(box(-0.36, -0.13, 0.36, 0.13), s * 62, origin=(0, 0)), -1.08, s * 1.14)
+# Pallet stones: 30 deg either side of the line of centres (2.5 tooth pitches apart), inner end just outside the tip circle while the fork
+# stands in the middle. With the fork on a banking pin (+-11 deg, film.py) one stone dips into the wheel and a tooth lies against its side;
+# escape wheel phase 8.5 deg (and 8.5 - 12 for the other pin) leaves no part inside another. Checked in 2D over all phases.
+D_PE = (Vector(PF) - Vector(E)).length
+for i, sg in enumerate((1, -1)):
+    inner = (-D_PE + 2.22 * math.cos(rad(30)), sg * 2.22 * math.sin(rad(30)))
+    st = affinity.translate(affinity.rotate(box(-0.36, -0.13, 0.36, 0.13), sg * 40, origin=(0, 0)),
+                            inner[0] + 0.36 * math.cos(rad(40)), inner[1] + sg * 0.36 * math.sin(rad(40)))
     shape_obj(f'pallet_stone_{i+1}', st, 0.48, 0.67, 0.015, RUBY, PF, FK_ANG)
 arbor('pallet_arbor', PF[0], PF[1], -0.3, Z_LO1, r=0.07)
 
@@ -653,29 +669,39 @@ screw('screw_ratchet', B[0], B[1], ZW + 0.56, r=0.95, ang=1.2, mat=STEEL_AX, h=0
 screw('screw_crown_wheel', CW[0], CW[1], ZW + 0.56, r=0.72, ang=2.4, mat=STEEL, h=0.3)
 # click + spring
 CLP = tuple(Vector(B) + Vector(pol(5.75, 204)))
-beak = tuple(Vector(B) + Vector(pol(RAT_R - 0.12, 186)))
 tail = tuple(Vector(CLP) + Vector(pol(1.5, 250)))
-click = unary_union([MultiPoint([CLP, beak]).convex_hull.buffer(0.02).union(circ(*CLP, 0.78)).union(circ(*beak, 0.2)).convex_hull,
-                     capsule(CLP, tail, 0.3)])
-click = fillet(click, 0.3).difference(rat.buffer(0.03) if False else circ(*CLP, 0.0001))
+# Click with one tooth. The line from its pivot to the tooth is a tangent of the ratchet, so the tooth lifts straight out of the gap
+# (with the pivot further out it would have to move through the locking face). Tooth 26 of 58 sits at 161.4 deg.
+_ratw = affinity.translate(rat, *B); _a0 = 360.0 * 26 / 58; _da = 360.0 / 58
+def _bp(r, deg): return tuple(Vector(B) + Vector(pol(r, deg)))
+_nc = _bp(RAT_R - 0.17, _a0 + 0.02 * _da); _bk = _bp(RAT_R + 0.28, _a0 + 0.1 * _da)
+_body = unary_union([MultiPoint([CLP, _bk]).convex_hull.buffer(0.02).union(circ(*CLP, 0.78)).union(circ(*_bk, 0.2)).convex_hull, capsule(CLP, tail, 0.3)])
+_body = fillet(_body, 0.3).difference(circ(B[0], B[1], RAT_R + 0.16))
+_nib = MultiPoint([_nc, _bk]).convex_hull.buffer(0.3).intersection(circ(B[0], B[1], RAT_R + 0.3)).difference(_ratw.buffer(0.02))
+_nib = _nib.difference(Polygon([B, _bp(9, _a0 - 0.02 * _da), _bp(9, _a0 - 3 * _da)])).difference(Polygon([B, _bp(9, _a0 + 0.62 * _da), _bp(9, _a0 + 4 * _da)]))
+click = unary_union([_body, _nib])
+if click.geom_type == 'MultiPolygon': click = max(click.geoms, key=lambda q: q.area)
+click = rounded(click, 0.015)
+assert click.intersection(_ratw).area < 1e-6, 'click inside the ratchet'
 shape_obj('click', click.difference(circ(*CLP, 0.5)), ZW, ZW + 0.34, 0.05, STEEL)
 screw('screw_click', CLP[0], CLP[1], ZW + 0.38, r=0.5, ang=0.3)
 sf = tuple(Vector(CLP) + Vector(pol(3.7, 262)))
-arcpts = [tuple(Vector(sf) + (Vector(tail) + Vector(pol(0.36, 160)) - Vector(sf)) * t + Vector(pol(0.5 * math.sin(math.pi * t), 170))) for t in [i / 24 for i in range(25)]]
+arcpts = [tuple(Vector(sf) + (Vector(tail) + Vector(pol(0.385, 160)) - Vector(sf)) * t + Vector(pol(0.5 * math.sin(math.pi * t), 170))) for t in [i / 24 for i in range(25)]]
 spring = unary_union([LineString(arcpts).buffer(0.075), circ(*sf, 0.42)])
 shape_obj('click_spring', spring.difference(circ(*sf, 0.3)), ZW, ZW + 0.2, 0.03, STEEL)
 screw('screw_click_spring', sf[0], sf[1], ZW + 0.24, r=0.3, ang=1.9, h=0.14)
-# winding stem
+# winding stem (axis inside the plate thickness: nothing of it stands proud of the plate surface)
+STEM_Z = -0.78
 st_a = math.atan2(CW[1], CW[0])
 lathe('winding_stem', [(0, 0), (0.5, 0), (0.5, 2.4), (0.62, 2.5), (0.62, 3.0), (0.42, 3.1), (0.42, 5.2), (0.36, 5.3), (0, 5.3)], STEEL_AX,
-      (13.0 * math.cos(st_a), 13.0 * math.sin(st_a), -0.55), segs=32, rot=(0, math.pi / 2, st_a))
+      (13.0 * math.cos(st_a), 13.0 * math.sin(st_a), STEM_Z), segs=32, rot=(0, math.pi / 2, st_a))
 # crown: 36 flutes, so the winding loop (one ratchet tooth = 30 deg of the stem, winding pinion 12 leaves) closes on a whole number of flutes
 CROWN_R = 2.15; CROWN_D = 19.55
 crown_g = fillet(gear(CROWN_R, 36, tooth=0.16, spokes=0), 0.03)
 cr = shape_obj('winding_crown', crown_g, -0.95, 0.95, 0.14, STEEL_AX)
-cr.location = (CROWN_D * math.cos(st_a), CROWN_D * math.sin(st_a), -0.55); cr.rotation_euler = (0, math.pi / 2, st_a)
+cr.location = (CROWN_D * math.cos(st_a), CROWN_D * math.sin(st_a), STEM_Z); cr.rotation_euler = (0, math.pi / 2, st_a)
 lathe('winding_crown_cap', [(0, 0.9), (1.55, 0.9), (1.5, 1.02), (0.6, 1.1), (0, 1.11)], STEEL_AX,
-      (CROWN_D * math.cos(st_a), CROWN_D * math.sin(st_a), -0.55), segs=48, rot=(0, math.pi / 2, st_a))
+      (CROWN_D * math.cos(st_a), CROWN_D * math.sin(st_a), STEM_Z), segs=48, rot=(0, math.pi / 2, st_a))
 
 # =====================================================================
 # balance assembly
@@ -767,8 +793,8 @@ _wo = w.node_tree.nodes.new('ShaderNodeOutputWorld'); w.node_tree.links.new(_bg.
 
 CAMS = {
   'hero':          dict(loc=(34, -47.5, 33), tgt=(0.6, -0.2, -2.4), lens=60, focus=(BC[0] - 2, BC[1] - 2, Z_CK1), ap=0.55, res=(2400, 3000)),
-  'top':           dict(loc=(0, 0, 100), tgt=(0, 0, 0), lens=100, focus=(0, 0, 2), ap=0.0, res=(3000, 3000)),
-  'macro_balance': dict(loc=(32.6, -27.8, 22.2), tgt=(8.6, -3.0, 2.0), lens=85, focus=(BC[0], BC[1], Z_CK1 + 0.3), ap=0.3, res=(3000, 2000)),
+  'top':           dict(loc=(0, 0, 100), tgt=(0, 0, 0), lens=78, focus=(0, 0, 2), ap=0.0, res=(3000, 3000)),
+  'macro_balance': dict(loc=(33.55, -26.9, 22.2), tgt=(9.55, -2.1, 2.0), lens=85, focus=(BC[0], BC[1], Z_CK1 + 0.3), ap=0.3, res=(3000, 2000)),
   'macro_train':   dict(loc=(-9, -37, 16), tgt=(0.4, -7.0, 1.4), lens=105, focus=(F[0], F[1], Z_BR1), ap=0.3, res=(3000, 2000)),
   'macro_winding': dict(loc=(-22, 34, 21), tgt=(-1.6, 7.6, 2.6), lens=105, focus=(-2.0, 8.6, Z_BR1 + 0.3), ap=0.4, res=(3000, 2000)),
 }

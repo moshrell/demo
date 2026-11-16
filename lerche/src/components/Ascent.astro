@@ -1,0 +1,249 @@
+---
+// Вся страница на одном языке. Тексты: src/data/<lang>.json, числа и даты: src/data/flight.json.
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+import flight from '../data/flight.json';
+import en from '../data/en.json';
+import de from '../data/de.json';
+import { tplus } from '../scripts/atmosphere';
+const { lang = 'de' } = Astro.props;
+const t = lang === 'en' ? en : de;
+const base = import.meta.env.BASE_URL;
+const other = lang === 'en' ? base : `${base}en/`;
+const fill = (s: string, v: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(v[k]));
+const num = (n: number) => n.toLocaleString(t.locale);
+const eur = (n: number) => (lang === 'en' ? `€${num(n)}` : `${num(n)} €`);
+const stations = flight.stations.map((s, i) => ({ ...s, ...t.stations[i] }));
+const dateFmt = new Intl.DateTimeFormat(t.locale, { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const liftoff = (sunrise: string) => {
+  const [h, m] = sunrise.split(':').map(Number); const x = h * 60 + m - 25;
+  return `${String(Math.floor(x / 60)).padStart(2, '0')}:${String(x % 60).padStart(2, '0')}`;
+};
+const windows = flight.windows.map((w) => ({ ...w, label: dateFmt.format(new Date(w.date + 'T00:00:00Z')), liftoff: liftoff(w.sunrise), free: flight.seats - w.taken.length }));
+// профиль полёта: минуты → x, высота → y
+const PX = (m: number) => 34 + m / 338 * 296, PY = (a: number) => 160 - a / flight.apex * 132;
+const line = flight.profile.map((p) => `${PX(p.t).toFixed(1)},${PY(p.alt).toFixed(1)}`).join(' ');
+const hm = (m: number) => `T+${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}`;
+const km = Array.from({ length: 26 }, (_, i) => i);
+const b = t.book;
+// строки, которые подставляет скрипт
+const strings = { locale: t.locale, lang, help0: b.help0, help1: b.help1, noWindow: b.noWindow, noSeats: b.noSeats, seat1: b.seat1, seatN: b.seatN, whole: b.whole };
+---
+<Base
+  lang={lang}
+  title={t.meta.title}
+  description={t.meta.description}
+  faq={t.faq.items}
+  prices={[{ name: t.meta.offer, price: flight.seatPrice }]}
+  t={t}
+  alternates={{ de: base, en: `${base}en/` }}
+>
+  <canvas id="sky" class="sky" aria-hidden="true"></canvas>
+  <div class="scrim" aria-hidden="true"></div>
+
+  <header class="mast">
+    <a class="brand" href={lang === 'en' ? `${base}en/` : base} aria-label={t.ui.home}>
+      <svg viewBox="0 0 22 30" aria-hidden="true"><path d="M11 1c5 0 8 3.6 8 8 0 5-4.6 8.4-6.6 13.4h-2.8C7.6 17.4 3 14 3 9c0-4.4 3-8 8-8Z" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M9.6 22.4v3.2h2.8v-3.2M9 27.6h4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span>Lerche</span>
+    </a>
+    <div class="mast__right">
+      <a class="lang" href={other} hreflang={lang === 'en' ? 'de' : 'en'} lang={lang === 'en' ? 'de' : 'en'} aria-label={t.ui.switch}>{t.ui.switchShort}</a>
+      <button class="plan-open" type="button" aria-haspopup="dialog" aria-controls="plan" aria-label={t.ui.plan}><span>{t.ui.plan}</span></button>
+      <a class="tag tag--small" href="#reserve">{t.ui.reserve}</a>
+    </div>
+  </header>
+
+  <aside class="tape" aria-hidden="true">
+    <div class="tape__window">
+      <div class="tape__scale" id="tapeScale">
+        {km.map((k) => <span class="tape__km" data-km={k}>{k}</span>)}
+      </div>
+    </div>
+    <div class="tape__read">
+      <div class="odo" id="odo">
+        {[0, 1, 2, 3].map(() => <span class="odo__col"><span class="odo__strip">0<br />1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />0</span></span>)}
+        <span class="odo__fixed">0</span>
+      </div>
+      <span class="tape__unit">m</span>
+    </div>
+  </aside>
+
+  <div class="gauges" aria-hidden="true">
+    <div><span>{t.gauges[0]}</span><b id="gTime">T+00:00</b></div>
+    <div><span>{t.gauges[1]}</span><b id="gTemp">+15 °C</b></div>
+    <div><span>{t.gauges[2]}</span><b id="gPress">1013 hPa</b></div>
+    <div><span>{t.gauges[3]}</span><b id="gHor">5 km</b></div>
+  </div>
+
+  <main id="main">
+    <section class="ascent" id="ascent" aria-label={t.ui.ascent}>
+      {stations.map((s, i) => (
+        <article class={`station station--${s.id}`} id={s.id} data-i={i}>
+          <div class="station__in">
+            <p class="way"><span>{num(s.alt)} m</span><i></i><span>{tplus(s.alt)}</span><i></i><span>{s.label}</span></p>
+            {i === 0 ? <h1>{s.title}</h1> : <h2>{s.title}</h2>}
+            {s.body && <p class="station__body">{s.body}</p>}
+            {s.plate && (
+              <dl class="spec">
+                {s.plate.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+              </dl>
+            )}
+            {i === 0 && (
+              <div class="station__act">
+                <a class="tag" href="#reserve">{t.ui.reserveSeat}</a>
+                <p class="hint"><i></i>{t.ui.hint}</p>
+              </div>
+            )}
+            {i === stations.length - 1 && (
+              <div class="station__act"><a class="tag" href="#reserve">{t.ui.floatCta}</a></div>
+            )}
+          </div>
+        </article>
+      ))}
+    </section>
+
+    <section class="sheet" id="hours">
+      <p class="eyebrow">{t.hours.eyebrow}</p>
+      <h2>{t.hours.title}</h2>
+      <figure class="profile">
+        <svg viewBox="0 0 340 186" role="img" aria-label={t.hours.aria}>
+          {[0, 5000, 11000, 25000].map((a) => (
+            <g><line class="profile__grid" x1="34" x2="330" y1={PY(a)} y2={PY(a)} /><text class="profile__y" x="28" y={PY(a) + 3} text-anchor="end">{a / 1000}</text></g>
+          ))}
+          <text class="profile__y" x="28" y="12" text-anchor="end">km</text>
+          <text class="profile__note" x="330" y={PY(11000) - 4} text-anchor="end">{t.hours.airliners}</text>
+          <polyline class="profile__line" points={line} pathLength="1" />
+          {flight.profile.map((p, i) => (
+            <g><circle class="profile__dot" cx={PX(p.t)} cy={PY(p.alt)} r="3.2" /><text class="profile__n" x={PX(p.t) + (i === 1 ? -7 : i === 3 ? -9 : 7)} y={PY(p.alt) - 7} text-anchor="middle">{i + 1}</text></g>
+          ))}
+          {[0, 1, 2, 3, 4, 5].map((h) => <text class="profile__x" x={PX(h * 60)} y="180" text-anchor="middle">{h} {t.hours.hour}</text>)}
+        </svg>
+      </figure>
+      <ol class="legs">
+        {flight.profile.map((p, i) => (
+          <li><span class="legs__t">{hm(p.t)}</span><div><b>{t.hours.legs[i].name}</b><p>{t.hours.legs[i].note}</p></div></li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="sheet" id="reserve">
+      <p class="eyebrow">{b.eyebrow}</p>
+      <h2>{b.title}</h2>
+      <p class="lede">{fill(b.lede, { seat: eur(flight.seatPrice), capsule: eur(flight.capsulePrice) })}</p>
+
+      <form class="book" id="book" novalidate data-seat={flight.seatPrice} data-capsule={flight.capsulePrice} data-t={JSON.stringify(strings)}>
+        <fieldset class="dawns">
+          <legend><span class="step">1</span>{b.window}</legend>
+          {windows.map((w) => (
+            <label class={`dawn${w.free ? '' : ' dawn--full'}`}>
+              <input type="radio" name="window" value={w.id} disabled={!w.free} data-label={w.label} data-liftoff={w.liftoff} data-taken={w.taken.join(',')} />
+              <span class="dawn__date">{w.label}</span>
+              <span class="dawn__meta">{fill(b.meta, { liftoff: w.liftoff, sunrise: w.sunrise })}</span>
+              <span class="dawn__seats" aria-hidden="true">{Array.from({ length: flight.seats }, (_, i) => <i class={w.taken.includes(i + 1) ? 'on' : ''}></i>)}</span>
+              <span class="dawn__free">{w.free ? fill(b.free, { n: w.free, all: flight.seats }) : b.full}</span>
+            </label>
+          ))}
+          <p class="err" id="errWindow" hidden>{b.errWindow}</p>
+        </fieldset>
+
+        <fieldset class="cabin">
+          <legend><span class="step">2</span>{b.seats}</legend>
+          <p class="cabin__help" id="cabinHelp">{b.help0}</p>
+          <div class="cabin__plan">
+            <svg viewBox="0 0 200 200" aria-hidden="true">
+              <circle cx="100" cy="100" r="96" class="cabin__hull" /><circle cx="100" cy="100" r="88" class="cabin__glass" />
+              {Array.from({ length: 12 }, (_, i) => { const a = i / 12 * Math.PI * 2; return <line class="cabin__mull" x1={100 + Math.sin(a) * 88} y1={100 - Math.cos(a) * 88} x2={100 + Math.sin(a) * 96} y2={100 - Math.cos(a) * 96} />; })}
+              <circle cx="100" cy="100" r="20" class="cabin__core" /><text x="100" y="103.5" text-anchor="middle" class="cabin__pilot">{b.pilot}</text>
+            </svg>
+            {Array.from({ length: flight.seats }, (_, i) => (
+              <label class={`seat seat--${i + 1}`}>
+                <input type="checkbox" name="seat" value={i + 1} disabled />
+                <span>{i + 1}</span>
+              </label>
+            ))}
+          </div>
+          <p class="err" id="errSeat" hidden>{b.errSeat}</p>
+        </fieldset>
+
+        <fieldset class="guest">
+          <legend><span class="step">3</span>{b.guest}</legend>
+          <div class="field">
+            <label for="fName">{b.name}</label>
+            <input id="fName" name="name" type="text" autocomplete="name" placeholder={b.namePh} required aria-describedby="errName" />
+            <p class="err" id="errName" hidden>{b.errName}</p>
+          </div>
+          <div class="field">
+            <label for="fMail">{b.mail}</label>
+            <input id="fMail" name="email" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" required aria-describedby="errMail" />
+            <p class="err" id="errMail" hidden>{b.errMail}</p>
+          </div>
+          <div class="field">
+            <label for="fTel">{b.tel} <em>{b.optional}</em></label>
+            <input id="fTel" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder={b.telPh} />
+          </div>
+          <label class="consent">
+            <input type="checkbox" id="fOk" name="consent" required aria-describedby="errOk" />
+            <span>{b.consent} <a href={`${base}datenschutz/`} target="_blank" rel="noopener">{b.privacy}</a></span>
+          </label>
+          <p class="err" id="errOk" hidden>{b.errOk}</p>
+        </fieldset>
+
+        <div class="sum" id="sum" aria-live="polite">
+          <div><span class="sum__what" id="sumWhat">{b.noWindow}</span><b class="sum__total" id="sumTotal">{eur(0)}</b></div>
+          <button class="tag tag--solid" type="submit">{b.submit}</button>
+        </div>
+      </form>
+
+      <div class="pass" id="pass" hidden tabindex="-1">
+        <p class="pass__top"><span>Lerche Aerostat</span><span>{b.passTop}</span></p>
+        <p class="pass__name" id="pName"></p>
+        <dl class="pass__grid">
+          <div><dt>{b.pLaunch}</dt><dd id="pDate"></dd></div>
+          <div><dt>{b.pLift}</dt><dd id="pLift"></dd></div>
+          <div><dt>{b.pSeats}</dt><dd id="pSeats"></dd></div>
+          <div><dt>{b.pCeil}</dt><dd>{num(flight.apex)} m</dd></div>
+        </dl>
+        <p class="pass__sum"><span>{b.total}</span><b id="pTotal"></b></p>
+        <p class="pass__demo">{b.passDemo}</p>
+        <button class="pass__again" type="button" id="again">{b.again}</button>
+      </div>
+
+      <div class="incl">
+        <h3>{b.inclTitle}</h3>
+        <ul>{b.included.map((x) => <li>{x}</li>)}</ul>
+      </div>
+    </section>
+
+    <section class="sheet" id="questions">
+      <p class="eyebrow">{t.faq.eyebrow}</p>
+      <h2>{t.faq.title}</h2>
+      <div class="faq">
+        {t.faq.items.map((f) => (
+          <details><summary>{f.q}</summary><p>{f.a}</p></details>
+        ))}
+      </div>
+      <p class="talk">{t.faq.talk} <a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a></p>
+    </section>
+  </main>
+
+  <dialog class="plan" id="plan" aria-label={t.ui.plan}>
+    <div class="plan__in">
+      <p class="plan__head"><span>{t.ui.plan}</span><button type="button" class="plan__close" aria-label={t.ui.closePlan}>{t.ui.close}</button></p>
+      <ol class="plan__way">
+        {stations.map((s, i) => ({ s, i })).reverse().map(({ s, i }) => (
+          <li><a href={`#${s.id}`} data-jump={i}><span>{num(s.alt)} m</span><i></i><b>{s.label}</b></a></li>
+        ))}
+      </ol>
+      <ul class="plan__more">
+        <li><a href="#hours">{t.more.hours}</a></li>
+        <li><a href="#reserve">{t.more.reserve}</a></li>
+        <li><a href="#questions">{t.more.questions}</a></li>
+        <li><a href={other} hreflang={lang === 'en' ? 'de' : 'en'} lang={lang === 'en' ? 'de' : 'en'}>{t.ui.switch}</a></li>
+      </ul>
+    </div>
+  </dialog>
+
+  <script>
+    import '../scripts/ui.ts';
+  </script>
+</Base>

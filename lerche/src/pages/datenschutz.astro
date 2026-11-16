@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import DatenschutzForm from '../components/DatenschutzForm.astro';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Datenschutz · Lerche Aerostat" plain>
+  <main>
+    <h1>Datenschutz</h1>
+    <p>Diese Seite lädt keine Inhalte von fremden Servern: Schriften, Skripte und die 3D-Szene liegen auf demselben Server. Es gibt keine Cookies und keine Analyse-Werkzeuge.</p>
+    <DatenschutzForm
+      formName="Reservierungsanfrage (Reservation request)"
+      data="Name, E-Mail-Adresse, Telefonnummer (freiwillig) sowie das gewählte Startfenster und die gewählten Plätze"
+      purpose="Wir bearbeiten Ihre Reservierungsanfrage und melden uns dazu bei Ihnen."
+    />
+    <p><a class="back" href={base}>← Zurück zur Startseite</a> · <a class="back" href={`${base}en/`} lang="en">Back to the English site</a></p>
+  </main>
+</Base>

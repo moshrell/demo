@@ -1,0 +1,85 @@
+---
+// SEO + KI-Sichtbarkeit (AIO) by default. Demos: noindex (index = false). Beim Kundenstart: index = true setzen.
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '@fontsource/b612/latin-400.css';
+import '@fontsource/b612/latin-700.css';
+import '@fontsource/b612-mono/latin-400.css';
+import '../styles/global.css';
+import site from '../data/site.json';
+import de from '../data/de.json';
+const {
+  title = site.name,
+  description = '',
+  index = false,          // Demo = noindex. Echte Kundenseite: index
+  type = 'TravelAgency',  // Schema.org-Typ
+  faq = [],               // [{ q, a }] -> sichtbarer FAQ-Block UND FAQPage-Markup (gleicher Text)
+  image = '',
+  prices = [],
+  lang = 'de',
+  plain = false,          // Textseiten (Impressum, Datenschutz): ruhiger Hintergrund ohne Szene
+  t = de,                 // Texte der Sprache (Fußzeile)
+  alternates = null,      // { de: url, en: url } -> hreflang
+} = Astro.props;
+const base = import.meta.env.BASE_URL;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = image ? new URL(base + image.replace(/^\//, ''), Astro.site).href : undefined;
+const graph = [
+  ...(index ? [{
+    '@type': type,
+    '@id': new URL(base, Astro.site).href + '#business',
+    name: site.name,
+    url: new URL(base, Astro.site).href,
+    description,
+    telephone: site.phone,
+    email: site.email,
+    address: { '@type': 'PostalAddress', streetAddress: site.address.street, postalCode: site.address.zip, addressLocality: site.address.city, addressCountry: 'DE' },
+    ...(site.openingHours ? { openingHours: site.openingHours } : {}),
+    ...(site.areaServed ? { areaServed: site.areaServed } : {}),
+    ...(ogImage ? { image: ogImage } : {}),
+    ...(prices.length ? { makesOffer: prices.map((p) => ({ '@type': 'Offer', priceCurrency: 'EUR', price: p.price, itemOffered: { '@type': 'Service', name: p.name } })) } : {}),
+  }] : []), // Demo (index = false): keine Geschäftsdaten-Markup mit erfundener Adresse/Telefon, nur FAQPage
+  ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
+];
+const ld = { '@context': 'https://schema.org', '@graph': graph };
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#060a14" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
+    <link rel="canonical" href={canonical} />
+    {alternates && Object.entries(alternates).map(([l, href]) => <link rel="alternate" hreflang={l} href={new URL(href, Astro.site).href} />)}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : 'en_GB'} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+  </head>
+  <body class={plain ? 'plain' : ''}>
+    <slot />
+    <footer class="plate">
+      <div class="plate__in">
+        <p class="plate__name">{site.name}</p>
+        <dl class="plate__data">
+          {t.plate.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+        </dl>
+        <p class="plate__links">
+          <a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+          <a href={`${base}impressum/`}>{t.legal.imprint}</a>
+          <a href={`${base}datenschutz/`}>{t.legal.privacy}</a>
+        </p>
+        {!index && <p class="plate__demo">{t.legal.demo} <a href="https://kravets-webdesign.de/kontakt/">{t.legal.cta}</a></p>}
+      </div>
+    </footer>
+  </body>
+</html>

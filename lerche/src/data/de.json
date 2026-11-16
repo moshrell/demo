@@ -1,0 +1,232 @@
+{
+  "locale": "de-DE",
+  "lang": "de",
+  "meta": {
+    "title": "Lerche Aerostat · Ballonfahrten auf 25.000 m",
+    "description": "Sechs Stunden Fahrt in die Stratosphäre unter einem Heliumballon. Sechs Gäste, ein Pilot, keine Rakete. Startfenster 2027, ab 128.000 € pro Platz.",
+    "offer": "Platz auf einer Stratosphärenfahrt"
+  },
+  "ui": {
+    "home": "Lerche Aerostat, Startseite",
+    "plan": "Flugplan",
+    "reserve": "Buchen",
+    "reserveSeat": "Platz buchen",
+    "hint": "Scrollen",
+    "floatCta": "Ihren Morgen wählen",
+    "ascent": "Der Aufstieg, vom Startfeld bis auf 25.000 Meter",
+    "close": "Schließen",
+    "closePlan": "Flugplan schließen",
+    "switch": "English",
+    "switchShort": "EN"
+  },
+  "gauges": [
+    "Fahrtzeit",
+    "Außen",
+    "Druck",
+    "Horizont"
+  ],
+  "stations": [
+    {
+      "label": "Startfeld",
+      "title": "Mit der Sonne steigen.",
+      "body": "Sechs Stunden am Heliumballon, bis auf 25.000 Meter. Sechs Gäste, ein Pilot, keine Rakete."
+    },
+    {
+      "label": "Abheben",
+      "title": "Sie starten im Tempo eines Fahrrads.",
+      "body": "Fünf Meter pro Sekunde. Kein Schub, kein Lärm: Das Feld wird einfach kleiner. Die Hülle über Ihnen ist eine schlaffe Säule aus Folie, nur ganz oben steht eine Blase Helium."
+    },
+    {
+      "label": "Frühstück",
+      "title": "Frühstück über dem Wetter.",
+      "body": "Die Wolkendecke schließt sich unter Ihnen, und die Sonne geht darunter auf. Gedeckt wird auf fünftausend Metern, abgeräumt vor zehn."
+    },
+    {
+      "label": "Über den Flugzeugen",
+      "title": "Alle Flugzeuge fliegen jetzt unter Ihnen.",
+      "body": "Draußen sind es minus sechsundfünfzig Grad. Das Helium hat sich auf mehr als das Dreifache ausgedehnt, die Hülle füllt sich."
+    },
+    {
+      "label": "Die Kapsel",
+      "title": "Ein Raum, ein Fenster ringsum.",
+      "body": "",
+      "plate": [
+        [
+          "Kabine",
+          "Bodendruck, 21 °C"
+        ],
+        [
+          "Plätze",
+          "6 Gäste + 1 Pilot"
+        ],
+        [
+          "Verglasung",
+          "360°, 1,9 m hoch"
+        ],
+        [
+          "Traggas",
+          "Helium"
+        ],
+        [
+          "Abstieg",
+          "Ventil, Fallschirm"
+        ]
+      ]
+    },
+    {
+      "label": "Schwarzer Himmel",
+      "title": "Der Himmel wird dunkel, während die Sonne scheint.",
+      "body": "Sechsundneunzig Prozent der Atmosphäre liegen unter Ihnen. Was bleibt, ist die dünne blaue Linie am Horizont."
+    },
+    {
+      "label": "Schweben",
+      "title": "Schweben.",
+      "body": "Zwei Stunden auf 25.000 Metern. Seitwärts wischen, um sich umzusehen."
+    }
+  ],
+  "hours": {
+    "eyebrow": "Die Fahrt",
+    "title": "Sechs Stunden, die meisten davon zum Schauen.",
+    "aria": "Höhe über der Zeit: 83 Minuten Aufstieg, zwei Stunden auf 25.000 Metern, zwei Stunden Abstieg.",
+    "airliners": "Flugzeuge",
+    "hour": "h",
+    "legs": [
+      {
+        "name": "Abheben",
+        "note": "Vor dem ersten Licht, wenn die Luft am Feld noch still ist."
+      },
+      {
+        "name": "Schweben",
+        "note": "Aufstieg mit 5 m/s. Der Sonnenaufgang erreicht Sie auf etwa 5.000 m."
+      },
+      {
+        "name": "Abstieg beginnt",
+        "note": "Zwei Stunden auf Höhe. Dann lässt der Pilot Helium ab."
+      },
+      {
+        "name": "Fallschirm",
+        "note": "Die Hülle wird gelöst, ein steuerbarer Flächenfallschirm übernimmt."
+      },
+      {
+        "name": "Landung",
+        "note": "Die Bodenmannschaft ist auf der Straße gefolgt. Mittagessen gibt es am Feld."
+      }
+    ]
+  },
+  "book": {
+    "eyebrow": "Reservierung",
+    "title": "Wählen Sie Ihren Morgen.",
+    "lede": "Eine Kapsel, sechs Plätze, fünf Startfenster im Jahr 2027. Ein Platz kostet {seat}, die ganze Kapsel {capsule}.",
+    "window": "Startfenster",
+    "meta": "Start {liftoff} · Sonne {sunrise}",
+    "free": "{n} von {all} frei",
+    "full": "Ausgebucht",
+    "errWindow": "Bitte wählen Sie ein Startfenster.",
+    "seats": "Plätze",
+    "help0": "Wählen Sie zuerst ein Startfenster. Jeder Platz liegt am Glas.",
+    "help1": "{label}. Schraffierte Plätze sind vergeben. Jeder Platz liegt am Glas.",
+    "pilot": "PILOT",
+    "errSeat": "Bitte wählen Sie mindestens einen Platz.",
+    "guest": "Ihre Angaben",
+    "name": "Name",
+    "namePh": "Vor- und Nachname",
+    "errName": "Bitte geben Sie Ihren Namen an.",
+    "mail": "E-Mail",
+    "errMail": "Bitte geben Sie eine gültige E-Mail-Adresse an.",
+    "tel": "Telefon",
+    "optional": "(freiwillig)",
+    "telPh": "z. B. 040 66969 123",
+    "consent": "Ich bin einverstanden, dass meine Angaben zur Bearbeitung dieser Anfrage verwendet werden.",
+    "privacy": "Datenschutzhinweise",
+    "errOk": "Bitte bestätigen Sie, sonst dürfen wir Ihnen nicht antworten.",
+    "noWindow": "Noch kein Startfenster gewählt",
+    "noSeats": "Noch keine Plätze gewählt",
+    "seat1": "1 Platz",
+    "seatN": "{n} Plätze",
+    "whole": "Ganze Kapsel",
+    "submit": "Plätze anfragen",
+    "passTop": "Reservierungsanfrage",
+    "pLaunch": "Starttag",
+    "pLift": "Abheben",
+    "pSeats": "Plätze",
+    "pCeil": "Gipfelhöhe",
+    "total": "Summe",
+    "passDemo": "Demo: Es wurde nichts gesendet oder gespeichert. Auf einer echten Seite würde Ihr Pilot Sie innerhalb von zwei Werktagen anrufen.",
+    "again": "Neue Anfrage beginnen",
+    "inclTitle": "Jeder Platz enthält",
+    "included": [
+      "Zwei Nächte im Feldhaus, am Abend davor und in der Nacht danach",
+      "Einweisung und Kabinenprobe mit Ihrem Piloten",
+      "Frühstück an Bord, Mittagessen nach der Landung",
+      "Ein zweites Startfenster ohne Aufpreis, falls das Wetter den Start verhindert"
+    ]
+  },
+  "faq": {
+    "eyebrow": "Bevor Sie fragen",
+    "title": "Klare Antworten.",
+    "talk": "Lieber persönlich besprechen?",
+    "items": [
+      {
+        "q": "Ist das der Weltraum?",
+        "a": "Nein. Der Weltraum beginnt bei etwa 100 km, wir schweben auf 25 km. Sie sind über 96 Prozent der Atmosphäre, der Himmel ist schwarz und der Horizont gekrümmt, aber Sie bleiben in der Stratosphäre."
+      },
+      {
+        "q": "Bin ich schwerelos?",
+        "a": "Nein. Die Kapsel steigt und sinkt sanft, Sie spüren die ganze Zeit Ihr normales Gewicht. Sie können stehen, durch die Kabine gehen und am Tisch essen."
+      },
+      {
+        "q": "Wer kann mitfahren?",
+        "a": "Jeder, der ein Linienflugzeug besteigen darf. In der Kabine herrschen Bodendruck und Zimmertemperatur: kein Anzug, kein Training außer der Einweisung."
+      },
+      {
+        "q": "Was passiert bei schlechtem Wetter?",
+        "a": "Wir starten nur bei ruhiger Luft am Feld. Fällt ein Startfenster aus, wechselt Ihr Platz ohne Aufpreis in ein Fenster Ihrer Wahl."
+      },
+      {
+        "q": "Wie kommen wir herunter?",
+        "a": "Der Pilot lässt Helium ab, damit beginnt der Abstieg. Auf etwa 3.000 m wird die Hülle gelöst, und ein steuerbarer Flächenfallschirm trägt die Kapsel zu einem vorbereiteten Landeplatz."
+      },
+      {
+        "q": "Gibt es eine Toilette?",
+        "a": "Ja, eine eigene, mit Fenster."
+      }
+    ]
+  },
+  "more": {
+    "hours": "Die sechs Stunden",
+    "reserve": "Platz reservieren",
+    "questions": "Fragen"
+  },
+  "plate": [
+    [
+      "Typ",
+      "LA-6 Aerostat"
+    ],
+    [
+      "Hülle",
+      "400.000 m³"
+    ],
+    [
+      "Traggas",
+      "He"
+    ],
+    [
+      "Gipfelhöhe",
+      "25.000 m"
+    ],
+    [
+      "Serie",
+      "DEMO-001"
+    ],
+    [
+      "Startfeld",
+      "Soltau"
+    ]
+  ],
+  "legal": {
+    "imprint": "Impressum",
+    "privacy": "Datenschutz",
+    "demo": "Demo-Seite: Dieses Unternehmen gibt es nicht, alle Angaben sind fiktiv.",
+    "cta": "Eine solche Website für Ihr Unternehmen? Jetzt anfragen"
+  }
+}

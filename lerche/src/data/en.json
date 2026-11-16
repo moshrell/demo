@@ -1,0 +1,232 @@
+{
+  "locale": "en-GB",
+  "lang": "en",
+  "meta": {
+    "title": "Lerche Aerostat · Balloon ascents to 25,000 m",
+    "description": "A six-hour ascent to the stratosphere beneath a helium balloon. Six guests, one pilot, no rocket. Launch windows 2027, from €128,000 per seat.",
+    "offer": "Seat on a stratospheric ascent"
+  },
+  "ui": {
+    "home": "Lerche Aerostat, start",
+    "plan": "Flight plan",
+    "reserve": "Reserve",
+    "reserveSeat": "Reserve a seat",
+    "hint": "Scroll",
+    "floatCta": "Choose your dawn",
+    "ascent": "The ascent, from the launch field to 25,000 metres",
+    "close": "Close",
+    "closePlan": "Close flight plan",
+    "switch": "Deutsch",
+    "switchShort": "DE"
+  },
+  "gauges": [
+    "Elapsed",
+    "Outside",
+    "Pressure",
+    "Horizon"
+  ],
+  "stations": [
+    {
+      "label": "Launch field",
+      "title": "Rise with the sun.",
+      "body": "Six hours beneath a helium balloon, to 25,000 metres. Six guests, one pilot, no rocket."
+    },
+    {
+      "label": "Lift-off",
+      "title": "You leave at the pace of a bicycle.",
+      "body": "Five metres a second. No thrust and no noise: the field simply gets smaller. The envelope above you is a slack column of film, with a single bubble of helium at its crown."
+    },
+    {
+      "label": "Breakfast",
+      "title": "Breakfast above the weather.",
+      "body": "The cloud deck closes underneath and the sun comes up from below it. The table is laid at five thousand metres and cleared before ten."
+    },
+    {
+      "label": "Above the airliners",
+      "title": "Every airliner is now below you.",
+      "body": "Outside it is minus fifty-six. The helium has expanded to more than three times its launch volume, and the envelope is filling out."
+    },
+    {
+      "label": "The capsule",
+      "title": "A room with one continuous window.",
+      "body": "",
+      "plate": [
+        [
+          "Cabin",
+          "sea level, 21 °C"
+        ],
+        [
+          "Seats",
+          "6 guests + 1 pilot"
+        ],
+        [
+          "Glazing",
+          "360°, 1.9 m tall"
+        ],
+        [
+          "Lift gas",
+          "helium"
+        ],
+        [
+          "Descent",
+          "valve, parafoil"
+        ]
+      ]
+    },
+    {
+      "label": "Black sky",
+      "title": "The sky goes dark while the sun is shining.",
+      "body": "Ninety-six per cent of the atmosphere is beneath you. What is left of it is the thin blue line on the horizon."
+    },
+    {
+      "label": "Float",
+      "title": "Float.",
+      "body": "Two hours at 25,000 metres. Drag sideways to look around."
+    }
+  ],
+  "hours": {
+    "eyebrow": "The flight",
+    "title": "Six hours, most of them spent looking.",
+    "aria": "Altitude over time: 83 minutes up, two hours level at 25,000 metres, two hours down.",
+    "airliners": "airliners",
+    "hour": "h",
+    "legs": [
+      {
+        "name": "Lift-off",
+        "note": "Before first light, when the air on the field is still."
+      },
+      {
+        "name": "Float",
+        "note": "Ascent at 5 m/s. Sunrise meets you at about 5,000 m."
+      },
+      {
+        "name": "Descent begins",
+        "note": "Two hours level. The pilot valves helium to start down."
+      },
+      {
+        "name": "Parafoil",
+        "note": "The envelope is released and a steerable wing takes over."
+      },
+      {
+        "name": "Touchdown",
+        "note": "Ground crew has followed by road. Lunch is at the field."
+      }
+    ]
+  },
+  "book": {
+    "eyebrow": "Reservation",
+    "title": "Choose your dawn.",
+    "lede": "One capsule, six seats, five launch windows in 2027. A seat is {seat}; the whole capsule is {capsule}.",
+    "window": "Launch window",
+    "meta": "Lift-off {liftoff} · sun {sunrise}",
+    "free": "{n} of {all} free",
+    "full": "Fully booked",
+    "errWindow": "Please choose a launch window.",
+    "seats": "Seats",
+    "help0": "Choose a launch window first. Every seat faces the glass.",
+    "help1": "{label}. Hatched seats are taken. Every seat faces the glass.",
+    "pilot": "PILOT",
+    "errSeat": "Please choose at least one seat.",
+    "guest": "Lead guest",
+    "name": "Full name",
+    "namePh": "First and last name",
+    "errName": "Please enter your name.",
+    "mail": "E-mail",
+    "errMail": "Please enter a valid e-mail address.",
+    "tel": "Telephone",
+    "optional": "(optional)",
+    "telPh": "e.g. 040 66969 123",
+    "consent": "I agree that my details are used to answer this reservation request.",
+    "privacy": "Privacy notice (Datenschutz)",
+    "errOk": "Please confirm, otherwise we may not reply to you.",
+    "noWindow": "No launch window chosen yet",
+    "noSeats": "No seats chosen yet",
+    "seat1": "1 seat",
+    "seatN": "{n} seats",
+    "whole": "Whole capsule",
+    "submit": "Request these seats",
+    "passTop": "Reservation request",
+    "pLaunch": "Launch",
+    "pLift": "Lift-off",
+    "pSeats": "Seats",
+    "pCeil": "Ceiling",
+    "total": "Total",
+    "passDemo": "Demo: nothing was sent or stored. On a real site, your pilot would call you within two working days.",
+    "again": "Start a new request",
+    "inclTitle": "Every seat includes",
+    "included": [
+      "Two nights at the field house, the evening before and the night after",
+      "Pre-flight briefing and cabin fitting with your pilot",
+      "Breakfast aloft, lunch on landing",
+      "A second launch window at no charge if weather scrubs the first"
+    ]
+  },
+  "faq": {
+    "eyebrow": "Before you ask",
+    "title": "Straight answers.",
+    "talk": "Prefer to talk it through?",
+    "items": [
+      {
+        "q": "Is this space?",
+        "a": "No. Space begins at about 100 km and we float at 25 km. You are above 96 per cent of the atmosphere, the sky is black and the horizon is curved, but you remain in the stratosphere."
+      },
+      {
+        "q": "Will I be weightless?",
+        "a": "No. The capsule rises and descends gently, so you feel your normal weight the whole way. You can stand, walk around the cabin and eat at a table."
+      },
+      {
+        "q": "Who can fly?",
+        "a": "Anyone who is fit to take a commercial flight. The cabin is kept at sea-level pressure and room temperature, so there is no suit and no training beyond the briefing."
+      },
+      {
+        "q": "What happens in bad weather?",
+        "a": "We launch only in calm air at the field. If the window is scrubbed, your seat moves to the next window of your choice at no charge."
+      },
+      {
+        "q": "How do we come down?",
+        "a": "The pilot releases helium to begin the descent. At about 3,000 m the envelope is let go and a steerable parafoil carries the capsule to a prepared landing zone."
+      },
+      {
+        "q": "Is there a lavatory?",
+        "a": "Yes, a private one, with a window."
+      }
+    ]
+  },
+  "more": {
+    "hours": "The six hours",
+    "reserve": "Reserve a seat",
+    "questions": "Questions"
+  },
+  "plate": [
+    [
+      "Type",
+      "LA-6 aerostat"
+    ],
+    [
+      "Envelope",
+      "400,000 m³"
+    ],
+    [
+      "Lift gas",
+      "He"
+    ],
+    [
+      "Ceiling",
+      "25,000 m"
+    ],
+    [
+      "Serial",
+      "DEMO-001"
+    ],
+    [
+      "Field",
+      "Soltau"
+    ]
+  ],
+  "legal": {
+    "imprint": "Imprint (Impressum)",
+    "privacy": "Privacy (Datenschutz)",
+    "demo": "Demo site: this operator does not exist and all details are fictional.",
+    "cta": "A website like this for your company? Get in touch"
+  }
+}

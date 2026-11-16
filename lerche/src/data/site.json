@@ -1,0 +1,15 @@
+{
+  "name": "Lerche Aerostat",
+  "legalName": "Lerche Aerostat GmbH (fiktiv)",
+  "address": {
+    "street": "Am Startfeld 1",
+    "zip": "29614",
+    "city": "Soltau"
+  },
+  "email": "ascent@example.com",
+  "phone": "040 66969 125",
+  "openingHours": "Mo-Fr 09:00-17:00",
+  "areaServed": [
+    "Europe"
+  ]
+}

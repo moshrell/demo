@@ -17,7 +17,7 @@ const graph = [
 ];
 ---
 <!doctype html>
-<html lang={lang} data-night={`${site.night.from},${site.night.to}`}>
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -27,25 +27,14 @@ const graph = [
     <link rel="canonical" href={canonical} />
     {alt && <link rel="alternate" hreflang={lang === 'de' ? 'en' : 'de'} href={new URL(alt, Astro.site).href} />}
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
-    <meta name="theme-color" content="#121c25" />
+    <meta name="theme-color" content="#0c2a2b" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })} />}
     <script is:inline>
-      // Tag oder Nacht vor dem ersten Bild setzen: eigene Wahl (dieser Tab) vor Uhrzeit in Berlin.
-      (function () {
-        var d = document.documentElement, t = null;
-        try { t = sessionStorage.getItem('wohlauf:theme'); } catch (e) {}
-        if (!t) {
-          var n = d.getAttribute('data-night').split(',').map(Number), h = 12;
-          try { h = Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Berlin' }).format(new Date())); } catch (e) {}
-          t = h >= n[0] || h < n[1] ? 'nacht' : 'tag';
-        }
-        d.setAttribute('data-theme', t);
-        d.classList.add('js');
-        if ('scrollRestoration' in history && !location.hash) history.scrollRestoration = 'manual';
-      })();
+      document.documentElement.classList.add('js');
+      if ('scrollRestoration' in history && !location.hash) history.scrollRestoration = 'manual';
     </script>
   </head>
   <body class:list={[app && 'is-app']}>

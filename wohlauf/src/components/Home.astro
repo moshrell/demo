@@ -1,6 +1,6 @@
 ---
 // Startseite (DE und EN). Texte: src/data/<lang>.json, Stammdaten: site.json, Regionen der Figur: zones.json.
-// Jeder Block ist einem Gegenstand aus der Praxis nachgebaut: Anatomie-Tafel, Rezept, Maßband, Quittung, Namensschild, Karteikarte, Terminkarte, Liegenpapier, Winkelmesser (Navigation), Sprossenwand (Menü).
+// Jeder Block ist einem Gegenstand aus der Praxis nachgebaut: Gipsfigur, Rezept, Maßband, Quittung, Namensschild, Karteikarte, Terminkarte, Liegenpapier. Navigation und Menü sind bewusst schlicht.
 // Fotos: public/img/<name>.jpg; fehlt eines, fällt der Bildplatz weg.
 import site from '../data/site.json';
 import zones from '../data/zones.json';
@@ -17,37 +17,24 @@ const zname = (id: string) => t.zones.find((z: any) => z.id === id)?.short ?? id
 const rx = [...t.leistungen.rezept, ...t.leistungen.erg];
 const c = t.kosten.calc;
 const single = t.kosten.list.filter((x: any) => !x.pack);
-const js = { status: t.status, lang: t.lang, hours: site.hours, slot: site.nextSlot, nav: { night: t.nav.night, day: t.nav.day }, zones, names: Object.fromEntries(t.zones.map((z: any) => [z.id, z.name])), model: `${base}model/body.bin`, form: t.form,
+const js = { status: t.status, lang: t.lang, hours: site.hours, slot: site.nextSlot, zones, names: Object.fromEntries(t.zones.map((z: any) => [z.id, z.name])), model: `${base}model/body.bin`, form: t.form,
   kasse: site.kassePreise, fee: site.kasseGebuehr, calc: c, list: t.kosten.list, rxNames: Object.fromEntries(t.leistungen.rezept.map((x: any) => [x.k, x.h])) };
 const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin', t.nav.termin], ['#kosten', t.nav.kosten], ['#team', 'Team'], ['#fragen', t.nav.fragen], ['#anfrage', t.nav.anfrage]];
 ---
 <a class="skip" href="#main">{de ? 'Zum Inhalt' : 'Skip to content'}</a>
-<header class="head">
+<header class="head on-deep">
   <a class="mark" href={home} aria-label={`${site.name}: ${t.nav.home}`}><span class="mark__n">{site.name}</span><span class="mark__c">{t.claim}</span></a>
+  <nav class="head__nav" aria-label={de ? 'Hauptnavigation' : 'Main navigation'}>
+    {menu.slice(1, 6).map(([href, label]) => <a href={href}>{label}</a>)}
+  </nav>
   <p class="head__status" data-status></p>
   <a class="head__tel" href={`tel:${site.phoneHref}`}>{site.phone}</a>
+  <a class="btn btn--main head__cta" href="#anfrage">{t.nav.anfrage}</a>
 </header>
 
 <main id="main" data-home data-t={JSON.stringify(js)}>
-  <!-- Nachtansicht: nur bei data-theme="nacht" sichtbar -->
-  <section class="nacht" aria-labelledby="nacht-h">
-    <h2 id="nacht-h">{t.night.title}</h2>
-    <p class="nacht__lead">{t.night.lead}</p>
-    <ul class="nacht__tips">
-      {t.night.tips.map((x: any, i: number) => (
-        <li>
-          {has(i === 0 ? 'lagerung-ruecken' : 'lagerung-seite') && <img src={src(i === 0 ? 'lagerung-ruecken' : 'lagerung-seite')} alt="" width="1200" height="896" loading="lazy" decoding="async" />}
-          <h3>{x.h}</h3>
-          <p>{x.p}</p>
-        </li>
-      ))}
-    </ul>
-    <p class="nacht__contact">{t.night.contact} <a href="#anfrage">{t.nav.anfrage}</a></p>
-    <p class="nacht__warn">{t.night.warn}</p>
-  </section>
-
   <!-- 1 · Anatomie-Tafel -->
-  <section class="stage" id="figur" aria-labelledby="stage-h" data-chart>
+  <section class="stage on-deep" id="figur" aria-labelledby="stage-h" data-chart>
     <div class="stage__head">
       <h1 id="stage-h">{t.hero.h}</h1>
       <p>{t.hero.p}</p>
@@ -61,7 +48,6 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
           {posterOk && <img class="figure__poster" src={`${base}model/poster.webp`} alt="" width="480" height="1100" decoding="async" />}
           <canvas class="figure__canvas" data-canvas aria-hidden="true"></canvas>
         </div>
-        <svg class="chart__lines" data-lines aria-hidden="true"></svg>
       </div>
       <div class="chart__ctl">
         <div class="seg" role="group" aria-label={t.hero.turn}>
@@ -87,7 +73,7 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
             <h3>{t.hero.rez}</h3>
             <p>{z.rez}</p>
             {who(z.id) && <><h3>{t.hero.who}</h3><p>{who(z.id)}</p></>}
-            <a class="btn btn--warm" href="#anfrage" data-ask={z.name}>{t.hero.cta.replace('{z}', z.name)}</a>
+            <a class="btn btn--main" href="#anfrage" data-ask={z.name}>{t.hero.cta.replace('{z}', z.name)}</a>
           </article>
         ))}
       </div>
@@ -99,7 +85,7 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
   </section>
 
   <!-- 2 · Rezept -->
-  <section class="sec rezept" id="leistungen" aria-labelledby="leistungen-h" data-rezept>
+  <section class="sec sec--salbei rezept" id="leistungen" aria-labelledby="leistungen-h" data-rezept>
     <div class="sec__head"><h2 id="leistungen-h">{t.leistungen.title}</h2><p class="lead">{t.leistungen.p}</p></div>
     <div class="rezept__grid">
       <div class="slip">
@@ -133,7 +119,7 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
   </section>
 
   <!-- 3 · Maßband -->
-  <section class="sec sec--alt" id="termin" aria-labelledby="termin-h">
+  <section class="sec" id="termin" aria-labelledby="termin-h">
     <div class="sec__head"><h2 id="termin-h">{t.termin.title}</h2><p class="lead">{t.termin.p}</p></div>
     <ol class="tape">
       {t.termin.stages.map((s: any, i: number) => (
@@ -153,12 +139,12 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
   </section>
 
   <!-- 4 · Quittung -->
-  <section class="sec" id="kosten" aria-labelledby="kosten-h" data-calc>
+  <section class="sec on-deep" id="kosten" aria-labelledby="kosten-h" data-calc>
     <div class="sec__head"><h2 id="kosten-h">{t.kosten.title}</h2><p class="lead">{t.kosten.p}</p></div>
     <div class="calc">
       <div class="calc__in">
         <p class="calc__q">{c.way}</p>
-        <div class="seg seg--light" role="tablist" aria-label={c.way}>
+        <div class="seg seg--tabs" role="tablist" aria-label={c.way}>
           {t.kosten.tabs.map((x: any, i: number) => <button type="button" role="tab" id={`way-${x.id}`} aria-controls={`wayp-${x.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-way={x.id}>{x.tab}</button>)}
         </div>
         {t.kosten.tabs.map((x: any, i: number) => (
@@ -189,7 +175,7 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
           </div>
         ))}
       </div>
-      <div class="bon" aria-live="polite">
+      <div class="bon on-light" aria-live="polite">
         <p class="bon__h">{site.name} · {c.bon}</p>
         <dl class="bon__lines" data-bon-lines>
           <div><dt>{c.fee}</dt><dd>10,00 €</dd></div>
@@ -202,12 +188,12 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
   </section>
 
   <!-- 5 · Namensschilder -->
-  <section class="sec sec--alt" id="team" aria-labelledby="team-h">
+  <section class="sec" id="team" aria-labelledby="team-h">
     <div class="sec__head"><h2 id="team-h">{t.praxis.title}</h2><p class="lead">{t.praxis.p}</p></div>
     <ul class="badges">
       {t.praxis.team.map((p: any) => (
         <li class="badge">
-          {has(p.img) && <img src={src(p.img)} alt="" width="896" height="1200" loading="lazy" decoding="async" />}
+          {has(p.img) ? <img src={src(p.img)} alt="" width="896" height="1200" loading="lazy" decoding="async" /> : <span class="badge__av" aria-hidden="true">{p.n.split(' ').map((w: string) => w[0]).join('')}</span>}
           <h3>{p.n}</h3>
           <p class="badge__r">{p.r}</p>
           <p class="badge__q">{p.q}</p>
@@ -232,7 +218,7 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
   </section>
 
   <!-- 6 · Karteikarten -->
-  <section class="sec" id="fragen" aria-labelledby="faq-h">
+  <section class="sec sec--salbei" id="fragen" aria-labelledby="faq-h">
     <div class="sec__head"><h2 id="faq-h">{t.faq.title}</h2></div>
     <div class="kartei">
       {t.faq.items.map((x: any, i: number) => (
@@ -242,8 +228,8 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
   </section>
 
   <!-- 7 · Terminkarte -->
-  <section class="sec sec--alt anfrage" id="anfrage" aria-labelledby="anfrage-h">
-    <div class="karte">
+  <section class="sec on-deep anfrage" id="anfrage" aria-labelledby="anfrage-h">
+    <div class="karte on-light">
       <div class="karte__head">
         <p class="karte__brand"><span>{site.name}</span><span class="print">{t.form.card}</span></p>
         <h2 id="anfrage-h">{t.form.title}</h2>
@@ -302,25 +288,23 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
   <p class="rolle__demo">{t.footer.demo} {t.hero.model} <a href="https://kravets-webdesign.de/kontakt/">{t.footer.demoCta}</a></p>
 </footer>
 
-<!-- Navigation in Form eines Winkelmessers: zwei Schenkel (Menü, Termin), in der Mitte die Skala; der Zeiger folgt dem Scrollen -->
-<nav class="gonio" aria-label={de ? 'Hauptnavigation' : 'Main navigation'}>
-  <button class="gonio__arm gonio__arm--l" type="button" data-menu-open aria-expanded="false" aria-controls="wand">{t.nav.menu}</button>
-  <a class="gonio__dial" href="#figur" aria-label={t.nav.toFigure}>
-    <svg viewBox="0 0 64 64" aria-hidden="true"><circle class="gonio__ring" cx="32" cy="32" r="29" /><path class="gonio__ticks" d="M32 6v6M13.6 13.6l4.3 4.3M6 32h6M50.4 13.6l-4.3 4.3M58 32h-6" /><line class="gonio__needle" x1="32" y1="32" x2="32" y2="10" data-needle /><circle class="gonio__pin" cx="32" cy="32" r="4" /></svg>
-  </a>
-  <a class="gonio__arm gonio__arm--r" href="#anfrage">{t.nav.anfrage}</a>
+<!-- Handy: feste Leiste unten -->
+<nav class="dock" aria-label={de ? 'Schnellzugriff' : 'Quick actions'}>
+  <button type="button" class="dock__menu" data-menu-open aria-expanded="false" aria-controls="menu"><span aria-hidden="true"></span>{t.nav.menu}</button>
+  <a class="dock__call" href={`tel:${site.phoneHref}`}>{t.nav.call}</a>
+  <a class="dock__cta" href="#anfrage">{t.nav.anfrage}</a>
 </nav>
 
-<!-- Menü als Sprossenwand -->
-<div class="wand" id="wand" data-menu hidden>
-  <div class="wand__in" role="dialog" aria-modal="true" aria-label={t.nav.menu}>
-    <button class="wand__close" type="button" data-menu-close>{t.nav.close}</button>
-    <ul class="wand__rungs">
+<!-- Menü: ganze Fläche, große Einträge -->
+<div class="menu" id="menu" data-menu hidden>
+  <div class="menu__in" role="dialog" aria-modal="true" aria-label={t.nav.menu}>
+    <div class="menu__top"><span class="mark__n">{site.name}</span><button class="menu__close" type="button" data-menu-close>{t.nav.close}</button></div>
+    <ul class="menu__list">
       {menu.map(([href, label]) => <li><a href={href} data-menu-link>{label}</a></li>)}
     </ul>
-    <div class="wand__foot">
-      <a href={`tel:${site.phoneHref}`}>{site.phone}</a>
-      <button type="button" data-theme-toggle aria-label={t.nav.themeLabel}><span data-theme-label>{t.nav.night}</span></button>
+    <div class="menu__foot">
+      <a class="menu__tel" href={`tel:${site.phoneHref}`}>{site.phone}</a>
+      <p>{t.praxis.hours.map((h: string[]) => <span>{h[0]}: {h[1]}</span>)}</p>
       <a href={other} data-lang-link lang={de ? 'en' : 'de'}>{t.nav.lang}</a>
     </div>
   </div>

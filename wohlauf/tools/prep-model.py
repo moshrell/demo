@@ -22,7 +22,7 @@ def target(name, w):
         p = line.split()
         if len(p) == 4 and not line.startswith('#'): V[int(p[0])] += w * np.array([float(p[1]), float(p[2]), float(p[3])])
 for eth in ('caucasian', 'african', 'asian'): target(f'{eth}-male-young', 1 / 3)
-target('universal-male-young-maxmuscle-averageweight', 0.45)      # умеренно спортивное сложение
+target('universal-male-young-maxmuscle-averageweight', 0.62)      # спортивное сложение: рельеф читается на гипсовой фигуре
 target('proportions/male-young-averagemuscle-averageweight-idealproportions', 0.5)
 
 def cube(name): return V[sorted({i for f in faces[name] for i in f})].mean(axis=0)
@@ -110,7 +110,25 @@ for _ in range(6):
     A = np.zeros(len(P))
     for a, b in ((0, 1), (1, 2), (2, 0)): np.add.at(A, T[:, a], cav[T[:, b]]); np.add.at(A, T[:, b], cav[T[:, a]])
     cav = 0.5 * cav + 0.5 * A / np.maximum(C, 1)
-shade = np.clip(1.0 - np.clip(cav, 0, None) * 0.9, 0.55, 1.0); shade[eye] = 1.0
+# настоящее затенение (ambient occlusion): из каждой вершины лучи в полусферу, доля закрытых = тень.
+# Подмышки, внутренняя сторона рук и ног, под подбородком и грудью темнеют так, как это бывает у гипсовой фигуры в студии.
+import trimesh
+mesh = trimesh.Trimesh(P, T, process=False)
+rng = np.random.default_rng(7); RAYS = 96; occ = np.zeros(len(P))
+for _ in range(RAYS):
+    d = rng.normal(size=(len(P), 3)); d /= np.linalg.norm(d, axis=1)[:, None]
+    d = d + N * 1.001; d /= np.maximum(np.linalg.norm(d, axis=1), 1e-9)[:, None]      # косинусное распределение вокруг нормали
+    o = P + N * 0.02
+    loc, ray_i, _ = mesh.ray.intersects_location(o, d, multiple_hits=False)
+    dist = np.linalg.norm(loc - o[ray_i], axis=1)
+    occ[ray_i] += np.clip(1.0 - dist / 3.2, 0, 1)                                    # близкие преграды затеняют сильнее
+ao = 1.0 - occ / RAYS
+for _ in range(2):
+    A = np.zeros(len(P))
+    for a, b in ((0, 1), (1, 2), (2, 0)): np.add.at(A, T[:, a], ao[T[:, b]]); np.add.at(A, T[:, b], ao[T[:, a]])
+    ao = 0.5 * ao + 0.5 * A / np.maximum(C, 1)
+shade = np.clip(ao ** 1.35 * (1.0 - np.clip(cav, 0, None) * 0.55), 0.3, 1.0); shade[eye] = np.clip(shade[eye] + 0.25, 0, 1)
+print('ao', round(float(ao.min()), 3), round(float(ao.mean()), 3))
 
 # ткань (короткие шорты): считается в позе покоя, где ноги раздвинуты и кисти далеко; граница задаётся расстоянием до края
 waist = head['spine05'][1] + 0.18 * (head['spine04'][1] - head['spine05'][1])
@@ -142,15 +160,23 @@ def pair(a, b=None, dz=0.0, out=0.0):
         A = J[f'{s}-{a}'] + np.array([out * sg, 0, dz]); B = (J[f'{s}-{b}'] if b else J[f'{s}-{a}']) + np.array([out * sg, 0, dz if not b else 0]); caps.append(r3(A) + r3(B))
     return caps
 jaw = J['jaw']; nk = J['neck']; hd = J['head']
+tmj = [jaw[0], jaw[1] + 0.05, jaw[2] - 0.05]
 zones = [
- {'id': 'kopf', 'view': 'front', 'r': 0.95, 'caps': [r3([-0.72, nk[1] + 1.15, nk[2] + 0.75]) + r3([0.72, nk[1] + 1.15, nk[2] + 0.75])]},
- {'id': 'nacken', 'view': 'back', 'r': 0.85, 'caps': [r3([0, hd[1] - 0.25, nk[2] - 0.55]) + r3([0, nk[1] - 0.35, nk[2] - 0.6])]},
- {'id': 'schulter', 'view': 'front', 'r': 1.0, 'caps': pair('shoulder', out=0.1)},
- {'id': 'ruecken', 'view': 'back', 'r': 1.45, 'caps': [r3([0, J['spine-top'][1] + 0.9, back + 0.25]) + r3([0, J['spine-low'][1] + 0.1, back + 0.3])]},
- {'id': 'arm', 'view': 'front', 'r': 0.7, 'caps': pair('elbow', 'hand')},
- {'id': 'huefte', 'view': 'front', 'r': 1.05, 'caps': pair('hip', out=0.35)},
- {'id': 'knie', 'view': 'front', 'r': 0.9, 'caps': [c[:2] + [round(front_knee - 0.35, 3)] + c[3:5] + [round(front_knee - 0.35, 3)] for c in pair('knee')]},
- {'id': 'fuss', 'view': 'front', 'r': 0.78, 'caps': pair('ankle', 'toe')},
+ {'id': 'kopf', 'view': 'front', 'r': 0.4, 'caps': [r3([-0.62, tmj[1] - 0.1, tmj[2] + 0.45]) * 2, r3([0.62, tmj[1] - 0.1, tmj[2] + 0.45]) * 2]},
+ {'id': 'nacken', 'view': 'back', 'r': 0.5, 'caps': [r3([0, hd[1] - 0.25, nk[2] - 0.55]) + r3([0, nk[1] - 0.35, nk[2] - 0.6])]},
+ {'id': 'schulter', 'view': 'front', 'r': 0.6, 'caps': pair('shoulder', out=0.25)},
+ {'id': 'ruecken', 'view': 'back', 'r': 0.62, 'caps': [r3([0, J['spine-top'][1] + 0.5, back + 0.25]) + r3([0, J['spine-low'][1] + 0.1, back + 0.3])]},
+ {'id': 'arm', 'view': 'front', 'r': 0.75, 'caps': pair('elbow', 'hand')},
+ {'id': 'huefte', 'view': 'front', 'r': 0.5, 'caps': pair('hip', dz=1.1, out=0.25)},
+ {'id': 'knie', 'view': 'front', 'r': 0.62, 'caps': [c[:2] + [round(front_knee - 0.35, 3)] + c[3:5] + [round(front_knee - 0.35, 3)] for c in pair('knee')]},
+ {'id': 'fuss', 'view': 'front', 'r': 0.42, 'caps': pair('ankle', 'toe')},
 ]
+# d0: наименьшее расстояние от оси зоны до кожи. Шейдер считает расстояние от поверхности, поэтому пятно лежит на коже, а не «внутри» тела.
+def cap_dist(c):
+    a = np.array(c[:3]); bb_ = np.array(c[3:]); ba = bb_ - a; pa = P - a
+    h = np.clip(pa @ ba / max(float(ba @ ba), 1e-5), 0, 1)
+    return np.linalg.norm(pa - h[:, None] * ba, axis=1)
+for z in zones:
+    z['d0'] = round(float(min(cap_dist(c)[~eye].min() for c in z['caps'])), 3)
 json.dump(zones, open('src/data/zones.json', 'w'), indent=1)
 print('verts', len(P), 'tris', len(T), 'bbox', bb, 'unweighted', int((~ok[used]).sum()))

@@ -1,70 +1,68 @@
-/* Hallmark · custom theme «Befund» · genre: editorial/clinical · structure: bespoke, jeder Block ein Gegenstand der Praxis (Anatomie-Tafel, Rezept, Maßband, Quittung, Namensschild, Karteikarte, Terminkarte, Liegenpapier; Navigation als Winkelmesser, Menü als Sprossenwand)
- * pre-emit critique: P4 H4 E4 S5 R4 V4
- * Ruhige Praxisfarben: Porzellan, Tintenblau-Schwarz. Eine einzige warme Farbe zeigt, wo es wehtut. */
+/* Hallmark · custom theme «Gips & Maßband» · genre: clinical/atelier · structure: bespoke, jeder Block ein Gegenstand der Praxis
+ * (Gipsfigur, Rezept, Maßband, Quittung, Namensschild, Karteikarte, Terminkarte, Liegenpapier)
+ * Drei Flächen: tiefes Petrol (Behandlungsraum bei gedimmtem Licht), Kreide, Salbei. Rot zeigt nur, wo es wehtut. Maßband-Gelb ist die Farbe zum Handeln. */
 :root {
-  --paper: #f1f3f4;
-  --paper-2: #e5e9ec;
-  --surface: #ffffff;
-  --ink: #14202b;
-  --ink-2: #4d5b67;
-  --rule: #c7cfd6;
-  --warm: #d8482a;        /* gewählte Körperregion */
-  --warm-ink: #ad3a20;    /* dieselbe Farbe als Text auf hellem Grund */
-  --stage: #121c25;       /* dunkle Bühne der Figur, Tag und Nacht gleich */
-  --stage-2: #1b2834;
-  --stage-rule: #3a4a58;
-  --on-stage: #eef2f4;
-  --on-stage-2: #aab7c1;
-  --fig-skin: #d9b8a2;    /* Figur: Haut */
-  --fig-cloth: #2c3b46;   /* Figur: Hose */
-  --fig-eye: #e3cdbd;
-  --fig-hot: #ff4a22;     /* Figur: warme Markierung */
-  --ok: #6fcf97;          /* Punkt «jetzt erreichbar» */
-  --rosa: #f7dadd;        /* Rezeptpapier */
-  --rosa-line: #d97a8a;   /* Formularlinien */
-  --rosa-ink: #96283d;    /* Formularschrift */
-  --band: #f3c62f;        /* Maßband */
-  --band-ink: #1b1a12;
-  --holz: #c8a26c;        /* Sprossenwand */
-  --focus: #1f6fb2;
+  --deep: #0c2a2b;
+  --deep-2: #123637;
+  --deep-3: #1a4443;
+  --deep-rule: #2d5553;
+  --on-deep: #f0f3ec;
+  --on-deep-2: #a9beb7;
+  --kreide: #eef0ea;
+  --salbei: #d6ded2;
+  --weiss: #fcfcf8;
+  --tinte: #0f1f1e;
+  --tinte-2: #4a5b57;
+  --linie: #bcc7bd;
+
+  /* Rollen: Abschnitte auf Petrol setzen diese Werte neu (.on-deep) */
+  --paper: var(--kreide);
+  --surface: var(--weiss);
+  --ink: var(--tinte);
+  --ink-2: var(--tinte-2);
+  --rule: var(--linie);
+  --focus: #0b62b8;
+
+  --hot: #f2401a;         /* gewählte Körperregion */
+  --hot-ink: #b0330f;     /* dieselbe Farbe als Text auf hellem Grund */
+  --fig-skin: #d9d1c4;    /* Figur: Gips */
+  --fig-cloth: #aea698;   /* Figur: Hose, Ton in Ton */
+  --fig-hot: #f2401a;
+  --ok: #7ddc9f;          /* Punkt «jetzt erreichbar» */
+  --rosa: #f6d5d9;        /* Rezeptpapier */
+  --rosa-line: #d77a8b;
+  --rosa-ink: #932a40;
+  --band: #f4c62d;        /* Maßband, zugleich Farbe der Hauptknöpfe */
+  --band-2: #e0ae12;
+  --band-ink: #19170a;
   --alert: #a3231a;
 
   --font-display: 'Literata Variable', Georgia, 'Times New Roman', serif;
   --font-text: 'Hanken Grotesk Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-print: 'Courier Prime', 'Courier New', monospace; /* Nadeldrucker: alles, was «eingetragen» ist */
+  --font-print: 'Courier Prime', 'Courier New', monospace; /* alles, was «eingetragen» ist */
 
   --text-xs: 0.8125rem;
   --text-sm: 0.9375rem;
   --text-md: 1.0625rem;
-  --text-lg: clamp(1.15rem, 1rem + 0.6vw, 1.35rem);
+  --text-lg: clamp(1.15rem, 1.02rem + 0.6vw, 1.4rem);
   --text-h3: clamp(1.25rem, 1.1rem + 0.7vw, 1.6rem);
-  --text-h2: clamp(1.9rem, 1.4rem + 2.2vw, 3rem);
-  --text-h1: clamp(2.1rem, 1.5rem + 3vw, 3.6rem);
+  --text-h2: clamp(2.05rem, 1.35rem + 3.3vw, 3.9rem);
+  --text-h1: clamp(2.45rem, 1.45rem + 5vw, 5.1rem);
 
   --space-xs: 0.375rem;
   --space-sm: 0.75rem;
   --space-md: 1.25rem;
   --space-lg: 2rem;
   --space-xl: 3.25rem;
-  --space-2xl: clamp(4rem, 3rem + 5vw, 7.5rem);
+  --space-2xl: clamp(4.5rem, 3rem + 7vw, 9rem);
   --gutter: clamp(1.125rem, 0.5rem + 3.2vw, 3.5rem);
-  --max: 76rem;
-  --radius: 0.4rem;
+  --max: 82rem;
+  --pad: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+  --radius: 0.5rem;
   --bar: 0px;
   --ease: cubic-bezier(0.22, 0.8, 0.26, 1);
+  --shadow-paper: 0 0.1rem 0.2rem rgb(12 42 43 / 0.08), 0 0.9rem 2.2rem -0.6rem rgb(12 42 43 / 0.28);
 }
-:root[data-theme='nacht'] {
-  --paper: #0f1820;
-  --paper-2: #16222c;
-  --surface: #1b2833;
-  --ink: #e9eef1;
-  --ink-2: #a7b4be;
-  --rule: #33424f;
-  --warm-ink: #ff8e6e;
-  --rosa: #33222a;
-  --rosa-line: #8f4c5a;
-  --rosa-ink: #f2b3bf;
-  --focus: #8cc4f0;
-  --alert: #ff9483;
-}
-@media (max-width: 899px) { :root { --bar: 4.75rem; } }
+.on-deep { --paper: var(--deep); --surface: var(--deep-2); --ink: var(--on-deep); --ink-2: var(--on-deep-2); --rule: var(--deep-rule); --focus: var(--band); background: var(--deep); color: var(--on-deep); }
+.on-light { --paper: var(--kreide); --surface: var(--weiss); --ink: var(--tinte); --ink-2: var(--tinte-2); --rule: var(--linie); --focus: #0b62b8; color: var(--tinte); }
+@media (max-width: 899px) { :root { --bar: 4.25rem; } }

@@ -16,7 +16,7 @@ const ready = (p) => p.waitForSelector('.figure.is-ready', {timeout: 20000});
 
 if (process.argv[3] === 'poster') {
   const p = await mk(480, 1100, false); await p.goto(U + '/'); await ready(p);
-  await p.evaluate(() => { const f = document.querySelector('[data-figure]'); document.body.innerHTML = ''; document.body.style.cssText = 'margin:0;background:transparent;padding:0'; document.documentElement.style.background = 'transparent'; f.style.cssText = 'position:fixed;inset:0;width:480px;height:1100px'; document.body.append(f); });
+  await p.evaluate(() => { const f = document.querySelector('[data-figure]'); document.body.innerHTML = ''; document.body.style.cssText = 'margin:0;background:transparent;padding:0'; document.documentElement.style.background = 'transparent'; f.style.cssText = 'position:fixed;inset:0;width:480px;height:1100px'; document.body.append(f); const st = document.createElement('style'); st.textContent = 'html,body{background:transparent!important}.figure::after,.figure__poster{display:none!important}'; document.head.append(st); });
   await p.waitForTimeout(400); await p.evaluate(() => window.__body.still(0)); await p.waitForTimeout(200);
   await p.screenshot({path: out + '/poster.png', omitBackground: true});
   console.log('poster ok'); await browser.close(); srv.close(); process.exit(0);
@@ -27,10 +27,10 @@ for (const [name, w, h, touch] of [['m', 390, 844, true], ['d', 1440, 900, false
   await stage.screenshot({path: `${out}/${name}-0-start.png`});
   for (const id of ['schulter', 'ruecken', 'knie', 'kopf', 'nacken', 'arm', 'huefte', 'fuss']) {
     await p.evaluate((id) => document.querySelector(`[data-zone="${id}"]`).click(), id); await p.waitForTimeout(350);
-    await p.locator('.chart__map').screenshot({path: `${out}/${name}-${id}.png`});
+    await p.locator('.figure').screenshot({path: `${out}/${name}-${id}.png`});
   }
   res[name + 'Panel'] = await p.evaluate(() => [...document.querySelectorAll('[data-zone-panel]')].filter((x) => !x.hidden).map((x) => x.dataset.zonePanel));
-  await p.evaluate(() => window.__body.still(Math.PI / 2)); await p.waitForTimeout(200); await p.locator('.chart__map').screenshot({path: `${out}/${name}-side.png`});
+  await p.evaluate(() => window.__body.still(Math.PI / 2)); await p.waitForTimeout(200); await p.locator('.figure').screenshot({path: `${out}/${name}-side.png`});
   // тап по фигуре: колено (по проекции зоны)
   if (name === 'd') {
     await p.evaluate(() => { window.__body.select(null); window.__body.still(0); document.querySelector('[data-zone="fuss"]').click(); document.querySelector('[data-zone="fuss"]').click(); });
@@ -63,9 +63,8 @@ for (const [name, w, h, touch] of [['m', 390, 844, true], ['d', 1440, 900, false
   await p.locator('#anfrage').screenshot({path: `${out}/${name}-karte.png`});
   await p.locator('.rolle').screenshot({path: `${out}/${name}-rolle.png`});
   await p.evaluate(() => document.querySelector('.badge__z a').click()); await p.waitForTimeout(300); res[name + 'Goto'] = await p.evaluate(() => document.querySelector('[data-zone][aria-pressed="true"]')?.dataset.zone ?? null);
-  await p.click('[data-menu-open]'); await p.waitForTimeout(200); await p.screenshot({path: `${out}/${name}-menu.png`});
+  if (await p.locator('[data-menu-open]:visible').count()) { await p.locator('[data-menu-open]:visible').first().click(); await p.waitForTimeout(400); await p.screenshot({path: `${out}/${name}-menu.png`}); }
   res[name + 'Overflow'] = await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-  await p.click('.wand [data-theme-toggle]'); await p.waitForTimeout(300); await p.screenshot({path: `${out}/${name}-night.png`});
 }
 console.log(JSON.stringify({res, logs}, null, 1));
 await browser.close(); srv.close();

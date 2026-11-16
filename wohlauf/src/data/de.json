@@ -14,17 +14,13 @@
     "call": "Anrufen",
     "lang": "English",
     "langShort": "EN",
-    "night": "Nacht",
-    "day": "Tag",
-    "themeLabel": "Ansicht wechseln: Tag oder Nacht",
     "home": "Zur Startseite",
     "leistungen": "Leistungen",
     "menu": "Menü",
     "close": "Schließen",
     "figur": "Körperregion wählen",
     "fragen": "Fragen",
-    "rezept": "Rezept verstehen",
-    "toFigure": "Zur Figur"
+    "rezept": "Rezept verstehen"
   },
   "status": {
     "open": "Heute bis {t} Uhr erreichbar",
@@ -585,22 +581,6 @@
     "cardNote": "Datum und Uhrzeit tragen wir ein und melden uns bei Ihnen.",
     "cardDate": "Datum",
     "cardTime": "Uhrzeit"
-  },
-  "night": {
-    "title": "Schmerzen und kein Schlaf?",
-    "lead": "Das Zentrum ist jetzt geschlossen. Zwei Dinge können Sie sofort versuchen.",
-    "tips": [
-      {
-        "h": "Auf dem Rücken",
-        "p": "Ein dickes Kissen unter die Knie. Das entlastet den unteren Rücken."
-      },
-      {
-        "h": "Auf der Seite",
-        "p": "Ein Kissen zwischen die Knie, das obere Bein leicht angewinkelt. Bei Schulterschmerz auf die andere Seite."
-      }
-    ],
-    "contact": "Schreiben Sie uns jetzt, wir rufen zurück, sobald wir da sind.",
-    "warn": "Bei Taubheit, Lähmung, Fieber oder nach einem Sturz bitte nicht warten: ärztlicher Bereitschaftsdienst 116 117, im Notfall 112."
   },
   "footer": {
     "address": "Adresse",

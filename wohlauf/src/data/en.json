@@ -14,17 +14,13 @@
     "call": "Call",
     "lang": "Deutsch",
     "langShort": "DE",
-    "night": "Night",
-    "day": "Day",
-    "themeLabel": "Switch view: day or night",
     "home": "Go to home page",
     "leistungen": "Services",
     "menu": "Menu",
     "close": "Close",
     "figur": "Choose a body region",
     "fragen": "Questions",
-    "rezept": "Read your prescription",
-    "toFigure": "Back to the figure"
+    "rezept": "Read your prescription"
   },
   "status": {
     "open": "Reachable today until {t}",
@@ -585,22 +581,6 @@
     "cardNote": "We fill in date and time and get back to you.",
     "cardDate": "Date",
     "cardTime": "Time"
-  },
-  "night": {
-    "title": "In pain and can't sleep?",
-    "lead": "The centre is closed right now. Two things you can try straight away.",
-    "tips": [
-      {
-        "h": "On your back",
-        "p": "A thick pillow under your knees. This takes load off the lower back."
-      },
-      {
-        "h": "On your side",
-        "p": "A pillow between your knees, top leg slightly bent. With shoulder pain, lie on the other side."
-      }
-    ],
-    "contact": "Write to us now and we will call you back as soon as we are in.",
-    "warn": "With numbness, paralysis, fever or after a fall, do not wait: medical on-call service 116 117, emergencies 112."
   },
   "footer": {
     "address": "Address",

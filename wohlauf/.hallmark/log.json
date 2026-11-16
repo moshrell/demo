@@ -7,5 +7,14 @@
     "vibe": "ruhig, klinisch, genau; eine warme Farbe zeigt, wo es wehtut",
     "enrichment": "three.js-Figur aus CC0-Daten (MakeHuman/MPFB: Formziele, Skelett), Markierung und Hose per Shader, Poster als Standbild",
     "brief": "Wohlauf · Zentrum für Physiotherapie Hannover-Südstadt (Demo), dritte Fassung"
+  },
+  {
+    "date": "2026-11-16",
+    "macrostructure": "bespoke: Gipsfigur als Bühne, danach je Block ein Gegenstand der Praxis (Rezept, Maßband, Quittung, Namensschild, Karteikarte, Terminkarte, Liegenpapier); Navigation schlicht (Kopfzeile / Leiste unten)",
+    "theme": "custom «Gips & Maßband»",
+    "theme_axes": "Petrol tief + Kreide + Salbei / serif display groß + grotesk text + Druckerschrift / Rot nur für Schmerz, Maßband-Gelb für Handlung, Rezept-Rosa",
+    "vibe": "Studio, ruhig, genau",
+    "enrichment": "three.js-Gipsfigur: gebackene Verschattung, Studio-Umgebung, Schatten, Höhenlinien, Region als Fleck mit Messringen",
+    "brief": "Wohlauf, vierte Fassung"
   }
 ]

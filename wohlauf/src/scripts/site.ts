@@ -1,4 +1,4 @@
-// Startseite: Status, Tag/Nacht, Körper-Tafel (Liste steuert, 3D-Figur zeigt), Tabs, Formular.
+// Startseite: Status, Menü, Körper-Tafel (Liste steuert, 3D-Figur zeigt), Tabs, Formular.
 const main = document.querySelector<HTMLElement>('[data-home]');
 const doc = document.documentElement;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -8,38 +8,19 @@ const $$ = <E extends HTMLElement>(s: string, r: ParentNode = document) => [...r
 if (main) {
   const T = JSON.parse(main.dataset.t!);
 
-  // ---------- Tag / Nacht (Knopf im Menü) ----------
-  const themeBtn = $('[data-theme-toggle]')!, themeLabel = $('[data-theme-label]')!;
-  const paintTheme = () => {
-    const night = doc.dataset.theme === 'nacht';
-    themeLabel.textContent = night ? T.nav.day : T.nav.night;
-    themeBtn.setAttribute('aria-pressed', String(night));
+  // ---------- Menü ----------
+  const menu = $('[data-menu]')!, openers = $$<HTMLButtonElement>('[data-menu-open]');
+  let lastOpener: HTMLButtonElement | null = null;
+  const setMenu = (open: boolean, refocus = true) => {
+    if (menu.hidden === !open) return;
+    menu.hidden = !open; doc.classList.toggle('is-menu', open);
+    openers.forEach((b) => b.setAttribute('aria-expanded', String(open)));
+    if (open) $<HTMLButtonElement>('[data-menu-close]')!.focus(); else if (refocus) lastOpener?.focus({ preventScroll: true });
   };
-  themeBtn.addEventListener('click', () => {
-    doc.dataset.theme = doc.dataset.theme === 'nacht' ? 'tag' : 'nacht';
-    try { sessionStorage.setItem('wohlauf:theme', doc.dataset.theme!); } catch {}
-    paintTheme();
-    closeMenu();
-    window.scrollTo({ top: 0 });
-  });
-  paintTheme();
-
-  // ---------- Menü (Sprossenwand) ----------
-  const wand = $('[data-menu]')!, menuBtn = $<HTMLButtonElement>('[data-menu-open]')!;
-  function closeMenu() { if (wand.hidden) return; wand.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); doc.classList.remove('is-menu'); menuBtn.focus({ preventScroll: true }); }
-  menuBtn.addEventListener('click', () => { wand.hidden = false; menuBtn.setAttribute('aria-expanded', 'true'); doc.classList.add('is-menu'); $<HTMLButtonElement>('[data-menu-close]')!.focus(); });
-  $('[data-menu-close]')!.addEventListener('click', closeMenu);
-  $$('[data-menu-link]').forEach((a) => a.addEventListener('click', () => { wand.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); doc.classList.remove('is-menu'); }));
-  addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
-
-  // ---------- Winkelmesser: der Zeiger zeigt, wie weit die Seite gelesen ist ----------
-  {
-    const needle = document.querySelector<SVGLineElement>('[data-needle]')!;
-    let raf = 0;
-    const turn = () => { raf = 0; const max = doc.scrollHeight - innerHeight; const p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0; needle.setAttribute('transform', `rotate(${(-90 + 180 * p).toFixed(1)} 32 32)`); };
-    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(turn); }, { passive: true });
-    turn();
-  }
+  openers.forEach((b) => b.addEventListener('click', () => { lastOpener = b; setMenu(true); }));
+  $('[data-menu-close]')!.addEventListener('click', () => setMenu(false));
+  $$('[data-menu-link]').forEach((a) => a.addEventListener('click', () => setMenu(false, false)));
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
 
   // ---------- Erreichbarkeit (Zeit in Berlin) ----------
   const berlin = () => {
@@ -72,7 +53,7 @@ if (main) {
   // ---------- Körper-Tafel ----------
   const form = $<HTMLFormElement>('[data-af]')!;
   {
-    const chart = $('[data-chart]')!, map = $('[data-map]')!, fig = $('[data-figure]')!, canvas = $<HTMLCanvasElement>('[data-canvas]')!, svg = map.querySelector<SVGSVGElement>('[data-lines]')!;
+    const chart = $('[data-chart]')!, fig = $('[data-figure]')!, canvas = $<HTMLCanvasElement>('[data-canvas]')!;
     const labels = $$<HTMLAnchorElement>('[data-zone]', chart), panels = $$('[data-zone-panel]', chart), empty = $('[data-panel-empty]')!, panel = $('[data-panel]')!;
     const faces = $$<HTMLButtonElement>('[data-face]', chart);
     let body: Awaited<ReturnType<typeof import('./body').createBody>> | null = null;
@@ -87,7 +68,6 @@ if (main) {
       body?.select(id);
       const z = T.zones.find((x: any) => x.id === id);
       if (z) paintFace(z.view === 'back');
-      drawLines();
       paintPeek();
     };
     // Handy: das Feld liegt unter der Figur. Statt wegzurollen (dann sähe man die Markierung nicht), erscheint ein Hinweis über der Aktionsleiste.
@@ -114,42 +94,14 @@ if (main) {
       sel.dispatchEvent(new Event('change', { bubbles: true }));
     }));
 
-    // Hinweislinien von den Namen zur Figur (aus den projizierten 3D-Punkten)
-    let pts: Record<string, [number, number, boolean]> = {};
-    const NS = 'http://www.w3.org/2000/svg';
-    const lines = Object.fromEntries(labels.map((l) => { const g = document.createElementNS(NS, 'g'); g.innerHTML = '<path/><circle r="3.5"/>'; svg.append(g); return [l.dataset.zone!, g]; }));
-    function drawLines() {
-      const mr = map.getBoundingClientRect(), fr = fig.getBoundingClientRect();
-      svg.setAttribute('viewBox', `0 0 ${mr.width} ${mr.height}`);
-      labels.forEach((l) => {
-        const id = l.dataset.zone!, g = lines[id], p = pts[id];
-        if (!p) { g.style.display = 'none'; return; }
-        g.style.display = '';
-        const lr = l.getBoundingClientRect(), x1 = lr.right - mr.left, y1 = lr.bottom - mr.top - 1, x2 = p[0] + fr.left - mr.left, y2 = p[1] + fr.top - mr.top;
-        const mx = x1 + Math.max(10, (x2 - x1) * 0.35);
-        g.firstElementChild!.setAttribute('d', `M${x1.toFixed(1)} ${y1.toFixed(1)}H${mx.toFixed(1)}L${x2.toFixed(1)} ${y2.toFixed(1)}`);
-        const c = g.lastElementChild!; c.setAttribute('cx', x2.toFixed(1)); c.setAttribute('cy', y2.toFixed(1));
-        g.setAttribute('class', `${id === current ? 'is-on' : ''} ${p[2] ? '' : 'is-far'}`);
-      });
-    }
-
     const start = async () => {
       try {
         const { createBody } = await import('./body');
         const css = getComputedStyle(doc);
         body = await createBody({
-          canvas, model: T.model, zones: T.zones, reduce, skin: css.getPropertyValue('--fig-skin').trim(), hot: css.getPropertyValue('--fig-hot').trim(), cloth: css.getPropertyValue('--fig-cloth').trim(), eye: css.getPropertyValue('--fig-eye').trim(),
+          canvas, model: T.model, zones: T.zones, reduce, skin: css.getPropertyValue('--fig-skin').trim(), hot: css.getPropertyValue('--fig-hot').trim(), cloth: css.getPropertyValue('--fig-cloth').trim(),
           onPick: (id) => select(id),
-          onFrame: (project) => {
-            // Ankerpunkt je Region: das Kapselende, das auf dem Bildschirm am weitesten links liegt (zur Namensliste hin)
-            for (const z of T.zones) {
-              let best: [number, number, boolean] | null = null;
-              for (const c of z.caps) { const p = project([c[0], c[1], c[2]]); if (!best || p[0] < best[0]) best = p; }
-              pts[z.id] = best!;
-            }
-            drawLines();
-            paintFaceQuiet();
-          },
+          onFrame: () => paintFaceQuiet(),
         });
         fig.classList.add('is-ready');
         (window as any).__body = body;
@@ -159,7 +111,6 @@ if (main) {
     let lastBack = false;
     const paintFaceQuiet = () => { const b = body!.isBack(); if (b !== lastBack) { lastBack = b; paintFace(b); } };
     canvas.addEventListener('pointerdown', () => { const h = $('[data-drag-hint]'); if (h) h.dataset.done = '1'; }, { once: true });
-    addEventListener('resize', drawLines);
     if ('requestIdleCallback' in window) (window as any).requestIdleCallback(start, { timeout: 1200 }); else setTimeout(start, 200);
     const hash = location.hash.match(/^#z-(\w+)$/);
     if (hash) select(hash[1], false);

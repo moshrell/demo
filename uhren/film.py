@@ -164,15 +164,25 @@ def winding(psi, screw=True):
 #      upper part (or the lower one, for an upper bound) until every pair is clear, so whatever sits on top always rises higher. ----
 import json as _json
 LIMITS = _json.load(open(os.path.join(HERE, 'explode_limits.json')))
+# bodies: parts that are one piece in the watch (wheel + pinion + arbor, jewel + chaton, balance + its screws ...) and move identically in the design.
+# settle() lifts a body as a whole, never one member alone.
+BODIES = _json.load(open(os.path.join(HERE, 'explode_bodies.json')))
+BODY_OF = {n: i for i, b in enumerate(BODIES) for n in b}
 def settle(margin=0.12, rounds=400):
     lf = lambda n: pose.setdefault(n, {'lift': 0.0, 'rot': 0.0, 'pivot': None, 'shift': Vector((0, 0, 0)), 'axis': None})
+    def body(n):
+        i = BODY_OF.get(n)
+        if i is None: return
+        top = max(lf(m)['lift'] for m in BODIES[i])
+        for m in BODIES[i]: lf(m)['lift'] = top
+    for n in BODY_OF: body(n)
     for _ in range(rounds):
         moved = False
         for c in LIMITS:
             a, b = lf(c['a']), lf(c['b']); d = b['lift'] - a['lift']
             lo = c['lo'] + min(margin, -c['lo'] / 2) + c.get('k', 0.0) * a['lift']; hi = c['hi'] - min(margin, c['hi'] / 2)
-            if d < lo - 1e-9: b['lift'] = a['lift'] + lo; moved = True
-            elif d > hi + 1e-9: a['lift'] = b['lift'] - hi; moved = True
+            if d < lo - 1e-9: b['lift'] = a['lift'] + lo; body(c['b']); moved = True
+            elif d > hi + 1e-9: a['lift'] = b['lift'] - hi; body(c['a']); moved = True
         if not moved: return
     print('settle: no fixed point', flush=True)
 

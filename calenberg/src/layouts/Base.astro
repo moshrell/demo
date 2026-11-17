@@ -59,11 +59,35 @@ const ld = { '@context': 'https://schema.org', '@graph': graph };
     <slot />
     <footer class="fuss">
       <div class="fuss__in">
+        <div class="zeit" role="img" aria-label="Uhr: aktuelle Ortszeit in Hannover">
+          <p class="zeit__ort"><span class="zeit__stunden" data-uhr>--:--</span><span class="zeit__sek" data-uhr-s>:--</span><span class="zeit__label">Ortszeit in Hannover</span></p>
+          <div class="zeit__spur"><span class="zeit__zeiger" data-zeiger></span></div>
+          <p class="zeit__skala"><span>0</span><span>15</span><span>30</span><span>45</span></p>
+        </div>
         <p class="fuss__marke">Calenberg</p>
         <p class="fuss__zeile">Uhrenmanufaktur in Hannover. {site.address.street}, {site.address.zip} {site.address.city}.</p>
         <p class="fuss__unten"><a href={base}>Startseite</a><a href={`${base}impressum/`}>Impressum</a><a href={`${base}datenschutz/`}>Datenschutz</a></p>
         {!index && <p class="fuss__demo">Demo-Seite: Marke, Werk und alle Angaben sind erfunden, die Bilder sind am Computer gerendert. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihr Unternehmen? Jetzt anfragen</a></p>}
       </div>
     </footer>
+    <script>
+      // footer clock: Hannover time, the marker hops six times a second like a 21 600 vph escapement (the same beat as the movement above)
+      const hm = document.querySelector<HTMLElement>('[data-uhr]'), sec = document.querySelector<HTMLElement>('[data-uhr-s]'), z = document.querySelector<HTMLElement>('[data-zeiger]');
+      if (hm && sec && z) {
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const fmt = new Intl.DateTimeFormat('de-DE', { timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        let lastBeat = -1, lastText = '';
+        const tick = () => {
+          const now = Date.now(), beat = Math.floor((now % 60000) / (reduce ? 1000 : 1000 / 6)) ;
+          if (beat !== lastBeat) {
+            if (beat < lastBeat) { z.style.transition = 'none'; z.style.setProperty('--b', String(beat)); void z.offsetWidth; z.style.transition = ''; }
+            z.style.setProperty('--b', String(beat)); lastBeat = beat;
+            const t = fmt.format(now); if (t !== lastText) { lastText = t; hm.textContent = t.slice(0, 5); sec.textContent = t.slice(5); }
+          }
+        };
+        z.style.setProperty('--n', reduce ? '60' : '360');
+        tick(); setInterval(tick, 80);
+      }
+    </script>
   </body>
 </html>

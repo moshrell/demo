@@ -26,6 +26,15 @@ button { font: inherit; color: inherit; }
 .legal a { color: var(--stahl); }
 .fuss { background: var(--nacht); color: var(--hell); padding: clamp(3.5rem, 9vw, 7rem) var(--gutter) 2rem; }
 .fuss__in { max-width: var(--breit); margin: auto; }
+.zeit { margin-bottom: clamp(2.5rem, 7vw, 5rem); }
+.zeit__ort { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.15em; font-family: var(--serif); line-height: 1; font-variant-numeric: tabular-nums lining-nums; }
+.zeit__stunden { font-size: clamp(3.6rem, 16vw, 9rem); letter-spacing: -0.01em; }
+.zeit__sek { font-size: clamp(1.6rem, 6vw, 3.4rem); color: var(--rose-hell); }
+.zeit__label { flex-basis: 100%; margin-top: 0.7rem; font-family: var(--sans); font-size: 0.95rem; color: var(--hell-2); }
+.zeit__spur { position: relative; height: 22px; margin-top: 1.4rem; background: repeating-linear-gradient(to right, var(--hell-2) 0 1px, transparent 1px calc(100% / 60)); background-size: calc(100% + 1px) 100%; background-repeat: no-repeat; }
+.zeit__spur::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(to right, var(--hell) 0 1px, transparent 1px calc(100% / 12)); background-size: calc(100% + 1px) 100%; background-repeat: no-repeat; -webkit-mask: linear-gradient(to bottom, transparent 0 25%, #000 25%); mask: linear-gradient(to bottom, transparent 0 25%, #000 25%); }
+.zeit__zeiger { position: absolute; top: -6px; bottom: -6px; width: 2px; margin-left: -1px; left: calc(var(--b, 0) / var(--n, 360) * 100%); background: var(--rose-hell); transition: left 0.07s linear; }
+.zeit__skala { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 0.5rem; color: var(--hell-2); font-size: 0.8rem; }
 .fuss__marke { font-family: var(--serif); font-size: clamp(3.4rem, 17vw, 13rem); line-height: 0.9; letter-spacing: -0.015em; }
 .fuss__zeile { margin-top: 1rem; color: var(--hell-2); max-width: 30em; }
 .fuss__unten { margin-top: clamp(2.5rem, 6vw, 4.5rem); padding-top: 1.2rem; border-top: 1px solid var(--tinte-linie); display: flex; flex-wrap: wrap; gap: 0.2rem 1.8rem; align-items: baseline; }

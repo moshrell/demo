@@ -105,13 +105,15 @@
           "id": "stahl",
           "name": "Edelstahl",
           "eur": 12400,
-          "sw": "linear-gradient(135deg,#f2f3f5,#9a9da3 45%,#4d5056)"
+          "sw": "linear-gradient(135deg,#f2f3f5,#9a9da3 45%,#4d5056)",
+          "short": "Stahl"
         },
         {
           "id": "rose",
           "name": "Roségold 5N",
           "eur": 27900,
-          "sw": "linear-gradient(135deg,#ffd9bf,#d39a74 45%,#7c4c33)"
+          "sw": "linear-gradient(135deg,#ffd9bf,#d39a74 45%,#7c4c33)",
+          "short": "Roségold"
         }
       ]
     },
@@ -123,19 +125,22 @@
           "id": "silber",
           "name": "Silber, gekörnt",
           "eur": 0,
-          "sw": "radial-gradient(circle at 35% 30%,#fbfaf6,#c9c7c0 70%)"
+          "sw": "radial-gradient(circle at 35% 30%,#fbfaf6,#c9c7c0 70%)",
+          "short": "Silber"
         },
         {
           "id": "anthrazit",
           "name": "Anthrazit",
           "eur": 0,
-          "sw": "radial-gradient(circle at 35% 30%,#5b5f66,#202226 70%)"
+          "sw": "radial-gradient(circle at 35% 30%,#5b5f66,#202226 70%)",
+          "short": "Anthrazit"
         },
         {
           "id": "email",
           "name": "Email, weiß gebrannt",
           "eur": 1900,
-          "sw": "radial-gradient(circle at 35% 30%,#ffffff,#eceae4 60%,#d8d5cc)"
+          "sw": "radial-gradient(circle at 35% 30%,#ffffff,#eceae4 60%,#d8d5cc)",
+          "short": "Email"
         }
       ]
     },
@@ -147,13 +152,15 @@
           "id": "kalb",
           "name": "Kalbsleder, schwarz",
           "eur": 0,
-          "sw": "linear-gradient(135deg,#3a3b3e,#0c0c0d)"
+          "sw": "linear-gradient(135deg,#3a3b3e,#0c0c0d)",
+          "short": "Schwarz"
         },
         {
           "id": "cordovan",
           "name": "Shell Cordovan, cognac",
           "eur": 280,
-          "sw": "linear-gradient(135deg,#b06a35,#5a2c12)"
+          "sw": "linear-gradient(135deg,#b06a35,#5a2c12)",
+          "short": "Cognac"
         }
       ]
     },
@@ -165,15 +172,187 @@
           "id": "rathaus",
           "name": "Neues Rathaus",
           "eur": 0,
-          "sw": "radial-gradient(circle at 50% 62%,#d39a74 0 22%,transparent 23%),linear-gradient(135deg,#d7d5cf,#8e8c86)"
+          "sw": "radial-gradient(circle at 50% 62%,#d39a74 0 22%,transparent 23%),linear-gradient(135deg,#d7d5cf,#8e8c86)",
+          "short": "Neues Rathaus"
         },
         {
           "id": "initialen",
           "name": "Ihre Initialen",
           "eur": 450,
-          "sw": "repeating-linear-gradient(90deg,#d39a74 0 3px,transparent 3px 8px) 50% 50%/22px 12px no-repeat,linear-gradient(135deg,#d7d5cf,#8e8c86)"
+          "sw": "repeating-linear-gradient(90deg,#d39a74 0 3px,transparent 3px 8px) 50% 50%/22px 12px no-repeat,linear-gradient(135deg,#d7d5cf,#8e8c86)",
+          "short": "Eigene Initialen"
         }
       ]
     }
+  ],
+  "specs": [
+    {
+      "id": "gehaeuse",
+      "title": "Gehäuse",
+      "img": "side",
+      "alt": "Calenberg Eins von der Seite: flaches Edelstahlgehäuse mit gewölbtem Saphirglas",
+      "rows": [
+        [
+          "Durchmesser",
+          "39 mm, Bandanstoß 20 mm"
+        ],
+        [
+          "Höhe",
+          "10,4 mm, flach genug für eine Manschette"
+        ],
+        [
+          "Material",
+          "Edelstahl 316L oder Roségold 5N"
+        ],
+        [
+          "Glas",
+          "Saphir, gewölbt, beidseitig entspiegelt"
+        ],
+        [
+          "Boden",
+          "Saphirglas, verschraubt, Werk sichtbar"
+        ],
+        [
+          "Wasserdicht",
+          "5 bar, spritzwassergeschützt, nicht zum Tauchen"
+        ]
+      ]
+    },
+    {
+      "id": "blatt",
+      "title": "Zifferblatt",
+      "img": "front",
+      "alt": "Zifferblatt der Calenberg Eins: Stabindizes, Dauphine-Zeiger, kleine Sekunde bei sechs",
+      "rows": [
+        [
+          "Ausführung",
+          "Silber gekörnt, Anthrazit oder weiß gebranntes Email"
+        ],
+        [
+          "Indizes",
+          "appliziert, von Hand gesetzt"
+        ],
+        [
+          "Zeiger",
+          "Dauphine, poliert; Sekunde gebläut"
+        ],
+        [
+          "Anzeige",
+          "Stunde, Minute, kleine Sekunde bei 6 Uhr"
+        ]
+      ]
+    },
+    {
+      "id": "werk",
+      "title": "Werk",
+      "img": "top",
+      "alt": "Kaliber C 01 in der Aufsicht",
+      "rows": [
+        [
+          "Kaliber",
+          "C 01, Handaufzug"
+        ],
+        [
+          "Maße",
+          "30,6 mm Durchmesser, 4,9 mm Höhe"
+        ],
+        [
+          "Steine",
+          "21, davon 5 in verschraubten Goldchatons"
+        ],
+        [
+          "Frequenz",
+          "21 600 A/h (3 Hz)"
+        ],
+        [
+          "Gangreserve",
+          "60 Stunden"
+        ],
+        [
+          "Regulierung",
+          "Schwanenhals, in fünf Lagen"
+        ],
+        [
+          "Finissage",
+          "Genfer Streifen, Perlage, angliert, Schrauben gebläut"
+        ],
+        [
+          "Gravur",
+          "von Hand, Neues Rathaus auf dem Unruhkloben"
+        ]
+      ]
+    },
+    {
+      "id": "band",
+      "title": "Band",
+      "img": "hero",
+      "alt": "Calenberg Eins mit Lederband und Edelstahlgehäuse",
+      "rows": [
+        [
+          "Leder",
+          "Kalb schwarz oder Shell Cordovan cognac"
+        ],
+        [
+          "Verarbeitung",
+          "handgenäht, Kanten gefärbt und poliert"
+        ],
+        [
+          "Schließe",
+          "Dornschließe, Edelstahl oder Roségold passend zum Gehäuse"
+        ],
+        [
+          "Breite",
+          "20 mm am Gehäuse, 18 mm an der Schließe"
+        ],
+        [
+          "Länge",
+          "nach Handgelenk im Atelier angepasst"
+        ]
+      ]
+    }
+  ],
+  "erhalten": [
+    [
+      "Etui aus Nussbaum",
+      "gefertigt in Hannover, mit Platz für ein zweites Band"
+    ],
+    [
+      "Zertifikat",
+      "mit Seriennummer von 01 bis 50, vom Uhrmacher unterschrieben"
+    ],
+    [
+      "5 Jahre Garantie",
+      "auf Werk und Gehäuse, Service im Atelier"
+    ],
+    [
+      "Anpassung des Bandes",
+      "beim Abholen, kostenlos"
+    ]
+  ],
+  "faq": [
+    [
+      "Wann bekomme ich meine Uhr?",
+      "Etwa acht Monate nach Ihrer Bestätigung. Jedes Werk wird einzeln gebaut und in fünf Lagen reguliert."
+    ],
+    [
+      "Muss ich jetzt schon zahlen?",
+      "Nein. Die Anfrage ist unverbindlich. Erst nach dem Besuch im Atelier entscheiden Sie. Dann fallen 20 % Anzahlung an, den Rest zahlen Sie bei der Abholung."
+    ],
+    [
+      "Kann ich meine Wahl später ändern?",
+      "Bis zum Beginn der Fertigung ja: Gehäuse, Zifferblatt, Band und Gravur. Danach ist die Uhr Ihre."
+    ],
+    [
+      "Kann ich die Uhr vorher sehen?",
+      "Ja. Im Atelier liegen alle Zifferblätter, beide Gehäuse und beide Bänder zum Anprobieren bereit."
+    ],
+    [
+      "Was kostet der Service?",
+      "Alle fünf Jahre empfehlen wir eine Revision, sie kostet im Atelier 690 Euro. Innerhalb der Garantie fallen nur Versandkosten an."
+    ],
+    [
+      "Warum nur 50 Uhren?",
+      "Wir sind eine kleine Werkstatt und bauen jedes Werk selbst. Mehr als 50 im Jahr würde die Qualität kosten."
+    ]
   ]
 }

@@ -7,8 +7,8 @@ const eur = (n: number) => new Intl.NumberFormat('de-DE', { style: 'currency', c
 const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
 ---
 <Base title="Calenberg | Uhrenmanufaktur Hannover, Kaliber C 01" description="Calenberg baut in Hannover eine Uhr um ein eigenes Handaufzugswerk: Kaliber C 01. Ziehen Sie es auf, öffnen Sie es Schicht für Schicht und subskribieren Sie eine von 50 Uhren der ersten Serie." image="img/top-900.webp">
-  <a class="skip" href="#finissage">Zum Inhalt</a>
-  <header class="kz auf-film">
+  <a class="skip" href="#uhr">Zum Inhalt</a>
+  <header class="kz">
     <a class="kz__logo" href={base} aria-label="Calenberg, Startseite">
       <svg viewBox="0 0 48 48" aria-hidden="true">
         <circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="1.5" />
@@ -19,16 +19,37 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
       <span>Calenberg</span>
     </a>
     <nav class="kz__nav" aria-label="Hauptmenü">
-      <a href="#werk">Das Werk</a><a href="#finissage">Finissage</a><a href="#daten">Datenblatt</a><a href="#eins">Die Uhr</a><a href="#atelier">Atelier</a>
+      <a href="#uhr">Die Uhr</a><a href="#werk">Das Werk</a><a href="#daten">Details</a><a href="#eins">Zusammenstellen</a><a href="#atelier">Atelier</a>
     </nav>
     <a class="knopf knopf--klein" href="#eins"><span class="nur-breit">Platz anfragen</span><span class="nur-schmal">Anfragen</span></a>
     <button class="kz__menue krone" type="button" aria-expanded="false" aria-controls="menue" aria-label="Menü öffnen">Menü</button>
   </header>
   <nav class="menue" id="menue" hidden aria-label="Menü">
-    <a href="#werk">Das Werk</a><a href="#finissage">Finissage</a><a href="#daten">Datenblatt C 01</a><a href="#eins">Die Uhr: Calenberg Eins</a><a href="#atelier">Atelier und Besuch</a>
+    <a href="#uhr">Die Uhr</a><a href="#werk">Das Werk</a><a href="#daten">Details</a><a href="#eins">Eins zusammenstellen</a><a href="#atelier">Atelier und Besuch</a>
   </nav>
 
   <main>
+    <section class="prod" id="uhr" aria-labelledby="prod-h">
+      <div class="prod__bild">
+        <img src={`${base}watch/hero.webp`} width="1200" height="1500" fetchpriority="high" alt="Calenberg Eins: Armbanduhr aus Edelstahl mit silbernem Zifferblatt, kleiner Sekunde und schwarzem Lederband" />
+      </div>
+      <div class="prod__text">
+        <p class="prod__serie">Erste Serie, 50 Stück</p>
+        <h1 id="prod-h">Calenberg Eins</h1>
+        <p class="prod__lede">Eine flache Handaufzugsuhr mit eigenem Werk, gebaut von Hand in Hannover. 39 mm, Saphirglasboden, kleine Sekunde.</p>
+        <p class="prod__preis"><span>ab</span> <strong>{eur(start)}</strong> <small>inkl. MwSt.</small></p>
+        <div class="prod__tun">
+          <a class="knopf" href="#eins">Eins zusammenstellen</a>
+          <a class="knopf knopf--linie" href="#werk">Das Werk ansehen</a>
+        </div>
+        <dl class="prod__fakten">
+          <div><dt>Werk</dt><dd>eigenes Kaliber, 60 h Gangreserve</dd></div>
+          <div><dt>Glas</dt><dd>Saphir, vorn und hinten</dd></div>
+          <div><dt>Gravur</dt><dd>Neues Rathaus, von Hand</dd></div>
+          <div><dt>Garantie</dt><dd>5 Jahre, Service im Atelier</dd></div>
+        </dl>
+      </div>
+    </section>
     <section class="film" id="werk" aria-label="Kaliber C 01">
       <div class="buehne">
         <div class="bild">
@@ -37,8 +58,8 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
         </div>
         <div class="text">
           <div class="held" data-held>
-            <h1>Es steht still, bis Sie es aufziehen.</h1>
-            <p class="held__lede">Kaliber C 01: das erste eigene Handaufzugswerk von Calenberg, gebaut in Hannover.</p>
+            <h2>Es steht still, bis Sie es aufziehen.</h2>
+            <p class="held__lede">Das Werk in der Eins: Kaliber C 01. Halten Sie die Krone gedrückt, es läuft hier in Zeitlupe.</p>
             <div class="aufzug">
               <button class="aufzug__knopf" type="button" data-wind aria-describedby="aufzug-status">
                 <span class="rad" aria-hidden="true"></span>
@@ -68,6 +89,25 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
       </div>
     </section>
 
+
+    <section class="spec" id="daten" aria-labelledby="spec-h">
+      <header class="kopf"><h2 id="spec-h">Calenberg Eins im Detail</h2><p>Alle technischen Daten, nach Bauteil sortiert. Beim Scrollen wechselt das Bild.</p></header>
+      <div class="spec__in">
+        <div class="spec__bild" aria-hidden="true">
+          {werk.specs.map((g, i) => <img class={i === 0 ? 'ist-da' : ''} data-spec-bild={g.id} src={g.img === 'top' ? `${base}img/top-900.webp` : `${base}watch/${g.img}.webp`} width={g.img === 'top' ? 1500 : g.img === 'side' ? 1400 : g.img === 'front' ? 1400 : 1200} height={g.img === 'top' ? 1500 : g.img === 'side' ? 1000 : g.img === 'front' ? 1400 : 1500} loading="lazy" decoding="async" alt="" />)}
+        </div>
+        <div class="spec__liste">
+          {werk.specs.map((g) => (
+            <article class="spec__gruppe" data-spec={g.id}>
+              <h3>{g.title}</h3>
+              <figure class="spec__mobil"><img src={g.img === 'top' ? `${base}img/top-900.webp` : `${base}watch/${g.img}.webp`} width="900" height="900" loading="lazy" decoding="async" alt={g.alt} /></figure>
+              <dl>{g.rows.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
     <section class="fin" id="finissage">
       <header class="kopf">
         <h2>Was man nur mit der Lupe sieht</h2>
@@ -84,52 +124,51 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
         </figure>
       ))}
     </section>
-
-    <section class="daten" id="daten">
-      <div class="daten__bild" data-dreh>
-        <svg class="daten__ring" viewBox="0 0 400 400" aria-hidden="true">
-          {Array.from({ length: 60 }, (_, i) => <line x1="200" y1="4" x2="200" y2={i % 5 === 0 ? 18 : 11} stroke="currentColor" stroke-width={i % 5 === 0 ? 2 : 1} transform={`rotate(${i * 6} 200 200)`} />)}
-        </svg>
-        <img src={`${base}img/top-900.webp`} srcset={`${base}img/top-900.webp 900w, ${base}img/top-1500.webp 1500w`} sizes="(min-width: 900px) 36vw, 76vw" width="1500" height="1500" loading="lazy" decoding="async" alt="Kaliber C 01 in der Aufsicht" />
-      </div>
-      <div class="daten__blatt">
-        <h2>Datenblatt C 01</h2>
-        <dl>{werk.daten.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
-      </div>
-    </section>
-
     <section class="sub" id="eins">
       <header class="kopf">
-        <h2>Calenberg Eins. Erste Serie: 50 Uhren.</h2>
-        <p>Die Eins ist die Uhr zum Kaliber C 01: 39 mm, Saphirglasboden, kleine Sekunde. Stellen Sie Ihre zusammen und fragen Sie einen Platz in der ersten Serie an. Das Zifferblatt zeigen wir Subskribenten zuerst, persönlich im Atelier.</p>
+        <h2>Ihre Calenberg Eins zusammenstellen</h2>
+        <p>Wählen Sie Gehäuse, Zifferblatt und Band. Das Bild zeigt Ihre Uhr, die Summe steht fest. Dann fragen Sie unverbindlich einen Platz an.</p>
       </header>
       <form class="f" id="sub-form" novalidate data-form>
         <div class="f__wahlen" id="subskription">
           {werk.konfig.map((g) => (
-            <fieldset class="f__gruppe">
-              <legend>{g.label}</legend>
+            <fieldset class={`f__gruppe${g.id === 'gravur' ? ' f__gruppe--text' : ''}`}>
+              <legend><span>{g.label}</span><b data-gname={g.id}>{g.options[0].short}</b></legend>
               <div class="f__wahl">
                 {g.options.map((o, i) => (
                   <label class="f__opt">
-                    <input type="radio" name={g.id} value={o.id} data-eur={o.eur} data-name={o.name} checked={i === 0} />
-                    <span><em class="f__farbe" style={`--sw:${o.sw}`} aria-hidden="true"></em><b>{o.name}</b><i>{g.id === 'gehaeuse' ? eur(o.eur) : o.eur ? `+ ${eur(o.eur)}` : 'inklusive'}</i></span>
+                    <input type="radio" name={g.id} value={o.id} data-eur={o.eur} data-name={o.name} data-short={o.short} checked={i === 0} />
+                    <span class="f__opt-in">
+                      <em class="f__farbe" style={`--sw:${o.sw}`} aria-hidden="true"></em>
+                      <b>{o.short}</b>
+                      <i>{g.id === 'gehaeuse' ? eur(o.eur) : o.eur ? `+ ${eur(o.eur)}` : 'inklusive'}</i>
+                    </span>
                   </label>
                 ))}
               </div>
               {g.id === 'gravur' && (
-                <p class="f__feld f__ini" data-ini hidden>
-                  <label for="f-ini">Initialen (bis 3 Buchstaben)</label>
-                  <input id="f-ini" name="initialen" type="text" maxlength="3" placeholder="z. B. MK" autocomplete="off" autocapitalize="characters" />
-                </p>
+                <div class="f__ini" data-ini hidden>
+                  <p class="f__feld">
+                    <label for="f-ini">Initialen, 1 bis 3 Buchstaben</label>
+                    <input id="f-ini" name="initialen" type="text" maxlength="3" placeholder="z. B. MK" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="ini-ok" />
+                  </p>
+                  <div class="f__plakette" aria-hidden="true"><span>Unruhkloben</span><strong data-ini-vor>MK</strong></div>
+                  <p class="f__ini-ok" id="ini-ok" role="status" data-ini-ok></p>
+                </div>
               )}
             </fieldset>
           ))}
         </div>
-        <aside class="f__summe" aria-live="polite">
-          <p class="f__summe-titel">Ihre Calenberg Eins</p>
-          <ul class="f__summe-liste" data-wahl></ul>
-          <p class="f__summe-zeile"><span>Summe inkl. MwSt.</span><strong data-sum>{eur(start)}</strong></p>
-        </aside>
+        <div class="f__rechts">
+          <figure class="f__vor">
+            <img data-vorschau src={`${base}watch/cfg-stahl-silber-kalb.webp`} width="800" height="1000" alt="Ihre Calenberg Eins: Edelstahl, Zifferblatt Silber, Band Kalbsleder schwarz" />
+          </figure>
+          <aside class="f__summe" aria-live="polite">
+            <p class="f__summe-titel">Ihre Calenberg Eins</p>
+            <ul class="f__summe-liste" data-wahl></ul>
+            <p class="f__summe-zeile"><span>Summe inkl. MwSt.</span><strong data-sum>{eur(start)}</strong></p>
+          </aside>
+        </div>
         <div class="f__kontakt">
           <fieldset class="f__gruppe">
             <legend>Ihre Kontaktdaten</legend>
@@ -154,6 +193,20 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
         <p>Wir melden uns unter <span data-s-tel></span> und vereinbaren einen Termin im Atelier.</p>
         <p class="schein__demo">Demo: Es wurde nichts gesendet und nichts gespeichert.</p>
         <button type="button" class="knopf knopf--linie schein__neu" data-neu>Neue Anfrage</button>
+      </div>
+    </section>
+
+    <section class="erh" id="erhalten" aria-labelledby="erh-h">
+      <div class="erh__in">
+        <div class="erh__box">
+          <h2 id="erh-h">Was Sie erhalten</h2>
+          <ul>{werk.erhalten.map(([t, x]) => <li><strong>{t}</strong><span>{x}</span></li>)}</ul>
+          <p class="erh__hin">Demo: Manufaktur, Preise und Konditionen sind erfunden.</p>
+        </div>
+        <div class="erh__faq">
+          <h2>Häufige Fragen</h2>
+          {werk.faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}
+        </div>
       </div>
     </section>
 
@@ -230,7 +283,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .bild img, .bild canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
   .text { position: relative; width: 100%; max-width: 580px; padding: 0 var(--gutter) max(16px, env(safe-area-inset-bottom)); display: grid; align-content: center; }
   .text > * { grid-area: 1 / 1; align-self: center; }
-  .held h1 { font-size: clamp(1.75rem, 7.4vw, 3rem); }
+  .held h2 { font-size: clamp(1.75rem, 7.4vw, 3rem); }
   .held__lede { margin-top: 0.6rem; color: var(--tinte-2); max-width: 30em; }
   .aufzug { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 1.1rem; row-gap: 0.55rem; align-items: center; margin-top: clamp(0.7rem, 2svh, 1.4rem); max-width: 25rem; }
   .aufzug__knopf { position: relative; overflow: hidden; grid-column: 1 / -1; display: flex; align-items: center; gap: 0.9rem; padding: 4px 1.2rem 4px 4px; border: 0; border-radius: 999px; background: var(--nacht); color: var(--hell); cursor: pointer; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; justify-self: start; transition: background-color 0.2s; }
@@ -310,36 +363,15 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     .tafel--r figcaption { grid-column: 1 / 5; }
   }
 
-  .daten { display: grid; gap: 2.5rem; max-width: var(--breit); margin: auto; box-sizing: content-box; }
   .daten__bild { position: relative; width: min(100%, 460px); margin: auto; aspect-ratio: 1; display: grid; place-items: center; color: var(--tinte); }
   .daten__ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(calc(var(--p, 0.5) * -40deg)); will-change: transform; }
   .daten__bild img { width: 86%; border-radius: 50%; transform: rotate(calc((var(--p, 0.5) - 0.5) * 50deg)); will-change: transform; box-shadow: 0 30px 60px -20px var(--schatten); }
-  .daten h2 { margin-bottom: 1.5rem; }
-  .daten dl { margin: 0; border-bottom: 1px solid var(--tinte); }
-  .daten dl div { display: grid; grid-template-columns: minmax(6.5rem, 10rem) minmax(0, 1fr); gap: 1rem; padding: 0.8rem 0; border-top: 1px solid var(--linie); }
-  .daten dl div:first-child { border-top-color: var(--tinte); }
-  .daten dt { color: var(--tinte-2); }
-  .daten dd { margin: 0; font-variant-numeric: lining-nums; }
-  @media (min-width: 960px) { .daten { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: start; gap: 5rem; } .daten__bild { position: sticky; top: calc(var(--kh) + 3rem); } }
 
   .sub { background: var(--papier-2); }
   .f, .schein { max-width: var(--breit); margin: auto; }
   .f { display: grid; gap: 0 4rem; }
   .f__gruppe { border: 0; padding: 0; margin: 0 0 2.2rem; min-width: 0; }
-  .f__gruppe legend { font-family: var(--display); font-size: 1.7rem; padding: 0; margin-bottom: 0.9rem; }
-  .f__wahl { display: grid; gap: 0.6rem; }
-  @media (min-width: 560px) { .f__wahl { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
-  .f__opt { position: relative; display: block; cursor: pointer; }
-  .f__opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
-  .f__opt span { position: relative; display: flex; flex-direction: column; gap: 0.1rem; min-height: 72px; justify-content: center; padding: 0.8rem 1rem 0.8rem 4.3rem; border: 1px solid var(--linie); border-radius: var(--r); background: var(--weiss); transition: border-color 0.15s, box-shadow 0.15s; }
-  .f__farbe { position: absolute; left: 0.9rem; top: 50%; width: 44px; height: 44px; margin-top: -22px; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 1px var(--kante), inset -5px -7px 12px var(--kante), 0 4px 10px -4px var(--schatten); }
-  .f__opt b { font-weight: 600; }
-  .f__opt i { font-style: normal; color: var(--tinte-2); font-size: 0.95rem; }
-  .f__opt:hover span { border-color: var(--tinte-2); }
-  .f__opt input:checked + span { border-color: var(--stahl); box-shadow: inset 0 0 0 1px var(--stahl); }
-  .f__opt input:focus-visible + span { outline: 2px solid var(--fokus); outline-offset: 3px; }
   .f__feld { display: grid; gap: 0.35rem; margin: 0 0 1rem; }
-  .f__ini { margin-top: 0.9rem; max-width: 260px; }
   .f__feld label { font-weight: 600; }
   .f__feld label em { font-style: normal; font-weight: 400; color: var(--tinte-2); }
   .f input[type='text'], .f input[type='tel'], .f input[type='email'], .f textarea { width: 100%; font: inherit; color: var(--tinte); background: var(--weiss); border: 1px solid var(--tinte-2); border-radius: var(--r); padding: 0.8rem 0.9rem; min-height: 52px; }
@@ -361,7 +393,8 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   @media (min-width: 1000px) {
     .f { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; }
     .f__wahlen, .f__kontakt { grid-column: 1; }
-    .f__summe { grid-column: 2; grid-row: 1 / span 2; position: sticky; top: calc(var(--kh) + 2rem); bottom: auto; margin: 0; padding: 2rem; border-radius: var(--r); }
+    .f__rechts { grid-column: 2; grid-row: 1 / span 2; position: sticky; top: calc(var(--kh) + 1.5rem); display: grid; gap: 1rem; }
+    .f__summe { position: static; margin: 0; padding: 1.6rem 2rem; border-radius: var(--r); }
     .f__summe-titel { display: block; font-family: var(--display); font-size: 1.9rem; margin-bottom: 1.2rem; }
     .f__summe-liste { display: block; list-style: none; margin: 0 0 1.2rem; padding: 0; }
     .f__summe-liste li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.6rem 0; border-top: 1px solid var(--tinte-linie); }
@@ -394,6 +427,108 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   @media (min-width: 960px) { .atelier { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 5rem; } }
 
   @media (prefers-reduced-motion: reduce) { .rad::after, .weiter::before, .aufzug__knopf.ist-an .rad { animation: none; } .js .held, .js .station { transition: none; } .lupe img, .daten__ring, .daten__bild img { transform: none; } }
+
+  /* ---------- product hero ---------- */
+  main > section.prod { display: grid; grid-template-columns: minmax(0, 1fr); background: var(--papier); padding: var(--kh) 0 0; }
+  .prod__bild { background: var(--nacht); }
+  .prod__bild img { width: 100%; height: min(100vw, 48svh); object-fit: cover; object-position: 50% 42%; }
+  .prod__text { padding: clamp(1.6rem, 5vw, 3rem) var(--gutter) clamp(2.2rem, 6vw, 4rem); display: grid; gap: 1rem; align-content: start; }
+  .prod__serie { color: var(--stahl); font-weight: 600; }
+  .prod h1 { font-size: clamp(2.8rem, 12vw, 5.6rem); line-height: 0.98; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+  .prod__lede { color: var(--tinte-2); font-size: 1.12rem; max-width: 30em; }
+  .prod__preis { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem; }
+  .prod__preis strong { font-family: var(--display); font-weight: 500; font-size: clamp(2rem, 8vw, 2.8rem); font-variant-numeric: lining-nums; }
+  .prod__preis span, .prod__preis small { color: var(--tinte-2); }
+  .prod__tun { display: grid; gap: 0.6rem; grid-template-columns: minmax(0, 1fr); }
+  .prod__tun .knopf { white-space: normal; text-align: center; }
+  .prod__fakten { margin: 0.6rem 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--tinte); }
+  .prod__fakten div { padding: 0.8rem 0.8rem 0.8rem 0; border-bottom: 1px solid var(--linie); }
+  .prod__fakten dt { color: var(--tinte-2); font-size: 0.9rem; }
+  .prod__fakten dd { margin: 0.1rem 0 0; font-weight: 500; }
+  @media (min-width: 560px) { .prod__tun { grid-template-columns: repeat(2, auto); justify-content: start; } }
+  @media (min-width: 960px) {
+    main > section.prod { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); min-height: 100svh; padding-top: 0; }
+    .prod__bild { order: 2; }
+    .prod__bild img { height: 100%; min-height: 100svh; object-position: 50% 45%; }
+    .prod__text { order: 1; align-content: center; padding-top: calc(var(--kh) + 2rem); max-width: 44rem; justify-self: end; }
+  }
+  @media (max-aspect-ratio: 1/1) { .kz:not(.auf-film) { background: var(--papier); } }
+
+  /* ---------- specs unrolled by scroll ---------- */
+  .spec__in { max-width: var(--breit); margin: auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.4rem; }
+  .spec__bild { display: none; }
+  .spec__gruppe h3 { font-size: clamp(2rem, 7vw, 3rem); margin-bottom: 1rem; }
+  .spec__mobil { margin: 0 calc(var(--gutter) * -1) 1rem; background: var(--nacht); }
+  .spec__mobil img { width: 100%; max-height: 52svh; object-fit: contain; }
+  .spec__gruppe dl { margin: 0; border-bottom: 1px solid var(--tinte); }
+  .spec__gruppe dl div { display: grid; grid-template-columns: minmax(6.2rem, 9rem) minmax(0, 1fr); gap: 1rem; padding: 0.8rem 0; border-top: 1px solid var(--linie); }
+  .spec__gruppe dl div:first-child { border-top-color: var(--tinte); }
+  .spec__gruppe dt { color: var(--tinte-2); } .spec__gruppe dd { margin: 0; font-variant-numeric: lining-nums; }
+  .js .spec__gruppe dl div { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; transition-delay: calc(var(--i, 0) * 70ms); }
+  .js .spec__gruppe.ist-da dl div { opacity: 1; transform: none; }
+  @media (min-width: 960px) {
+    .spec__in { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 5rem; align-items: start; }
+    .spec__bild { display: block; position: sticky; top: calc(var(--kh) + 2rem); height: calc(100svh - var(--kh) - 4rem); background: var(--nacht); }
+    .spec__bild img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 0.5s ease; }
+    .spec__bild img.ist-da { opacity: 1; }
+    .spec__mobil { display: none; }
+    .spec__gruppe { min-height: 70svh; padding-bottom: 3rem; }
+  }
+
+  /* ---------- configurator ---------- */
+  .f__gruppe legend { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.8rem; font-family: var(--display); font-size: 1.4rem; margin-bottom: 0.9rem; padding: 0; }
+  .f__gruppe legend b { font-family: var(--sans); font-size: 1rem; font-weight: 600; color: var(--stahl); }
+  .f__gruppe { margin-bottom: 1.8rem; }
+  .f__wahl { display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; }
+  .f__opt { position: relative; display: block; cursor: pointer; }
+  .f__opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+  .f__opt-in { display: grid; justify-items: center; gap: 0.25rem; min-width: 76px; padding: 0.3rem 0.3rem 0.4rem; text-align: center; }
+  .f__farbe { position: relative; display: block; width: 52px; height: 52px; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 1px var(--kante), inset -5px -7px 12px var(--kante); outline: 2px solid transparent; outline-offset: 4px; transition: outline-color 0.15s; }
+  .f__opt b { font-weight: 600; font-size: 0.95rem; }
+  .f__opt i { font-style: normal; color: var(--tinte-2); font-size: 0.85rem; white-space: nowrap; }
+  .f__opt:hover .f__farbe { outline-color: var(--linie); }
+  .f__opt input:checked + .f__opt-in .f__farbe { outline-color: var(--stahl); }
+  .f__opt input:checked + .f__opt-in .f__farbe::after { content: ''; position: absolute; right: -3px; top: -3px; width: 20px; height: 20px; border-radius: 50%; background: var(--stahl) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5l3 3 6-7' fill='none' stroke='%23f8f8f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% no-repeat; }
+  .f__opt input:focus-visible + .f__opt-in { outline: 2px solid var(--fokus); outline-offset: 2px; border-radius: var(--r); }
+  .f__gruppe--text .f__farbe { display: none; }
+  .f__gruppe--text .f__opt-in { min-width: 0; padding: 0.7rem 1rem; min-height: 56px; border: 1px solid var(--linie); border-radius: var(--r); background: var(--weiss); justify-items: start; text-align: left; }
+  .f__gruppe--text .f__opt input:checked + .f__opt-in { border-color: var(--stahl); box-shadow: inset 0 0 0 1px var(--stahl); }
+  .f__ini { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.4rem 1rem; align-items: end; margin-top: 1rem; max-width: 30rem; }
+  .f__ini .f__feld { margin: 0; }
+  .f__ini .f__feld input { text-transform: uppercase; letter-spacing: 0.2em; }
+  @media (max-width: 479px) { .f__ini { grid-template-columns: minmax(0, 1fr); } .f__plakette { justify-self: start; } }
+  .f__plakette { display: grid; gap: 0.1rem; place-items: center; min-width: 7.5rem; padding: 0.55rem 0.9rem; border-radius: var(--r); background: var(--nacht); color: var(--hell-2); font-size: 0.78rem; }
+  .f__plakette strong { font-family: var(--display); font-weight: 500; font-size: 1.7rem; letter-spacing: 0.18em; text-indent: 0.18em; color: var(--rose-hell); min-height: 1.2em; }
+  .f__ini-ok { grid-column: 1 / -1; min-height: 1.4em; color: var(--tinte-2); font-size: 0.95rem; margin: 0; }
+  .f__ini-ok.ist-da { color: #1c6b3d; font-weight: 600; animation: ok-pop 0.35s ease; }
+  .f__feld.ist-ok input, .f__feld.ist-ok textarea { border-color: #1c6b3d; padding-right: 2.8rem; background: var(--weiss) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M4 10.5l4 4 8-9' fill='none' stroke='%231c6b3d' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") right 0.9rem center / 20px no-repeat; }
+  @keyframes ok-pop { from { transform: translateY(4px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .f__rechts { display: contents; }
+  .f__vor { margin: 0 calc(var(--gutter) * -1) 1.6rem; position: sticky; top: var(--kh); z-index: 4; background: var(--nacht); }
+  .f__vor { order: -1; }
+  .f__vor img { display: block; width: 100%; height: min(28svh, 54vw); object-fit: contain; transition: opacity 0.25s; }
+  .f:has(.f__kontakt :focus) .f__vor { display: none; }
+  .f__vor img.wechselt { opacity: 0.35; }
+  @media (min-width: 1000px) { .f__vor { order: 0; position: static; margin: 0; z-index: auto; } .f__vor img { height: auto; max-height: 56svh; aspect-ratio: 4/5; } }
+  @media (max-aspect-ratio: 1/1) and (max-width: 999px) { .f__summe { margin-top: 0; } }
+
+  /* ---------- what you get + FAQ ---------- */
+  .erh__in { max-width: var(--breit); margin: auto; display: grid; gap: 3rem; grid-template-columns: minmax(0, 1fr); }
+  .erh h2 { font-size: clamp(2.2rem, 7vw, 3.6rem); margin-bottom: 1.4rem; }
+  .erh__box ul { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--tinte); }
+  .erh__box li { display: grid; gap: 0.15rem; padding: 0.95rem 0; border-top: 1px solid var(--linie); }
+  .erh__box li:first-child { border-top-color: var(--tinte); }
+  .erh__box li span { color: var(--tinte-2); }
+  .erh__hin { margin-top: 0.9rem; color: var(--tinte-2); font-size: 0.92rem; }
+  .erh details { border-top: 1px solid var(--linie); }
+  .erh details:last-child { border-bottom: 1px solid var(--linie); }
+  .erh summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 1rem; min-height: 56px; padding: 0.7rem 0; font-weight: 600; }
+  .erh summary::-webkit-details-marker { display: none; }
+  .erh summary::after { content: '+'; font-size: 1.6rem; font-weight: 400; color: var(--stahl); transition: transform 0.2s; }
+  .erh details[open] summary::after { transform: rotate(45deg); }
+  .erh details p { padding: 0 2.5rem 1rem 0; color: var(--tinte-2); max-width: 36em; }
+  @media (min-width: 960px) { .erh__in { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 5rem; } }
+  @media (prefers-reduced-motion: reduce) { .js .spec__gruppe dl div { transition: none; } .spec__bild img, .f__vor img { transition: none; } .f__ini-ok.ist-da { animation: none; } }
 </style>
 
 <script>
@@ -407,7 +542,8 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   const krone = document.querySelector<HTMLButtonElement>('.krone')!;
   const menue = document.getElementById('menue')!;
   const zeiger = document.querySelector<SVGLineElement>('.krone__zeiger')!;
-  const setMenu = (open: boolean) => { menue.hidden = !open; krone.setAttribute('aria-expanded', String(open)); krone.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen'); krone.textContent = open ? 'Schließen' : 'Menü'; kz.classList.toggle('auf-film', !open && document.querySelector('.film')!.getBoundingClientRect().bottom > kz.offsetHeight); };
+  const onFilm = () => { const r = document.querySelector('.film')!.getBoundingClientRect(); return r.top <= kz.offsetHeight && r.bottom > kz.offsetHeight; };
+  const setMenu = (open: boolean) => { menue.hidden = !open; krone.setAttribute('aria-expanded', String(open)); krone.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen'); krone.textContent = open ? 'Schließen' : 'Menü'; kz.classList.toggle('auf-film', !open && onFilm()); };
   krone.addEventListener('click', () => setMenu(menue.hidden));
   menue.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setMenu(false); });
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menue.hidden) { setMenu(false); krone.focus(); } });
@@ -532,7 +668,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     stations.forEach((el, i) => { const on = !hero && t >= cuts[i] && t < cuts[i + 1]; el.classList.toggle('ist-da', on); el.setAttribute('aria-hidden', String(!on)); });
     held.setAttribute('aria-hidden', String(!hero));
     if (!hero) press(false);
-    kz.classList.toggle('auf-film', menue.hidden && film.getBoundingClientRect().bottom > kz.offsetHeight);
+    kz.classList.toggle('auf-film', menue.hidden && onFilm());
   }
   addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll);
 
@@ -630,6 +766,17 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     box.addEventListener('contextmenu', (e) => e.preventDefault());
   }
 
+  /* ---------- specs unrolled by scroll ---------- */
+  const specG = [...document.querySelectorAll<HTMLElement>('[data-spec]')];
+  const specB = [...document.querySelectorAll<HTMLElement>('[data-spec-bild]')];
+  specG.forEach((g) => g.querySelectorAll<HTMLElement>('dl div').forEach((r, i) => r.style.setProperty('--i', String(i))));
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('ist-da'); const id = (e.target as HTMLElement).dataset.spec; specB.forEach((b) => b.classList.toggle('ist-da', b.dataset.specBild === id)); } }), { rootMargin: '-30% 0px -35% 0px', threshold: 0 });
+    specG.forEach((g) => io.observe(g));
+    const io2 = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('ist-da'); io2.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px' });
+    specG.forEach((g) => io2.observe(g));
+  } else specG.forEach((g) => g.classList.add('ist-da'));
+
   /* ---------- Subskription form ---------- */
   const form = document.querySelector<HTMLFormElement>('[data-form]')!;
   const schein = document.querySelector<HTMLElement>('[data-schein]')!;
@@ -640,10 +787,33 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   const picks = () => [...form.querySelectorAll<HTMLInputElement>('input[type=radio]:checked')];
   const total = () => picks().reduce((s, r) => s + Number(r.dataset.eur), 0);
   const wahl = form.querySelector<HTMLElement>('[data-wahl]')!;
+  const vor = form.querySelector<HTMLImageElement>('[data-vorschau]')!;
+  const iniIn = form.elements.namedItem('initialen') as HTMLInputElement;
+  const iniVor = form.querySelector<HTMLElement>('[data-ini-vor]')!;
+  const iniOk = form.querySelector<HTMLElement>('[data-ini-ok]')!;
+  const val = (n: string) => (form.elements.namedItem(n) as RadioNodeList).value;
+  let vorKey = '';
+  function vorschau() {
+    const key = `${val('gehaeuse')}-${val('blatt')}-${val('band')}`;
+    if (key === vorKey) return; vorKey = key;
+    const alt = `Ihre Calenberg Eins: ${picks().filter((r) => r.name !== 'gravur').map((r) => r.dataset.short).join(', ')}`;
+    const im = new Image(); im.onload = () => { vor.src = im.src; vor.alt = alt; vor.classList.remove('wechselt'); };
+    vor.classList.add('wechselt'); im.src = `${vor.src.replace(/cfg-[^/]*\.webp.*$/, '')}cfg-${key}.webp`;
+  }
+  function iniStatus() {
+    const v = iniIn.value.replace(/[^A-Za-zÄÖÜäöüß]/g, '').toUpperCase();
+    iniIn.value = v; iniVor.textContent = v || 'MK';
+    iniIn.closest('.f__feld')!.classList.toggle('ist-ok', v.length >= 1);
+    iniOk.classList.toggle('ist-da', v.length >= 1);
+    iniOk.textContent = v ? `✓ Übernommen: ${v.split('').join(' ')} wird auf den Unruhkloben graviert.` : '';
+  }
   function refresh() {
+    vorschau();
+    for (const g of ['gehaeuse', 'blatt', 'band', 'gravur']) { const r = form.querySelector<HTMLInputElement>(`input[name=${g}]:checked`)!; form.querySelector(`[data-gname=${g}]`)!.textContent = r.dataset.short!; }
+    iniStatus();
     sumEl.textContent = eur(total());
     wahl.textContent = '';
-    for (const r of picks()) { const li = document.createElement('li'), n = document.createElement('span'), e = document.createElement('span'); n.textContent = r.dataset.name!; const v = Number(r.dataset.eur); e.textContent = r.name === 'gehaeuse' ? eur(v) : v ? `+ ${eur(v)}` : 'inklusive'; li.append(n, e); wahl.append(li); }
+    for (const r of picks()) { const li = document.createElement('li'), n = document.createElement('span'), e = document.createElement('span'); n.textContent = r.dataset.name! + (r.value === 'initialen' && iniIn.value ? `: ${iniIn.value}` : ''); const v = Number(r.dataset.eur); e.textContent = r.name === 'gehaeuse' ? eur(v) : v ? `+ ${eur(v)}` : 'inklusive'; li.append(n, e); wahl.append(li); }
     ini.hidden = (form.elements.namedItem('gravur') as RadioNodeList).value !== 'initialen';
   }
   function save() {
@@ -659,7 +829,12 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     }
   } catch {}
   refresh();
-  form.addEventListener('input', () => { refresh(); save(); });
+  const marks: [string, (v: string) => boolean][] = [['name', (v) => v.trim().length >= 2], ['tel', (v) => v.replace(/\D/g, '').length >= 6], ['mail', (v) => /^\S+@\S+\.\S+$/.test(v.trim())]];
+  function okMarks(t?: EventTarget | null) {
+    for (const [n, fn] of marks) { const el = form.elements.namedItem(n) as HTMLInputElement; if (t && t !== el) continue; el.closest('.f__feld')!.classList.toggle('ist-ok', fn(el.value)); }
+  }
+  okMarks();
+  form.addEventListener('input', (e) => { refresh(); okMarks(e.target); save(); });
   const fields: [string, (v: string) => boolean][] = [
     ['name', (v) => v.trim().length >= 2],
     ['tel', (v) => v.replace(/\D/g, '').length >= 6],
@@ -675,6 +850,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     e.preventDefault();
     let first: HTMLElement | null = null;
     for (const [n, fn] of fields) { const bad = check(n, fn((form.elements.namedItem(n) as HTMLInputElement).value)); first ||= bad; }
+    if (val('gravur') === 'initialen' && !iniIn.value) { iniIn.setAttribute('aria-invalid', 'true'); iniOk.textContent = 'Bitte tragen Sie Ihre Initialen ein oder wählen Sie das Neue Rathaus.'; iniOk.classList.remove('ist-da'); first ||= iniIn; }
     const c = form.elements.namedItem('consent') as HTMLInputElement;
     first ||= check('consent', c.checked);
     if (first) { first.focus(); first.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' }); return; }
@@ -697,5 +873,5 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     const t = e.target as HTMLInputElement; const f = fields.find(([n]) => n === t.name);
     if (f && t.getAttribute('aria-invalid') === 'true') check(f[0], f[1](t.value));
   });
-  schein.querySelector('[data-neu]')!.addEventListener('click', () => { form.reset(); refresh(); schein.hidden = true; form.hidden = false; form.scrollIntoView({ block: 'start' }); });
+  schein.querySelector('[data-neu]')!.addEventListener('click', () => { form.reset(); refresh(); okMarks(); schein.hidden = true; form.hidden = false; form.scrollIntoView({ block: 'start' }); });
 </script>

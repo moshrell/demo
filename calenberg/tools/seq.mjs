@@ -1,5 +1,5 @@
 // PNG-кадры из ../uhren/film.py  ->  public/seq (800x1000) + public/seq/hd (1200x1500) + src/data/seq.json
-//   node tools/seq.mjs <папка с PNG> [--only explode,wind,run,f4,t3,rs]
+//   node tools/seq.mjs <папка с PNG> [--only explode,wind,run,f4,t3,rs] [--small <папка с телефонными кадрами разбора>]
 //
 // Что делает:
 //   explode_NNN  полные кадры скролл-разбора. explode_000 = неподвижный кадр, из него вырезаны первые кадры wind и run.
@@ -17,7 +17,7 @@ const ONLY = onlyArg > 0 ? process.argv[onlyArg + 1].split(',') : null;
 const want = (k) => !ONLY || ONLY.includes(k);
 const W = 1200, H = 1500, G = 12;                      // G: сетка выравнивания; 12 px в большом размере = 8 px в малом
 const TIERS = [{ dir: 'public/seq', k: 2 / 3, q: 74 }, { dir: 'public/seq/hd', k: 1, q: 76 }];   // q: качество webp (подобрано по весу: телефонный набор около 7 МБ)
-const N = { explode: 97, wind: 12, run: 73 };
+const N = { wind: 12, run: 73 };                       // число кадров разбора берётся из explode_t.json
 const SPR = { f4: { n: 60, cols: 10 }, t3: { n: 150, cols: 15 }, rs: { n: 90, cols: 10 } };
 const THR = 7, PAD = 2, FEATHER = 10;
 const MAN = 'src/data/seq.json';
@@ -44,12 +44,31 @@ const report = (prefix) => console.log(prefix.padEnd(9), TIERS.map((t) => `${t.d
 const still = await raw(png(nm('explode', 0)));
 
 // ---------- полные кадры разбора ----------
+// Два набора с разным числом кадров: большой из SRC, телефонный из --small <папка> (PNG 800x1000 или готовые webp).
+// Рядом с кадрами лежит explode_t.json из film.py: время плёнки каждого кадра (кадры расставлены по равному изменению картинки).
+// Кадр 0 телефона всегда = уменьшенный большой explode_000: из него же вырезаны завод и ход.
 if (want('explode')) {
-  for (let i = 0; i < N.explode; i++) {
+  const table = (dir) => { const f = path.join(dir, 'explode_t.json'); if (!fs.existsSync(f)) throw new Error(`нет ${f}`); const j = JSON.parse(fs.readFileSync(f, 'utf8')); return { n: j.n, t: j.t }; };
+  const clean = (dir, n) => { for (const f of fs.readdirSync(dir)) { const m = /^explode_(\d+)\.webp$/.exec(f); if (m && +m[1] >= n) fs.unlinkSync(path.join(dir, f)); } };
+  const [small, hd] = TIERS, big = table(SRC), sArg = process.argv.indexOf('--small'), SM = sArg > 0 ? process.argv[sArg + 1] : null;
+  for (let i = 0; i < big.n; i++) {
     const b = i === 0 ? still : await raw(png(nm('explode', i)));
-    for (const t of TIERS) await webp(b, W, H, 3, path.join(t.dir, nm('explode', i) + '.webp'), t.k, t.q - 4);
+    await webp(b, W, H, 3, path.join(hd.dir, nm('explode', i) + '.webp'), hd.k, hd.q - 4);
+    if (!SM || i === 0) await webp(b, W, H, 3, path.join(small.dir, nm('explode', i) + '.webp'), small.k, small.q - 4);
   }
-  man.explode = { n: N.explode }; report('explode_');
+  let sm = big;
+  if (SM) {
+    sm = table(SM); const sw = W * small.k, sh = H * small.k;
+    for (let i = 1; i < sm.n; i++) {
+      const out = path.join(small.dir, nm('explode', i) + '.webp'), ready = path.join(SM, nm('explode', i) + '.webp');
+      if (fs.existsSync(ready)) { fs.copyFileSync(ready, out); continue; }
+      const { data, info } = await sharp(path.join(SM, nm('explode', i) + '.png')).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+      if (info.width !== sw || info.height !== sh) throw new Error(`${SM}/${nm('explode', i)}: ${info.width}x${info.height}, нужно ${sw}x${sh}`);
+      await webp(data, sw, sh, 3, out, 1, small.q - 4);
+    }
+  }
+  clean(hd.dir, big.n); clean(small.dir, sm.n);
+  man.explode = { hd: big, small: sm }; report('explode_');
 }
 
 // ---------- прямоугольники с движением ----------

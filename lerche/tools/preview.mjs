@@ -24,7 +24,11 @@ const g = await page.evaluate(() => { const a = document.querySelector('#ascent'
 const ascY = (p) => g.top + p * g.span;           // p 0..1 подъём
 const postY = (k) => g.top + g.span + k * g.vh;   // k экранов после потолка
 // раскадровка: [секунда, scrollY]. Долго на фирменном (подъём, капсула, потолок, взгляд вверх, бронь), быстро между
-const K = [
+const K = process.env.CARD ? [   // карточка портфолио: 1280x800, ~14,6 с
+  [0, ascY(0)], [1.2, ascY(0)], [3.0, ascY(0.34)], [4.6, ascY(0.5)], [5.2, ascY(0.52)],
+  [6.4, ascY(0.667)], [7.6, ascY(0.70)], [9.2, ascY(1)], [10.0, ascY(1)],
+  [11.8, postY(1.0)], [12.8, g.reserve - 40], [14.6, g.reserve - 40],
+] : [
   [0, ascY(0)], [2.4, ascY(0)],            // старт, заголовок
   [4.6, ascY(0.30)],                       // быстро сквозь облака
   [6.4, ascY(0.34)],                       // завтрак над погодой
@@ -37,11 +41,11 @@ const K = [
   [27.6, g.reserve - 40],                  // клики: окно, места, итог
   [28.4, g.reserve + 120],
 ];
-const S = 0.9; K.forEach((k) => { k[0] *= S; });
+const S = process.env.CARD ? 1 : 0.9; K.forEach((k) => { k[0] *= S; });
 const T = K[K.length - 1][0], N = Math.min(Math.round(T * FPS), TO);
 const ease = (x) => x * x * (3 - 2 * x);
 const yAt = (t) => { for (let i = 1; i < K.length; i++) if (t <= K[i][0]) { const [t0, y0] = K[i - 1], [t1, y1] = K[i]; return y0 + (y1 - y0) * ease((t - t0) / (t1 - t0)); } return K[K.length - 1][1]; };
-const clicks = [[23.3 * S, '.dawn', 1], [24.6 * S, '.seat', 0], [25.4 * S, '.seat', 3]];
+const clicks = process.env.CARD ? [[13.3, '.dawn', 1], [13.9, '.seat', 0]] : [[23.3 * S, '.dawn', 1], [24.6 * S, '.seat', 0], [25.4 * S, '.seat', 3]];
 if (FROM === 0) fs.rmSync(out, {recursive: true, force: true}); fs.mkdirSync(out, {recursive: true});
 const t0 = Date.now(); const done = new Set();
 for (let f = Math.max(0, FROM - 36); f < N; f++) {

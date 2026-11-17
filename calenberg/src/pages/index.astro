@@ -44,9 +44,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
                 <span class="rad" aria-hidden="true"></span>
                 <span class="aufzug__txt" data-wind-label>Krone gedrückt halten</span>
               </button>
-              <div class="gang" aria-hidden="true"><span class="gang__fuell"></span></div>
-              <p class="gang__skala" aria-hidden="true"><span>0</span><span>15</span><span>30</span><span>45</span><span>60 h</span></p>
-              <p class="aufzug__status" id="aufzug-status" aria-live="polite"><span data-status>Gangreserve</span> <strong data-reserve>0 h</strong></p>
+              <p class="aufzug__status" id="aufzug-status" aria-live="polite" data-status></p>
             </div>
             <p class="weiter" aria-hidden="true">Nach unten wischen: das Werk öffnet sich</p>
           </div>
@@ -188,27 +186,29 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
 
   /* ---------- header ---------- */
   .kz { position: fixed; inset: 0 0 auto 0; z-index: 50; height: var(--kh); display: flex; align-items: center; gap: 0.75rem; padding: 0 var(--gutter); background: var(--papier); border-bottom: 1px solid var(--linie); transition: background-color 0.25s, color 0.25s, border-color 0.25s; }
-  .kz.auf-film { background: linear-gradient(to bottom, var(--nacht-glas), transparent); color: var(--hell); border-bottom-color: transparent; }
-  .kz.auf-film .kz__menue { border-color: var(--hell-2); }
-  .kz.auf-film .krone__zeiger, .kz.auf-film .kz__logo circle:last-of-type { stroke: var(--rose-hell); }
-  .kz.auf-film .kz__logo circle:last-of-type { fill: var(--rose-hell); stroke: none; }
-  .kz.auf-film .kz__nav a:hover { border-bottom-color: var(--hell); }
-  .kz.auf-film :focus-visible { outline-color: var(--hell); }
-  .kz__logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; font-family: var(--serif); font-size: 1.55rem; line-height: 1; white-space: nowrap; margin-right: auto; padding: 0.5rem 0; }
+  @media (max-aspect-ratio: 1/1) {
+    .kz.auf-film { background: transparent; color: var(--hell); border-bottom-color: transparent; }
+    .kz.auf-film .kz__menue { border-color: var(--hell-2); }
+    .kz.auf-film .krone__zeiger, .kz.auf-film .kz__logo circle:last-of-type { stroke: var(--rose-hell); }
+    .kz.auf-film .kz__logo circle:last-of-type { fill: var(--rose-hell); stroke: none; }
+    .kz.auf-film .kz__nav a:hover { border-bottom-color: var(--hell); }
+    .kz.auf-film :focus-visible { outline-color: var(--hell); }
+  }
+  .kz__logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; font-family: var(--display); font-size: 1.55rem; line-height: 1; white-space: nowrap; margin-right: auto; padding: 0.5rem 0; }
   .kz__logo svg { width: 30px; height: 30px; flex: none; }
   .krone__zeiger { transform-origin: 24px 24px; }
   .kz__nav { display: none; }
   .kz__menue { min-height: 44px; padding: 0 0.9rem; border: 1px solid var(--tinte); border-radius: var(--r); background: transparent; font-weight: 600; cursor: pointer; white-space: nowrap; }
   .menue { position: fixed; z-index: 49; inset: var(--kh) 0 auto 0; max-height: calc(100dvh - var(--kh)); overflow: auto; background: var(--papier); border-bottom: 1px solid var(--tinte); padding: 0.5rem var(--gutter) 1.5rem; box-shadow: 0 30px 60px -20px var(--schatten); }
   .menue[hidden] { display: none; }
-  .menue a { display: block; padding: 1rem 0; border-bottom: 1px solid var(--linie); text-decoration: none; font-family: var(--serif); font-size: 1.7rem; line-height: 1.15; }
+  .menue a { display: block; padding: 1rem 0; border-bottom: 1px solid var(--linie); text-decoration: none; font-family: var(--display); font-size: 1.7rem; line-height: 1.15; }
   .knopf { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0.7rem 1.4rem; border: 1px solid var(--stahl); border-radius: var(--r); background: var(--stahl); color: var(--weiss); font-weight: 600; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color 0.15s, border-color 0.15s; }
   .knopf:hover { background: var(--stahl-tief); border-color: var(--stahl-tief); }
   .knopf:active { transform: translateY(1px); }
   .knopf--klein { min-height: 44px; padding: 0.4rem 1rem; }
   .knopf--linie { background: transparent; color: var(--tinte); border-color: var(--tinte); }
   .knopf--linie:hover { background: var(--tinte); color: var(--weiss); border-color: var(--tinte); }
-  .textlink { display: inline-block; padding: 0.6rem 0; color: var(--stahl); font-weight: 600; text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
+  .textlink { display: inline-block; max-width: 100%; padding: 0.6rem 0; color: var(--stahl); font-weight: 600; text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
   @media (max-width: 420px) { .nur-breit { display: none; } .nur-schmal { display: inline; } }
   @media (max-width: 370px) { .kz { gap: 0.5rem; } .kz__logo svg { display: none; } .kz__logo { font-size: 1.4rem; } .kz .knopf--klein, .kz__menue { padding-inline: 0.7rem; } }
   @media (min-width: 960px) {
@@ -219,66 +219,62 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   }
 
   /* ---------- film plate: hero + scroll explode on one sticky stage (dark) ---------- */
-  .film { height: 340svh; position: relative; background: var(--nacht); color: var(--hell); }
-  .buehne { position: sticky; top: 0; height: 100svh; padding-top: var(--kh); display: grid; grid-template-rows: auto minmax(0, 1fr); justify-items: center; overflow: hidden; }
-  .bild { position: relative; height: min(125vw, 56svh); aspect-ratio: 4 / 5; margin-top: clamp(0px, 2svh, 24px);
+  /* the watch stays on a dark plate, everything that is read sits on paper */
+  .film { height: 340svh; position: relative; background: var(--papier); color: var(--tinte); }
+  .buehne { --bh: min(120vw, 48svh); position: sticky; top: 0; height: 100svh; padding-top: var(--kh); display: grid; grid-template-rows: auto minmax(0, 1fr); justify-items: center; overflow: hidden;
+    background: linear-gradient(to bottom, var(--nacht) calc(var(--kh) + var(--bh) + 1svh), var(--papier) 0); }
+  .bild { position: relative; height: var(--bh); aspect-ratio: 4 / 5; margin-top: 1svh;
     -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
     -webkit-mask-composite: source-in; mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%); mask-composite: intersect; }
   .bild picture { display: contents; }
   .bild img, .bild canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
   .text { position: relative; width: 100%; max-width: 580px; padding: 0 var(--gutter) max(16px, env(safe-area-inset-bottom)); display: grid; align-content: center; }
   .text > * { grid-area: 1 / 1; align-self: center; }
-  .held h1 { font-size: clamp(2rem, 8.4vw, 3.4rem); }
-  .held__lede { margin-top: 0.7rem; color: var(--hell-2); max-width: 30em; }
-  .aufzug { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 1.1rem; row-gap: 0.55rem; align-items: center; margin-top: clamp(0.9rem, 2.6svh, 1.8rem); max-width: 25rem; }
-  .aufzug__knopf { grid-column: 1 / -1; display: flex; align-items: center; gap: 1rem; padding: 4px 1.2rem 4px 4px; border: 1px solid var(--tinte-linie); border-radius: 999px; background: var(--nacht-2); color: var(--hell); cursor: pointer; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; justify-self: start; transition: border-color 0.2s, background-color 0.2s; }
-  .aufzug__knopf:hover { border-color: var(--rose-hell); }
-  .aufzug__knopf.ist-an { border-color: var(--rose-hell); background: var(--nacht-3); }
+  .held h1 { font-size: clamp(1.75rem, 7.4vw, 3rem); }
+  .held__lede { margin-top: 0.6rem; color: var(--tinte-2); max-width: 30em; }
+  .aufzug { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 1.1rem; row-gap: 0.55rem; align-items: center; margin-top: clamp(0.7rem, 2svh, 1.4rem); max-width: 25rem; }
+  .aufzug__knopf { position: relative; overflow: hidden; grid-column: 1 / -1; display: flex; align-items: center; gap: 0.9rem; padding: 4px 1.2rem 4px 4px; border: 0; border-radius: 999px; background: var(--nacht); color: var(--hell); cursor: pointer; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; justify-self: start; transition: background-color 0.2s; }
+  .aufzug__knopf::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--rose-hell); transform: scaleX(var(--r, 0)); transform-origin: left; }
+  .aufzug__knopf:hover, .aufzug__knopf.ist-an { background: var(--nacht-3); }
   /* the crown: a knurled steel wheel that turns while it is pressed */
-  .rad { position: relative; flex: none; width: 64px; height: 64px; border-radius: 50%; background: radial-gradient(circle at 50% 50%, var(--nacht-3) 0 44%, transparent 45%), repeating-conic-gradient(#8d9096 0 3deg, #2f3236 3deg 7.2deg); box-shadow: 0 0 0 1px #000, inset 0 0 0 3px rgba(0, 0, 0, 0.35); }
+  .rad { position: relative; flex: none; width: 52px; height: 52px; border-radius: 50%; background: radial-gradient(circle at 50% 50%, var(--nacht-3) 0 44%, transparent 45%), repeating-conic-gradient(#8d9096 0 3deg, #2f3236 3deg 7.2deg); box-shadow: 0 0 0 1px #000, inset 0 0 0 3px rgba(0, 0, 0, 0.35); }
   .rad::before { content: ''; position: absolute; inset: 22%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #c9c6bf, #6f7278 60%, #3a3d43); }
   .rad::after { content: ''; position: absolute; inset: -3px; border-radius: 50%; border: 1px solid var(--rose-hell); opacity: 0; animation: puls 2.2s ease-out infinite; }
   .aufzug__knopf.ist-an .rad { animation: dreh 1.4s linear infinite; }
   .aufzug__knopf.ist-an .rad::after, .laeuft .rad::after { animation: none; }
   @keyframes puls { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.4); opacity: 0; } }
   @keyframes dreh { to { transform: rotate(1turn); } }
-  .aufzug__txt { font-size: 1rem; font-weight: 600; text-align: left; }
-  /* power reserve like on a watch dial: a track with ticks every 5 h, filled from the left */
-  .gang { grid-column: 1 / -1; position: relative; height: 10px; margin-top: 0.4rem; background: repeating-linear-gradient(to right, var(--hell-2) 0 1px, transparent 1px calc(100% / 12)); background-size: calc(100% + 1px) 100%; background-repeat: no-repeat; }
-  .gang::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--nacht-3); }
-  .gang__fuell { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--rose-hell); transform: scaleX(var(--r, 0)); transform-origin: left; transition: transform 0.12s linear; }
-  .gang__skala { grid-column: 1 / -1; display: flex; justify-content: space-between; color: var(--hell-2); font-size: 0.78rem; font-variant-numeric: tabular-nums; margin-top: -0.2rem; }
-  .aufzug__status { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 0.8rem; color: var(--hell-2); font-size: 0.98rem; line-height: 1.3; }
-  .aufzug__status strong { color: var(--hell); font-family: var(--serif); font-weight: 400; font-size: 2rem; line-height: 1.1; font-variant-numeric: lining-nums; }
-  .weiter { margin-top: clamp(0.6rem, 2svh, 1.2rem); color: var(--hell-2); font-size: 0.95rem; }
-  .weiter::before { content: '↓'; display: inline-block; margin-right: 0.5rem; color: var(--rose-hell); animation: runter 1.8s ease-in-out infinite; }
+  .aufzug__txt { font-size: 0.98rem; font-weight: 600; text-align: left; }
+  .aufzug__status { grid-column: 1 / -1; color: var(--tinte-2); font-size: 0.95rem; line-height: 1.3; }
+  .weiter { margin-top: clamp(0.5rem, 1.6svh, 1rem); color: var(--tinte-2); font-size: 0.92rem; }
+  .weiter::before { content: '↓'; display: inline-block; margin-right: 0.5rem; color: var(--stahl); animation: runter 1.8s ease-in-out infinite; }
   @keyframes runter { 50% { transform: translateY(4px); } }
-  .station h2 { font-size: clamp(2rem, 8.6vw, 3.2rem); }
-  .station__txt { margin-top: 0.7rem; color: var(--hell-2); max-width: 34em; }
-  .station__fig { display: flex; align-items: baseline; gap: 0.9rem; margin-top: 1.1rem; padding-top: 0.9rem; border-top: 1px solid var(--tinte-linie); color: var(--hell-2); font-size: 0.95rem; max-width: 30em; }
-  .station__fig strong { flex: none; font-family: var(--serif); font-weight: 400; font-size: 2.3rem; line-height: 1; color: var(--hell); font-variant-numeric: lining-nums; }
+  .station h2 { font-size: clamp(1.75rem, 7.4vw, 3rem); }
+  .station__txt { margin-top: 0.6rem; color: var(--tinte-2); max-width: 34em; }
+  .station__fig { display: flex; align-items: baseline; gap: 0.9rem; margin-top: 1.1rem; padding-top: 0.9rem; border-top: 1px solid var(--linie); color: var(--tinte-2); font-size: 0.95rem; max-width: 30em; }
+  .station__fig strong { flex: none; font-family: var(--display); font-weight: 300; font-stretch: 112%; letter-spacing: -0.03em; font-size: 2.3rem; line-height: 1; color: var(--tinte); font-variant-numeric: lining-nums; }
   .js .held, .js .station { transition: opacity 0.35s ease, transform 0.35s ease; }
   .js .held:not(.ist-da), .js .station:not(.ist-da) { opacity: 0; transform: translateY(14px); visibility: hidden; transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s; }
   html:not(.js) .film { height: auto; }
   html:not(.js) .buehne { position: static; height: auto; }
   html:not(.js) .text > * { grid-area: auto; margin-bottom: 2rem; }
   html:not(.js) .bild canvas, html:not(.js) .aufzug, html:not(.js) .weiter { display: none; }
-  @media (max-height: 700px) and (max-aspect-ratio: 1/1) { .held__lede { display: none; } }
+  @media (max-height: 760px) and (max-aspect-ratio: 1/1) { .held__lede { display: none; } }
   @media (min-aspect-ratio: 1/1) {
-    .buehne { grid-template-rows: 1fr; grid-template-columns: minmax(280px, 600px) auto; justify-content: center; align-items: center; column-gap: clamp(8px, 3vw, 56px); }
-    .bild { height: min(calc(100svh - var(--kh)), 74vw); margin-top: 0; grid-column: 2; grid-row: 1; }
-    .text { grid-column: 1; grid-row: 1; padding-right: 0; }
+    .buehne { grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; justify-items: stretch; align-items: center; background: linear-gradient(to right, var(--papier) 50%, var(--nacht) 50%); }
+    .bild { height: min(calc(100svh - var(--kh)), 62vw); margin-top: 0; grid-column: 2; grid-row: 1; justify-self: center; }
+    .text { grid-column: 1; grid-row: 1; justify-self: end; padding-right: clamp(20px, 4vw, 64px); }
   }
   @media (min-width: 1100px) and (min-height: 700px) {
     .text { max-width: 640px; }
-    .held h1, .station h2 { font-size: clamp(3rem, 4.4vw, 4.6rem); }
+    .held h1, .station h2 { font-size: clamp(2.8rem, 4vw, 4.2rem); }
     .held__lede, .station__txt { font-size: 1.15rem; }
-    .rad { width: 76px; height: 76px; } .aufzug__txt { font-size: 1.05rem; } .aufzug { max-width: 28rem; }
+    .rad { width: 64px; height: 64px; } .aufzug__txt { font-size: 1.05rem; }
   }
   @media (min-aspect-ratio: 1/1) and (max-height: 520px) {
     .held h1, .station h2 { font-size: clamp(1.5rem, 7svh, 2.2rem); }
     .held__lede { display: none; }
-    .rad { width: 48px; height: 48px; } .aufzug__txt { font-size: 0.9rem; } .gang__skala { display: none; }
+    .rad { width: 44px; height: 44px; } .aufzug__txt { font-size: 0.9rem; }
     .station__txt { font-size: 0.95rem; margin-top: 0.4rem; }
   }
 
@@ -288,8 +284,8 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .kopf h2, .daten h2, .atelier h2 { font-size: clamp(2.3rem, 7.5vw, 4.4rem); max-width: 16em; overflow-wrap: anywhere; }
   .kopf p { margin-top: 1.1rem; color: var(--tinte-2); max-width: 36em; font-size: 1.1rem; }
 
-  .satz { display: grid; gap: 1.6rem; max-width: var(--breit); margin: auto; box-sizing: content-box; }
-  .satz__zeile { font-size: clamp(2.7rem, 10.5vw, 6.6rem); line-height: 1; letter-spacing: -0.012em; max-width: 9em; }
+  .satz { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.6rem; max-width: var(--breit); margin: auto; box-sizing: content-box; }
+  .satz__zeile { font-size: clamp(2.7rem, 10.5vw, 6.6rem); line-height: 1; letter-spacing: -0.02em; overflow-wrap: anywhere; max-width: 9em; }
   .satz__text { display: grid; gap: 1rem; max-width: 30em; color: var(--tinte-2); font-size: 1.1rem; align-content: end; }
   @media (min-width: 960px) { .satz { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 4rem; align-items: end; } }
 
@@ -330,7 +326,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .f, .schein { max-width: var(--breit); margin: auto; }
   .f { display: grid; gap: 0 4rem; }
   .f__gruppe { border: 0; padding: 0; margin: 0 0 2.2rem; min-width: 0; }
-  .f__gruppe legend { font-family: var(--serif); font-size: 1.7rem; padding: 0; margin-bottom: 0.9rem; }
+  .f__gruppe legend { font-family: var(--display); font-size: 1.7rem; padding: 0; margin-bottom: 0.9rem; }
   .f__wahl { display: grid; gap: 0.6rem; }
   @media (min-width: 560px) { .f__wahl { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
   .f__opt { position: relative; display: block; cursor: pointer; }
@@ -355,7 +351,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .f__summe-titel, .f__summe-liste { display: none; }
   .f__summe-zeile { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
   .f__summe-zeile span { color: var(--hell-2); }
-  .f__summe-zeile strong { font-family: var(--serif); font-weight: 400; font-size: 1.9rem; font-variant-numeric: lining-nums; white-space: nowrap; }
+  .f__summe-zeile strong { font-family: var(--display); font-weight: 400; font-size: 1.9rem; font-variant-numeric: lining-nums; white-space: nowrap; }
   .f__ok { margin: 0 0 1.4rem; }
   .f__ok label { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 0.8rem; align-items: start; cursor: pointer; }
   .f__ok input { width: 24px; height: 24px; margin: 2px 0 0; accent-color: var(--stahl); }
@@ -366,7 +362,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     .f { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; }
     .f__wahlen, .f__kontakt { grid-column: 1; }
     .f__summe { grid-column: 2; grid-row: 1 / span 2; position: sticky; top: calc(var(--kh) + 2rem); bottom: auto; margin: 0; padding: 2rem; border-radius: var(--r); }
-    .f__summe-titel { display: block; font-family: var(--serif); font-size: 1.9rem; margin-bottom: 1.2rem; }
+    .f__summe-titel { display: block; font-family: var(--display); font-size: 1.9rem; margin-bottom: 1.2rem; }
     .f__summe-liste { display: block; list-style: none; margin: 0 0 1.2rem; padding: 0; }
     .f__summe-liste li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.6rem 0; border-top: 1px solid var(--tinte-linie); }
     .f__summe-liste li span:last-child { color: var(--hell-2); white-space: nowrap; }
@@ -382,7 +378,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .schein dl div { display: grid; grid-template-columns: minmax(6rem, 12rem) minmax(0, 1fr); gap: 0.8rem; padding: 0.55rem 0; border-top: 1px solid var(--linie); }
   .schein dt { color: var(--tinte-2); } .schein dd { margin: 0; overflow-wrap: anywhere; }
   .schein__summe { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--tinte); padding-top: 0.8rem; }
-  .schein__summe strong { font-family: var(--serif); font-weight: 400; font-size: 2rem; font-variant-numeric: lining-nums; }
+  .schein__summe strong { font-family: var(--display); font-weight: 400; font-size: 2rem; font-variant-numeric: lining-nums; }
   .schein__demo { color: var(--tinte-2); font-size: 0.95rem; }
 
   .atelier { display: grid; gap: 3.5rem; max-width: var(--breit); margin: auto; box-sizing: content-box; }
@@ -390,7 +386,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .atelier ol { list-style: none; margin: 0; padding: 0; counter-reset: weg; display: grid; gap: 0; }
   .atelier li { counter-increment: weg; display: grid; grid-template-columns: 3.2rem minmax(0, 1fr); column-gap: 0.5rem; padding: 1.3rem 0; border-top: 1px solid var(--linie); }
   .atelier li:first-child { border-top-color: var(--tinte); }
-  .atelier li::before { content: counter(weg); grid-row: 1 / span 2; font-family: var(--serif); font-size: 2.6rem; line-height: 1; color: var(--stahl); font-variant-numeric: lining-nums; }
+  .atelier li::before { content: counter(weg); grid-row: 1 / span 2; font-family: var(--display); font-size: 2.6rem; line-height: 1; color: var(--stahl); font-variant-numeric: lining-nums; }
   .atelier li h3 { font-size: 1.6rem; }
   .atelier li p { grid-column: 2; margin-top: 0.3rem; color: var(--tinte-2); max-width: 32em; }
   .atelier__ort { font-style: normal; display: grid; gap: 1rem; align-content: start; font-size: 1.1rem; }
@@ -499,7 +495,6 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   const stations = [...document.querySelectorAll<HTMLElement>('[data-station]')];
   const knopf = document.querySelector<HTMLButtonElement>('[data-wind]')!;
   const lbl = document.querySelector<HTMLElement>('[data-wind-label]')!;
-  const resEl = document.querySelector<HTMLElement>('[data-reserve]')!;
   const statEl = document.querySelector<HTMLElement>('[data-status]')!;
   const FULL = 60;
   let pressed = false, reserve = 0, cur = 0, target = 0, last = 0;
@@ -509,9 +504,8 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
 
   function ui() {
     held.style.setProperty('--r', String(reserve / FULL));
-    resEl.textContent = `${Math.floor(reserve)} h`;
     const full = reserve >= FULL, runs = reserve > 0;
-    statEl.textContent = full ? 'Voll aufgezogen, Gangreserve' : runs ? (reduce ? 'Das Werk läuft, Gangreserve' : 'Das Werk läuft, hier in Zeitlupe, Gangreserve') : 'Gangreserve';
+    statEl.textContent = full ? 'Voll aufgezogen. Weiter nach unten: das Werk öffnet sich.' : runs ? (reduce ? 'Das Werk läuft.' : 'Das Werk läuft, hier in Zeitlupe.') : '';
     lbl.textContent = full ? 'Voll aufgezogen' : pressed ? 'Es wird aufgezogen …' : runs ? 'Weiter aufziehen' : 'Krone gedrückt halten';
     held.classList.toggle('laeuft', runs);
   }
@@ -571,7 +565,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     const exploding = cur > 0.04 || target > 0.04;
     // winding: one tooth per loop; after release the click still drops into the next tooth
     if (!exploding && pressed && reserve < FULL) {
-      reserve = Math.min(FULL, reserve + dt * 7); ui();
+      reserve = Math.min(FULL, reserve + dt * 32); ui();
       if (!reduce) { accW += dt * 18; while (accW >= 1) { accW -= 1; windF++; if (windF === WIND) { windF = 0; teeth++; if (navigator.vibrate) navigator.vibrate(6); } } }
     } else if (windF !== 0) { accW += dt * 18; while (accW >= 1 && windF !== 0) { accW -= 1; windF = (windF + 1) % WIND; if (windF === 0) teeth++; } }
     // running: starts with the first hour of reserve

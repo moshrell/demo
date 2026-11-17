@@ -31,7 +31,7 @@ const m = await page.evaluate(() => {
   const de = document.documentElement; const bad = [];
   document.querySelectorAll('a,button,input,select,textarea,label,summary').forEach((e) => { const r = e.getBoundingClientRect(); if (!r.width || !r.height) return; const cs = getComputedStyle(e); if (cs.visibility === 'hidden') return;
     if (r.right > innerWidth + 0.5 || r.left < -0.5) bad.push('off-screen-x:' + (e.textContent || e.id || e.tagName).trim().slice(0, 30) + ' ' + Math.round(r.left) + '..' + Math.round(r.right)); });
-  document.querySelectorAll('h1,h2,h3,p,li,span,div,td,th,label').forEach((e) => { if (e.scrollWidth > e.clientWidth + 2 && getComputedStyle(e).overflow !== 'visible' && e.clientWidth) bad.push('clipped:' + e.tagName + '.' + e.className + ' ' + (e.textContent || '').trim().slice(0, 30)); });
+  document.querySelectorAll('h1,h2,h3,p,li,span,div,td,th,label').forEach((e) => { if (e.closest('[aria-hidden="true"]')) return; /* Schmuck, absichtlich beschnitten */ if (e.scrollWidth > e.clientWidth + 2 && getComputedStyle(e).overflow !== 'visible' && e.clientWidth) bad.push('clipped:' + e.tagName + '.' + e.className + ' ' + (e.textContent || '').trim().slice(0, 30)); });
   return {sw: de.scrollWidth, cw: de.clientWidth, h: de.scrollHeight, bad: bad.slice(0, 25)};
 });
 await page.evaluate(() => scrollTo(0, 0)); await page.waitForTimeout(400);

@@ -89,6 +89,7 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
     <div class="sec__head"><h2 id="leistungen-h">{t.leistungen.title}</h2><p class="lead">{t.leistungen.p}</p></div>
     <div class="rezept__grid">
       <div class="slip">
+        <span class="kt kt--l" aria-hidden="true"><span>{`${site.name} · `.repeat(5)}</span></span><span class="kt kt--r" aria-hidden="true"><span>{`${site.name} · `.repeat(5)}</span></span>
         <p class="slip__top"><span>{t.leistungen.slip.title}</span><span class="slip__sample">{t.leistungen.slip.sample}</span></p>
         <div class="slip__field slip__field--wide"><p class="slip__l">{t.leistungen.slip.heil}</p>
           <div class="slip__chips">{t.leistungen.rezept.map((x: any, i: number) => <button type="button" class="rxk" data-rx-btn={x.k} aria-pressed={i === 0 ? 'true' : 'false'}>{x.k}</button>)}</div>
@@ -126,7 +127,7 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
         <li data-dur={s.to - s.from}>
           <div class="tape__band" aria-hidden="true"><span>{s.from}</span>{i === t.termin.stages.length - 1 && <span class="tape__end">{s.to}</span>}</div>
           <div class="tape__body">
-            <p class="print tape__t">{s.from}–{s.to} {t.termin.min}</p>
+            <p class="print tape__t">{s.to - s.from} {t.termin.min}</p>
             <h3>{s.h}</h3>
             <p>{s.p}</p>
             <ul>{s.li.map((x: string) => <li>{x}</li>)}</ul>
@@ -176,6 +177,7 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
         ))}
       </div>
       <div class="bon on-light" aria-live="polite">
+        <span class="kt kt--c" aria-hidden="true"><span>{`${site.name} · `.repeat(5)}</span></span>
         <p class="bon__h">{site.name} · {c.bon}</p>
         <dl class="bon__lines" data-bon-lines>
           <div><dt>{c.fee}</dt><dd>10,00 €</dd></div>
@@ -230,6 +232,7 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
   <!-- 7 · Terminkarte -->
   <section class="sec on-deep anfrage" id="anfrage" aria-labelledby="anfrage-h">
     <div class="karte on-light">
+      <span class="kt kt--l" aria-hidden="true"><span>{`${site.name} · `.repeat(5)}</span></span>
       <div class="karte__head">
         <p class="karte__brand"><span>{site.name}</span><span class="print">{t.form.card}</span></p>
         <h2 id="anfrage-h">{t.form.title}</h2>

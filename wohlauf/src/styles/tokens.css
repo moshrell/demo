@@ -36,9 +36,11 @@
   --band-2: #e0ae12;
   --band-ink: #19170a;
   --alert: #a3231a;
+  --kt: #3f86c9;          /* Kinesio-Tape: hält Papier fest, wie in der Praxis */
+  --kt-2: #2f6fae;
 
-  --font-display: 'Literata Variable', Georgia, 'Times New Roman', serif;
-  --font-text: 'Hanken Grotesk Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --font-text: 'Geologica Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-print: 'Courier Prime', 'Courier New', monospace; /* alles, was «eingetragen» ist */
 
   --text-xs: 0.8125rem;

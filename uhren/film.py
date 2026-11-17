@@ -159,6 +159,23 @@ def winding(psi, screw=True):
     v0, v1 = tip - SF, tip2 - SF
     P('click_spring', rot=math.atan2(v0.x * v1.y - v0.y * v1.x, v0.dot(v1)), pivot=SF)
 
+# ---- stacking order: explode_limits.json holds, for every pair of parts whose outlines overlap seen from above, how far one may rise
+#      relative to the other before the solids meet (measured on the meshes by a vertical sweep, see uhren/README.md). settle() raises the
+#      upper part (or the lower one, for an upper bound) until every pair is clear, so whatever sits on top always rises higher. ----
+import json as _json
+LIMITS = _json.load(open(os.path.join(HERE, 'explode_limits.json')))
+def settle(margin=0.12, rounds=400):
+    lf = lambda n: pose.setdefault(n, {'lift': 0.0, 'rot': 0.0, 'pivot': None, 'shift': Vector((0, 0, 0)), 'axis': None})
+    for _ in range(rounds):
+        moved = False
+        for c in LIMITS:
+            a, b = lf(c['a']), lf(c['b']); d = b['lift'] - a['lift']
+            lo = c['lo'] + min(margin, -c['lo'] / 2) + c.get('k', 0.0) * a['lift']; hi = c['hi'] - min(margin, c['hi'] / 2)
+            if d < lo - 1e-9: b['lift'] = a['lift'] + lo; moved = True
+            elif d > hi + 1e-9: a['lift'] = b['lift'] - hi; moved = True
+        if not moved: return
+    print('settle: no fixed point', flush=True)
+
 # ---- exploded view: four stations of a quarter each. Parts move in the first ~0.15 of a quarter, then drift.
 #      What was opened earlier keeps rising at every later station, so it never stands between the light and the next subject. ----
 SCREW_TURN = 9.0
@@ -188,12 +205,13 @@ def explode(t):
     lift(t, ['screw_balance_cock'], [(17.5, 0.50, 0.60), (1.5, *Q4)], screw=True)
     lift(t, G_COCK, [(14.0, 0.505, 0.62), (1.0, *Q4)])
     lift(t, G_BAL + ['hairspring'], [(9.6, 0.515, 0.63), (1.5, *Q4)])
-    lift(t, ['screw_escape_cock', 'screw_pallet_bridge_1', 'screw_pallet_bridge_2'], [(15.0, 0.52, 0.62)], screw=True)
-    lift(t, ['escape_wheel_cock', 'pallet_bridge'] + pre('jewel_escape', 'jewel_pallet'), [(12.0, 0.535, 0.64)])
+    lift(t, ['screw_escape_cock', 'screw_pallet_bridge_1', 'screw_pallet_bridge_2'], [(8.5, 0.52, 0.62)], screw=True)
+    lift(t, ['escape_wheel_cock', 'pallet_bridge'] + pre('jewel_escape', 'jewel_pallet'), [(6.5, 0.535, 0.64)])
     lift(t, G_ESC + G_FORK, [(1.5, 0.555, 0.65)])
     # 4  Unruh: the balance turns a little while the camera rises to it
     th = rad(-75) * seg(t, 0.77, 1.0)
     P(G_BAL, rot=th, pivot=BC); hairspring(th)
+    settle()
 
 # ---- camera: fixed azimuth (the hero light rig stays valid); target, distance, elevation and focus travel from station to station ----
 cam = bpy.data.cameras.new('cam_film'); co = bpy.data.objects.new('cam_film', cam); S.collection.objects.link(co)

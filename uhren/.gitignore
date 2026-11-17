@@ -2,3 +2,5 @@
 renders_test/
 frames/
 frames_s/
+_chk/
+explode_limits_raw.json

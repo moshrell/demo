@@ -123,9 +123,8 @@
     "full": "Fully booked",
     "errWindow": "Please choose a launch window.",
     "seats": "Seats",
-    "help0": "Choose a launch window first. Every seat faces the glass.",
-    "help1": "{label}. Hatched seats are taken. Every seat faces the glass.",
-    "pilot": "PILOT",
+    "help0": "Choose a launch window first. Every chair faces outwards, and the capsule turns slowly: every seat sees the sunrise.",
+    "help1": "{label}. Hatched chairs are taken. The capsule turns slowly, so every seat sees the sunrise.",
     "errSeat": "Please choose at least one seat.",
     "guest": "Lead guest",
     "name": "Full name",
@@ -159,7 +158,26 @@
       "Pre-flight briefing and cabin fitting with your pilot",
       "Breakfast aloft, lunch on landing",
       "A second launch window at no charge if weather scrubs the first"
-    ]
+    ],
+    "key": [
+      [
+        "A",
+        "Pilot and controls"
+      ],
+      [
+        "B",
+        "Table, breakfast aloft"
+      ],
+      [
+        "C",
+        "Lavatory, with a window"
+      ],
+      [
+        "D",
+        "Floor hatch"
+      ]
+    ],
+    "section": "Section at window height · Ø 5.0 m"
   },
   "faq": {
     "eyebrow": "Before you ask",

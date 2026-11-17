@@ -123,9 +123,8 @@
     "full": "Ausgebucht",
     "errWindow": "Bitte wählen Sie ein Startfenster.",
     "seats": "Plätze",
-    "help0": "Wählen Sie zuerst ein Startfenster. Jeder Platz liegt am Glas.",
-    "help1": "{label}. Schraffierte Plätze sind vergeben. Jeder Platz liegt am Glas.",
-    "pilot": "PILOT",
+    "help0": "Wählen Sie zuerst ein Startfenster. Alle Sessel schauen nach außen, und die Kapsel dreht sich langsam: Jeder Platz sieht den Sonnenaufgang.",
+    "help1": "{label}. Schraffierte Sessel sind vergeben. Die Kapsel dreht sich langsam, jeder Platz sieht den Sonnenaufgang.",
     "errSeat": "Bitte wählen Sie mindestens einen Platz.",
     "guest": "Ihre Angaben",
     "name": "Name",
@@ -159,7 +158,26 @@
       "Einweisung und Kabinenprobe mit Ihrem Piloten",
       "Frühstück an Bord, Mittagessen nach der Landung",
       "Ein zweites Startfenster ohne Aufpreis, falls das Wetter den Start verhindert"
-    ]
+    ],
+    "key": [
+      [
+        "A",
+        "Pilot und Steuerpult"
+      ],
+      [
+        "B",
+        "Tisch, Frühstück an Bord"
+      ],
+      [
+        "C",
+        "Toilette, mit Fenster"
+      ],
+      [
+        "D",
+        "Bodenluke"
+      ]
+    ],
+    "section": "Schnitt auf Fensterhöhe · Ø 5,0 m"
   },
   "faq": {
     "eyebrow": "Bevor Sie fragen",

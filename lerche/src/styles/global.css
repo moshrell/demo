@@ -166,23 +166,45 @@ legend { display: flex; align-items: center; gap: 12px; padding: 0; margin-botto
 .err { margin-top: 8px; font-size: var(--text-sm); color: var(--alert); }
 
 .cabin__help { margin-bottom: 18px; font-size: 0.92rem; color: var(--muted); }
-.cabin__plan { position: relative; width: min(100%, 330px); aspect-ratio: 1; margin: 0 auto; }
-.cabin__plan svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.cabin__hull { fill: rgba(6, 10, 20, 0.5); stroke: var(--ink); stroke-width: 1; }
-.cabin__glass { fill: none; stroke: var(--dawn); stroke-width: 0.6; }
-.cabin__mull { stroke: var(--ink); stroke-width: 1; }
-.cabin__core { fill: none; stroke: var(--line); stroke-width: 1; }
-.cabin__pilot { font: 400 6.4px var(--mono); letter-spacing: 0.1em; fill: var(--muted); }
-.seat { position: absolute; width: 56px; height: 56px; margin: -28px; display: grid; place-items: center; cursor: pointer; }
-.seat input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
-.seat span { display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid var(--ink); border-radius: 50%; font: 400 0.9rem/1 var(--mono); transition: background-color 0.15s, color 0.15s; }
-.seat input:checked + span { background: var(--dawn); border-color: var(--dawn); color: var(--night); font-weight: 700; }
-.seat input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 3px; }
+.cabin__plan { position: relative; width: min(100%, 420px); aspect-ratio: 200 / 214; margin: 0 auto; }
+.cabin__plan > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.cut__floor { fill: rgba(6, 10, 20, 0.72); }
+.cut__grid { fill: none; stroke: var(--line); stroke-width: 0.3; stroke-dasharray: 0.8 1.6; }
+.cut__wall { fill: url(#hatch); stroke: var(--ink); stroke-width: 0.7; }
+.cut__line { stroke: var(--muted); stroke-width: 0.55; }
+.cut__glass { fill: none; stroke: var(--dawn); stroke-width: 0.5; }
+.cut__glass--in { stroke-width: 0.35; opacity: 0.7; }
+.cut__mull { stroke: var(--ink); stroke-width: 1.4; }
+.cut__part { fill: rgba(244, 240, 232, 0.05); stroke: var(--ink); stroke-width: 0.6; }
+.cut__part--soft { fill: none; stroke: var(--muted); stroke-width: 0.35; }
+.cut__lav { fill: url(#hatch); }
+.cut__door { fill: none; stroke: var(--muted); stroke-width: 0.4; stroke-dasharray: 1 1; }
+.cut__hatchlid { fill: none; stroke: var(--muted); stroke-width: 0.5; stroke-dasharray: 1.6 1.2; }
+.cut__dot { fill: var(--muted); }
+.cut__pilot .chair > * { fill: rgba(6, 10, 20, 0.9); stroke: var(--ink); stroke-width: 0.6; }
+.cut__key { font: 700 5.4px var(--sans); fill: var(--dawn); text-anchor: middle; }
+.cut__scale line { stroke: var(--muted); stroke-width: 0.5; }
+.cut__scale text { font: 400 4.6px var(--mono); fill: var(--muted); text-anchor: middle; }
+.cut__cap { margin-top: 6px; text-align: center; font: 400 0.64rem/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.cut__legend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+.cut__legend div { display: flex; gap: 8px; align-items: baseline; font-size: 0.84rem; color: var(--muted); }
+.cut__legend dt { flex: none; font: 700 0.72rem/1 var(--sans); color: var(--dawn); }
+
+.seat { position: absolute; width: max(44px, 15%); aspect-ratio: 1; transform: translate(-50%, -50%); display: grid; place-items: center; cursor: pointer; }
+.seat input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 1; }
+.seat__chair { position: absolute; inset: 6%; width: 88%; height: 88%; overflow: visible; transform: rotate(var(--a)); }
+.chair > * { fill: rgba(6, 10, 20, 0.9); stroke: var(--ink); stroke-width: 0.8; transition: fill 0.15s, stroke 0.15s; }
+.seat__n { position: relative; font: 400 0.82rem/1 var(--mono); pointer-events: none; transition: color 0.15s; }
+.seat:hover .chair__seat { fill: rgba(255, 180, 140, 0.18); }
+.seat input:checked ~ .seat__chair .chair > * { stroke: var(--dawn); }
+.seat input:checked ~ .seat__chair .chair__seat { fill: var(--dawn); }
+.seat input:checked ~ .seat__n { color: var(--night); font-weight: 700; }
+.seat input:focus-visible ~ .seat__chair { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 50%; }
 .seat input:disabled { cursor: default; }
-.seat input:disabled + span { opacity: 0.38; }
-.seat--taken input:disabled + span { opacity: 0.6; color: transparent; background: repeating-linear-gradient(45deg, var(--muted) 0 1px, transparent 1px 6px); }
-.seat--1 { left: 50%; top: 15%; } .seat--2 { left: 80.3%; top: 32.5%; } .seat--3 { left: 80.3%; top: 67.5%; }
-.seat--4 { left: 50%; top: 85%; } .seat--5 { left: 19.7%; top: 67.5%; } .seat--6 { left: 19.7%; top: 32.5%; }
+.seat input:disabled ~ * { opacity: 0.4; }
+.seat--taken input:disabled ~ * { opacity: 0.75; }
+.seat--taken .chair__seat, .seat--taken .chair__back { fill: url(#hatch); }
+.seat--taken .seat__n { color: transparent; }
 
 .guest { display: grid; gap: 22px; }
 .guest legend { margin-bottom: 0; padding-bottom: 20px; }

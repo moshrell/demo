@@ -36,13 +36,16 @@ button, input { font: inherit; color: inherit; }
 h1, h2 { font-family: var(--serif); font-weight: 340; font-variation-settings: 'opsz' 60; letter-spacing: -0.022em; text-wrap: balance; }
 h1 { font-size: clamp(2.4rem, min(11vw, 17svh), 5.6rem); line-height: 0.96; }
 h2 { font-size: clamp(2.05rem, min(8.8vw, 12svh), 4.2rem); line-height: 1.02; }
-h3 { font: 400 0.72rem/1.4 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+h3 { font: 400 1.36rem/1.2 var(--serif); color: var(--ink); }
 
 /* ── сцена ── */
 .sky { position: fixed; inset: 0 0 auto 0; width: 100%; height: 100lvh; z-index: 0; }
-.scrim { position: fixed; inset: 0 0 auto 0; height: 100lvh; z-index: 1; pointer-events: none; background: radial-gradient(ellipse 85% 80% at 50% 45%, rgba(3, 5, 12, 0) 55%, rgba(3, 5, 12, 0.34)), rgba(5, 8, 17, calc(var(--post) * 0.8)); }
+.scrim { position: fixed; inset: 0 0 auto 0; height: 100lvh; z-index: 1; pointer-events: none; background: radial-gradient(ellipse 85% 80% at 50% 45%, rgba(3, 5, 12, 0) 55%, rgba(3, 5, 12, 0.34)), rgba(5, 8, 17, calc(var(--post) * 0.4)); }
 .scrim::before { content: ''; position: absolute; inset: 78% 0 0 0; background: linear-gradient(to top, rgba(4, 7, 16, 0.78), rgba(4, 7, 16, 0)); opacity: calc(1 - var(--post)); }
 .scrim::after { content: ''; position: absolute; inset: 0 0 76% 0; background: linear-gradient(rgba(4, 7, 16, 0.5), rgba(4, 7, 16, 0)); }
+/* после потолка: Земля ушла под нижний край, от неё остаётся голубое свечение атмосферы */
+.sky-limb { position: fixed; inset: auto 0 0 0; height: 46lvh; z-index: 1; pointer-events: none; opacity: calc(var(--post) * 0.9); background: radial-gradient(ellipse 120% 70% at 50% 140%, rgba(120, 170, 255, 0.42), rgba(60, 110, 220, 0.16) 45%, rgba(6, 10, 20, 0) 75%); }
+.no-gl .sky-limb { display: none; }
 .no-gl .sky { display: none; }
 .no-gl body::before, .no-gl body::after { content: ''; position: fixed; inset: 0; z-index: 0; }
 .no-gl body::before { background: linear-gradient(#0b1c3d, #35507c 52%, #e39a6a 62%, #0a0f18 62.2%); }
@@ -88,7 +91,7 @@ h3 { font: 400 0.72rem/1.4 var(--mono); letter-spacing: 0.12em; text-transform: 
 .gauges { position: fixed; inset: auto 0 0 0; z-index: 4; display: grid; grid-template-columns: repeat(4, auto); justify-content: space-between; gap: 10px; padding: 11px var(--gutter) max(11px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); pointer-events: none; transition: opacity 0.4s; }
 .gauges span { display: block; font: 400 0.62rem/1.3 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 .gauges b { display: block; font: 400 0.84rem/1.35 var(--mono); white-space: nowrap; }
-.is-post .tape, .is-post .gauges { opacity: 0; }
+.tape, .gauges { opacity: clamp(0, 1 - var(--post) * 3, 1); }
 
 /* ── подъём ── */
 main { position: relative; z-index: 2; }
@@ -104,7 +107,8 @@ main { position: relative; z-index: 2; }
 .station__in::before { content: ''; position: absolute; z-index: -1; inset: -90px -100vw -40svh; background: linear-gradient(rgba(4, 7, 16, 0), rgba(4, 7, 16, 0.6) 120px, rgba(4, 7, 16, 0.78)); pointer-events: none; }
 .station--float .station__in::before { inset: -40svh -100vw -110px; background: linear-gradient(rgba(4, 7, 16, 0.5), rgba(4, 7, 16, 0.35) 60%, rgba(4, 7, 16, 0)); }
 .station--float { justify-content: flex-start; padding-top: 104px; }
-.way { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 9px; margin-bottom: 16px; font: 400 0.7rem/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; }
+.way { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-bottom: 14px; font: 400 0.86rem/1.4 var(--mono); letter-spacing: 0.02em; }
+.way span:first-child { color: var(--dawn); }
 .way i { flex: 0 0 16px; height: 1px; background: var(--dawn); }
 .station__body { margin-top: 16px; max-width: 33ch; }
 .station__act { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin-top: 24px; }
@@ -286,7 +290,8 @@ legend { display: flex; align-items: center; gap: 12px; padding: 0; margin-botto
 
 /* телефон, первый экран как афиша: заголовок в небе, шар посередине, текст и кнопка у земли */
 @media (max-width: 899px) and (orientation: portrait) {
-  .station--field { padding-top: 88px; }
+  .station--field { padding-top: 88px; padding-right: var(--gutter); }
+  .station--field h1 { font-size: min(13.6vw, 8.4svh); letter-spacing: -0.03em; }
   .station--field .station__in { display: flex; flex-direction: column; height: 100%; }
   .station--field .station__body { margin-top: auto; }
   .station--field .station__in::before { inset: 62% -100vw -40svh; background: linear-gradient(rgba(4, 7, 16, 0), rgba(4, 7, 16, 0.5) 80px, rgba(4, 7, 16, 0.74)); }

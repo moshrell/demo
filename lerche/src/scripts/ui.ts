@@ -54,7 +54,7 @@ function paint() {
   stations.forEach((s, i) => {
     const d = Math.abs(p * N - i);
     let o = 1 - Math.min(1, Math.max(0, (d - 0.2) / 0.22));
-    if (i === N && p >= 1) o = 1 - post;
+    if (i === N && p >= 1) o = Math.max(0, 1 - post * 3); // уходит раньше, чем первый лист доезжает до текста
     s.style.opacity = o.toFixed(3);
     s.style.visibility = o < 0.02 ? 'hidden' : 'visible';
     if (!still) (s.firstElementChild as HTMLElement).style.transform = `translate3d(0, ${((i - p * N) * 120).toFixed(1)}px, 0)`;
@@ -80,7 +80,7 @@ requestAnimationFrame(tick);
 // ── сцена ────────────────────────────────────────────────────────────────────
 const canvas = $('#sky') as unknown as HTMLCanvasElement;
 import('./scene').then(({ initScene }) => {
-  if (!initScene(canvas, () => ({ alt, yaw }), still)) { root.classList.add('no-gl'); canvas.dataset.live = '0'; }
+  if (!initScene(canvas, () => ({ alt, yaw, post }), still)) { root.classList.add('no-gl'); canvas.dataset.live = '0'; }
 }).catch(() => { root.classList.add('no-gl'); canvas.dataset.live = '0'; });
 
 // на потолке: провести пальцем в сторону, чтобы осмотреться

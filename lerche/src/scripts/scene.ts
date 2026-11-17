@@ -261,7 +261,9 @@ const FOG_FRAG = /* glsl */ `
 precision highp float; uniform vec3 uFogCol; uniform float uFog;
 void main(){ gl_FragColor = vec4(uFogCol, uFog); }`;
 
-export interface SceneState { alt: number; yaw: number; }
+const TILT = 26 * Math.PI / 180;
+
+export interface SceneState { alt: number; yaw: number; post: number; }
 
 export function initScene(canvas: HTMLCanvasElement, state: () => SceneState, still: boolean): boolean {
   let renderer: THREE.WebGLRenderer;
@@ -411,7 +413,7 @@ export function initScene(canvas: HTMLCanvasElement, state: () => SceneState, st
     if (document.hidden) { last = now; return; }
     const dtm = now - last; last = now;
     if (!still) t += Math.min(dtm, 50) / 1000;
-    const { alt, yaw } = state();
+    const { alt, yaw, post } = state();
     const h = Math.max(alt, 2) / 1000;
 
     // солнце и свет
@@ -474,6 +476,8 @@ export function initScene(canvas: HTMLCanvasElement, state: () => SceneState, st
     const lift = 0;
     tgt.set(0, track(wide ? TGT_Y_W : TGT_Y, alt) - lift, 0); camera.lookAt(tgt);
     if (wide) camera.setViewOffset(vw, vh, -track(SHIFT_W, alt) * vw, 0, vw, vh); else if (camera.view) camera.clearViewOffset();
+    // после потолка взгляд поднимается в чёрное небо: аппарат уходит вниз из кадра, у нижнего края остаётся голубая кромка Земли
+    if (post > 0) { const q = Math.min(1, post * 1.6); camera.rotateX(TILT * q * q * (3 - 2 * q)); }
     camera.updateMatrixWorld();
     skyU.uCam.value.copy(camera.position); skyU.uGroundY.value = -alt / 10 - 0.45;
     skyU.uProjInv.value.copy(camera.projectionMatrixInverse); skyU.uCamWorld.value.copy(camera.matrixWorld);

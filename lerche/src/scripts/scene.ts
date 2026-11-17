@@ -11,9 +11,9 @@ const DEG = Math.PI / 180;
 
 // По станциям (0, 1500, 5000, 11000, 18000, 22000, 25000 м):
 const SUN_ELEV = [-8, -7.2, -3.2, -0.5, 3.5, 6, 8]; // градусы над истинным горизонтом
-const CAM_DIST = [72, 46, 34, 36, 4.3, 32, 62];
+const CAM_DIST = [60, 46, 34, 36, 4.3, 32, 62];
 const CAM_Y = [0.6, -3, 8.8, 2, 0.3, 2, 19.1];
-const TGT_Y = [-4.2, 3.5, 6, 6, -0.9, 4.2, 10.5];
+const TGT_Y = [7.6, 3.5, 6, 6, -0.9, 4.2, 10.5];
 const CAM_YAW = [0, 6, 14, 26, 62, 30, 0];
 // широкий экран: аппарат справа и крупнее, текст слева
 const CAM_DIST_W = [37, 38, 32, 34, 4.6, 30, 56];
@@ -44,7 +44,8 @@ const SKY_FRAG = /* glsl */ `
 precision highp float;
 varying vec3 vDir; varying vec2 vNdc;
 uniform float uH, uTime, uExp, uTwi, uCurve, uLow, uGroundY;
-uniform vec3 uSun, uSunCol, uAmb, uDisc, uCirrus, uCam;
+uniform vec3 uSun, uSunCol, uAmb, uDisc, uCirrus, uCam, uSunTop;
+uniform float uRed;
 const vec3 LAMP = vec3(1.0, 0.7, 0.4);
 const float RP = ${RP.toFixed(1)}, HR = 6.5, HM = 1.2, CL = ${CLOUD.toFixed(1)};
 const vec3 BR = vec3(${BR.join(',')}); const float BM = 5e-3;
@@ -73,10 +74,14 @@ void main(){
   vec3 scatR = 1.0 - exp(-BR*tr); float scatM = 1.0 - exp(-BM*tm);
   float pm = 0.045 / pow(1.58 - 1.52*mu, 1.5);
   vec3 col = scatR * (uSunCol*(0.55 + 0.45*mu*mu) + uAmb) + scatM * (uSunCol*(0.3 + pm) + uAmb*0.6);
-  // заря: тёплая полоса у горизонта в сторону солнца, пока оно под горизонтом
   float dip = acos(RP/(RP+uH));
   float el = asin(clamp(d.y, -1.0, 1.0)) + dip;
   float az = max(dot(normalize(d.xz + 1e-5), normalize(uSun.xz)), 0.0);
+  // низкое солнце: свет, прошедший длинный путь у горизонта, теряет синий; сильнее всего в сторону солнца
+  col *= exp(-BR * min(tr, 75.0) * uRed * (0.3 + 1.7*az*az)) * (1.0 + uRed*0.9);
+  float th = acos(clamp(mu, -1.0, 1.0));
+  float glow = exp(-th*70.0)*2.2 + exp(-th*22.0)*0.9 + exp(-th*6.0)*0.26; // ореол вокруг диска, как в объективе
+  // заря: тёплая полоса у горизонта в сторону солнца, пока оно под горизонтом
   vec3 dawn = mix(vec3(1.0,0.36,0.12), vec3(1.0,0.72,0.42), smoothstep(0.0,0.12,el));
   col += uTwi * dawn * exp(-max(el,0.0)*11.0) * (0.25 + 0.75*pow(az, 6.0)) * (hit ? 0.0 : 1.0) * scatR.b;
 
@@ -92,13 +97,32 @@ void main(){
       vec2 cp = (o + d*tcl).xz;
       vec2 cq = cp*0.016 + wind;
       cq += 0.55 * vec2(noise(cq*1.9 + 5.2), noise(cq*1.9 - 3.1)); // погодные системы: крупные, изогнутые
-      float cov = fbm(cq) + (noise(cp*0.22 + wind*6.0) - 0.5) * 0.12;
-      float dens = smoothstep(0.42, 0.62, cov) * smoothstep(0.0, 0.25, uH - CL);
-      float sh = smoothstep(-0.07, 0.11, cov - fbm(cq + normalize(uSun.xz)*0.035));
-      vec3 cc = uSunCol*mix(0.18, 1.5, sh) + uAmb*1.0;
-      surf = mix(surf, cc, dens);
+      // верх облаков как рельеф: склоны к солнцу тёплые, обратные в синей тени; вдали рельеф гаснет в дымке
+      float near = exp(-tcl*0.007);
+      vec2 sdir = normalize(uSun.xz);
+      float fine = exp(-tcl*0.022); // кучевые бугры по 1–3 км видны только вблизи
+      float h0 = fbm(cq) + (fbm(cp*0.11 + wind*5.0) - 0.5) * 0.34 * near + (fbm(cp*0.55 + wind*18.0) - 0.5) * 0.26 * fine;
+      float h1 = fbm(cq + sdir*0.012) + (fbm(cp*0.11 + sdir*0.09 + wind*5.0) - 0.5) * 0.34 * near + (fbm(cp*0.55 + sdir*0.3 + wind*18.0) - 0.5) * 0.26 * fine;
+      float thr = mix(0.30, 0.43, smoothstep(6.0, 20.0, uH)); // вблизи сплошной слой, с высоты видны разрывы
+      float dens = smoothstep(thr, thr + 0.2, h0) * smoothstep(0.0, 0.25, uH - CL);
+      float slope = (h0 - h1) * mix(7.0, 14.0, near);
+      float lit = smoothstep(-0.3, 0.6, slope + 0.1);
+      vec3 cc = uSunTop * (0.06 + 1.5*lit) + uAmb * (0.6 + 0.5*h0);
+      cc += uSunTop * pow(max(mu, 0.0), 5.0) * 0.55 * (0.4 + 0.6*lit); // дорожка света на облаках под солнцем
+      // дымка до облака, а не до земли: слой лежит выше приземной мглы
+      vec3 pc = o + d*tcl; float cc0 = dot(normalize(pc), -d);
+      float trc = max(HR * (chap(RP/HR, CL/HR, cc0) - chap(RP/HR, uH/HR, -d.y)), 0.0);
+      float tmc = max(HM * (chap(RP/HM, CL/HM, cc0) - chap(RP/HM, uH/HM, -d.y)), 0.0);
+      vec3 extc = exp(-(BR*trc + BM*tmc));
+      vec3 sRc = 1.0 - exp(-BR*trc); float sMc = 1.0 - exp(-BM*tmc);
+      vec3 colc = sRc * (uSunCol*(0.55 + 0.45*mu*mu) + uAmb) + sMc * (uSunCol*(0.3 + pm) + uAmb*0.6);
+      colc *= exp(-BR * min(trc, 75.0) * uRed * (0.3 + 1.7*az*az)) * (1.0 + uRed*0.9);
+      vec3 viaCloud = colc * mix(0.7, 1.0, 1.0 - extc.r) + cc * extc;
+      vec3 viaGround = col * mix(0.62, 1.0, 1.0 - ext.r) + surf * ext;
+      col = mix(viaGround, viaCloud, dens) + uDisc * glow * 0.3;
+    } else {
+      col = col * mix(0.62, 1.0, 1.0 - ext.r) + surf * ext + uDisc * glow * 0.3;
     }
-    col = col * 0.62 + surf * ext;
     if(uLow > 0.0){
       // стартовое поле: вереск, туман в низинах, прожекторы и разметка площадки под капсулой
       float tp = (uGroundY - uCam.y) / min(d.y, -1e-4);
@@ -152,7 +176,7 @@ void main(){
     float hsh = hash(cell.xy + cell.z*17.31);
     float star = step(0.992, hsh) * smoothstep(0.42, 0.0, length(f)) * (0.4 + 0.6*hash(cell.yz));
     col += star * 0.8 * clamp(1.0 - lum*16.0, 0.0, 1.0) * smoothstep(-0.02, 0.2, el);
-    col += uDisc * (smoothstep(0.99990, 0.99996, mu)*30.0 + pow(max(mu,0.0), 1400.0)*1.6 + pow(max(mu,0.0), 90.0)*0.22);
+    col += uDisc * (smoothstep(0.0082, 0.0046, th)*30.0 + glow);
   }
   col = tone(col, uExp);
   col += (hash(gl_FragCoord.xy + fract(uTime)) - 0.5) / 255.0;
@@ -192,7 +216,7 @@ void main(){
   float nv = abs(dot(N, V));
   float fres = pow(1.0 - nv, 2.2);
   float nl = dot(N, uSun);
-  float lit = max(nl, 0.0), thru = max(-nl, 0.0);
+  float lit = max(nl, 0.0), thru = max(-nl, 0.0) * mix(0.2, 1.0, vInfl); // сложенная плёнка почти не просвечивает
   vec3 film = vec3(0.93, 0.95, 1.0);
   vec3 col = film * (envAt(N)*0.55 + uSunCol*(lit*0.55 + thru*0.95));
   col += envAt(reflect(-V, N)) * fres * 0.9;
@@ -266,6 +290,7 @@ export function initScene(canvas: HTMLCanvasElement, state: () => SceneState, st
     uH: { value: 0 }, uTime: { value: 0 }, uExp: light.uExp, uTwi: { value: 0 }, uCurve: { value: 0 },
     uSun: light.uSun, uSunCol: light.uSunCol, uAmb: { value: new THREE.Vector3() }, uDisc: { value: new THREE.Vector3() },
     uLow: light.uLow, uCirrus: light.uCirrus, uCam: { value: new THREE.Vector3() }, uGroundY: { value: 0 },
+    uSunTop: { value: new THREE.Vector3() }, uRed: { value: 0 },
   };
   const tri = new THREE.BufferGeometry();
   tri.setAttribute('position', new THREE.Float32BufferAttribute([-1, -1, 0, 3, -1, 0, -1, 3, 0], 3));
@@ -401,6 +426,9 @@ export function initScene(canvas: HTMLCanvasElement, state: () => SceneState, st
     else tau = Math.exp(-h / HR) * HR / (Math.sin(elev) + 0.026);
     const sc = BR.map((b) => 2.6 * vis * Math.exp(-b * tau * 0.55));
     set(light.uSunCol, sc[0], sc[1], sc[2]);
+    const st = BR.map((b) => 2.8 * vis * Math.exp(-b * tau * 0.2)); // солнце над слоем облаков: путь короче, свет теплее и ярче
+    skyU.uSunTop.value.set(st[0], st[1], st[2]);
+    skyU.uRed.value = 0.27 * (1 - THREE.MathUtils.smoothstep(e / DEG, 2, 15));
     const tw = THREE.MathUtils.smoothstep(e / DEG, -16, 3); // сумеречный свет неба
     const day = THREE.MathUtils.smoothstep(e / DEG, -1, 6);
     const amb = 0.10 + 0.5 * tw * (1 - 0.45 * day);
@@ -443,7 +471,7 @@ export function initScene(canvas: HTMLCanvasElement, state: () => SceneState, st
     const dist = track(wide ? CAM_DIST_W : CAM_DIST, alt), cy = track(wide ? CAM_Y_W : CAM_Y, alt);
     camera.position.set(Math.sin(yawCam) * dist, cy, Math.cos(yawCam) * dist);
     // низкий портретный экран: на старте капсула выше, чтобы текст её не закрывал
-    const lift = !wide && vh < 700 ? 3.2 * (1 - THREE.MathUtils.smoothstep(alt, 0, 1200)) : 0;
+    const lift = 0;
     tgt.set(0, track(wide ? TGT_Y_W : TGT_Y, alt) - lift, 0); camera.lookAt(tgt);
     if (wide) camera.setViewOffset(vw, vh, -track(SHIFT_W, alt) * vw, 0, vw, vh); else if (camera.view) camera.clearViewOffset();
     camera.updateMatrixWorld();

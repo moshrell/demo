@@ -40,7 +40,7 @@ h3 { font: 400 0.72rem/1.4 var(--mono); letter-spacing: 0.12em; text-transform: 
 
 /* ── сцена ── */
 .sky { position: fixed; inset: 0 0 auto 0; width: 100%; height: 100lvh; z-index: 0; }
-.scrim { position: fixed; inset: 0 0 auto 0; height: 100lvh; z-index: 1; pointer-events: none; background: rgba(5, 8, 17, calc(var(--post) * 0.8)); }
+.scrim { position: fixed; inset: 0 0 auto 0; height: 100lvh; z-index: 1; pointer-events: none; background: radial-gradient(ellipse 85% 80% at 50% 45%, rgba(3, 5, 12, 0) 55%, rgba(3, 5, 12, 0.34)), rgba(5, 8, 17, calc(var(--post) * 0.8)); }
 .scrim::before { content: ''; position: absolute; inset: 78% 0 0 0; background: linear-gradient(to top, rgba(4, 7, 16, 0.78), rgba(4, 7, 16, 0)); opacity: calc(1 - var(--post)); }
 .scrim::after { content: ''; position: absolute; inset: 0 0 76% 0; background: linear-gradient(rgba(4, 7, 16, 0.5), rgba(4, 7, 16, 0)); }
 .no-gl .sky { display: none; }
@@ -52,7 +52,7 @@ h3 { font: 400 0.72rem/1.4 var(--mono); letter-spacing: 0.12em; text-transform: 
 .mast { position: fixed; inset: 0 0 auto 0; z-index: 6; display: flex; justify-content: space-between; align-items: center; padding: max(12px, env(safe-area-inset-top)) var(--gutter) 22px; transition: background-color 0.3s; }
 .is-post .mast { background: linear-gradient(rgba(6, 10, 20, 0.96) 55%, rgba(6, 10, 20, 0)); }
 .brand { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; text-decoration: none; font: italic 400 1.5rem/1 var(--serif); font-variation-settings: 'opsz' 40; }
-.brand svg { width: 16px; height: 22px; }
+.brand svg { flex: none; width: 16px; height: 22px; }
 .mast__right { display: flex; align-items: center; gap: 14px; }
 .lang { display: grid; place-items: center; min-width: 40px; min-height: 44px; text-decoration: none; font: 400 0.7rem/1 var(--mono); letter-spacing: 0.12em; }
 .lang:hover { color: var(--dawn); }
@@ -262,6 +262,13 @@ legend { display: flex; align-items: center; gap: 12px; padding: 0; margin-botto
 .plain main p strong { color: var(--ink); font-weight: 400; }
 .back { display: inline-flex; align-items: center; min-height: 44px; }
 
+/* телефон, первый экран как афиша: заголовок в небе, шар посередине, текст и кнопка у земли */
+@media (max-width: 899px) and (orientation: portrait) {
+  .station--field { padding-top: 88px; }
+  .station--field .station__in { display: flex; flex-direction: column; height: 100%; }
+  .station--field .station__body { margin-top: auto; }
+  .station--field .station__in::before { inset: 62% -100vw -40svh; background: linear-gradient(rgba(4, 7, 16, 0), rgba(4, 7, 16, 0.5) 80px, rgba(4, 7, 16, 0.74)); }
+}
 @media (max-width: 359px) {
   .dawn__meta { white-space: normal; }
   .gauges { gap: 6px; }
@@ -294,8 +301,9 @@ legend { display: flex; align-items: center; gap: 12px; padding: 0; margin-botto
   .book { grid-template-columns: 1fr 1fr; column-gap: 72px; }
   .incl { max-width: 47rem; }
   .guest, .sum { grid-column: 1 / -1; }
-  .sum { grid-template-columns: 1fr auto; align-items: center; margin: 0; padding-left: 0; padding-right: 0; }
-  .sum > div { justify-content: flex-start; gap: 28px; }
+  .sum { position: static; grid-template-columns: 1fr auto; align-items: end; margin: 0; padding: 26px 0 0; background: none; }
+  .sum > div { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .sum__total { font-size: 2.6rem; }
   .plate__data { grid-template-columns: repeat(3, 1fr); }
   .plan__in { max-width: 44rem; margin: 0 auto; }
 }

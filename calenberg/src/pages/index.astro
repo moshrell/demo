@@ -417,7 +417,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   const ctx = canvas.getContext('2d')!;
   const conn = (navigator as any).connection;
   const slow = !!conn && (conn.saveData || /2g|3g/.test(conn.effectiveType || ''));
-  const HD = innerWidth >= 700 && canvas.clientWidth * devicePixelRatio > 880 && !slow;   // phones and slow lines get 800x1000, large screens 1200x1500
+  const HD = !!seq.explode.hd && innerWidth >= 700 && canvas.clientWidth * devicePixelRatio > 880 && !slow;   // phones and slow lines get 800x1000, large screens 1200x1500
   const K = HD ? 1 : seq.small.w / seq.w, DIR = `${BASE}seq/${HD ? 'hd/' : ''}`;
   const CW = Math.round(seq.w * K), CH = Math.round(seq.h * K);
   canvas.width = CW; canvas.height = CH;

@@ -13,7 +13,7 @@ html { background: var(--papier); -webkit-text-size-adjust: 100%; overflow-x: cl
 body { margin: 0; background: var(--papier); color: var(--tinte); font: 400 1.0625rem/1.6 var(--sans); overflow-x: clip; }
 img { max-width: 100%; display: block; height: auto; }
 a { color: inherit; text-underline-offset: 0.2em; }
-h1, h2, h3 { font-family: var(--display); font-weight: 420; font-stretch: 116%; letter-spacing: -0.018em; font-style: normal; line-height: 1.06; margin: 0; text-wrap: balance; }
+h1, h2, h3 { font-family: var(--display); font-weight: 800; font-stretch: 108%; letter-spacing: -0.03em; font-style: italic; line-height: 1; margin: 0; text-wrap: balance; }
 p { margin: 0; }
 :focus-visible { outline: 2px solid var(--fokus); outline-offset: 3px; border-radius: 2px; }
 .fuss :focus-visible { outline-color: var(--hell); }

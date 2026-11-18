@@ -18,8 +18,7 @@
 Шрифт: Archivo Variable, заголовки прямые (не курсив), 640, ширина 118 %. Токены в `src/styles/global.css`.
 
 ## Фото (ждут Gemini)
-`PROMPTS.txt`: `meister.jpg` (3:4) и `etui.jpg` (4:3) → `public/img/`. Пока файлов нет, блоки собираются без картинки (проверка `hasImg` в `index.astro`).
-После того как Степан положит файлы: пересобрать и прогнать `pagecheck`.
+`PROMPTS.txt`: `meister.jpg` (3:4) и `etui.jpg` (4:3) лежат в `public/img/` (18.11, Gemini). Без файла блок собирается без картинки (`hasImg` в `index.astro`).
 
 ## Часы (рендеры)
 `../uhren/watch.py` (Blender 5.0.1, в облаке: `blender -b --factory-startup -P watch.py -- <папка> <сэмплы> <кадры>`).

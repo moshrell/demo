@@ -4,7 +4,7 @@ import werk from '../data/werk.json';
 import site from '../data/site.json';
 import fs from 'node:fs';
 // фото из Gemini (PROMPTS.txt): пока файла нет, блок обходится без картинки
-const hasImg = (f: string) => fs.existsSync(new URL(`../../public/img/${f}`, import.meta.url));
+const hasImg = (f: string) => fs.existsSync(`${process.cwd()}/public/img/${f}`);
 const base = import.meta.env.BASE_URL;
 const eur = (n: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
 const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
@@ -139,7 +139,7 @@ const ser = werk.serie; const frei = ser.gesamt - ser.vergeben;
       ))}
     </section>
     <section class={`meister${hasImg('meister.jpg') ? '' : ' meister--ohne'}`} id="meister" aria-labelledby="meister-h">
-      {hasImg('meister.jpg') && <figure class="meister__bild"><img src={`${base}img/meister.jpg`} width="1536" height="2048" loading="lazy" decoding="async" alt={`${werk.meister.name} an der Werkbank, mit Lupe über einem Uhrwerk`} /></figure>}
+      {hasImg('meister.jpg') && <figure class="meister__bild"><img src={`${base}img/meister.jpg`} width="765" height="1024" loading="lazy" decoding="async" alt={`${werk.meister.name} an der Werkbank, mit Lupe über einem Uhrwerk`} /></figure>}
       <div class="meister__text">
         <h2 id="meister-h">Wer Ihre Uhr baut</h2>
         <p class="meister__name"><strong>{werk.meister.name}</strong> {werk.meister.rolle}</p>
@@ -151,7 +151,7 @@ const ser = werk.serie; const frei = ser.gesamt - ser.vergeben;
       <div class="erh__in">
         <div class="erh__box">
           <h2 id="erh-h">Was Sie erhalten</h2>
-          {hasImg('etui.jpg') && <figure class="erh__bild"><img src={`${base}img/etui.jpg`} width="2048" height="1536" loading="lazy" decoding="async" alt="Geöffnetes Etui aus Nussbaum mit Polster für die Uhr, Fach für ein zweites Band und Zertifikat" /></figure>}
+          {hasImg('etui.jpg') && <figure class="erh__bild"><img src={`${base}img/etui.jpg`} width="1024" height="765" loading="lazy" decoding="async" alt="Geöffnetes Etui aus Nussbaum mit Polster für die Uhr, Fach für ein zweites Band und Zertifikat" /></figure>}
           <ul>{werk.erhalten.map(([t, x]) => <li><strong>{t}</strong><span>{x}</span></li>)}</ul>
         </div>
         <div class="atelier__weg">

@@ -43,10 +43,10 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
           <a class="knopf knopf--linie" href="#werk">Das Werk ansehen</a>
         </div>
         <dl class="prod__fakten">
-          <div><dt>Werk</dt><dd>eigenes Kaliber, 60 h Gangreserve</dd></div>
+          <div><dt>Werk</dt><dd>60 h Gangreserve, eigenes Kaliber</dd></div>
           <div><dt>Glas</dt><dd>Saphir, vorn und hinten</dd></div>
           <div><dt>Gravur</dt><dd>Neues Rathaus, von Hand</dd></div>
-          <div><dt>Garantie</dt><dd>5 Jahre, Service im Atelier</dd></div>
+          <div><dt>Garantie</dt><dd>5 Jahre, Service im Atelier</dd></div>
         </dl>
       </div>
     </section>
@@ -328,9 +328,9 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .lupe { position: relative; overflow: visible; clip-path: inset(-100px 0 -100px 0); background: var(--nacht); margin-inline: calc(var(--gutter) * -1); touch-action: pan-y; cursor: zoom-in; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-shadow: 0 40px 70px -40px var(--schatten); }
   .lupe__bild { display: block; overflow: hidden; }
   .lupe img { display: block; width: 100%; transform: scale(calc(1.1 - var(--p, 0.5) * 0.1)); will-change: transform; -webkit-user-drag: none; }
-  .lupe__glas { position: absolute; z-index: 2; left: 0; top: 0; width: 168px; height: 168px; margin: -84px 0 0 -84px; border-radius: 50%; pointer-events: none; opacity: 0; transform: translate(var(--x, 50%), var(--y, 50%)); transition: opacity 0.18s ease; background-repeat: no-repeat;
+  .lupe__glas { position: absolute; z-index: 2; left: 0; top: 0; width: 168px; height: 168px; margin: -84px 0 0 -84px; border-radius: 50%; pointer-events: none; opacity: 0; transform: translate(var(--x, 50%), var(--y, 50%)); transition: opacity 0.6s ease 0.1s; background-repeat: no-repeat;
     box-shadow: 0 0 0 2px var(--nacht-2), 0 0 0 5px var(--papier), 0 0 0 6px var(--nacht-2), 0 24px 50px var(--schatten), inset 0 0 26px var(--schatten); }
-  .lupe.ist-an .lupe__glas { opacity: 1; }
+  .lupe.ist-an .lupe__glas { opacity: 1; transition-duration: 0.18s; transition-delay: 0s; }
   .lupe__tipp { position: absolute; z-index: 1; left: 14px; bottom: 12px; padding: 0.35rem 0.7rem; border-radius: var(--r); background: var(--nacht-glas); color: var(--hell); font-size: 0.88rem; transition: opacity 0.3s; }
   .lupe.war-an .lupe__tipp { opacity: 0; }
   @media (hover: hover) and (pointer: fine) { .lupe__tipp { font-size: 0; } .lupe__tipp::after { content: 'Lupe: Maus über das Bild bewegen'; font-size: 0.88rem; } }

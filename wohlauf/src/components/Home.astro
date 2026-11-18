@@ -15,6 +15,8 @@ const posterOk = fs.existsSync('public/model/poster.webp');
 const who = (id: string) => t.praxis.team.filter((p: any) => p.zones.includes(id)).map((p: any) => p.n).join(', ');
 const zname = (id: string) => t.zones.find((z: any) => z.id === id)?.short ?? id;
 const rx = [...t.leistungen.rezept, ...t.leistungen.erg];
+const total: number = t.termin.stages[t.termin.stages.length - 1].to;
+const marks = Array.from({ length: Math.floor(total / 10) + 1 }, (_, k) => k * 10);
 const c = t.kosten.calc;
 const single = t.kosten.list.filter((x: any) => !x.pack);
 const js = { status: t.status, lang: t.lang, hours: site.hours, slot: site.nextSlot, zones, names: Object.fromEntries(t.zones.map((z: any) => [z.id, z.name])), model: `${base}model/body.bin`, form: t.form,
@@ -122,12 +124,20 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
   <!-- 3 · Maßband -->
   <section class="sec" id="termin" aria-labelledby="termin-h">
     <div class="sec__head"><h2 id="termin-h">{t.termin.title}</h2><p class="lead">{t.termin.p}</p></div>
+    <div class="ruler" aria-hidden="true" style={`--total:${total}`}>
+      <div class="ruler__steps">
+        {t.termin.stages.map((s: any, i: number) => <div class="ruler__step" style={`--d:${s.to - s.from}`}><b>{i + 1}</b><span>{s.to - s.from} {t.termin.min}</span></div>)}
+      </div>
+      <div class="ruler__band">
+        {marks.map((m: number) => <span class:list={[m === 0 && 'is-first', m === total && 'is-last']} style={`--m:${m}`}>{m}</span>)}
+      </div>
+    </div>
     <ol class="tape">
       {t.termin.stages.map((s: any, i: number) => (
         <li data-dur={s.to - s.from}>
           <div class="tape__band" aria-hidden="true"><span>{s.from}</span>{i === t.termin.stages.length - 1 && <span class="tape__end">{s.to}</span>}</div>
           <div class="tape__body">
-            <p class="print tape__t">{s.to - s.from} {t.termin.min}</p>
+            <p class="print tape__t"><b class="tape__n">{i + 1}</b> {s.to - s.from} {t.termin.min}</p>
             <h3>{s.h}</h3>
             <p>{s.p}</p>
             <ul>{s.li.map((x: string) => <li>{x}</li>)}</ul>

@@ -211,6 +211,10 @@ except Exception: pass
 w_.node_tree.nodes.clear(); _bg = w_.node_tree.nodes.new('ShaderNodeBackground'); _bg.inputs[0].default_value = (0.10, 0.10, 0.105, 1)
 _wo = w_.node_tree.nodes.new('ShaderNodeOutputWorld'); w_.node_tree.links.new(_bg.outputs[0], _wo.inputs[0])
 
+backdrop = bpy.data.meshes.new('bd'); _b = bmesh.new(); bmesh.ops.create_grid(_b, x_segments=1, y_segments=1, size=500); _b.to_mesh(backdrop); _b.free()
+bd = link(bpy.data.objects.new('backdrop', backdrop)); bd.rotation_euler = (0, math.pi / 2, 0); bd.location = (-140, 0, 0)
+_bm = new_mat('backdrop')[0]; _bm.node_tree.nodes['Principled BSDF'].inputs['Base Color'].default_value = (0.01, 0.01, 0.012, 1); _bm.node_tree.nodes['Principled BSDF'].inputs['Roughness'].default_value = 0.6
+backdrop.materials.append(_bm); bd.hide_render = True
 # ---------------- variants ----------------
 def variant(case, dial_id, band):
     cm, cp = CASE[case]
@@ -251,7 +255,7 @@ for sh in SHOTS:
     base = sh.split('-')[0]
     if base == 'cfg': _, c_, d_, b_ = sh.split('-'); variant(c_, d_, b_)
     else: variant('stahl', 'silber', 'kalb')
-    c = SHOTCAM[base]
+    c = SHOTCAM[base]; bd.hide_render = (base != 'side')
     camo.location = c['loc']; camo.rotation_euler = (Vector(c['tgt']) - Vector(c['loc'])).to_track_quat('-Z', 'Y').to_euler(); cam.lens = c['lens']
     S.render.resolution_x, S.render.resolution_y = c['res']; S.render.resolution_percentage = SC
     S.render.filepath = os.path.join(OUT, sh + '.png'); t0 = time.time()

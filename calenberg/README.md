@@ -99,3 +99,12 @@ Die Uhr (конфигуратор, на ПК липкая карточка с в
 - Условия в «Что получает клиент» и FAQ (20 % аванс, 690 € сервис, 5 лет гарантии) вымышлены, помечены как демо.
 
 - Заголовки h1–h3: Archivo 800, курсив (wdth-italic), стретч 108 %. Кнопки завода нет: механизм в первом экране `#werk` крутится сам (reserve = FULL), пока не начат скролл; при `prefers-reduced-motion` стоит кадром.
+
+## 18.11.2026: Korrekturen nach Test auf dem Telefon
+- `tools/pagecheck.mjs` prüft jetzt zusätzlich: Wörter, die nicht in ihre Box passen (würden mitten im Wort brechen), und h1/h2 mit mehr als 3 Zeilen. Vorher gab es diese Prüfung nicht.
+- Überschriften kleiner und mit `hyphens:auto`; Wasserdicht-Zeile gekürzt.
+- Lupe: Glas darf oben und unten über den Bildrand hinausragen (Bild in `.lupe__bild` geklippt, `.lupe` nur seitlich).
+- Konfigurator mobil: Vorschau im Fluss (6:5, `cover`, keine schwarzen Balken); unten klebt die Summenleiste mit Mini-Vorschau, Auswahl und Summe. Desktop: Vorschau + Summe rechts sticky.
+- Initialen: nur noch Eingabe + «✓ Übernommen», keine Plakette.
+- Block «Das Werk»: Überschrift «So tickt die Eins von innen.» (kein Aufzug-Knopf mehr).
+- Seitenansicht neu gerendert auf dunklem Hintergrund.

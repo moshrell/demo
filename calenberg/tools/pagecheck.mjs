@@ -32,7 +32,11 @@ const m = await page.evaluate(() => {
   document.querySelectorAll('a,button,input,select,textarea,label,summary').forEach((e) => { const r = e.getBoundingClientRect(); if (!r.width || !r.height) return; const cs = getComputedStyle(e); if (cs.visibility === 'hidden') return;
     if (r.right > innerWidth + 0.5 || r.left < -0.5) bad.push('off-screen-x:' + (e.textContent || e.id || e.tagName).trim().slice(0, 30) + ' ' + Math.round(r.left) + '..' + Math.round(r.right)); });
   document.querySelectorAll('h1,h2,h3,p,li,span,div,td,th,label').forEach((e) => { if (e.scrollWidth > e.clientWidth + 2 && getComputedStyle(e).overflow !== 'visible' && e.clientWidth) bad.push('clipped:' + e.tagName + '.' + e.className + ' ' + (e.textContent || '').trim().slice(0, 30)); });
-  return {sw: de.scrollWidth, cw: de.clientWidth, h: de.scrollHeight, bad: bad.slice(0, 25)};
+  // words that do not fit their box (the browser would break them mid-word) and headings with too many lines
+  document.querySelectorAll('h1,h2,h3,p,li,dd,dt,summary,legend,b,strong,em,i,button,label,figcaption').forEach((e) => { if (!e.clientWidth || !(e.textContent || '').trim() || getComputedStyle(e).display === 'inline') return; const st = e.style.cssText; e.style.overflowWrap = 'normal'; e.style.wordBreak = 'normal'; e.style.hyphens = 'manual';
+    if (e.scrollWidth > e.clientWidth + 1) bad.push('word-too-wide:' + e.tagName + '.' + e.className + ' ' + (e.textContent || '').trim().slice(0, 40)); e.style.cssText = st; });
+  document.querySelectorAll('h1,h2').forEach((e) => { if (!e.clientWidth) return; const lh = parseFloat(getComputedStyle(e).lineHeight) || parseFloat(getComputedStyle(e).fontSize); const n = Math.round(e.getBoundingClientRect().height / lh); if (n > 3) bad.push('lines>3(' + n + '):' + (e.textContent || '').trim().slice(0, 40)); });
+  return {sw: de.scrollWidth, cw: de.clientWidth, h: de.scrollHeight, bad: bad.slice(0, 40)};
 });
 await page.evaluate(() => scrollTo(0, 0)); await page.waitForTimeout(400);
 let y = 0, i = 0; const step = Math.round(H * 0.85);

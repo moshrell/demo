@@ -6,7 +6,7 @@ const base = import.meta.env.BASE_URL;
 const eur = (n: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
 const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
 ---
-<Base title="Calenberg | Uhrenmanufaktur Hannover, Kaliber C 01" description="Calenberg baut in Hannover eine Uhr um ein eigenes Handaufzugswerk: Kaliber C 01. Ziehen Sie es auf, öffnen Sie es Schicht für Schicht und subskribieren Sie eine von 50 Uhren der ersten Serie." image="img/top-900.webp">
+<Base title="Calenberg | Uhrenmanufaktur Hannover, Kaliber C 01" description="Calenberg baut in Hannover eine Uhr um ein eigenes Handaufzugswerk: Kaliber C 01. Stellen Sie sich Ihre Calenberg Eins zusammen, sehen Sie das Werk Schicht für Schicht und fragen Sie einen von 50 Plätzen der ersten Serie an." image="img/top-900.webp">
   <a class="skip" href="#uhr">Zum Inhalt</a>
   <header class="kz">
     <a class="kz__logo" href={base} aria-label="Calenberg, Startseite">
@@ -58,8 +58,8 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
         </div>
         <div class="text">
           <div class="held" data-held>
-            <h2>Es steht still, bis Sie es aufziehen.</h2>
-            <p class="held__lede">Das Werk in der Eins: Kaliber C 01. Es läuft hier in Zeitlupe, bis Sie es öffnen.</p>
+            <h2>So tickt die Eins von innen.</h2>
+            <p class="held__lede">Das Werk in der Eins: Kaliber C 01. Es läuft hier in Zeitlupe. Scrollen Sie, dann öffnet es sich Schicht für Schicht.</p>
             <p class="weiter" aria-hidden="true">Nach unten wischen: das Werk öffnet sich</p>
           </div>
           {werk.stations.map((s) => (
@@ -109,7 +109,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
       {werk.finissage.map((f, i) => (
         <figure class={`tafel tafel--${i % 2 ? 'r' : 'l'}`}>
           <div class="lupe" data-lupe data-gross={`${base}img/${f.img}-3000.webp`}>
-            <img src={`${base}img/${f.img}-900.webp`} srcset={`${base}img/${f.img}-900.webp 900w, ${base}img/${f.img}-1800.webp 1800w`} sizes="(min-width: 900px) 62vw, 100vw" width="1800" height="1200" loading="lazy" decoding="async" alt={`Makroaufnahme des Kalibers C 01: ${f.title}`} />
+            <span class="lupe__bild"><img src={`${base}img/${f.img}-900.webp`} srcset={`${base}img/${f.img}-900.webp 900w, ${base}img/${f.img}-1800.webp 1800w`} sizes="(min-width: 900px) 62vw, 100vw" width="1800" height="1200" loading="lazy" decoding="async" alt={`Makroaufnahme des Kalibers C 01: ${f.title}`} /></span>
             <span class="lupe__glas" aria-hidden="true"></span>
             <span class="lupe__tipp" aria-hidden="true">Lupe: Finger auflegen und ziehen</span>
           </div>
@@ -145,7 +145,6 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
                     <label for="f-ini">Initialen, 1 bis 3 Buchstaben</label>
                     <input id="f-ini" name="initialen" type="text" maxlength="3" placeholder="z. B. MK" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="ini-ok" />
                   </p>
-                  <div class="f__plakette" aria-hidden="true"><span>Unruhkloben</span><strong data-ini-vor>MK</strong></div>
                   <p class="f__ini-ok" id="ini-ok" role="status" data-ini-ok></p>
                 </div>
               )}
@@ -157,6 +156,8 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
             <img data-vorschau src={`${base}watch/cfg-stahl-silber-kalb.webp`} width="800" height="1000" alt="Ihre Calenberg Eins: Edelstahl, Zifferblatt Silber, Band Kalbsleder schwarz" />
           </figure>
           <aside class="f__summe" aria-live="polite">
+            <img class="f__mini" data-vorschau src={`${base}watch/cfg-stahl-silber-kalb.webp`} width="800" height="1000" alt="" />
+            <p class="f__kurz" data-kurz>Stahl · Silber · Schwarz</p>
             <p class="f__summe-titel">Ihre Calenberg Eins</p>
             <ul class="f__summe-liste" data-wahl></ul>
             <p class="f__summe-zeile"><span>Summe inkl. MwSt.</span><strong data-sum>{eur(start)}</strong></p>
@@ -313,19 +314,20 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   /* ---------- paper sheets ---------- */
   main > section:not(.film) { padding: clamp(4rem, 10vw, 8.5rem) var(--gutter); scroll-margin-top: var(--kh); }
   .kopf { max-width: var(--breit); margin: 0 auto clamp(2rem, 5vw, 4rem); }
-  .kopf h2, .daten h2, .atelier h2 { font-size: clamp(2.3rem, 7.5vw, 4.4rem); max-width: 16em; overflow-wrap: anywhere; }
+  .kopf h2, .daten h2, .atelier h2, .spec h2, .erh h2 { font-size: clamp(1.7rem, 7vw, 4.4rem); max-width: 16em; hyphens: auto; overflow-wrap: break-word; }
   .kopf p { margin-top: 1.1rem; color: var(--tinte-2); max-width: 36em; font-size: 1.1rem; }
 
   .satz { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.6rem; max-width: var(--breit); margin: auto; box-sizing: content-box; }
-  .satz__zeile { font-size: clamp(2.7rem, 10.5vw, 6.6rem); line-height: 1; letter-spacing: -0.02em; overflow-wrap: anywhere; max-width: 9em; }
+  .satz__zeile { font-size: clamp(1.9rem, 8.4vw, 6.6rem); line-height: 1.02; letter-spacing: -0.02em; hyphens: auto; overflow-wrap: break-word; max-width: 11em; }
   .satz__text { display: grid; gap: 1rem; max-width: 30em; color: var(--tinte-2); font-size: 1.1rem; align-content: end; }
-  @media (min-width: 960px) { .satz { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 4rem; align-items: end; } }
+  @media (min-width: 960px) { .satz { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 4rem; align-items: end; } .satz__zeile { font-size: clamp(2.4rem, 5vw, 4.4rem); } }
 
   .fin { background: var(--papier-2); }
   .tafel { max-width: var(--breit); margin: 0 auto clamp(3rem, 8vw, 6.5rem); display: grid; gap: 1.2rem; }
   .tafel:last-child { margin-bottom: 0; }
-  .lupe { position: relative; overflow: hidden; background: var(--nacht); margin-inline: calc(var(--gutter) * -1); touch-action: pan-y; cursor: zoom-in; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-shadow: 0 40px 70px -40px var(--schatten); }
-  .lupe img { width: 100%; transform: scale(calc(1.1 - var(--p, 0.5) * 0.1)); will-change: transform; -webkit-user-drag: none; }
+  .lupe { position: relative; overflow: visible; clip-path: inset(-100px 0 -100px 0); background: var(--nacht); margin-inline: calc(var(--gutter) * -1); touch-action: pan-y; cursor: zoom-in; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-shadow: 0 40px 70px -40px var(--schatten); }
+  .lupe__bild { display: block; overflow: hidden; }
+  .lupe img { display: block; width: 100%; transform: scale(calc(1.1 - var(--p, 0.5) * 0.1)); will-change: transform; -webkit-user-drag: none; }
   .lupe__glas { position: absolute; z-index: 2; left: 0; top: 0; width: 168px; height: 168px; margin: -84px 0 0 -84px; border-radius: 50%; pointer-events: none; opacity: 0; transform: translate(var(--x, 50%), var(--y, 50%)); transition: opacity 0.18s ease; background-repeat: no-repeat;
     box-shadow: 0 0 0 2px var(--nacht-2), 0 0 0 5px var(--papier), 0 0 0 6px var(--nacht-2), 0 24px 50px var(--schatten), inset 0 0 26px var(--schatten); }
   .lupe.ist-an .lupe__glas { opacity: 1; }
@@ -335,6 +337,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .tafel h3 { font-size: clamp(1.8rem, 6vw, 2.7rem); }
   .tafel figcaption p { margin-top: 0.6rem; color: var(--tinte-2); max-width: 28em; }
   @media (min-width: 960px) {
+    .tafel h3 { font-size: clamp(1.5rem, 2.5vw, 2.2rem); hyphens: auto; overflow-wrap: break-word; }
     .tafel { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 2.5rem; align-items: end; }
     .tafel .lupe { grid-row: 1; grid-column: 1 / 9; margin-inline: 0; }
     .tafel figcaption { grid-row: 1; grid-column: 9 / 13; padding-bottom: 1.5rem; border-bottom: 1px solid var(--tinte); }
@@ -436,8 +439,9 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   /* ---------- specs unrolled by scroll ---------- */
   .spec__in { max-width: var(--breit); margin: auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.4rem; }
   .spec__bild { display: none; }
-  .spec__gruppe h3 { font-size: clamp(2rem, 7vw, 3rem); margin-bottom: 1rem; }
-  .spec__mobil { margin: 0 calc(var(--gutter) * -1) 1rem; background: var(--nacht); }
+  .spec__gruppe h3 { font-size: clamp(1.8rem, 7vw, 3rem); margin-bottom: 1.2rem; }
+  .spec__gruppe + .spec__gruppe { margin-top: clamp(3.2rem, 12vw, 5rem); }
+  .spec__mobil { margin: 0 calc(var(--gutter) * -1) 1.6rem; background: var(--nacht); }
   .spec__mobil img { width: 100%; max-height: 52svh; object-fit: contain; }
   .spec__gruppe dl { margin: 0; border-bottom: 1px solid var(--tinte); }
   .spec__gruppe dl div { display: grid; grid-template-columns: minmax(6.2rem, 9rem) minmax(0, 1fr); gap: 1rem; padding: 0.8rem 0; border-top: 1px solid var(--linie); }
@@ -472,28 +476,26 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .f__gruppe--text .f__farbe { display: none; }
   .f__gruppe--text .f__opt-in { min-width: 0; padding: 0.7rem 1rem; min-height: 56px; border: 1px solid var(--linie); border-radius: var(--r); background: var(--weiss); justify-items: start; text-align: left; }
   .f__gruppe--text .f__opt input:checked + .f__opt-in { border-color: var(--stahl); box-shadow: inset 0 0 0 1px var(--stahl); }
-  .f__ini { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.4rem 1rem; align-items: end; margin-top: 1rem; max-width: 30rem; }
+  .f__ini { display: grid; gap: 0.5rem; margin-top: 1rem; max-width: 26rem; }
   .f__ini .f__feld { margin: 0; }
   .f__ini .f__feld input { text-transform: uppercase; letter-spacing: 0.2em; }
-  @media (max-width: 479px) { .f__ini { grid-template-columns: minmax(0, 1fr); } .f__plakette { justify-self: start; } }
-  .f__plakette { display: grid; gap: 0.1rem; place-items: center; min-width: 7.5rem; padding: 0.55rem 0.9rem; border-radius: var(--r); background: var(--nacht); color: var(--hell-2); font-size: 0.78rem; }
-  .f__plakette strong { font-family: var(--display); font-weight: 500; font-size: 1.7rem; letter-spacing: 0.18em; text-indent: 0.18em; color: var(--rose-hell); min-height: 1.2em; }
-  .f__ini-ok { grid-column: 1 / -1; min-height: 1.4em; color: var(--tinte-2); font-size: 0.95rem; margin: 0; }
+  .f__ini-ok { min-height: 1.4em; color: var(--tinte-2); font-size: 0.95rem; margin: 0; }
   .f__ini-ok.ist-da { color: #1c6b3d; font-weight: 600; animation: ok-pop 0.35s ease; }
   .f__feld.ist-ok input, .f__feld.ist-ok textarea { border-color: #1c6b3d; padding-right: 2.8rem; background: var(--weiss) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M4 10.5l4 4 8-9' fill='none' stroke='%231c6b3d' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") right 0.9rem center / 20px no-repeat; }
   @keyframes ok-pop { from { transform: translateY(4px); opacity: 0; } to { transform: none; opacity: 1; } }
   .f__rechts { display: contents; }
-  .f__vor { margin: 0 calc(var(--gutter) * -1) 1.6rem; position: sticky; top: var(--kh); z-index: 4; background: var(--nacht); }
-  .f__vor { order: -1; }
-  .f__vor img { display: block; width: 100%; height: min(28svh, 54vw); object-fit: contain; transition: opacity 0.25s; }
-  .f:has(.f__kontakt :focus) .f__vor { display: none; }
-  .f__vor img.wechselt { opacity: 0.35; }
-  @media (min-width: 1000px) { .f__vor { order: 0; position: static; margin: 0; z-index: auto; } .f__vor img { height: auto; max-height: 56svh; aspect-ratio: 4/5; } }
-  @media (max-aspect-ratio: 1/1) and (max-width: 999px) { .f__summe { margin-top: 0; } }
+  .f__vor { order: -1; margin: 0 calc(var(--gutter) * -1) 1.8rem; background: var(--nacht); }
+  .f__vor img { display: block; width: 100%; aspect-ratio: 6 / 5; object-fit: cover; object-position: 50% 46%; transition: opacity 0.25s; }
+  .f__summe { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 0.9rem; align-items: center; }
+  .f__mini { grid-row: 1 / span 2; width: 48px; height: 60px; object-fit: cover; object-position: 50% 46%; border-radius: 4px; background: var(--nacht); transition: opacity 0.25s; }
+  .f__kurz { grid-column: 2; margin: 0; color: var(--hell-2); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .f__summe-zeile { grid-column: 2; }
+  .f__vor img.wechselt, .f__mini.wechselt { opacity: 0.35; }
+  @media (min-width: 960px) { .f__rechts { display: grid; grid-column: 2; grid-row: 1 / span 2; align-self: start; position: sticky; top: calc(var(--kh) + 1.5rem); gap: 1rem; } .f__vor { order: 0; margin: 0; } .f__vor img { aspect-ratio: 4 / 5; max-height: 62svh; object-position: 50% 50%; } .f__mini, .f__kurz { display: none; } .f__summe { display: block; } }
 
   /* ---------- what you get + FAQ ---------- */
   .erh__in { max-width: var(--breit); margin: auto; display: grid; gap: 3rem; grid-template-columns: minmax(0, 1fr); }
-  .erh h2 { font-size: clamp(2.2rem, 7vw, 3.6rem); margin-bottom: 1.4rem; }
+  .erh h2 { margin-bottom: 1.4rem; }
   .erh__box ul { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--tinte); }
   .erh__box li { display: grid; gap: 0.15rem; padding: 0.95rem 0; border-top: 1px solid var(--linie); }
   .erh__box li:first-child { border-top-color: var(--tinte); }
@@ -713,7 +715,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
     const move = (e: PointerEvent) => {
       const r = box.getBoundingClientRect(), x = Math.min(r.width, Math.max(0, e.clientX - r.left)), y = Math.min(r.height, Math.max(0, e.clientY - r.top));
       const lift = e.pointerType === 'touch' ? 96 : 0;        // on a phone the glass sits above the finger
-      box.style.setProperty('--x', `${x}px`); box.style.setProperty('--y', `${Math.max(40, y - lift)}px`);
+      box.style.setProperty('--x', `${x}px`); const k = lift ? Math.min(1, (r.height - y) / (lift * 1.3)) : 0; box.style.setProperty('--y', `${Math.max(20, y - lift * k)}px`);   // near the lower edge the glass slides down to the finger and may overhang the picture
       const g = glas.offsetWidth;
       glas.style.backgroundSize = `${r.width * Z}px ${r.height * Z}px`;
       glas.style.backgroundPosition = `${g / 2 - x * Z}px ${g / 2 - y * Z}px`;
@@ -749,25 +751,28 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   const picks = () => [...form.querySelectorAll<HTMLInputElement>('input[type=radio]:checked')];
   const total = () => picks().reduce((s, r) => s + Number(r.dataset.eur), 0);
   const wahl = form.querySelector<HTMLElement>('[data-wahl]')!;
-  const vor = form.querySelector<HTMLImageElement>('[data-vorschau]')!;
+  const vors = [...form.querySelectorAll<HTMLImageElement>('[data-vorschau]')];
+  const kurz = form.querySelector<HTMLElement>('[data-kurz]')!;
   const iniIn = form.elements.namedItem('initialen') as HTMLInputElement;
-  const iniVor = form.querySelector<HTMLElement>('[data-ini-vor]')!;
   const iniOk = form.querySelector<HTMLElement>('[data-ini-ok]')!;
   const val = (n: string) => (form.elements.namedItem(n) as RadioNodeList).value;
   let vorKey = '';
   function vorschau() {
     const key = `${val('gehaeuse')}-${val('blatt')}-${val('band')}`;
     if (key === vorKey) return; vorKey = key;
-    const alt = `Ihre Calenberg Eins: ${picks().filter((r) => r.name !== 'gravur').map((r) => r.dataset.short).join(', ')}`;
-    const im = new Image(); im.onload = () => { vor.src = im.src; vor.alt = alt; vor.classList.remove('wechselt'); };
-    vor.classList.add('wechselt'); im.src = `${vor.src.replace(/cfg-[^/]*\.webp.*$/, '')}cfg-${key}.webp`;
+    const names = picks().filter((r) => r.name !== 'gravur').map((r) => r.dataset.short);
+    kurz.textContent = names.join(' · ');
+    const alt = `Ihre Calenberg Eins: ${names.join(', ')}`;
+    const url = `${vors[0].src.replace(/cfg-[^/]*\.webp.*$/, '')}cfg-${key}.webp`;
+    const im = new Image(); im.onload = () => vors.forEach((v) => { v.src = url; v.alt = v.classList.contains('f__mini') ? '' : alt; v.classList.remove('wechselt'); });
+    vors.forEach((v) => v.classList.add('wechselt')); im.src = url;
   }
   function iniStatus() {
     const v = iniIn.value.replace(/[^A-Za-zÄÖÜäöüß]/g, '').toUpperCase();
-    iniIn.value = v; iniVor.textContent = v || 'MK';
+    iniIn.value = v;
     iniIn.closest('.f__feld')!.classList.toggle('ist-ok', v.length >= 1);
     iniOk.classList.toggle('ist-da', v.length >= 1);
-    iniOk.textContent = v ? `✓ Übernommen: ${v.split('').join(' ')} wird auf den Unruhkloben graviert.` : '';
+    iniOk.textContent = v ? `✓ Übernommen: ${v.split('').join(' ')}` : '';
   }
   function refresh() {
     vorschau();

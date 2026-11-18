@@ -239,9 +239,29 @@ for i, (loc, size, st, colr, gr) in enumerate(RIG):
     o = link(bpy.data.objects.new('softbox%d' % i, me)); o.location = loc; o.scale = (size[0], size[1], 1)
     o.rotation_euler = (Vector((0, 0, 4)) - Vector(loc)).to_track_quat('Z', 'Y').to_euler()
     me.materials.append(mat_emit('sbw%d' % i, st, colr, gr)); o.visible_camera = False; rig.append(o)
+
+# ---- rear view: sapphire case back with the movement (top.png is the bridge side of the C 01, 64.4 px/mm) ----
+bk_ring = lathe('bk_ring', [(12.5, 0.0), (15.3, 0.0), (15.3, -0.35), (12.5, -0.35)], CASE['stahl'][1], segs=128, closed=True)
+bk_mov = lathe('bk_mov', [(0, -0.30), (12.55, -0.30), (12.55, -0.31), (0, -0.31)], CASE['stahl'][1], segs=128, closed=True)
+_mm, _nt, _pp = new_mat('bk_mov'); _tc = _nt.nodes.new('ShaderNodeTexCoord'); _mp = _nt.nodes.new('ShaderNodeMapping')
+_mp.inputs['Rotation'].default_value = (0, 0, math.radians(-90)); _mp.inputs['Scale'].default_value = (-1 / 46.5, 1 / 46.5, 1); _mp.inputs['Location'].default_value = (0.5, 0.5, 0)
+_im = _nt.nodes.new('ShaderNodeTexImage'); _im.image = bpy.data.images.load(os.path.join(HERE, 'renders', 'top.png')); _im.extension = 'EXTEND'
+_nt.links.new(_tc.outputs['Object'], _mp.inputs['Vector']); _nt.links.new(_mp.outputs['Vector'], _im.inputs['Vector']); _nt.links.new(_im.outputs['Color'], _pp.inputs['Base Color'])
+_pp.inputs['Roughness'].default_value = 0.5
+try: _nt.links.new(_im.outputs['Color'], _pp.inputs['Emission Color']); _pp.inputs['Emission Strength'].default_value = 0.9
+except Exception as e: print('emit', e)
+bk_mov.data.materials.clear(); bk_mov.data.materials.append(_mm)
+bk_glass = lathe('bk_glass', [(0, -0.45), (12.6, -0.45), (12.6, -0.46), (0, -0.46)], GLASS, segs=128, closed=True)
+bk_screws = []
+for i in range(6):
+    a = 2 * math.pi * i / 6 + 0.3
+    sc = lathe('bks%d' % i, [(0, -0.35), (0.55, -0.35), (0.55, -0.55), (0, -0.55)], BLUEH, segs=24, closed=True); sc.location = (13.9 * math.cos(a), 13.9 * math.sin(a), 0); bk_screws.append(sc)
+BACKS = [bk_ring, bk_mov, bk_glass] + bk_screws
+for o in BACKS: o.hide_render = True
 SHOTCAM = {'hero': dict(loc=(-45, -105, 105), tgt=(0, -4.0, 3.5), lens=88, res=(1200, 1500), ap=0.0),
            'front': dict(loc=(0, 0, 210), tgt=(0, 0, 6), lens=135, res=(1400, 1400), ap=0.0),
            'side': dict(loc=(150, -18, 14), tgt=(0, 0, 4.2), lens=70, res=(1200, 1500), ap=0.0),
+           'back': dict(loc=(-45, -105, -105), tgt=(0, -4.0, -3.5), lens=88, res=(1200, 1500), ap=0.0),
            'cfg': dict(loc=(-45, -105, 105), tgt=(0, -4.0, 3.5), lens=88, res=(800, 1000), ap=0.0)}
 cam = bpy.data.cameras.new('cam'); camo = link(bpy.data.objects.new('cam', cam)); S.camera = camo
 cam.clip_start = 1; cam.clip_end = 2000
@@ -256,6 +276,12 @@ for sh in SHOTS:
     if base == 'cfg': _, c_, d_, b_ = sh.split('-'); variant(c_, d_, b_)
     else: variant('stahl', 'silber', 'kalb')
     c = SHOTCAM[base]; bd.hide_render = (base != 'side')
+    isb = base == 'back'; _bg.inputs[0].default_value = (0.012, 0.012, 0.014, 1) if isb else (0.10, 0.10, 0.105, 1)
+    for o in BACKS: o.hide_render = not isb
+    back.hide_render = isb; floor.hide_render = isb
+    for o_, (loc_, *_r) in zip(rig, RIG):
+        l2 = (loc_[0], loc_[1], -loc_[2] if isb else loc_[2]); o_.location = l2
+        o_.rotation_euler = (Vector((0, 0, -4 if isb else 4)) - Vector(l2)).to_track_quat('Z', 'Y').to_euler()
     camo.location = c['loc']; camo.rotation_euler = (Vector(c['tgt']) - Vector(c['loc'])).to_track_quat('-Z', 'Y').to_euler(); cam.lens = c['lens']
     S.render.resolution_x, S.render.resolution_y = c['res']; S.render.resolution_percentage = SC
     S.render.filepath = os.path.join(OUT, sh + '.png'); t0 = time.time()

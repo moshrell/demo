@@ -108,3 +108,7 @@ Die Uhr (конфигуратор, на ПК липкая карточка с в
 - Initialen: nur noch Eingabe + «✓ Übernommen», keine Plakette.
 - Block «Das Werk»: Überschrift «So tickt die Eins von innen.» (kein Aufzug-Knopf mehr).
 - Seitenansicht neu gerendert auf dunklem Hintergrund.
+
+## 18.11.2026: Циферблат «Waldgrün» вместо эмали
+- Эмаль почти не отличалась от серебра, заменена на тёмно-зелёный лак «Waldgrün» (+900 €, демо). id `gruen`, кадры `public/watch/cfg-*-gruen-*.webp` (4 шт.), `uhren/watch.py` — циферблат `gruen`.
+- Не проверено на настоящем телефоне; зелёный рендерился с 32 сэмплами, как остальные.

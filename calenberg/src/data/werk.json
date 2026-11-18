@@ -136,11 +136,11 @@
           "short": "Anthrazit"
         },
         {
-          "id": "email",
-          "name": "Email, weiß gebrannt",
-          "eur": 1900,
-          "sw": "radial-gradient(circle at 35% 30%,#ffffff,#eceae4 60%,#d8d5cc)",
-          "short": "Email"
+          "id": "gruen",
+          "name": "Waldgrün, lackiert",
+          "eur": 900,
+          "sw": "radial-gradient(circle at 35% 30%,#3f7a58,#143a28 70%)",
+          "short": "Waldgrün"
         }
       ]
     },
@@ -226,7 +226,7 @@
       "rows": [
         [
           "Ausführung",
-          "Silber gekörnt, Anthrazit oder weiß gebranntes Email"
+          "Silber gekörnt, Anthrazit oder Waldgrün (lackiert)"
         ],
         [
           "Indizes",

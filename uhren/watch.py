@@ -1,6 +1,6 @@
 # Calenberg Eins -- the watch around the C 01, built in code (case, dial, hands, strap) for the sales page.
 # Run:  python watch.py <outdir> <samples> <shot,shot,...> [--scale 100]
-#   shot = hero | front | side | cfg-<case>-<dial>-<band>      (case: stahl|rose, dial: silber|anthrazit|email, band: kalb|cordovan)
+#   shot = hero | front | side | cfg-<case>-<dial>-<band>      (case: stahl|rose, dial: silber|anthrazit|gruen, band: kalb|cordovan)
 # Units: 1 BU = 1 mm. Case 39 mm, lug-to-lug 47 mm. Needs bpy, shapely (pip), like build.py.
 import sys, os, math, time
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -31,7 +31,7 @@ def mat_dial(name, col, rough, grain, coat=0.0):
     return m
 DIAL = {'silber': (mat_dial('dial_silver', (0.93, 0.92, 0.88), 0.42, 0.30), (0.02, 0.03, 0.07)),
         'anthrazit': (mat_dial('dial_anthracite', (0.045, 0.048, 0.056), 0.38, 0.35), (0.82, 0.80, 0.74)),
-        'email': (mat_dial('dial_enamel', (0.90, 0.89, 0.85), 0.05, 0.0, coat=1.0), (0.015, 0.02, 0.05))}
+        'gruen': (mat_dial('dial_green', (0.030, 0.105, 0.065), 0.36, 0.25), (0.88, 0.83, 0.70))}
 INK = {}
 def mat_ink(c):
     m, nt, p = new_mat('ink_%0.2f_%0.2f' % c[:2]); p.inputs['Base Color'].default_value = (*c, 1); p.inputs['Roughness'].default_value = 0.55; p.inputs['Metallic'].default_value = 0.0

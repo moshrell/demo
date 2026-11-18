@@ -67,7 +67,14 @@ const ld = { '@context': 'https://schema.org', '@graph': graph };
         <p class="fuss__marke">Calenberg</p>
         <p class="fuss__zeile">Uhrenmanufaktur in Hannover. {site.address.street}, {site.address.zip} {site.address.city}.</p>
         <p class="fuss__unten"><a href={base}>Startseite</a><a href={`${base}impressum/`}>Impressum</a><a href={`${base}datenschutz/`}>Datenschutz</a></p>
-        {!index && <p class="fuss__demo">Demo-Seite: Marke, Werk und alle Angaben sind erfunden, die Bilder sind am Computer gerendert. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihr Unternehmen? Jetzt anfragen</a></p>}
+        {!index && (
+          <aside class="fuss__demo" aria-label="Hinweis für Unternehmer">
+            <p class="fuss__demo-kopf">Demo von Kravets Webdesign</p>
+            <p>Marke, Personen und Angaben sind erfunden, die Uhr ist am Computer gerendert. Was davon auch für Ihren Betrieb geht: ein Konfigurator mit fester Summe (Küchen, Fenster, Möbel, Fahrräder), ein Produkt in Einzelteilen zum Durchscrollen (Maschinen, Geräte, Technik) und Anfragen mit Reservierung.</p>
+            <p>Diese Seite zeigt den Premium-Umfang mit 3D-Modell. Eine klare Website für Ihren Betrieb kostet deutlich weniger.</p>
+            <p class="fuss__demo-links"><a href="https://kravets-webdesign.de/leistungen/" target="_blank" rel="noopener">Leistungen und Preise</a><a href="https://kravets-webdesign.de/kontakt/" target="_blank" rel="noopener">Ihre Website anfragen</a></p>
+          </aside>
+        )}
       </div>
     </footer>
     <script>

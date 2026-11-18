@@ -13,7 +13,7 @@ html { background: var(--papier); -webkit-text-size-adjust: 100%; overflow-x: cl
 body { margin: 0; background: var(--papier); color: var(--tinte); font: 400 1.0625rem/1.6 var(--sans); overflow-x: clip; }
 img { max-width: 100%; display: block; height: auto; }
 a { color: inherit; text-underline-offset: 0.2em; }
-h1, h2, h3 { font-family: var(--display); font-weight: 800; font-stretch: 108%; letter-spacing: -0.03em; font-style: italic; line-height: 1; margin: 0; text-wrap: balance; }
+h1, h2, h3 { font-family: var(--display); font-weight: 640; font-stretch: 118%; letter-spacing: -0.015em; font-style: normal; line-height: 1; margin: 0; text-wrap: balance; }
 p { margin: 0; }
 :focus-visible { outline: 2px solid var(--fokus); outline-offset: 3px; border-radius: 2px; }
 .fuss :focus-visible { outline-color: var(--hell); }
@@ -39,7 +39,10 @@ button { font: inherit; color: inherit; }
 .fuss__zeile { margin-top: 1rem; color: var(--hell-2); max-width: 30em; }
 .fuss__unten { margin-top: clamp(2.5rem, 6vw, 4.5rem); padding-top: 1.2rem; border-top: 1px solid var(--tinte-linie); display: flex; flex-wrap: wrap; gap: 0.2rem 1.8rem; align-items: baseline; }
 .fuss__unten a { padding: 0.7rem 0; white-space: nowrap; }
-.fuss__demo { margin-top: 1rem; color: var(--hell-2); font-size: 0.92rem; max-width: 46em; }
+.fuss__demo { margin-top: 2rem; padding: 1.2rem 1.3rem; border: 1px solid var(--hell-2); border-radius: var(--r); color: var(--hell-2); font-size: 0.95rem; max-width: 52em; display: grid; gap: 0.6rem; }
+.fuss__demo-kopf { color: var(--hell); font-weight: 600; font-size: 1.05rem; }
+.fuss__demo-links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; }
+.fuss__demo-links a { color: var(--hell); padding: 0.35rem 0; }
 
 @media (min-width: 960px) {
   .fuss__in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 4rem; align-items: end; }

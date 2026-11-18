@@ -8,7 +8,8 @@ _src = open(os.path.join(HERE, 'build.py')).read().split('# ---- balance cock ou
 _argv = sys.argv; sys.argv = ['x']
 exec(compile(_src, 'build_head', 'exec'))              # materials, lathe/shape helpers, text, boolean (no movement is built)
 sys.argv = _argv
-args = [a for a in sys.argv[1:] if not a.startswith('--')]
+_av = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else sys.argv[1:]   # works as `python watch.py` (bpy module) and `blender -b -P watch.py -- ...`
+args = [a for a in _av if not a.startswith('--')]
 OUT = args[0] if args else os.path.join(HERE, 'renders_watch'); SPL = int(args[1]) if len(args) > 1 else 32
 SHOTS = (args[2] if len(args) > 2 else 'hero').split(',')
 SC = int(sys.argv[sys.argv.index('--scale') + 1]) if '--scale' in sys.argv else 100
@@ -36,16 +37,35 @@ INK = {}
 def mat_ink(c):
     m, nt, p = new_mat('ink_%0.2f_%0.2f' % c[:2]); p.inputs['Base Color'].default_value = (*c, 1); p.inputs['Roughness'].default_value = 0.55; p.inputs['Metallic'].default_value = 0.0
     return m
-def mat_leather(name, col, r=0.48):
-    m, nt, p = new_mat(name); p.inputs['Base Color'].default_value = (*col, 1); p.inputs['Roughness'].default_value = r
-    try: p.inputs['Sheen Weight'].default_value = 0.25; p.inputs['Coat Weight'].default_value = 0.12; p.inputs['Coat Roughness'].default_value = 0.3
+def mat_leather(name, col, r=0.48, dark=0.55, grain=0.5, coat=0.10, edge=(0.02, 0.012, 0.008)):
+    # leather: uneven tone (two noises), pore grain (voronoi), painted edges (by object normal X), not a uniform plastic shell
+    m, nt, p = new_mat(name)
+    tc = nt.nodes.new('ShaderNodeTexCoord')
+    tone = noise(nt, tc.outputs['Object'], 0.35, 4.0)
+    rmp = nt.nodes.new('ShaderNodeValToRGB'); rmp.color_ramp.elements[0].position = 0.35; rmp.color_ramp.elements[1].position = 0.7
+    rmp.color_ramp.elements[0].color = (col[0] * dark, col[1] * dark, col[2] * dark, 1); rmp.color_ramp.elements[1].color = (*col, 1)
+    nt.links.new(tone, rmp.inputs[0])
+    sep = nt.nodes.new('ShaderNodeSeparateXYZ'); nt.links.new(tc.outputs['Normal'], sep.inputs[0])
+    ab = nt.nodes.new('ShaderNodeMath'); ab.operation = 'ABSOLUTE'; nt.links.new(sep.outputs[0], ab.inputs[0])
+    er = nt.nodes.new('ShaderNodeValToRGB'); er.color_ramp.elements[0].position = 0.55; er.color_ramp.elements[1].position = 0.75
+    nt.links.new(ab.outputs[0], er.inputs[0])
+    mix = nt.nodes.new('ShaderNodeMix'); mix.data_type = 'RGBA'
+    nt.links.new(er.outputs['Color'], mix.inputs['Factor']); nt.links.new(rmp.outputs['Color'], mix.inputs[6]); mix.inputs[7].default_value = (*edge, 1)
+    nt.links.new(mix.outputs[2], p.inputs['Base Color'])
+    rr = nt.nodes.new('ShaderNodeMath'); rr.operation = 'MULTIPLY_ADD'; rr.inputs[1].default_value = 0.18; rr.inputs[2].default_value = r - 0.08
+    nt.links.new(tone, rr.inputs[0]); nt.links.new(rr.outputs[0], p.inputs['Roughness'])
+    try: p.inputs['Sheen Weight'].default_value = 0.3; p.inputs['Coat Weight'].default_value = coat; p.inputs['Coat Roughness'].default_value = 0.25
     except Exception: pass
-    tc = nt.nodes.new('ShaderNodeTexCoord'); n = noise(nt, tc.outputs['Object'], 9.0, 6.0)
-    b = nt.nodes.new('ShaderNodeBump'); b.inputs['Strength'].default_value = 0.35; b.inputs['Distance'].default_value = 0.06
-    nt.links.new(n, b.inputs['Height']); nt.links.new(b.outputs[0], p.inputs['Normal'])
+    vo = nt.nodes.new('ShaderNodeTexVoronoi'); vo.inputs['Scale'].default_value = 3.2; vo.feature = 'DISTANCE_TO_EDGE'
+    nt.links.new(tc.outputs['Object'], vo.inputs['Vector'])
+    fine = noise(nt, tc.outputs['Object'], 14.0, 6.0)
+    add = nt.nodes.new('ShaderNodeMath'); add.operation = 'MULTIPLY_ADD'; add.inputs[1].default_value = 0.6
+    nt.links.new(vo.outputs['Distance'], add.inputs[0]); nt.links.new(fine, add.inputs[2])
+    b = nt.nodes.new('ShaderNodeBump'); b.inputs['Strength'].default_value = grain; b.inputs['Distance'].default_value = 0.04
+    nt.links.new(add.outputs[0], b.inputs['Height']); nt.links.new(b.outputs[0], p.inputs['Normal'])
     return m
-BAND = {'kalb': (mat_leather('leather_black', (0.012, 0.012, 0.014)), (0.55, 0.53, 0.5)),
-        'cordovan': (mat_leather('leather_cognac', (0.30, 0.105, 0.035), 0.40), (0.62, 0.38, 0.2))}
+BAND = {'kalb': (mat_leather('leather_black', (0.018, 0.017, 0.018), 0.58, dark=0.6, grain=0.55, coat=0.0, edge=(0.004, 0.004, 0.004)), (0.60, 0.58, 0.54)),
+        'cordovan': (mat_leather('leather_cognac', (0.30, 0.10, 0.033), 0.34, dark=0.74, grain=0.18, coat=0.35, edge=(0.06, 0.018, 0.008)), (0.80, 0.70, 0.52))}
 def mat_glass():
     m, nt, p = new_mat('sapphire'); nt.nodes.clear()
     tr = nt.nodes.new('ShaderNodeBsdfTransparent'); gl = nt.nodes.new('ShaderNodeBsdfGlossy'); gl.inputs['Roughness'].default_value = 0.0
@@ -186,10 +206,10 @@ def build_stitch(sign, name):
                 t = (yy - 21.4) / 80.0; w = 10.0 - 1.4 * min(1.0, t * 1.1); th = 1.55 - 0.45 * min(1.0, t * 1.3)
                 x_off = 0.0 if yy < 45 else 0.00055 * (yy - 45) ** 2.0
                 l = math.hypot(y2 - y, z2 - z); ty, tz = (y2 - y) / l, (z2 - z) / l; ny, nz = -tz, ty
-                cx = side * (w - 1.7) + x_off
+                cx = side * (w - 1.5) + x_off
                 c = Vector((cx, sign * (yy + ny * (th + 0.02)), zz + nz * (th + 0.02)))
                 T = Vector((0, sign * ty, tz)); N = Vector((0, sign * ny, nz)); X = Vector((1, 0, 0))
-                vs = [bm.verts.new(c + X * dx + T * dt + N * dn) for dx, dt, dn in ((-0.14, -0.5, 0), (0.14, -0.5, 0), (0.14, 0.5, 0), (-0.14, 0.5, 0), (-0.14, -0.5, 0.06), (0.14, -0.5, 0.06), (0.14, 0.5, 0.06), (-0.14, 0.5, 0.06))]
+                vs = [bm.verts.new(c + X * dx + T * dt + N * dn) for dx, dt, dn in ((-0.17, -0.3, -0.04), (0.17, -0.3, -0.04), (0.17, 0.3, -0.04), (-0.17, 0.3, -0.04), (-0.13, -0.26, 0.11), (0.13, -0.26, 0.11), (0.13, 0.26, 0.11), (-0.13, 0.26, 0.11))]
                 for q in ((0, 1, 2, 3), (4, 7, 6, 5), (0, 4, 5, 1), (1, 5, 6, 2), (2, 6, 7, 3), (3, 7, 4, 0)):
                     try: bm.faces.new([vs[k] for k in q])
                     except ValueError: pass

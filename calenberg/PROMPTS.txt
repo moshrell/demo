@@ -1,0 +1,22 @@
+CALENBERG — ФОТО ДЛЯ GEMINI
+Готовые файлы положить в D:\Webdesign\calenberg\public\img\ под этими именами (jpg).
+Пока файла нет, блок на сайте показывается без картинки, ничего не ломается.
+
+Единый стиль: тихая часовая мастерская, мягкий дневной свет из окна слева, приглушённые тёплые серые тона,
+тёмный фон, никакого текста, логотипов и надписей, без брендов. Как кадр из каталога мануфактуры, а не реклама.
+
+
+============================================================
+1) meister.jpg — кнопка формата 3:4
+Блок «Wer Ihre Uhr baut» (кто делает ваши часы)
+============================================================
+
+Documentary photograph of a watchmaker at his workbench in a small, quiet watch workshop in northern Germany. A man in his mid-forties with short dark-blond hair and a short trimmed beard, wearing a plain grey cotton work coat over a dark shirt, fully clothed, calm and concentrated. He sits at a wooden watchmaker's bench with an elevated work surface, a watchmaker's loupe in his right eye, holding fine steel tweezers above an open mechanical watch movement that rests in a small movement holder. On the bench: a few brass and steel hand tools neatly laid out, a small glass dome, a sheet of white paper. Soft daylight falls from a window on the left, the background is dark and slightly out of focus, warm grey and muted tones. Shot at eye level from slightly to the side, 85 mm lens look, shallow depth of field, his face and hands in sharp focus. Natural, neutral expression, no posing, no smile for the camera. No text, no logos, no brand names, no watermarks anywhere in the image.
+
+
+============================================================
+2) etui.jpg — кнопка формата 4:3
+Блок «Was Sie erhalten» (что вы получаете)
+============================================================
+
+Product photograph of an open watch presentation box made of solid walnut wood with a fine natural grain and a satin oil finish, photographed from above at a gentle 30 degree angle on a dark charcoal linen surface. The lid is open. Inside: a soft dark grey felt cushion for one wristwatch, left empty, and next to it a narrow compartment holding a rolled spare leather watch strap in cognac brown with light cream stitching. Leaning inside the lid is a plain cream-coloured certificate card made of thick cotton paper, completely blank, without any writing. A small brass watchmaker's screwdriver lies beside the box. Soft daylight from the left, gentle shadows, warm and calm muted colours, high detail on the wood grain and felt texture. No watch, no text, no logos, no numbers, no brand names, no watermarks anywhere in the image.

@@ -1,358 +1,340 @@
 {
-  "stations": [
+ "stations": [
+  {
+   "at": 0.1,
+   "nr": "01",
+   "title": "Aufzug und Federhaus",
+   "text": "Die Krone spannt über Kron- und Sperrrad die Zugfeder. Voll aufgezogen läuft das Werk 60 Stunden.",
+   "fig": "60 h",
+   "figLabel": "Gangreserve"
+  },
+  {
+   "at": 0.36,
+   "nr": "02",
+   "title": "Räderwerk",
+   "text": "Drei Räder aus Roségold übersetzen die langsame Drehung des Federhauses, bis das Sekundenrad genau einmal pro Minute umläuft.",
+   "fig": "60 s",
+   "figLabel": "pro Umlauf des Sekundenrads"
+  },
+  {
+   "at": 0.6,
+   "nr": "03",
+   "title": "Hemmung",
+   "text": "Anker und Ankerrad geben die Kraft in winzigen Portionen frei. Zwei Rubinpaletten fangen jeden Zahn.",
+   "fig": "21 600",
+   "figLabel": "Halbschwingungen pro Stunde"
+  },
+  {
+   "at": 0.86,
+   "nr": "04",
+   "title": "Unruh und Schwanenhals",
+   "text": "Die Unruh mit 16 Goldschrauben gibt den Takt. Reguliert wird in fünf Lagen über die Schwanenhalsfeder.",
+   "fig": "3 Hz",
+   "figLabel": "Frequenz"
+  }
+ ],
+ "finissage": [
+  {
+   "img": "macro_balance",
+   "title": "Unruhkloben und Gravur",
+   "text": "Schwanenhalsfeder und Deckstein im Goldchaton. Gleich daneben, auf der Räderwerkbrücke: das Neue Rathaus von Hannover, kaum größer als ein Reiskorn."
+  },
+  {
+   "img": "macro_train",
+   "title": "Kanten, die das Licht fangen",
+   "text": "Jede Brückenkante wird von Hand gebrochen und poliert. Das dauert pro Werk länger als sein Zusammenbau."
+  },
+  {
+   "img": "macro_winding",
+   "title": "Sonnenschliff",
+   "text": "Kron- und Sperrrad tragen einen Sonnenschliff. Beim Aufziehen wandert das Licht über die Zähne."
+  }
+ ],
+ "konfig": [
+  {
+   "id": "gehaeuse",
+   "label": "Gehäuse, 39 mm",
+   "options": [
     {
-      "at": 0.1,
-      "nr": "01",
-      "title": "Aufzug und Federhaus",
-      "text": "Die Krone spannt über Kron- und Sperrrad die Zugfeder. Voll aufgezogen läuft das Werk 60 Stunden.",
-      "fig": "60 h",
-      "figLabel": "Gangreserve"
+     "id": "stahl",
+     "name": "Edelstahl",
+     "eur": 12400,
+     "sw": "linear-gradient(135deg,#f2f3f5,#9a9da3 45%,#4d5056)",
+     "short": "Stahl"
     },
     {
-      "at": 0.36,
-      "nr": "02",
-      "title": "Räderwerk",
-      "text": "Drei Räder aus Roségold übersetzen die langsame Drehung des Federhauses, bis das Sekundenrad genau einmal pro Minute umläuft.",
-      "fig": "60 s",
-      "figLabel": "pro Umlauf des Sekundenrads"
-    },
-    {
-      "at": 0.6,
-      "nr": "03",
-      "title": "Hemmung",
-      "text": "Anker und Ankerrad geben die Kraft in winzigen Portionen frei. Zwei Rubinpaletten fangen jeden Zahn.",
-      "fig": "21 600",
-      "figLabel": "Halbschwingungen pro Stunde"
-    },
-    {
-      "at": 0.86,
-      "nr": "04",
-      "title": "Unruh und Schwanenhals",
-      "text": "Die Unruh mit 16 Goldschrauben gibt den Takt. Reguliert wird in fünf Lagen über die Schwanenhalsfeder.",
-      "fig": "3 Hz",
-      "figLabel": "Frequenz"
+     "id": "rose",
+     "name": "Roségold 5N",
+     "eur": 27900,
+     "sw": "linear-gradient(135deg,#ffd9bf,#d39a74 45%,#7c4c33)",
+     "short": "Roségold"
     }
-  ],
-  "daten": [
+   ]
+  },
+  {
+   "id": "blatt",
+   "label": "Zifferblatt",
+   "options": [
+    {
+     "id": "silber",
+     "name": "Silber, gekörnt",
+     "eur": 0,
+     "sw": "radial-gradient(circle at 35% 30%,#fbfaf6,#c9c7c0 70%)",
+     "short": "Silber"
+    },
+    {
+     "id": "anthrazit",
+     "name": "Anthrazit",
+     "eur": 0,
+     "sw": "radial-gradient(circle at 35% 30%,#5b5f66,#202226 70%)",
+     "short": "Anthrazit"
+    },
+    {
+     "id": "gruen",
+     "name": "Waldgrün, lackiert",
+     "eur": 900,
+     "sw": "radial-gradient(circle at 35% 30%,#3f7a58,#143a28 70%)",
+     "short": "Waldgrün"
+    }
+   ]
+  },
+  {
+   "id": "band",
+   "label": "Band",
+   "options": [
+    {
+     "id": "kalb",
+     "name": "Kalbsleder, schwarz",
+     "eur": 0,
+     "sw": "linear-gradient(135deg,#3a3b3e,#0c0c0d)",
+     "short": "Kalb, schwarz"
+    },
+    {
+     "id": "cordovan",
+     "name": "Shell Cordovan, cognac",
+     "eur": 280,
+     "sw": "linear-gradient(135deg,#b06a35,#5a2c12)",
+     "short": "Cordovan, cognac"
+    }
+   ]
+  },
+  {
+   "id": "gravur",
+   "label": "Gravur neben der Unruh",
+   "options": [
+    {
+     "id": "rathaus",
+     "name": "Neues Rathaus",
+     "eur": 0,
+     "sw": "radial-gradient(circle at 50% 62%,#d39a74 0 22%,transparent 23%),linear-gradient(135deg,#d7d5cf,#8e8c86)",
+     "short": "Neues Rathaus"
+    },
+    {
+     "id": "initialen",
+     "name": "Ihre Initialen",
+     "eur": 450,
+     "sw": "repeating-linear-gradient(90deg,#d39a74 0 3px,transparent 3px 8px) 50% 50%/22px 12px no-repeat,linear-gradient(135deg,#d7d5cf,#8e8c86)",
+     "short": "Eigene Initialen"
+    }
+   ]
+  }
+ ],
+ "specs": [
+  {
+   "id": "gehaeuse",
+   "title": "Gehäuse",
+   "img": "side",
+   "alt": "Calenberg Eins von der Seite: Edelstahlgehäuse mit gewölbtem Saphirglas",
+   "rows": [
     [
-      "Kaliber",
-      "C 01, Handaufzug"
+     "Durchmesser",
+     "39 mm, Bandanstoß 20 mm"
     ],
     [
-      "Durchmesser",
-      "30,6 mm"
+     "Anstoß zu Anstoß",
+     "47 mm, passt an Handgelenke ab etwa 15 cm"
     ],
     [
-      "Höhe",
-      "4,9 mm"
+     "Höhe",
+     "10,4 mm, passt unter eine Manschette"
     ],
     [
-      "Steine",
-      "21, davon 5 in verschraubten und gepressten Goldchatons"
+     "Material",
+     "Edelstahl 316L oder Roségold 5N"
     ],
     [
-      "Frequenz",
-      "21 600 A/h (3 Hz)"
+     "Glas",
+     "Saphir, gewölbt, beidseitig entspiegelt"
     ],
     [
-      "Gangreserve",
-      "60 Stunden"
+     "Boden",
+     "Saphirglas, verschraubt, Werk sichtbar"
     ],
     [
-      "Regulierung",
-      "Schwanenhals-Feinregulierung, in fünf Lagen"
-    ],
-    [
-      "Brücken",
-      "Neusilber, rhodiniert, Genfer Streifen, Kanten von Hand angliert"
-    ],
-    [
-      "Platine",
-      "anthrazit, Perlage"
-    ],
-    [
-      "Schrauben",
-      "thermisch gebläut"
-    ],
-    [
-      "Gravuren",
-      "von Hand, roségold ausgelegt; Neues Rathaus auf dem Unruhkloben"
+     "Wasserdicht",
+     "5 bar, nicht zum Tauchen"
     ]
-  ],
-  "finissage": [
-    {
-      "img": "macro_balance",
-      "title": "Der Unruhkloben",
-      "text": "Schwanenhalsfeder, Deckstein im Goldchaton und, kaum größer als ein Reiskorn, das Neue Rathaus von Hannover."
-    },
-    {
-      "img": "macro_train",
-      "title": "Kanten, die das Licht fangen",
-      "text": "Jede Brückenkante wird von Hand gebrochen und poliert. Das dauert pro Werk länger als sein Zusammenbau."
-    },
-    {
-      "img": "macro_winding",
-      "title": "Sonnenschliff",
-      "text": "Kron- und Sperrrad tragen einen Sonnenschliff. Beim Aufziehen wandert das Licht über die Zähne."
-    }
-  ],
-  "konfig": [
-    {
-      "id": "gehaeuse",
-      "label": "Gehäuse, 39 mm",
-      "options": [
-        {
-          "id": "stahl",
-          "name": "Edelstahl",
-          "eur": 12400,
-          "sw": "linear-gradient(135deg,#f2f3f5,#9a9da3 45%,#4d5056)",
-          "short": "Stahl"
-        },
-        {
-          "id": "rose",
-          "name": "Roségold 5N",
-          "eur": 27900,
-          "sw": "linear-gradient(135deg,#ffd9bf,#d39a74 45%,#7c4c33)",
-          "short": "Roségold"
-        }
-      ]
-    },
-    {
-      "id": "blatt",
-      "label": "Zifferblatt",
-      "options": [
-        {
-          "id": "silber",
-          "name": "Silber, gekörnt",
-          "eur": 0,
-          "sw": "radial-gradient(circle at 35% 30%,#fbfaf6,#c9c7c0 70%)",
-          "short": "Silber"
-        },
-        {
-          "id": "anthrazit",
-          "name": "Anthrazit",
-          "eur": 0,
-          "sw": "radial-gradient(circle at 35% 30%,#5b5f66,#202226 70%)",
-          "short": "Anthrazit"
-        },
-        {
-          "id": "gruen",
-          "name": "Waldgrün, lackiert",
-          "eur": 900,
-          "sw": "radial-gradient(circle at 35% 30%,#3f7a58,#143a28 70%)",
-          "short": "Waldgrün"
-        }
-      ]
-    },
-    {
-      "id": "band",
-      "label": "Band",
-      "options": [
-        {
-          "id": "kalb",
-          "name": "Kalbsleder, schwarz",
-          "eur": 0,
-          "sw": "linear-gradient(135deg,#3a3b3e,#0c0c0d)",
-          "short": "Schwarz"
-        },
-        {
-          "id": "cordovan",
-          "name": "Shell Cordovan, cognac",
-          "eur": 280,
-          "sw": "linear-gradient(135deg,#b06a35,#5a2c12)",
-          "short": "Cognac"
-        }
-      ]
-    },
-    {
-      "id": "gravur",
-      "label": "Gravur auf dem Unruhkloben",
-      "options": [
-        {
-          "id": "rathaus",
-          "name": "Neues Rathaus",
-          "eur": 0,
-          "sw": "radial-gradient(circle at 50% 62%,#d39a74 0 22%,transparent 23%),linear-gradient(135deg,#d7d5cf,#8e8c86)",
-          "short": "Neues Rathaus"
-        },
-        {
-          "id": "initialen",
-          "name": "Ihre Initialen",
-          "eur": 450,
-          "sw": "repeating-linear-gradient(90deg,#d39a74 0 3px,transparent 3px 8px) 50% 50%/22px 12px no-repeat,linear-gradient(135deg,#d7d5cf,#8e8c86)",
-          "short": "Eigene Initialen"
-        }
-      ]
-    }
-  ],
-  "specs": [
-    {
-      "id": "gehaeuse",
-      "title": "Gehäuse",
-      "img": "side",
-      "alt": "Calenberg Eins von der Seite: flaches Edelstahlgehäuse mit gewölbtem Saphirglas",
-      "rows": [
-        [
-          "Durchmesser",
-          "39 mm, Bandanstoß 20 mm"
-        ],
-        [
-          "Höhe",
-          "10,4 mm, flach genug für eine Manschette"
-        ],
-        [
-          "Material",
-          "Edelstahl 316L oder Roségold 5N"
-        ],
-        [
-          "Glas",
-          "Saphir, gewölbt, beidseitig entspiegelt"
-        ],
-        [
-          "Boden",
-          "Saphirglas, verschraubt, Werk sichtbar"
-        ],
-        [
-          "Wasserdicht",
-          "5 bar, nicht zum Tauchen"
-        ]
-      ]
-    },
-    {
-      "id": "blatt",
-      "title": "Zifferblatt",
-      "img": "front",
-      "alt": "Zifferblatt der Calenberg Eins: Stabindizes, Dauphine-Zeiger, kleine Sekunde bei sechs",
-      "rows": [
-        [
-          "Ausführung",
-          "Silber gekörnt, Anthrazit oder Waldgrün (lackiert)"
-        ],
-        [
-          "Indizes",
-          "appliziert, von Hand gesetzt"
-        ],
-        [
-          "Zeiger",
-          "Dauphine, poliert; Sekunde gebläut"
-        ],
-        [
-          "Anzeige",
-          "Stunde, Minute, kleine Sekunde bei 6 Uhr"
-        ]
-      ]
-    },
-    {
-      "id": "werk",
-      "title": "Werk",
-      "img": "top",
-      "alt": "Kaliber C 01 in der Aufsicht",
-      "rows": [
-        [
-          "Kaliber",
-          "C 01, Handaufzug"
-        ],
-        [
-          "Maße",
-          "30,6 mm Durchmesser, 4,9 mm Höhe"
-        ],
-        [
-          "Steine",
-          "21, davon 5 in verschraubten Goldchatons"
-        ],
-        [
-          "Frequenz",
-          "21 600 A/h (3 Hz)"
-        ],
-        [
-          "Gangreserve",
-          "60 Stunden"
-        ],
-        [
-          "Regulierung",
-          "Schwanenhals, in fünf Lagen"
-        ],
-        [
-          "Finissage",
-          "Genfer Streifen, Perlage, angliert, Schrauben gebläut"
-        ],
-        [
-          "Gravur",
-          "von Hand, Neues Rathaus auf dem Unruhkloben"
-        ]
-      ]
-    },
-    {
-      "id": "band",
-      "title": "Band",
-      "img": "hero",
-      "alt": "Calenberg Eins mit Lederband und Edelstahlgehäuse",
-      "rows": [
-        [
-          "Leder",
-          "Kalb schwarz oder Shell Cordovan cognac"
-        ],
-        [
-          "Verarbeitung",
-          "handgenäht, Kanten gefärbt und poliert"
-        ],
-        [
-          "Schließe",
-          "Dornschließe, Edelstahl oder Roségold passend zum Gehäuse"
-        ],
-        [
-          "Breite",
-          "20 mm am Gehäuse, 18 mm an der Schließe"
-        ],
-        [
-          "Länge",
-          "nach Handgelenk im Atelier angepasst"
-        ]
-      ]
-    }
-  ],
-  "erhalten": [
+   ]
+  },
+  {
+   "id": "blatt",
+   "title": "Zifferblatt",
+   "img": "front",
+   "alt": "Zifferblatt der Calenberg Eins: Stabindizes, Dauphine-Zeiger, kleine Sekunde bei sechs",
+   "rows": [
     [
-      "Etui aus Nussbaum",
-      "gefertigt in Hannover, mit Platz für ein zweites Band"
+     "Ausführung",
+     "Silber gekörnt, Anthrazit oder Waldgrün (lackiert)"
     ],
     [
-      "Zertifikat",
-      "mit Seriennummer von 01 bis 50, vom Uhrmacher unterschrieben"
+     "Indizes",
+     "appliziert, von Hand gesetzt"
     ],
     [
-      "5 Jahre Garantie",
-      "auf Werk und Gehäuse, Service im Atelier"
+     "Zeiger",
+     "Dauphine, poliert; Sekunde gebläut"
     ],
     [
-      "Anpassung des Bandes",
-      "beim Abholen, kostenlos"
+     "Anzeige",
+     "Stunde, Minute, kleine Sekunde bei 6 Uhr"
     ]
-  ],
-  "faq": [
+   ]
+  },
+  {
+   "id": "werk",
+   "title": "Werk",
+   "img": "top",
+   "alt": "Kaliber C 01 in der Aufsicht",
+   "rows": [
     [
-      "Wann bekomme ich meine Uhr?",
-      "Etwa acht Monate nach Ihrer Bestätigung. Jedes Werk wird einzeln gebaut und in fünf Lagen reguliert."
+     "Kaliber",
+     "C 01, Handaufzug"
     ],
     [
-      "Muss ich jetzt schon zahlen?",
-      "Nein. Die Anfrage ist unverbindlich. Erst nach dem Besuch im Atelier entscheiden Sie. Dann fallen 20 % Anzahlung an, den Rest zahlen Sie bei der Abholung."
+     "Maße",
+     "30,6 mm Durchmesser, 4,9 mm Höhe"
     ],
     [
-      "Kann ich meine Wahl später ändern?",
-      "Bis zum Beginn der Fertigung ja: Gehäuse, Zifferblatt, Band und Gravur. Danach ist die Uhr Ihre."
+     "Steine",
+     "21, davon 5 in verschraubten Goldchatons"
     ],
     [
-      "Kann ich die Uhr vorher sehen?",
-      "Ja. Im Atelier liegen alle Zifferblätter, beide Gehäuse und beide Bänder zum Anprobieren bereit."
+     "Frequenz",
+     "21 600 A/h (3 Hz)"
     ],
     [
-      "Was kostet der Service?",
-      "Alle fünf Jahre empfehlen wir eine Revision, sie kostet im Atelier 690 Euro. Innerhalb der Garantie fallen nur Versandkosten an."
+     "Gangreserve",
+     "60 Stunden"
     ],
     [
-      "Warum nur 50 Uhren?",
-      "Wir sind eine kleine Werkstatt und bauen jedes Werk selbst. Mehr als 50 im Jahr würde die Qualität kosten."
+     "Regulierung",
+     "Schwanenhals, in fünf Lagen"
+    ],
+    [
+     "Finissage",
+     "Genfer Streifen, Perlage, angliert, Schrauben gebläut"
+    ],
+    [
+     "Gravur",
+     "von Hand auf der Räderwerkbrücke: Neues Rathaus oder Ihre Initialen"
     ]
+   ]
+  },
+  {
+   "id": "band",
+   "title": "Band",
+   "img": "hero",
+   "alt": "Calenberg Eins mit Lederband und Edelstahlgehäuse",
+   "rows": [
+    [
+     "Leder",
+     "Kalbsleder schwarz, genarbt, oder Shell Cordovan cognac, glänzendes Pferdeleder"
+    ],
+    [
+     "Verarbeitung",
+     "handgenäht, Kanten gefärbt und poliert"
+    ],
+    [
+     "Schließe",
+     "Dornschließe, Edelstahl oder Roségold passend zum Gehäuse"
+    ],
+    [
+     "Breite",
+     "20 mm am Gehäuse, 18 mm an der Schließe"
+    ],
+    [
+     "Länge",
+     "nach Handgelenk im Atelier angepasst"
+    ]
+   ]
+  }
+ ],
+ "erhalten": [
+  [
+   "Etui aus Nussbaum",
+   "gefertigt in Hannover, mit Platz für ein zweites Band"
+  ],
+  [
+   "Zertifikat",
+   "mit Ihrer Seriennummer, von Tjark Lindemeyer unterschrieben"
+  ],
+  [
+   "5 Jahre Garantie",
+   "auf Werk und Gehäuse, Service im Atelier kostenlos"
+  ],
+  [
+   "Anpassung des Bandes",
+   "beim Abholen, kostenlos"
   ]
+ ],
+ "faq": [
+  [
+   "Wann bekomme ich meine Uhr?",
+   "Das hängt von Ihrer Nummer ab. Die Uhren 01 bis 27 sind vergeben und in Arbeit. Für die Nummer 28 rechnen wir mit etwa acht Monaten nach Ihrer Entscheidung, jede weitere Nummer kommt etwa eine Woche später."
+  ],
+  [
+   "Was passiert, wenn ich mich in 30 Tagen nicht entscheide?",
+   "Dann geht die Nummer zurück in die Serie. Es entstehen keine Kosten. Solange Plätze frei sind, können Sie neu anfragen."
+  ],
+  [
+   "Kann ich meine Wahl später ändern?",
+   "Bis zum Beginn der Fertigung ja: Gehäuse, Zifferblatt, Band und Gravur. Danach ist die Uhr Ihre."
+  ],
+  [
+   "Was kostet der Service?",
+   "Innerhalb der fünf Jahre Garantie nichts. Danach empfehlen wir alle fünf Jahre eine Revision im Atelier, sie kostet 690 Euro. Wer nicht nach Hannover kommen kann, schickt die Uhr versichert ein und zahlt nur den Versand."
+  ],
+  [
+   "Warum nur 50 Uhren?",
+   "Drei Uhrmacher, ein Werk nach dem anderen: Mehr als etwa 50 im Jahr schaffen wir nicht, ohne an der Regulierung zu sparen. Eine zweite Serie folgt frühestens 2028."
+  ]
+ ],
+ "serie": {
+  "gesamt": 50,
+  "vergeben": 27,
+  "naechste": 28,
+  "monate": 8
+ },
+ "meister": {
+  "name": "Tjark Lindemeyer",
+  "rolle": "Uhrmachermeister, Gründer",
+  "text": [
+   "Gelernt hat er in Hannover, danach zwölf Jahre lang alte Taschenuhren restauriert. Das Kaliber C 01 hat er in vier Jahren selbst konstruiert.",
+   "Mit zwei Kolleginnen setzt er jedes Werk zusammen, reguliert es in fünf Lagen und unterschreibt am Ende Ihr Zertifikat."
+  ]
+ },
+ "ablauf": [
+  [
+   "Anfrage",
+   "Sie stellen Ihre Eins zusammen und fragen an. Wir reservieren Ihnen die nächste freie Nummer der Serie für 30 Tage. Das kostet nichts und verpflichtet zu nichts."
+  ],
+  [
+   "Besuch im Atelier",
+   "In diesen 30 Tagen sehen Sie Werk, Zifferblätter, Gehäuse und Bänder im Original und probieren an. Erst dann entscheiden Sie. Mit 20 % Anzahlung gehört die Nummer Ihnen."
+  ],
+  [
+   "Fertigung und Abholung",
+   "Wir bauen etwa vier Uhren im Monat, in der Reihenfolge der Nummern. Den Rest zahlen Sie bei der Abholung, das Band passen wir dann an Ihr Handgelenk an."
+  ]
+ ]
 }

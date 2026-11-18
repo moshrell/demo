@@ -241,7 +241,7 @@ for i, (loc, size, st, colr, gr) in enumerate(RIG):
     me.materials.append(mat_emit('sbw%d' % i, st, colr, gr)); o.visible_camera = False; rig.append(o)
 SHOTCAM = {'hero': dict(loc=(-45, -105, 105), tgt=(0, -4.0, 3.5), lens=88, res=(1200, 1500), ap=0.0),
            'front': dict(loc=(0, 0, 210), tgt=(0, 0, 6), lens=135, res=(1400, 1400), ap=0.0),
-           'side': dict(loc=(150, -18, 14), tgt=(0, 0, 4.2), lens=95, res=(1400, 1000), ap=0.0),
+           'side': dict(loc=(150, -18, 14), tgt=(0, 0, 4.2), lens=70, res=(1200, 1500), ap=0.0),
            'cfg': dict(loc=(-45, -105, 105), tgt=(0, -4.0, 3.5), lens=88, res=(800, 1000), ap=0.0)}
 cam = bpy.data.cameras.new('cam'); camo = link(bpy.data.objects.new('cam', cam)); S.camera = camo
 cam.clip_start = 1; cam.clip_end = 2000

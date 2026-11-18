@@ -40,3 +40,12 @@ button { font: inherit; color: inherit; }
 .fuss__unten { margin-top: clamp(2.5rem, 6vw, 4.5rem); padding-top: 1.2rem; border-top: 1px solid var(--tinte-linie); display: flex; flex-wrap: wrap; gap: 0.2rem 1.8rem; align-items: baseline; }
 .fuss__unten a { padding: 0.7rem 0; white-space: nowrap; }
 .fuss__demo { margin-top: 1rem; color: var(--hell-2); font-size: 0.92rem; max-width: 46em; }
+
+@media (min-width: 960px) {
+  .fuss__in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 4rem; align-items: end; }
+  .fuss .zeit { grid-column: 1; grid-row: 1 / span 2; margin-bottom: 0; }
+  .fuss .zeit__stunden { font-size: clamp(3.6rem, 7vw, 6.4rem); }
+  .fuss__marke { grid-column: 2; grid-row: 1; font-size: clamp(3rem, 7vw, 6.6rem); text-align: right; }
+  .fuss__zeile { grid-column: 2; grid-row: 2; text-align: right; justify-self: end; margin-top: 0.6rem; }
+  .fuss__unten, .fuss__demo { grid-column: 1 / -1; }
+}

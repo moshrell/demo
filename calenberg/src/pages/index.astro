@@ -87,7 +87,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
       <header class="kopf"><h2 id="spec-h">Calenberg Eins im Detail</h2><p>Alle technischen Daten, nach Bauteil sortiert. Beim Scrollen wechselt das Bild.</p></header>
       <div class="spec__in">
         <div class="spec__bild" aria-hidden="true">
-          {werk.specs.map((g, i) => <img class={i === 0 ? 'ist-da' : ''} data-spec-bild={g.id} src={g.img === 'top' ? `${base}img/top-900.webp` : `${base}watch/${g.img}.webp`} width={g.img === 'top' ? 1500 : g.img === 'side' ? 1400 : g.img === 'front' ? 1400 : 1200} height={g.img === 'top' ? 1500 : g.img === 'side' ? 1000 : g.img === 'front' ? 1400 : 1500} loading="lazy" decoding="async" alt="" />)}
+          {werk.specs.map((g, i) => <img class={i === 0 ? 'ist-da' : ''} data-spec-bild={g.id} src={g.img === 'top' ? `${base}img/top-900.webp` : `${base}watch/${g.img}.webp`} width={g.img === 'top' ? 1500 : g.img === 'side' ? 1200 : g.img === 'front' ? 1400 : 1200} height={g.img === 'top' ? 1500 : g.img === 'side' ? 1500 : g.img === 'front' ? 1400 : 1500} loading="lazy" decoding="async" alt="" />)}
         </div>
         <div class="spec__liste">
           {werk.specs.map((g) => (
@@ -429,7 +429,7 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .prod__fakten dd { margin: 0.1rem 0 0; font-weight: 500; }
   @media (min-width: 560px) { .prod__tun { grid-template-columns: repeat(2, auto); justify-content: start; } }
   @media (min-width: 960px) {
-    main > section.prod { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); min-height: 100svh; padding-top: 0; }
+    main > section.prod { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 100svh; padding-top: 0; }
     .prod__bild { order: 2; }
     .prod__bild img { height: 100%; min-height: 100svh; object-position: 50% 45%; }
     .prod__text { order: 1; align-content: center; padding-top: calc(var(--kh) + 2rem); max-width: 44rem; justify-self: end; }
@@ -451,8 +451,8 @@ const start = werk.konfig.reduce((s, g) => s + g.options[0].eur, 0);
   .js .spec__gruppe.ist-da dl div { opacity: 1; transform: none; }
   @media (min-width: 960px) {
     .spec__in { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 5rem; align-items: start; }
-    .spec__bild { display: block; position: sticky; top: calc(var(--kh) + 2rem); height: calc(100svh - var(--kh) - 4rem); background: var(--nacht); }
-    .spec__bild img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 0.5s ease; }
+    .spec__bild { display: block; position: sticky; top: calc(var(--kh) + 2rem); width: min(100%, calc(100svh - var(--kh) - 4rem)); aspect-ratio: 1 / 1; background: var(--nacht); }
+    .spec__bild img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease; }
     .spec__bild img.ist-da { opacity: 1; }
     .spec__mobil { display: none; }
     .spec__gruppe { min-height: 70svh; padding-bottom: 3rem; }

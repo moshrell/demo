@@ -20,11 +20,11 @@ const colors = async (pause) => { for (const t of ['Roségold', 'Waldgrün', 'Co
 const film = await top('.film'), span = await p.evaluate(() => document.querySelector('.film').offsetHeight - innerHeight);
 // порядок: микропауза на первом экране → вниз → плавный разбор → цвета моделей
 if (CARD) {
-  await wait(700);
-  await scrollTo(film, 900);
-  await lin(film + span, 6800); await wait(400);
-  await scrollTo((await top('#eins')) + 60, 1100); await wait(500);
-  await colors(1100); await wait(300);
+  await wait(800);                                      // первый экран: часы идут, ~1 с
+  await scrollTo(film, 600);
+  await lin(film + span, 6600);                         // разбор равномерно по всему скроллу
+  await lin((await top('#eins')) + 60, 2200); await wait(300);   // дальше без рывка вниз, к заказу
+  await colors(1000); await wait(300);
 } else {
   await wait(1200);
   await scrollTo(film, 1400);

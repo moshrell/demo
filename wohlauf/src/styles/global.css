@@ -229,13 +229,7 @@ html:not(.js) .rxout__item + .rxout__item { margin-top: var(--space-md); }
 @media (min-width: 900px) {
   /* ПК: лента на всю ширину 0–60 минут, над ней полосы шагов по длительности, ниже карточки шагов с теми же номерами */
   .ruler { display: block; margin-bottom: var(--space-xl); filter: drop-shadow(0 0.6rem 0.7rem rgb(12 42 43 / 0.22)); }
-  .ruler__steps { display: flex; padding-left: 0.6rem; }
-  .ruler__step { flex: var(--d) 1 0; min-width: 0; display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 0.9rem; background: var(--deep); color: var(--on-deep); box-shadow: inset -2px 0 0 var(--kreide); white-space: nowrap; overflow: hidden; }
-  .ruler__step:first-child { border-radius: 0.5rem 0 0 0; }
-  .ruler__step:last-child { border-radius: 0 0.5rem 0 0; box-shadow: none; }
-  .ruler__step b { flex: none; display: grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--band); color: var(--band-ink); font-family: var(--font-print); font-size: 0.85rem; line-height: 1; }
-  .ruler__step span { font-family: var(--font-print); font-size: var(--text-sm); }
-  .ruler__band { position: relative; height: 3.4rem; background-color: var(--band); background-image: linear-gradient(180deg, rgb(255 255 255 / 0.28), transparent 35%, rgb(0 0 0 / 0.12)), linear-gradient(90deg, var(--band-ink) 0 1.5px, transparent 1.5px), linear-gradient(90deg, var(--band-ink) 0 1px, transparent 1px); background-size: 100% 100%, calc(100% * 10 / var(--total)) 100%, calc(100% / var(--total)) 34%; background-repeat: no-repeat, repeat-x, repeat-x; background-position: 0 0, 0 0, 0 100%; border-left: 0.6rem solid #9aa3a1; border-radius: 0.2rem 0 0.4rem 0.4rem; color: var(--band-ink); }
+  .ruler__band { position: relative; height: 3.4rem; background-color: var(--band); background-image: linear-gradient(180deg, rgb(255 255 255 / 0.28), transparent 35%, rgb(0 0 0 / 0.12)), linear-gradient(90deg, var(--band-ink) 0 1.5px, transparent 1.5px), linear-gradient(90deg, var(--band-ink) 0 1px, transparent 1px); background-size: 100% 100%, calc(100% * 10 / var(--total)) 100%, calc(100% / var(--total)) 34%; background-repeat: no-repeat, repeat-x, repeat-x; background-position: 0 0, 0 0, 0 100%; border-left: 0.6rem solid #9aa3a1; border-radius: 0.2rem 0.4rem 0.4rem 0.2rem; color: var(--band-ink); }
   .ruler__band span { position: absolute; top: 0.4rem; left: calc(var(--m) * 100% / var(--total)); transform: translateX(0.3rem); padding: 0 0.15rem; background: var(--band); font-family: var(--font-print); font-weight: 700; font-size: 1.1rem; line-height: 1.1; }
   .ruler__band .is-first { transform: translateX(0.3rem); }
   .ruler__band .is-last { transform: translateX(calc(-100% - 0.3rem)); }

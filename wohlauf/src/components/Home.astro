@@ -125,9 +125,6 @@ const menu = [['#figur', t.nav.figur], ['#leistungen', t.nav.rezept], ['#termin'
   <section class="sec" id="termin" aria-labelledby="termin-h">
     <div class="sec__head"><h2 id="termin-h">{t.termin.title}</h2><p class="lead">{t.termin.p}</p></div>
     <div class="ruler" aria-hidden="true" style={`--total:${total}`}>
-      <div class="ruler__steps">
-        {t.termin.stages.map((s: any, i: number) => <div class="ruler__step" style={`--d:${s.to - s.from}`}><b>{i + 1}</b><span>{s.to - s.from} {t.termin.min}</span></div>)}
-      </div>
       <div class="ruler__band">
         {marks.map((m: number) => <span class:list={[m === 0 && 'is-first', m === total && 'is-last']} style={`--m:${m}`}>{m}</span>)}
       </div>

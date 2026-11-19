@@ -17,11 +17,11 @@
   --alert: #B3261B;
   --focus: #E3A21F;
 
-  --font-display: 'Noto Serif Display Variable', 'Noto Serif Display', Georgia, serif;
-  --font-text: 'Albert Sans Variable', system-ui, sans-serif;
-  --display-weight: 340;
-  --display-tracking: -0.015em;
-  --strong-weight: 620;
+  --font-display: 'Gilda Display', Georgia, serif;
+  --font-text: 'Manrope Variable', system-ui, sans-serif;
+  --display-weight: 400;
+  --display-tracking: -0.01em;
+  --strong-weight: 650;
   --lh: 1.55;
 
   --text-base: 1.125rem;
@@ -37,9 +37,6 @@
   --bar-h: 56px;
   --bar-gap: 12px;
 }
-html[data-font='b'] { --font-display: 'Gilda Display', Georgia, serif; --font-text: 'Manrope Variable', system-ui, sans-serif; --display-weight: 400; --display-tracking: -0.01em; --strong-weight: 650; }
-html[data-font='c'] { --font-display: 'Bricolage Grotesque Variable', system-ui, sans-serif; --font-text: 'Bricolage Grotesque Variable', system-ui, sans-serif; --display-weight: 520; --display-tracking: -0.03em; --strong-weight: 620; }
-html[data-font='d'] { --font-display: 'Literata Variable', Georgia, serif; --font-text: 'Literata Variable', Georgia, serif; --display-weight: 420; --display-tracking: -0.02em; --strong-weight: 620; --lh: 1.65; }
 @media (min-width: 64rem) { :root { --text-base: 1.1875rem; --text-sm: 1.0625rem; } }
 
 *, *::before, *::after { box-sizing: border-box; }

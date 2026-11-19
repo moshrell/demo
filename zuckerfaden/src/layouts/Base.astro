@@ -1,11 +1,10 @@
 ---
 // SEO + KI-Sichtbarkeit. Demo: noindex. Beim Kundenstart: index = true.
-import '@fontsource-variable/noto-serif-display/wght.css';
-import '@fontsource-variable/albert-sans/wght.css';
+import '@fontsource/gilda-display/400.css';
+import '@fontsource-variable/manrope/wght.css';
 import '../styles/global.css';
 import site from '../data/site.json';
 import zeiten from '../data/oeffnungszeiten.json';
-import fonts from '../data/fonts.json';
 const {
   title = site.name,
   description = '',
@@ -44,7 +43,7 @@ const tel = `tel:${site.phoneHref}`;
 const wa = `https://wa.me/${site.whatsapp}`;
 ---
 <!doctype html>
-<html lang="de" data-font={fonts.default}>
+<html lang="de">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -61,7 +60,6 @@ const wa = `https://wa.me/${site.whatsapp}`;
     <meta property="og:url" content={canonical} />
     {ogImage && <meta property="og:image" content={ogImage} />}
     {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
-    {site.fontSwitcher && <script is:inline>try{var u=new URLSearchParams(location.search).get('schrift'),s=u||localStorage.getItem('zf-schrift');if(/^[abcd]$/.test(s||''))document.documentElement.dataset.font=s}catch(e){}</script>}
   </head>
   <body data-leiste={leiste}>
     <a class="skip" href="#inhalt">Zum Inhalt</a>
@@ -81,17 +79,6 @@ const wa = `https://wa.me/${site.whatsapp}`;
             : <a class="leiste__haupt" href={`${base}termin/`}>Termin anfragen</a>}
           <a class="kopf__tel" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg>{site.phone}</a>
         </nav>
-        {site.fontSwitcher && (
-          <div class="schrift" data-schrift>
-            <button type="button" class="schrift__knopf" data-schrift-knopf aria-expanded="false" aria-controls="schrift-panel" aria-label="Schrift wechseln (nur in der Demo)"><span aria-hidden="true">Aa</span></button>
-            <div class="schrift__panel" id="schrift-panel" role="group" aria-label="Schriftprobe (nur in der Demo)" hidden>
-              <p class="schrift__titel">Schrift testen <span>nur in der Demo</span></p>
-              {fonts.paare.map((p) => (
-                <label><input type="radio" name="schrift" value={p.id} /><span><b>{p.kurz}</b><i>{p.name}</i></span></label>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </header>
 
@@ -155,14 +142,6 @@ const wa = `https://wa.me/${site.whatsapp}`;
         {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label === 'Gesicht' ? 'Gesichtspflege' : n.label}</a>)}
         <a href={`${base}termin/`}>Termin anfragen</a>
       </nav>
-      {site.fontSwitcher && (
-        <div class="sheet__schrift" role="group" aria-label="Schriftprobe (nur in der Demo)">
-          <p class="sheet__schrift-t">Schrift testen <span>nur in der Demo</span></p>
-          <div class="sheet__schrift-w">
-            {fonts.paare.map((p) => <label><input type="radio" name="schrift" value={p.id} /><span title={p.name}>{p.kurz}</span></label>)}
-          </div>
-        </div>
-      )}
       <div class="sheet__info">
         <p data-status></p>
         <p>{site.address.street}, {site.address.zip} {site.address.city} · <a href={site.mapUrl} target="_blank" rel="noopener">Karte</a></p>
@@ -191,33 +170,8 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .skip { position: absolute; left: -999px; top: 0.5rem; background: var(--tinte); color: var(--weiss); padding: 0.6rem 1rem; border-radius: 999px; z-index: 100; }
   .skip:focus { left: 0.5rem; }
 
-  /* Проба шрифтов (только демо): кнопка в шапке, не плавает над страницей; на телефоне ещё и в меню */
-  .schrift { position: relative; flex: none; font-family: 'Albert Sans Variable', system-ui, sans-serif; }
-  .schrift__knopf { width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1px solid rgba(246, 239, 231, 0.28); background: transparent; color: var(--honig-hell); font: inherit; font-weight: 700; font-size: 0.95rem; cursor: pointer; }
-  .schrift__panel { position: absolute; z-index: 60; top: 3.3rem; right: 0; width: min(19rem, calc(100vw - 1.2rem)); display: grid; gap: 0.2rem; padding: 0.7rem; border-radius: 20px; background: #120B07; border: 1px solid var(--nacht-3); box-shadow: 0 24px 50px -20px #000; animation: hoch 0.2s ease-out; }
-  .schrift__panel[hidden] { display: none; }
-  .schrift__titel { color: var(--licht); font-weight: 600; padding: 0.3rem 0.5rem 0.5rem; font-size: 0.95rem; }
-  .schrift__titel span { color: var(--licht-2); font-weight: 400; margin-left: 0.4rem; font-size: 0.85rem; }
-  .schrift label { position: relative; display: block; }
-  .schrift input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-  .schrift label span { display: flex; align-items: center; gap: 0.7rem; min-height: 2.9rem; padding: 0 0.9rem; border-radius: 14px; color: var(--licht); cursor: pointer; }
-  .schrift b { width: 1.6rem; height: 1.6rem; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--nacht-3); font-size: 0.85rem; }
-  .schrift i { font-style: normal; font-size: 0.95rem; }
-  .schrift input:checked + span { background: var(--honig); color: var(--tinte); }
-  .schrift input:checked + span b { border-color: var(--tinte); }
-  .schrift input:focus-visible + span { outline: 2px solid var(--honig); outline-offset: 2px; }
-  .sheet__schrift { margin-top: 1.1rem; padding: 0.8rem 0.9rem; border-radius: 16px; background: var(--grau); }
-  .sheet__schrift-t { font-weight: 600; font-size: 0.95rem; }
-  .sheet__schrift-t span { font-weight: 400; color: var(--tinte-2); margin-left: 0.3rem; }
-  .sheet__schrift-w { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
-  .sheet__schrift-w label { position: relative; flex: 1; }
-  .sheet__schrift-w input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
-  .sheet__schrift-w span { display: grid; place-items: center; min-height: 2.75rem; border-radius: 12px; border: 1.5px solid var(--linie); font-weight: 700; background: var(--weiss); cursor: pointer; }
-  .sheet__schrift-w input:checked + span { border-color: var(--tinte); background: var(--tinte); color: var(--weiss); }
-  .sheet__schrift-w input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
-
   /* Мёд-капсула: готовая текстура (tools/honig-textur.mjs), края по 32 px, середина растягивается */
-  .leiste__bar, .pille, .kopf__kapsel { border: solid transparent; border-width: 0 var(--cap, 32px); border-image: var(--leisteBild) 0 96 fill / 0 var(--cap, 32px) / 0 stretch; border-radius: 999px; box-shadow: 0 14px 26px -12px rgba(0, 0, 0, 0.7), 0 2px 0 rgba(120, 60, 0, 0.5); }
+  .leiste__bar, .pille { border: solid transparent; border-width: 0 var(--cap, 32px); border-image: var(--leisteBild) 0 96 fill / 0 var(--cap, 32px) / 0 stretch; border-radius: 999px; box-shadow: 0 14px 26px -12px rgba(0, 0, 0, 0.7), 0 2px 0 rgba(120, 60, 0, 0.5); }
 
   /* Шапка */
   .kopf { position: relative; z-index: 30; }
@@ -233,16 +187,19 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .punkt--zu { background: var(--licht-2); box-shadow: none; }
   .kopf__kapsel { display: none; }
   @media (min-width: 64rem) {
-    .kopf { position: sticky; top: 0; background: rgba(27, 17, 11, 0.94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-    .kopf__in { padding-block: 0.7rem; }
+    .kopf { position: sticky; top: 0; background: rgba(27, 17, 11, 0.92); border-bottom: 1px solid rgba(255, 210, 122, 0.14); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+    .kopf__in { padding-block: 0.55rem; }
+    .kopf__marke { font-size: 1.6rem; }
     .kopf__kapsel { margin-left: auto; }
     .kopf__heute { white-space: nowrap; }
-    .kopf__kapsel { --cap: 28px; display: flex; align-items: center; gap: 0.3rem; height: 56px; padding: 0; color: var(--tinte); }
-    .kopf__nav { display: flex; gap: 0.1rem; }
-    .kopf__kapsel .kopf__nav a { display: inline-flex; align-items: center; white-space: nowrap; min-height: 2.6rem; padding: 0 0.8rem; border-radius: 999px; text-decoration: none; font-weight: 600; color: var(--tinte); }
-    .kopf__nav a:hover, .kopf__nav a[aria-current='page'] { background: rgba(255, 246, 220, 0.5); }
-    .kopf__kapsel .leiste__haupt { min-height: 2.8rem; margin-left: 0.2rem; }
-    .kopf__kapsel .kopf__tel { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0 0.9rem 0 0.7rem; min-height: 2.6rem; text-decoration: none; font-weight: 600; color: var(--tinte); white-space: nowrap; }
+    .kopf__kapsel { display: flex; align-items: center; gap: 1.6rem; }
+    .kopf__nav { display: flex; gap: 0.2rem; }
+    .kopf__kapsel .kopf__nav a { position: relative; display: inline-flex; align-items: center; white-space: nowrap; min-height: 2.75rem; padding: 0 0.7rem; text-decoration: none; font-weight: 500; color: var(--licht); }
+    .kopf__nav a::after { content: ''; position: absolute; left: 0.7rem; right: 0.7rem; bottom: 0.45rem; height: 2px; border-radius: 2px; background: var(--honig); transform: scaleX(0); transition: transform 0.2s; }
+    .kopf__nav a:hover::after, .kopf__nav a[aria-current='page']::after { transform: scaleX(1); }
+    .kopf__nav a[aria-current='page'] { color: var(--honig-hell); }
+    .kopf__kapsel .leiste__haupt { min-height: 2.6rem; padding: 0 1.2rem; font-size: 0.95rem; background: linear-gradient(180deg, #FFD983, #E9A52C 60%, #CF8A22); color: var(--tinte); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 6px 16px -8px rgba(227, 162, 31, 0.7); }
+    .kopf__kapsel .kopf__tel { display: inline-flex; align-items: center; gap: 0.45rem; min-height: 2.75rem; text-decoration: none; font-weight: 600; color: var(--licht); white-space: nowrap; }
     .kopf__kapsel .kopf__tel svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
   }
 
@@ -313,5 +270,5 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .auswahl__kombi[hidden] { display: none; }
   .auswahl__kombi p { font-weight: 600; line-height: 1.3; }
   .btn--klein { min-height: 2.6rem; padding: 0.3rem 0.9rem; font-size: 0.95rem; flex: none; }
-  @media print { .honigfaden, .leiste, .fuss__demo, .fuss__recht, .schrift, .kopf__kapsel { display: none !important; } }
+  @media print { .honigfaden, .leiste, .fuss__demo, .fuss__recht, .kopf__kapsel { display: none !important; } }
 </style>

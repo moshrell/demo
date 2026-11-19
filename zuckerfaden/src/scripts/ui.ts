@@ -1,4 +1,4 @@
-// Общая логика всех страниц: шторки, пилюля с итогом, часы работы, проба шрифтов, медовая панель.
+// Общая логика всех страниц: шторки, пилюля с итогом, часы работы, медовая нить.
 import * as cart from '../lib/cart';
 import { honig } from './honig';
 import zeiten from '../data/oeffnungszeiten.json';
@@ -90,44 +90,5 @@ function zeitenRender() {
 }
 zeitenRender();
 setInterval(zeitenRender, 60_000);
-
-/* ---------- Проба шрифтов ---------- */
-let geladen = false;
-function schriftLaden() {
-  if (geladen) return; geladen = true;
-  Promise.all([
-    import('@fontsource/gilda-display/400.css'), import('@fontsource-variable/manrope/wght.css'),
-    import('@fontsource-variable/bricolage-grotesque/wght.css'), import('@fontsource-variable/literata/wght.css'),
-  ]).catch(() => {});
-}
-function schriftSetzen(id: string, merken = true) {
-  // держим на месте то, что сейчас посередине экрана
-  const anchor = document.elementFromPoint(innerWidth / 2, innerHeight / 3) as HTMLElement | null;
-  const before = anchor?.getBoundingClientRect().top ?? 0;
-  document.documentElement.dataset.font = id;
-  if (merken) { try { localStorage.setItem('zf-schrift', id); } catch {} }
-  const u = new URL(location.href); u.searchParams.set('schrift', id); history.replaceState(history.state, '', u);
-  const fix = () => { if (anchor?.isConnected) window.scrollBy(0, anchor.getBoundingClientRect().top - before); };
-  requestAnimationFrame(fix); document.fonts?.ready.then(fix);
-}
-const aktuell = document.documentElement.dataset.font || 'a';
-// шрифты B–D подгружаются после загрузки страницы, чтобы переключение было мгновенным
-if (aktuell !== 'a') schriftLaden(); else addEventListener('load', () => setTimeout(schriftLaden, 1200));
-const sPanel = $<HTMLElement>('#schrift-panel'), sKnopf = $<HTMLButtonElement>('[data-schrift-knopf]');
-const sZu = (): void => { if (sPanel && sKnopf) { sPanel.hidden = true; sKnopf.setAttribute('aria-expanded', 'false'); } };
-sKnopf?.addEventListener('click', () => { if (!sPanel) return; sPanel.hidden = !sPanel.hidden; sKnopf.setAttribute('aria-expanded', String(!sPanel.hidden)); });
-document.addEventListener('click', (e) => { if (sPanel && !sPanel.hidden && !(e.target as Element).closest('[data-schrift]')) sZu(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') sZu(); });
-$$<HTMLInputElement>('input[name="schrift"]').forEach((r) => {
-  r.checked = r.value === aktuell;
-  r.addEventListener('change', () => { schriftSetzen(r.value); setTimeout(sZu, 250); });
-});
-// Ссылки внутри сайта несут выбранную пару, чтобы клиентка видела одну и ту же
-document.addEventListener('click', (e) => {
-  const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href]');
-  const f = document.documentElement.dataset.font;
-  if (!a || !f || f === 'a' || a.origin !== location.origin || a.target) return;
-  const u = new URL(a.href); if (!u.searchParams.has('schrift')) { u.searchParams.set('schrift', f); a.href = u.toString(); }
-}, true);
 
 honig.start();

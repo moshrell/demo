@@ -8,21 +8,21 @@ const poly = (...p) => `M${p.map((q) => q.join(' ')).join('L')}Z`;
 // slugs: Körperteile (Muskel-Formen, werden mit Strich zu einer Fläche), shapes: freie Formen, a: Ankerpunkt für die Preisbeschriftung, s: Seite l/r
 const ZONEN = {
   'damen-vorne': [
-    { zone: 'd-arme', slugs: ['biceps', 'triceps', 'forearm', 'hands'], a: [176, 446], s: 'l', hit: 60 },
+    { zone: 'd-arme', slugs: ['biceps', 'triceps', 'forearm', 'hands'], a: [176, 446], s: 'l', hit: 72 },
     { zone: 'd-achseln', shapes: [ell(226, 438, 19, 34), ell(414, 438, 19, 34)], a: [226, 438], s: 'l' },
     { zone: 'd-oberschenkel', slugs: ['quadriceps', 'adductors'], a: [236, 790], s: 'l' },
     { zone: 'd-unterschenkel', slugs: ['knees', 'tibialis', 'calves', 'ankles', 'feet'], a: [378, 1190], s: 'r' },
     { zone: 'd-bikini', shapes: ['M222 596Q246 700 320 752Q394 700 418 596L394 596Q372 668 320 712Q268 668 246 596Z'], a: [320, 700], s: 'r' },
   ],
   'damen-hinten': [
-    { zone: 'd-arme', slugs: ['triceps', 'forearm', 'hands'], a: [992, 432], s: 'l', hit: 60 },
+    { zone: 'd-arme', slugs: ['triceps', 'forearm', 'hands'], a: [992, 432], s: 'l', hit: 72 },
     { zone: 'd-oberschenkel', slugs: ['hamstring', 'adductors'], a: [1050, 890], s: 'l' },
     { zone: 'd-unterschenkel', slugs: ['calves', 'feet'], a: [1200, 1180], s: 'r' },
   ],
   'herren-vorne': [
     { zone: 'h-brust', slugs: ['chest'], a: [300, 380], s: 'l' },
     { zone: 'h-bauch', slugs: ['abs', 'obliques'], a: [395, 540], s: 'r' },
-    { zone: 'h-arme', slugs: ['biceps', 'triceps', 'forearm', 'hands'], a: [206, 452], s: 'l', hit: 60 },
+    { zone: 'h-arme', slugs: ['biceps', 'triceps', 'forearm', 'hands'], a: [206, 452], s: 'l', hit: 72 },
     { zone: 'h-achseln', shapes: [ell(254, 430, 17, 32), ell(474, 430, 17, 32)], a: [254, 430], s: 'l' },
     { zone: 'h-oberschenkel', slugs: ['quadriceps', 'adductors'], a: [292, 810], s: 'l' },
     { zone: 'h-unterschenkel', slugs: ['knees', 'tibialis', 'calves', 'ankles', 'feet'], a: [440, 1140], s: 'r' },
@@ -31,7 +31,7 @@ const ZONEN = {
   'herren-hinten': [
     { zone: 'h-schultern', slugs: ['deltoids', 'trapezius'], a: [930, 352], s: 'l' },
     { zone: 'h-ruecken', slugs: ['upper-back', 'lower-back'], a: [1100, 470], s: 'r' },
-    { zone: 'h-arme', slugs: ['triceps', 'forearm', 'hands'], a: [905, 450], s: 'l', hit: 60 },
+    { zone: 'h-arme', slugs: ['triceps', 'forearm', 'hands'], a: [905, 450], s: 'l', hit: 72 },
     { zone: 'h-gesaess', slugs: ['gluteal'], a: [1016, 700], s: 'l' },
     { zone: 'h-oberschenkel', slugs: ['hamstring', 'adductors'], a: [990, 880], s: 'l' },
     { zone: 'h-unterschenkel', slugs: ['calves', 'ankles', 'feet'], a: [1170, 1140], s: 'r' },
@@ -54,7 +54,7 @@ export const ANSICHTEN = Object.keys(roh).map((key) => {
       ...z,
       teile: (z.slugs || []).flatMap((s) => teile.filter((t) => t.slug === s)),
       shapes: z.shapes || [],
-      hit: z.hit || 26,
+      hit: z.hit || 46,
     })),
   };
 });

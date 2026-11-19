@@ -34,8 +34,8 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
         <feComposite in="s" in2="SourceAlpha" operator="in" result="s2" />
         <feComposite in="SourceGraphic" in2="s2" operator="arithmetic" k1="0" k2="1" k3="0.85" k4="0" />
       </filter>
-      <linearGradient id={`${id}-liege`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5A4230" /><stop offset="1" stop-color="#37261A" /></linearGradient>
-      <linearGradient id={`${id}-liege2`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6B503A" /><stop offset="1" stop-color="#47331F" /></linearGradient>
+      <linearGradient id={`${id}-liege`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3F332C" /><stop offset="1" stop-color="#2A211C" /></linearGradient>
+      <linearGradient id={`${id}-liege2`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A3D35" /><stop offset="1" stop-color="#352B25" /></linearGradient>
     </defs>
   </svg>
   <div class="wrap zr__grid">
@@ -71,8 +71,8 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
               </defs>
               <g class="liege" aria-hidden="true">
                 <rect x={cx - hw / 2} y={y0 - 80} width={hw} height="150" rx="60" fill={`url(#${id}-liege2)`} />
-                <rect x={cx - lw / 2} y={y0 - 20} width={lw} height={y1 - y0 + 90} rx="100" fill={`url(#${id}-liege)`} stroke="#7A5B41" stroke-width="3" />
-                <rect x={cx - lw / 2 + 26} y={y0 + 6} width={lw - 52} height={y1 - y0 + 38} rx="78" fill="none" stroke="#8B6A4D" stroke-width="2.5" stroke-dasharray="14 12" opacity="0.7" />
+                <rect x={cx - lw / 2} y={y0 - 20} width={lw} height={y1 - y0 + 90} rx="100" fill={`url(#${id}-liege)`} stroke="#5E5047" stroke-width="3" />
+                <rect x={cx - lw / 2 + 26} y={y0 + 6} width={lw - 52} height={y1 - y0 + 38} rx="78" fill="none" stroke="#76665B" stroke-width="2.5" stroke-dasharray="14 12" opacity="0.7" />
               </g>
               <g class="koerper">
                 <path d={v.rand} fill={`url(#${id}-${v.key}-porz)`} />
@@ -182,14 +182,15 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   .zr { padding-block: 1rem var(--space-2xl); scroll-margin-top: 0; background: radial-gradient(70% 45% at 50% 40%, #3A2416 0%, transparent 70%), var(--nacht); }
   .zr__grid { display: grid; gap: var(--space-lg); }
   .zr__app { display: grid; gap: 0.6rem; grid-template-rows: auto auto minmax(0, 1fr) auto; height: calc(100svh - 10.4rem); min-height: 31rem; }
-  .zr__kopf h2 { font-size: clamp(1.7rem, 1.3rem + 2vw, 3.2rem); }
+  .zr__kopf h2 { font-size: clamp(1.6rem, 1.2rem + 2vw, 3.2rem); }
+  @media (max-height: 700px) and (max-width: 63.99rem) { .zr__lede { display: none; } .zr__app { gap: 0.45rem; } }
   .zr__lede { color: var(--licht-2); margin-top: 0.2rem; font-size: 1rem; }
-  .zr__steuer { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  .zr__steuer { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
   .seg { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--nacht-2); border: 1px solid var(--nacht-3); }
   .seg label { position: relative; }
   .seg label[hidden] { display: none; }
   .seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-  .seg span { display: inline-flex; align-items: center; min-height: 2.5rem; padding: 0 0.56rem; font-size: 0.95rem; border-radius: 999px; font-weight: 500; cursor: pointer; color: var(--licht-2); }
+  .seg span { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 clamp(0.38rem, 2.6vw - 0.3rem, 0.7rem); font-size: clamp(0.84rem, 0.6rem + 1vw, 0.95rem); border-radius: 999px; font-weight: 500; cursor: pointer; color: var(--licht-2); }
   .seg input:checked + span { background: var(--licht); color: var(--tinte); font-weight: var(--strong-weight); }
   .seg input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
   .zr__fuss { min-height: 3rem; }
@@ -205,7 +206,7 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   .fig[data-on='0'] { display: none; }
   .fig[data-on='1'] { animation: ein 0.28s ease-out; }
   .fig--gesicht { overflow: hidden; }
-  .haar--hinten { fill: #5E4436; }
+  .haar--hinten { fill: #6E4128; }
   .g__ohr { fill: #E6D6C6; stroke: #B59C88; stroke-width: 0.6; }
   .g__wange { fill: #E7B4A2; opacity: 0.35; }
   .g__straehne { fill: none; stroke: #8A6A57; stroke-width: 0.7; }
@@ -218,8 +219,8 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   :global(.zr.einladen .fig[data-on='1'] .zone[aria-checked='false'] .zone__glanz) { display: inline; animation: einladen 1.2s ease-in-out both; animation-delay: calc(var(--i) * 0.14s + 0.15s); }
   @keyframes einladen { 0%, 100% { opacity: 0; } 45% { opacity: 0.55; } }
   @keyframes ein { from { opacity: 0; } }
-  .haar { fill: #6E5243; }
-  .koerper .haar { fill: #2F1F16; stroke: rgba(255, 230, 200, 0.18); stroke-width: 3; }
+  .haar { fill: #8B5A3C; }
+  .koerper .haar { fill: #8B5A3C; stroke: rgba(40, 20, 8, 0.35); stroke-width: 3; }
   :global(.zone) { cursor: pointer; outline: none; }
   :global(.zone__hit) { fill: transparent; stroke: transparent; pointer-events: all; }
   :global(.zone__glanz) { display: none; }
@@ -237,6 +238,9 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   .zr__labels :global(.lbl--l) { text-align: right; }
   .zr__labels :global(.lbl__n) { font-size: 0.8125rem; color: var(--licht); }
   .zr__labels :global(.lbl__p) { font-size: 1rem; font-weight: 700; color: var(--honig-hell); font-variant-numeric: tabular-nums; }
+  .zr__labels :global(.lbl--kurz) { display: flex; align-items: baseline; gap: 0.35rem; padding: 0.2rem 0.5rem; border-radius: 999px; max-width: none; white-space: nowrap; }
+  .zr__labels :global(.lbl--kurz .lbl__n) { font-size: 0.75rem; }
+  .zr__labels :global(.lbl--kurz .lbl__p) { font-size: 0.875rem; }
   @keyframes lbl { from { opacity: 0; transform: translateY(4px); } }
   .kombi[hidden] { display: none !important; }
   .kombi p { font-weight: 600; line-height: 1.3; }
@@ -265,6 +269,11 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   .zl__m { font-size: 0.9rem; color: var(--licht-2); }
   .zl .preis { font-weight: var(--strong-weight); min-width: 3.6rem; text-align: right; color: var(--honig-hell); }
   .zr__links { margin-top: var(--space-md); color: var(--licht-2); }
+  @media (max-width: 63.99rem) and (max-height: 500px) and (orientation: landscape) {
+    .zr__app { height: auto; min-height: 0; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto auto 1fr; grid-template-areas: 'kopf buehne' 'steuer buehne' 'fuss buehne'; column-gap: 1.5rem; }
+    .zr__kopf { grid-area: kopf; } .zr__steuer { grid-area: steuer; } .zr__fuss { grid-area: fuss; align-self: start; }
+    .zr__buehne { grid-area: buehne; height: calc(100svh - var(--bar-h) - var(--bar-gap) - 1.6rem); }
+  }
   @media (min-width: 64rem) {
     .zr { padding-block: var(--space-xl) var(--space-2xl); scroll-margin-top: 4.5rem; }
     .zr__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-areas: 'buehne kopf' 'buehne steuer' 'buehne seite' 'fuss seite'; grid-template-rows: auto auto 1fr auto; column-gap: var(--space-2xl); row-gap: 1rem; align-items: start; }
@@ -339,19 +348,34 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
       lines.setAttribute('viewBox', `0 0 ${W} ${sr.height}`);
       const frag: string[] = [];
       labels.replaceChildren();
+      const H = sr.height;
       (['l', 'r'] as const).forEach((side) => {
         const list = items.filter((i) => i.side === side).map((i) => ({ ...i, p: toStage(i.a[0], i.a[1]) })).sort((a, b) => a.p[1] - b.p[1]);
-        let last = -1e9;
-        list.forEach((i) => {
-          const y = Math.max(i.p[1] - 20, last + 48, 4); last = y;
-          const el = document.createElement('div'); el.className = `lbl lbl--${side}`;
+        // viele Schilder auf einer Seite → kompakt in einer Zeile
+        const kurzForm = list.length > 3;
+        const colEdge = side === 'l' ? Math.max(figL, 92) : Math.min(figR, W - 92);
+        const els = list.map((i) => {
+          const el = document.createElement('div'); el.className = `lbl lbl--${side}${kurzForm ? ' lbl--kurz' : ''}`;
           const n = document.createElement('span'); n.className = 'lbl__n'; n.textContent = i.text;
           const p = document.createElement('span'); p.className = 'lbl__p'; p.textContent = i.preis;
-          el.append(n, p); el.style.top = `${y}px`;
-          const colEdge = side === 'l' ? Math.max(figL, 92) : Math.min(figR, W - 92);
+          el.append(n, p);
           if (side === 'l') el.style.right = `${W - colEdge}px`; else el.style.left = `${colEdge}px`;
           labels.append(el);
-          frag.push(`<line x1="${i.p[0].toFixed(1)}" y1="${i.p[1].toFixed(1)}" x2="${colEdge.toFixed(1)}" y2="${(y + 20).toFixed(1)}"/><circle cx="${i.p[0].toFixed(1)}" cy="${i.p[1].toFixed(1)}" r="3"/>`);
+          // nicht über den Bühnenrand hinaus: notfalls zur Figur hin verschieben
+          const w = el.offsetWidth;
+          if (side === 'l' && w > colEdge - 2) el.style.right = `${W - w - 2}px`;
+          if (side === 'r' && colEdge + w > W - 2) el.style.left = `${W - w - 2}px`;
+          return el;
+        });
+        // Höhen messen, von oben stapeln (Abstand 6 px), dann von unten in die Bühne zurückschieben
+        const hs = els.map((e) => e.offsetHeight), ys: number[] = [];
+        let last = -1e9;
+        list.forEach((i, k) => { const y = Math.max(i.p[1] - hs[k] / 2, last + 6, 2); ys.push(y); last = y + hs[k]; });
+        let unten = H - 2;
+        for (let k = list.length - 1; k >= 0; k--) { if (ys[k] + hs[k] > unten) ys[k] = unten - hs[k]; unten = ys[k] - 6; }
+        list.forEach((i, k) => {
+          els[k].style.top = `${ys[k]}px`;
+          frag.push(`<line x1="${i.p[0].toFixed(1)}" y1="${i.p[1].toFixed(1)}" x2="${colEdge.toFixed(1)}" y2="${(ys[k] + hs[k] / 2).toFixed(1)}"/><circle cx="${i.p[0].toFixed(1)}" cy="${i.p[1].toFixed(1)}" r="3"/>`);
         });
       });
       lines.innerHTML = frag.join('');

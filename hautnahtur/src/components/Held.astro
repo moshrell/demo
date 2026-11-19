@@ -28,10 +28,10 @@ const base = import.meta.env.BASE_URL;
 </section>
 
 <style is:global define:vars={{ bandBild: `url(${import.meta.env.BASE_URL}img/honig-band.webp)`, tropfenBild: `url(${import.meta.env.BASE_URL}img/honig-tropfen.webp)` }}>
-  .held { position: relative; overflow: hidden; min-height: calc(100svh - 4.6rem); display: grid; align-items: end; isolation: isolate; background: radial-gradient(80% 60% at 78% 8%, rgba(227, 162, 31, 0.2), transparent 60%), var(--nacht); }
+  .held { --bs: 0.56; --honig-tief: calc(var(--bs) * 275px); position: relative; overflow: hidden; min-height: calc(100svh - 4.6rem); display: grid; align-items: end; isolation: isolate; background: radial-gradient(80% 60% at 78% 8%, rgba(227, 162, 31, 0.2), transparent 60%), var(--nacht); }
   .held__bild { display: none; }
   .held__bild picture, .held__bild img { width: 100%; height: 100%; }
-  .held__band { position: absolute; left: 0; top: 0; width: calc(100% / var(--bs)); height: 320px; transform: scale(var(--bs)); transform-origin: 0 0; --bs: 0.56; z-index: -1; background: var(--bandBild) 0 0 / 1600px 320px repeat-x; pointer-events: none; filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.45)); }
+  .held__band { position: absolute; left: 0; top: 0; width: calc(100% / var(--bs)); height: 320px; transform: scale(var(--bs)); transform-origin: 0 0; z-index: -1; background: var(--bandBild) 0 0 / 1600px 320px repeat-x; pointer-events: none; filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.45)); }
   .tr { position: absolute; left: var(--x); top: var(--y); width: 30px; height: 46px; margin-left: -15px; background: var(--tropfenBild) center / 100% 100% no-repeat; opacity: 0; transform-origin: 50% 0; animation: tropf var(--d) cubic-bezier(0.55, 0, 0.9, 0.6) var(--w) 2 both; }
   @keyframes tropf {
     0%, 12% { opacity: 0; transform: translateY(0) scale(0.25); }
@@ -41,17 +41,17 @@ const base = import.meta.env.BASE_URL;
     86%, 100% { opacity: 0; transform: translateY(min(68svh, 580px)) scale(0.9, 1.25); }
   }
   @media (prefers-reduced-motion: reduce) { .tr { display: none; } }
-  .held__in { position: relative; display: grid; width: 100%; min-width: 0; padding-top: clamp(6.6rem, 22svh - 2rem, 9rem); padding-bottom: calc(var(--bar-h) + var(--bar-gap) + 1.6rem + env(safe-area-inset-bottom)); }
+  .held__in { position: relative; display: grid; width: 100%; min-width: 0; padding-top: calc(var(--honig-tief) + 1.4rem); padding-bottom: calc(var(--bar-h) + var(--bar-gap) + 1.6rem + env(safe-area-inset-bottom)); }
   .held__ort, .held__abend, .held__btns .btn--ghost { display: none; }
   .held h1 { font-size: clamp(2.3rem, 1.2rem + 5vw, 6.2rem); }
   .held__lede { font-size: 1.05rem; }
   .nur-pc { display: none; }
-  @media (max-height: 700px) and (max-width: 63.99rem) { .held__in { padding-top: 6rem; } .held h1.held__h1 { font-size: 2.15rem; } .held__lede { font-size: 0.98rem; line-height: 1.5; } .held__text { gap: 0.75rem; } }
+  @media (max-height: 700px) and (max-width: 63.99rem) { .held h1.held__h1 { font-size: 2.15rem; } .held__lede { font-size: 0.98rem; line-height: 1.5; } .held__text { gap: 0.75rem; } }
   .held { min-height: min(calc(100svh - 5.8rem), 46rem); }
   /* Телефон боком: заголовок в две строки, текст слева, панель уходит вправо — ничего не прячется под ней */
   @media (orientation: landscape) and (max-height: 500px) and (max-width: 63.99rem) {
-    .held__band { --bs: 0.5; }
-    .held__in { padding-top: 5.4rem; padding-bottom: 1.6rem; }
+    .held { --bs: 0.5; }
+    .held__in { padding-bottom: 1.6rem; }
     .held h1.held__h1 { font-size: 2rem; max-width: 24ch; }
     .held__text { max-width: min(30rem, 58vw); gap: 0.6rem; }
     .held__lede { font-size: 0.95rem; }
@@ -64,7 +64,7 @@ const base = import.meta.env.BASE_URL;
   .held__abend { color: var(--licht); font-size: var(--text-sm); margin-top: 0.4rem; }
   @media (min-width: 64rem) {
     .held { min-height: min(90svh, 58rem); align-items: center; }
-    .held__band { --bs: 0.66; }
+    .held { --bs: 0.66; }
     .held__ort, .held__abend { display: block; }
     .held__btns .btn--ghost { display: inline-flex; }
     .held__lede { font-size: var(--text-lg); }
@@ -73,7 +73,7 @@ const base = import.meta.env.BASE_URL;
     .held__foto { width: 100%; height: 100%; object-fit: cover; object-position: 40% 60%; opacity: 1; filter: none; }
     .held__bild picture { display: block; height: 100%; }
     .held__bild::after { content: none; }
-    .held__in { padding-top: 9rem; padding-bottom: 4rem; }
+    .held__in { padding-bottom: 4rem; }
     .held h1 { max-width: 12ch; font-size: clamp(3.4rem, 1rem + 4.2vw, 5.4rem); }
     .held__text { max-width: 36rem; }
   }

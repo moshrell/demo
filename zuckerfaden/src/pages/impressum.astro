@@ -1,10 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
+import Seitenkopf from '../components/Seitenkopf.astro';
 import site from '../data/site.json';
 ---
 <Base title="Impressum | Kosmetik Zuckerfaden">
-  <main class="wrap recht">
-    <h1>Impressum</h1>
+  <Seitenkopf titel="Impressum" />
+  <main class="wrap recht section">
     <p><strong>Demo-Hinweis:</strong> Dies ist eine Beispielseite von Kravets Webdesign. Betrieb und Personen sind erfunden, Bilder teils KI-erzeugt. Die Angaben zeigen, was bei einem echten Betrieb hier stehen muss.</p>
     <h2>Angaben gemäß § 5 DDG</h2>
     <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
@@ -19,6 +20,6 @@ import site from '../data/site.json';
   </main>
 </Base>
 <style>
-  .recht { max-width: 46rem; padding-top: var(--space-lg); display: grid; gap: var(--space-md); }
+  .recht { max-width: 46rem; padding-top: var(--space-xl); display: grid; gap: var(--space-md); }
   .recht h2 { font-size: 1.5rem; margin-top: var(--space-md); }
 </style>

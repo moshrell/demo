@@ -1,108 +1,93 @@
-// Медовая панель: одно «стекло» (backdrop-filter) обрезается контуром clip-path: path(), в котором
-// объединены овал панели, пилюля с итогом (с перемычкой) и нити к медовым блокам [data-honig].
-// Блок, ушедший из-под панели вверх, тянет за собой нить; на расстоянии MAX она рвётся и капли втягиваются.
-// Всё считается только во время прокрутки/анимации; prefers-reduced-motion — без нитей.
+// Медовая панель внизу: WebGL-мёд (honig-gl.ts) из овала панели, пилюли с итогом (жидкая перемычка) и нитей
+// к медовым блокам [data-honig]. Блок, уходящий вверх из-под панели, тянет нить; на MAX px она рвётся,
+// капли втягиваются. Под мёдом — размытие фона (backdrop-filter) по форме панели и пилюли.
+// Без WebGL: html.no-gl, панель и пилюля получают CSS-заливку. prefers-reduced-motion: без нитей.
+import { HonigGL, type Cap, type RRect } from './honig-gl';
 
-const MAX = 104;           // px: длина, после которой нить рвётся
-const SNAP_MS = 300;
-const PILL_MS = 420;
+const MAX = 110;
+const SNAP_MS = 320;
+const PILL_MS = 480;
 
-type Strand = { el: HTMLElement; armed: boolean; snapAt: number; snapX: number; snapTop: number; snapW: number };
+type Strand = { el: HTMLElement; armed: boolean; snapAt: number; snapX: number };
 
-const glas = document.querySelector<HTMLElement>('[data-glas]');
-const kontur = document.querySelector<SVGPathElement>('[data-kontur]');
-const layer = glas?.parentElement as HTMLElement | null;
+const canvas = document.querySelector<HTMLCanvasElement>('[data-honig-canvas]');
+const layer = canvas?.parentElement as HTMLElement | null;
 const bar = document.querySelector<HTMLElement>('[data-bar]');
 const pille = document.querySelector<HTMLElement>('[data-pille]');
+const blurBar = document.querySelector<HTMLElement>('[data-blur-bar]');
+const blurPille = document.querySelector<HTMLElement>('[data-blur-pille]');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-
+let gl: HonigGL | null = null;
 let strands: Strand[] = [];
-let raf = 0;
-let animUntil = 0;
-let lastPath = '';
+let raf = 0, animUntil = 0;
 
-const f = (n: number) => Math.round(n * 10) / 10;
-function rrect(x: number, y: number, w: number, h: number, r = h / 2) {
-  r = Math.min(r, h / 2, w / 2);
-  return `M${f(x + r)} ${f(y)}H${f(x + w - r)}A${f(r)} ${f(r)} 0 0 1 ${f(x + w)} ${f(y + r)}V${f(y + h - r)}A${f(r)} ${f(r)} 0 0 1 ${f(x + w - r)} ${f(y + h)}H${f(x + r)}A${f(r)} ${f(r)} 0 0 1 ${f(x)} ${f(y + h - r)}V${f(y + r)}A${f(r)} ${f(r)} 0 0 1 ${f(x + r)} ${f(y)}Z`;
-}
-// Перемычка-«песочные часы» между yT (сверху) и yB (снизу); по часовой, как и овалы, чтобы nonzero объединял.
-function neck(cx: number, yT: number, yB: number, wT: number, wM: number, wB: number) {
-  const h = yB - yT, ym = yT + h * 0.5;
-  const R = (w: number) => cx + w / 2, L = (w: number) => cx - w / 2;
-  return `M${f(R(wT))} ${f(yT)}C${f(R(wT))} ${f(yT + h * 0.32)} ${f(R(wM))} ${f(ym - h * 0.2)} ${f(R(wM))} ${f(ym)}C${f(R(wM))} ${f(ym + h * 0.2)} ${f(R(wB))} ${f(yB - h * 0.32)} ${f(R(wB))} ${f(yB)}`
-    + `L${f(L(wB))} ${f(yB)}C${f(L(wB))} ${f(yB - h * 0.32)} ${f(L(wM))} ${f(ym + h * 0.2)} ${f(L(wM))} ${f(ym)}C${f(L(wM))} ${f(ym - h * 0.2)} ${f(L(wT))} ${f(yT + h * 0.32)} ${f(L(wT))} ${f(yT)}Z`;
-}
-// Капля-конус: широкое основание на yBase, вершина на yTip (вверх или вниз).
-function cone(cx: number, yBase: number, yTip: number, w: number) {
-  const h = yTip - yBase;
-  return `M${f(cx + w / 2)} ${f(yBase)}C${f(cx + w / 2)} ${f(yBase + h * 0.45)} ${f(cx + w * 0.12)} ${f(yTip - h * 0.08)} ${f(cx)} ${f(yTip)}C${f(cx - w * 0.12)} ${f(yTip - h * 0.08)} ${f(cx - w / 2)} ${f(yBase + h * 0.45)} ${f(cx - w / 2)} ${f(yBase)}Z`;
-}
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+function place(el: HTMLElement | null, r: DOMRect | null, top = 0) {
+  if (!el) return;
+  if (!r) { el.style.opacity = '0'; return; }
+  el.style.opacity = '1';
+  el.style.transform = `translate(${r.left}px, ${r.top - top}px)`;
+  el.style.width = `${r.width}px`; el.style.height = `${r.height}px`;
+}
 
 function frame(now: number) {
   raf = 0;
-  if (!layer || !bar || !glas || !kontur) return;
+  if (!layer || !bar) return;
   const top = layer.getBoundingClientRect().top;
   const b = bar.getBoundingClientRect();
-  const by = b.top - top;
-  let d = rrect(b.left, by, b.width, b.height);
-
-  // Пилюля с итогом + перемычка к панели. Нити цепляются за самый верхний медовый элемент (пилюля или панель).
-  let T = { left: b.left, right: b.right, top: b.top, bottom: b.bottom, height: b.height };
+  const rects: RRect[] = [{ x: b.left, y: b.top - top, w: b.width, h: b.height, r: b.height / 2 }];
+  const caps: Cap[] = [];
+  let T = { left: b.left, right: b.right, top: b.top, bottom: b.bottom, h: b.height };
+  let pr: DOMRect | null = null;
   if (pille && !pille.hidden) {
     const p = pille.getBoundingClientRect();
-    if (p.width > 4 && getComputedStyle(pille).visibility !== 'hidden') {
-      const py = p.top - top;
-      d += rrect(p.left, py, p.width, p.height);
-      const gap = by - (py + p.height);
-      if (gap > 0) {
-        const cx = p.left + p.width / 2, w = Math.min(p.width * 0.42, 64);
-        d += neck(cx, py + p.height - 8, by + 8, w, w * 0.7, w * 1.1);
+    if (p.width > 4 && Number(getComputedStyle(pille).opacity) > 0.05) {
+      pr = p;
+      rects.push({ x: p.left, y: p.top - top, w: p.width, h: p.height, r: p.height / 2 });
+      if (b.top - p.bottom > -4) {
+        const cx = p.left + p.width / 2;
+        caps.push({ x0: cx, y0: p.bottom - top - 6, r0: Math.min(16, p.height * 0.34), x1: cx, y1: b.top - top + 8, r1: Math.min(26, p.height * 0.55) });
       }
-      if (p.height > 20) T = { left: p.left, right: p.right, top: p.top, bottom: p.bottom, height: p.height };
+      T = { left: p.left, right: p.right, top: p.top, bottom: p.bottom, h: p.height };
     }
   }
+  place(blurBar, b, top); place(blurPille, pr, top);
 
-  // Нити к медовым блокам
   if (!reduce.matches) {
-    const bL = T.left + T.height / 2, bR = T.right - T.height / 2, ty = T.top - top;
+    const tL = T.left + T.h / 2, tR = T.right - T.h / 2, ty = T.top - top;
     for (const s of strands) {
       const r = s.el.getBoundingClientRect();
-      const visible = r.bottom > -50 && r.top < innerHeight && r.right > T.left && r.left < T.right;
-      const dist = T.top - r.bottom; // >0: нижний край блока выше пилюли/панели
+      const visible = r.bottom > -60 && r.top < innerHeight && r.right > T.left && r.left < T.right;
+      const dist = T.top - r.bottom;
       if (!visible) { s.armed = false; continue; }
-      if (dist <= 2 && r.top < T.bottom) s.armed = true; // блок касается панели или под ней
-      const cx = Math.min(bR, Math.max(bL, Math.min(r.right - 30, Math.max(r.left + 30, (r.left + r.right) / 2))));
-      const wBlock = Math.min(r.width - 8, 132);
+      if (dist <= 2 && r.top < T.bottom) s.armed = true;
+      const cx = Math.min(tR, Math.max(tL, Math.min(r.right - 34, Math.max(r.left + 34, (r.left + r.right) / 2))));
+      const by = r.bottom - top;
       if (s.armed && dist > 0 && dist < MAX) {
         const t = dist / MAX;
-        const wT = lerp(wBlock, 30, ease(t)), wB = Math.min(T.height * 1.9, lerp(124, 48, t)), wM = Math.max(1.6, wT * 0.62 * Math.pow(1 - t, 1.35));
-        d += neck(cx, r.bottom - top - 4, ty + 8, wT, wM, wB);
+        const rTop = lerp(26, 9, ease(t)), rMid = Math.max(1.1, lerp(12, 1.1, Math.pow(t, 0.7))), rBot = Math.min(T.h * 0.5, lerp(26, 12, t));
+        const my = by + (ty - by) * 0.5;
+        rects.push({ x: cx - rTop * 2.2, y: by - 10, w: rTop * 4.4, h: 12, r: 6 });
+        caps.push({ x0: cx, y0: by - 2, r0: rTop, x1: cx, y1: my, r1: rMid });
+        caps.push({ x0: cx, y0: my, r0: rMid, x1: cx, y1: ty + 6, r1: rBot });
         animUntil = Math.max(animUntil, now + 60);
       } else if (s.armed && dist >= MAX) {
-        s.armed = false; s.snapAt = now; s.snapX = cx; s.snapTop = r.bottom - top; s.snapW = wBlock;
+        s.armed = false; s.snapAt = now; s.snapX = cx;
         animUntil = Math.max(animUntil, now + SNAP_MS);
       }
-      // Разрыв: верхняя капля уходит к блоку, нижняя втягивается в панель
       const k = (now - s.snapAt) / SNAP_MS;
       if (k >= 0 && k < 1) {
-        const e = ease(k), len = (1 - e) * MAX * 0.42;
-        const topNow = r.bottom - top;
-        if (len > 1) {
-          d += cone(s.snapX, topNow - 3, topNow - 3 + len * 0.7, lerp(34, 6, e));
-          d += cone(s.snapX, ty + 6, ty + 6 - len, lerp(48, 10, e));
+        const e = ease(k), len = (1 - e) * MAX * 0.45;
+        if (len > 1.5) {
+          rects.push({ x: s.snapX - lerp(20, 8, e), y: by - 10, w: lerp(40, 16, e), h: 12, r: 6 });
+          caps.push({ x0: s.snapX, y0: by - 2, r0: lerp(10, 3, e), x1: s.snapX, y1: by + len * 0.6, r1: lerp(4, 1, e) });
+          caps.push({ x0: s.snapX, y0: ty + 6, r0: lerp(18, 6, e), x1: s.snapX, y1: ty - len, r1: lerp(5, 1.5, e) });
         }
       }
     }
   }
-
-  if (d !== lastPath) {
-    lastPath = d;
-    glas.style.clipPath = `path('${d}')`;
-    kontur.setAttribute('d', d);
-  }
+  gl?.draw({ rects, caps, k: 16, shadow: 0.3, bright: 1.08 });
   if (now < animUntil) raf = requestAnimationFrame(frame);
 }
 
@@ -113,14 +98,16 @@ function kick(ms = 0) {
 
 export const honig = {
   start() {
-    if (!layer) return;
-    strands = [...document.querySelectorAll<HTMLElement>('[data-honig]')].map((el) => ({ el, armed: false, snapAt: -1e9, snapX: 0, snapTop: 0, snapW: 0 }));
-    addEventListener('scroll', () => kick(80), { passive: true });
-    addEventListener('resize', () => kick(80));
-    visualViewport?.addEventListener('resize', () => kick(80));
+    if (!canvas || !layer) return;
+    gl = new HonigGL(canvas, 2);
+    if (!gl.ok) { document.documentElement.classList.add('no-gl'); gl = null; }
+    strands = [...document.querySelectorAll<HTMLElement>('[data-honig]')].map((el) => ({ el, armed: false, snapAt: -1e9, snapX: 0 }));
+    addEventListener('scroll', () => kick(90), { passive: true });
+    addEventListener('resize', () => kick(90));
+    visualViewport?.addEventListener('resize', () => kick(90));
     reduce.addEventListener?.('change', () => kick());
-    document.fonts?.ready.then(() => kick());
-    kick(120);
+    document.fonts?.ready.then(() => kick(100));
+    kick(200);
   },
   pulse() { kick(PILL_MS); },
 };

@@ -1,7 +1,7 @@
 ---
 // SEO + KI-Sichtbarkeit. Demo: noindex. Beim Kundenstart: index = true.
-import '@fontsource/gloock/400.css';
-import '@fontsource-variable/hanken-grotesk/wght.css';
+import '@fontsource-variable/noto-serif-display/wght.css';
+import '@fontsource-variable/albert-sans/wght.css';
 import '../styles/global.css';
 import site from '../data/site.json';
 import zeiten from '../data/oeffnungszeiten.json';
@@ -34,7 +34,7 @@ const graph = [
 const ld = { '@context': 'https://schema.org', '@graph': graph };
 const nav = [
   { id: 'sugaring', href: 'sugaring/', label: 'Sugaring' },
-  { id: 'gesicht', href: 'gesicht/', label: 'Gesichtspflege' },
+  { id: 'gesicht', href: 'gesicht/', label: 'Gesicht' },
   { id: 'preise', href: 'preise/', label: 'Preise' },
   { id: 'ueber', href: 'ueber-mich/', label: 'Über mich' },
   { id: 'gutschein', href: 'gutschein/', label: 'Gutschein' },
@@ -48,7 +48,7 @@ const wa = `https://wa.me/${site.whatsapp}`;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#F2E4DC" />
+    <meta name="theme-color" content="#1B110B" />
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -65,54 +65,69 @@ const wa = `https://wa.me/${site.whatsapp}`;
   </head>
   <body data-leiste={leiste}>
     <a class="skip" href="#inhalt">Zum Inhalt</a>
-    <header class="kopf wrap">
-      <a class="kopf__name" href={base} aria-label={`${site.name}, Startseite`}>
-        <span class="kopf__marke">Zuckerfaden</span>
-        <span class="kopf__zeile">Kosmetik in {site.address.city}</span>
-      </a>
-      <nav class="kopf__nav" aria-label="Hauptmenü">
-        {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label}</a>)}
-      </nav>
-      <p class="kopf__heute" data-heute aria-live="polite"></p>
+    {site.fontSwitcher && (
+      <div class="demobar" role="group" aria-label="Schriftprobe (nur in der Demo)">
+        <span class="demobar__l">Demo · Schrift</span>
+        <div class="demobar__seg">
+          {fonts.paare.map((p) => (
+            <label title={p.name}><input type="radio" name="schrift" value={p.id} /><span><b>{p.kurz}</b><i>{p.name}</i></span></label>
+          ))}
+        </div>
+      </div>
+    )}
+    <header class="kopf dunkel">
+      <div class="wrap kopf__in">
+        <a class="kopf__name" href={base} aria-label={`${site.name}, Startseite`}>
+          <span class="kopf__marke">Zuckerfaden</span>
+          <span class="kopf__zeile">Kosmetik · {site.address.city}</span>
+        </a>
+        <nav class="kopf__nav" aria-label="Hauptmenü">
+          {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label}</a>)}
+        </nav>
+        <p class="kopf__heute" data-heute aria-live="polite"></p>
+      </div>
     </header>
 
     <div id="inhalt"><slot /></div>
 
-    <footer class="fuss wrap" aria-label="Kontakt und Öffnungszeiten">
-      <div class="karte">
-        <div class="karte__kontakt">
-          <p class="karte__marke">Kosmetik Zuckerfaden</p>
-          <p>{site.owner}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
-          <p><a href={site.mapUrl} target="_blank" rel="noopener">Weg auf der Karte</a></p>
-          <ul class="karte__wege">
-            <li><span>Telefon</span> <a href={tel}>{site.phone}</a></li>
-            <li><span>Mobil</span> <a href={`tel:${site.mobile.replace(/\D/g, '').replace(/^0/, '+49')}`}>{site.mobile}</a></li>
-            <li><span>WhatsApp</span> <a href={wa} target="_blank" rel="noopener">Nachricht schreiben</a></li>
-            <li><span>E-Mail</span> <a href={`mailto:${site.email}`}>{site.email}</a></li>
-          </ul>
+    <footer class="fuss dunkel" aria-label="Kontakt und Öffnungszeiten">
+      <div class="wrap">
+        <div class="karte">
+          <div class="karte__kontakt">
+            <p class="karte__marke">Zuckerfaden</p>
+            <p class="karte__inh">{site.owner} · Kosmetikerin seit {site.since}</p>
+            <p>{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+            <p><a href={site.mapUrl} target="_blank" rel="noopener">Weg auf der Karte</a></p>
+            <ul class="karte__wege">
+              <li><span>Telefon</span> <a href={tel}>{site.phone}</a></li>
+              <li><span>Mobil</span> <a href={`tel:${site.mobile.replace(/\D/g, '').replace(/^0/, '+49')}`}>{site.mobile}</a></li>
+              <li><span>WhatsApp</span> <a href={wa} target="_blank" rel="noopener">Nachricht schreiben</a></li>
+              <li><span>E-Mail</span> <a href={`mailto:${site.email}`}>{site.email}</a></li>
+            </ul>
+          </div>
+          <div class="karte__zeiten">
+            <p class="karte__titel">Öffnungszeiten</p>
+            <p class="karte__status" data-status></p>
+            <dl class="woche">
+              {zeiten.tage.map((t, i) => (
+                <div data-tag={i}><dt>{t.name}</dt><dd>{t.zeiten.length ? fmtZeit(t.zeiten) : (t.hinweis ?? 'geschlossen')}</dd></div>
+              ))}
+            </dl>
+          </div>
         </div>
-        <div class="karte__zeiten">
-          <p class="karte__titel">Öffnungszeiten</p>
-          <p class="karte__status" data-status></p>
-          <dl class="woche">
-            {zeiten.tage.map((t, i) => (
-              <div data-tag={i}><dt>{t.name}</dt><dd>{t.zeiten.length ? fmtZeit(t.zeiten) : (t.hinweis ?? 'geschlossen')}</dd></div>
-            ))}
-          </dl>
-        </div>
+        <p class="fuss__recht small">
+          <a href={`${base}impressum/`}>Impressum</a>
+          <a href={`${base}datenschutz/`}>Datenschutz</a>
+        </p>
+        {!index && <p class="fuss__demo small">Beispielseite von Kravets Webdesign. Betrieb und Personen sind erfunden, Bilder teils KI-erzeugt. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihren Betrieb?</a></p>}
       </div>
-      <p class="fuss__recht small">
-        <a href={`${base}impressum/`}>Impressum</a>
-        <a href={`${base}datenschutz/`}>Datenschutz</a>
-        {site.fontSwitcher && <button type="button" class="fuss__schrift" data-open="schrift">Schriftprobe</button>}
-      </p>
-      {!index && <p class="fuss__demo small">Beispielseite von Kravets Webdesign. Betrieb und Personen sind erfunden, Bilder teils KI-erzeugt. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihren Betrieb?</a></p>}
     </footer>
 
-    <!-- Медовая панель: стекло рисуется одним контуром (clip-path) вместе с пилюлей и нитями к медовым блокам -->
+    <!-- Медовая панель: размытие фона по форме панели/пилюли + WebGL-мёд поверх + кнопки сверху -->
     <div class="honig-layer" aria-hidden="true">
-      <div class="honig-glas" data-glas></div>
-      <svg class="honig-kontur"><path data-kontur d="" /></svg>
+      <div class="honig-blur" data-blur-bar></div>
+      <div class="honig-blur" data-blur-pille></div>
+      <canvas class="honig-canvas" data-honig-canvas></canvas>
     </div>
     <nav class="leiste" aria-label="Schnellzugriff">
       <button type="button" class="pille" data-pille data-open="auswahl" hidden>
@@ -121,12 +136,15 @@ const wa = `https://wa.me/${site.whatsapp}`;
       </button>
       <div class="leiste__bar" data-bar>
         <button type="button" class="leiste__btn leiste__menue" data-open="menue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16" /></svg><span>Menü</span></button>
+        <div class="leiste__nav">
+          {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label}</a>)}
+        </div>
         {leiste === 'termin'
           ? <a class="leiste__haupt" href={tel}>Jetzt anrufen</a>
           : <a class="leiste__haupt" href={`${base}termin/`} data-termin>Termin anfragen</a>}
         {leiste === 'termin'
           ? <a class="leiste__btn" href={wa} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19l1.2-3.6A7.5 7.5 0 1 1 9 18.3z" /></svg><span>WhatsApp</span></a>
-          : <a class="leiste__btn" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg><span class="leiste__lang">{site.phone}</span><span class="leiste__kurz">Anrufen</span></a>}
+          : <a class="leiste__btn leiste__tel" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg><span class="leiste__kurz">Anrufen</span><span class="leiste__lang">{site.phone}</span></a>}
       </div>
     </nav>
 
@@ -134,13 +152,12 @@ const wa = `https://wa.me/${site.whatsapp}`;
       <div class="sheet__kopf"><p class="sheet__titel">Menü</p><button type="button" class="sheet__zu" data-close aria-label="Menü schließen">Schließen</button></div>
       <nav class="sheet__nav" aria-label="Seiten">
         <a href={base}>Start</a>
-        {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label}</a>)}
+        {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label === 'Gesicht' ? 'Gesichtspflege' : n.label}</a>)}
         <a href={`${base}termin/`}>Termin anfragen</a>
       </nav>
       <div class="sheet__info">
         <p data-status></p>
         <p>{site.address.street}, {site.address.zip} {site.address.city} · <a href={site.mapUrl} target="_blank" rel="noopener">Karte</a></p>
-        {site.fontSwitcher && <button type="button" class="btn btn--ghost sheet__schrift" data-open="schrift">Schriftprobe</button>}
       </div>
     </dialog>
 
@@ -155,26 +172,6 @@ const wa = `https://wa.me/${site.whatsapp}`;
       </div>
     </dialog>
 
-    {site.fontSwitcher && (
-      <dialog class="sheet sheet--schrift" data-dialog="schrift" aria-labelledby="schrift-t">
-        <div class="sheet__kopf"><p class="sheet__titel" id="schrift-t">Schriftprobe <span class="muted small">(nur in der Demo)</span></p><button type="button" class="sheet__zu" data-close aria-label="Schriftprobe schließen">Schließen</button></div>
-        <fieldset class="schrift">
-          <legend class="sr">Schriftpaar wählen</legend>
-          {fonts.paare.map((p) => (
-            <label class="schrift__opt" data-paar={p.id}>
-              <input type="radio" name="schrift" value={p.id} />
-              <span class="schrift__probe" data-font-probe={p.id}>
-                <span class="schrift__h">Sugaring in Ronnenberg</span>
-                <span class="schrift__t">{p.name}. {p.text}. Ab 19 € · 15 Min.</span>
-              </span>
-            </label>
-          ))}
-        </fieldset>
-        <p class="small muted">Die Auswahl gilt für die ganze Seite und steht im Link (?schrift=…), damit Sie ihn weitergeben können.</p>
-        <button type="button" class="btn btn--ghost" data-schrift-link>Link mit dieser Schrift kopieren</button>
-      </dialog>
-    )}
-
     <script>
       import '../scripts/ui.ts';
     </script>
@@ -182,104 +179,110 @@ const wa = `https://wa.me/${site.whatsapp}`;
 </html>
 
 <style is:global>
-  .skip { position: absolute; left: -999px; top: 0.5rem; background: var(--kandis); color: var(--weiss); padding: 0.6rem 1rem; border-radius: 999px; z-index: 100; }
+  .skip { position: absolute; left: -999px; top: 0.5rem; background: var(--tinte); color: var(--weiss); padding: 0.6rem 1rem; border-radius: 999px; z-index: 100; }
   .skip:focus { left: 0.5rem; }
 
+  /* Демо-полоса: проба шрифтов */
+  .demobar { position: relative; z-index: 5; display: flex; align-items: center; justify-content: center; gap: 0.8rem; padding: 0.45rem var(--gutter); padding-top: max(0.45rem, env(safe-area-inset-top)); background: #120B07; color: var(--licht-2); font-family: 'Albert Sans Variable', system-ui, sans-serif; font-size: 0.85rem; }
+  .demobar__l { white-space: nowrap; }
+  .demobar__seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px; background: #2A1C13; }
+  .demobar label { position: relative; }
+  .demobar input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .demobar span { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 2.2rem; min-width: 2.4rem; justify-content: center; padding: 0 0.7rem; border-radius: 999px; color: var(--licht); cursor: pointer; }
+  .demobar b { font-weight: 700; }
+  .demobar i { font-style: normal; display: none; color: var(--licht-2); }
+  .demobar input:checked + span { background: var(--honig); color: var(--tinte); }
+  .demobar input:checked + span i { color: var(--tinte); }
+  .demobar input:focus-visible + span { outline: 2px solid var(--honig); outline-offset: 2px; }
+  @media (min-width: 64rem) { .demobar i { display: inline; } }
+
   /* Шапка */
-  .kopf { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding-top: max(0.9rem, env(safe-area-inset-top)); padding-bottom: 0.9rem; }
-  .kopf__name { display: grid; text-decoration: none; line-height: 1.05; }
-  .kopf__marke { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.6rem; letter-spacing: var(--display-tracking); }
-  .kopf__zeile { font-size: 0.875rem; color: var(--kandis-2); margin-top: 0.2rem; }
-  .kopf__heute { font-size: 0.9375rem; line-height: 1.3; text-align: right; color: var(--kandis-2); max-width: 11rem; }
-  .kopf__heute b { color: var(--kandis); font-weight: var(--strong-weight); }
-  .punkt { display: inline-block; width: 0.55em; height: 0.55em; border-radius: 50%; background: var(--salbei); margin-right: 0.35em; vertical-align: 0.06em; }
-  .punkt--zu { background: var(--puder-3); }
+  .kopf__in { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding-block: 1rem; }
+  .kopf__name { display: grid; text-decoration: none; line-height: 1; }
+  .kopf__marke { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.75rem; letter-spacing: var(--display-tracking); }
+  .kopf__zeile { font-size: 0.8125rem; color: var(--licht-2); margin-top: 0.3rem; letter-spacing: 0.02em; }
+  .kopf__heute { font-size: 0.875rem; line-height: 1.3; text-align: right; color: var(--licht-2); max-width: 10.5rem; }
+  .kopf__heute b { color: var(--licht); font-weight: var(--strong-weight); }
+  .punkt { display: inline-block; width: 0.5em; height: 0.5em; border-radius: 50%; background: #7BC47F; margin-right: 0.4em; vertical-align: 0.08em; box-shadow: 0 0 0 3px rgba(123, 196, 127, 0.18); }
+  .punkt--zu { background: var(--licht-2); box-shadow: none; }
   .kopf__nav { display: none; }
   @media (min-width: 64rem) {
-    .kopf__nav { display: flex; gap: 1.6rem; margin-left: auto; }
-    .kopf__nav a { text-decoration: none; font-weight: 500; padding-block: 0.4rem; border-bottom: 2px solid transparent; }
-    .kopf__nav a:hover, .kopf__nav a[aria-current='page'] { border-bottom-color: var(--bernstein); }
+    .kopf__nav { display: flex; gap: 2rem; margin-left: auto; margin-right: 1rem; }
+    .kopf__nav a { text-decoration: none; padding-block: 0.4rem; border-bottom: 1.5px solid transparent; color: var(--licht); }
+    .kopf__nav a:hover, .kopf__nav a[aria-current='page'] { border-bottom-color: var(--honig); }
     .kopf__heute { max-width: 13rem; }
   }
 
-  /* Футер = Terminkarte */
-  .fuss { padding-top: var(--space-2xl); padding-bottom: var(--space-lg); }
-  .karte { display: grid; gap: var(--space-xl); background: var(--weiss); border-radius: 22px; padding: clamp(1.4rem, 4vw, 2.6rem); box-shadow: 0 1px 0 var(--puder-3), 0 18px 40px -28px rgba(58, 33, 23, 0.35); }
-  .karte__marke { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.9rem; letter-spacing: var(--display-tracking); line-height: 1.1; margin-bottom: 0.6rem; }
-  .karte__wege { list-style: none; padding: 0; margin: var(--space-lg) 0 0; display: grid; gap: 0.5rem; }
-  .karte__wege li { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 0.5rem; align-items: baseline; }
-  .karte__wege span { color: var(--kandis-2); font-size: var(--text-sm); }
+  /* Футер: белая карточка записи на тёмном */
+  .fuss { padding-top: var(--space-2xl); padding-bottom: calc(var(--bar-h) + var(--bar-gap) * 3 + env(safe-area-inset-bottom) + 3.5rem); }
+  .karte { display: grid; gap: var(--space-xl); background: var(--weiss); color: var(--tinte); border-radius: 26px; padding: clamp(1.4rem, 4vw, 3rem); border-top: 6px solid var(--honig); }
+  .karte a { color: var(--tinte); }
+  .karte__marke { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 2.4rem; letter-spacing: var(--display-tracking); line-height: 1; }
+  .karte__inh { color: var(--tinte-2); margin: 0.5rem 0 1rem; }
+  .karte__wege { list-style: none; padding: 0; margin: var(--space-lg) 0 0; display: grid; gap: 0.2rem; }
+  .karte__wege li { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 0.5rem; align-items: center; }
+  .karte__wege span { color: var(--tinte-2); font-size: var(--text-sm); }
   .karte__wege a { overflow-wrap: anywhere; min-height: 2.75rem; display: inline-flex; align-items: center; }
   .karte__titel { font-weight: var(--strong-weight); font-size: var(--text-lg); }
-  .karte__status { margin: 0.2rem 0 0.9rem; color: var(--kandis-2); }
+  .karte__status { margin: 0.2rem 0 0.9rem; color: var(--tinte-2); }
+  .karte__status .punkt { background: #3E8E44; box-shadow: none; }
   .woche { margin: 0; display: grid; }
-  .woche > div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0.5rem; padding: 0.55rem 0.7rem; border-radius: 10px; font-variant-numeric: tabular-nums; }
+  .woche > div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0.5rem; padding: 0.55rem 0.75rem; border-radius: 10px; font-variant-numeric: tabular-nums; }
   .woche dt { font-weight: 500; } .woche dd { margin: 0; }
-  .woche > div.heute { background: var(--puder); }
+  .woche > div.heute { background: #FBEFD6; }
   .woche > div.heute dt { font-weight: var(--strong-weight); }
-  .fuss__recht { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; justify-content: center; margin-top: var(--space-lg); }
-  .fuss__recht a, .fuss__schrift { min-height: 2.75rem; display: inline-flex; align-items: center; }
-  .fuss__schrift { background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; text-underline-offset: 0.18em; cursor: pointer; }
-  .fuss__demo { text-align: center; color: var(--kandis-2); max-width: 40rem; margin: 0.4rem auto 0; }
+  .fuss__recht { display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; justify-content: center; margin-top: var(--space-lg); }
+  .fuss__recht a { min-height: 2.75rem; display: inline-flex; align-items: center; }
+  .fuss__demo { text-align: center; color: var(--licht-2); max-width: 40rem; margin: 0.4rem auto 0; }
   @media (min-width: 48rem) { .karte { grid-template-columns: 1fr 1fr; } }
 
   /* Медовая панель */
-  .honig-layer { position: fixed; left: 0; right: 0; bottom: 0; height: 320px; pointer-events: none; z-index: 40; }
-  .honig-glas { position: absolute; inset: 0; clip-path: path('M0 0Z'); background: linear-gradient(180deg, rgba(246, 214, 150, 0.66) 0%, rgba(234, 176, 84, 0.7) 55%, rgba(206, 138, 44, 0.84) 100%); -webkit-backdrop-filter: blur(14px) saturate(1.5); backdrop-filter: blur(14px) saturate(1.5); }
-  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .honig-glas { background: linear-gradient(180deg, rgba(240, 200, 120, 0.94), rgba(206, 140, 46, 0.96)); } }
-  .honig-kontur { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-  .honig-kontur path { fill: none; stroke: rgba(122, 70, 12, 0.42); stroke-width: 1; }
-  .leiste { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; pointer-events: none; padding: 0 max(var(--bar-gap), env(safe-area-inset-left)) calc(var(--bar-gap) + env(safe-area-inset-bottom)); display: grid; justify-items: center; gap: 14px; }
-  .leiste__bar { pointer-events: auto; width: 100%; max-width: 30rem; height: var(--bar-h); border-radius: 999px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 0.5rem; }
-  .leiste__btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 4.2rem; min-height: 3rem; background: none; border: 0; color: var(--kandis); font: inherit; font-size: 0.8125rem; font-weight: var(--strong-weight); text-decoration: none; cursor: pointer; border-radius: 999px; justify-self: center; }
-  .leiste__btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-  .leiste__haupt { display: inline-flex; align-items: center; min-height: 3rem; padding: 0 1.3rem; border-radius: 999px; background: var(--kandis); color: var(--weiss); text-decoration: none; font-weight: var(--strong-weight); white-space: nowrap; }
-  .leiste__lang { display: none; }
-  .pille { pointer-events: auto; display: inline-flex; align-items: center; gap: 0.8rem; min-height: 2.9rem; padding: 0 1.2rem; border: 0; border-radius: 999px; background: none; color: var(--kandis); font: inherit; font-weight: var(--strong-weight); cursor: pointer; transition: transform 0.38s cubic-bezier(0.3, 1.3, 0.5, 1), opacity 0.25s; }
-  .pille[hidden] { display: inline-flex; visibility: hidden; opacity: 0; transform: translateY(46px) scale(0.6); }
+  .honig-layer { position: fixed; left: 0; right: 0; bottom: 0; height: 340px; pointer-events: none; z-index: 40; }
+  .honig-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .honig-blur { position: absolute; left: 0; top: 0; width: 0; height: 0; border-radius: 999px; opacity: 0; -webkit-backdrop-filter: blur(10px) saturate(1.3); backdrop-filter: blur(10px) saturate(1.3); }
+  .no-gl .honig-blur { background: linear-gradient(180deg, rgba(246, 194, 89, 0.94), rgba(207, 138, 34, 0.96)); }
+  .leiste { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; pointer-events: none; padding: 0 max(var(--bar-gap), env(safe-area-inset-left)) calc(var(--bar-gap) + env(safe-area-inset-bottom)); display: grid; justify-items: center; gap: 16px; }
+  .leiste__bar { pointer-events: auto; width: 100%; max-width: 30rem; height: var(--bar-h); border-radius: 999px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 0.45rem; color: var(--tinte); }
+  .leiste__btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 4.2rem; min-height: 3rem; background: none; border: 0; color: var(--tinte); font: inherit; font-size: 0.8125rem; font-weight: 700; text-decoration: none; cursor: pointer; border-radius: 999px; justify-self: center; text-shadow: 0 1px 0 rgba(255, 230, 170, 0.5); }
+  .leiste__btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .leiste__haupt { display: inline-flex; align-items: center; min-height: 3.1rem; padding: 0 1.35rem; border-radius: 999px; background: var(--tinte); color: var(--weiss); text-decoration: none; font-weight: var(--strong-weight); white-space: nowrap; box-shadow: 0 6px 14px -6px rgba(60, 25, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
+  .leiste__nav, .leiste__lang { display: none; }
+  .pille { pointer-events: auto; display: inline-flex; align-items: center; gap: 0.9rem; min-height: 3rem; padding: 0 1.3rem; border: 0; border-radius: 999px; background: none; color: var(--tinte); font: inherit; font-weight: var(--strong-weight); cursor: pointer; transition: transform 0.42s cubic-bezier(0.3, 1.35, 0.5, 1), opacity 0.25s; text-shadow: 0 1px 0 rgba(255, 230, 170, 0.5); }
+  .pille[hidden] { display: inline-flex; visibility: hidden; opacity: 0; transform: translateY(52px) scale(0.5); }
   .pille__n { font-weight: 500; }
-  .pille__summe { font-size: 1.15rem; }
+  .pille__summe { font-size: 1.2rem; font-weight: 700; }
   @media (min-width: 64rem) {
-    .leiste__bar { max-width: 26rem; grid-template-columns: auto 1fr; gap: 0.5rem; padding: 0 0.5rem 0 0.5rem; }
+    .leiste__bar { width: auto; max-width: none; grid-template-columns: auto auto auto; gap: 0.4rem; padding: 0 0.45rem 0 1.1rem; }
     .leiste__menue { display: none; }
-    .leiste__lang { display: inline; font-size: 1rem; }
+    .leiste__nav { display: flex; gap: 0.2rem; }
+    .leiste__nav a { display: inline-flex; align-items: center; white-space: nowrap; min-height: 2.8rem; padding: 0 0.85rem; border-radius: 999px; text-decoration: none; font-weight: 600; color: var(--tinte); text-shadow: 0 1px 0 rgba(255, 230, 170, 0.5); }
+    .leiste__nav a:hover, .leiste__nav a[aria-current='page'] { background: rgba(255, 244, 214, 0.38); }
+    .leiste__lang { display: inline; font-size: 0.95rem; }
     .leiste__kurz { display: none; }
-    .leiste__bar > .leiste__btn { flex-direction: row; gap: 0.5rem; justify-self: end; padding-right: 1rem; }
+    .leiste__tel { flex-direction: row; gap: 0.45rem; padding: 0 0.9rem; }
   }
 
   /* Шторки */
-  .sheet { border: 0; padding: 0; margin: auto auto 0; width: 100%; max-width: 34rem; max-height: 88dvh; border-radius: 24px 24px 0 0; background: var(--weiss); color: var(--kandis); padding: 1.1rem var(--gutter) calc(1.4rem + env(safe-area-inset-bottom)); overflow: auto; overscroll-behavior: contain; }
-  .sheet::backdrop { background: rgba(58, 33, 23, 0.38); }
-  .sheet[open] { animation: hoch 0.24s cubic-bezier(0.2, 0.9, 0.3, 1); }
+  .sheet { border: 0; padding: 0; margin: auto auto 0; width: 100%; max-width: 34rem; max-height: 88dvh; border-radius: 26px 26px 0 0; background: var(--weiss); color: var(--tinte); padding: 1.1rem var(--gutter) calc(1.4rem + env(safe-area-inset-bottom)); overflow: auto; overscroll-behavior: contain; }
+  .sheet::backdrop { background: rgba(18, 11, 7, 0.55); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+  .sheet[open] { animation: hoch 0.26s cubic-bezier(0.2, 0.9, 0.3, 1); }
   @keyframes hoch { from { transform: translateY(40px); opacity: 0; } }
-  @media (min-width: 48rem) { .sheet { margin: auto; border-radius: 24px; } }
+  @media (min-width: 48rem) { .sheet { margin: auto; border-radius: 26px; } }
   .sheet__kopf { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.6rem; }
-  .sheet__titel { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.6rem; }
-  .sheet__zu { min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; border: 1.5px solid var(--kandis); background: none; font: inherit; font-weight: 500; cursor: pointer; color: var(--kandis); }
+  .sheet__titel { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.9rem; }
+  .sheet__zu { min-height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1.5px solid var(--tinte); background: none; font: inherit; font-weight: 500; cursor: pointer; color: var(--tinte); }
   .sheet__nav { display: grid; }
-  .sheet__nav a { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.65rem; text-decoration: none; padding: 0.55rem 0; border-bottom: 1px solid var(--puder-2); }
-  .sheet__nav a[aria-current='page'] { color: var(--bernstein-tief); }
-  .sheet__info { display: grid; gap: 0.6rem; margin-top: 1.1rem; color: var(--kandis-2); }
-  .sheet__schrift { justify-self: start; margin-top: 0.4rem; }
+  .sheet__nav a { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.9rem; text-decoration: none; padding: 0.5rem 0; border-bottom: 1px solid var(--linie); }
+  .sheet__nav a[aria-current='page'] { color: #9A5D0B; }
+  .sheet__info { display: grid; gap: 0.6rem; margin-top: 1.1rem; color: var(--tinte-2); }
+  .sheet__info .punkt { background: #3E8E44; box-shadow: none; }
   .auswahl { list-style: none; margin: 0.4rem 0 0; padding: 0; }
-  .auswahl li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 0.75rem; align-items: center; padding: 0.55rem 0; border-bottom: 1px solid var(--puder-2); }
-  .auswahl .preis { font-variant-numeric: tabular-nums; }
-  .auswahl button { width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1.5px solid var(--puder-3); background: none; cursor: pointer; color: var(--kandis); font-size: 1.1rem; }
+  .auswahl li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 0.75rem; align-items: center; padding: 0.55rem 0; border-bottom: 1px solid var(--linie); }
+  .auswahl .preis { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .auswahl button { width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1.5px solid var(--linie); background: none; cursor: pointer; color: var(--tinte); font-size: 1.1rem; }
   .auswahl__summe { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 0.9rem 0 0.2rem; font-size: var(--text-lg); }
-  .auswahl__summe strong { font-size: 1.6rem; margin-left: 0.3rem; }
-  .auswahl__leer { color: var(--kandis-2); padding: 0.8rem 0; }
+  .auswahl__summe strong { font-size: 1.7rem; margin-left: 0.3rem; }
+  .auswahl__leer { color: var(--tinte-2); padding: 0.8rem 0; }
   .sheet__aktion { margin-top: 1rem; }
-  .schrift { border: 0; padding: 0; margin: 0 0 0.8rem; display: grid; gap: 0.6rem; }
-  .schrift__opt { position: relative; display: block; border: 1.5px solid var(--puder-3); border-radius: 16px; padding: 0.9rem 1rem; cursor: pointer; }
-  .schrift__opt:has(input:checked) { border-color: var(--kandis); background: var(--puder); }
-  .schrift__opt input { position: absolute; opacity: 0; }
-  .schrift__opt:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
-  .schrift__probe { display: grid; gap: 0.2rem; }
-  .schrift__h { font-size: 1.5rem; line-height: 1.15; }
-  .schrift__t { font-size: 0.95rem; color: var(--kandis-2); }
-  [data-font-probe='a'] .schrift__h { font-family: 'Gloock', serif; } [data-font-probe='a'] .schrift__t { font-family: 'Hanken Grotesk Variable', sans-serif; }
-  [data-font-probe='b'] .schrift__h { font-family: 'Young Serif', serif; } [data-font-probe='b'] .schrift__t { font-family: 'Rethink Sans Variable', sans-serif; }
-  [data-font-probe='c'] .schrift__h { font-family: 'Bricolage Grotesque Variable', sans-serif; font-weight: 640; } [data-font-probe='c'] .schrift__t { font-family: 'Bricolage Grotesque Variable', sans-serif; }
-  [data-font-probe='d'] .schrift__h { font-family: 'Literata Variable', serif; font-weight: 560; } [data-font-probe='d'] .schrift__t { font-family: 'Literata Variable', serif; }
-  @media print { .honig-layer, .leiste, .kopf__heute, .fuss__demo, .fuss__recht { display: none !important; } }
+  @media print { .honig-layer, .leiste, .kopf__heute, .fuss__demo, .fuss__recht, .demobar { display: none !important; } }
 </style>

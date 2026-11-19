@@ -1,15 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
+import Seitenkopf from '../components/Seitenkopf.astro';
 import site from '../data/site.json';
 const base = import.meta.env.BASE_URL;
 const tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 ---
 <Base title="Termin anfragen | Kosmetik Zuckerfaden Ronnenberg" description="Termin für Sugaring oder Gesichtsbehandlung in Ronnenberg anfragen. Auswahl, Wunschzeiten und Rückruf, meist am selben Abend." leiste="termin">
-  <section class="wrap tf">
-    <div class="tf__kopf">
-      <h1>Termin anfragen</h1>
-      <p class="lede">Sie schlagen Tage und Tageszeit vor, ich rufe zurück und wir machen die Uhrzeit fest. Meist am selben Abend.</p>
-    </div>
+  <Seitenkopf titel="Termin anfragen" lede="Sie schlagen Tage und Tageszeit vor, ich rufe zurück und wir machen die Uhrzeit fest. Meist am selben Abend." />
+  <section class="wrap tf section">
 
     <form class="form" id="termin" novalidate data-termin-form>
       <fieldset class="gruppe">
@@ -103,14 +101,14 @@ const tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 </Base>
 
 <style>
-  .tf { max-width: 44rem; padding-top: var(--space-lg); display: grid; gap: var(--space-xl); }
+  .tf { max-width: 44rem; padding-top: var(--space-xl); display: grid; gap: var(--space-xl); }
   .tf__kopf { display: grid; gap: var(--space-md); }
   .tf__auswahl { background: var(--weiss); border-radius: 20px; padding: 0.6rem 1.2rem 1.1rem; }
   .tf__auswahl[hidden], .tf__leer[hidden], .tf__abend[hidden] { display: none; }
   .tf__leer { display: grid; gap: var(--space-md); }
   .tf__label { margin-bottom: 0.6rem; font-weight: var(--strong-weight); }
   .tf__abend { margin-top: 0.5rem; }
-  .tf__direkt { display: grid; gap: var(--space-md); padding-top: var(--space-lg); border-top: 1px solid var(--puder-3); }
+  .tf__direkt { display: grid; gap: var(--space-md); padding-top: var(--space-xl); border-top: 1px solid var(--linie); }
   .tf__direkt h2 { font-size: 1.7rem; }
 </style>
 

@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Seitenkopf from '../components/Seitenkopf.astro';
 import Foto from '../components/Foto.astro';
 import Finder from '../components/Finder.astro';
 import data from '../data/behandlungen.json';
@@ -8,10 +9,7 @@ const bilder = { zucker: ['gesicht-3x4', 'Entspannte Kundin mit Handtuch-Turban 
 const zeitTag = (m) => (m <= 45 ? 'kurz' : m === 60 ? 'mittel' : 'lang');
 ---
 <Base title="Gesichtsbehandlungen ohne Geräte in Ronnenberg | Kosmetik Zuckerfaden" description="Gesichtspflege mit Zuckerpaste, Naturkosmetik oder klassisch, ohne Geräte. Passende Behandlung in drei Fragen finden, Preise ab 29,50 €." aktiv="gesicht" prices={data.behandlungen.map((b) => ({ name: b.name, price: b.preis }))}>
-  <section class="kopfsek wrap">
-    <h1>Gesichtsbehandlungen</h1>
-    <p class="lede">Alles mit den Händen, ohne Geräte. Die Produkte sind für empfindliche Haut und Allergiker geeignet. Haarentfernung im Gesicht ist bei jeder Behandlung inklusive.</p>
-  </section>
+  <Seitenkopf titel="Gesichts­behandlungen" lede="Alles mit den Händen, ohne Geräte. Die Produkte sind für empfindliche Haut und Allergiker geeignet. Haarentfernung im Gesicht ist bei jeder Behandlung inklusive." />
 
   <Finder titel="Welche passt zu Ihrer Haut?" mehr={false} />
 
@@ -24,6 +22,10 @@ const zeitTag = (m) => (m <= 45 ? 'kurz' : m === 60 ? 'mittel' : 'lang');
         <label class="chip"><input type="radio" name="zeit" value="mittel" /><span>60 Min.</span></label>
         <label class="chip"><input type="radio" name="zeit" value="lang" /><span>90 Min. und mehr</span></label>
       </div>
+      <div class="filter" role="group" aria-label="Nach Hautwunsch filtern">
+        <label class="chip"><input type="radio" name="haut" value="alle" checked /><span>Jeder Hautwunsch</span></label>
+        {data.fragen.haut.map((h) => <label class="chip"><input type="radio" name="haut" value={h.id} /><span>{h.label}</span></label>)}
+      </div>
       {data.linien.map((l) => (
         <div class="linie" id={l.id}>
           <div class="linie__kopf">
@@ -33,7 +35,7 @@ const zeitTag = (m) => (m <= 45 ? 'kurz' : m === 60 ? 'mittel' : 'lang');
           </div>
           <ul class="beh">
             {data.behandlungen.filter((b) => b.linie === l.id).map((b) => (
-              <li data-zeit={zeitTag(b.min)}>
+              <li data-zeit={zeitTag(b.min)} data-haut={b.haut.join(' ')}>
                 <div class="beh__text"><h4>{b.name}</h4><p>{b.text}</p></div>
                 <p class="beh__preis num">{dauer(b.min)}<strong>{euro(b.preis)}</strong></p>
                 <button type="button" class="beh__add" data-add={b.id} aria-pressed="false" aria-label={`${b.name} zur Anfrage hinzufügen`}>Hinzufügen</button>
@@ -42,7 +44,7 @@ const zeitTag = (m) => (m <= 45 ? 'kurz' : m === 60 ? 'mittel' : 'lang');
           </ul>
         </div>
       ))}
-      <p class="leer muted" data-leer hidden>Keine Behandlung in dieser Länge.</p>
+      <p class="leer muted" data-leer hidden>Keine Behandlung passt zu beiden Filtern. Am besten fragen Sie mich direkt.</p>
     </div>
   </section>
 
@@ -55,22 +57,23 @@ const zeitTag = (m) => (m <= 45 ? 'kurz' : m === 60 ? 'mittel' : 'lang');
 </Base>
 
 <style>
-  .kopfsek { padding-top: var(--space-lg); display: grid; gap: var(--space-md); max-width: 52rem; margin-left: max(0px, calc((100vw - var(--maxw)) / 2)); }
-  .filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: var(--space-lg) 0 var(--space-md); }
+  .kopfsek { padding-top: var(--space-xl); display: grid; gap: var(--space-md); max-width: 52rem; margin-left: max(0px, calc((100vw - var(--maxw)) / 2)); }
+  .filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: var(--space-md) 0 0; }
+  .filter:first-of-type { margin-top: var(--space-lg); }
   .linie { display: grid; gap: var(--space-md); padding-top: var(--space-xl); }
   .linie[hidden] { display: none; }
   .linie__kopf { display: grid; gap: 0.5rem; align-content: start; }
   .linie__name { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.75rem; letter-spacing: var(--display-tracking); }
   .linie__kopf :global(.linie__foto) { border-radius: 18px; max-width: 18rem; margin-top: 0.6rem; }
-  .beh { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--puder-3); }
-  .beh li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.4rem 1rem; padding: 1rem 0; border-bottom: 1px solid var(--puder-3); }
+  .beh { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--linie); }
+  .beh li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.4rem 1rem; padding: 1rem 0; border-bottom: 1px solid var(--linie); }
   .beh li[hidden] { display: none; }
   .beh h4 { margin: 0 0 0.2rem; font-size: var(--text-lg); font-weight: var(--strong-weight); }
-  .beh p { color: var(--kandis-2); }
-  .beh__preis { display: grid; justify-items: end; text-align: right; color: var(--kandis-2) !important; font-size: 0.95rem; }
-  .beh__preis strong { color: var(--kandis); font-size: 1.2rem; }
-  .beh__add { grid-column: 1 / -1; justify-self: start; min-height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1.5px solid var(--kandis); background: none; font: inherit; font-weight: 500; color: var(--kandis); cursor: pointer; }
-  .beh__add[aria-pressed='true'] { background: linear-gradient(170deg, var(--bernstein-hl), var(--honig-tief)); border-color: var(--bernstein-tief); }
+  .beh p { color: var(--tinte-2); }
+  .beh__preis { display: grid; justify-items: end; text-align: right; color: var(--tinte-2) !important; font-size: 0.95rem; }
+  .beh__preis strong { color: var(--tinte); font-size: 1.2rem; }
+  .beh__add { grid-column: 1 / -1; justify-self: start; min-height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1.5px solid var(--tinte); background: none; font: inherit; font-weight: 500; color: var(--tinte); cursor: pointer; }
+  .beh__add[aria-pressed='true'] { background: linear-gradient(170deg, var(--honig-hell), var(--honig-tief)); border-color: #9A5D0B; }
   @media (min-width: 64rem) {
     .linie { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-2xl); }
     .beh li { grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; }
@@ -89,10 +92,11 @@ const zeitTag = (m) => (m <= 45 ? 'kurz' : m === 60 ? 'mittel' : 'lang');
   addEventListener('zf:cart', sync); sync();
   const bar = document.querySelector('[data-filterbar]')!;
   bar.addEventListener('change', (e) => {
-    const v = (e.target as HTMLInputElement).value; if (!(e.target as HTMLInputElement).matches('[name=zeit]')) return;
+    if (!(e.target as HTMLInputElement).matches('[name=zeit], [name=haut]')) return;
+    const v = bar.querySelector<HTMLInputElement>('[name=zeit]:checked')!.value, h = bar.querySelector<HTMLInputElement>('[name=haut]:checked')!.value;
     let any = false;
     bar.querySelectorAll<HTMLElement>('.linie').forEach((l) => {
-      let n = 0; l.querySelectorAll<HTMLElement>('li[data-zeit]').forEach((li) => { const ok = v === 'alle' || li.dataset.zeit === v; li.hidden = !ok; if (ok) n++; });
+      let n = 0; l.querySelectorAll<HTMLElement>('li[data-zeit]').forEach((li) => { const ok = (v === 'alle' || li.dataset.zeit === v) && (h === 'alle' || li.dataset.haut!.split(' ').includes(h)); li.hidden = !ok; if (ok) n++; });
       l.hidden = n === 0; if (n) any = true;
     });
     bar.querySelector<HTMLElement>('[data-leer]')!.hidden = any;

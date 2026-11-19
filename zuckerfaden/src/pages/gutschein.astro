@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Seitenkopf from '../components/Seitenkopf.astro';
 import Foto from '../components/Foto.astro';
 import site from '../data/site.json';
 import beh from '../data/behandlungen.json';
@@ -10,11 +11,8 @@ const betraege = [25, 50, 75, 100];
 const optionen = [...beh.behandlungen.map((b) => ({ id: b.id, name: b.name, preis: b.preis })), ...zusatz.gruppen.flatMap((g) => g.items).filter((x) => !x.ab).map((x) => ({ id: x.id, name: x.name, preis: x.preis }))];
 ---
 <Base title="Gutschein verschenken | Kosmetik Zuckerfaden Ronnenberg" description="Gutschein für eine Behandlung oder einen Betrag Ihrer Wahl. Abholen im Studio in Ronnenberg oder per Post, bezahlt wird bei Abholung." aktiv="gutschein">
-  <section class="wrap gp">
-    <div class="gp__kopf">
-      <h1>Gutschein verschenken</h1>
-      <p class="lede">Für eine Behandlung oder einen Betrag. Sie fragen hier an, ich bereite den Gutschein vor. Bezahlt wird bei der Abholung oder per Überweisung, wenn ich ihn schicke.</p>
-    </div>
+  <Seitenkopf titel="Gutschein verschenken" lede="Für eine Behandlung oder einen Betrag. Sie fragen hier an, ich bereite den Gutschein vor. Bezahlt wird bei der Abholung oder per Überweisung, wenn ich ihn schicke." />
+  <section class="wrap gp section">
     <Foto name="gutschein-1x1" alt="Gutscheinkarte im Umschlag mit Schleife" sizes="(min-width: 64rem) 22rem, 70vw" class="gp__foto" eager />
 
     <form class="form gp__form" id="gutschein" novalidate data-gs-form>
@@ -95,7 +93,7 @@ const optionen = [...beh.behandlungen.map((b) => ({ id: b.id, name: b.name, prei
 </Base>
 
 <style>
-  .gp { max-width: 44rem; padding-top: var(--space-lg); display: grid; gap: var(--space-xl); }
+  .gp { max-width: 44rem; padding-top: var(--space-xl); display: grid; gap: var(--space-xl); }
   .gp__kopf { display: grid; gap: var(--space-md); }
   .gp :global(.gp__foto) { border-radius: 22px; max-width: 20rem; }
   [data-teil][hidden], .gp__frei[hidden], [data-adresse][hidden] { display: none; }

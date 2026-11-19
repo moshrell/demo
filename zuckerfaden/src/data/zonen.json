@@ -1,30 +1,249 @@
 {
   "hinweis": "Richtwert. Abgerechnet wird nach Zeit und Material, im Schnitt 50 € pro Stunde.",
   "zonen": [
-    { "id": "d-achseln",      "g": "damen",  "seite": "vorne",   "name": "Achseln",                         "min": 15, "preis": 19 },
-    { "id": "d-arme",         "g": "damen",  "seite": "beide",   "name": "Arme",                            "min": 25, "preis": 24 },
-    { "id": "d-unterschenkel","g": "damen",  "seite": "beide",   "name": "Unterschenkel inkl. Knie und Fuß","min": 30, "preis": 36 },
-    { "id": "d-oberschenkel", "g": "damen",  "seite": "beide",   "name": "Oberschenkel",                    "min": 30, "preis": 36 },
-    { "id": "d-beine",        "g": "damen",  "seite": "kombi",   "name": "Beine komplett",                  "min": 55, "preis": 62, "ersetzt": ["d-unterschenkel", "d-oberschenkel"], "regel": "alle" },
-    { "id": "d-bikini",       "g": "damen",  "seite": "vorne",   "name": "Bikinilinie",                     "min": 15, "preis": 21 },
-    { "id": "d-intim",        "g": "damen",  "seite": "liste",   "name": "Intimzone komplett",              "min": 40, "preis": 59 },
-    { "id": "d-oberlippe",    "g": "damen",  "seite": "gesicht", "name": "Oberlippe",                       "min": 5,  "preis": 9 },
-    { "id": "d-kinn",         "g": "damen",  "seite": "gesicht", "name": "Kinn",                            "min": 5,  "preis": 9 },
-    { "id": "d-brauen",       "g": "damen",  "seite": "gesicht", "name": "Augenbrauen",                     "min": 10, "preis": 11 },
-    { "id": "d-nase",         "g": "damen",  "seite": "gesicht", "name": "Nase oder Ohren",                 "min": 5,  "preis": 6 },
-    { "id": "d-hals",         "g": "damen",  "seite": "gesicht", "name": "Hals",                            "min": 10, "preis": 11 },
-    { "id": "d-gesicht",      "g": "damen",  "seite": "kombi",   "name": "Gesicht komplett",                "min": 30, "preis": 45, "ersetzt": ["d-oberlippe", "d-kinn", "d-brauen", "d-nase", "d-hals"], "regel": "summe" },
-    { "id": "h-achseln",      "g": "herren", "seite": "vorne",   "name": "Achseln",                         "min": 20, "preis": 21 },
-    { "id": "h-arme",         "g": "herren", "seite": "beide",   "name": "Arme",                            "min": 30, "preis": 26 },
-    { "id": "h-unterschenkel","g": "herren", "seite": "beide",   "name": "Unterschenkel inkl. Knie und Fuß","min": 35, "preis": 41 },
-    { "id": "h-oberschenkel", "g": "herren", "seite": "beide",   "name": "Oberschenkel",                    "min": 35, "preis": 41 },
-    { "id": "h-beine",        "g": "herren", "seite": "kombi",   "name": "Beine komplett",                  "min": 65, "preis": 72, "ersetzt": ["h-unterschenkel", "h-oberschenkel"], "regel": "alle" },
-    { "id": "h-brust",        "g": "herren", "seite": "vorne",   "name": "Brust",                           "min": 25, "preis": 26 },
-    { "id": "h-bauch",        "g": "herren", "seite": "vorne",   "name": "Bauch",                           "min": 20, "preis": 21 },
-    { "id": "h-schultern",    "g": "herren", "seite": "hinten",  "name": "Schultern",                       "min": 15, "preis": 16 },
-    { "id": "h-ruecken",      "g": "herren", "seite": "hinten",  "name": "Rücken",                          "min": 40, "preis": 42 },
-    { "id": "h-gesaess",      "g": "herren", "seite": "hinten",  "name": "Gesäß",                           "min": 25, "preis": 26 },
-    { "id": "h-bikini",       "g": "herren", "seite": "vorne",   "name": "Bikinilinie",                     "min": 20, "preis": 21 },
-    { "id": "h-intim",        "g": "herren", "seite": "liste",   "name": "Intimbereich komplett",           "min": 45, "preis": 69, "ab": true }
+    {
+      "id": "d-achseln",
+      "g": "damen",
+      "seite": "vorne",
+      "name": "Achseln",
+      "min": 15,
+      "preis": 19,
+      "kurz": "Achseln"
+    },
+    {
+      "id": "d-arme",
+      "g": "damen",
+      "seite": "beide",
+      "name": "Arme",
+      "min": 25,
+      "preis": 24,
+      "kurz": "Arme"
+    },
+    {
+      "id": "d-unterschenkel",
+      "g": "damen",
+      "seite": "beide",
+      "name": "Unterschenkel inkl. Knie und Fuß",
+      "min": 30,
+      "preis": 36,
+      "kurz": "Unterschenkel"
+    },
+    {
+      "id": "d-oberschenkel",
+      "g": "damen",
+      "seite": "beide",
+      "name": "Oberschenkel",
+      "min": 30,
+      "preis": 36,
+      "kurz": "Oberschenkel"
+    },
+    {
+      "id": "d-beine",
+      "g": "damen",
+      "seite": "kombi",
+      "name": "Beine komplett",
+      "min": 55,
+      "preis": 62,
+      "ersetzt": [
+        "d-unterschenkel",
+        "d-oberschenkel"
+      ],
+      "regel": "alle",
+      "kurz": "Beine komplett"
+    },
+    {
+      "id": "d-bikini",
+      "g": "damen",
+      "seite": "vorne",
+      "name": "Bikinilinie",
+      "min": 15,
+      "preis": 21,
+      "kurz": "Bikinilinie"
+    },
+    {
+      "id": "d-intim",
+      "g": "damen",
+      "seite": "liste",
+      "name": "Intimzone komplett",
+      "min": 40,
+      "preis": 59,
+      "kurz": "Intimzone"
+    },
+    {
+      "id": "d-oberlippe",
+      "g": "damen",
+      "seite": "gesicht",
+      "name": "Oberlippe",
+      "min": 5,
+      "preis": 9,
+      "kurz": "Oberlippe"
+    },
+    {
+      "id": "d-kinn",
+      "g": "damen",
+      "seite": "gesicht",
+      "name": "Kinn",
+      "min": 5,
+      "preis": 9,
+      "kurz": "Kinn"
+    },
+    {
+      "id": "d-brauen",
+      "g": "damen",
+      "seite": "gesicht",
+      "name": "Augenbrauen",
+      "min": 10,
+      "preis": 11,
+      "kurz": "Augenbrauen"
+    },
+    {
+      "id": "d-nase",
+      "g": "damen",
+      "seite": "gesicht",
+      "name": "Nase oder Ohren",
+      "min": 5,
+      "preis": 6,
+      "kurz": "Nase, Ohren"
+    },
+    {
+      "id": "d-hals",
+      "g": "damen",
+      "seite": "gesicht",
+      "name": "Hals",
+      "min": 10,
+      "preis": 11,
+      "kurz": "Hals"
+    },
+    {
+      "id": "d-gesicht",
+      "g": "damen",
+      "seite": "kombi",
+      "name": "Gesicht komplett",
+      "min": 30,
+      "preis": 45,
+      "ersetzt": [
+        "d-oberlippe",
+        "d-kinn",
+        "d-brauen",
+        "d-nase",
+        "d-hals"
+      ],
+      "regel": "summe",
+      "kurz": "Gesicht komplett"
+    },
+    {
+      "id": "h-achseln",
+      "g": "herren",
+      "seite": "vorne",
+      "name": "Achseln",
+      "min": 20,
+      "preis": 21,
+      "kurz": "Achseln"
+    },
+    {
+      "id": "h-arme",
+      "g": "herren",
+      "seite": "beide",
+      "name": "Arme",
+      "min": 30,
+      "preis": 26,
+      "kurz": "Arme"
+    },
+    {
+      "id": "h-unterschenkel",
+      "g": "herren",
+      "seite": "beide",
+      "name": "Unterschenkel inkl. Knie und Fuß",
+      "min": 35,
+      "preis": 41,
+      "kurz": "Unterschenkel"
+    },
+    {
+      "id": "h-oberschenkel",
+      "g": "herren",
+      "seite": "beide",
+      "name": "Oberschenkel",
+      "min": 35,
+      "preis": 41,
+      "kurz": "Oberschenkel"
+    },
+    {
+      "id": "h-beine",
+      "g": "herren",
+      "seite": "kombi",
+      "name": "Beine komplett",
+      "min": 65,
+      "preis": 72,
+      "ersetzt": [
+        "h-unterschenkel",
+        "h-oberschenkel"
+      ],
+      "regel": "alle",
+      "kurz": "Beine komplett"
+    },
+    {
+      "id": "h-brust",
+      "g": "herren",
+      "seite": "vorne",
+      "name": "Brust",
+      "min": 25,
+      "preis": 26,
+      "kurz": "Brust"
+    },
+    {
+      "id": "h-bauch",
+      "g": "herren",
+      "seite": "vorne",
+      "name": "Bauch",
+      "min": 20,
+      "preis": 21,
+      "kurz": "Bauch"
+    },
+    {
+      "id": "h-schultern",
+      "g": "herren",
+      "seite": "hinten",
+      "name": "Schultern",
+      "min": 15,
+      "preis": 16,
+      "kurz": "Schultern"
+    },
+    {
+      "id": "h-ruecken",
+      "g": "herren",
+      "seite": "hinten",
+      "name": "Rücken",
+      "min": 40,
+      "preis": 42,
+      "kurz": "Rücken"
+    },
+    {
+      "id": "h-gesaess",
+      "g": "herren",
+      "seite": "hinten",
+      "name": "Gesäß",
+      "min": 25,
+      "preis": 26,
+      "kurz": "Gesäß"
+    },
+    {
+      "id": "h-bikini",
+      "g": "herren",
+      "seite": "vorne",
+      "name": "Bikinilinie",
+      "min": 20,
+      "preis": 21,
+      "kurz": "Bikinilinie"
+    },
+    {
+      "id": "h-intim",
+      "g": "herren",
+      "seite": "liste",
+      "name": "Intimbereich komplett",
+      "min": 45,
+      "preis": 69,
+      "ab": true,
+      "kurz": "Intimbereich"
+    }
   ]
 }

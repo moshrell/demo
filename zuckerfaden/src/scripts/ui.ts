@@ -15,7 +15,7 @@ document.addEventListener('click', (e) => {
   const open = t.closest<HTMLElement>('[data-open]');
   if (open) {
     const d = dlg(open.dataset.open!);
-    if (d) { $$<HTMLDialogElement>('dialog[open]').forEach((x) => x.close()); d.showModal(); if (open.dataset.open === 'schrift') schriftLaden(); }
+    if (d) { $$<HTMLDialogElement>('dialog[open]').forEach((x) => x.close()); d.showModal(); }
     return;
   }
   if (t.closest('[data-close]')) { t.closest('dialog')?.close(); return; }
@@ -89,7 +89,7 @@ let geladen = false;
 function schriftLaden() {
   if (geladen) return; geladen = true;
   Promise.all([
-    import('@fontsource/young-serif/400.css'), import('@fontsource-variable/rethink-sans/wght.css'),
+    import('@fontsource/gilda-display/400.css'), import('@fontsource-variable/manrope/wght.css'),
     import('@fontsource-variable/bricolage-grotesque/wght.css'), import('@fontsource-variable/literata/wght.css'),
   ]).catch(() => {});
 }
@@ -104,14 +104,11 @@ function schriftSetzen(id: string, merken = true) {
   requestAnimationFrame(fix); document.fonts?.ready.then(fix);
 }
 const aktuell = document.documentElement.dataset.font || 'a';
-if (aktuell !== 'a') schriftLaden();
+// шрифты B–D подгружаются после загрузки страницы, чтобы переключение было мгновенным
+if (aktuell !== 'a') schriftLaden(); else addEventListener('load', () => setTimeout(schriftLaden, 1200));
 $$<HTMLInputElement>('input[name="schrift"]').forEach((r) => {
   r.checked = r.value === aktuell;
   r.addEventListener('change', () => schriftSetzen(r.value));
-});
-$('[data-schrift-link]')?.addEventListener('click', async (e) => {
-  const b = e.currentTarget as HTMLButtonElement;
-  try { await navigator.clipboard.writeText(location.href); b.textContent = 'Link kopiert'; } catch { b.textContent = location.href; }
 });
 // Ссылки внутри сайта несут выбранную пару, чтобы клиентка видела одну и ту же
 document.addEventListener('click', (e) => {

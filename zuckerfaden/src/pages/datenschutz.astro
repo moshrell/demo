@@ -1,10 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
+import Seitenkopf from '../components/Seitenkopf.astro';
 import site from '../data/site.json';
 ---
 <Base title="Datenschutz | Kosmetik Zuckerfaden">
-  <main class="wrap recht">
-    <h1>Datenschutz</h1>
+  <Seitenkopf titel="Datenschutz" />
+  <main class="wrap recht section">
     <p><strong>Demo-Hinweis:</strong> In dieser Beispielseite wird nichts gesendet oder gespeichert. Die folgenden Angaben zeigen, was bei einem echten Betrieb hier stehen muss.</p>
     <h2>Verantwortlich</h2>
     <p>{site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}. E-Mail: {site.email}, Telefon: {site.phone}.</p>
@@ -32,6 +33,6 @@ import site from '../data/site.json';
   </main>
 </Base>
 <style>
-  .recht { max-width: 46rem; padding-top: var(--space-lg); display: grid; gap: var(--space-md); }
+  .recht { max-width: 46rem; padding-top: var(--space-xl); display: grid; gap: var(--space-md); }
   .recht h2 { font-size: 1.5rem; margin-top: var(--space-md); }
 </style>

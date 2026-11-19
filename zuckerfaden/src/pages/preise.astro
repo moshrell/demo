@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Seitenkopf from '../components/Seitenkopf.astro';
 import zonen from '../data/zonen.json';
 import beh from '../data/behandlungen.json';
 import zusatz from '../data/zusatz.json';
@@ -13,12 +14,10 @@ const gruppen = [
 ];
 ---
 <Base title="Preisliste | Kosmetik Zuckerfaden Ronnenberg" description={`Alle Preise für Sugaring, Gesichtsbehandlungen, Maniküre, Fußpflege und Make-up. Stand ${site.priceStand}.`} aktiv="preise" prices={gruppen.flatMap((g) => g.items.map((i) => ({ name: i.name, price: i.preis })))}>
+  <Seitenkopf titel="Preisliste" lede={`Stand: ${site.priceStand}. Alle Preise inklusive Mehrwertsteuer.`}>
+    <button type="button" class="btn btn--ghost pl__druck" data-druck>Preisliste drucken</button>
+  </Seitenkopf>
   <section class="wrap pl">
-    <div class="pl__kopf">
-      <h1>Preisliste</h1>
-      <p class="muted">Stand: {site.priceStand}. Alle Preise inklusive Mehrwertsteuer.</p>
-      <button type="button" class="btn btn--ghost pl__druck" data-druck>Preisliste drucken</button>
-    </div>
     <nav class="pl__sprung" aria-label="Zu einer Gruppe springen">
       {gruppen.map((g) => <a href={`#${g.id}`}>{g.name.replace('Gesicht: ', '')}</a>)}
     </nav>
@@ -38,18 +37,18 @@ const gruppen = [
 </Base>
 
 <style>
-  .pl { padding-top: var(--space-lg); max-width: 52rem; }
+  .pl { padding-top: var(--space-xl); max-width: 52rem; }
   .pl__kopf { display: grid; gap: 0.6rem; }
   .pl__druck { justify-self: start; margin-top: 0.4rem; }
   .pl__sprung { display: flex; gap: 0.5rem; overflow-x: auto; scroll-snap-type: x proximity; padding: var(--space-lg) 0 0.6rem; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scrollbar-width: none; }
-  .pl__sprung a { flex: none; scroll-snap-align: start; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; background: var(--weiss); text-decoration: none; font-weight: 500; white-space: nowrap; }
+  .pl__sprung a { flex: none; scroll-snap-align: start; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; background: var(--grau); text-decoration: none; font-weight: 500; white-space: nowrap; }
   @media (min-width: 48rem) { .pl__sprung { flex-wrap: wrap; overflow: visible; } }
   .pl__gruppe { padding-top: var(--space-xl); scroll-margin-top: 1rem; }
   .pl__gruppe h2 { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem); }
   .pl__gruppe ul { list-style: none; margin: 0.8rem 0 0; padding: 0; }
-  .pl__gruppe li { display: grid; grid-template-columns: auto minmax(1rem, 1fr) auto auto; align-items: baseline; gap: 0.6rem; padding: 0.6rem 0; border-bottom: 1px solid var(--puder-3); }
+  .pl__gruppe li { display: grid; grid-template-columns: auto minmax(1rem, 1fr) auto auto; align-items: baseline; gap: 0.6rem; padding: 0.6rem 0; border-bottom: 1px solid var(--linie); }
   .pl__n { min-width: 0; }
-  .pl__punkte { border-bottom: 1.5px dotted var(--puder-3); transform: translateY(-0.3em); }
+  .pl__punkte { border-bottom: 1.5px dotted var(--linie); transform: translateY(-0.3em); }
   .pl__m { font-size: 0.92rem; text-align: right; }
   .pl__p { font-weight: var(--strong-weight); min-width: 4.4rem; text-align: right; }
   @media (max-width: 30rem) {

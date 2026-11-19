@@ -1,9 +1,9 @@
 {
   "default": "a",
   "paare": [
-    { "id": "a", "name": "Gloock und Hanken Grotesk", "text": "Kontrastreiche Antiqua, ruhiger Text" },
-    { "id": "b", "name": "Young Serif und Rethink Sans", "text": "Weich und freundlich" },
-    { "id": "c", "name": "Bricolage Grotesque", "text": "Modern, eine Familie" },
-    { "id": "d", "name": "Literata", "text": "Wie ein gutes Buch, am besten lesbar" }
+    { "id": "a", "kurz": "A", "name": "Noto Serif Display + Albert Sans", "text": "Elegant, wie ein Magazin" },
+    { "id": "b", "kurz": "B", "name": "Gilda Display + Manrope", "text": "Klassisch und ruhig" },
+    { "id": "c", "kurz": "C", "name": "Bricolage Grotesque", "text": "Modern, eine Familie" },
+    { "id": "d", "kurz": "D", "name": "Literata", "text": "Wie ein gutes Buch, am besten lesbar" }
   ]
 }

@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Seitenkopf from '../components/Seitenkopf.astro';
 import Foto from '../components/Foto.astro';
 import site from '../data/site.json';
 const base = import.meta.env.BASE_URL;
@@ -13,10 +14,9 @@ const weg = [
 ];
 ---
 <Base title={`Über mich: ${site.owner} | Kosmetik Zuckerfaden`} description={`${site.owner}, Kosmetikerin und Fußpflegerin, behandelt seit ${site.since} in Ronnenberg. Ausbildung, Arbeitsweise und Grundsatz.`} aktiv="ueber">
-  <section class="wrap um">
+  <Seitenkopf titel="Über mich" lede={`Ich bin ${site.owner} und behandle seit ${site.since} in meinem eigenen Raum in Ronnenberg.`} />
+  <section class="wrap um section">
     <div class="um__intro">
-      <h1>Über mich</h1>
-      <p class="lede">Ich bin {site.owner} und behandle seit {site.since} in meinem eigenen Raum in Ronnenberg.</p>
       <p>Ich arbeite allein, ohne Angestellte und ohne Geräte. Das heißt: Sie sprechen am Telefon mit mir, ich behandle Sie, und ich weiß beim nächsten Termin noch, was Ihrer Haut gutgetan hat.</p>
       <p>Wichtig sind mir Produkte, die auch empfindliche Haut verträgt, und genug Zeit. Lieber eine Behandlung weniger am Tag als eine gehetzte.</p>
     </div>
@@ -44,13 +44,13 @@ const weg = [
 </Base>
 
 <style>
-  .um { display: grid; gap: var(--space-xl); padding-top: var(--space-lg); }
+  .um { display: grid; gap: var(--space-xl); padding-top: var(--space-xl); }
   .um__intro { display: grid; gap: var(--space-md); align-content: start; max-width: 40rem; }
   .um :global(.um__foto) { border-radius: 22px; max-width: 26rem; }
   @media (min-width: 64rem) { .um { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; } }
-  .weg { list-style: none; margin: var(--space-xl) 0 0; padding: 0; max-width: 46rem; border-left: 2px solid var(--bernstein); }
+  .weg { list-style: none; margin: var(--space-xl) 0 0; padding: 0; max-width: 46rem; border-left: 2px solid var(--honig); }
   .weg li { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr); gap: 1rem; padding: 0 0 var(--space-lg) 1.2rem; position: relative; }
-  .weg li::before { content: ''; position: absolute; left: -0.48rem; top: 0.45rem; width: 0.85rem; height: 0.85rem; border-radius: 50%; background: var(--bernstein); box-shadow: 0 0 0 4px var(--puder); }
+  .weg li::before { content: ''; position: absolute; left: -0.48rem; top: 0.45rem; width: 0.85rem; height: 0.85rem; border-radius: 50%; background: var(--honig); box-shadow: 0 0 0 4px var(--grau); }
   .weg__j { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.35rem; line-height: 1.2; }
   .satz { display: grid; gap: var(--space-lg); max-width: 46rem; }
   .satz blockquote { margin: 0; font-family: var(--font-display); font-weight: var(--display-weight); font-size: var(--h2); line-height: 1.12; letter-spacing: var(--display-tracking); }

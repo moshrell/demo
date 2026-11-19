@@ -1,183 +1,226 @@
 ---
-/** Калькулятор зон шугаринга: силуэт из «выкроек», панель лица, список-дубль, итог, подсказки комбинаций. */
-import { figur, gesicht } from '../lib/figur.mjs';
+/** Калькулятор зон: фарфоровая фигура на тёмной сцене, зоны заливаются мёдом, цена подписью у зоны.
+ *  Лицо — приближением внутри той же сцены. Всё помещается в один экран; список-дубль ниже. */
+import { figur, GESICHT, GESICHT_LINIEN, KOPF_VIEW } from '../lib/figur.mjs';
 import { euro, dauer } from '../lib/fmt.mjs';
 import zonenData from '../data/zonen.json';
 const { titel = 'Was soll glatt werden?', id = 'zonen', mehr = true } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const Z = Object.fromEntries(zonenData.zonen.map((z) => [z.id, z]));
-const views = [['damen', 'vorne'], ['damen', 'hinten'], ['herren', 'vorne'], ['herren', 'hinten']];
-const label = (zid) => zid === 'kopf' ? 'Gesicht: Zonen im Gesicht wählen' : `${Z[zid].name}, ${Z[zid].ab ? 'ab ' : ''}${euro(Z[zid].preis)}`;
+const views = [['damen', 'vorne'], ['damen', 'hinten'], ['herren', 'vorne'], ['herren', 'hinten']].map(([g, s]) => ({ g, s, key: `${g}-${s}`, F: figur(g, s) }));
+const label = (zid) => `${Z[zid].name}, ${Z[zid].ab ? 'ab ' : ''}${euro(Z[zid].preis)}`;
 const liste = (g) => zonenData.zonen.filter((z) => z.g === g);
 const extras = zonenData.zonen.filter((z) => z.seite === 'liste');
+const gesichtListe = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id === 'd-gesicht');
+const anchors = {};
+views.forEach((v) => v.F.zones.forEach((z) => { anchors[`${v.key}:${z.zone}`] = { a: z.anchor, s: z.side }; }));
+GESICHT.forEach((z) => { anchors[`gesicht:${z.zone}`] = { a: z.anchor, s: z.side }; });
+const kurz = Object.fromEntries(zonenData.zonen.map((z) => [z.id, z.kurz]));
 ---
-<section class="zr section" id={id} aria-labelledby={`${id}-h`} data-zr>
+<section class="zr dunkel" id={id} aria-labelledby={`${id}-h`} data-zr data-anchors={JSON.stringify(anchors)} data-kurz={JSON.stringify(kurz)} data-kopfview={JSON.stringify(KOPF_VIEW)}>
   <div class="wrap zr__grid">
-    <div class="zr__text">
+    <div class="zr__kopf">
       <h2 id={`${id}-h`}>{titel}</h2>
-      <p class="lede zr__lede">Tippen Sie auf die Zonen. Preis und Dauer rechnen sich sofort mit.</p>
+      <p class="zr__lede">Tippen Sie auf die Zonen. Preis und Dauer rechnen sich sofort mit.</p>
     </div>
 
-    <div class="zr__buehne">
-      <div class="zr__schalter">
-        <div class="seg" role="radiogroup" aria-label="Für wen">
-          <label><input type="radio" name={`${id}-g`} value="damen" checked /><span>Damen</span></label>
-          <label><input type="radio" name={`${id}-g`} value="herren" /><span>Herren</span></label>
-        </div>
-        <div class="seg" role="radiogroup" aria-label="Ansicht">
-          <label><input type="radio" name={`${id}-s`} value="vorne" checked /><span>Vorne</span></label>
-          <label><input type="radio" name={`${id}-s`} value="hinten" /><span>Hinten</span></label>
-        </div>
+    <div class="zr__steuer">
+      <div class="seg" role="radiogroup" aria-label="Für wen">
+        <label><input type="radio" name={`${id}-g`} value="damen" checked /><span>Damen</span></label>
+        <label><input type="radio" name={`${id}-g`} value="herren" /><span>Herren</span></label>
       </div>
+      <div class="seg" role="radiogroup" aria-label="Ansicht">
+        <label><input type="radio" name={`${id}-s`} value="vorne" checked /><span>Vorne</span></label>
+        <label><input type="radio" name={`${id}-s`} value="hinten" /><span>Hinten</span></label>
+      </div>
+    </div>
 
-      <div class="zr__figur">
-        {views.map(([g, s]) => (
-          <svg viewBox="0 0 240 480" class="fig" data-view={`${g}-${s}`} hidden={!(g === 'damen' && s === 'vorne')} role="group" aria-label={`Figur ${g === 'damen' ? 'Damen' : 'Herren'}, ${s === 'vorne' ? 'Vorderseite' : 'Rückseite'}`}>
-            {figur(g, s).map((p, i) => p.zone ? (
-              <g class="zone" data-zone={p.zone} role={p.zone === 'kopf' ? 'button' : 'checkbox'} aria-checked={p.zone === 'kopf' ? undefined : 'false'} tabindex="0" aria-label={label(p.zone)}>
-                <clipPath id={`c-${id}-${g}-${s}-${i}`}><path d={p.d} /></clipPath>
-                <path class="zone__form" d={p.d} />
-                <g clip-path={`url(#c-${id}-${g}-${s}-${i})`}><circle class="zone__glasur" cx="120" cy="240" r="300" /></g>
-                <path class="zone__naht" d={p.d} />
-                {p.hit?.map(([x, y]) => <circle class="zone__hit" cx={x} cy={y} r="15" />)}
+    <div class="zr__buehne" data-buehne>
+      <div class="zr__extras">{extras.map((z) => (
+          <button type="button" class="extra" data-toggle={z.id} data-g={z.g} aria-pressed="false" hidden={z.g !== 'damen'}>
+            {z.kurz} <span class="preis">{z.ab ? 'ab ' : ''}{euro(z.preis)}</span>
+          </button>
+        ))}</div>
+      <button type="button" class="zr__zurueck" data-zurueck hidden>Zurück zur ganzen Figur</button>
+      <p class="zr__gesichtstipp" data-gesichtstipp>Für Zonen im Gesicht auf den Kopf tippen</p>
+      <svg class="fig" viewBox="0 0 300 620" data-fig role="group" aria-label="Figur zur Auswahl der Zonen">
+        <defs>
+          <linearGradient id={`${id}-porz`} x1="0" x2="1"><stop offset="0" stop-color="#C9B3A1" /><stop offset="0.5" stop-color="#F6EEE6" /><stop offset="1" stop-color="#C9B3A1" /></linearGradient>
+          <linearGradient id={`${id}-honig`} x1="0" y1="0" x2="0.4" y2="1"><stop offset="0" stop-color="#FFD98A" /><stop offset="0.45" stop-color="#E8A22A" /><stop offset="1" stop-color="#A35F0D" /></linearGradient>
+          <filter id={`${id}-glanz`} x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="b" />
+            <feSpecularLighting in="b" surfaceScale="3.2" specularConstant="1.1" specularExponent="26" lighting-color="#FFF6E2" result="s"><fePointLight x="60" y="-80" z="220" /></feSpecularLighting>
+            <feComposite in="s" in2="SourceAlpha" operator="in" result="s2" />
+            <feComposite in="SourceGraphic" in2="s2" operator="arithmetic" k1="0" k2="1" k3="0.85" k4="0" />
+          </filter>
+          <filter id={`${id}-volumen`} x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="b" />
+            <feComposite in="SourceAlpha" in2="b" operator="arithmetic" k2="1" k3="-1" result="rand" />
+            <feFlood flood-color="#7A5A45" flood-opacity="0.55" />
+            <feComposite in2="rand" operator="in" result="schatten" />
+            <feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="schatten" /></feMerge>
+          </filter>
+          {views.map((v) => (<>
+            <clipPath id={`${id}-${v.key}-body`}><path d={v.F.body} /></clipPath>
+            <clipPath id={`${id}-${v.key}-arm`}><path d={v.F.arms} /></clipPath>
+            {v.F.zones.map((z, i) => <clipPath id={`${id}-${v.key}-z${i}`}><path d={z.area} /></clipPath>)}
+          </>))}
+          {GESICHT.map((z, i) => <clipPath id={`${id}-g${i}`}><path d={z.area} /></clipPath>)}
+        </defs>
+        {views.map((v) => (
+          <g class="ansicht" data-view={v.key} data-on={v.key === 'damen-vorne' ? '1' : '0'}>
+            <g filter={`url(#${id}-volumen)`} fill={`url(#${id}-porz)`}><path d={v.F.arms} /><path d={v.F.body} /><path d={v.F.face} /></g>
+            <path class="haar" d={v.F.haar} />
+            <path class="linien" d={v.F.linien} />
+            <path class="naht" d={v.F.seams} clip-path={`url(#${id}-${v.key}-body)`} />
+            {v.F.zones.map((z, i) => {
+              const part = z.part === 'arm' ? `url(#${id}-${v.key}-arm)` : z.part === 'body' ? `url(#${id}-${v.key}-body)` : undefined;
+              return (
+                <g class="zone" data-zone={z.zone} role="checkbox" aria-checked="false" tabindex="-1" aria-label={label(z.zone)}>
+                  <g filter={`url(#${id}-glanz)`} class="zone__glanz"><g clip-path={part}><g clip-path={`url(#${id}-${v.key}-z${i})`}><circle class="zone__glasur" cx="150" cy="300" r="420" fill={`url(#${id}-honig)`} /></g></g></g>
+                  <g clip-path={part}><path class="zone__hit" d={z.area} /></g>
+                  {z.hit?.map(([x, y]) => <circle class="zone__hit" cx={x} cy={y} r="13" />)}
+                </g>
+              );
+            })}
+            {v.F.kopf && (<>
+              <g class="kopfzone" data-kopf role="button" tabindex="-1" aria-label="Gesicht: Zonen im Gesicht wählen"><ellipse class="zone__hit" cx="150" cy="56" rx="30" ry="36" /></g>
+              <g class="gesicht" data-gesicht>
+                <path class="gesicht__linien" d={GESICHT_LINIEN} />
+                {GESICHT.map((z, i) => (
+                  <g class="zone" data-zone={z.zone} role="checkbox" aria-checked="false" tabindex="-1" aria-label={label(z.zone)}>
+                    <g filter={`url(#${id}-glanz)`}><g clip-path={`url(#${id}-g${i})`}><circle class="zone__glasur" cx="150" cy="60" r="60" fill={`url(#${id}-honig)`} /></g></g>
+                    <path class="zone__umriss" d={z.area} />
+                    <path class="zone__hit" d={z.hit} />
+                  </g>
+                ))}
               </g>
-            ) : <path class="teil" d={p.d} />)}
-          </svg>
+            </>)}
+          </g>
         ))}
-        <svg class="zr__defs" aria-hidden="true" width="0" height="0"><defs>
-          <linearGradient id="honigglanz" x1="0" y1="0" x2="0.35" y2="1"><stop offset="0" stop-color="#F3CD84" /><stop offset="0.45" stop-color="#D99A3A" /><stop offset="1" stop-color="#A9650F" /></linearGradient>
-        </defs></svg>
+      </svg>
+      <svg class="zr__leitungen" data-leitungen aria-hidden="true"></svg>
+      <div class="zr__labels" data-labels aria-hidden="true"></div>
+      <div class="kombi" data-kombi hidden role="status">
+        <p data-kombi-text></p>
+        <div class="kombi__btns"><button type="button" class="btn kombi__ja" data-kombi-ja>Übernehmen</button><button type="button" class="btn btn--ghost" data-kombi-nein>Nein danke</button></div>
       </div>
-      <p class="zr__info" data-info aria-live="polite"><span data-info-text>Tippen Sie auf eine Zone</span> <button type="button" class="zr__undo" data-undo hidden>Rückgängig</button></p>
+      <div class="zr__gesichtsliste" data-gesichtsliste hidden>
+        {gesichtListe.map((z) => <button type="button" class="extra" data-toggle={z.id} aria-pressed="false">{z.kurz} <span class="preis">{euro(z.preis)}</span></button>)}
+      </div>
+      <p class="sr" data-info aria-live="polite"></p>
     </div>
 
     <div class="zr__seite">
-      <div class="zr__extras">
-        {extras.map((z) => (
-          <button type="button" class="extra" data-toggle={z.id} data-g={z.g} aria-pressed="false" hidden={z.g !== 'damen'}>
-            <span>{z.name}</span><span class="preis">{z.ab ? 'ab ' : ''}{euro(z.preis)}</span>
-          </button>
-        ))}
-      </div>
-
       <div class="zr__summe" data-summe>
         <p class="zr__leer" data-leer>Noch keine Zone gewählt.</p>
         <div data-voll hidden>
-          <p class="zr__zahl"><span class="muted" data-n></span><strong class="num" data-s></strong></p>
+          <p class="zr__zahl"><span data-n></span><strong class="num" data-s></strong></p>
           <p class="muted num" data-d></p>
-          <div class="kombi" data-kombi hidden role="status">
-            <p data-kombi-text></p>
-            <div class="kombi__btns"><button type="button" class="btn btn--honig kombi__ja" data-kombi-ja>Übernehmen</button><button type="button" class="btn btn--ghost" data-kombi-nein>Nein danke</button></div>
-          </div>
           <a class="btn zr__weiter" href={`${base}termin/`}>Mit dieser Auswahl Termin anfragen</a>
         </div>
         <p class="small muted zr__hinweis">{zonenData.hinweis} Bei einer Gesichtsbehandlung ist die Haarentfernung im Gesicht inklusive.</p>
       </div>
-
       <details class="zr__liste" data-liste>
         <summary>Alle Zonen als Liste</summary>
         {['damen', 'herren'].map((g) => (
           <ul data-g={g} hidden={g !== 'damen'}>
             {liste(g).map((z) => (
-              <li><label class="zl"><input type="checkbox" data-toggle={z.id} /><span class="zl__n">{z.name}</span><span class="zl__m muted">{dauer(z.min)}</span><span class="preis">{z.ab ? 'ab ' : ''}{euro(z.preis)}</span></label></li>
+              <li><label class="zl"><input type="checkbox" data-toggle={z.id} /><span class="zl__n">{z.name}</span><span class="zl__m">{dauer(z.min)}</span><span class="preis">{z.ab ? 'ab ' : ''}{euro(z.preis)}</span></label></li>
             ))}
           </ul>
         ))}
       </details>
-      {mehr && <p class="zr__links small"><a href={`${base}sugaring/#vorbereitung`}>Zum ersten Mal Sugaring? So bereiten Sie sich vor</a></p>}
+      {mehr && <p class="zr__links small"><a href={`${base}sugaring/#vorbereitung`}>Zum ersten Mal Sugaring? So bereiten Sie sich vor</a> · <a href="#zonen" data-herren-link>Preise für Männer</a></p>}
     </div>
   </div>
-
-  <dialog class="sheet gsheet" data-gesicht aria-labelledby={`${id}-gt`}>
-    <div class="sheet__kopf"><p class="sheet__titel" id={`${id}-gt`}>Gesicht</p><button type="button" class="sheet__zu" data-close>Fertig</button></div>
-    <div class="gsheet__grid">
-      <svg viewBox="0 0 200 240" class="fig fig--gesicht" role="group" aria-label="Zonen im Gesicht">
-        {gesicht().map((p, i) => p.zone ? (
-          <g class="zone" data-zone={p.zone} role="checkbox" aria-checked="false" tabindex="0" aria-label={label(p.zone)}>
-            <clipPath id={`cg-${id}-${i}`}><path d={p.d} /></clipPath>
-            <path class="zone__form" d={p.d} />
-            <g clip-path={`url(#cg-${id}-${i})`}><circle class="zone__glasur" cx="100" cy="120" r="200" /></g>
-            <path class="zone__naht" d={p.d} />
-          </g>
-        ) : <path class="teil teil--gesicht" d={p.d} />)}
-        <path class="augen" d="M64 98q12 7 24 0M112 98q12 7 24 0" />
-      </svg>
-      <ul class="gsheet__liste">
-        {zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id === 'd-gesicht').map((z) => (
-          <li><label class="zl"><input type="checkbox" data-toggle={z.id} /><span class="zl__n">{z.name}</span><span class="preis">{euro(z.preis)}</span></label></li>
-        ))}
-      </ul>
-    </div>
-  </dialog>
 </section>
 
 <style>
-  .zr__grid { display: grid; gap: var(--space-lg); }
-  .zr__lede { margin-top: 0.8rem; }
-  .zr__buehne { display: grid; gap: 0.9rem; justify-items: center; }
-  .zr__schalter { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
-  .seg { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--puder-2); }
+  .zr { padding-block: 1.2rem var(--space-2xl); scroll-margin-top: 0; background: radial-gradient(70% 50% at 50% 45%, #3A2416 0%, transparent 70%), var(--nacht); }
+  .zr__grid { display: grid; gap: 0.75rem; }
+  .zr__kopf h2 { font-size: clamp(1.9rem, 1.4rem + 2.4vw, 3.4rem); }
+  .zr__lede { color: var(--licht-2); margin-top: 0.3rem; font-size: var(--text-sm); }
+  @media (max-width: 47.99rem) { .zr__lede { display: none; } }
+  .zr__extras { position: absolute; top: 0; left: 0; z-index: 2; display: flex; flex-direction: column; gap: 0.4rem; }
+  .zoom ~ .zr__extras, .zr__buehne:has(.zoom) .zr__extras { display: none; }
+  .zr__steuer { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  .seg { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--nacht-2); border: 1px solid var(--nacht-3); }
   .seg label { position: relative; }
   .seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-  .seg span { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.15rem; border-radius: 999px; font-weight: 500; cursor: pointer; }
-  .seg input:checked + span { background: var(--weiss); box-shadow: 0 1px 2px rgba(58, 33, 23, 0.18); font-weight: var(--strong-weight); }
+  .seg span { display: inline-flex; align-items: center; min-height: 2.6rem; padding: 0 0.85rem; border-radius: 999px; font-weight: 500; cursor: pointer; color: var(--licht-2); }
+  .seg input:checked + span { background: var(--licht); color: var(--tinte); font-weight: var(--strong-weight); }
   .seg input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
-  .zr__figur { width: 100%; display: grid; justify-items: center; }
-  .fig { height: min(60vh, 34rem); min-height: 22rem; width: auto; overflow: visible; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-  .fig[hidden] { display: none; }
-  .zr__defs { position: absolute; }
-  .teil { fill: #EAD6CB; }
-  :global(.zone) { cursor: pointer; outline: none; }
-  :global(.zone__form) { fill: #D8B19C; transition: fill 0.15s; }
-  :global(.zone__naht) { fill: none; stroke: var(--bernstein-tief); stroke-opacity: 0.55; stroke-width: 0.9; stroke-dasharray: 2.4 2.2; }
-  :global(.zone__glasur) { fill: url(#honigglanz); transform: scale(0); transform-box: view-box; transition: transform 0.26s cubic-bezier(0.25, 0.8, 0.3, 1); }
-  :global(.zone__hit) { fill: transparent; }
-  :global(.zone[aria-checked='true'] .zone__glasur), :global(.zone.hat .zone__glasur) { transform: scale(1); }
-  :global(.zone[aria-checked='true'] .zone__naht) { stroke: #FFE7B5; stroke-opacity: 0.85; }
-  :global(.zone:hover .zone__form) { fill: #CBA08A; }
-  :global(.zone:focus-visible .zone__naht) { stroke: var(--kandis); stroke-opacity: 1; stroke-width: 2.2; stroke-dasharray: none; }
-  :global(.zone[data-zone='kopf'] .zone__naht) { stroke-dasharray: none; stroke-opacity: 0.6; }
-  .zr__info { min-height: 3rem; display: flex; align-items: center; gap: 0.8rem; justify-content: center; text-align: center; font-weight: 500; }
-  .zr__undo { min-height: 2.75rem; padding: 0 0.9rem; border-radius: 999px; border: 1.5px solid var(--kandis); background: none; font: inherit; font-size: 0.95rem; color: var(--kandis); cursor: pointer; }
-  .zr__undo[hidden] { display: none; }
-  .zr__extras { display: flex; flex-wrap: wrap; gap: 0.6rem; }
-  .extra { display: inline-flex; gap: 0.8rem; align-items: center; min-height: 3rem; padding: 0.5rem 1.1rem; border-radius: 999px; border: 1.5px solid var(--kandis); background: var(--weiss); color: var(--kandis); font: inherit; cursor: pointer; }
+  .extra { display: inline-flex; gap: 0.5rem; align-items: center; min-height: 2.75rem; padding: 0.4rem 1rem; border-radius: 999px; border: 1px solid var(--nacht-3); background: var(--nacht-2); color: var(--licht); font: inherit; font-size: 0.95rem; cursor: pointer; }
   .extra[hidden] { display: none; }
-  .extra[aria-pressed='true'] { background: linear-gradient(170deg, var(--bernstein-hl), var(--honig-tief)); border-color: var(--bernstein-tief); }
-  .extra .preis { font-weight: var(--strong-weight); }
-  .zr__summe { margin-top: var(--space-lg); padding: 1.2rem 1.25rem; background: var(--weiss); border-radius: 20px; }
+  .extra .preis { color: var(--honig-hell); font-weight: var(--strong-weight); }
+  .extra[aria-pressed='true'] { background: linear-gradient(180deg, #FFD983, #E9A52C 55%, #C9801A); color: var(--tinte); border-color: transparent; }
+  .extra[aria-pressed='true'] .preis { color: var(--tinte); }
+
+  .zr__buehne { position: relative; height: clamp(24rem, calc(100svh - 20rem), 46rem); display: grid; place-items: center; }
+  .fig { position: absolute; inset: 0; height: 100%; width: 100%; overflow: visible; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .ansicht { transition: opacity 0.25s; }
+  .ansicht[data-on='0'] { opacity: 0; pointer-events: none; visibility: hidden; }
+  .haar { fill: #7C6152; }
+  .linien { fill: none; stroke: #8E7464; stroke-width: 0.9; stroke-linecap: round; opacity: 0.55; pointer-events: none; }
+  .naht { fill: none; stroke: #8E7464; stroke-width: 0.8; stroke-dasharray: 3 3; opacity: 0.7; pointer-events: none; }
+  :global(.zone) { cursor: pointer; outline: none; }
+  :global(.zone__hit) { fill: transparent; }
+  :global(.zone__glasur) { transform: scale(0); transform-box: view-box; transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.3, 1); }
+  :global(.zone[aria-checked='true'] .zone__glasur) { transform: scale(1); }
+  :global(.zone:hover .zone__hit) { fill: rgba(227, 162, 31, 0.16); }
+  :global(.zone:focus-visible .zone__hit) { fill: rgba(227, 162, 31, 0.3); stroke: var(--honig); stroke-width: 1.5; }
+  .kopfzone { cursor: zoom-in; outline: none; }
+  .kopfzone:focus-visible .zone__hit { stroke: var(--honig); stroke-width: 1.5; }
+  .gesicht { opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .zoom .gesicht { opacity: 1; pointer-events: auto; }
+  .zoom .kopfzone { pointer-events: none; }
+  .gesicht__linien { fill: none; stroke: #5A4538; stroke-width: 0.55; stroke-linecap: round; }
+  :global(.zone__umriss) { fill: none; stroke: #A27A5F; stroke-width: 0.45; stroke-dasharray: 1 1; }
+  .zr__leitungen { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .zr__leitungen :global(line) { stroke: rgba(255, 210, 122, 0.75); stroke-width: 1; }
+  .zr__leitungen :global(circle) { fill: var(--honig-hell); }
+  .zr__labels { position: absolute; inset: 0; pointer-events: none; }
+  .zr__labels :global(.lbl) { position: absolute; display: grid; line-height: 1.15; padding: 0.35rem 0.6rem; border-radius: 10px; background: rgba(27, 17, 11, 0.78); border: 1px solid rgba(255, 210, 122, 0.35); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); max-width: 8.5rem; animation: lbl 0.22s ease-out; }
+  .zr__labels :global(.lbl--l) { text-align: right; }
+  .zr__labels :global(.lbl__n) { font-size: 0.8125rem; color: var(--licht); }
+  .zr__labels :global(.lbl__p) { font-size: 1rem; font-weight: 700; color: var(--honig-hell); font-variant-numeric: tabular-nums; }
+  @keyframes lbl { from { opacity: 0; transform: translateY(4px); } }
+  .zr__zurueck { position: absolute; top: 0; left: 0; z-index: 3; min-height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1px solid rgba(246, 239, 231, 0.5); background: rgba(27, 17, 11, 0.7); color: var(--licht); font: inherit; font-weight: 600; cursor: pointer; }
+  .zr__zurueck[hidden] { display: none; }
+  .zr__gesichtstipp { position: absolute; top: 0.2rem; right: 0; font-size: 0.8125rem; color: var(--licht-2); max-width: 9rem; text-align: right; pointer-events: none; }
+  .zr__gesichtstipp[hidden] { display: none; }
+  .zr__gesichtsliste { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; display: flex; flex-wrap: wrap; gap: 0.45rem; justify-content: center; }
+  .zr__gesichtsliste[hidden] { display: none; }
+  .kombi { position: absolute; left: 50%; top: 0.2rem; z-index: 4; transform: translateX(-50%); width: min(100%, 26rem); padding: 1rem 1.1rem; border-radius: 18px; background: var(--weiss); color: var(--tinte); box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.7); animation: rein 0.25s ease-out; }
+  .kombi[hidden] { display: none; }
+  @keyframes rein { from { opacity: 0; transform: translate(-50%, 8px); } }
+  .kombi p { font-weight: 600; }
+  .kombi__btns { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.7rem; }
+  .kombi__btns .btn { min-height: 2.8rem; padding: 0.5rem 1.1rem; }
+  .kombi__btns .btn--ghost { color: var(--tinte); border-color: var(--tinte); }
+
+  .zr__summe { padding: 1.2rem 1.3rem; background: var(--nacht-2); border: 1px solid var(--nacht-3); border-radius: 20px; }
   .zr__leer { font-weight: 500; }
-  .zr__zahl { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-  .zr__zahl strong { font-size: 2.1rem; font-family: var(--font-display); font-weight: var(--display-weight); }
+  .zr__zahl { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; color: var(--licht-2); }
+  .zr__zahl strong { font-size: 2.4rem; font-family: var(--font-display); font-weight: var(--display-weight); color: var(--licht); }
   .zr__weiter { width: 100%; margin-top: 1rem; white-space: normal; text-align: center; }
   .zr__hinweis { margin-top: 0.9rem; }
-  .kombi { margin-top: 0.9rem; padding: 0.9rem 1rem; border-radius: 16px; background: var(--puder); animation: rein 0.25s ease-out; }
-  .kombi[hidden] { display: none; }
-  @keyframes rein { from { opacity: 0; transform: translateY(-6px); } }
-  .kombi p { font-weight: 500; }
-  .kombi__btns { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.7rem; }
-  .kombi__btns .btn { min-height: 2.9rem; padding: 0.5rem 1.1rem; }
-  .zr__liste { margin-top: var(--space-lg); }
+  .zr__liste { margin-top: var(--space-md); }
   .zr__liste summary { cursor: pointer; font-weight: var(--strong-weight); min-height: 2.75rem; display: flex; align-items: center; }
-  .zr__liste ul, .gsheet__liste { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+  .zr__liste ul { list-style: none; margin: 0.4rem 0 0; padding: 0; }
   .zr__liste ul[hidden] { display: none; }
-  .zl { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 0.75rem; align-items: center; min-height: 3rem; padding: 0.35rem 0; border-bottom: 1px solid var(--puder-3); cursor: pointer; }
-  .zl input { width: 1.35rem; height: 1.35rem; accent-color: var(--bernstein-tief); margin: 0; }
-  .zl__m { font-size: 0.9rem; }
-  .zl .preis { font-weight: var(--strong-weight); min-width: 3.6rem; text-align: right; }
-  .zr__links { margin-top: var(--space-md); }
-  .gsheet__grid { display: grid; gap: 1rem; }
-  .fig--gesicht { height: auto; min-height: 0; width: min(100%, 15rem); justify-self: center; }
-  .teil--gesicht { fill: #EBD3C6; }
-  .augen { fill: none; stroke: var(--kandis-2); stroke-width: 1.6; stroke-linecap: round; pointer-events: none; }
-  .gsheet__liste .zl { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .zl { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 0.75rem; align-items: center; min-height: 3rem; padding: 0.35rem 0; border-bottom: 1px solid var(--nacht-3); cursor: pointer; }
+  .zl input { width: 1.3rem; height: 1.3rem; accent-color: var(--honig); margin: 0; }
+  .zl__m { font-size: 0.9rem; color: var(--licht-2); }
+  .zl .preis { font-weight: var(--strong-weight); min-width: 3.6rem; text-align: right; color: var(--honig-hell); }
+  .zr__links { margin-top: var(--space-md); color: var(--licht-2); }
   @media (min-width: 64rem) {
-    .zr__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: 'buehne text' 'buehne seite'; column-gap: var(--space-2xl); align-items: start; }
-    .zr__text { grid-area: text; }
-    .zr__buehne { grid-area: buehne; position: sticky; top: 1rem; }
-    .zr__seite { grid-area: seite; }
-    .fig { height: min(72vh, 38rem); }
-    .gsheet__grid { grid-template-columns: 15rem minmax(0, 1fr); align-items: center; }
+    .zr { padding-block: var(--space-2xl); }
+    .zr__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-areas: 'buehne kopf' 'buehne steuer' 'buehne seite'; grid-template-rows: auto auto 1fr; column-gap: var(--space-2xl); row-gap: 1.2rem; align-items: start; }
+    .zr__kopf { grid-area: kopf; } .zr__steuer { grid-area: steuer; } .zr__seite { grid-area: seite; }
+    .zr__buehne { grid-area: buehne; height: min(84vh, 52rem); position: sticky; top: 1rem; }
+    .zr__liste[open] ul { max-height: 22rem; overflow: auto; padding-right: 0.5rem; }
   }
 </style>
 
@@ -187,96 +230,167 @@ const extras = zonenData.zonen.filter((z) => z.seite === 'liste');
   document.querySelectorAll<HTMLElement>('[data-zr]').forEach((root) => {
     const $ = <T extends Element = HTMLElement>(s: string) => root.querySelector<T>(s)!;
     const $$ = <T extends Element = HTMLElement>(s: string) => [...root.querySelectorAll<T>(s)];
-    const gDlg = $<HTMLDialogElement>('[data-gesicht]');
-    let g = 'damen', s = 'vorne';
-    let undoId = '';
-    const vib = () => { try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) navigator.vibrate?.(8); } catch {} };
+    const svg = $<SVGSVGElement>('[data-fig]');
+    const stage = $('[data-buehne]');
+    const lines = $<SVGSVGElement>('[data-leitungen]');
+    const labels = $('[data-labels]');
+    const anchors: Record<string, { a: [number, number]; s: 'l' | 'r' }> = JSON.parse(root.dataset.anchors!);
+    const kurz: Record<string, string> = JSON.parse(root.dataset.kurz!);
+    const KOPF: number[] = JSON.parse(root.dataset.kopfview!);
+    const FULL = [0, 0, 300, 620];
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    let g = 'damen', s = 'vorne', zoom = false, vb = [...FULL];
+    const vib = () => { try { if (!reduce.matches) navigator.vibrate?.(8); } catch {} };
+    const key = () => `${g}-${s}`;
 
+    function setTab() {
+      $$('.ansicht').forEach((v) => {
+        const on = v.dataset.view === key(); v.dataset.on = on ? '1' : '0';
+        v.querySelectorAll<SVGGElement>('.zone, .kopfzone').forEach((z) => {
+          const inFace = !!z.closest('.gesicht');
+          z.tabIndex = on && (zoom ? inFace : !inFace) ? 0 : -1;
+        });
+      });
+    }
     function view() {
-      $$('svg[data-view]').forEach((v) => (v.hidden = v.dataset.view !== `${g}-${s}`));
+      setTab();
       $$('.zr__liste ul').forEach((u) => (u.hidden = u.dataset.g !== g));
-      $$('.extra').forEach((b) => (b.hidden = b.dataset.g !== g));
+      $$('.zr__extras .extra').forEach((b) => (b.hidden = b.dataset.g !== g));
+      $('[data-gesichtstipp]').hidden = !(g === 'damen' && s === 'vorne') || zoom;
+      labelsRender();
     }
-    $$<HTMLInputElement>('.seg input').forEach((r) => r.addEventListener('change', () => {
-      if (r.name.endsWith('-g')) g = r.value; else s = r.value;
-      view();
-    }));
+    function animVB(to: number[], done?: () => void) {
+      const from = [...vb], t0 = performance.now(), D = reduce.matches ? 0 : 480;
+      const step = (now: number) => {
+        const k = D ? Math.min(1, (now - t0) / D) : 1, e = 1 - Math.pow(1 - k, 3);
+        vb = from.map((v, i) => v + (to[i] - v) * e);
+        svg.setAttribute('viewBox', vb.join(' '));
+        labelsRender();
+        if (k < 1) requestAnimationFrame(step); else done?.();
+      };
+      requestAnimationFrame(step);
+    }
+    function setZoom(on: boolean) {
+      if (on === zoom) return;
+      zoom = on; svg.classList.toggle('zoom', on);
+      $('[data-zurueck]').hidden = !on; $('[data-gesichtsliste]').hidden = !on;
+      $('[data-gesichtstipp]').hidden = on;
+      animVB(on ? KOPF : FULL);
+      setTab();
+    }
 
-    function info(text: string, undo = '') {
-      $('[data-info-text]').textContent = text;
-      undoId = undo; $('[data-undo]').hidden = !undo;
+    // Подписи у выбранных зон
+    function labelsRender() {
+      const c = cart.get();
+      const items: { text: string; preis: string; a: [number, number]; side: 'l' | 'r' }[] = [];
+      const add = (id: string, aKey: string) => {
+        const an = anchors[aKey]; if (!an) return;
+        const it = cart.item(id)!; const line = c.lines.find((l) => l.id === id);
+        items.push({ text: kurz[id] || it.name, preis: line?.gratis ? 'inklusive' : (it.ab ? 'ab ' : '') + eur(it.preis), a: an.a, side: an.s });
+      };
+      for (const l of c.lines) {
+        if (l.art !== 'zone' || l.g !== g) continue;
+        const id = l.id;
+        if (id.endsWith('-beine')) { if (!zoom) add(id, `${key()}:${g === 'damen' ? 'd' : 'h'}-oberschenkel`); continue; }
+        if (id === 'd-gesicht') { if (s === 'vorne') add(id, zoom ? 'gesicht:d-kinn' : 'damen-vorne:d-hals'); continue; }
+        if (zoom) { if (anchors[`gesicht:${id}`]) add(id, `gesicht:${id}`); else if (id === 'd-hals') add(id, 'damen-vorne:d-hals'); continue; }
+        if (anchors[`${key()}:${id}`]) add(id, `${key()}:${id}`);
+        else if (s === 'vorne' && anchors[`gesicht:${id}`]) add(id, `gesicht:${id}`);
+      }
+      const m = svg.getScreenCTM(); const sr = stage.getBoundingClientRect();
+      if (!m || !sr.width) return;
+      const pt = svg.createSVGPoint();
+      const toStage = (x: number, y: number) => { pt.x = x; pt.y = y; const q = pt.matrixTransform(m); return [q.x - sr.left, q.y - sr.top]; };
+      const [figL] = toStage(zoom ? KOPF[0] + 6 : 44, 0), [figR] = toStage(zoom ? KOPF[0] + KOPF[2] - 6 : 256, 0);
+      const W = sr.width;
+      lines.setAttribute('viewBox', `0 0 ${W} ${sr.height}`);
+      const frag: string[] = [];
+      labels.replaceChildren();
+      (['l', 'r'] as const).forEach((side) => {
+        const list = items.filter((i) => i.side === side).map((i) => ({ ...i, p: toStage(i.a[0], i.a[1]) })).sort((a, b) => a.p[1] - b.p[1]);
+        let last = -1e9;
+        list.forEach((i) => {
+          const y = Math.max(i.p[1] - 20, last + 48, 4); last = y;
+          const el = document.createElement('div'); el.className = `lbl lbl--${side}`;
+          const n = document.createElement('span'); n.className = 'lbl__n'; n.textContent = i.text;
+          const p = document.createElement('span'); p.className = 'lbl__p'; p.textContent = i.preis;
+          el.append(n, p); el.style.top = `${y}px`;
+          const colEdge = side === 'l' ? Math.max(figL - 6, 96) : Math.min(figR + 6, W - 96);
+          if (side === 'l') el.style.right = `${W - colEdge}px`; else el.style.left = `${colEdge}px`;
+          labels.append(el);
+          frag.push(`<line x1="${i.p[0].toFixed(1)}" y1="${i.p[1].toFixed(1)}" x2="${colEdge.toFixed(1)}" y2="${(y + 20).toFixed(1)}"/><circle cx="${i.p[0].toFixed(1)}" cy="${i.p[1].toFixed(1)}" r="3"/>`);
+        });
+      });
+      lines.innerHTML = frag.join('');
     }
+
     function sync() {
       const c = cart.get();
-      $$('.zone[data-zone]').forEach((z) => { if (z.dataset.zone !== 'kopf') z.setAttribute('aria-checked', String(cart.active(z.dataset.zone!))); });
+      $$('.zone[data-zone]').forEach((z) => z.setAttribute('aria-checked', String(cart.active(z.dataset.zone!))));
       $$<HTMLInputElement>('input[data-toggle]').forEach((i) => (i.checked = cart.active(i.dataset.toggle!)));
-      $$('.extra').forEach((b) => b.setAttribute('aria-pressed', String(cart.has(b.dataset.toggle!))));
-      const zl = c.lines.filter((l) => l.art === 'zone');
+      $$('button.extra[data-toggle]').forEach((b) => b.setAttribute('aria-pressed', String(cart.active(b.dataset.toggle!))));
       $('[data-leer]').hidden = c.lines.length > 0; $('[data-voll]').hidden = c.lines.length === 0;
       if (c.lines.length) {
-        $('[data-n]').textContent = cart.anzahl(c.lines.length) + (zl.length !== c.lines.length ? ' (mit Gesicht)' : '');
+        $('[data-n]').textContent = cart.anzahl(c.lines.length);
         $('[data-s]').textContent = (c.ab ? 'ab ' : '') + eur(c.summe);
         $('[data-d]').textContent = 'Dauer ca. ' + cart.dauer(c.min);
       }
-      const k = cart.kombiHint();
-      const kb = $('[data-kombi]');
-      if (k) {
-        $('[data-kombi-text]').textContent = `${k.durch.name} ist günstiger: ${eur(k.durch.preis)} statt ${eur(k.durch.preis + k.spart)}. Übernehmen?`;
-        kb.dataset.id = k.durch.id; kb.hidden = false;
-      } else kb.hidden = true;
-      // Подсветка головы, если выбрано что-то на лице
-      $$('.zone[data-zone="kopf"]').forEach((h) => h.classList.toggle('hat', c.lines.some((l) => l.gesicht)));
+      const k = cart.kombiHint(), kb = $('[data-kombi]');
+      if (k) { $('[data-kombi-text]').textContent = `${k.durch.name} ist günstiger: ${eur(k.durch.preis)} statt ${eur(k.durch.preis + k.spart)}.`; kb.dataset.id = k.durch.id; kb.hidden = false; }
+      else kb.hidden = true;
+      labelsRender();
     }
-
-    function toggle(id: string, el?: Element, ev?: PointerEvent | MouseEvent) {
-      // Глазурь растекается из точки касания
-      if (el && ev && 'clientX' in ev && ev.clientX) {
-        const svg = el.closest('svg')!; const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+    function toggle(id: string, el?: Element, ev?: MouseEvent) {
+      if (el && ev && ev.clientX) {
+        const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
         const p = pt.matrixTransform(svg.getScreenCTM()!.inverse());
         el.querySelectorAll<SVGCircleElement>('.zone__glasur').forEach((c) => { c.setAttribute('cx', String(p.x)); c.setAttribute('cy', String(p.y)); c.style.transformOrigin = `${p.x}px ${p.y}px`; });
       }
-      const was = cart.active(id);
-      cart.toggle(id); vib();
+      const was = cart.active(id); cart.toggle(id); vib();
       const it = cart.item(id)!;
-      info(was ? `${it.name} entfernt` : `${it.name} · ${it.ab ? 'ab ' : ''}${eur(it.preis)} · ${cart.dauer(it.min)}`, id);
+      $('[data-info]').textContent = was ? `${it.name} entfernt` : `${it.name} hinzugefügt, ${eur(it.preis)}`;
     }
-
+    function setG(v: string) {
+      g = v; if (zoom) setZoom(false);
+      $$<HTMLInputElement>('.seg input').forEach((r) => { if (r.name.endsWith('-g')) r.checked = r.value === g; });
+      view();
+    }
+    function setS(v: string) {
+      s = v; if (zoom && s !== 'vorne') setZoom(false);
+      $$<HTMLInputElement>('.seg input').forEach((r) => { if (r.name.endsWith('-s')) r.checked = r.value === s; });
+      view();
+    }
     root.addEventListener('click', (e) => {
       const t = e.target as Element;
+      if (t.closest('[data-kopf]')) { setZoom(true); return; }
+      if (t.closest('[data-zurueck]')) { setZoom(false); return; }
       const z = t.closest<SVGGElement>('.zone[data-zone]');
-      if (z) {
-        if (z.dataset.zone === 'kopf') { gDlg.showModal(); return; }
-        toggle(z.dataset.zone!, z, e as MouseEvent); return;
-      }
+      if (z) { toggle(z.dataset.zone!, z, e as MouseEvent); return; }
       const b = t.closest<HTMLElement>('button[data-toggle]');
       if (b) { toggle(b.dataset.toggle!); return; }
-      if (t.closest('[data-undo]') && undoId) { cart.toggle(undoId); info('Rückgängig gemacht'); return; }
-      if (t.closest('[data-kombi-ja]')) { const id = $('[data-kombi]').dataset.id!; cart.applyKombi(id); info(`${cart.item(id)!.name} übernommen`); return; }
+      if (t.closest('[data-kombi-ja]')) { cart.applyKombi($('[data-kombi]').dataset.id!); return; }
       if (t.closest('[data-kombi-nein]')) { cart.dismissKombi($('[data-kombi]').dataset.id!); return; }
+      if (t.closest('[data-herren-link]')) { setG('herren'); setS('hinten'); }
     });
     root.addEventListener('keydown', (e) => {
-      const z = (e.target as Element).closest?.<SVGGElement>('.zone[data-zone]');
-      if (z && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); if (z.dataset.zone === 'kopf') gDlg.showModal(); else toggle(z.dataset.zone!); }
+      const t = e.target as Element;
+      if (e.key === 'Escape' && zoom) { setZoom(false); return; }
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      if (t.closest?.('[data-kopf]')) { e.preventDefault(); setZoom(true); return; }
+      const z = t.closest?.<SVGGElement>('.zone[data-zone]');
+      if (z) { e.preventDefault(); toggle(z.dataset.zone!); }
     });
     root.addEventListener('change', (e) => {
       const i = e.target as HTMLInputElement;
-      if (i.matches('input[data-toggle]')) { if (i.checked !== cart.active(i.dataset.toggle!)) toggle(i.dataset.toggle!); }
+      if (i.matches('input[data-toggle]')) { if (i.checked !== cart.active(i.dataset.toggle!)) toggle(i.dataset.toggle!); return; }
+      if (i.name?.endsWith('-g')) { setG(i.value); return; }
+      if (i.name?.endsWith('-s')) setS(i.value);
     });
-    // Ховер на ПК: подсказка, что под курсором
-    root.addEventListener('pointerover', (e) => {
-      if ((e as PointerEvent).pointerType !== 'mouse') return;
-      const z = (e.target as Element).closest<SVGGElement>('.zone[data-zone]');
-      if (z) info(z.getAttribute('aria-label')!.replace(', ', ' · '));
-    });
-    gDlg.addEventListener('click', (e) => { if (e.target === gDlg) gDlg.close(); });
-    // Внешний переключатель (например, «Für Männer» на странице Sugaring)
-    addEventListener('zf:geschlecht', (e) => {
-      g = (e as CustomEvent).detail; s = g === 'herren' ? 'hinten' : 'vorne';
-      $$<HTMLInputElement>('.seg input').forEach((r) => (r.checked = r.value === g || r.value === s));
-      view();
-    });
+    addEventListener('zf:geschlecht', (e) => { setG((e as CustomEvent).detail); setS('hinten'); });
     if (matchMedia('(min-width: 64rem)').matches) ($('[data-liste]') as HTMLDetailsElement).open = true;
+    new ResizeObserver(() => labelsRender()).observe(stage);
     addEventListener('zf:cart', sync);
-    sync();
+    document.fonts?.ready.then(labelsRender);
+    view(); sync();
   });
 </script>

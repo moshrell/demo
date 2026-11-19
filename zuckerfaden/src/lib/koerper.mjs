@@ -9,7 +9,7 @@ const poly = (...p) => `M${p.map((q) => q.join(' ')).join('L')}Z`;
 const ZONEN = {
   'damen-vorne': [
     { zone: 'd-arme', slugs: ['biceps', 'triceps', 'forearm', 'hands'], a: [176, 446], s: 'l', hit: 72 },
-    { zone: 'd-achseln', shapes: [ell(226, 438, 19, 34), ell(414, 438, 19, 34)], a: [226, 438], s: 'l' },
+    { zone: 'd-achseln', shapes: [ell(220, 414, 12, 21), ell(420, 414, 12, 21)], a: [220, 414], s: 'l', hit: 60 },
     { zone: 'd-oberschenkel', slugs: ['quadriceps', 'adductors'], a: [236, 790], s: 'l' },
     { zone: 'd-unterschenkel', slugs: ['knees', 'tibialis', 'calves', 'ankles', 'feet'], a: [378, 1190], s: 'r' },
     { zone: 'd-bikini', shapes: ['M222 596Q246 700 320 752Q394 700 418 596L394 596Q372 668 320 712Q268 668 246 596Z'], a: [320, 700], s: 'r' },
@@ -23,7 +23,7 @@ const ZONEN = {
     { zone: 'h-brust', slugs: ['chest'], a: [300, 380], s: 'l' },
     { zone: 'h-bauch', slugs: ['abs', 'obliques'], a: [395, 540], s: 'r' },
     { zone: 'h-arme', slugs: ['biceps', 'triceps', 'forearm', 'hands'], a: [206, 452], s: 'l', hit: 72 },
-    { zone: 'h-achseln', shapes: [ell(254, 430, 17, 32), ell(474, 430, 17, 32)], a: [254, 430], s: 'l' },
+    { zone: 'h-achseln', shapes: [ell(249, 442, 11, 21), ell(479, 442, 11, 21)], a: [249, 442], s: 'l', hit: 60 },
     { zone: 'h-oberschenkel', slugs: ['quadriceps', 'adductors'], a: [292, 810], s: 'l' },
     { zone: 'h-unterschenkel', slugs: ['knees', 'tibialis', 'calves', 'ankles', 'feet'], a: [440, 1140], s: 'r' },
     { zone: 'h-bikini', shapes: ['M256 640Q280 744 365 796Q450 744 474 640L450 640Q428 712 365 752Q302 712 280 640Z'], a: [365, 740], s: 'r' },

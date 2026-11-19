@@ -5,7 +5,7 @@ import Foto from '../components/Foto.astro';
 import Finder from '../components/Finder.astro';
 import data from '../data/behandlungen.json';
 import { euro, dauer } from '../lib/fmt.mjs';
-const bilder = { zucker: ['gesicht-3x4', 'Entspannte Kundin mit Handtuch-Turban während einer Gesichtsbehandlung'], natur: ['pflege-1x1', 'Glas mit Zuckerpaste, Pflegefläschchen und Handtuch'] };
+const bilder = { zucker: ['zuckerpflege-3x4', 'gesicht-3x4', 'Entspannte Kundin während einer Gesichtsbehandlung'], natur: ['natur-1x1', 'pflege-1x1', 'Pflegeprodukte und Handtuch auf Leinen'] };
 const zeitTag = (m) => (m <= 45 ? 'kurz' : m === 60 ? 'mittel' : 'lang');
 ---
 <Base title="Gesichtsbehandlungen ohne Geräte in Ronnenberg | Kosmetik Zuckerfaden" description="Gesichtspflege mit Zuckerpaste, Naturkosmetik oder klassisch, ohne Geräte. Passende Behandlung in drei Fragen finden, Preise ab 29,50 €." aktiv="gesicht" prices={data.behandlungen.map((b) => ({ name: b.name, price: b.preis }))}>
@@ -31,13 +31,13 @@ const zeitTag = (m) => (m <= 45 ? 'kurz' : m === 60 ? 'mittel' : 'lang');
           <div class="linie__kopf">
             <h3 class="linie__name">{l.name}</h3>
             <p class="muted">{l.text}</p>
-            {bilder[l.id] && <Foto name={bilder[l.id][0]} alt={bilder[l.id][1]} sizes="(min-width: 64rem) 22rem, 60vw" class="linie__foto" />}
+            {bilder[l.id] && <Foto name={bilder[l.id][0]} fallback={bilder[l.id][1]} alt={bilder[l.id][2]} sizes="(min-width: 64rem) 22rem, 60vw" class="linie__foto" />}
           </div>
           <ul class="beh">
             {data.behandlungen.filter((b) => b.linie === l.id).map((b) => (
               <li data-zeit={zeitTag(b.min)} data-haut={b.haut.join(' ')}>
                 <div class="beh__text"><h4>{b.name}</h4><p>{b.text}</p></div>
-                <p class="beh__preis num">{dauer(b.min)}<strong>{euro(b.preis)}</strong></p>
+                <p class="beh__preis num"><strong>{euro(b.preis)}</strong><span>{dauer(b.min)}</span></p>
                 <button type="button" class="beh__add" data-add={b.id} aria-pressed="false" aria-label={`${b.name} zur Anfrage hinzufügen`}>Hinzufügen</button>
               </li>
             ))}
@@ -70,7 +70,8 @@ const zeitTag = (m) => (m <= 45 ? 'kurz' : m === 60 ? 'mittel' : 'lang');
   .beh li[hidden] { display: none; }
   .beh h4 { margin: 0 0 0.2rem; font-size: var(--text-lg); font-weight: var(--strong-weight); }
   .beh p { color: var(--tinte-2); }
-  .beh__preis { display: grid; justify-items: end; text-align: right; color: var(--tinte-2) !important; font-size: 0.95rem; }
+  .beh__preis { display: grid; align-content: start; justify-items: end; gap: 0.1rem; text-align: right; color: var(--tinte-2) !important; font-size: 1rem; white-space: nowrap; }
+  .beh__preis strong { line-height: 1.2; }
   .beh__preis strong { color: var(--tinte); font-size: 1.2rem; }
   .beh__add { grid-column: 1 / -1; justify-self: start; min-height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1.5px solid var(--tinte); background: none; font: inherit; font-weight: 500; color: var(--tinte); cursor: pointer; }
   .beh__add[aria-pressed='true'] { background: linear-gradient(170deg, var(--honig-hell), var(--honig-tief)); border-color: #9A5D0B; }

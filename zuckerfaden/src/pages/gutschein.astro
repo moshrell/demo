@@ -10,10 +10,10 @@ const base = import.meta.env.BASE_URL;
 const betraege = [25, 50, 75, 100];
 const optionen = [...beh.behandlungen.map((b) => ({ id: b.id, name: b.name, preis: b.preis })), ...zusatz.gruppen.flatMap((g) => g.items).filter((x) => !x.ab).map((x) => ({ id: x.id, name: x.name, preis: x.preis }))];
 ---
-<Base title="Gutschein verschenken | Kosmetik Zuckerfaden Ronnenberg" description="Gutschein für eine Behandlung oder einen Betrag Ihrer Wahl. Abholen im Studio in Ronnenberg oder per Post, bezahlt wird bei Abholung." aktiv="gutschein">
+<Base title="Gutschein verschenken | Kosmetik Zuckerfaden Ronnenberg" description="Gutschein für eine Behandlung oder einen Betrag Ihrer Wahl. Abholen im Studio in Ronnenberg oder per Post, bezahlt wird bei Abholung." aktiv="gutschein" leiste="gutschein">
   <Seitenkopf titel="Gutschein verschenken" lede="Für eine Behandlung oder einen Betrag. Sie fragen hier an, ich bereite den Gutschein vor. Bezahlt wird bei der Abholung oder per Überweisung, wenn ich ihn schicke." />
   <section class="wrap gp section">
-    <Foto name="gutschein-1x1" alt="Gutscheinkarte im Umschlag mit Schleife" sizes="(min-width: 64rem) 22rem, 70vw" class="gp__foto" eager />
+    <Foto name="gutschein-tisch-1x1" fallback="gutschein-1x1" alt="Gutscheinkarte im Umschlag mit Schleife" sizes="(min-width: 64rem) 22rem, 70vw" class="gp__foto" eager />
 
     <form class="form gp__form" id="gutschein" novalidate data-gs-form>
       <fieldset class="gruppe">

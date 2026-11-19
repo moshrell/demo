@@ -34,7 +34,8 @@ const io = new IntersectionObserver((es) => { es.forEach((e) => (e.isIntersectin
 $$('[data-pille-weg]').forEach((e) => io.observe(e));
 function render() {
   const c = cart.get();
-  const show = c.lines.length > 0;
+  // на странице записи сводка уже в форме — пилюля не нужна и легла бы на поля
+  const show = c.lines.length > 0 && document.body.dataset.leiste !== 'termin';
   if (pille.hidden === show) { pille.hidden = !show; honig.pulse(); }
   if (show) {
     $('[data-pille-n]')!.textContent = cart.anzahl(c.lines.length);

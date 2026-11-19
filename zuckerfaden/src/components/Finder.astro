@@ -76,6 +76,8 @@ const fragen = [
   .fi__nav { display: flex; justify-content: space-between; gap: 1rem; min-height: 2.75rem; margin-top: var(--space-md); }
   .fi__link { min-height: 2.75rem; padding: 0 0.2rem; border: 0; background: none; font: inherit; font-weight: var(--strong-weight); color: var(--tinte); text-decoration: underline; text-underline-offset: 0.25em; cursor: pointer; }
   .fi__link[hidden] { display: none; }
+  /* на первом шаге обе ссылки скрыты — ряд не держит пустое место */
+  .fi__nav:not(:has(.fi__link:not([hidden]))) { display: none; }
   .fi__ergebnis { outline: none; animation: schritt 0.34s cubic-bezier(0.2, 0.9, 0.3, 1); }
   .fi__titel { font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.2rem); line-height: 1.15; }
   .fi__liste { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.9rem; }

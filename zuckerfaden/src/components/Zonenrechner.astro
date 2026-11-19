@@ -131,11 +131,6 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
       </div>
 
       <div class="zr__fuss">
-        <div class="kombi kombi--fuss" data-kombi hidden role="status">
-          <p data-kombi-text></p>
-          <button type="button" class="btn btn--klein" data-kombi-ja>Übernehmen</button>
-          <button type="button" class="kombi__x" data-kombi-nein aria-label="Nein danke">×</button>
-        </div>
         {['damen', 'herren'].map((g) => (
           <div class="zr__chips" data-fuss={g} hidden={g !== 'damen'}>
             {extras(g).map((z) => <button type="button" class="extra" data-toggle={z.id} aria-pressed="false">{z.name} <span class="preis">{z.ab ? 'ab ' : ''}{euro(z.preis)}</span></button>)}
@@ -155,6 +150,7 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
         <div data-voll hidden>
           <p class="zr__zahl"><span data-n></span><strong class="num" data-s></strong></p>
           <p class="muted num" data-d></p>
+          <p class="zr__andere" data-andere hidden></p>
           <div class="kombi kombi--karte" data-kombi hidden role="status">
             <p data-kombi-text></p>
             <div class="kombi__btns"><button type="button" class="btn btn--klein" data-kombi-ja>Übernehmen</button><button type="button" class="btn btn--ghost btn--klein" data-kombi-nein>Nein danke</button></div>
@@ -190,13 +186,13 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   .seg label { position: relative; }
   .seg label[hidden] { display: none; }
   .seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-  .seg span { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 clamp(0.38rem, 2.6vw - 0.3rem, 0.7rem); font-size: clamp(0.84rem, 0.6rem + 1vw, 0.95rem); border-radius: 999px; font-weight: 500; cursor: pointer; color: var(--licht-2); }
+  .seg span { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 clamp(0.5rem, 2.6vw - 0.2rem, 0.85rem); font-size: clamp(0.95rem, 0.8rem + 0.6vw, 1.0625rem); border-radius: 999px; font-weight: 500; cursor: pointer; color: var(--licht-2); }
   .seg input:checked + span { background: var(--licht); color: var(--tinte); font-weight: var(--strong-weight); }
   .seg input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
   .zr__fuss { min-height: 3rem; }
   .zr__chips { display: flex; flex-wrap: wrap; gap: 0.45rem; justify-content: center; }
   .zr__chips[hidden] { display: none; }
-  .extra { display: inline-flex; gap: 0.5rem; align-items: center; min-height: 2.75rem; padding: 0.4rem 1rem; border-radius: 999px; border: 1px solid var(--nacht-3); background: var(--nacht-2); color: var(--licht); font: inherit; font-size: 0.95rem; cursor: pointer; }
+  .extra { display: inline-flex; gap: 0.5rem; align-items: center; min-height: 2.75rem; padding: 0.4rem 1rem; border-radius: 999px; border: 1px solid var(--nacht-3); background: var(--nacht-2); color: var(--licht); font: inherit; font-size: 1rem; cursor: pointer; }
   .extra .preis { color: var(--honig-hell); font-weight: var(--strong-weight); }
   .extra[aria-pressed='true'] { background: linear-gradient(180deg, #FFD983, #E9A52C 55%, #C9801A); color: var(--tinte); border-color: transparent; }
   .extra[aria-pressed='true'] .preis { color: var(--tinte); }
@@ -216,8 +212,8 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   .zr__kopf { fill: transparent; cursor: pointer; outline: none; }
   .zr__kopf:hover, .zr__kopf:focus-visible { fill: rgba(227, 162, 31, 0.14); }
   /* Einladung: beim ersten Sichtbarwerden leuchten die Zonen einmal nacheinander auf */
-  :global(.zr.einladen .fig[data-on='1'] .zone[aria-checked='false'] .zone__glanz) { display: inline; animation: einladen 1.2s ease-in-out both; animation-delay: calc(var(--i) * 0.14s + 0.15s); }
-  @keyframes einladen { 0%, 100% { opacity: 0; } 45% { opacity: 0.55; } }
+  :global(.zr.einladen .fig[data-on='1'] .zone[aria-checked='false']:not(:hover):not(:focus-visible) .zone__glanz) { display: inline; animation: einladen 1.2s ease-in-out both; animation-delay: calc(var(--i) * 0.14s + 0.15s); }
+  @keyframes einladen { 0%, 100% { opacity: 0; } 45% { opacity: 0.32; } }
   @keyframes ein { from { opacity: 0; } }
   .haar { fill: #8B5A3C; }
   .koerper .haar { fill: #8B5A3C; stroke: rgba(40, 20, 8, 0.35); stroke-width: 3; }
@@ -226,8 +222,11 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   :global(.zone__glanz) { display: none; }
   :global(.zone[aria-checked='true'] .zone__glanz) { display: inline; animation: glasur 0.35s ease-out; }
   @keyframes glasur { from { opacity: 0; } }
-  :global(.zone:hover .zone__hit) { fill: rgba(227, 162, 31, 0.16); stroke: rgba(227, 162, 31, 0.16); }
-  :global(.zone:focus-visible .zone__hit) { fill: rgba(227, 162, 31, 0.3); stroke: rgba(227, 162, 31, 0.3); }
+  /* Наведение и фокус подсвечивают саму зону (мёд вполсилы), а не увеличенную невидимую область нажатия */
+  :global(.zone:hover .zone__glanz), :global(.zone:focus-visible .zone__glanz) { display: inline; opacity: 0.45; }
+  :global(.zone[aria-checked='true']:hover .zone__glanz), :global(.zone[aria-checked='true']:focus-visible .zone__glanz) { opacity: 1; }
+  /* Фокус с клавиатуры: светлое кольцо вокруг зоны, видно и на выбранной (медовой) зоне */
+  :global(.zone:focus-visible) { filter: drop-shadow(0 0 1.5px #FFF6E2) drop-shadow(0 0 1.5px #FFF6E2) drop-shadow(0 0 5px rgba(255, 210, 122, 0.9)); }
   :global(.zone__umriss) { fill: rgba(227, 162, 31, 0.08); stroke: #C08A3E; stroke-width: 0.6; stroke-dasharray: 2 1.6; pointer-events: none; }
   :global(.zone[aria-checked='true'] .zone__umriss) { display: none; }
   .zr__leitungen { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
@@ -236,10 +235,10 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   .zr__labels { position: absolute; inset: 0; pointer-events: none; }
   .zr__labels :global(.lbl) { position: absolute; display: grid; line-height: 1.15; padding: 0.35rem 0.6rem; border-radius: 10px; background: rgba(27, 17, 11, 0.82); border: 1px solid rgba(255, 210, 122, 0.35); max-width: 8.5rem; animation: lbl 0.22s ease-out; }
   .zr__labels :global(.lbl--l) { text-align: right; }
-  .zr__labels :global(.lbl__n) { font-size: 0.8125rem; color: var(--licht); }
+  .zr__labels :global(.lbl__n) { font-size: 0.875rem; color: var(--licht); }
   .zr__labels :global(.lbl__p) { font-size: 1rem; font-weight: 700; color: var(--honig-hell); font-variant-numeric: tabular-nums; }
   .zr__labels :global(.lbl--kurz) { display: flex; align-items: baseline; gap: 0.35rem; padding: 0.2rem 0.5rem; border-radius: 999px; max-width: none; white-space: nowrap; }
-  .zr__labels :global(.lbl--kurz .lbl__n) { font-size: 0.75rem; }
+  .zr__labels :global(.lbl--kurz .lbl__n) { font-size: 0.8125rem; }
   .zr__labels :global(.lbl--kurz .lbl__p) { font-size: 0.875rem; }
   @keyframes lbl { from { opacity: 0; transform: translateY(4px); } }
   .kombi[hidden] { display: none !important; }
@@ -247,12 +246,7 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   .kombi--karte { margin-top: 1rem; padding: 0.8rem 0.9rem; border-radius: 14px; background: rgba(255, 210, 122, 0.12); border: 1px solid rgba(255, 210, 122, 0.4); display: grid; gap: 0.6rem; animation: rein 0.25s ease-out; }
   .kombi__btns { display: flex; flex-wrap: wrap; gap: 0.4rem; }
   .kombi--karte .btn--ghost { color: var(--licht); border-color: rgba(246, 239, 231, 0.5); }
-  .zr__fuss { position: relative; }
-  .kombi--fuss { position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.45rem 0.45rem 0.9rem; border-radius: 18px; background: var(--weiss); color: var(--tinte); box-shadow: 0 16px 30px -18px rgba(0, 0, 0, 0.8); animation: rein 0.25s ease-out; }
-  .kombi--fuss p { flex: 1; font-size: 0.9rem; }
-  .kombi__x { flex: none; width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 1.5px solid var(--linie); background: none; font-size: 1.2rem; color: var(--tinte); cursor: pointer; }
   @keyframes rein { from { opacity: 0; transform: translateY(8px); } }
-  @media (min-width: 64rem) { .kombi--fuss { display: none !important; } }
 
   .zr__summe { padding: 1.2rem 1.3rem; background: var(--nacht-2); border: 1px solid var(--nacht-3); border-radius: 20px; }
   .zr__leer { font-weight: 500; }
@@ -260,13 +254,15 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   .zr__zahl strong { font-size: 2.4rem; font-family: var(--font-display); font-weight: var(--display-weight); color: var(--licht); }
   .zr__weiter { width: 100%; margin-top: 1rem; white-space: normal; text-align: center; }
   .zr__hinweis { margin-top: 0.9rem; }
+  .zr__andere { margin-top: 0.6rem; padding: 0.55rem 0.8rem; border-radius: 12px; background: rgba(246, 239, 231, 0.08); color: var(--licht); font-size: 0.95rem; }
+  .zr__andere[hidden] { display: none; }
   .zr__liste { margin-top: var(--space-md); }
   .zr__liste summary { cursor: pointer; font-weight: var(--strong-weight); min-height: 2.75rem; display: flex; align-items: center; }
   .zr__liste ul { list-style: none; margin: 0.4rem 0 0; padding: 0; }
   .zr__liste ul[hidden] { display: none; }
   .zl { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 0.75rem; align-items: center; min-height: 3rem; padding: 0.35rem 0; border-bottom: 1px solid var(--nacht-3); cursor: pointer; }
   .zl input { width: 1.3rem; height: 1.3rem; accent-color: var(--honig); margin: 0; }
-  .zl__m { font-size: 0.9rem; color: var(--licht-2); }
+  .zl__m { font-size: 1rem; color: var(--licht-2); }
   .zl .preis { font-weight: var(--strong-weight); min-width: 3.6rem; text-align: right; color: var(--honig-hell); }
   .zr__links { margin-top: var(--space-md); color: var(--licht-2); }
   @media (max-width: 63.99rem) and (max-height: 500px) and (orientation: landscape) {
@@ -393,14 +389,17 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
         $('[data-d]').textContent = 'Dauer ca. ' + cart.dauer(c.min);
       }
       const k = cart.kombiHint();
+      // Подсказка комплекта — одна, в карточке итога (не всплывает поверх фигуры)
       $$('[data-kombi]').forEach((kb) => {
-        const hier = !kb.classList.contains('kombi--fuss') || (!!k && s !== 'gesicht' && cart.item(k.durch.id)?.g === g);
-        kb.hidden = !k || !hier; if (!k) return;
+        kb.hidden = !k; if (!k) return;
         kb.dataset.id = k.durch.id;
-        kb.querySelector('[data-kombi-text]')!.textContent = kb.classList.contains('kombi--fuss')
-          ? `${k.durch.name} für ${eur(k.durch.preis)} statt ${eur(k.durch.preis + k.spart)}`
-          : `${k.durch.name} ist günstiger: ${eur(k.durch.preis)} statt ${eur(k.durch.preis + k.spart)}.`;
+        kb.querySelector('[data-kombi-text]')!.textContent = `${k.durch.name} ist günstiger: ${eur(k.durch.preis)} statt ${eur(k.durch.preis + k.spart)}.`;
       });
+      // В итоге есть зоны другой фигуры (выбрали у Damen, переключились на Herren) — говорим об этом прямо
+      const andere = c.lines.filter((l) => l.art === 'zone' && l.g && l.g !== g);
+      const an = $('[data-andere]');
+      an.hidden = !andere.length;
+      if (andere.length) an.textContent = `Enthält auch ${andere.length === 1 ? '1 Zone' : andere.length + ' Zonen'} für ${andere[0].g === 'damen' ? 'Damen' : 'Herren'}: ${andere.map((l) => l.name).join(', ')}.`;
       labelsRender();
     }
     function toggle(id: string) {

@@ -15,8 +15,9 @@ export function bilder() {
         for (const f of fs.readdirSync(dir).filter((x) => /\.jpe?g$/i.test(x))) {
           const src = path.join(dir, f), base = f.replace(/\.jpe?g$/i, ''), mt = fs.statSync(src).mtimeMs;
           const meta = await sharp(src).metadata();
-          for (const w of WIDTHS) {
-            if (w > (meta.width || 0) && w !== WIDTHS[0]) continue;
+          for (const [i, w] of WIDTHS.entries()) {
+            // первая ширина больше исходника = исходник целиком (иначе у 896-px кадров был бы только 480w и на телефонах мыло)
+            if (i > 0 && WIDTHS[i - 1] >= (meta.width || 0)) continue;
             const dst = path.join(out, `${base}-${w}.webp`);
             if (fs.existsSync(dst) && fs.statSync(dst).mtimeMs >= mt) continue;
             await sharp(src).resize({ width: Math.min(w, meta.width || w) }).webp({ quality: 78 }).toFile(dst);

@@ -41,7 +41,7 @@ const schritte = [
 
   <section class="ich section" aria-labelledby="ich-h">
     <div class="wrap ich__grid">
-      <Foto name="kosmetikerin-3x4" alt={`${site.owner} in ihrem Behandlungsraum`} sizes="(min-width: 64rem) 34vw, 92vw" class="ich__foto" />
+      <Foto name="kosmetikerin-arbeit-3x4" fallback="kosmetikerin-3x4" alt={`${site.owner} in ihrem Behandlungsraum`} sizes="(min-width: 64rem) 34vw, 92vw" class="ich__foto" />
       <div class="ich__text">
         <p class="muted">Seit {jahre} Jahren im eigenen Raum</p>
         <h2 id="ich-h">Ich bin {site.owner.split(' ')[0]}</h2>

@@ -196,7 +196,7 @@ const tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
     onSubmit: () => {
       const c = cart.get();
       const rows: [string, string, string?][] = c.lines.map((l) => [l.name, l.gratis ? 'inklusive' : (l.ab ? 'ab ' : '') + cart.euro(l.preis)]);
-      if (c.lines.length) rows.push(['Summe, ca. ' + cart.dauer(c.min), (c.ab ? 'ab ' : '') + cart.euro(c.summe), 'summe']);
+      if (c.lines.length) rows.push(['Summe', (c.ab ? 'ab ' : '') + cart.euro(c.summe), 'summe'], ['Dauer', 'ca. ' + cart.dauer(c.min)]);
       const tage = [...form.querySelectorAll<HTMLInputElement>('input[name=tage]:checked')].map((i) => i.value).join(', ');
       const zeit = [...form.querySelectorAll<HTMLInputElement>('input[name=zeit]:checked')].map((i) => i.value).join(', ');
       if (tage || zeit) rows.push(['Wunschzeit', [tage, zeit].filter(Boolean).join(' · ')]);

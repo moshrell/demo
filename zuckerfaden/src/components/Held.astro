@@ -48,6 +48,14 @@ const base = import.meta.env.BASE_URL;
   .nur-pc { display: none; }
   @media (max-height: 700px) and (max-width: 63.99rem) { .held__in { padding-top: 6rem; } .held h1.held__h1 { font-size: 2.15rem; } .held__lede { font-size: 0.98rem; line-height: 1.5; } .held__text { gap: 0.75rem; } }
   .held { min-height: min(calc(100svh - 5.8rem), 46rem); }
+  /* Телефон боком: заголовок в две строки, текст слева, панель уходит вправо — ничего не прячется под ней */
+  @media (orientation: landscape) and (max-height: 500px) and (max-width: 63.99rem) {
+    .held__band { --bs: 0.5; }
+    .held__in { padding-top: 5.4rem; padding-bottom: 1.6rem; }
+    .held h1.held__h1 { font-size: 2rem; max-width: 24ch; }
+    .held__text { max-width: min(30rem, 58vw); gap: 0.6rem; }
+    .held__lede { font-size: 0.95rem; }
+  }
   .held__text { min-width: 0; display: grid; gap: var(--space-md); max-width: 40rem; }
   .held__ort { color: var(--licht-2); font-size: var(--text-sm); }
   .held h1 { font-size: clamp(2.6rem, 1.2rem + 6vw, 6.2rem); line-height: 1; max-width: 13ch; text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5); }

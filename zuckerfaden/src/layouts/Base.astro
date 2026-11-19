@@ -14,11 +14,11 @@ const {
   image = '',
   prices = [],
   aktiv = '',
-  leiste = 'normal', // 'termin' = auf der Anfrage-Seite: Hauptknopf ruft an
+  leiste = 'normal', // 'termin' = auf der Anfrage-Seite: Hauptknopf ruft an; 'gutschein' = Hauptknopf führt zum Gutschein-Formular
 } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = image ? new URL(base + image.replace(/^\//, ''), Astro.site).href : undefined;
+const ogImage = new URL(base + (image || 'img/og.jpg').replace(/^\//, ''), Astro.site).href;
 const graph = [
   ...(index ? [{
     '@type': type, '@id': new URL(base, Astro.site).href + '#business', name: site.name, url: new URL(base, Astro.site).href, description,
@@ -58,7 +58,10 @@ const wa = `https://wa.me/${site.whatsapp}`;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
   </head>
   <body data-leiste={leiste}>
@@ -128,7 +131,9 @@ const wa = `https://wa.me/${site.whatsapp}`;
         <button type="button" class="leiste__btn leiste__menue" data-open="menue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16" /></svg><span>Menü</span></button>
         {leiste === 'termin'
           ? <a class="leiste__haupt" href={tel}>Jetzt anrufen</a>
-          : <a class="leiste__haupt" href={`${base}termin/`} data-termin>Termin anfragen</a>}
+          : leiste === 'gutschein'
+            ? <a class="leiste__haupt" href="#gutschein">Gutschein anfragen</a>
+            : <a class="leiste__haupt" href={`${base}termin/`} data-termin>Termin anfragen</a>}
         {leiste === 'termin'
           ? <a class="leiste__btn" href={wa} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19l1.2-3.6A7.5 7.5 0 1 1 9 18.3z" /></svg><span>WhatsApp</span></a>
           : <a class="leiste__btn leiste__tel" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg><span>Anrufen</span></a>}
@@ -177,12 +182,12 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .kopf { position: relative; z-index: 30; }
   .kopf__in { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding-block: 0.8rem; }
   .kopf__name { min-width: 0; }
-  .kopf__heute { font-size: 0.875rem; color: var(--licht); margin-top: 0.45rem; }
+  .kopf__heute { font-size: 0.9375rem; color: var(--licht); margin-top: 0.45rem; }
   .kopf__heute:empty { display: none; }
   .kopf__heute b { font-weight: 600; color: var(--honig-hell); }
   .kopf__name { display: grid; text-decoration: none; line-height: 1; }
   .kopf__marke { overflow-wrap: anywhere; font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.75rem; letter-spacing: var(--display-tracking); }
-  .kopf__zeile { font-size: 0.8125rem; color: var(--licht-2); margin-top: 0.3rem; letter-spacing: 0.02em; }
+  .kopf__zeile { font-size: 0.875rem; color: var(--licht-2); margin-top: 0.3rem; letter-spacing: 0.02em; }
   .punkt { display: inline-block; width: 0.5em; height: 0.5em; border-radius: 50%; background: #7BC47F; margin-right: 0.4em; vertical-align: 0.08em; box-shadow: 0 0 0 3px rgba(123, 196, 127, 0.18); }
   .punkt--zu { background: var(--licht-2); box-shadow: none; }
   .kopf__kapsel { display: none; }
@@ -235,13 +240,14 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .honigfaden { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 39; pointer-events: none; }
   .leiste { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; pointer-events: none; padding: 0 max(var(--bar-gap), env(safe-area-inset-left)) calc(var(--bar-gap) + env(safe-area-inset-bottom)); display: grid; justify-items: center; gap: 12px; transform: translateZ(0); }
   .leiste__bar { --cap: 24px; pointer-events: auto; width: min(100%, 23rem); height: var(--bar-h); display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; color: var(--tinte); }
-  .leiste__btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-width: 0; min-height: 2.75rem; padding: 0 0.2rem; background: none; border: 0; color: var(--tinte); font: inherit; font-size: 0.75rem; font-weight: 700; text-decoration: none; cursor: pointer; border-radius: 999px; justify-self: center; }
+  .leiste__btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-width: 0; min-height: 2.75rem; padding: 0 0.2rem; background: none; border: 0; color: var(--tinte); font: inherit; font-size: 0.875rem; font-weight: 700; line-height: 1.1; text-decoration: none; cursor: pointer; border-radius: 999px; justify-self: center; }
   .leiste__btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
-  .leiste__haupt { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: 0 1.05rem; font-size: 0.95rem; border-radius: 999px; background: var(--tinte); color: var(--weiss); text-decoration: none; font-weight: var(--strong-weight); white-space: nowrap; box-shadow: 0 6px 14px -6px rgba(60, 25, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
+  .leiste__haupt { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: 0 1.05rem; font-size: 1rem; border-radius: 999px; background: var(--tinte); color: var(--weiss); text-decoration: none; font-weight: var(--strong-weight); white-space: nowrap; box-shadow: 0 6px 14px -6px rgba(60, 25, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
   .pille { --cap: 22px; pointer-events: auto; display: inline-flex; align-items: center; gap: 0.7rem; height: 44px; padding: 0; font: inherit; font-weight: var(--strong-weight); color: var(--tinte); cursor: pointer; transition: transform 0.4s cubic-bezier(0.3, 1.35, 0.5, 1), opacity 0.25s; }
   .pille[hidden], .pille.pille--weg { display: inline-flex; visibility: hidden; opacity: 0; transform: translateY(40px) scale(0.6); pointer-events: none; }
   .pille__n { font-weight: 500; }
   .pille__summe { font-size: 1.1rem; font-weight: 700; }
+  @media (orientation: landscape) and (max-height: 500px) and (max-width: 63.99rem) { .leiste { justify-items: end; } .leiste__bar { width: min(100%, 20rem); } }
   @media (min-width: 64rem) { .leiste__bar { display: none; } .leiste { padding-bottom: calc(1.2rem + env(safe-area-inset-bottom)); } }
 
   /* Шторки */
@@ -258,11 +264,14 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .sheet__nav a[aria-current='page'] { color: #9A5D0B; }
   .sheet__info { display: grid; gap: 0.6rem; margin-top: 1.1rem; color: var(--tinte-2); }
   .sheet__info .punkt { background: #3E8E44; box-shadow: none; }
+  /* «закрыто» — серая точка и в футере, и в меню (раньше зелёное правило выше по специфичности её перебивало) */
+  .karte__status .punkt.punkt--zu, .sheet__info .punkt.punkt--zu { background: #A79A90; }
   .auswahl { list-style: none; margin: 0.4rem 0 0; padding: 0; }
   .auswahl li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 0.75rem; align-items: center; padding: 0.55rem 0; border-bottom: 1px solid var(--linie); }
   .auswahl .preis { font-variant-numeric: tabular-nums; font-weight: 600; }
   .auswahl button { width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1.5px solid var(--linie); background: none; cursor: pointer; color: var(--tinte); font-size: 1.1rem; }
-  .auswahl__summe { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 0.9rem 0 0.2rem; font-size: var(--text-lg); }
+  .auswahl__summe { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.2rem 1rem; margin: 0.9rem 0 0.2rem; font-size: var(--text-lg); }
+  .auswahl__summe > span { white-space: nowrap; }
   .auswahl__summe strong { font-size: 1.7rem; margin-left: 0.3rem; }
   .auswahl__leer { color: var(--tinte-2); padding: 0.8rem 0; }
   .sheet__aktion { margin-top: 1rem; }

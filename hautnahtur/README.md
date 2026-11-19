@@ -1,0 +1,41 @@
+# hautnahtur — сайт Hautnahtur Kosmetikstudio (Michaela Jurisch, Gehrden), версия для показа клиентке
+
+Просмотр: https://moshrell.github.io/demo/hautnahtur/ (noindex, не продвигать). Основа — демо `zuckerfaden/` (оно остаётся в портфолио как вымышленное, его не трогать).
+Источник данных: старый сайт клиентки http://hautnahtur-gehrden.de (страницы ueber, leistungen_alle, sugaring, kosmetik, zucker, atame, angebot, kontakt, galerie).
+
+## Что взято с её сайта (1:1)
+- Название, логотип (`public/img/logo.png`, на тёмном фоне `logo-hell.png` — тот же рисунок, тёмные части перекрашены в светлые), имя, контакты, часы, адрес, «с 1999», Ust.ID.
+- Цены: Sugaring Damen/Herren (все зоны), 12 процедур «Zucker dich schön!» (Turbo-Hydra-Deluxe — две строки 60/90 Мин.), 6 процедур atamé, 3 классических (Mary Kay), Maniküre/Naturnagelpflege/Fußpflege, Wimpern/Brauen, Make-up (24,50 / 34,50 €). Данные в `src/data/*.json`.
+- Тексты: методика Sugaring и «Vorteile», три «Säulen» (продукты, без аппаратов, индивидуальность), Farbbegleitung, Ausbildung с годами, золотое правило Mary Kay. Опечатки исправлены, смысл не менялся.
+- Фото (с её сайта, `public/img/`): портрет `michaela.jpg`, студия `studio-*.jpg` (вырезаны из её галереи), мёд `honig.jpg` (её главный кадр без надписи), `leistung-*.jpg`.
+
+## Что убрано из демо, потому что у неё этого нет
+Beine komplett (цены комплекта нет), мужские зоны лица, страница Gutschein, WhatsApp, «Vorher/Nachher» и FAQ, шаги «Rückruf am selben Abend», «Parkplatz/ebenerdig», Ronnenberg/Birgit/Zuckerfaden, сгенерированные фото, PROMPTS.txt, publish.mjs и ki-hinweis.mjs (они дописывали «Betrieb erfunden»).
+
+## TODO / вопросы к клиентке (в коде помечены TODO)
+- **Письменное согласие** на использование её логотипа, текстов и фото (в т.ч. фото клиенток и её портрет) — по правилам из CLAUDE.md. Репозиторий публичный: если согласия нет или это неприемлемо, папку убрать из публичного репозитория.
+- Ust.ID.Nr.: на её сайте указано «DE23/120/06329». Похоже на Steuernummer, а не USt-IdNr. (формат DE + 9 цифр). Выяснить у неё, в Impressum стоит как на старом сайте + пометка TODO.
+- У старого сайта нет Impressum и Datenschutz (страницы 404). Тексты новых написаны по шаблону, хостинг/логи — TODO.
+- Длительность: у зон Sugaring, Färben/Zupfen и Tages-/Abend-/Braut-Make-up её времени нет (она считает по времени и материалу, ~50 €/Std.). «Dauer» показывается только когда время известно для всех выбранных услуг.
+- «Gesicht komplett» (45 €): что входит (Vellushaar 30 € отдельно) — уточнить; сейчас считается комплектом из Oberlippe, Kinn, Augenbrauen, Nase/Ohr, Hals, подсказка «дешевле» не включается (сумма частей 42 € < 45 €).
+- Herren: на её листе нет цен на лицо, поэтому вкладки «Gesicht» у мужчин нет. Можно предложить ей (в «Behandlung für den Mann» уже есть Nase/Ohren).
+- Google-отзывы: `googleReviewsUrl: "TODO"` в `site.json`; кнопка появится, когда ссылка будет.
+- Не взято: Facebook-ссылка, Qype (мёртв), PDF «Sommeraktion 2011» (устарел), личные детали (год рождения, семья).
+- Фото из её старого сайта маленькие (портрет 263 px, студия 356 px, баннеры 755 px): показаны в размере, где не мылятся. Для крупных кадров нужны оригиналы от неё. `leistung-*` — её рекламные фото с клиентками.
+- Актуальность цен (дата «Stand») — подтвердить.
+
+## Как устроено (как в zuckerfaden)
+- Astro, данные в `src/data/*.json`, шрифты локально (Gilda Display + Manrope), без внешних запросов.
+- Калькулятор зон (`src/components/Zonenrechner.astro`) на готовых фигурах (`@mjcdev/react-body-highlighter`, MIT); у Herren вкладка лица скрыта, пока нет зон лица. Мёд — предрисованные WebP (`tools/honig-textur.mjs`).
+- Корзина (`src/lib/cart.ts`): сумма всегда, длительность — только если известна для всех позиций (`minOk`).
+- Формы по правилам: label, placeholder, согласие со ссылкой на Datenschutz в новой вкладке, sessionStorage-автосохранение, итог виден. Пометка «Vorschau: nichts gesendet».
+- `DEMO_BASE=/ npx astro build`, затем `node tools/pagecheck.mjs 390x844 /tmp/out /sugaring/`.
+
+## Проверено (числами)
+- pagecheck 390×844, 360×640, 844×390, 1440×900 на всех 8 страницах: нет горизонтальной прокрутки, нет ошибок консоли, после перезагрузки сверху (предупреждения только известные: skip-ссылка за краем и скрытый `.sr`-заголовок).
+- Сценарий (390 px): зоны Damen → Gesicht → Herren (вкладки лица нет) → Rücken, сумма 86 € совпадает в калькуляторе, пилюле, форме и подтверждении; без ошибок.
+- Скриншотами смотрели: главная на телефоне и ПК (шапка с логотипом, герой с мёдом, галерея, футер), калькулятор.
+
+## Не проверено
+- На настоящем телефоне (iOS Safari), печать прайса.
+- Другие страницы (Preise, Über mich, Gesicht) по скриншотам не смотрели, только числами.

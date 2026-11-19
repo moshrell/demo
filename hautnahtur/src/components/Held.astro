@@ -1,0 +1,80 @@
+---
+/** Главный экран: тёмная сцена, по верхнему краю — слой мёда с каплями (готовая текстура, капли падают CSS-анимацией).
+ *  На телефоне без фото (чистая сцена), на ПК — арка с банкой сахарной пасты. Капли падают два раза и замирают. prefers-reduced-motion: капель нет. */
+import site from '../data/site.json';
+import Foto from './Foto.astro';
+const base = import.meta.env.BASE_URL;
+---
+<section class="held dunkel" data-held>
+  <div class="held__bild" aria-hidden="true"><Foto name="honig" alt="" sizes="(min-width: 64rem) 26rem, 1px" class="held__foto" /></div>
+  <div class="held__band" aria-hidden="true">
+    <i class="tr" style="--x:96px;--y:131px;--d:6.5s;--w:0.4s"></i>
+    <i class="tr" style="--x:790px;--y:207px;--d:7.5s;--w:1.6s"></i>
+    <i class="tr" style="--x:905px;--y:221px;--d:8s;--w:2.8s"></i>
+    <i class="tr" style="--x:1235px;--y:177px;--d:7s;--w:3.6s"></i>
+  </div>
+  <div class="wrap held__in">
+    <div class="held__text">
+      <p class="held__ort">Hautnahtur Kosmetikstudio · selbstständig seit {site.since}</p>
+      <h1 class="held__h1">Sugaring und Kosmetik in {site.address.city}</h1>
+      <p class="lede held__lede">Die zuckersüße Methode zur perfekten Haarentfernung und Gesichtsbehandlungen ganz ohne Apparate, individuell auf Sie abgestimmt.</p>
+      <div class="btn-row held__btns">
+        <a class="btn" href="#zonen"><span class="nur-pc">Preis für meine Zonen berechnen</span><span class="nur-tel">Preis für meine Zonen</span></a>
+        <a class="btn btn--ghost" href={`${base}termin/`}>Termin anfragen</a>
+      </div>
+      <p class="held__abend">Dienstag und Donnerstag bis 22 Uhr geöffnet</p>
+    </div>
+  </div>
+</section>
+
+<style is:global define:vars={{ bandBild: `url(${import.meta.env.BASE_URL}img/honig-band.webp)`, tropfenBild: `url(${import.meta.env.BASE_URL}img/honig-tropfen.webp)` }}>
+  .held { position: relative; overflow: hidden; min-height: calc(100svh - 4.6rem); display: grid; align-items: end; isolation: isolate; background: radial-gradient(80% 60% at 78% 8%, rgba(227, 162, 31, 0.2), transparent 60%), var(--nacht); }
+  .held__bild { display: none; }
+  .held__bild picture, .held__bild img { width: 100%; height: 100%; }
+  .held__band { position: absolute; left: 0; top: 0; width: calc(100% / var(--bs)); height: 320px; transform: scale(var(--bs)); transform-origin: 0 0; --bs: 0.56; z-index: -1; background: var(--bandBild) 0 0 / 1600px 320px repeat-x; pointer-events: none; filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.45)); }
+  .tr { position: absolute; left: var(--x); top: var(--y); width: 30px; height: 46px; margin-left: -15px; background: var(--tropfenBild) center / 100% 100% no-repeat; opacity: 0; transform-origin: 50% 0; animation: tropf var(--d) cubic-bezier(0.55, 0, 0.9, 0.6) var(--w) 2 both; }
+  @keyframes tropf {
+    0%, 12% { opacity: 0; transform: translateY(0) scale(0.25); }
+    22% { opacity: 1; transform: translateY(0) scale(1); animation-timing-function: ease-in; }
+    34% { opacity: 1; transform: translateY(2px) scale(0.95, 1.12); animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.5); }
+    80% { opacity: 1; transform: translateY(min(66svh, 560px)) scale(0.9, 1.25); }
+    86%, 100% { opacity: 0; transform: translateY(min(68svh, 580px)) scale(0.9, 1.25); }
+  }
+  @media (prefers-reduced-motion: reduce) { .tr { display: none; } }
+  .held__in { position: relative; display: grid; width: 100%; min-width: 0; padding-top: clamp(6.6rem, 22svh - 2rem, 9rem); padding-bottom: calc(var(--bar-h) + var(--bar-gap) + 1.6rem + env(safe-area-inset-bottom)); }
+  .held__ort, .held__abend, .held__btns .btn--ghost { display: none; }
+  .held h1 { font-size: clamp(2.3rem, 1.2rem + 5vw, 6.2rem); }
+  .held__lede { font-size: 1.05rem; }
+  .nur-pc { display: none; }
+  @media (max-height: 700px) and (max-width: 63.99rem) { .held__in { padding-top: 6rem; } .held h1.held__h1 { font-size: 2.15rem; } .held__lede { font-size: 0.98rem; line-height: 1.5; } .held__text { gap: 0.75rem; } }
+  .held { min-height: min(calc(100svh - 5.8rem), 46rem); }
+  /* Телефон боком: заголовок в две строки, текст слева, панель уходит вправо — ничего не прячется под ней */
+  @media (orientation: landscape) and (max-height: 500px) and (max-width: 63.99rem) {
+    .held__band { --bs: 0.5; }
+    .held__in { padding-top: 5.4rem; padding-bottom: 1.6rem; }
+    .held h1.held__h1 { font-size: 2rem; max-width: 24ch; }
+    .held__text { max-width: min(30rem, 58vw); gap: 0.6rem; }
+    .held__lede { font-size: 0.95rem; }
+  }
+  .held__text { min-width: 0; display: grid; gap: var(--space-md); max-width: 40rem; }
+  .held__ort { color: var(--licht-2); font-size: var(--text-sm); }
+  .held h1 { font-size: clamp(2.6rem, 1.2rem + 6vw, 6.2rem); line-height: 1; max-width: 13ch; text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5); }
+  .held__lede { color: var(--licht); max-width: 34rem; }
+  .held__btns { margin-top: 0.6rem; }
+  .held__abend { color: var(--licht); font-size: var(--text-sm); margin-top: 0.4rem; }
+  @media (min-width: 64rem) {
+    .held { min-height: min(90svh, 58rem); align-items: center; }
+    .held__band { --bs: 0.66; }
+    .held__ort, .held__abend { display: block; }
+    .held__btns .btn--ghost { display: inline-flex; }
+    .held__lede { font-size: var(--text-lg); }
+    .nur-pc { display: inline; } .nur-tel { display: none; }
+    .held__bild { display: block; position: absolute; left: auto; right: max(var(--gutter), calc((100vw - var(--maxw)) / 2 + var(--gutter))); width: min(24rem, 26vw); inset-block: 13.5rem 4.5rem; border-radius: 999px 999px 28px 28px; overflow: hidden; box-shadow: 0 30px 60px -30px #000, 0 0 0 1px rgba(255, 210, 122, 0.25); z-index: -1; }
+    .held__foto { width: 100%; height: 100%; object-fit: cover; object-position: 40% 60%; opacity: 1; filter: none; }
+    .held__bild picture { display: block; height: 100%; }
+    .held__bild::after { content: none; }
+    .held__in { padding-top: 9rem; padding-bottom: 4rem; }
+    .held h1 { max-width: 12ch; font-size: clamp(3.4rem, 1rem + 4.2vw, 5.4rem); }
+    .held__text { max-width: 36rem; }
+  }
+</style>

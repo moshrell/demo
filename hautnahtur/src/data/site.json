@@ -1,0 +1,27 @@
+{
+  "name": "Hautnahtur Kosmetikstudio",
+  "short": "Hautnahtur",
+  "owner": "Michaela Jurisch",
+  "legalName": "Michaela Jurisch, Hautnahtur Kosmetikstudio",
+  "address": {
+    "street": "Parkstraße 6",
+    "zip": "30989",
+    "city": "Gehrden"
+  },
+  "mapUrl": "https://www.openstreetmap.org/search?query=Parkstra%C3%9Fe%206%2C%2030989%20Gehrden",
+  "phone": "05108 644919",
+  "phoneHref": "+495108644919",
+  "mobile": "0172 5482937",
+  "whatsapp": null,
+  "email": "info@hautnahtur-gehrden.de",
+  "web": "www.hautnahtur-gehrden.de",
+  "since": 1999,
+  "ustId": "DE23/120/06329",
+  "openingHours": "Mo,We,Fr 09:00-13:00, 15:00-18:00; Tu,Th 09:00-13:00, 15:00-22:00",
+  "areaServed": [
+    "Gehrden"
+  ],
+  "priceStand": "TODO: Stand der Preise vom Kunden bestätigen",
+  "gutscheinBlock": false,
+  "googleReviewsUrl": "TODO"
+}

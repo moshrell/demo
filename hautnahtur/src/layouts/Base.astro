@@ -1,0 +1,280 @@
+---
+// SEO + KI-Sichtbarkeit. Vorschau: noindex. Beim Kundenstart: index = true.
+import '@fontsource/gilda-display/400.css';
+import '@fontsource-variable/manrope/wght.css';
+import '../styles/global.css';
+import site from '../data/site.json';
+import zeiten from '../data/oeffnungszeiten.json';
+const {
+  title = site.name,
+  description = '',
+  index = false,
+  type = 'BeautySalon',
+  faq = [],
+  image = '',
+  prices = [],
+  aktiv = '',
+  leiste = 'normal', // 'termin' = auf der Anfrage-Seite: Hauptknopf ruft an;
+} = Astro.props;
+const base = import.meta.env.BASE_URL;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(base + (image || 'img/og.jpg').replace(/^\//, ''), Astro.site).href;
+const graph = [
+  ...(index ? [{
+    '@type': type, '@id': new URL(base, Astro.site).href + '#business', name: site.name, url: new URL(base, Astro.site).href, description,
+    telephone: site.phone, email: site.email,
+    address: { '@type': 'PostalAddress', streetAddress: site.address.street, postalCode: site.address.zip, addressLocality: site.address.city, addressCountry: 'DE' },
+    openingHours: site.openingHours, areaServed: site.areaServed,
+    ...(ogImage ? { image: ogImage } : {}),
+    ...(prices.length ? { makesOffer: prices.map((p) => ({ '@type': 'Offer', priceCurrency: 'EUR', price: p.price, itemOffered: { '@type': 'Service', name: p.name } })) } : {}),
+  }] : []),
+  ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
+];
+const ld = { '@context': 'https://schema.org', '@graph': graph };
+const nav = [
+  { id: 'sugaring', href: 'sugaring/', label: 'Sugaring' },
+  { id: 'gesicht', href: 'gesicht/', label: 'Gesicht' },
+  { id: 'preise', href: 'preise/', label: 'Preise' },
+  { id: 'ueber', href: 'ueber-mich/', label: 'Über mich' },
+];
+const fmtZeit = (z) => z.map(([a, b]) => `${a}–${b}`).join(' und ');
+const tel = `tel:${site.phoneHref}`;
+const mob = `tel:${site.mobile.replace(/\D/g, '').replace(/^0/, '+49')}`;
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1B110B" />
+    <link rel="icon" href={`${base}favicon.png`} type="image/png" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+  </head>
+  <body data-leiste={leiste}>
+    <a class="skip" href="#inhalt">Zum Inhalt</a>
+    <header class="kopf dunkel">
+      <div class="wrap kopf__in">
+        <a class="kopf__name" href={base} aria-label={`${site.name}, Startseite`}>
+          <img class="kopf__logo" src={`${base}img/logo-hell.png`} alt={site.name} width="308" height="155" />
+          <span class="kopf__heute" data-heute></span>
+        </a>
+        <nav class="kopf__kapsel" aria-label="Hauptmenü">
+          <div class="kopf__nav">
+            {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label}</a>)}
+          </div>
+          {leiste === 'termin'
+            ? <a class="leiste__haupt" href={tel}>Jetzt anrufen</a>
+            : <a class="leiste__haupt" href={`${base}termin/`}>Termin anfragen</a>}
+          <a class="kopf__tel" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg>{site.phone}</a>
+        </nav>
+      </div>
+    </header>
+
+    <div id="inhalt"><slot /></div>
+
+    <footer class="fuss dunkel" aria-label="Kontakt und Öffnungszeiten">
+      <div class="wrap">
+        <div class="karte">
+          <div class="karte__kontakt">
+            <img class="karte__logo" src={`${base}img/logo.png`} alt={site.name} width="308" height="155" loading="lazy" />
+            <p class="karte__inh">{site.owner} · selbstständig seit {site.since}</p>
+            <p>{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+            <p><a href={site.mapUrl} target="_blank" rel="noopener">Weg auf der Karte</a></p>
+            <ul class="karte__wege">
+              <li><span>Telefon</span> <a href={tel}>{site.phone}</a></li>
+              <li><span>Mobil</span> <a href={mob}>{site.mobile}</a></li>
+              <li><span>E-Mail</span> <a class="karte__mail" href={`mailto:${site.email}`}>{site.email.split('@')[0]}<wbr />@{site.email.split('@')[1]}</a></li>
+            </ul>
+          </div>
+          <div class="karte__zeiten">
+            <p class="karte__titel">Öffnungszeiten</p>
+            <p class="karte__status" data-status></p>
+            <dl class="woche">
+              {zeiten.tage.map((t, i) => (
+                <div data-tag={i}><dt>{t.name}</dt><dd>{t.zeiten.length ? fmtZeit(t.zeiten) : (t.hinweis ?? 'geschlossen')}</dd></div>
+              ))}
+            </dl>
+          </div>
+        </div>
+        <p class="fuss__recht small">
+          <a href={`${base}impressum/`}>Impressum</a>
+          <a href={`${base}datenschutz/`}>Datenschutz</a>
+        </p>
+        {!index && <p class="fuss__demo small">Vorschau der neuen Website, erstellt von Kravets Webdesign. Noch nicht veröffentlicht, Anfragen werden hier nicht gesendet.</p>}
+      </div>
+    </footer>
+
+    <!-- Нить к медовым блокам (SVG, рисуется только при прокрутке); панель и пилюля — готовая текстура мёда -->
+    <svg class="honigfaden" data-faden aria-hidden="true"><defs><linearGradient id="fg" x1="0" x2="1"><stop offset="0" stop-color="#E9A93A" /><stop offset="0.35" stop-color="#FFE29A" /><stop offset="1" stop-color="#E39A2A" /></linearGradient></defs><path data-faden-pfad fill="url(#fg)" d="" /></svg>
+    <nav class="leiste" aria-label="Schnellzugriff">
+      <button type="button" class="pille" data-pille data-open="auswahl" hidden>
+        <span class="pille__n" data-pille-n></span>
+        <span class="pille__summe num" data-pille-summe></span>
+      </button>
+      <div class="leiste__bar" data-bar>
+        <button type="button" class="leiste__btn leiste__menue" data-open="menue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16" /></svg><span>Menü</span></button>
+        {leiste === 'termin'
+          ? <a class="leiste__haupt" href={tel}>Jetzt anrufen</a>
+          : <a class="leiste__haupt" href={`${base}termin/`} data-termin>Termin anfragen</a>}
+        {leiste === 'termin'
+          ? <a class="leiste__btn" href={mob}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg><span>Mobil</span></a>
+          : <a class="leiste__btn leiste__tel" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg><span>Anrufen</span></a>}
+      </div>
+    </nav>
+
+    <dialog class="sheet" data-dialog="menue" aria-label="Menü">
+      <div class="sheet__kopf"><p class="sheet__titel">Menü</p><button type="button" class="sheet__zu" data-close aria-label="Menü schließen">Schließen</button></div>
+      <nav class="sheet__nav" aria-label="Seiten">
+        <a href={base}>Start</a>
+        {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label === 'Gesicht' ? 'Gesichtspflege' : n.label}</a>)}
+        <a href={`${base}termin/`}>Termin anfragen</a>
+      </nav>
+      <div class="sheet__info">
+        <p data-status></p>
+        <p>{site.address.street}, {site.address.zip} {site.address.city} · <a href={site.mapUrl} target="_blank" rel="noopener">Karte</a></p>
+      </div>
+    </dialog>
+
+    <dialog class="sheet" data-dialog="auswahl" aria-labelledby="auswahl-t">
+      <div class="sheet__kopf"><p class="sheet__titel" id="auswahl-t">Ihre Auswahl</p><button type="button" class="sheet__zu" data-close aria-label="Auswahl schließen">Schließen</button></div>
+      <ul class="auswahl" data-auswahl-liste></ul>
+      <div class="auswahl__kombi" data-auswahl-kombi hidden><p data-auswahl-kombi-text></p><button type="button" class="btn btn--klein" data-auswahl-kombi-ja>Übernehmen</button></div>
+      <p class="auswahl__summe"><span>Summe <strong class="num" data-auswahl-summe></strong></span><span class="muted num" data-auswahl-dauer></span></p>
+      <p class="small muted">Richtwert. Abgerechnet wird nach Zeit und Material.</p>
+      <div class="btn-row sheet__aktion">
+        <a class="btn" href={`${base}termin/`}>Mit dieser Auswahl anfragen</a>
+        <button type="button" class="btn btn--ghost" data-leeren>Auswahl leeren</button>
+      </div>
+    </dialog>
+
+    <script>
+      import '../scripts/ui.ts';
+    </script>
+  </body>
+</html>
+
+<style is:global define:vars={{ leisteBild: `url(${base}img/honig-leiste.webp)` }}>
+  .skip { position: absolute; left: -999px; top: 0.5rem; background: var(--tinte); color: var(--weiss); padding: 0.6rem 1rem; border-radius: 999px; z-index: 100; }
+  .skip:focus { left: 0.5rem; }
+
+  /* Мёд-капсула: готовая текстура (tools/honig-textur.mjs), края по 32 px, середина растягивается */
+  .leiste__bar, .pille { border: solid transparent; border-width: 0 var(--cap, 32px); border-image: var(--leisteBild) 0 96 fill / 0 var(--cap, 32px) / 0 stretch; border-radius: 999px; box-shadow: 0 14px 26px -12px rgba(0, 0, 0, 0.7), 0 2px 0 rgba(120, 60, 0, 0.5); }
+
+  /* Шапка */
+  .kopf { position: relative; z-index: 30; }
+  .kopf__in { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding-block: 0.8rem; }
+  .kopf__name { min-width: 0; }
+  .kopf__heute { font-size: 0.9375rem; color: var(--licht); margin-top: 0.45rem; }
+  .kopf__heute:empty { display: none; }
+  .kopf__heute b { font-weight: 600; color: var(--honig-hell); }
+  .kopf__name { display: grid; text-decoration: none; line-height: 1; }
+  .kopf__logo { display: block; height: 3.4rem; width: auto; }
+  .karte__logo { display: block; height: 4.6rem; width: auto; margin-left: -0.2rem; }
+  .kopf__marke { overflow-wrap: anywhere; font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.75rem; letter-spacing: var(--display-tracking); }
+  .kopf__zeile { font-size: 0.875rem; color: var(--licht-2); margin-top: 0.3rem; letter-spacing: 0.02em; }
+  .punkt { display: inline-block; width: 0.5em; height: 0.5em; border-radius: 50%; background: #7BC47F; margin-right: 0.4em; vertical-align: 0.08em; box-shadow: 0 0 0 3px rgba(123, 196, 127, 0.18); }
+  .punkt--zu { background: var(--licht-2); box-shadow: none; }
+  .kopf__kapsel { display: none; }
+  @media (min-width: 64rem) {
+    .kopf { position: sticky; top: 0; background: rgba(27, 17, 11, 0.92); border-bottom: 1px solid rgba(255, 210, 122, 0.14); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+    .kopf__in { padding-block: 0.55rem; }
+    .kopf__logo { height: 3.1rem; }
+    .kopf__kapsel { margin-left: auto; }
+    .kopf__heute { white-space: nowrap; }
+    .kopf__kapsel { display: flex; align-items: center; gap: 1.6rem; }
+    .kopf__nav { display: flex; gap: 0.2rem; }
+    .kopf__kapsel .kopf__nav a { position: relative; display: inline-flex; align-items: center; white-space: nowrap; min-height: 2.75rem; padding: 0 0.7rem; text-decoration: none; font-weight: 500; color: var(--licht); }
+    .kopf__nav a::after { content: ''; position: absolute; left: 0.7rem; right: 0.7rem; bottom: 0.45rem; height: 2px; border-radius: 2px; background: var(--honig); transform: scaleX(0); transition: transform 0.2s; }
+    .kopf__nav a:hover::after, .kopf__nav a[aria-current='page']::after { transform: scaleX(1); }
+    .kopf__nav a[aria-current='page'] { color: var(--honig-hell); }
+    .kopf__kapsel .leiste__haupt { min-height: 2.6rem; padding: 0 1.2rem; font-size: 0.95rem; background: linear-gradient(180deg, #FFD983, #E9A52C 60%, #CF8A22); color: var(--tinte); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 6px 16px -8px rgba(227, 162, 31, 0.7); }
+    .kopf__kapsel .kopf__tel { display: inline-flex; align-items: center; gap: 0.45rem; min-height: 2.75rem; text-decoration: none; font-weight: 600; color: var(--licht); white-space: nowrap; }
+    .kopf__kapsel .kopf__tel svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  }
+
+  /* Футер: белая карточка записи на тёмном */
+  .fuss { padding-top: var(--space-2xl); padding-bottom: calc(var(--bar-h) + var(--bar-gap) * 3 + env(safe-area-inset-bottom) + 3.5rem); }
+  .karte > * { min-width: 0; }
+  .karte__marke { overflow-wrap: anywhere; }
+  .karte { display: grid; gap: var(--space-xl); background: var(--weiss); color: var(--tinte); border-radius: 26px; padding: clamp(1.4rem, 4vw, 3rem); border-top: 6px solid var(--honig); }
+  .karte a { color: var(--tinte); }
+  .karte__marke { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 2.4rem; letter-spacing: var(--display-tracking); line-height: 1; }
+  .karte__inh { color: var(--tinte-2); margin: 0.5rem 0 1rem; }
+  .karte__wege { list-style: none; padding: 0; margin: var(--space-lg) 0 0; display: grid; gap: 0.2rem; }
+  .karte__wege li { display: flex; flex-wrap: wrap; column-gap: 0.75rem; align-items: center; }
+  .karte__wege li > span { flex: 0 0 5.5rem; }
+  .karte__wege li > a { white-space: nowrap; }
+  .karte__wege li > a.karte__mail { white-space: normal; }
+  .karte__wege span { color: var(--tinte-2); font-size: var(--text-sm); }
+  .karte__wege a { overflow-wrap: normal; word-break: normal; min-height: 2.75rem; display: inline-flex; align-items: center; }
+  .karte__titel { font-weight: var(--strong-weight); font-size: var(--text-lg); }
+  .karte__status { margin: 0.2rem 0 0.9rem; color: var(--tinte-2); }
+  .karte__status .punkt { background: #3E8E44; box-shadow: none; }
+  .woche { margin: 0; display: grid; }
+  .woche > div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0.5rem; padding: 0.55rem 0.75rem; border-radius: 10px; font-variant-numeric: tabular-nums; }
+  .woche dt { font-weight: 500; } .woche dd { margin: 0; }
+  .woche > div.heute { background: #FBEFD6; }
+  .woche > div.heute dt { font-weight: var(--strong-weight); }
+  .fuss__recht { display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; justify-content: center; margin-top: var(--space-lg); }
+  .fuss__recht a { min-height: 2.75rem; display: inline-flex; align-items: center; }
+  .fuss__demo { text-align: center; color: var(--licht-2); max-width: 40rem; margin: 0.4rem auto 0; }
+  @media (min-width: 48rem) { .karte { grid-template-columns: 1fr 1fr; } }
+
+  /* Нижняя панель (телефон) */
+  .honigfaden { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 39; pointer-events: none; }
+  .leiste { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; pointer-events: none; padding: 0 max(var(--bar-gap), env(safe-area-inset-left)) calc(var(--bar-gap) + env(safe-area-inset-bottom)); display: grid; justify-items: center; gap: 12px; transform: translateZ(0); }
+  .leiste__bar { --cap: 24px; pointer-events: auto; width: min(100%, 23rem); height: var(--bar-h); display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; color: var(--tinte); }
+  .leiste__btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-width: 0; min-height: 2.75rem; padding: 0 0.2rem; background: none; border: 0; color: var(--tinte); font: inherit; font-size: 0.875rem; font-weight: 700; line-height: 1.1; text-decoration: none; cursor: pointer; border-radius: 999px; justify-self: center; }
+  .leiste__btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .leiste__haupt { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: 0 1.05rem; font-size: 1rem; border-radius: 999px; background: var(--tinte); color: var(--weiss); text-decoration: none; font-weight: var(--strong-weight); white-space: nowrap; box-shadow: 0 6px 14px -6px rgba(60, 25, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
+  .pille { --cap: 22px; pointer-events: auto; display: inline-flex; align-items: center; gap: 0.7rem; height: 44px; padding: 0; font: inherit; font-weight: var(--strong-weight); color: var(--tinte); cursor: pointer; transition: transform 0.4s cubic-bezier(0.3, 1.35, 0.5, 1), opacity 0.25s; }
+  .pille[hidden], .pille.pille--weg { display: inline-flex; visibility: hidden; opacity: 0; transform: translateY(40px) scale(0.6); pointer-events: none; }
+  .pille__n { font-weight: 500; }
+  .pille__summe { font-size: 1.1rem; font-weight: 700; }
+  @media (orientation: landscape) and (max-height: 500px) and (max-width: 63.99rem) { .leiste { justify-items: end; } .leiste__bar { width: min(100%, 20rem); } }
+  @media (min-width: 64rem) { .leiste__bar { display: none; } .leiste { padding-bottom: calc(1.2rem + env(safe-area-inset-bottom)); } }
+
+  /* Шторки */
+  .sheet { border: 0; padding: 0; margin: auto auto 0; width: 100%; max-width: 34rem; max-height: 88dvh; border-radius: 26px 26px 0 0; background: var(--weiss); color: var(--tinte); padding: 1.1rem var(--gutter) calc(1.4rem + env(safe-area-inset-bottom)); overflow: auto; overscroll-behavior: contain; }
+  .sheet::backdrop { background: rgba(18, 11, 7, 0.55); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+  .sheet[open] { animation: hoch 0.26s cubic-bezier(0.2, 0.9, 0.3, 1); }
+  @keyframes hoch { from { transform: translateY(40px); opacity: 0; } }
+  @media (min-width: 48rem) { .sheet { margin: auto; border-radius: 26px; } }
+  .sheet__kopf { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.6rem; }
+  .sheet__titel { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.9rem; }
+  .sheet__zu { min-height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1.5px solid var(--tinte); background: none; font: inherit; font-weight: 500; cursor: pointer; color: var(--tinte); }
+  .sheet__nav { display: grid; }
+  .sheet__nav a { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.9rem; text-decoration: none; padding: 0.5rem 0; border-bottom: 1px solid var(--linie); }
+  .sheet__nav a[aria-current='page'] { color: #9A5D0B; }
+  .sheet__info { display: grid; gap: 0.6rem; margin-top: 1.1rem; color: var(--tinte-2); }
+  .sheet__info .punkt { background: #3E8E44; box-shadow: none; }
+  /* «закрыто» — серая точка и в футере, и в меню (раньше зелёное правило выше по специфичности её перебивало) */
+  .karte__status .punkt.punkt--zu, .sheet__info .punkt.punkt--zu { background: #A79A90; }
+  .auswahl { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+  .auswahl li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 0.75rem; align-items: center; padding: 0.55rem 0; border-bottom: 1px solid var(--linie); }
+  .auswahl .preis { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .auswahl button { width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1.5px solid var(--linie); background: none; cursor: pointer; color: var(--tinte); font-size: 1.1rem; }
+  .auswahl__summe { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.2rem 1rem; margin: 0.9rem 0 0.2rem; font-size: var(--text-lg); }
+  .auswahl__summe > span { white-space: nowrap; }
+  .auswahl__summe strong { font-size: 1.7rem; margin-left: 0.3rem; }
+  .auswahl__leer { color: var(--tinte-2); padding: 0.8rem 0; }
+  .sheet__aktion { margin-top: 1rem; }
+  .auswahl__kombi { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; margin-top: 0.8rem; padding: 0.7rem 0.9rem; border-radius: 14px; background: #FBEFD6; }
+  .auswahl__kombi[hidden] { display: none; }
+  .auswahl__kombi p { font-weight: 600; line-height: 1.3; }
+  .btn--klein { min-height: 2.6rem; padding: 0.3rem 0.9rem; font-size: 0.95rem; flex: none; }
+  @media print { .honigfaden, .leiste, .fuss__demo, .fuss__recht, .kopf__kapsel { display: none !important; } }
+</style>

@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import Seitenkopf from '../components/Seitenkopf.astro';
+import Foto from '../components/Foto.astro';
+import Zonenrechner from '../components/Zonenrechner.astro';
+import zonen from '../data/zonen.json';
+const base = import.meta.env.BASE_URL;
+const vorteile = [
+  'Wir entfernen die Haare in Wuchsrichtung. Das vermindert den Schmerz und vermeidet Haarbruch.',
+  'Wir entfernen die Haare vollständig. Dadurch verändert sich der Charakter des Haarwuchses: Die Haare werden feiner und wachsen langsamer nach.',
+  'Wir zerstören langfristig die Haarbildungsstrukturen, was zu einem permanenten Resultat führt.',
+  'Wir arbeiten absolut sauber und hygienisch.',
+  'Wir verbessern das Hautbild durch sanftes Abtragen von Überverhornungen, ohne die lebenden Hautzellen zu verletzen.',
+  'Wir arbeiten natürlich: Sowohl bei der Haarentfernung als auch in der Vor- und Nachbehandlung verwenden wir ausschließlich natürliche Inhaltsstoffe.',
+  'Wir arbeiten physiologisch: Die Haut wird nicht durch hohe Temperaturen oder mechanische und chemische Reize belastet.',
+];
+const ab = Math.min(...zonen.zonen.map((z) => z.preis));
+---
+<Base title="Sugaring in Gehrden: Preise pro Zone berechnen | Hautnahtur Kosmetikstudio" description={`Pandy’s Comfort Sugaring in Gehrden: die zuckersüße Methode zur perfekten Haarentfernung für Damen und Herren, ab ${ab} €. Zonen antippen, Preis sofort sehen, Termin anfragen.`} aktiv="sugaring">
+  <Seitenkopf titel="Sugaring in Gehrden" lede="Die zuckersüße Methode zur perfekten Haarentfernung. Mit körperwarmen Zuckerpasten und Zuckergel werden von Kopf bis Zeh alle unerwünschten Haare sanft in Wuchsrichtung gelöst." />
+
+  <Zonenrechner titel="Ihre Zonen, Ihr Preis" mehr={false} />
+
+  <section class="section" id="methode" aria-labelledby="vb-h">
+    <div class="wrap vb">
+      <Foto name="leistung-lippe" alt="Sugaring an der Oberlippe mit Zuckerpaste" sizes="(min-width: 64rem) 30rem, 92vw" class="vb__foto" />
+      <div class="vb__listen">
+        <h2 id="vb-h">So arbeite ich mit Zucker</h2>
+        <p>Ist Ihre Haut gut durchfeuchtet und entspannt, wird professionelles Sugaring mehr und mehr wie eine Massage. Deshalb wird Ihre Haut individuell vor- und nachbehandelt. Alle Zuckerprodukte sind ohne jegliche Beimengungen.</p>
+        <p>Ich verzichte bewusst auf alle Substanzen, die die Haut belasten können oder über die bisher keine Langzeitstudien vorliegen. Nach der Haarentfernung wird Ihre Haut entsprechend Ihres Hauttyps gepflegt und geschützt. Sie können sofort wieder unter die Leute gehen.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="vorteile-h">
+    <div class="wrap vorteile">
+      <h2 id="vorteile-h">Alle Vorteile des Zuckerns auf einen Blick</h2>
+      <ul class="haken vorteile__liste">
+        {vorteile.map((v) => <li>{v}</li>)}
+      </ul>
+      <Foto name="leistung-brauen" alt="Sugaring an der Augenbraue" sizes="(min-width: 64rem) 46rem, 92vw" class="vorteile__foto" />
+    </div>
+  </section>
+
+  <section class="section" id="herren" aria-labelledby="h-h">
+    <div class="wrap herren">
+      <h2 id="h-h">Sugaring auch für Herren</h2>
+      <p class="lede">Achseln, Arme, Beine, Brust, Schultern, Bauch, Rücken, Gesäß, Bikinilinie und Intimbereich. Die Preise stehen im Rechner unter „Herren“.</p>
+      <div class="btn-row"><a class="btn" href="#zonen" data-herren>Herren-Preise im Rechner zeigen</a><a class="btn btn--ghost" href={`${base}termin/`}>Termin anfragen</a></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .kopfsek { padding-top: var(--space-xl); padding-bottom: 0; display: grid; gap: var(--space-md); max-width: 52rem; margin-left: max(0px, calc((100vw - var(--maxw)) / 2)); }
+  .vb { display: grid; gap: var(--space-xl); }
+  .vb :global(.vb__foto) { border-radius: 22px; max-width: 24rem; }
+  .vb__listen { display: grid; gap: var(--space-md); align-content: start; }
+  .vb__listen h2 { margin-bottom: 0.4rem; }
+  .vb__box { padding: 1.3rem 1.4rem; border-radius: 22px; }
+  .vb__box--hell { background: var(--weiss); }
+  .haken { list-style: none; padding: 0; margin: 0.7rem 0 0; display: grid; gap: 0.45rem; }
+  .haken li { position: relative; padding-left: 1.7rem; }
+  .haken li::before { content: ''; position: absolute; left: 0.15rem; top: 0.38em; width: 0.9rem; height: 0.5rem; border-left: 2.5px solid #3E8E44; border-bottom: 2.5px solid #3E8E44; transform: rotate(-45deg); }
+  .honig .haken li::before { border-color: var(--tinte); }
+  @media (min-width: 64rem) { .vb { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); } }
+  .vorteile { display: grid; gap: var(--space-lg); max-width: 52rem; }
+  .vorteile__liste { gap: 0.8rem; margin: 0; }
+  .vorteile :global(.vorteile__foto) { border-radius: 22px; width: 100%; max-width: 47rem; height: auto; }
+  .faq { max-width: 52rem; }
+  .faq__liste { margin-top: var(--space-lg); border-top: 1px solid var(--linie); }
+  .faq details { border-bottom: 1px solid var(--linie); }
+  .faq summary { cursor: pointer; list-style: none; min-height: 3.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-weight: var(--strong-weight); font-size: var(--text-lg); padding: 0.6rem 0; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: '+'; font-size: 1.6rem; font-weight: 400; line-height: 1; transition: transform 0.2s; }
+  .faq details[open] summary::after { transform: rotate(45deg); }
+  .faq details p { padding: 0 0 1.1rem; max-width: 42rem; color: var(--tinte-2); }
+  .herren { display: grid; gap: var(--space-md); max-width: 52rem; }
+</style>
+
+<script>
+  document.querySelector('[data-herren]')?.addEventListener('click', () => dispatchEvent(new CustomEvent('zf:geschlecht', { detail: 'herren' })));
+</script>

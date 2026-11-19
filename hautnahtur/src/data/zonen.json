@@ -1,0 +1,230 @@
+{
+  "hinweis": "Die angegebenen Preise sind eine Richtlinie. Berechnet werden die Zeit des reinen Zuckerns und der Materialverbrauch, im Durchschnitt 50 € pro Stunde.",
+  "zonen": [
+    {
+      "id": "d-achseln",
+      "g": "damen",
+      "seite": "vorne",
+      "name": "Achseln",
+      "min": 0,
+      "preis": 18,
+      "kurz": "Achseln"
+    },
+    {
+      "id": "d-arme",
+      "g": "damen",
+      "seite": "beide",
+      "name": "Arme",
+      "min": 0,
+      "preis": 20,
+      "kurz": "Arme"
+    },
+    {
+      "id": "d-unterschenkel",
+      "g": "damen",
+      "seite": "beide",
+      "name": "Unterschenkel inkl. Knie und Fuß",
+      "min": 0,
+      "preis": 35,
+      "kurz": "Unterschenkel"
+    },
+    {
+      "id": "d-oberschenkel",
+      "g": "damen",
+      "seite": "beide",
+      "name": "Oberschenkel",
+      "min": 0,
+      "preis": 35,
+      "kurz": "Oberschenkel"
+    },
+    {
+      "id": "d-bikini",
+      "g": "damen",
+      "seite": "vorne",
+      "name": "Bikinilinie",
+      "min": 0,
+      "preis": 20,
+      "kurz": "Bikinilinie"
+    },
+    {
+      "id": "d-intim",
+      "g": "damen",
+      "seite": "liste",
+      "name": "Intimzone komplett, inkl. Po-Falte",
+      "min": 0,
+      "preis": 60,
+      "kurz": "Intimzone"
+    },
+    {
+      "id": "d-oberlippe",
+      "g": "damen",
+      "seite": "gesicht",
+      "name": "Oberlippe",
+      "min": 0,
+      "preis": 8,
+      "kurz": "Oberlippe"
+    },
+    {
+      "id": "d-kinn",
+      "g": "damen",
+      "seite": "gesicht",
+      "name": "Kinn",
+      "min": 0,
+      "preis": 9,
+      "kurz": "Kinn"
+    },
+    {
+      "id": "d-brauen",
+      "g": "damen",
+      "seite": "gesicht",
+      "name": "Augenbrauen säubern",
+      "min": 0,
+      "preis": 10,
+      "kurz": "Augenbrauen"
+    },
+    {
+      "id": "d-nase",
+      "g": "damen",
+      "seite": "gesicht",
+      "name": "Nase oder Ohr",
+      "min": 0,
+      "preis": 5,
+      "kurz": "Nase, Ohr"
+    },
+    {
+      "id": "d-hals",
+      "g": "damen",
+      "seite": "gesicht",
+      "name": "Hals",
+      "min": 0,
+      "preis": 10,
+      "kurz": "Hals"
+    },
+    {
+      "id": "d-vellus",
+      "g": "damen",
+      "seite": "liste",
+      "name": "Vellushaar",
+      "min": 0,
+      "preis": 30,
+      "kurz": "Vellushaar"
+    },
+    {
+      "id": "d-gesicht",
+      "g": "damen",
+      "seite": "kombi",
+      "name": "Gesicht komplett",
+      "min": 0,
+      "preis": 45,
+      "kurz": "Gesicht komplett",
+      "ersetzt": [
+        "d-oberlippe",
+        "d-kinn",
+        "d-brauen",
+        "d-nase",
+        "d-hals"
+      ],
+      "regel": "summe"
+    },
+    {
+      "id": "h-achseln",
+      "g": "herren",
+      "seite": "vorne",
+      "name": "Achseln",
+      "min": 0,
+      "preis": 20,
+      "kurz": "Achseln"
+    },
+    {
+      "id": "h-arme",
+      "g": "herren",
+      "seite": "beide",
+      "name": "Arme",
+      "min": 0,
+      "preis": 25,
+      "kurz": "Arme"
+    },
+    {
+      "id": "h-unterschenkel",
+      "g": "herren",
+      "seite": "beide",
+      "name": "Unterschenkel inkl. Knie und Fuß",
+      "min": 0,
+      "preis": 40,
+      "kurz": "Unterschenkel"
+    },
+    {
+      "id": "h-oberschenkel",
+      "g": "herren",
+      "seite": "beide",
+      "name": "Oberschenkel",
+      "min": 0,
+      "preis": 40,
+      "kurz": "Oberschenkel"
+    },
+    {
+      "id": "h-brust",
+      "g": "herren",
+      "seite": "vorne",
+      "name": "Brust",
+      "min": 0,
+      "preis": 25,
+      "kurz": "Brust"
+    },
+    {
+      "id": "h-bauch",
+      "g": "herren",
+      "seite": "vorne",
+      "name": "Bauch",
+      "min": 0,
+      "preis": 20,
+      "kurz": "Bauch"
+    },
+    {
+      "id": "h-schultern",
+      "g": "herren",
+      "seite": "hinten",
+      "name": "Schultern",
+      "min": 0,
+      "preis": 15,
+      "kurz": "Schultern"
+    },
+    {
+      "id": "h-ruecken",
+      "g": "herren",
+      "seite": "hinten",
+      "name": "Rücken",
+      "min": 0,
+      "preis": 40,
+      "kurz": "Rücken"
+    },
+    {
+      "id": "h-gesaess",
+      "g": "herren",
+      "seite": "hinten",
+      "name": "Gesäß",
+      "min": 0,
+      "preis": 25,
+      "kurz": "Gesäß"
+    },
+    {
+      "id": "h-bikini",
+      "g": "herren",
+      "seite": "vorne",
+      "name": "Bikinilinie",
+      "min": 0,
+      "preis": 20,
+      "kurz": "Bikinilinie"
+    },
+    {
+      "id": "h-intim",
+      "g": "herren",
+      "seite": "liste",
+      "name": "Intim komplett, inkl. Po-Falte",
+      "min": 0,
+      "preis": 69,
+      "kurz": "Intimbereich",
+      "ab": true
+    }
+  ]
+}

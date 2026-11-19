@@ -41,9 +41,9 @@ const base = import.meta.env.BASE_URL;
     86%, 100% { opacity: 0; transform: translateY(min(68svh, 580px)) scale(0.9, 1.25); }
   }
   @media (prefers-reduced-motion: reduce) { .tr { display: none; } }
-  .held__in { position: relative; display: grid; width: 100%; padding-top: 10.6rem; padding-bottom: calc(var(--bar-h) + 3rem); }
+  .held__in { position: relative; display: grid; width: 100%; min-width: 0; padding-top: 10.6rem; padding-bottom: calc(var(--bar-h) + 3rem); }
   .held { min-height: min(calc(100svh - 4.6rem), 46rem); }
-  .held__text { display: grid; gap: var(--space-md); max-width: 40rem; }
+  .held__text { min-width: 0; display: grid; gap: var(--space-md); max-width: 40rem; }
   .held__ort { color: var(--licht-2); font-size: var(--text-sm); }
   .held h1 { font-size: clamp(2.6rem, 1.2rem + 6vw, 6.2rem); line-height: 1; max-width: 13ch; text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5); }
   .held__lede { color: var(--licht); max-width: 34rem; }

@@ -16,7 +16,7 @@ const fragen = [
   <div class={`wrap fi__wrap ${foto ? 'fi__wrap--foto' : ''}`}>
     {foto && <div class="fi__foto"><Foto name={typeof foto === 'string' ? foto : 'gesicht-3x4'} alt="Kundin mit Handtuch im Haar bei einer ruhigen Gesichtsbehandlung" sizes="(min-width: 64rem) 30rem, 92vw" /></div>}
     <div class="fi__karte">
-      <h2 id={`${id}-h`}>{titel}</h2>
+      <h2 id={`${id}-h`}>{titel.replace("Gesichtsbehandlung", "Gesichts\u00ADbehandlung")}</h2>
       <div class="fi__kopf">
         <p class="fi__zaehler" data-zaehler aria-live="polite">Frage 1 von 3</p>
         <div class="fi__faden" aria-hidden="true"><i data-fuell></i><b></b><b></b><b></b></div>
@@ -49,7 +49,7 @@ const fragen = [
 
 <style>
   .fi__wrap { display: grid; gap: 0; }
-  .fi__karte { position: relative; background: linear-gradient(160deg, #FBF6F0 0%, #F1E6DB 100%); border-radius: 28px; padding: clamp(1.3rem, 4.5vw, 2.8rem); box-shadow: 0 1px 0 #fff inset, 0 30px 60px -40px rgba(80, 40, 10, 0.45); overflow: hidden; }
+  .fi__karte { min-width: 0; position: relative; background: linear-gradient(160deg, #FBF6F0 0%, #F1E6DB 100%); border-radius: 28px; padding: clamp(1.3rem, 4.5vw, 2.8rem); box-shadow: 0 1px 0 #fff inset, 0 30px 60px -40px rgba(80, 40, 10, 0.45); overflow: hidden; }
   .fi__karte h2 { font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem); }
   .fi__kopf { display: grid; gap: 0.7rem; margin-top: var(--space-lg); }
   .fi__zaehler { font-size: var(--text-sm); color: var(--tinte-2); font-weight: 500; }
@@ -79,7 +79,7 @@ const fragen = [
   .fi__ergebnis { outline: none; animation: schritt 0.34s cubic-bezier(0.2, 0.9, 0.3, 1); }
   .fi__titel { font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.2rem); line-height: 1.15; }
   .fi__liste { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.9rem; }
-  .fi__liste :global(li) { display: grid; gap: 0.5rem; padding: 1.1rem 1.2rem; background: var(--weiss); border-radius: 20px; }
+  .fi__liste :global(li) { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.5rem; overflow-wrap: anywhere; padding: 1.1rem 1.2rem; background: var(--weiss); border-radius: 20px; }
   .fi__liste :global(li:first-child) { box-shadow: 0 0 0 2px var(--honig) inset; }
   .fi__liste :global(.fi__kopf2) { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap; }
   .fi__liste :global(.fi__preis) { font-weight: var(--strong-weight); font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -88,8 +88,8 @@ const fragen = [
   .fi__tel { margin-top: 1rem; }
   .fi__tel[hidden] { display: none; }
   .fi__mehr { margin-top: var(--space-md); }
-  .fi__foto { margin-bottom: -2.4rem; }
-  .fi__foto :global(img) { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: 50% 35%; border-radius: 28px 28px 0 0; }
+  .fi__foto { margin-bottom: 0.9rem; }
+  .fi__foto :global(img) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 30%; border-radius: 28px; }
   @media (min-width: 48rem) {
     .fi__opt--haut { grid-template-columns: 1fr 1fr; }
     .fi__opt--haut .fi__karteopt:last-child { grid-column: 1 / -1; }

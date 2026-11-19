@@ -222,11 +222,12 @@ const wa = `https://wa.me/${site.whatsapp}`;
   /* Шапка */
   .kopf { position: relative; z-index: 30; }
   .kopf__in { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding-block: 0.8rem; }
-  .kopf__heute { font-size: 0.875rem; color: var(--licht); margin-top: 0.45rem; white-space: nowrap; }
+  .kopf__name { min-width: 0; }
+  .kopf__heute { font-size: 0.875rem; color: var(--licht); margin-top: 0.45rem; }
   .kopf__heute:empty { display: none; }
   .kopf__heute b { font-weight: 600; color: var(--honig-hell); }
   .kopf__name { display: grid; text-decoration: none; line-height: 1; }
-  .kopf__marke { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.75rem; letter-spacing: var(--display-tracking); }
+  .kopf__marke { overflow-wrap: anywhere; font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.75rem; letter-spacing: var(--display-tracking); }
   .kopf__zeile { font-size: 0.8125rem; color: var(--licht-2); margin-top: 0.3rem; letter-spacing: 0.02em; }
   .punkt { display: inline-block; width: 0.5em; height: 0.5em; border-radius: 50%; background: #7BC47F; margin-right: 0.4em; vertical-align: 0.08em; box-shadow: 0 0 0 3px rgba(123, 196, 127, 0.18); }
   .punkt--zu { background: var(--licht-2); box-shadow: none; }
@@ -235,6 +236,7 @@ const wa = `https://wa.me/${site.whatsapp}`;
     .kopf { position: sticky; top: 0; background: rgba(27, 17, 11, 0.94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
     .kopf__in { padding-block: 0.7rem; }
     .kopf__kapsel { margin-left: auto; }
+    .kopf__heute { white-space: nowrap; }
     .kopf__kapsel { --cap: 28px; display: flex; align-items: center; gap: 0.3rem; height: 56px; padding: 0; color: var(--tinte); }
     .kopf__nav { display: flex; gap: 0.1rem; }
     .kopf__kapsel .kopf__nav a { display: inline-flex; align-items: center; white-space: nowrap; min-height: 2.6rem; padding: 0 0.8rem; border-radius: 999px; text-decoration: none; font-weight: 600; color: var(--tinte); }
@@ -246,12 +248,17 @@ const wa = `https://wa.me/${site.whatsapp}`;
 
   /* Футер: белая карточка записи на тёмном */
   .fuss { padding-top: var(--space-2xl); padding-bottom: calc(var(--bar-h) + var(--bar-gap) * 3 + env(safe-area-inset-bottom) + 3.5rem); }
+  .karte > * { min-width: 0; }
+  .karte__marke { overflow-wrap: anywhere; }
   .karte { display: grid; gap: var(--space-xl); background: var(--weiss); color: var(--tinte); border-radius: 26px; padding: clamp(1.4rem, 4vw, 3rem); border-top: 6px solid var(--honig); }
   .karte a { color: var(--tinte); }
   .karte__marke { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 2.4rem; letter-spacing: var(--display-tracking); line-height: 1; }
   .karte__inh { color: var(--tinte-2); margin: 0.5rem 0 1rem; }
   .karte__wege { list-style: none; padding: 0; margin: var(--space-lg) 0 0; display: grid; gap: 0.2rem; }
-  .karte__wege li { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 0.5rem; align-items: center; }
+  .karte__wege li { display: flex; flex-wrap: wrap; column-gap: 0.75rem; align-items: center; }
+  .karte__wege li > span { flex: 0 0 5.5rem; }
+  .karte__wege li > a { white-space: nowrap; }
+  .karte__wege li > a.karte__mail { white-space: normal; }
   .karte__wege span { color: var(--tinte-2); font-size: var(--text-sm); }
   .karte__wege a { overflow-wrap: normal; word-break: normal; min-height: 2.75rem; display: inline-flex; align-items: center; }
   .karte__titel { font-weight: var(--strong-weight); font-size: var(--text-lg); }
@@ -270,14 +277,14 @@ const wa = `https://wa.me/${site.whatsapp}`;
   /* Нижняя панель (телефон) */
   .honigfaden { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 39; pointer-events: none; }
   .leiste { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; pointer-events: none; padding: 0 max(var(--bar-gap), env(safe-area-inset-left)) calc(var(--bar-gap) + env(safe-area-inset-bottom)); display: grid; justify-items: center; gap: 12px; transform: translateZ(0); }
-  .leiste__bar { pointer-events: auto; width: 100%; max-width: 30rem; height: var(--bar-h); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; color: var(--tinte); }
-  .leiste__btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 3.6rem; min-height: 3rem; background: none; border: 0; color: var(--tinte); font: inherit; font-size: 0.8125rem; font-weight: 700; text-decoration: none; cursor: pointer; border-radius: 999px; justify-self: center; }
-  .leiste__btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
-  .leiste__haupt { display: inline-flex; align-items: center; min-height: 3.1rem; padding: 0 1.3rem; border-radius: 999px; background: var(--tinte); color: var(--weiss); text-decoration: none; font-weight: var(--strong-weight); white-space: nowrap; box-shadow: 0 6px 14px -6px rgba(60, 25, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
-  .pille { --cap: 24px; pointer-events: auto; display: inline-flex; align-items: center; gap: 0.8rem; height: 48px; padding: 0; font: inherit; font-weight: var(--strong-weight); color: var(--tinte); cursor: pointer; transition: transform 0.4s cubic-bezier(0.3, 1.35, 0.5, 1), opacity 0.25s; }
+  .leiste__bar { --cap: 24px; pointer-events: auto; width: min(100%, 23rem); height: var(--bar-h); display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; color: var(--tinte); }
+  .leiste__btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-width: 0; min-height: 2.75rem; padding: 0 0.2rem; background: none; border: 0; color: var(--tinte); font: inherit; font-size: 0.75rem; font-weight: 700; text-decoration: none; cursor: pointer; border-radius: 999px; justify-self: center; }
+  .leiste__btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .leiste__haupt { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: 0 1.05rem; font-size: 0.95rem; border-radius: 999px; background: var(--tinte); color: var(--weiss); text-decoration: none; font-weight: var(--strong-weight); white-space: nowrap; box-shadow: 0 6px 14px -6px rgba(60, 25, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
+  .pille { --cap: 22px; pointer-events: auto; display: inline-flex; align-items: center; gap: 0.7rem; height: 44px; padding: 0; font: inherit; font-weight: var(--strong-weight); color: var(--tinte); cursor: pointer; transition: transform 0.4s cubic-bezier(0.3, 1.35, 0.5, 1), opacity 0.25s; }
   .pille[hidden], .pille.pille--weg { display: inline-flex; visibility: hidden; opacity: 0; transform: translateY(40px) scale(0.6); pointer-events: none; }
   .pille__n { font-weight: 500; }
-  .pille__summe { font-size: 1.2rem; font-weight: 700; }
+  .pille__summe { font-size: 1.1rem; font-weight: 700; }
   @media (min-width: 64rem) { .leiste__bar { display: none; } .leiste { padding-bottom: calc(1.2rem + env(safe-area-inset-bottom)); } }
 
   /* Шторки */

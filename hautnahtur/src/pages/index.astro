@@ -25,7 +25,7 @@ const blick = [
 <Base title="Hautnahtur Kosmetikstudio Gehrden: Sugaring und Kosmetik" description="Kosmetikstudio in Gehrden: Sugaring mit reiner Zuckerpaste, ganzheitliche Gesichtsbehandlungen mit atamé und Mary Kay, Maniküre, Fußpflege, Make-up. Preis für Ihre Zonen sofort berechnen." aktiv="start">
   <Held />
   <Zonenrechner />
-  <Finder foto="studio-kabine" />
+  <Finder foto="gesicht-3x4" />
 
   <section class="ablauf section" aria-labelledby="ablauf-h">
     <div class="wrap ablauf__grid">
@@ -73,17 +73,6 @@ const blick = [
       {blick.map(([n, alt]) => <li><Foto name={n} alt={alt} sizes="(min-width: 48rem) 33vw, 76vw" class="blick__foto" /></li>)}
     </ul>
   </section>
-
-  <section class="meinung section" aria-labelledby="meinung-h">
-    <div class="wrap meinung__wrap">
-      <h2 id="meinung-h">Sagen Sie mir, was Ihnen gefällt</h2>
-      <p class="lede">Und was ich für Sie noch besser machen kann. Ihre Rückmeldung zu Behandlung, Produkten oder auch zu mir ist mir wichtig.</p>
-      <p class="btn-row">
-        <a class="btn btn--ghost" href={`mailto:${site.email}`}>Rückmeldung per E-Mail</a>
-        {site.googleReviewsUrl !== 'TODO' && <a class="btn btn--ghost" href={site.googleReviewsUrl} target="_blank" rel="noopener">Bewertungen auf Google lesen</a>}
-      </p>
-    </div>
-  </section>
 </Base>
 
 <style>
@@ -122,5 +111,4 @@ const blick = [
   }
 
 
-  .meinung__wrap { max-width: 46rem; display: grid; gap: var(--space-md); }
 </style>

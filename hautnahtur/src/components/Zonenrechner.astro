@@ -274,7 +274,7 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   }
   @media (min-width: 64rem) {
     .zr { padding-block: var(--space-xl) var(--space-2xl); scroll-margin-top: 4.5rem; }
-    .zr__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-areas: 'buehne kopf' 'buehne steuer' 'buehne seite' 'fuss seite'; grid-template-rows: auto auto 1fr auto; column-gap: var(--space-2xl); row-gap: 1rem; align-items: start; }
+    .zr__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-areas: 'buehne kopf' 'buehne steuer' 'buehne fuss' 'buehne seite'; grid-template-rows: auto auto auto 1fr; column-gap: var(--space-2xl); row-gap: 1rem; align-items: start; }
     .zr__app { display: contents; }
     .zr__kopf { grid-area: kopf; } .zr__steuer { grid-area: steuer; } .zr__fuss { grid-area: fuss; } .zr__seite { grid-area: seite; }
     .zr__buehne { grid-area: buehne; height: min(calc(100vh - 11rem), 50rem); min-height: 30rem; position: sticky; top: 5.5rem; }

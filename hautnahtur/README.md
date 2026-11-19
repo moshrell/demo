@@ -7,10 +7,10 @@
 - Название, логотип (`public/img/logo.png`, на тёмном фоне `logo-hell.png` — тот же рисунок, тёмные части перекрашены в светлые), имя, контакты, часы, адрес, «с 1999», Ust.ID.
 - Цены: Sugaring Damen/Herren (все зоны), 12 процедур «Zucker dich schön!» (Turbo-Hydra-Deluxe — две строки 60/90 Мин.), 6 процедур atamé, 3 классических (Mary Kay), Maniküre/Naturnagelpflege/Fußpflege, Wimpern/Brauen, Make-up (24,50 / 34,50 €). Данные в `src/data/*.json`.
 - Тексты: методика Sugaring и «Vorteile», три «Säulen» (продукты, без аппаратов, индивидуальность), Farbbegleitung, Ausbildung с годами, золотое правило Mary Kay. Опечатки исправлены, смысл не менялся.
-- Фото (с её сайта, `public/img/`): портрет `michaela.jpg`, студия `studio-*.jpg` (вырезаны из её галереи), мёд `honig.jpg` (её главный кадр без надписи), `leistung-*.jpg`.
+- Фото (с её сайта, `public/img/`): портрет `michaela.jpg`, студия `studio-*.jpg` (вырезаны из её галереи), `leistung-*.jpg`, `honig.jpg` (её главный кадр, сейчас не используется). Герой (арка на ПК) и подбор процедуры — сгенерированные Gemini кадры из демо (`pflege-1x1.jpg`, `gesicht-3x4.jpg`), по решению Степана.
 
 ## Что убрано из демо, потому что у неё этого нет
-Beine komplett (цены комплекта нет), мужские зоны лица, страница Gutschein, WhatsApp, «Vorher/Nachher» и FAQ, шаги «Rückruf am selben Abend», «Parkplatz/ebenerdig», Ronnenberg/Birgit/Zuckerfaden, сгенерированные фото, PROMPTS.txt, publish.mjs и ki-hinweis.mjs (они дописывали «Betrieb erfunden»).
+Блок «Sagen Sie mir…» (отзывы), Beine komplett (цены комплекта нет), мужские зоны лица, страница Gutschein, WhatsApp, «Vorher/Nachher» и FAQ, шаги «Rückruf am selben Abend», «Parkplatz/ebenerdig», Ronnenberg/Birgit/Zuckerfaden, сгенерированные фото, PROMPTS.txt, publish.mjs и ki-hinweis.mjs (они дописывали «Betrieb erfunden»).
 
 ## TODO / вопросы к клиентке (в коде помечены TODO)
 - **Письменное согласие** на использование её логотипа, текстов и фото (в т.ч. фото клиенток и её портрет) — по правилам из CLAUDE.md. Репозиторий публичный: если согласия нет или это неприемлемо, папку убрать из публичного репозитория.
@@ -19,12 +19,14 @@ Beine komplett (цены комплекта нет), мужские зоны л�
 - Длительность: у зон Sugaring, Färben/Zupfen и Tages-/Abend-/Braut-Make-up её времени нет (она считает по времени и материалу, ~50 €/Std.). «Dauer» показывается только когда время известно для всех выбранных услуг.
 - «Gesicht komplett» (45 €): что входит (Vellushaar 30 € отдельно) — уточнить; сейчас считается комплектом из Oberlippe, Kinn, Augenbrauen, Nase/Ohr, Hals, подсказка «дешевле» не включается (сумма частей 42 € < 45 €).
 - Herren: на её листе нет цен на лицо, поэтому вкладки «Gesicht» у мужчин нет. Можно предложить ей (в «Behandlung für den Mann» уже есть Nase/Ohren).
-- Google-отзывы: `googleReviewsUrl: "TODO"` в `site.json`; кнопка появится, когда ссылка будет.
+- Google-отзывы: блока «Sagen Sie mir, was Ihnen gefällt» нет (убран по решению Степана), `googleReviewsUrl: "TODO"` в `site.json` пока не используется.
 - Не взято: Facebook-ссылка, Qype (мёртв), PDF «Sommeraktion 2011» (устарел), личные детали (год рождения, семья).
 - Фото из её старого сайта маленькие (портрет 263 px, студия 356 px, баннеры 755 px): показаны в размере, где не мылятся. Для крупных кадров нужны оригиналы от неё. `leistung-*` — её рекламные фото с клиентками.
 - Актуальность цен (дата «Stand») — подтвердить.
 
 ## Как устроено (как в zuckerfaden)
+- Ссылка «Weg auf der Karte» ведёт на Google Maps (обычная ссылка, ничего не грузится до нажатия; в Datenschutz указано).
+- ПК: сцена калькулятора занимает все строки левой колонки, плашки Oberlippe/Kinn/Intimzone стоят в правой колонке под переключателями, поэтому фигура при прокрутке ничего не перекрывает.
 - Astro, данные в `src/data/*.json`, шрифты локально (Gilda Display + Manrope), без внешних запросов.
 - Калькулятор зон (`src/components/Zonenrechner.astro`) на готовых фигурах (`@mjcdev/react-body-highlighter`, MIT); у Herren вкладка лица скрыта, пока нет зон лица. Мёд — предрисованные WebP (`tools/honig-textur.mjs`).
 - Корзина (`src/lib/cart.ts`): сумма всегда, длительность — только если известна для всех позиций (`minOk`).

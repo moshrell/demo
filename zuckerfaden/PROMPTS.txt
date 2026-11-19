@@ -1,0 +1,43 @@
+ZUCKERFADEN — ПРОМПТЫ ДЛЯ GEMINI (8 кадров, по порядку, в одном чате)
+Готовые файлы класть в zuckerfaden/public/img/ точно под этими именами.
+Единый стиль во всех кадрах: тёплый естественный свет после обеда, мягкая плёночная зернистость, палитра янтарь / пудрово-розовый / тёмно-коричневый, без текста и логотипов.
+
+=====================================================================
+1) hero-faden-9x16.jpg — формат 9:16
+=====================================================================
+Extreme close-up macro photograph of warm translucent amber sugar paste being slowly stretched into a long glossy thread between the thumb and index finger of two hands wearing thin nude-coloured nitrile gloves. The thread catches warm afternoon window light and glows like liquid honey, with a soft bright highlight running along it and tiny air bubbles visible inside the paste. Background is a softly blurred cosmetic treatment room in powdery pink-beige tones with a hint of a folded white towel. Shallow depth of field, the sugar thread is razor sharp. Calm, clean, premium beauty-studio mood, natural colours, subtle film grain. Vertical composition with the thread running diagonally from upper left to lower right through the middle of the frame, empty soft background at the bottom third. No text, no logos, no jewellery, no product packaging.
+
+=====================================================================
+2) hero-faden-16x9.jpg — формат 16:9
+=====================================================================
+Wide macro photograph of warm translucent amber sugar paste being slowly stretched into a long glossy thread between the thumb and index finger of two hands wearing thin nude-coloured nitrile gloves, placed in the right half of the frame. The thread catches warm afternoon window light and glows like liquid honey, with a soft bright highlight running along it and tiny air bubbles inside the paste. The left half of the frame is calm, softly blurred powdery pink-beige space of a small cosmetic treatment room, with a hint of a folded white towel and a green plant far out of focus. Shallow depth of field, the sugar thread is razor sharp. Calm, clean, premium beauty-studio mood, natural colours, subtle film grain. No text, no logos, no jewellery, no product packaging.
+
+=====================================================================
+3) raum-4x3.jpg — формат 4:3
+=====================================================================
+Interior photograph of a small, very tidy one-room cosmetic studio in a German small-town house. One padded treatment bed with a fresh white cover and a neatly folded towel, a small wooden side table with a few glass jars of amber paste and unlabeled glass bottles, a soft lamp, a green potted plant, a window with sheer curtains letting in warm late-afternoon light. Walls in powdery pink-beige, warm wooden floor, a framed abstract print in amber and brown tones. Calm, welcoming, personal, not luxurious hotel spa. Eye-level view from the doorway, natural colours, subtle film grain. No people, no text, no logos, no brand names.
+
+=====================================================================
+4) haende-3x4.jpg — формат 3:4
+=====================================================================
+Close-up photograph of a cosmetician's hands in thin nude-coloured nitrile gloves applying a small ball of warm translucent amber sugar paste onto a client's forearm resting on a white towel. Warm afternoon window light, the paste glows like honey. Only the hands and the forearm are visible, the client wears a light beige knit sleeve pushed up to the elbow. Powdery pink-beige blurred background, shallow depth of field, calm and hygienic mood, natural skin tones, subtle film grain. Vertical composition. No text, no logos, no jewellery.
+
+=====================================================================
+5) gesicht-3x4.jpg — формат 3:4
+=====================================================================
+Photograph of a relaxed woman around 55 years old lying on a treatment bed with her eyes closed, hair wrapped in a soft white towel turban, a white towel covering her shoulders and chest up to the collarbones, during a gentle facial treatment. A cosmetician's gloved hands softly hold two cotton pads near her cheeks. Seen slightly from above and from the side. Warm afternoon window light, powdery pink-beige surroundings, calm, peaceful, natural, no heavy makeup. Natural skin texture, subtle film grain. Vertical composition. No text, no logos, no jewellery.
+
+=====================================================================
+6) kosmetikerin-3x4.jpg — формат 3:4
+=====================================================================
+Portrait photograph of a friendly cosmetician around 60 years old with short grey-blonde hair and a natural warm smile, wearing a simple light sage-green cosmetic tunic, standing in her small treatment room next to the window. Warm afternoon light from the side, softly blurred background with a treatment bed with a white towel and a green plant, powdery pink-beige walls. Natural, confident, approachable, realistic skin texture, minimal makeup. Waist-up framing, eye level, subtle film grain. Vertical composition. Fictional person. No text, no logos, no name tag, no jewellery.
+
+=====================================================================
+7) pflege-1x1.jpg — формат 1:1
+=====================================================================
+Still life photograph on a light linen cloth: an open glass jar of translucent amber sugar paste with a wooden spatula resting on it, two small unlabeled amber glass bottles with droppers, a folded white cotton towel, a small sprig of dried chamomile and a few sugar cubes. Warm afternoon window light with soft shadows, powdery pink-beige background, calm natural cosmetic mood, shallow depth of field, subtle film grain. Square composition, objects grouped slightly left of centre. No text, no labels, no logos, no brand names.
+
+=====================================================================
+8) gutschein-4x3.jpg — формат 4:3
+=====================================================================
+Still life photograph of a blank thick cream-white gift card standing slightly tilted in a kraft paper envelope, tied with a thin amber satin ribbon, with a small sprig of dried eucalyptus and a single wrapped sugar cube beside it, on a powdery pink-beige surface. Warm soft window light, cosy pre-Christmas mood without any Christmas symbols, shallow depth of field, subtle film grain. The card is completely empty. No text, no letters, no numbers, no logos.

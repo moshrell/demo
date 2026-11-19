@@ -1,16 +1,17 @@
-ZUCKERFADEN — ПРОМПТЫ ДЛЯ GEMINI (8 кадров, по порядку, в одном чате)
+ZUCKERFADEN — ПРОМПТЫ ДЛЯ GEMINI
+СТАТУС 19.11.: кадры 3–8 готовы и лежат в public/img/. Нужны только 1 и 2 (новый герой).
 Готовые файлы класть в zuckerfaden/public/img/ точно под этими именами.
 Единый стиль во всех кадрах: тёплый естественный свет после обеда, мягкая плёночная зернистость, палитра янтарь / пудрово-розовый / тёмно-коричневый, без текста и логотипов.
 
 =====================================================================
-1) hero-faden-9x16.jpg — формат 9:16
+1) hero-9x16.jpg — формат 9:16   (НОВЫЙ, вместо «нити в пальцах»: реальная ручная техника)
 =====================================================================
-Extreme close-up macro photograph of warm translucent amber sugar paste being slowly stretched into a long glossy thread between the thumb and index finger of two hands wearing thin nude-coloured nitrile gloves. The thread catches warm afternoon window light and glows like liquid honey, with a soft bright highlight running along it and tiny air bubbles visible inside the paste. Background is a softly blurred cosmetic treatment room in powdery pink-beige tones with a hint of a folded white towel. Shallow depth of field, the sugar thread is razor sharp. Calm, clean, premium beauty-studio mood, natural colours, subtle film grain. Vertical composition with the thread running diagonally from upper left to lower right through the middle of the frame, empty soft background at the bottom third. No text, no logos, no jewellery, no product packaging.
+Realistic close-up photograph of professional manual sugaring on a woman's lower leg. A cosmetician's hand in a thin nude-coloured nitrile glove presses and spreads a thick, dense, translucent amber ball of sugar paste against the hair growth over the shin with the fingertips, the paste slightly flattened and glossy, catching warm afternoon window light like soft caramel. The client lies relaxed on a treatment bed covered with a white towel, only her lower leg and knee are visible, skin natural with fine texture. Second gloved hand rests flat beside the paste, keeping the skin taut. Powdery pink-beige softly blurred background with a folded white towel. Shallow depth of field, focus on the paste and fingertips. Calm, clean, hygienic, premium small beauty-studio mood, natural colours, subtle film grain. Vertical composition, paste and hand in the upper middle of the frame, soft empty space at the bottom. No text, no logos, no jewellery, no spatula, no wooden sticks, no strips.
 
 =====================================================================
-2) hero-faden-16x9.jpg — формат 16:9
+2) hero-16x9.jpg — формат 16:9   (НОВЫЙ, та же сцена горизонтально)
 =====================================================================
-Wide macro photograph of warm translucent amber sugar paste being slowly stretched into a long glossy thread between the thumb and index finger of two hands wearing thin nude-coloured nitrile gloves, placed in the right half of the frame. The thread catches warm afternoon window light and glows like liquid honey, with a soft bright highlight running along it and tiny air bubbles inside the paste. The left half of the frame is calm, softly blurred powdery pink-beige space of a small cosmetic treatment room, with a hint of a folded white towel and a green plant far out of focus. Shallow depth of field, the sugar thread is razor sharp. Calm, clean, premium beauty-studio mood, natural colours, subtle film grain. No text, no logos, no jewellery, no product packaging.
+Realistic wide close-up photograph of professional manual sugaring on a woman's lower leg, placed in the right half of the frame. A cosmetician's hand in a thin nude-coloured nitrile glove presses and spreads a thick, dense, translucent amber ball of sugar paste against the hair growth over the shin with the fingertips, the paste slightly flattened and glossy, catching warm afternoon window light like soft caramel. The client lies relaxed on a treatment bed covered with a white towel, only her lower leg and knee are visible, skin natural with fine texture. Second gloved hand rests flat beside the paste, keeping the skin taut. The left half of the frame is calm, softly blurred powdery pink-beige room space with a hint of a window and a green plant far out of focus. Shallow depth of field, focus on the paste and fingertips. Calm, clean, hygienic, premium small beauty-studio mood, natural colours, subtle film grain. No text, no logos, no jewellery, no spatula, no wooden sticks, no strips.
 
 =====================================================================
 3) raum-4x3.jpg — формат 4:3
@@ -38,6 +39,6 @@ Portrait photograph of a friendly cosmetician around 60 years old with short gre
 Still life photograph on a light linen cloth: an open glass jar of translucent amber sugar paste with a wooden spatula resting on it, two small unlabeled amber glass bottles with droppers, a folded white cotton towel, a small sprig of dried chamomile and a few sugar cubes. Warm afternoon window light with soft shadows, powdery pink-beige background, calm natural cosmetic mood, shallow depth of field, subtle film grain. Square composition, objects grouped slightly left of centre. No text, no labels, no logos, no brand names.
 
 =====================================================================
-8) gutschein-4x3.jpg — формат 4:3
+8) gutschein-1x1.jpg — формат 1:1 (уже готов)
 =====================================================================
 Still life photograph of a blank thick cream-white gift card standing slightly tilted in a kraft paper envelope, tied with a thin amber satin ribbon, with a small sprig of dried eucalyptus and a single wrapped sugar cube beside it, on a powdery pink-beige surface. Warm soft window light, cosy pre-Christmas mood without any Christmas symbols, shallow depth of field, subtle film grain. The card is completely empty. No text, no letters, no numbers, no logos.

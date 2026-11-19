@@ -5,14 +5,14 @@
 
 export type RRect = { x: number; y: number; w: number; h: number; r: number };
 export type Cap = { x0: number; y0: number; r0: number; x1: number; y1: number; r1: number };
-export type Scene = { rects: RRect[]; caps: Cap[]; k?: number; shadow?: number; bright?: number };
+export type Scene = { rects: RRect[]; caps: Cap[]; k?: number; shadow?: number; bright?: number; abs?: number; a0?: number };
 
-const MAXR = 8, MAXC = 16;
+const MAXR = 8, MAXC = 64;
 
 const VS = `attribute vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }`;
 const FS = `
 precision highp float;
-uniform vec2 uRes; uniform float uDpr; uniform float uK; uniform float uShadow; uniform float uBright;
+uniform vec2 uRes; uniform float uDpr; uniform float uK; uniform float uShadow; uniform float uBright; uniform float uAbs; uniform float uA0;
 uniform vec4 uR[${MAXR}]; uniform float uRr[${MAXR}]; uniform int uNR;
 uniform vec4 uC[${MAXC}]; uniform vec2 uCr[${MAXC}]; uniform int uNC;
 float smin(float a, float b, float k){ float h = max(k - abs(a - b), 0.0) / k; return min(a, b) - h * h * k * 0.25; }
@@ -39,7 +39,7 @@ void main(){
     vec3 n = normalize(vec3(h - hx, h - hy, e * 0.9));
     float T = h / DEPTH;
     // поглощение: тонкое — светлый мёд, толстое — тёмный янтарь
-    vec3 trans = exp(-vec3(0.27, 0.60, 1.65) * (0.25 + 1.5 * T));
+    vec3 trans = exp(-vec3(0.27, 0.60, 1.65) * (0.25 + 1.5 * T) * uAbs);
     vec3 col = trans * 1.04 * uBright;
     vec3 L = normalize(vec3(-0.42, -0.72, 0.56));
     float dif = max(dot(n, L), 0.0);
@@ -53,7 +53,7 @@ void main(){
     float sp = pow(max(dot(n, H), 0.0), 110.0) * 1.5 + pow(max(dot(n, H), 0.0), 14.0) * 0.10;
     float rim = pow(1.0 - n.z, 2.5);
     col += vec3(1.0, 0.94, 0.82) * rim * 0.22;
-    float a = mix(0.55, 0.9, smoothstep(0.0, 0.8, T));
+    float a = mix(uA0, 0.95, smoothstep(0.0, 0.8, T));
     col = col * a + vec3(1.0) * sp;
     a = clamp(a + sp, 0.0, 1.0);
     outC = vec4(col, a) * aa;
@@ -86,7 +86,7 @@ export class HonigGL {
       const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
       const loc = gl.getAttribLocation(pr, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-      for (const n of ['uRes', 'uDpr', 'uK', 'uShadow', 'uBright', 'uR', 'uRr', 'uNR', 'uC', 'uCr', 'uNC']) this.u[n] = gl.getUniformLocation(pr, n);
+      for (const n of ['uRes', 'uDpr', 'uK', 'uShadow', 'uBright', 'uAbs', 'uA0', 'uR', 'uRr', 'uNR', 'uC', 'uCr', 'uNC']) this.u[n] = gl.getUniformLocation(pr, n);
       gl.clearColor(0, 0, 0, 0);
       this.ok = true;
     } catch (e) { this.ok = false; }
@@ -115,6 +115,8 @@ export class HonigGL {
     gl.uniform1f(this.u.uK, s.k ?? 14);
     gl.uniform1f(this.u.uShadow, s.shadow ?? 0.3);
     gl.uniform1f(this.u.uBright, s.bright ?? 1);
+    gl.uniform1f(this.u.uAbs, s.abs ?? 1);
+    gl.uniform1f(this.u.uA0, s.a0 ?? 0.55);
     gl.uniform4fv(this.u.uR, rv); gl.uniform1fv(this.u.uRr, rr); gl.uniform1i(this.u.uNR, R.length);
     gl.uniform4fv(this.u.uC, cv); gl.uniform2fv(this.u.uCr, cr); gl.uniform1i(this.u.uNC, C.length);
     gl.drawArrays(gl.TRIANGLES, 0, 3);

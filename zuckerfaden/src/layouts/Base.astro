@@ -66,11 +66,12 @@ const wa = `https://wa.me/${site.whatsapp}`;
   <body data-leiste={leiste}>
     <a class="skip" href="#inhalt">Zum Inhalt</a>
     {site.fontSwitcher && (
-      <div class="demobar" role="group" aria-label="Schriftprobe (nur in der Demo)">
-        <span class="demobar__l">Demo · Schrift</span>
-        <div class="demobar__seg">
+      <div class="schrift" data-schrift>
+        <button type="button" class="schrift__knopf" data-schrift-knopf aria-expanded="false" aria-controls="schrift-panel" aria-label="Schrift wechseln (nur in der Demo)"><span aria-hidden="true">Aa</span></button>
+        <div class="schrift__panel" id="schrift-panel" role="group" aria-label="Schriftprobe (nur in der Demo)" hidden>
+          <p class="schrift__titel">Schrift testen <span>nur in der Demo</span></p>
           {fonts.paare.map((p) => (
-            <label title={p.name}><input type="radio" name="schrift" value={p.id} /><span><b>{p.kurz}</b><i>{p.name}</i></span></label>
+            <label><input type="radio" name="schrift" value={p.id} /><span><b>{p.kurz}</b><i>{p.name}</i></span></label>
           ))}
         </div>
       </div>
@@ -81,10 +82,15 @@ const wa = `https://wa.me/${site.whatsapp}`;
           <span class="kopf__marke">Zuckerfaden</span>
           <span class="kopf__zeile">Kosmetik · {site.address.city}</span>
         </a>
-        <nav class="kopf__nav" aria-label="Hauptmenü">
-          {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label}</a>)}
+        <nav class="kopf__kapsel" aria-label="Hauptmenü">
+          <div class="kopf__nav">
+            {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label}</a>)}
+          </div>
+          {leiste === 'termin'
+            ? <a class="leiste__haupt" href={tel}>Jetzt anrufen</a>
+            : <a class="leiste__haupt" href={`${base}termin/`}>Termin anfragen</a>}
+          <a class="kopf__tel" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg>{site.phone}</a>
         </nav>
-        <p class="kopf__heute" data-heute aria-live="polite"></p>
       </div>
     </header>
 
@@ -123,12 +129,8 @@ const wa = `https://wa.me/${site.whatsapp}`;
       </div>
     </footer>
 
-    <!-- Медовая панель: размытие фона по форме панели/пилюли + WebGL-мёд поверх + кнопки сверху -->
-    <div class="honig-layer" aria-hidden="true">
-      <div class="honig-blur" data-blur-bar></div>
-      <div class="honig-blur" data-blur-pille></div>
-      <canvas class="honig-canvas" data-honig-canvas></canvas>
-    </div>
+    <!-- Нить к медовым блокам (SVG, рисуется только при прокрутке); панель и пилюля — готовая текстура мёда -->
+    <svg class="honigfaden" data-faden aria-hidden="true"><defs><linearGradient id="fg" x1="0" x2="1"><stop offset="0" stop-color="#E9A93A" /><stop offset="0.35" stop-color="#FFE29A" /><stop offset="1" stop-color="#E39A2A" /></linearGradient></defs><path data-faden-pfad fill="url(#fg)" d="" /></svg>
     <nav class="leiste" aria-label="Schnellzugriff">
       <button type="button" class="pille" data-pille data-open="auswahl" hidden>
         <span class="pille__n" data-pille-n></span>
@@ -136,15 +138,12 @@ const wa = `https://wa.me/${site.whatsapp}`;
       </button>
       <div class="leiste__bar" data-bar>
         <button type="button" class="leiste__btn leiste__menue" data-open="menue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16" /></svg><span>Menü</span></button>
-        <div class="leiste__nav">
-          {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label}</a>)}
-        </div>
         {leiste === 'termin'
           ? <a class="leiste__haupt" href={tel}>Jetzt anrufen</a>
           : <a class="leiste__haupt" href={`${base}termin/`} data-termin>Termin anfragen</a>}
         {leiste === 'termin'
           ? <a class="leiste__btn" href={wa} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19l1.2-3.6A7.5 7.5 0 1 1 9 18.3z" /></svg><span>WhatsApp</span></a>
-          : <a class="leiste__btn leiste__tel" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg><span class="leiste__kurz">Anrufen</span><span class="leiste__lang">{site.phone}</span></a>}
+          : <a class="leiste__btn leiste__tel" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg><span>Anrufen</span></a>}
       </div>
     </nav>
 
@@ -178,39 +177,48 @@ const wa = `https://wa.me/${site.whatsapp}`;
   </body>
 </html>
 
-<style is:global>
+<style is:global define:vars={{ leisteBild: `url(${base}img/honig-leiste.webp)` }}>
   .skip { position: absolute; left: -999px; top: 0.5rem; background: var(--tinte); color: var(--weiss); padding: 0.6rem 1rem; border-radius: 999px; z-index: 100; }
   .skip:focus { left: 0.5rem; }
 
-  /* Демо-полоса: проба шрифтов */
-  .demobar { position: relative; z-index: 5; display: flex; align-items: center; justify-content: center; gap: 0.8rem; padding: 0.45rem var(--gutter); padding-top: max(0.45rem, env(safe-area-inset-top)); background: #120B07; color: var(--licht-2); font-family: 'Albert Sans Variable', system-ui, sans-serif; font-size: 0.85rem; }
-  .demobar__l { white-space: nowrap; }
-  .demobar__seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px; background: #2A1C13; }
-  .demobar label { position: relative; }
-  .demobar input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-  .demobar span { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 2.2rem; min-width: 2.4rem; justify-content: center; padding: 0 0.7rem; border-radius: 999px; color: var(--licht); cursor: pointer; }
-  .demobar b { font-weight: 700; }
-  .demobar i { font-style: normal; display: none; color: var(--licht-2); }
-  .demobar input:checked + span { background: var(--honig); color: var(--tinte); }
-  .demobar input:checked + span i { color: var(--tinte); }
-  .demobar input:focus-visible + span { outline: 2px solid var(--honig); outline-offset: 2px; }
-  @media (min-width: 64rem) { .demobar i { display: inline; } }
+  /* Переключатель шрифтов: выдвижной, только в демо */
+  .schrift { position: fixed; z-index: 60; top: calc(env(safe-area-inset-top, 0px) + 0.55rem); right: 0.6rem; font-family: 'Albert Sans Variable', system-ui, sans-serif; }
+  .schrift__knopf { width: 2.9rem; height: 2.9rem; border-radius: 50%; border: 1px solid rgba(246, 239, 231, 0.28); background: rgba(27, 17, 11, 0.86); color: var(--honig-hell); font: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .schrift__panel { position: absolute; top: 3.5rem; right: 0; width: min(19rem, calc(100vw - 1.2rem)); display: grid; gap: 0.2rem; padding: 0.7rem; border-radius: 20px; background: #120B07; border: 1px solid var(--nacht-3); box-shadow: 0 24px 50px -20px #000; animation: hoch 0.2s ease-out; }
+  .schrift__panel[hidden] { display: none; }
+  .schrift__titel { color: var(--licht); font-weight: 600; padding: 0.3rem 0.5rem 0.5rem; font-size: 0.95rem; }
+  .schrift__titel span { color: var(--licht-2); font-weight: 400; margin-left: 0.4rem; font-size: 0.85rem; }
+  .schrift label { position: relative; display: block; }
+  .schrift input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .schrift label span { display: flex; align-items: center; gap: 0.7rem; min-height: 2.9rem; padding: 0 0.9rem; border-radius: 14px; color: var(--licht); cursor: pointer; }
+  .schrift b { width: 1.6rem; height: 1.6rem; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--nacht-3); font-size: 0.85rem; }
+  .schrift i { font-style: normal; font-size: 0.95rem; }
+  .schrift input:checked + span { background: var(--honig); color: var(--tinte); }
+  .schrift input:checked + span b { border-color: var(--tinte); }
+  .schrift input:focus-visible + span { outline: 2px solid var(--honig); outline-offset: 2px; }
+
+  /* Мёд-капсула: готовая текстура (tools/honig-textur.mjs), края по 32 px, середина растягивается */
+  .leiste__bar, .pille, .kopf__kapsel { border: solid transparent; border-width: 0 var(--cap, 32px); border-image: var(--leisteBild) 0 96 fill / 0 var(--cap, 32px) / 0 stretch; border-radius: 999px; box-shadow: 0 14px 26px -12px rgba(0, 0, 0, 0.7), 0 2px 0 rgba(120, 60, 0, 0.5); }
 
   /* Шапка */
-  .kopf__in { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding-block: 1rem; }
+  .kopf { position: relative; z-index: 30; }
+  .kopf__in { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding-block: 0.9rem; padding-right: 4rem; }
   .kopf__name { display: grid; text-decoration: none; line-height: 1; }
   .kopf__marke { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.75rem; letter-spacing: var(--display-tracking); }
   .kopf__zeile { font-size: 0.8125rem; color: var(--licht-2); margin-top: 0.3rem; letter-spacing: 0.02em; }
-  .kopf__heute { font-size: 0.875rem; line-height: 1.3; text-align: right; color: var(--licht-2); max-width: 10.5rem; }
-  .kopf__heute b { color: var(--licht); font-weight: var(--strong-weight); }
   .punkt { display: inline-block; width: 0.5em; height: 0.5em; border-radius: 50%; background: #7BC47F; margin-right: 0.4em; vertical-align: 0.08em; box-shadow: 0 0 0 3px rgba(123, 196, 127, 0.18); }
   .punkt--zu { background: var(--licht-2); box-shadow: none; }
-  .kopf__nav { display: none; }
+  .kopf__kapsel { display: none; }
   @media (min-width: 64rem) {
-    .kopf__nav { display: flex; gap: 2rem; margin-left: auto; margin-right: 1rem; }
-    .kopf__nav a { text-decoration: none; padding-block: 0.4rem; border-bottom: 1.5px solid transparent; color: var(--licht); }
-    .kopf__nav a:hover, .kopf__nav a[aria-current='page'] { border-bottom-color: var(--honig); }
-    .kopf__heute { max-width: 13rem; }
+    .kopf { position: sticky; top: 0; background: rgba(27, 17, 11, 0.94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+    .kopf__in { padding-right: calc(var(--gutter) + 3.6rem); padding-block: 0.7rem; }
+    .kopf__kapsel { --cap: 28px; display: flex; align-items: center; gap: 0.3rem; height: 56px; padding: 0; color: var(--tinte); }
+    .kopf__nav { display: flex; gap: 0.1rem; }
+    .kopf__kapsel .kopf__nav a { display: inline-flex; align-items: center; white-space: nowrap; min-height: 2.6rem; padding: 0 0.8rem; border-radius: 999px; text-decoration: none; font-weight: 600; color: var(--tinte); }
+    .kopf__nav a:hover, .kopf__nav a[aria-current='page'] { background: rgba(255, 246, 220, 0.5); }
+    .kopf__kapsel .leiste__haupt { min-height: 2.8rem; margin-left: 0.2rem; }
+    .kopf__kapsel .kopf__tel { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0 0.9rem 0 0.7rem; min-height: 2.6rem; text-decoration: none; font-weight: 600; color: var(--tinte); white-space: nowrap; }
+    .kopf__kapsel .kopf__tel svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
   }
 
   /* Футер: белая карточка записи на тёмном */
@@ -236,31 +244,18 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .fuss__demo { text-align: center; color: var(--licht-2); max-width: 40rem; margin: 0.4rem auto 0; }
   @media (min-width: 48rem) { .karte { grid-template-columns: 1fr 1fr; } }
 
-  /* Медовая панель */
-  .honig-layer { position: fixed; left: 0; right: 0; bottom: 0; height: 340px; pointer-events: none; z-index: 40; }
-  .honig-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .honig-blur { position: absolute; left: 0; top: 0; width: 0; height: 0; border-radius: 999px; opacity: 0; -webkit-backdrop-filter: blur(10px) saturate(1.3); backdrop-filter: blur(10px) saturate(1.3); }
-  .no-gl .honig-blur { background: linear-gradient(180deg, rgba(246, 194, 89, 0.94), rgba(207, 138, 34, 0.96)); }
-  .leiste { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; pointer-events: none; padding: 0 max(var(--bar-gap), env(safe-area-inset-left)) calc(var(--bar-gap) + env(safe-area-inset-bottom)); display: grid; justify-items: center; gap: 16px; }
-  .leiste__bar { pointer-events: auto; width: 100%; max-width: 30rem; height: var(--bar-h); border-radius: 999px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 0.45rem; color: var(--tinte); }
-  .leiste__btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 4.2rem; min-height: 3rem; background: none; border: 0; color: var(--tinte); font: inherit; font-size: 0.8125rem; font-weight: 700; text-decoration: none; cursor: pointer; border-radius: 999px; justify-self: center; text-shadow: 0 1px 0 rgba(255, 230, 170, 0.5); }
+  /* Нижняя панель (телефон) */
+  .honigfaden { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 39; pointer-events: none; }
+  .leiste { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; pointer-events: none; padding: 0 max(var(--bar-gap), env(safe-area-inset-left)) calc(var(--bar-gap) + env(safe-area-inset-bottom)); display: grid; justify-items: center; gap: 12px; transform: translateZ(0); }
+  .leiste__bar { pointer-events: auto; width: 100%; max-width: 30rem; height: var(--bar-h); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; color: var(--tinte); }
+  .leiste__btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 3.6rem; min-height: 3rem; background: none; border: 0; color: var(--tinte); font: inherit; font-size: 0.8125rem; font-weight: 700; text-decoration: none; cursor: pointer; border-radius: 999px; justify-self: center; }
   .leiste__btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
-  .leiste__haupt { display: inline-flex; align-items: center; min-height: 3.1rem; padding: 0 1.35rem; border-radius: 999px; background: var(--tinte); color: var(--weiss); text-decoration: none; font-weight: var(--strong-weight); white-space: nowrap; box-shadow: 0 6px 14px -6px rgba(60, 25, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
-  .leiste__nav, .leiste__lang { display: none; }
-  .pille { pointer-events: auto; display: inline-flex; align-items: center; gap: 0.9rem; min-height: 3rem; padding: 0 1.3rem; border: 0; border-radius: 999px; background: none; color: var(--tinte); font: inherit; font-weight: var(--strong-weight); cursor: pointer; transition: transform 0.42s cubic-bezier(0.3, 1.35, 0.5, 1), opacity 0.25s; text-shadow: 0 1px 0 rgba(255, 230, 170, 0.5); }
-  .pille[hidden] { display: inline-flex; visibility: hidden; opacity: 0; transform: translateY(52px) scale(0.5); }
+  .leiste__haupt { display: inline-flex; align-items: center; min-height: 3.1rem; padding: 0 1.3rem; border-radius: 999px; background: var(--tinte); color: var(--weiss); text-decoration: none; font-weight: var(--strong-weight); white-space: nowrap; box-shadow: 0 6px 14px -6px rgba(60, 25, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
+  .pille { --cap: 24px; pointer-events: auto; display: inline-flex; align-items: center; gap: 0.8rem; height: 48px; padding: 0; font: inherit; font-weight: var(--strong-weight); color: var(--tinte); cursor: pointer; transition: transform 0.4s cubic-bezier(0.3, 1.35, 0.5, 1), opacity 0.25s; }
+  .pille[hidden] { display: inline-flex; visibility: hidden; opacity: 0; transform: translateY(40px) scale(0.6); }
   .pille__n { font-weight: 500; }
   .pille__summe { font-size: 1.2rem; font-weight: 700; }
-  @media (min-width: 64rem) {
-    .leiste__bar { width: auto; max-width: none; grid-template-columns: auto auto auto; gap: 0.4rem; padding: 0 0.45rem 0 1.1rem; }
-    .leiste__menue { display: none; }
-    .leiste__nav { display: flex; gap: 0.2rem; }
-    .leiste__nav a { display: inline-flex; align-items: center; white-space: nowrap; min-height: 2.8rem; padding: 0 0.85rem; border-radius: 999px; text-decoration: none; font-weight: 600; color: var(--tinte); text-shadow: 0 1px 0 rgba(255, 230, 170, 0.5); }
-    .leiste__nav a:hover, .leiste__nav a[aria-current='page'] { background: rgba(255, 244, 214, 0.38); }
-    .leiste__lang { display: inline; font-size: 0.95rem; }
-    .leiste__kurz { display: none; }
-    .leiste__tel { flex-direction: row; gap: 0.45rem; padding: 0 0.9rem; }
-  }
+  @media (min-width: 64rem) { .leiste__bar { display: none; } .leiste { padding-bottom: calc(1.2rem + env(safe-area-inset-bottom)); } }
 
   /* Шторки */
   .sheet { border: 0; padding: 0; margin: auto auto 0; width: 100%; max-width: 34rem; max-height: 88dvh; border-radius: 26px 26px 0 0; background: var(--weiss); color: var(--tinte); padding: 1.1rem var(--gutter) calc(1.4rem + env(safe-area-inset-bottom)); overflow: auto; overscroll-behavior: contain; }
@@ -284,5 +279,5 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .auswahl__summe strong { font-size: 1.7rem; margin-left: 0.3rem; }
   .auswahl__leer { color: var(--tinte-2); padding: 0.8rem 0; }
   .sheet__aktion { margin-top: 1rem; }
-  @media print { .honig-layer, .leiste, .kopf__heute, .fuss__demo, .fuss__recht, .demobar { display: none !important; } }
+  @media print { .faden, .leiste, .fuss__demo, .fuss__recht, .schrift, .kopf__kapsel { display: none !important; } }
 </style>

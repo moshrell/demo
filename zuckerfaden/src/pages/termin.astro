@@ -82,10 +82,24 @@ const tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
       </div>
     </form>
 
-    <div class="terminkarte" data-karte hidden tabindex="-1" aria-live="polite">
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><radialGradient id="danke-honig" cx="35%" cy="28%" r="85%"><stop offset="0" stop-color="#FFE9AE" /><stop offset="0.5" stop-color="#F0AE34" /><stop offset="1" stop-color="#C77F17" /></radialGradient></defs></svg>
+    <div class="terminkarte danke" data-karte hidden tabindex="-1" aria-live="polite">
+      <div class="danke__siegel" aria-hidden="true">
+        <i class="danke__tropf"></i>
+        <svg viewBox="0 0 88 88"><circle class="danke__kreis" cx="44" cy="44" r="40" /><path class="danke__haken" d="M27 45l12 12 23-26" /></svg>
+      </div>
       <h2>Anfrage angekommen</h2>
-      <p class="lede">Ich melde mich in der Regel am selben Abend.</p>
+      <p class="lede" data-danke-hallo>Ich melde mich in der Regel am selben Abend.</p>
       <dl data-karte-liste></dl>
+      <ol class="danke__weg">
+        <li><b>Heute Abend</b><span>Ich rufe Sie an (oder schreibe per WhatsApp) und wir legen die Uhrzeit fest.</span></li>
+        <li><b>Vor dem Termin</b><span>Sie bekommen eine kurze Erinnerung. Bitte Haare 3 bis 5 mm lang lassen.</span></li>
+        <li><b>Bei mir</b><span>Wir schauen zuerst auf Ihre Haut, dann beginnt die Behandlung.</span></li>
+      </ol>
+      <div class="btn-row danke__aktion">
+        <a class="btn" href={base}>Zur Startseite</a>
+        <a class="btn btn--ghost" href={`${base}sugaring/#vorbereitung`}>So bereiten Sie sich vor</a>
+      </div>
       <p class="demo-hinweis">Demo: Diese Anfrage wurde nicht gesendet und nicht gespeichert.</p>
     </div>
 
@@ -100,7 +114,7 @@ const tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
   </section>
 </Base>
 
-<style>
+<style is:global define:vars={{ tropfenBild: `url(${base}img/honig-tropfen.webp)` }}>
   .tf { max-width: 44rem; padding-top: var(--space-xl); display: grid; gap: var(--space-xl); }
   .tf__kopf { display: grid; gap: var(--space-md); }
   .tf__auswahl { background: var(--weiss); border-radius: 20px; padding: 0.6rem 1.2rem 1.1rem; }
@@ -110,6 +124,21 @@ const tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
   .tf__abend { margin-top: 0.5rem; }
   .tf__direkt { display: grid; gap: var(--space-md); padding-top: var(--space-xl); border-top: 1px solid var(--linie); }
   .tf__direkt h2 { font-size: 1.7rem; }
+  .danke { display: grid; gap: 0.2rem; justify-items: start; }
+  .danke__siegel { position: relative; width: 5.5rem; height: 5.5rem; margin-bottom: 0.8rem; }
+  .danke__siegel svg { width: 100%; height: 100%; overflow: visible; }
+  .danke__kreis { fill: url(#danke-honig); stroke: #C98410; stroke-width: 2; transform-origin: 44px 44px; animation: siegel 0.6s cubic-bezier(0.3, 1.4, 0.5, 1) 0.45s both; filter: drop-shadow(0 8px 12px rgba(160, 90, 0, 0.35)); }
+  .danke__haken { fill: none; stroke: var(--tinte); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 60; stroke-dashoffset: 60; animation: haken 0.45s ease-out 0.95s forwards; }
+  .danke__tropf { position: absolute; left: 50%; top: -3.2rem; width: 22px; height: 34px; margin-left: -11px; background: var(--tropfenBild) center / 100% 100% no-repeat; animation: fall 0.5s cubic-bezier(0.55, 0, 0.9, 0.6) both; }
+  @keyframes fall { 0% { transform: translateY(-1rem) scale(0.4); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(3.4rem) scale(1, 1.2); opacity: 1; } 100% { opacity: 0; } }
+  @keyframes siegel { from { transform: scale(0.2); opacity: 0; } }
+  @keyframes haken { to { stroke-dashoffset: 0; } }
+  .danke dl { width: 100%; }
+  .danke__weg { list-style: none; margin: 1.4rem 0 0; padding: 0; display: grid; gap: 0.9rem; width: 100%; counter-reset: w; }
+  .danke__weg li { position: relative; display: grid; gap: 0.1rem; padding-left: 2.4rem; counter-increment: w; }
+  .danke__weg li::before { content: counter(w); position: absolute; left: 0; top: 0.05rem; width: 1.7rem; height: 1.7rem; display: grid; place-items: center; border-radius: 50%; border: 1.5px solid var(--honig-tief); font-size: 0.9rem; font-weight: 600; }
+  .danke__weg span { color: var(--tinte-2); }
+  .danke__aktion { margin-top: 1.4rem; }
 </style>
 
 <script>
@@ -178,6 +207,8 @@ const tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
         const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v;
         d.append(dt, dd); return d;
       }));
+      const vorname = f('name').value.trim().split(/\s+/)[0];
+      q('[data-danke-hallo]').textContent = `Danke, ${vorname}. Ich melde mich in der Regel am selben Abend.`;
       form.hidden = true; const k = q('[data-karte]'); k.hidden = false; k.focus(); k.scrollIntoView({ block: 'start' });
       ctrl.reset(); cart.clear();
     },

@@ -1,61 +1,104 @@
 ---
-/** Подбор ухода за лицом: три вопроса чипами → 1–2 процедуры с ценой и кнопкой «в заявку». */
+/** Подбор ухода за лицом: мастер по шагам. Один вопрос на экране, крупные карточки-ответы, медовая нить показывает прогресс,
+ *  после третьего ответа — 1–2 процедуры с ценой и кнопкой «в заявку». */
 import data from '../data/behandlungen.json';
 import site from '../data/site.json';
-const { id = 'finder', titel = 'Welche Gesichtsbehandlung passt zu mir?', mehr = true } = Astro.props;
+import Foto from './Foto.astro';
+const { id = 'finder', titel = 'Welche Gesichtsbehandlung passt zu mir?', mehr = true, foto = true } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const fragen = [
   { key: 'haut', text: 'Was wünscht sich Ihre Haut?' },
-  { key: 'zeit', text: 'Wie viel Zeit haben Sie?' },
+  { key: 'zeit', text: 'Wie viel Zeit möchten Sie sich nehmen?' },
   { key: 'art', text: 'Was mögen Sie lieber?' },
 ];
 ---
 <section class="fi section" id={id} aria-labelledby={`${id}-h`} data-finder>
-  <div class="wrap fi__wrap">
-    <h2 id={`${id}-h`}>{titel}</h2>
-    <p class="lede fi__lede">Drei Fragen, dann sehen Sie die passende Behandlung mit Preis.</p>
-    <div class="fi__form">
-      {fragen.map((f, n) => (
-        <fieldset class="fi__frage">
-          <legend><span class="fi__nr">{n + 1}</span>{f.text}</legend>
-          <div class="chips">
-            {data.fragen[f.key].map((o) => (
-              <label class="chip"><input type="radio" name={`${id}-${f.key}`} value={o.id} data-key={f.key} /><span>{o.label}</span></label>
-            ))}
-          </div>
-        </fieldset>
-      ))}
+  <div class={`wrap fi__wrap ${foto ? 'fi__wrap--foto' : ''}`}>
+    {foto && <div class="fi__foto"><Foto name="pflege-1x1" alt="Glas mit Zuckerpaste, Pflegefläschchen und Handtuch auf Leinen" sizes="(min-width: 64rem) 30rem, 0px" /></div>}
+    <div class="fi__karte">
+      <h2 id={`${id}-h`}>{titel}</h2>
+      <div class="fi__kopf">
+        <p class="fi__zaehler" data-zaehler aria-live="polite">Frage 1 von 3</p>
+        <div class="fi__faden" aria-hidden="true"><i data-fuell></i><b></b><b></b><b></b></div>
+      </div>
+      <div class="fi__buehne">
+        {fragen.map((f, n) => (
+          <fieldset class="fi__frage" data-schritt={n} hidden={n > 0}>
+            <legend>{f.text}</legend>
+            <div class={`fi__opt fi__opt--${f.key}`}>
+              {data.fragen[f.key].map((o) => (
+                <label class="fi__karteopt"><input type="radio" name={`${id}-${f.key}`} value={o.id} data-key={f.key} /><span>{o.label}</span></label>
+              ))}
+            </div>
+          </fieldset>
+        ))}
+        <div class="fi__ergebnis" data-ergebnis hidden tabindex="-1" aria-live="polite">
+          <p class="fi__titel" data-ergebnis-titel></p>
+          <ul class="fi__liste" data-ergebnis-liste></ul>
+          <p class="fi__tel" data-ergebnis-tel hidden>Am besten besprechen wir das kurz am Telefon: <a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+        </div>
+      </div>
+      <div class="fi__nav">
+        <button type="button" class="fi__link" data-zurueck hidden>Zurück</button>
+        <button type="button" class="fi__link" data-neu hidden>Noch einmal von vorn</button>
+      </div>
+      {mehr && <p class="fi__mehr"><a href={`${base}gesicht/`}>Alle Gesichtsbehandlungen und Preise</a></p>}
     </div>
-    <div class="fi__ergebnis" data-ergebnis hidden tabindex="-1" aria-live="polite">
-      <p class="fi__titel" data-ergebnis-titel></p>
-      <ul class="fi__liste" data-ergebnis-liste></ul>
-      <p class="fi__tel" data-ergebnis-tel hidden>Am besten besprechen wir das kurz am Telefon: <a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
-    </div>
-    {mehr && <p class="fi__mehr"><a href={`${base}gesicht/`}>Alle Gesichtsbehandlungen und Preise</a></p>}
   </div>
 </section>
 
 <style>
-  .fi__wrap { max-width: 52rem; }
-  .fi__lede { margin-top: 0.8rem; }
-  .fi__form { display: grid; gap: var(--space-lg); margin-top: var(--space-xl); }
-  .fi__frage { border: 0; padding: 0; margin: 0; min-width: 0; }
-  .fi__frage legend { display: flex; align-items: baseline; gap: 0.7rem; padding: 0; margin-bottom: 0.8rem; font-weight: var(--strong-weight); font-size: var(--text-lg); }
-  .fi__nr { display: inline-grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 50%; background: var(--tinte); color: var(--weiss); font-size: 0.95rem; flex: none; transform: translateY(-0.1rem); }
-  .fi__ergebnis { margin-top: var(--space-xl); outline: none; }
-  .fi__ergebnis[hidden] { display: none; }
-  .fi__titel { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.6rem; line-height: 1.2; }
+  .fi__wrap { display: grid; gap: var(--space-xl); }
+  .fi__karte { position: relative; background: linear-gradient(160deg, #FBF6F0 0%, #F1E6DB 100%); border-radius: 28px; padding: clamp(1.3rem, 4.5vw, 2.8rem); box-shadow: 0 1px 0 #fff inset, 0 30px 60px -40px rgba(80, 40, 10, 0.45); overflow: hidden; }
+  .fi__karte h2 { font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem); }
+  .fi__kopf { display: grid; gap: 0.7rem; margin-top: var(--space-lg); }
+  .fi__zaehler { font-size: var(--text-sm); color: var(--tinte-2); font-weight: 500; }
+  /* медовая нить: линия с тремя узлами, заполняется по шагам */
+  .fi__faden { position: relative; height: 14px; display: flex; justify-content: space-between; align-items: center; }
+  .fi__faden::before { content: ''; position: absolute; left: 7px; right: 7px; top: 6px; height: 2px; border-radius: 2px; background: #DCCBBB; }
+  .fi__faden i { position: absolute; left: 7px; top: 4px; height: 6px; border-radius: 6px; width: 0; max-width: calc(100% - 14px); background: linear-gradient(180deg, #FFD983, #E49B1F); box-shadow: 0 0 8px rgba(227, 162, 31, 0.6); transition: width 0.45s cubic-bezier(0.3, 0.9, 0.3, 1); }
+  .fi__faden b { position: relative; width: 14px; height: 14px; border-radius: 50%; background: #F4EADF; border: 2px solid #CDB9A6; transition: background 0.3s, border-color 0.3s; }
+  .fi__faden b.an { background: radial-gradient(circle at 35% 30%, #FFE9AE, #E49B1F 70%); border-color: #C98410; }
+  .fi__buehne { margin-top: var(--space-lg); min-height: 17rem; }
+  .fi__frage { border: 0; padding: 0; margin: 0; min-width: 0; animation: schritt 0.34s cubic-bezier(0.2, 0.9, 0.3, 1); }
+  .fi__frage[hidden], .fi__ergebnis[hidden] { display: none; }
+  .fi__rueck .fi__frage { animation-name: schrittzu; }
+  @keyframes schritt { from { opacity: 0; transform: translateX(28px); } }
+  @keyframes schrittzu { from { opacity: 0; transform: translateX(-28px); } }
+  .fi__frage legend { padding: 0; margin-bottom: 1rem; font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2rem); letter-spacing: var(--display-tracking); line-height: 1.15; }
+  .fi__opt { display: grid; gap: 0.6rem; }
+  .fi__karteopt { position: relative; display: block; }
+  .fi__karteopt input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .fi__karteopt span { display: flex; align-items: center; min-height: 3.5rem; padding: 0.7rem 1.2rem; border-radius: 18px; background: var(--weiss); border: 1.5px solid #E2D3C5; font-weight: 500; line-height: 1.3; cursor: pointer; transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s; }
+  .fi__karteopt:hover span { border-color: var(--honig-tief); transform: translateY(-1px); }
+  .fi__karteopt input:checked + span { border-color: var(--honig-tief); box-shadow: 0 0 0 2px var(--honig) inset, 0 10px 20px -14px rgba(160, 90, 0, 0.6); background: #FFF8E8; }
+  .fi__karteopt input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .fi__nav { display: flex; justify-content: space-between; gap: 1rem; min-height: 2.75rem; margin-top: var(--space-md); }
+  .fi__link { min-height: 2.75rem; padding: 0 0.2rem; border: 0; background: none; font: inherit; font-weight: var(--strong-weight); color: var(--tinte); text-decoration: underline; text-underline-offset: 0.25em; cursor: pointer; }
+  .fi__link[hidden] { display: none; }
+  .fi__ergebnis { outline: none; animation: schritt 0.34s cubic-bezier(0.2, 0.9, 0.3, 1); }
+  .fi__titel { font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.2rem); line-height: 1.15; }
   .fi__liste { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.9rem; }
-  .fi__liste :global(li) { display: grid; gap: 0.5rem; padding: 1.1rem 1.2rem; background: var(--weiss); border-radius: 18px; animation: auf 0.28s ease-out; }
-  .fi__liste :global(li:first-child) { border-left: 6px solid var(--honig); }
-  @keyframes auf { from { opacity: 0; transform: translateY(8px); } }
-  .fi__liste :global(.fi__kopf) { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap; }
+  .fi__liste :global(li) { display: grid; gap: 0.5rem; padding: 1.1rem 1.2rem; background: var(--weiss); border-radius: 20px; }
+  .fi__liste :global(li:first-child) { box-shadow: 0 0 0 2px var(--honig) inset; }
+  .fi__liste :global(.fi__kopf2) { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap; }
   .fi__liste :global(.fi__preis) { font-weight: var(--strong-weight); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .fi__liste :global(.fi__linie) { font-size: 0.95rem; color: var(--tinte-2); }
   .fi__liste :global(.btn) { justify-self: start; margin-top: 0.3rem; }
   .fi__tel { margin-top: 1rem; }
   .fi__tel[hidden] { display: none; }
-  .fi__mehr { margin-top: var(--space-lg); }
+  .fi__mehr { margin-top: var(--space-md); }
+  .fi__foto { display: none; }
+  @media (min-width: 48rem) {
+    .fi__opt--haut { grid-template-columns: 1fr 1fr; }
+    .fi__opt--haut .fi__karteopt:last-child { grid-column: 1 / -1; }
+  }
+  @media (min-width: 64rem) {
+    .fi__wrap--foto { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: var(--space-2xl); }
+    .fi__foto { display: block; }
+    .fi__foto :global(img) { border-radius: 999px 999px 28px 28px; aspect-ratio: 3 / 4; object-fit: cover; box-shadow: 0 30px 60px -36px rgba(80, 40, 10, 0.6); }
+    .fi__wrap:not(.fi__wrap--foto) { max-width: 52rem; }
+  }
 </style>
 
 <script>
@@ -63,28 +106,39 @@ const fragen = [
   import * as cart from '../lib/cart';
   const linie = Object.fromEntries(data.linien.map((l) => [l.id, l.name]));
   const zeitOk = (min: number, z: string) => (z === 'kurz' ? min <= 45 : z === 'mittel' ? min === 60 : min >= 90);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   document.querySelectorAll<HTMLElement>('[data-finder]').forEach((root) => {
-    const erg = root.querySelector<HTMLElement>('[data-ergebnis]')!;
-    const liste = root.querySelector<HTMLElement>('[data-ergebnis-liste]')!;
-    function wahl() {
-      const v: Record<string, string> = {};
-      root.querySelectorAll<HTMLInputElement>('input[data-key]:checked').forEach((i) => (v[i.dataset.key!] = i.value));
-      return v;
+    const q = <T extends HTMLElement = HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const steps = [...root.querySelectorAll<HTMLElement>('[data-schritt]')];
+    const erg = q('[data-ergebnis]'), liste = q('[data-ergebnis-liste]'), buehne = q('.fi__buehne');
+    const dots = [...root.querySelectorAll<HTMLElement>('.fi__faden b')];
+    let cur = 0, timer = 0;
+    const wahl = () => { const v: Record<string, string> = {}; root.querySelectorAll<HTMLInputElement>('input[data-key]:checked').forEach((i) => (v[i.dataset.key!] = i.value)); return v; };
+
+    function show(n: number, rueck = false) {
+      cur = n; const fertig = n >= steps.length;
+      buehne.classList.toggle('fi__rueck', rueck);
+      steps.forEach((s, i) => (s.hidden = i !== n));
+      erg.hidden = !fertig;
+      q('[data-zaehler]').textContent = fertig ? 'Ihr Ergebnis' : `Frage ${n + 1} von ${steps.length}`;
+      q('[data-fuell]').style.width = `calc(${Math.min(n, steps.length) / steps.length * 100}% - 14px)`;
+      dots.forEach((d, i) => d.classList.toggle('an', i < n || (fertig && i < steps.length)));
+      q('[data-zurueck]').hidden = n === 0;
+      q('[data-neu]').hidden = !fertig;
     }
-    function rechnen(scroll: boolean) {
+    function rechnen() {
       const v = wahl();
-      if (!v.haut || !v.zeit || !v.art) return;
       const ranked = data.behandlungen
         .filter((b) => b.id !== 'z-mann' || v.haut === 'entspannen' || v.haut === 'frische')
         .map((b) => ({ b, p: (b.haut.includes(v.haut) ? 3 : 0) + (zeitOk(b.min, v.zeit) ? 2 : 0) + (v.art === 'egal' ? 1 : b.art === v.art ? 2 : 0), d: Math.abs(b.min - (v.zeit === 'kurz' ? 40 : v.zeit === 'mittel' ? 60 : 95)) }))
         .sort((a, b) => b.p - a.p || a.d - b.d);
       const best = ranked.filter((r) => r.p >= 5).slice(0, 2);
-      const show = best.length ? best : ranked.slice(0, 1);
-      root.querySelector<HTMLElement>('[data-ergebnis-titel]')!.textContent = best.length ? (show.length > 1 ? 'Das passt zu Ihnen' : 'Das passt am besten') : 'Am nächsten kommt das';
-      root.querySelector<HTMLElement>('[data-ergebnis-tel]')!.hidden = best.length > 0;
-      liste.replaceChildren(...show.map(({ b }) => {
+      const zeige = best.length ? best : ranked.slice(0, 1);
+      q('[data-ergebnis-titel]').textContent = best.length ? (zeige.length > 1 ? 'Das passt zu Ihnen' : 'Das passt am besten') : 'Am nächsten kommt das';
+      q('[data-ergebnis-tel]').hidden = best.length > 0;
+      liste.replaceChildren(...zeige.map(({ b }) => {
         const li = document.createElement('li');
-        const kopf = document.createElement('div'); kopf.className = 'fi__kopf';
+        const kopf = document.createElement('div'); kopf.className = 'fi__kopf2';
         const h = document.createElement('h3'); h.textContent = b.name;
         const p = document.createElement('span'); p.className = 'fi__preis'; p.textContent = `${cart.dauer(b.min)} · ${cart.euro(b.preis)}`;
         kopf.append(h, p);
@@ -96,13 +150,22 @@ const fragen = [
         addEventListener('zf:cart', upd); upd();
         li.append(kopf, l, t, btn); return li;
       }));
-      const wasHidden = erg.hidden; erg.hidden = false;
-      if (scroll && wasHidden) {
-        const r = erg.getBoundingClientRect();
-        if (r.top > innerHeight * 0.6) erg.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
-      }
     }
-    root.addEventListener('change', () => rechnen(true));
-    rechnen(false);
+    root.addEventListener('change', (e) => {
+      if (!(e.target as HTMLElement).matches('input[data-key]')) return;
+      clearTimeout(timer);
+      const next = cur + 1;
+      timer = window.setTimeout(() => {
+        if (next >= steps.length) rechnen();
+        show(next);
+        if (next >= steps.length) erg.focus({ preventScroll: true });
+      }, reduce.matches ? 0 : 260);
+    });
+    q('[data-zurueck]').addEventListener('click', () => { clearTimeout(timer); show(Math.max(0, cur - 1), true); });
+    q('[data-neu]').addEventListener('click', () => {
+      root.querySelectorAll<HTMLInputElement>('input[data-key]').forEach((i) => (i.checked = false));
+      show(0, true);
+    });
+    show(0);
   });
 </script>

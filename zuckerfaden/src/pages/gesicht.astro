@@ -11,7 +11,7 @@ const zeitTag = (m) => (m <= 45 ? 'kurz' : m === 60 ? 'mittel' : 'lang');
 <Base title="Gesichtsbehandlungen ohne Geräte in Ronnenberg | Kosmetik Zuckerfaden" description="Gesichtspflege mit Zuckerpaste, Naturkosmetik oder klassisch, ohne Geräte. Passende Behandlung in drei Fragen finden, Preise ab 29,50 €." aktiv="gesicht" prices={data.behandlungen.map((b) => ({ name: b.name, price: b.preis }))}>
   <Seitenkopf titel="Gesichts­behandlungen" lede="Alles mit den Händen, ohne Geräte. Die Produkte sind für empfindliche Haut und Allergiker geeignet. Haarentfernung im Gesicht ist bei jeder Behandlung inklusive." />
 
-  <Finder titel="Welche passt zu Ihrer Haut?" mehr={false} />
+  <Finder titel="Welche passt zu Ihrer Haut?" mehr={false} foto={false} />
 
   <section class="section" aria-labelledby="alle-h" data-filterbar>
     <div class="wrap">

@@ -106,9 +106,14 @@ function schriftSetzen(id: string, merken = true) {
 const aktuell = document.documentElement.dataset.font || 'a';
 // шрифты B–D подгружаются после загрузки страницы, чтобы переключение было мгновенным
 if (aktuell !== 'a') schriftLaden(); else addEventListener('load', () => setTimeout(schriftLaden, 1200));
+const sPanel = $<HTMLElement>('#schrift-panel'), sKnopf = $<HTMLButtonElement>('[data-schrift-knopf]');
+const sZu = () => { if (sPanel && sKnopf) { sPanel.hidden = true; sKnopf.setAttribute('aria-expanded', 'false'); } };
+sKnopf?.addEventListener('click', () => { if (!sPanel) return; sPanel.hidden = !sPanel.hidden; sKnopf.setAttribute('aria-expanded', String(!sPanel.hidden)); });
+document.addEventListener('click', (e) => { if (sPanel && !sPanel.hidden && !(e.target as Element).closest('[data-schrift]')) sZu(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') sZu(); });
 $$<HTMLInputElement>('input[name="schrift"]').forEach((r) => {
   r.checked = r.value === aktuell;
-  r.addEventListener('change', () => schriftSetzen(r.value));
+  r.addEventListener('change', () => { schriftSetzen(r.value); setTimeout(sZu, 250); });
 });
 // Ссылки внутри сайта несут выбранную пару, чтобы клиентка видела одну и ту же
 document.addEventListener('click', (e) => {

@@ -1,0 +1,21 @@
+{
+  "gruppen": [
+    { "id": "haende", "name": "Hände und Füße", "items": [
+      { "id": "x-manikuere", "name": "Maniküre", "min": 30, "preis": 25 },
+      { "id": "x-nagel", "name": "Naturnagelpflege", "min": 60, "preis": 45 },
+      { "id": "x-fuss", "name": "Wellness-Fußpflege", "min": 60, "preis": 36 }
+    ]},
+    { "id": "farbe", "name": "Wimpern und Brauen", "items": [
+      { "id": "x-wimpern", "name": "Wimpern färben", "min": 15, "preis": 12 },
+      { "id": "x-brauenf", "name": "Augenbrauen färben", "min": 10, "preis": 9 },
+      { "id": "x-beides", "name": "Wimpern und Augenbrauen färben", "min": 20, "preis": 20 },
+      { "id": "x-zupfen", "name": "Augenbrauen zupfen", "min": 10, "preis": 6, "ab": true }
+    ]},
+    { "id": "makeup", "name": "Make-up", "items": [
+      { "id": "x-beratung", "name": "Make-up-Beratung", "min": 60, "preis": 49 },
+      { "id": "x-tag", "name": "Tages-Make-up", "min": 30, "preis": 25 },
+      { "id": "x-abend", "name": "Abend-Make-up", "min": 45, "preis": 35 },
+      { "id": "x-braut", "name": "Braut-Make-up mit Probetermin", "min": 120, "preis": 89 }
+    ]}
+  ]
+}

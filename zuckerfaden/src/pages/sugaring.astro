@@ -1,0 +1,95 @@
+---
+import Base from '../layouts/Base.astro';
+import Foto from '../components/Foto.astro';
+import Zonenrechner from '../components/Zonenrechner.astro';
+import zonen from '../data/zonen.json';
+const base = import.meta.env.BASE_URL;
+const faq = [
+  { q: 'Tut Sugaring weh?', a: 'Es zieht kurz, vor allem beim ersten Mal. Weil die Haare in Wuchsrichtung gelöst werden und die Paste nur lauwarm ist, empfinden die meisten Kundinnen es als deutlich angenehmer als Waxing.' },
+  { q: 'Wie lange hält das Ergebnis?', a: 'Meist drei bis fünf Wochen, das ist von Mensch zu Mensch verschieden. Bei regelmäßigen Terminen wachsen die Haare oft feiner nach.' },
+  { q: 'Wie lang müssen die Haare sein?', a: 'Etwa 3 bis 5 Millimeter, also ungefähr eine Woche nach dem letzten Rasieren. Sind sie länger, kürze ich sie vorher.' },
+  { q: 'Sugaring oder Waxing?', a: 'Die Zuckerpaste besteht nur aus Zucker, Wasser und Zitrone, ist nur lauwarm und haftet kaum an der Haut. Deshalb ist sie für empfindliche Haut und Besenreiser meist die schonendere Wahl.' },
+  { q: 'Geht Sugaring in der Schwangerschaft?', a: 'Oft ja, aber sprechen Sie mich bitte vorher an. Wir entscheiden gemeinsam, welche Zonen sinnvoll sind.' },
+  { q: 'Machen Sie auch Sugaring für Männer?', a: 'Ja, Rücken, Schultern, Brust und alle anderen Zonen. Die Preise stehen im Rechner unter „Herren“.' },
+];
+const ab = Math.min(...zonen.zonen.map((z) => z.preis));
+---
+<Base title="Sugaring in Ronnenberg: Preise pro Zone berechnen | Kosmetik Zuckerfaden" description={`Sugaring mit warmer Zuckerpaste in Ronnenberg für Damen und Herren, ab ${ab} €. Zonen antippen, Preis und Dauer sofort sehen, Termin anfragen.`} aktiv="sugaring" faq={faq}>
+  <section class="kopfsek wrap">
+    <h1>Sugaring in Ronnenberg</h1>
+    <p class="lede">Warme Paste aus Zucker, Wasser und Zitrone, mit den Fingern aufgetragen. Die Haare werden in Wuchsrichtung gelöst, ohne Strips und ohne heißes Wachs.</p>
+  </section>
+
+  <Zonenrechner titel="Ihre Zonen, Ihr Preis" mehr={false} />
+
+  <section class="section" id="vorbereitung" aria-labelledby="vb-h">
+    <div class="wrap vb">
+      <Foto name="haende-3x4" alt="Behandschuhte Hände tragen Zuckerpaste auf einen Unterarm auf" sizes="(min-width: 64rem) 30vw, 90vw" class="vb__foto" />
+      <div class="vb__listen">
+        <h2 id="vb-h">Vorher und nachher</h2>
+        <div class="vb__box honig" data-honig>
+          <h3>Vor dem Termin</h3>
+          <ul class="haken">
+            <li>Haare 3 bis 5 mm lang wachsen lassen.</li>
+            <li>24 Stunden vorher kein Peeling und keine Selbstbräuner.</li>
+            <li>Am Tag selbst keine Bodylotion auf die Zonen.</li>
+            <li>Bequeme, weite Kleidung anziehen.</li>
+          </ul>
+        </div>
+        <div class="vb__box vb__box--hell">
+          <h3>Danach</h3>
+          <ul class="haken">
+            <li>24 Stunden keine Sauna, kein Solarium, kein Chlorwasser.</li>
+            <li>Ab dem dritten Tag sanft peelen, damit nichts einwächst.</li>
+            <li>Die Haut abends mit einer leichten Pflege eincremen.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="faq-h">
+    <div class="wrap faq">
+      <h2 id="faq-h">Häufige Fragen</h2>
+      <div class="faq__liste">
+        {faq.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="herren" aria-labelledby="h-h">
+    <div class="wrap herren">
+      <h2 id="h-h">Sugaring für Männer</h2>
+      <p class="lede">Rücken, Schultern, Brust oder Bauch: ganz normal, ohne Getuschel. Viele Männer kommen zum Rücken und bleiben, weil die Haut danach ruhiger ist als nach dem Rasieren.</p>
+      <div class="btn-row"><a class="btn" href="#zonen" data-herren>Herren-Preise im Rechner zeigen</a><a class="btn btn--ghost" href={`${base}termin/`}>Termin anfragen</a></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .kopfsek { padding-top: var(--space-lg); padding-bottom: 0; display: grid; gap: var(--space-md); max-width: 52rem; margin-left: max(0px, calc((100vw - var(--maxw)) / 2)); }
+  .vb { display: grid; gap: var(--space-xl); }
+  .vb :global(.vb__foto) { border-radius: 22px; max-width: 24rem; }
+  .vb__listen { display: grid; gap: var(--space-md); align-content: start; }
+  .vb__listen h2 { margin-bottom: 0.4rem; }
+  .vb__box { padding: 1.3rem 1.4rem; border-radius: 22px; }
+  .vb__box--hell { background: var(--weiss); }
+  .haken { list-style: none; padding: 0; margin: 0.7rem 0 0; display: grid; gap: 0.45rem; }
+  .haken li { position: relative; padding-left: 1.7rem; }
+  .haken li::before { content: ''; position: absolute; left: 0.15rem; top: 0.38em; width: 0.9rem; height: 0.5rem; border-left: 2.5px solid var(--salbei); border-bottom: 2.5px solid var(--salbei); transform: rotate(-45deg); }
+  .honig .haken li::before { border-color: var(--kandis); }
+  @media (min-width: 64rem) { .vb { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); } }
+  .faq { max-width: 52rem; }
+  .faq__liste { margin-top: var(--space-lg); border-top: 1px solid var(--puder-3); }
+  .faq details { border-bottom: 1px solid var(--puder-3); }
+  .faq summary { cursor: pointer; list-style: none; min-height: 3.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-weight: var(--strong-weight); font-size: var(--text-lg); padding: 0.6rem 0; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: '+'; font-size: 1.6rem; font-weight: 400; line-height: 1; transition: transform 0.2s; }
+  .faq details[open] summary::after { transform: rotate(45deg); }
+  .faq details p { padding: 0 0 1.1rem; max-width: 42rem; color: var(--kandis-2); }
+  .herren { display: grid; gap: var(--space-md); max-width: 52rem; }
+</style>
+
+<script>
+  document.querySelector('[data-herren]')?.addEventListener('click', () => dispatchEvent(new CustomEvent('zf:geschlecht', { detail: 'herren' })));
+</script>

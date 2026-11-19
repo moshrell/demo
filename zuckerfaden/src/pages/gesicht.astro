@@ -1,0 +1,100 @@
+---
+import Base from '../layouts/Base.astro';
+import Foto from '../components/Foto.astro';
+import Finder from '../components/Finder.astro';
+import data from '../data/behandlungen.json';
+import { euro, dauer } from '../lib/fmt.mjs';
+const bilder = { zucker: ['gesicht-3x4', 'Entspannte Kundin mit Handtuch-Turban während einer Gesichtsbehandlung'], natur: ['pflege-1x1', 'Glas mit Zuckerpaste, Pflegefläschchen und Handtuch'] };
+const zeitTag = (m) => (m <= 45 ? 'kurz' : m === 60 ? 'mittel' : 'lang');
+---
+<Base title="Gesichtsbehandlungen ohne Geräte in Ronnenberg | Kosmetik Zuckerfaden" description="Gesichtspflege mit Zuckerpaste, Naturkosmetik oder klassisch, ohne Geräte. Passende Behandlung in drei Fragen finden, Preise ab 29,50 €." aktiv="gesicht" prices={data.behandlungen.map((b) => ({ name: b.name, price: b.preis }))}>
+  <section class="kopfsek wrap">
+    <h1>Gesichtsbehandlungen</h1>
+    <p class="lede">Alles mit den Händen, ohne Geräte. Die Produkte sind für empfindliche Haut und Allergiker geeignet. Haarentfernung im Gesicht ist bei jeder Behandlung inklusive.</p>
+  </section>
+
+  <Finder titel="Welche passt zu Ihrer Haut?" mehr={false} />
+
+  <section class="section" aria-labelledby="alle-h" data-filterbar>
+    <div class="wrap">
+      <h2 id="alle-h">Alle Behandlungen</h2>
+      <div class="filter" role="group" aria-label="Nach Dauer filtern">
+        <label class="chip"><input type="radio" name="zeit" value="alle" checked /><span>Alle</span></label>
+        <label class="chip"><input type="radio" name="zeit" value="kurz" /><span>bis 45 Min.</span></label>
+        <label class="chip"><input type="radio" name="zeit" value="mittel" /><span>60 Min.</span></label>
+        <label class="chip"><input type="radio" name="zeit" value="lang" /><span>90 Min. und mehr</span></label>
+      </div>
+      {data.linien.map((l) => (
+        <div class="linie" id={l.id}>
+          <div class="linie__kopf">
+            <h3 class="linie__name">{l.name}</h3>
+            <p class="muted">{l.text}</p>
+            {bilder[l.id] && <Foto name={bilder[l.id][0]} alt={bilder[l.id][1]} sizes="(min-width: 64rem) 22rem, 60vw" class="linie__foto" />}
+          </div>
+          <ul class="beh">
+            {data.behandlungen.filter((b) => b.linie === l.id).map((b) => (
+              <li data-zeit={zeitTag(b.min)}>
+                <div class="beh__text"><h4>{b.name}</h4><p>{b.text}</p></div>
+                <p class="beh__preis num">{dauer(b.min)}<strong>{euro(b.preis)}</strong></p>
+                <button type="button" class="beh__add" data-add={b.id} aria-pressed="false" aria-label={`${b.name} zur Anfrage hinzufügen`}>Hinzufügen</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      <p class="leer muted" data-leer hidden>Keine Behandlung in dieser Länge.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="farbe-h">
+    <div class="wrap farbe">
+      <h2 id="farbe-h">Auf Wunsch mit Farbbegleitung</h2>
+      <p class="lede">Wer mag, wählt eine Farbe für die Behandlung: ein paar Tropfen Farböl im Kompressenwasser, passendes Licht und leise Musik. Es ist eine Frage der Stimmung, keine Therapie. Wer lieber einfach so entspannt, sagt es mir.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .kopfsek { padding-top: var(--space-lg); display: grid; gap: var(--space-md); max-width: 52rem; margin-left: max(0px, calc((100vw - var(--maxw)) / 2)); }
+  .filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: var(--space-lg) 0 var(--space-md); }
+  .linie { display: grid; gap: var(--space-md); padding-top: var(--space-xl); }
+  .linie[hidden] { display: none; }
+  .linie__kopf { display: grid; gap: 0.5rem; align-content: start; }
+  .linie__name { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.75rem; letter-spacing: var(--display-tracking); }
+  .linie__kopf :global(.linie__foto) { border-radius: 18px; max-width: 18rem; margin-top: 0.6rem; }
+  .beh { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--puder-3); }
+  .beh li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.4rem 1rem; padding: 1rem 0; border-bottom: 1px solid var(--puder-3); }
+  .beh li[hidden] { display: none; }
+  .beh h4 { margin: 0 0 0.2rem; font-size: var(--text-lg); font-weight: var(--strong-weight); }
+  .beh p { color: var(--kandis-2); }
+  .beh__preis { display: grid; justify-items: end; text-align: right; color: var(--kandis-2) !important; font-size: 0.95rem; }
+  .beh__preis strong { color: var(--kandis); font-size: 1.2rem; }
+  .beh__add { grid-column: 1 / -1; justify-self: start; min-height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1.5px solid var(--kandis); background: none; font: inherit; font-weight: 500; color: var(--kandis); cursor: pointer; }
+  .beh__add[aria-pressed='true'] { background: linear-gradient(170deg, var(--bernstein-hl), var(--honig-tief)); border-color: var(--bernstein-tief); }
+  @media (min-width: 64rem) {
+    .linie { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-2xl); }
+    .beh li { grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; }
+    .beh__add { grid-column: auto; }
+  }
+  .leer[hidden] { display: none; }
+  .farbe { max-width: 52rem; display: grid; gap: var(--space-md); }
+</style>
+
+<script>
+  import * as cart from '../lib/cart';
+  const sync = () => document.querySelectorAll<HTMLButtonElement>('[data-add]').forEach((b) => {
+    const on = cart.has(b.dataset.add!); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? 'In der Anfrage ✓' : 'Hinzufügen';
+  });
+  document.addEventListener('click', (e) => { const b = (e.target as Element).closest<HTMLButtonElement>('[data-add]'); if (b) cart.toggle(b.dataset.add!); });
+  addEventListener('zf:cart', sync); sync();
+  const bar = document.querySelector('[data-filterbar]')!;
+  bar.addEventListener('change', (e) => {
+    const v = (e.target as HTMLInputElement).value; if (!(e.target as HTMLInputElement).matches('[name=zeit]')) return;
+    let any = false;
+    bar.querySelectorAll<HTMLElement>('.linie').forEach((l) => {
+      let n = 0; l.querySelectorAll<HTMLElement>('li[data-zeit]').forEach((li) => { const ok = v === 'alle' || li.dataset.zeit === v; li.hidden = !ok; if (ok) n++; });
+      l.hidden = n === 0; if (n) any = true;
+    });
+    bar.querySelector<HTMLElement>('[data-leer]')!.hidden = any;
+  });
+</script>

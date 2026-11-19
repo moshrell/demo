@@ -1,0 +1,282 @@
+---
+/** Калькулятор зон шугаринга: силуэт из «выкроек», панель лица, список-дубль, итог, подсказки комбинаций. */
+import { figur, gesicht } from '../lib/figur.mjs';
+import { euro, dauer } from '../lib/fmt.mjs';
+import zonenData from '../data/zonen.json';
+const { titel = 'Was soll glatt werden?', id = 'zonen', mehr = true } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const Z = Object.fromEntries(zonenData.zonen.map((z) => [z.id, z]));
+const views = [['damen', 'vorne'], ['damen', 'hinten'], ['herren', 'vorne'], ['herren', 'hinten']];
+const label = (zid) => zid === 'kopf' ? 'Gesicht: Zonen im Gesicht wählen' : `${Z[zid].name}, ${Z[zid].ab ? 'ab ' : ''}${euro(Z[zid].preis)}`;
+const liste = (g) => zonenData.zonen.filter((z) => z.g === g);
+const extras = zonenData.zonen.filter((z) => z.seite === 'liste');
+---
+<section class="zr section" id={id} aria-labelledby={`${id}-h`} data-zr>
+  <div class="wrap zr__grid">
+    <div class="zr__text">
+      <h2 id={`${id}-h`}>{titel}</h2>
+      <p class="lede zr__lede">Tippen Sie auf die Zonen. Preis und Dauer rechnen sich sofort mit.</p>
+    </div>
+
+    <div class="zr__buehne">
+      <div class="zr__schalter">
+        <div class="seg" role="radiogroup" aria-label="Für wen">
+          <label><input type="radio" name={`${id}-g`} value="damen" checked /><span>Damen</span></label>
+          <label><input type="radio" name={`${id}-g`} value="herren" /><span>Herren</span></label>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Ansicht">
+          <label><input type="radio" name={`${id}-s`} value="vorne" checked /><span>Vorne</span></label>
+          <label><input type="radio" name={`${id}-s`} value="hinten" /><span>Hinten</span></label>
+        </div>
+      </div>
+
+      <div class="zr__figur">
+        {views.map(([g, s]) => (
+          <svg viewBox="0 0 240 480" class="fig" data-view={`${g}-${s}`} hidden={!(g === 'damen' && s === 'vorne')} role="group" aria-label={`Figur ${g === 'damen' ? 'Damen' : 'Herren'}, ${s === 'vorne' ? 'Vorderseite' : 'Rückseite'}`}>
+            {figur(g, s).map((p, i) => p.zone ? (
+              <g class="zone" data-zone={p.zone} role={p.zone === 'kopf' ? 'button' : 'checkbox'} aria-checked={p.zone === 'kopf' ? undefined : 'false'} tabindex="0" aria-label={label(p.zone)}>
+                <clipPath id={`c-${id}-${g}-${s}-${i}`}><path d={p.d} /></clipPath>
+                <path class="zone__form" d={p.d} />
+                <g clip-path={`url(#c-${id}-${g}-${s}-${i})`}><circle class="zone__glasur" cx="120" cy="240" r="300" /></g>
+                <path class="zone__naht" d={p.d} />
+                {p.hit?.map(([x, y]) => <circle class="zone__hit" cx={x} cy={y} r="15" />)}
+              </g>
+            ) : <path class="teil" d={p.d} />)}
+          </svg>
+        ))}
+        <svg class="zr__defs" aria-hidden="true" width="0" height="0"><defs>
+          <linearGradient id="honigglanz" x1="0" y1="0" x2="0.35" y2="1"><stop offset="0" stop-color="#F3CD84" /><stop offset="0.45" stop-color="#D99A3A" /><stop offset="1" stop-color="#A9650F" /></linearGradient>
+        </defs></svg>
+      </div>
+      <p class="zr__info" data-info aria-live="polite"><span data-info-text>Tippen Sie auf eine Zone</span> <button type="button" class="zr__undo" data-undo hidden>Rückgängig</button></p>
+    </div>
+
+    <div class="zr__seite">
+      <div class="zr__extras">
+        {extras.map((z) => (
+          <button type="button" class="extra" data-toggle={z.id} data-g={z.g} aria-pressed="false" hidden={z.g !== 'damen'}>
+            <span>{z.name}</span><span class="preis">{z.ab ? 'ab ' : ''}{euro(z.preis)}</span>
+          </button>
+        ))}
+      </div>
+
+      <div class="zr__summe" data-summe>
+        <p class="zr__leer" data-leer>Noch keine Zone gewählt.</p>
+        <div data-voll hidden>
+          <p class="zr__zahl"><span class="muted" data-n></span><strong class="num" data-s></strong></p>
+          <p class="muted num" data-d></p>
+          <div class="kombi" data-kombi hidden role="status">
+            <p data-kombi-text></p>
+            <div class="kombi__btns"><button type="button" class="btn btn--honig kombi__ja" data-kombi-ja>Übernehmen</button><button type="button" class="btn btn--ghost" data-kombi-nein>Nein danke</button></div>
+          </div>
+          <a class="btn zr__weiter" href={`${base}termin/`}>Mit dieser Auswahl Termin anfragen</a>
+        </div>
+        <p class="small muted zr__hinweis">{zonenData.hinweis} Bei einer Gesichtsbehandlung ist die Haarentfernung im Gesicht inklusive.</p>
+      </div>
+
+      <details class="zr__liste" data-liste>
+        <summary>Alle Zonen als Liste</summary>
+        {['damen', 'herren'].map((g) => (
+          <ul data-g={g} hidden={g !== 'damen'}>
+            {liste(g).map((z) => (
+              <li><label class="zl"><input type="checkbox" data-toggle={z.id} /><span class="zl__n">{z.name}</span><span class="zl__m muted">{dauer(z.min)}</span><span class="preis">{z.ab ? 'ab ' : ''}{euro(z.preis)}</span></label></li>
+            ))}
+          </ul>
+        ))}
+      </details>
+      {mehr && <p class="zr__links small"><a href={`${base}sugaring/#vorbereitung`}>Zum ersten Mal Sugaring? So bereiten Sie sich vor</a></p>}
+    </div>
+  </div>
+
+  <dialog class="sheet gsheet" data-gesicht aria-labelledby={`${id}-gt`}>
+    <div class="sheet__kopf"><p class="sheet__titel" id={`${id}-gt`}>Gesicht</p><button type="button" class="sheet__zu" data-close>Fertig</button></div>
+    <div class="gsheet__grid">
+      <svg viewBox="0 0 200 240" class="fig fig--gesicht" role="group" aria-label="Zonen im Gesicht">
+        {gesicht().map((p, i) => p.zone ? (
+          <g class="zone" data-zone={p.zone} role="checkbox" aria-checked="false" tabindex="0" aria-label={label(p.zone)}>
+            <clipPath id={`cg-${id}-${i}`}><path d={p.d} /></clipPath>
+            <path class="zone__form" d={p.d} />
+            <g clip-path={`url(#cg-${id}-${i})`}><circle class="zone__glasur" cx="100" cy="120" r="200" /></g>
+            <path class="zone__naht" d={p.d} />
+          </g>
+        ) : <path class="teil teil--gesicht" d={p.d} />)}
+        <path class="augen" d="M64 98q12 7 24 0M112 98q12 7 24 0" />
+      </svg>
+      <ul class="gsheet__liste">
+        {zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id === 'd-gesicht').map((z) => (
+          <li><label class="zl"><input type="checkbox" data-toggle={z.id} /><span class="zl__n">{z.name}</span><span class="preis">{euro(z.preis)}</span></label></li>
+        ))}
+      </ul>
+    </div>
+  </dialog>
+</section>
+
+<style>
+  .zr__grid { display: grid; gap: var(--space-lg); }
+  .zr__lede { margin-top: 0.8rem; }
+  .zr__buehne { display: grid; gap: 0.9rem; justify-items: center; }
+  .zr__schalter { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
+  .seg { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--puder-2); }
+  .seg label { position: relative; }
+  .seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .seg span { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.15rem; border-radius: 999px; font-weight: 500; cursor: pointer; }
+  .seg input:checked + span { background: var(--weiss); box-shadow: 0 1px 2px rgba(58, 33, 23, 0.18); font-weight: var(--strong-weight); }
+  .seg input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .zr__figur { width: 100%; display: grid; justify-items: center; }
+  .fig { height: min(60vh, 34rem); min-height: 22rem; width: auto; overflow: visible; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .fig[hidden] { display: none; }
+  .zr__defs { position: absolute; }
+  .teil { fill: #EAD6CB; }
+  :global(.zone) { cursor: pointer; outline: none; }
+  :global(.zone__form) { fill: #D8B19C; transition: fill 0.15s; }
+  :global(.zone__naht) { fill: none; stroke: var(--bernstein-tief); stroke-opacity: 0.55; stroke-width: 0.9; stroke-dasharray: 2.4 2.2; }
+  :global(.zone__glasur) { fill: url(#honigglanz); transform: scale(0); transform-box: view-box; transition: transform 0.26s cubic-bezier(0.25, 0.8, 0.3, 1); }
+  :global(.zone__hit) { fill: transparent; }
+  :global(.zone[aria-checked='true'] .zone__glasur), :global(.zone.hat .zone__glasur) { transform: scale(1); }
+  :global(.zone[aria-checked='true'] .zone__naht) { stroke: #FFE7B5; stroke-opacity: 0.85; }
+  :global(.zone:hover .zone__form) { fill: #CBA08A; }
+  :global(.zone:focus-visible .zone__naht) { stroke: var(--kandis); stroke-opacity: 1; stroke-width: 2.2; stroke-dasharray: none; }
+  :global(.zone[data-zone='kopf'] .zone__naht) { stroke-dasharray: none; stroke-opacity: 0.6; }
+  .zr__info { min-height: 3rem; display: flex; align-items: center; gap: 0.8rem; justify-content: center; text-align: center; font-weight: 500; }
+  .zr__undo { min-height: 2.75rem; padding: 0 0.9rem; border-radius: 999px; border: 1.5px solid var(--kandis); background: none; font: inherit; font-size: 0.95rem; color: var(--kandis); cursor: pointer; }
+  .zr__undo[hidden] { display: none; }
+  .zr__extras { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .extra { display: inline-flex; gap: 0.8rem; align-items: center; min-height: 3rem; padding: 0.5rem 1.1rem; border-radius: 999px; border: 1.5px solid var(--kandis); background: var(--weiss); color: var(--kandis); font: inherit; cursor: pointer; }
+  .extra[hidden] { display: none; }
+  .extra[aria-pressed='true'] { background: linear-gradient(170deg, var(--bernstein-hl), var(--honig-tief)); border-color: var(--bernstein-tief); }
+  .extra .preis { font-weight: var(--strong-weight); }
+  .zr__summe { margin-top: var(--space-lg); padding: 1.2rem 1.25rem; background: var(--weiss); border-radius: 20px; }
+  .zr__leer { font-weight: 500; }
+  .zr__zahl { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .zr__zahl strong { font-size: 2.1rem; font-family: var(--font-display); font-weight: var(--display-weight); }
+  .zr__weiter { width: 100%; margin-top: 1rem; white-space: normal; text-align: center; }
+  .zr__hinweis { margin-top: 0.9rem; }
+  .kombi { margin-top: 0.9rem; padding: 0.9rem 1rem; border-radius: 16px; background: var(--puder); animation: rein 0.25s ease-out; }
+  .kombi[hidden] { display: none; }
+  @keyframes rein { from { opacity: 0; transform: translateY(-6px); } }
+  .kombi p { font-weight: 500; }
+  .kombi__btns { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.7rem; }
+  .kombi__btns .btn { min-height: 2.9rem; padding: 0.5rem 1.1rem; }
+  .zr__liste { margin-top: var(--space-lg); }
+  .zr__liste summary { cursor: pointer; font-weight: var(--strong-weight); min-height: 2.75rem; display: flex; align-items: center; }
+  .zr__liste ul, .gsheet__liste { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+  .zr__liste ul[hidden] { display: none; }
+  .zl { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 0.75rem; align-items: center; min-height: 3rem; padding: 0.35rem 0; border-bottom: 1px solid var(--puder-3); cursor: pointer; }
+  .zl input { width: 1.35rem; height: 1.35rem; accent-color: var(--bernstein-tief); margin: 0; }
+  .zl__m { font-size: 0.9rem; }
+  .zl .preis { font-weight: var(--strong-weight); min-width: 3.6rem; text-align: right; }
+  .zr__links { margin-top: var(--space-md); }
+  .gsheet__grid { display: grid; gap: 1rem; }
+  .fig--gesicht { height: auto; min-height: 0; width: min(100%, 15rem); justify-self: center; }
+  .teil--gesicht { fill: #EBD3C6; }
+  .augen { fill: none; stroke: var(--kandis-2); stroke-width: 1.6; stroke-linecap: round; pointer-events: none; }
+  .gsheet__liste .zl { grid-template-columns: auto minmax(0, 1fr) auto; }
+  @media (min-width: 64rem) {
+    .zr__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: 'buehne text' 'buehne seite'; column-gap: var(--space-2xl); align-items: start; }
+    .zr__text { grid-area: text; }
+    .zr__buehne { grid-area: buehne; position: sticky; top: 1rem; }
+    .zr__seite { grid-area: seite; }
+    .fig { height: min(72vh, 38rem); }
+    .gsheet__grid { grid-template-columns: 15rem minmax(0, 1fr); align-items: center; }
+  }
+</style>
+
+<script>
+  import * as cart from '../lib/cart';
+  const eur = cart.euro;
+  document.querySelectorAll<HTMLElement>('[data-zr]').forEach((root) => {
+    const $ = <T extends Element = HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const $$ = <T extends Element = HTMLElement>(s: string) => [...root.querySelectorAll<T>(s)];
+    const gDlg = $<HTMLDialogElement>('[data-gesicht]');
+    let g = 'damen', s = 'vorne';
+    let undoId = '';
+    const vib = () => { try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) navigator.vibrate?.(8); } catch {} };
+
+    function view() {
+      $$('svg[data-view]').forEach((v) => (v.hidden = v.dataset.view !== `${g}-${s}`));
+      $$('.zr__liste ul').forEach((u) => (u.hidden = u.dataset.g !== g));
+      $$('.extra').forEach((b) => (b.hidden = b.dataset.g !== g));
+    }
+    $$<HTMLInputElement>('.seg input').forEach((r) => r.addEventListener('change', () => {
+      if (r.name.endsWith('-g')) g = r.value; else s = r.value;
+      view();
+    }));
+
+    function info(text: string, undo = '') {
+      $('[data-info-text]').textContent = text;
+      undoId = undo; $('[data-undo]').hidden = !undo;
+    }
+    function sync() {
+      const c = cart.get();
+      $$('.zone[data-zone]').forEach((z) => { if (z.dataset.zone !== 'kopf') z.setAttribute('aria-checked', String(cart.active(z.dataset.zone!))); });
+      $$<HTMLInputElement>('input[data-toggle]').forEach((i) => (i.checked = cart.active(i.dataset.toggle!)));
+      $$('.extra').forEach((b) => b.setAttribute('aria-pressed', String(cart.has(b.dataset.toggle!))));
+      const zl = c.lines.filter((l) => l.art === 'zone');
+      $('[data-leer]').hidden = c.lines.length > 0; $('[data-voll]').hidden = c.lines.length === 0;
+      if (c.lines.length) {
+        $('[data-n]').textContent = cart.anzahl(c.lines.length) + (zl.length !== c.lines.length ? ' (mit Gesicht)' : '');
+        $('[data-s]').textContent = (c.ab ? 'ab ' : '') + eur(c.summe);
+        $('[data-d]').textContent = 'Dauer ca. ' + cart.dauer(c.min);
+      }
+      const k = cart.kombiHint();
+      const kb = $('[data-kombi]');
+      if (k) {
+        $('[data-kombi-text]').textContent = `${k.durch.name} ist günstiger: ${eur(k.durch.preis)} statt ${eur(k.durch.preis + k.spart)}. Übernehmen?`;
+        kb.dataset.id = k.durch.id; kb.hidden = false;
+      } else kb.hidden = true;
+      // Подсветка головы, если выбрано что-то на лице
+      $$('.zone[data-zone="kopf"]').forEach((h) => h.classList.toggle('hat', c.lines.some((l) => l.gesicht)));
+    }
+
+    function toggle(id: string, el?: Element, ev?: PointerEvent | MouseEvent) {
+      // Глазурь растекается из точки касания
+      if (el && ev && 'clientX' in ev && ev.clientX) {
+        const svg = el.closest('svg')!; const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+        const p = pt.matrixTransform(svg.getScreenCTM()!.inverse());
+        el.querySelectorAll<SVGCircleElement>('.zone__glasur').forEach((c) => { c.setAttribute('cx', String(p.x)); c.setAttribute('cy', String(p.y)); c.style.transformOrigin = `${p.x}px ${p.y}px`; });
+      }
+      const was = cart.active(id);
+      cart.toggle(id); vib();
+      const it = cart.item(id)!;
+      info(was ? `${it.name} entfernt` : `${it.name} · ${it.ab ? 'ab ' : ''}${eur(it.preis)} · ${cart.dauer(it.min)}`, id);
+    }
+
+    root.addEventListener('click', (e) => {
+      const t = e.target as Element;
+      const z = t.closest<SVGGElement>('.zone[data-zone]');
+      if (z) {
+        if (z.dataset.zone === 'kopf') { gDlg.showModal(); return; }
+        toggle(z.dataset.zone!, z, e as MouseEvent); return;
+      }
+      const b = t.closest<HTMLElement>('button[data-toggle]');
+      if (b) { toggle(b.dataset.toggle!); return; }
+      if (t.closest('[data-undo]') && undoId) { cart.toggle(undoId); info('Rückgängig gemacht'); return; }
+      if (t.closest('[data-kombi-ja]')) { const id = $('[data-kombi]').dataset.id!; cart.applyKombi(id); info(`${cart.item(id)!.name} übernommen`); return; }
+      if (t.closest('[data-kombi-nein]')) { cart.dismissKombi($('[data-kombi]').dataset.id!); return; }
+    });
+    root.addEventListener('keydown', (e) => {
+      const z = (e.target as Element).closest?.<SVGGElement>('.zone[data-zone]');
+      if (z && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); if (z.dataset.zone === 'kopf') gDlg.showModal(); else toggle(z.dataset.zone!); }
+    });
+    root.addEventListener('change', (e) => {
+      const i = e.target as HTMLInputElement;
+      if (i.matches('input[data-toggle]')) { if (i.checked !== cart.active(i.dataset.toggle!)) toggle(i.dataset.toggle!); }
+    });
+    // Ховер на ПК: подсказка, что под курсором
+    root.addEventListener('pointerover', (e) => {
+      if ((e as PointerEvent).pointerType !== 'mouse') return;
+      const z = (e.target as Element).closest<SVGGElement>('.zone[data-zone]');
+      if (z) info(z.getAttribute('aria-label')!.replace(', ', ' · '));
+    });
+    gDlg.addEventListener('click', (e) => { if (e.target === gDlg) gDlg.close(); });
+    // Внешний переключатель (например, «Für Männer» на странице Sugaring)
+    addEventListener('zf:geschlecht', (e) => {
+      g = (e as CustomEvent).detail; s = g === 'herren' ? 'hinten' : 'vorne';
+      $$<HTMLInputElement>('.seg input').forEach((r) => (r.checked = r.value === g || r.value === s));
+      view();
+    });
+    if (matchMedia('(min-width: 64rem)').matches) ($('[data-liste]') as HTMLDetailsElement).open = true;
+    addEventListener('zf:cart', sync);
+    sync();
+  });
+</script>

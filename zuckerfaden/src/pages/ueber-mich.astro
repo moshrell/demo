@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import Foto from '../components/Foto.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const weg = [
+  { j: 1982, t: 'Drogistin', d: 'Ausbildung in einer Drogerie, viel Beratung zu Haut und Pflege.' },
+  { j: 1985, t: 'Kosmetikerin und Fußpflegerin', d: 'Abschluss im Bund deutscher Kosmetikerinnen.' },
+  { j: 1999, t: 'Eigener Raum', d: 'Seitdem behandle ich selbstständig, zuerst nebenbei, dann ganz.' },
+  { j: 2002, t: 'Visagistin', d: 'Make-up für Alltag, Abend und Hochzeit.' },
+  { j: 2008, t: 'Zertifizierte Sugaring-Anwenderin', d: 'Seitdem ist die Zuckerpaste mein wichtigstes Werkzeug.' },
+  { j: 2019, t: 'Fortbildung Naturkosmetik', d: 'Arbeit mit Kräuter-Tonics für empfindliche Haut.' },
+];
+---
+<Base title={`Über mich: ${site.owner} | Kosmetik Zuckerfaden`} description={`${site.owner}, Kosmetikerin und Fußpflegerin, behandelt seit ${site.since} in Ronnenberg. Ausbildung, Arbeitsweise und Grundsatz.`} aktiv="ueber">
+  <section class="wrap um">
+    <div class="um__intro">
+      <h1>Über mich</h1>
+      <p class="lede">Ich bin {site.owner} und behandle seit {site.since} in meinem eigenen Raum in Ronnenberg.</p>
+      <p>Ich arbeite allein, ohne Angestellte und ohne Geräte. Das heißt: Sie sprechen am Telefon mit mir, ich behandle Sie, und ich weiß beim nächsten Termin noch, was Ihrer Haut gutgetan hat.</p>
+      <p>Wichtig sind mir Produkte, die auch empfindliche Haut verträgt, und genug Zeit. Lieber eine Behandlung weniger am Tag als eine gehetzte.</p>
+    </div>
+    <Foto name="kosmetikerin-3x4" alt={`${site.owner} in ihrem Behandlungsraum`} sizes="(min-width: 64rem) 30vw, 90vw" class="um__foto" eager />
+  </section>
+
+  <section class="section" aria-labelledby="weg-h">
+    <div class="wrap">
+      <h2 id="weg-h">Ausbildung und Weg</h2>
+      <ol class="weg">
+        {weg.map((w) => <li><span class="weg__j num">{w.j}</span><div><h3>{w.t}</h3><p class="muted">{w.d}</p></div></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="satz-h">
+    <div class="wrap satz">
+      <h2 id="satz-h" class="sr">Mein Grundsatz</h2>
+      <blockquote>Behandle andere so, wie du behandelt werden möchtest.</blockquote>
+      <p class="lede">Deshalb frage ich nach jeder Behandlung, was Ihnen gefallen hat und was ich anders machen kann. An der Behandlung, an den Produkten oder an mir.</p>
+      <Foto name="haende-3x4" alt="Behandschuhte Hände tragen Zuckerpaste auf einen Unterarm auf" sizes="(min-width: 64rem) 24rem, 80vw" class="satz__foto" />
+      <a class="btn" href={`${base}termin/`}>Termin anfragen</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .um { display: grid; gap: var(--space-xl); padding-top: var(--space-lg); }
+  .um__intro { display: grid; gap: var(--space-md); align-content: start; max-width: 40rem; }
+  .um :global(.um__foto) { border-radius: 22px; max-width: 26rem; }
+  @media (min-width: 64rem) { .um { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; } }
+  .weg { list-style: none; margin: var(--space-xl) 0 0; padding: 0; max-width: 46rem; border-left: 2px solid var(--bernstein); }
+  .weg li { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr); gap: 1rem; padding: 0 0 var(--space-lg) 1.2rem; position: relative; }
+  .weg li::before { content: ''; position: absolute; left: -0.48rem; top: 0.45rem; width: 0.85rem; height: 0.85rem; border-radius: 50%; background: var(--bernstein); box-shadow: 0 0 0 4px var(--puder); }
+  .weg__j { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.35rem; line-height: 1.2; }
+  .satz { display: grid; gap: var(--space-lg); max-width: 46rem; }
+  .satz blockquote { margin: 0; font-family: var(--font-display); font-weight: var(--display-weight); font-size: var(--h2); line-height: 1.12; letter-spacing: var(--display-tracking); }
+  .satz :global(.satz__foto) { border-radius: 22px; max-width: 22rem; }
+  .satz .btn { justify-self: start; }
+</style>

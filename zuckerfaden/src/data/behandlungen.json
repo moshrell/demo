@@ -1,0 +1,43 @@
+{
+  "linien": [
+    { "id": "zucker",    "name": "Zuckerpflege",  "text": "Pflege mit reiner Zuckerpaste und pflanzlichen Wirkstoffen. Die Paste löst Schüppchen sanft, die Haut nimmt die Pflege danach gut auf." },
+    { "id": "natur",     "name": "Naturkosmetik", "text": "Kräuter-Tonics und Cremes aus Pflanzenextrakten, ohne Duftstoffe und Mineralöle. Gut geeignet für empfindliche Haut." },
+    { "id": "klassisch", "name": "Klassisch",     "text": "Die vertraute Kosmetikbehandlung: reinigen, peelen, Augenbrauen in Form, Maske oder Massage." }
+  ],
+  "behandlungen": [
+    { "id": "z-ruhe",    "linie": "zucker",    "name": "Ruhe für gerötete Haut",            "text": "Für empfindliche Haut mit Rötungen und feinen Äderchen. Sanft, kühlend, ohne Ausreinigung.", "min": 60,  "preis": 49,   "haut": ["ruhe"],               "art": "zucker" },
+    { "id": "z-frische", "linie": "zucker",    "name": "Frische für müde Haut",             "text": "Regt die Durchblutung an, löst Verhornungen. Die Haut wirkt danach wacher und glatter.",      "min": 60,  "preis": 49,   "haut": ["frische"],            "art": "zucker" },
+    { "id": "z-klar",    "linie": "zucker",    "name": "Klärende Zuckerpflege",             "text": "Für unreine Haut in jedem Alter: Tiefenreinigung, Ausreinigung, beruhigende Maske.",          "min": 90,  "preis": 59,   "haut": ["klar"],               "art": "zucker" },
+    { "id": "z-feucht",  "linie": "zucker",    "name": "Feuchtigkeit intensiv",             "text": "Für trockene, anspruchsvolle Haut. Mehrere Pflegeschichten, Maske, sanfte Massage.",         "min": 60,  "preis": 49,   "haut": ["feucht"],             "art": "zucker" },
+    { "id": "z-kurz",    "linie": "zucker",    "name": "Kurze Frischepflege",               "text": "Die halbe Stunde zwischendurch: reinigen, Zuckerpeeling, Feuchtigkeit.",                     "min": 30,  "preis": 29.9, "haut": ["frische", "feucht"],  "art": "zucker" },
+    { "id": "z-mann",    "linie": "zucker",    "name": "Pflege für den Mann",               "text": "Reinigung, Peeling, Massage, Pflege. Haare an Nase und Ohren werden mit entfernt.",          "min": 60,  "preis": 49,   "haut": ["entspannen", "frische"], "art": "zucker" },
+    { "id": "n-kurz",    "linie": "natur",     "name": "Kräuterpflege für Gesicht und Hals","text": "Hautgespräch, Behandlung mit dem passenden Kräuter-Tonic, Pflegecreme. Brauen auf Wunsch.", "min": 45,  "preis": 39,   "haut": ["ruhe", "entspannen"], "art": "natur" },
+    { "id": "n-fuss",    "linie": "natur",     "name": "Kräuterpflege mit Fußbad und Nacken","text": "Beginnt mit einem warmen Fußbad, dann Nacken und Schultern, dann das Gesicht.",            "min": 90,  "preis": 69,   "haut": ["entspannen"],         "art": "natur" },
+    { "id": "n-glatt",   "linie": "natur",     "name": "Straffende Kräuterpflege",          "text": "Tiefenreinigung mit Wirkstoff-Tonic, leichte Massage, Tages- oder Nachtpflege.",            "min": 90,  "preis": 69,   "haut": ["frische"],            "art": "natur" },
+    { "id": "n-klar",    "linie": "natur",     "name": "Kräuterpflege bei unreiner Haut",   "text": "Für großporige, fettige Haut. Reinigt porentief, eine Maske beruhigt. Auch für den Rücken.", "min": 60,  "preis": 49,   "haut": ["klar"],               "art": "natur" },
+    { "id": "n-jung",    "linie": "natur",     "name": "Junge Haut",                        "text": "Für Schülerinnen, Schüler und Studierende mit Unreinheiten. Preis nur mit Ausweis.",         "min": 45,  "preis": 29.5, "haut": ["klar"],               "art": "natur" },
+    { "id": "k-kurz",    "linie": "klassisch", "name": "Klassisch kurz",                    "text": "Reinigen, peelen, Augenbrauen korrigieren, Maske oder Massage, Tages- oder Nachtpflege.",    "min": 60,  "preis": 49,   "haut": ["frische", "feucht"],  "art": "klassisch" },
+    { "id": "k-komfort", "linie": "klassisch", "name": "Klassisch mit Ausreinigung",        "text": "Wie die kurze Behandlung, dazu Ausreinigung, Maske und Massage.",                            "min": 90,  "preis": 69,   "haut": ["klar", "entspannen"], "art": "klassisch" },
+    { "id": "k-lang",    "linie": "klassisch", "name": "Klassisch ausführlich",             "text": "Mit Hals- und Handpackung, Augen- und Lippenmaske. Zwei Stunden nur für Sie.",               "min": 120, "preis": 98,   "haut": ["entspannen", "feucht"], "art": "klassisch" }
+  ],
+  "fragen": {
+    "haut": [
+      { "id": "ruhe",       "label": "Ruhe bei Rötungen" },
+      { "id": "klar",       "label": "Klarheit bei Unreinheiten" },
+      { "id": "feucht",     "label": "Feuchtigkeit" },
+      { "id": "frische",    "label": "Frische und Glätte" },
+      { "id": "entspannen", "label": "Einfach entspannen" }
+    ],
+    "zeit": [
+      { "id": "kurz",   "label": "bis 45 Min." },
+      { "id": "mittel", "label": "60 Min." },
+      { "id": "lang",   "label": "90 Min. und mehr" }
+    ],
+    "art": [
+      { "id": "zucker",    "label": "Zuckerpflege" },
+      { "id": "natur",     "label": "Naturkosmetik mit Kräuter-Tonics" },
+      { "id": "klassisch", "label": "Klassisch" },
+      { "id": "egal",      "label": "Egal, beraten Sie mich" }
+    ]
+  }
+}

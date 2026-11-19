@@ -1,0 +1,24 @@
+---
+/** Фото из public/img/<name>.jpg с WebP-srcset (scripts/bilder.mjs). Если файла нет — берётся fallback, иначе ничего не выводится (без заглушек). */
+import fs from 'node:fs';
+import path from 'node:path';
+import sharp from 'sharp';
+import { WIDTHS } from '../../scripts/bilder.mjs';
+interface Props { name: string; alt: string; fallback?: string; sizes?: string; eager?: boolean; class?: string; ratio?: string }
+const { name, alt, fallback, sizes = '100vw', eager = false, class: cls = '', ratio } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const dir = path.resolve('public/img');
+const pick = [name, fallback].filter(Boolean).find((n) => fs.existsSync(path.join(dir, `${n}.jpg`)));
+let w = 0, h = 0, srcset = '';
+if (pick) {
+  const m = await sharp(path.join(dir, `${pick}.jpg`)).metadata();
+  w = m.width || 0; h = m.height || 0;
+  srcset = WIDTHS.filter((x) => fs.existsSync(path.join(dir, 'w', `${pick}-${x}.webp`))).map((x) => `${base}img/w/${pick}-${x}.webp ${Math.min(x, w)}w`).join(', ');
+}
+---
+{pick && (
+  <picture>
+    {srcset && <source type="image/webp" srcset={srcset} sizes={sizes} />}
+    <img class={`foto ${cls}`} src={`${base}img/${pick}.jpg`} alt={alt} width={w} height={h} loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : 'auto'} decoding="async" data-ratio={ratio} />
+  </picture>
+)}

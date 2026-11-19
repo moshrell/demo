@@ -1,0 +1,285 @@
+---
+// SEO + KI-Sichtbarkeit. Demo: noindex. Beim Kundenstart: index = true.
+import '@fontsource/gloock/400.css';
+import '@fontsource-variable/hanken-grotesk/wght.css';
+import '../styles/global.css';
+import site from '../data/site.json';
+import zeiten from '../data/oeffnungszeiten.json';
+import fonts from '../data/fonts.json';
+const {
+  title = site.name,
+  description = '',
+  index = false,
+  type = 'BeautySalon',
+  faq = [],
+  image = '',
+  prices = [],
+  aktiv = '',
+  leiste = 'normal', // 'termin' = auf der Anfrage-Seite: Hauptknopf ruft an
+} = Astro.props;
+const base = import.meta.env.BASE_URL;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = image ? new URL(base + image.replace(/^\//, ''), Astro.site).href : undefined;
+const graph = [
+  ...(index ? [{
+    '@type': type, '@id': new URL(base, Astro.site).href + '#business', name: site.name, url: new URL(base, Astro.site).href, description,
+    telephone: site.phone, email: site.email,
+    address: { '@type': 'PostalAddress', streetAddress: site.address.street, postalCode: site.address.zip, addressLocality: site.address.city, addressCountry: 'DE' },
+    openingHours: site.openingHours, areaServed: site.areaServed,
+    ...(ogImage ? { image: ogImage } : {}),
+    ...(prices.length ? { makesOffer: prices.map((p) => ({ '@type': 'Offer', priceCurrency: 'EUR', price: p.price, itemOffered: { '@type': 'Service', name: p.name } })) } : {}),
+  }] : []),
+  ...(faq.length ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
+];
+const ld = { '@context': 'https://schema.org', '@graph': graph };
+const nav = [
+  { id: 'sugaring', href: 'sugaring/', label: 'Sugaring' },
+  { id: 'gesicht', href: 'gesicht/', label: 'Gesichtspflege' },
+  { id: 'preise', href: 'preise/', label: 'Preise' },
+  { id: 'ueber', href: 'ueber-mich/', label: 'Über mich' },
+  { id: 'gutschein', href: 'gutschein/', label: 'Gutschein' },
+];
+const fmtZeit = (z) => z.map(([a, b]) => `${a}–${b}`).join(' und ');
+const tel = `tel:${site.phoneHref}`;
+const wa = `https://wa.me/${site.whatsapp}`;
+---
+<!doctype html>
+<html lang="de" data-font={fonts.default}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#F2E4DC" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {graph.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+    {site.fontSwitcher && <script is:inline>try{var u=new URLSearchParams(location.search).get('schrift'),s=u||localStorage.getItem('zf-schrift');if(/^[abcd]$/.test(s||''))document.documentElement.dataset.font=s}catch(e){}</script>}
+  </head>
+  <body data-leiste={leiste}>
+    <a class="skip" href="#inhalt">Zum Inhalt</a>
+    <header class="kopf wrap">
+      <a class="kopf__name" href={base} aria-label={`${site.name}, Startseite`}>
+        <span class="kopf__marke">Zuckerfaden</span>
+        <span class="kopf__zeile">Kosmetik in {site.address.city}</span>
+      </a>
+      <nav class="kopf__nav" aria-label="Hauptmenü">
+        {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label}</a>)}
+      </nav>
+      <p class="kopf__heute" data-heute aria-live="polite"></p>
+    </header>
+
+    <div id="inhalt"><slot /></div>
+
+    <footer class="fuss wrap" aria-label="Kontakt und Öffnungszeiten">
+      <div class="karte">
+        <div class="karte__kontakt">
+          <p class="karte__marke">Kosmetik Zuckerfaden</p>
+          <p>{site.owner}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+          <p><a href={site.mapUrl} target="_blank" rel="noopener">Weg auf der Karte</a></p>
+          <ul class="karte__wege">
+            <li><span>Telefon</span> <a href={tel}>{site.phone}</a></li>
+            <li><span>Mobil</span> <a href={`tel:${site.mobile.replace(/\D/g, '').replace(/^0/, '+49')}`}>{site.mobile}</a></li>
+            <li><span>WhatsApp</span> <a href={wa} target="_blank" rel="noopener">Nachricht schreiben</a></li>
+            <li><span>E-Mail</span> <a href={`mailto:${site.email}`}>{site.email}</a></li>
+          </ul>
+        </div>
+        <div class="karte__zeiten">
+          <p class="karte__titel">Öffnungszeiten</p>
+          <p class="karte__status" data-status></p>
+          <dl class="woche">
+            {zeiten.tage.map((t, i) => (
+              <div data-tag={i}><dt>{t.name}</dt><dd>{t.zeiten.length ? fmtZeit(t.zeiten) : (t.hinweis ?? 'geschlossen')}</dd></div>
+            ))}
+          </dl>
+        </div>
+      </div>
+      <p class="fuss__recht small">
+        <a href={`${base}impressum/`}>Impressum</a>
+        <a href={`${base}datenschutz/`}>Datenschutz</a>
+        {site.fontSwitcher && <button type="button" class="fuss__schrift" data-open="schrift">Schriftprobe</button>}
+      </p>
+      {!index && <p class="fuss__demo small">Beispielseite von Kravets Webdesign. Betrieb und Personen sind erfunden, Bilder teils KI-erzeugt. <a href="https://kravets-webdesign.de/kontakt/">Eine solche Website für Ihren Betrieb?</a></p>}
+    </footer>
+
+    <!-- Медовая панель: стекло рисуется одним контуром (clip-path) вместе с пилюлей и нитями к медовым блокам -->
+    <div class="honig-layer" aria-hidden="true">
+      <div class="honig-glas" data-glas></div>
+      <svg class="honig-kontur"><path data-kontur d="" /></svg>
+    </div>
+    <nav class="leiste" aria-label="Schnellzugriff">
+      <button type="button" class="pille" data-pille data-open="auswahl" hidden>
+        <span class="pille__n" data-pille-n></span>
+        <span class="pille__summe num" data-pille-summe></span>
+      </button>
+      <div class="leiste__bar" data-bar>
+        <button type="button" class="leiste__btn leiste__menue" data-open="menue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16" /></svg><span>Menü</span></button>
+        {leiste === 'termin'
+          ? <a class="leiste__haupt" href={tel}>Jetzt anrufen</a>
+          : <a class="leiste__haupt" href={`${base}termin/`} data-termin>Termin anfragen</a>}
+        {leiste === 'termin'
+          ? <a class="leiste__btn" href={wa} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19l1.2-3.6A7.5 7.5 0 1 1 9 18.3z" /></svg><span>WhatsApp</span></a>
+          : <a class="leiste__btn" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg><span class="leiste__lang">{site.phone}</span><span class="leiste__kurz">Anrufen</span></a>}
+      </div>
+    </nav>
+
+    <dialog class="sheet" data-dialog="menue" aria-label="Menü">
+      <div class="sheet__kopf"><p class="sheet__titel">Menü</p><button type="button" class="sheet__zu" data-close aria-label="Menü schließen">Schließen</button></div>
+      <nav class="sheet__nav" aria-label="Seiten">
+        <a href={base}>Start</a>
+        {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label}</a>)}
+        <a href={`${base}termin/`}>Termin anfragen</a>
+      </nav>
+      <div class="sheet__info">
+        <p data-status></p>
+        <p>{site.address.street}, {site.address.zip} {site.address.city} · <a href={site.mapUrl} target="_blank" rel="noopener">Karte</a></p>
+        {site.fontSwitcher && <button type="button" class="btn btn--ghost sheet__schrift" data-open="schrift">Schriftprobe</button>}
+      </div>
+    </dialog>
+
+    <dialog class="sheet" data-dialog="auswahl" aria-labelledby="auswahl-t">
+      <div class="sheet__kopf"><p class="sheet__titel" id="auswahl-t">Ihre Auswahl</p><button type="button" class="sheet__zu" data-close aria-label="Auswahl schließen">Schließen</button></div>
+      <ul class="auswahl" data-auswahl-liste></ul>
+      <p class="auswahl__summe"><span>Summe <strong class="num" data-auswahl-summe></strong></span><span class="muted num" data-auswahl-dauer></span></p>
+      <p class="small muted">Richtwert. Abgerechnet wird nach Zeit und Material.</p>
+      <div class="btn-row sheet__aktion">
+        <a class="btn" href={`${base}termin/`}>Mit dieser Auswahl anfragen</a>
+        <button type="button" class="btn btn--ghost" data-leeren>Auswahl leeren</button>
+      </div>
+    </dialog>
+
+    {site.fontSwitcher && (
+      <dialog class="sheet sheet--schrift" data-dialog="schrift" aria-labelledby="schrift-t">
+        <div class="sheet__kopf"><p class="sheet__titel" id="schrift-t">Schriftprobe <span class="muted small">(nur in der Demo)</span></p><button type="button" class="sheet__zu" data-close aria-label="Schriftprobe schließen">Schließen</button></div>
+        <fieldset class="schrift">
+          <legend class="sr">Schriftpaar wählen</legend>
+          {fonts.paare.map((p) => (
+            <label class="schrift__opt" data-paar={p.id}>
+              <input type="radio" name="schrift" value={p.id} />
+              <span class="schrift__probe" data-font-probe={p.id}>
+                <span class="schrift__h">Sugaring in Ronnenberg</span>
+                <span class="schrift__t">{p.name}. {p.text}. Ab 19 € · 15 Min.</span>
+              </span>
+            </label>
+          ))}
+        </fieldset>
+        <p class="small muted">Die Auswahl gilt für die ganze Seite und steht im Link (?schrift=…), damit Sie ihn weitergeben können.</p>
+        <button type="button" class="btn btn--ghost" data-schrift-link>Link mit dieser Schrift kopieren</button>
+      </dialog>
+    )}
+
+    <script>
+      import '../scripts/ui.ts';
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .skip { position: absolute; left: -999px; top: 0.5rem; background: var(--kandis); color: var(--weiss); padding: 0.6rem 1rem; border-radius: 999px; z-index: 100; }
+  .skip:focus { left: 0.5rem; }
+
+  /* Шапка */
+  .kopf { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding-top: max(0.9rem, env(safe-area-inset-top)); padding-bottom: 0.9rem; }
+  .kopf__name { display: grid; text-decoration: none; line-height: 1.05; }
+  .kopf__marke { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.6rem; letter-spacing: var(--display-tracking); }
+  .kopf__zeile { font-size: 0.875rem; color: var(--kandis-2); margin-top: 0.2rem; }
+  .kopf__heute { font-size: 0.9375rem; line-height: 1.3; text-align: right; color: var(--kandis-2); max-width: 11rem; }
+  .kopf__heute b { color: var(--kandis); font-weight: var(--strong-weight); }
+  .punkt { display: inline-block; width: 0.55em; height: 0.55em; border-radius: 50%; background: var(--salbei); margin-right: 0.35em; vertical-align: 0.06em; }
+  .punkt--zu { background: var(--puder-3); }
+  .kopf__nav { display: none; }
+  @media (min-width: 64rem) {
+    .kopf__nav { display: flex; gap: 1.6rem; margin-left: auto; }
+    .kopf__nav a { text-decoration: none; font-weight: 500; padding-block: 0.4rem; border-bottom: 2px solid transparent; }
+    .kopf__nav a:hover, .kopf__nav a[aria-current='page'] { border-bottom-color: var(--bernstein); }
+    .kopf__heute { max-width: 13rem; }
+  }
+
+  /* Футер = Terminkarte */
+  .fuss { padding-top: var(--space-2xl); padding-bottom: var(--space-lg); }
+  .karte { display: grid; gap: var(--space-xl); background: var(--weiss); border-radius: 22px; padding: clamp(1.4rem, 4vw, 2.6rem); box-shadow: 0 1px 0 var(--puder-3), 0 18px 40px -28px rgba(58, 33, 23, 0.35); }
+  .karte__marke { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.9rem; letter-spacing: var(--display-tracking); line-height: 1.1; margin-bottom: 0.6rem; }
+  .karte__wege { list-style: none; padding: 0; margin: var(--space-lg) 0 0; display: grid; gap: 0.5rem; }
+  .karte__wege li { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 0.5rem; align-items: baseline; }
+  .karte__wege span { color: var(--kandis-2); font-size: var(--text-sm); }
+  .karte__wege a { overflow-wrap: anywhere; min-height: 2.75rem; display: inline-flex; align-items: center; }
+  .karte__titel { font-weight: var(--strong-weight); font-size: var(--text-lg); }
+  .karte__status { margin: 0.2rem 0 0.9rem; color: var(--kandis-2); }
+  .woche { margin: 0; display: grid; }
+  .woche > div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0.5rem; padding: 0.55rem 0.7rem; border-radius: 10px; font-variant-numeric: tabular-nums; }
+  .woche dt { font-weight: 500; } .woche dd { margin: 0; }
+  .woche > div.heute { background: var(--puder); }
+  .woche > div.heute dt { font-weight: var(--strong-weight); }
+  .fuss__recht { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; justify-content: center; margin-top: var(--space-lg); }
+  .fuss__recht a, .fuss__schrift { min-height: 2.75rem; display: inline-flex; align-items: center; }
+  .fuss__schrift { background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; text-underline-offset: 0.18em; cursor: pointer; }
+  .fuss__demo { text-align: center; color: var(--kandis-2); max-width: 40rem; margin: 0.4rem auto 0; }
+  @media (min-width: 48rem) { .karte { grid-template-columns: 1fr 1fr; } }
+
+  /* Медовая панель */
+  .honig-layer { position: fixed; left: 0; right: 0; bottom: 0; height: 320px; pointer-events: none; z-index: 40; }
+  .honig-glas { position: absolute; inset: 0; clip-path: path('M0 0Z'); background: linear-gradient(180deg, rgba(246, 214, 150, 0.66) 0%, rgba(234, 176, 84, 0.7) 55%, rgba(206, 138, 44, 0.84) 100%); -webkit-backdrop-filter: blur(14px) saturate(1.5); backdrop-filter: blur(14px) saturate(1.5); }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .honig-glas { background: linear-gradient(180deg, rgba(240, 200, 120, 0.94), rgba(206, 140, 46, 0.96)); } }
+  .honig-kontur { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .honig-kontur path { fill: none; stroke: rgba(122, 70, 12, 0.42); stroke-width: 1; }
+  .leiste { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; pointer-events: none; padding: 0 max(var(--bar-gap), env(safe-area-inset-left)) calc(var(--bar-gap) + env(safe-area-inset-bottom)); display: grid; justify-items: center; gap: 14px; }
+  .leiste__bar { pointer-events: auto; width: 100%; max-width: 30rem; height: var(--bar-h); border-radius: 999px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 0.5rem; }
+  .leiste__btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 4.2rem; min-height: 3rem; background: none; border: 0; color: var(--kandis); font: inherit; font-size: 0.8125rem; font-weight: var(--strong-weight); text-decoration: none; cursor: pointer; border-radius: 999px; justify-self: center; }
+  .leiste__btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .leiste__haupt { display: inline-flex; align-items: center; min-height: 3rem; padding: 0 1.3rem; border-radius: 999px; background: var(--kandis); color: var(--weiss); text-decoration: none; font-weight: var(--strong-weight); white-space: nowrap; }
+  .leiste__lang { display: none; }
+  .pille { pointer-events: auto; display: inline-flex; align-items: center; gap: 0.8rem; min-height: 2.9rem; padding: 0 1.2rem; border: 0; border-radius: 999px; background: none; color: var(--kandis); font: inherit; font-weight: var(--strong-weight); cursor: pointer; transition: transform 0.38s cubic-bezier(0.3, 1.3, 0.5, 1), opacity 0.25s; }
+  .pille[hidden] { display: inline-flex; visibility: hidden; opacity: 0; transform: translateY(46px) scale(0.6); }
+  .pille__n { font-weight: 500; }
+  .pille__summe { font-size: 1.15rem; }
+  @media (min-width: 64rem) {
+    .leiste__bar { max-width: 26rem; grid-template-columns: auto 1fr; gap: 0.5rem; padding: 0 0.5rem 0 0.5rem; }
+    .leiste__menue { display: none; }
+    .leiste__lang { display: inline; font-size: 1rem; }
+    .leiste__kurz { display: none; }
+    .leiste__bar > .leiste__btn { flex-direction: row; gap: 0.5rem; justify-self: end; padding-right: 1rem; }
+  }
+
+  /* Шторки */
+  .sheet { border: 0; padding: 0; margin: auto auto 0; width: 100%; max-width: 34rem; max-height: 88dvh; border-radius: 24px 24px 0 0; background: var(--weiss); color: var(--kandis); padding: 1.1rem var(--gutter) calc(1.4rem + env(safe-area-inset-bottom)); overflow: auto; overscroll-behavior: contain; }
+  .sheet::backdrop { background: rgba(58, 33, 23, 0.38); }
+  .sheet[open] { animation: hoch 0.24s cubic-bezier(0.2, 0.9, 0.3, 1); }
+  @keyframes hoch { from { transform: translateY(40px); opacity: 0; } }
+  @media (min-width: 48rem) { .sheet { margin: auto; border-radius: 24px; } }
+  .sheet__kopf { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.6rem; }
+  .sheet__titel { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.6rem; }
+  .sheet__zu { min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; border: 1.5px solid var(--kandis); background: none; font: inherit; font-weight: 500; cursor: pointer; color: var(--kandis); }
+  .sheet__nav { display: grid; }
+  .sheet__nav a { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.65rem; text-decoration: none; padding: 0.55rem 0; border-bottom: 1px solid var(--puder-2); }
+  .sheet__nav a[aria-current='page'] { color: var(--bernstein-tief); }
+  .sheet__info { display: grid; gap: 0.6rem; margin-top: 1.1rem; color: var(--kandis-2); }
+  .sheet__schrift { justify-self: start; margin-top: 0.4rem; }
+  .auswahl { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+  .auswahl li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 0.75rem; align-items: center; padding: 0.55rem 0; border-bottom: 1px solid var(--puder-2); }
+  .auswahl .preis { font-variant-numeric: tabular-nums; }
+  .auswahl button { width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1.5px solid var(--puder-3); background: none; cursor: pointer; color: var(--kandis); font-size: 1.1rem; }
+  .auswahl__summe { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 0.9rem 0 0.2rem; font-size: var(--text-lg); }
+  .auswahl__summe strong { font-size: 1.6rem; margin-left: 0.3rem; }
+  .auswahl__leer { color: var(--kandis-2); padding: 0.8rem 0; }
+  .sheet__aktion { margin-top: 1rem; }
+  .schrift { border: 0; padding: 0; margin: 0 0 0.8rem; display: grid; gap: 0.6rem; }
+  .schrift__opt { position: relative; display: block; border: 1.5px solid var(--puder-3); border-radius: 16px; padding: 0.9rem 1rem; cursor: pointer; }
+  .schrift__opt:has(input:checked) { border-color: var(--kandis); background: var(--puder); }
+  .schrift__opt input { position: absolute; opacity: 0; }
+  .schrift__opt:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .schrift__probe { display: grid; gap: 0.2rem; }
+  .schrift__h { font-size: 1.5rem; line-height: 1.15; }
+  .schrift__t { font-size: 0.95rem; color: var(--kandis-2); }
+  [data-font-probe='a'] .schrift__h { font-family: 'Gloock', serif; } [data-font-probe='a'] .schrift__t { font-family: 'Hanken Grotesk Variable', sans-serif; }
+  [data-font-probe='b'] .schrift__h { font-family: 'Young Serif', serif; } [data-font-probe='b'] .schrift__t { font-family: 'Rethink Sans Variable', sans-serif; }
+  [data-font-probe='c'] .schrift__h { font-family: 'Bricolage Grotesque Variable', sans-serif; font-weight: 640; } [data-font-probe='c'] .schrift__t { font-family: 'Bricolage Grotesque Variable', sans-serif; }
+  [data-font-probe='d'] .schrift__h { font-family: 'Literata Variable', serif; font-weight: 560; } [data-font-probe='d'] .schrift__t { font-family: 'Literata Variable', serif; }
+  @media print { .honig-layer, .leiste, .kopf__heute, .fuss__demo, .fuss__recht { display: none !important; } }
+</style>

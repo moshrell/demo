@@ -1,0 +1,188 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+---
+<Base title="Termin anfragen | Kosmetik Zuckerfaden Ronnenberg" description="Termin für Sugaring oder Gesichtsbehandlung in Ronnenberg anfragen. Auswahl, Wunschzeiten und Rückruf, meist am selben Abend." leiste="termin">
+  <section class="wrap tf">
+    <div class="tf__kopf">
+      <h1>Termin anfragen</h1>
+      <p class="lede">Sie schlagen Tage und Tageszeit vor, ich rufe zurück und wir machen die Uhrzeit fest. Meist am selben Abend.</p>
+    </div>
+
+    <form class="form" id="termin" novalidate data-termin-form>
+      <fieldset class="gruppe">
+        <legend>Ihre Auswahl</legend>
+        <div class="tf__auswahl" data-tf-auswahl>
+          <ul class="auswahl" data-tf-liste></ul>
+          <p class="auswahl__summe"><span>Summe <strong class="num" data-tf-summe></strong></span><span class="muted num" data-tf-dauer></span></p>
+          <p class="small muted">Richtwert. Abgerechnet wird nach Zeit und Material.</p>
+        </div>
+        <div class="tf__leer" data-tf-leer hidden>
+          <p>Sie haben noch nichts ausgewählt. Das ist kein Problem.</p>
+          <div class="btn-row">
+            <a class="btn btn--ghost" href={`${base}sugaring/#zonen`}>Sugaring-Zonen wählen</a>
+            <a class="btn btn--ghost" href={`${base}gesicht/`}>Gesichtsbehandlung wählen</a>
+            <button type="button" class="btn btn--ghost" data-weissnicht>Ich weiß es noch nicht</button>
+          </div>
+        </div>
+        <p class="err" id="err-auswahl" hidden>Bitte wählen Sie etwas aus oder schreiben Sie unten kurz, worum es geht.</p>
+      </fieldset>
+
+      <fieldset class="gruppe">
+        <legend>Wann passt es Ihnen?</legend>
+        <div>
+          <p class="label tf__label" id="tage-l">Tage <span class="opt">(mehrere möglich)</span></p>
+          <div class="chips" role="group" aria-labelledby="tage-l">
+            {tage.map((t) => <label class="chip"><input type="checkbox" name="tage" value={t} /><span>{t}{t === 'Sa' ? ' nach Vereinbarung' : ''}</span></label>)}
+          </div>
+        </div>
+        <div>
+          <p class="label tf__label" id="zeit-l">Tageszeit</p>
+          <div class="chips" role="group" aria-labelledby="zeit-l">
+            <label class="chip"><input type="checkbox" name="zeit" value="Vormittag" /><span>Vormittag 9–13</span></label>
+            <label class="chip"><input type="checkbox" name="zeit" value="Nachmittag" /><span>Nachmittag 15–18</span></label>
+            <label class="chip"><input type="checkbox" name="zeit" value="Abend" data-abend /><span>Abend bis 22 (Di, Do)</span></label>
+          </div>
+          <p class="small muted tf__abend" data-abend-hinweis hidden>Abends bin ich nur dienstags und donnerstags da.</p>
+        </div>
+      </fieldset>
+
+      <fieldset class="gruppe">
+        <legend>Ihre Angaben</legend>
+        <div class="feld">
+          <label for="t-name">Name</label>
+          <input id="t-name" name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname" required aria-describedby="err-name" />
+          <p class="err" id="err-name" hidden>Bitte geben Sie Ihren Namen an.</p>
+        </div>
+        <div class="feld">
+          <label for="t-tel">Telefon</label>
+          <input id="t-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 0151 23456789" required aria-describedby="err-tel" />
+          <p class="err" id="err-tel" hidden>Bitte geben Sie eine Telefonnummer an, unter der ich Sie erreiche.</p>
+        </div>
+        <div class="feld">
+          <label for="t-mail">E-Mail <span class="opt">(optional)</span></label>
+          <input id="t-mail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" aria-describedby="err-mail" />
+          <p class="err" id="err-mail" hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.</p>
+        </div>
+        <div class="feld">
+          <label for="t-note">Nachricht <span class="opt">(optional)</span></label>
+          <textarea id="t-note" name="note" rows="3" autocomplete="off" placeholder="z. B. erstes Mal Sugaring, empfindliche Haut, Fragen"></textarea>
+        </div>
+        <label class="check"><input type="checkbox" name="whatsapp" value="ja" /><span>Lieber per WhatsApp antworten als anrufen</span></label>
+      </fieldset>
+
+      <div class="gruppe">
+        <label class="check">
+          <input type="checkbox" name="privacy" required aria-describedby="err-privacy" />
+          <span>Ich bin einverstanden, dass {site.name} meine Angaben (Name, Telefon, E-Mail, Nachricht, Auswahl und Wunschzeiten) zur Bearbeitung meiner Terminanfrage verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a></span>
+        </label>
+        <p class="err" id="err-privacy" hidden>Bitte stimmen Sie zu, sonst kann ich Ihre Anfrage nicht bearbeiten.</p>
+        <button class="btn senden" type="submit">Anfrage senden</button>
+        <p class="small muted">Demo: Es wird nichts gesendet oder gespeichert.</p>
+      </div>
+    </form>
+
+    <div class="terminkarte" data-karte hidden tabindex="-1" aria-live="polite">
+      <h2>Anfrage angekommen</h2>
+      <p class="lede">Ich melde mich in der Regel am selben Abend.</p>
+      <dl data-karte-liste></dl>
+      <p class="demo-hinweis">Demo: Diese Anfrage wurde nicht gesendet und nicht gespeichert.</p>
+    </div>
+
+    <aside class="tf__direkt" aria-labelledby="direkt-h">
+      <h2 id="direkt-h">Lieber direkt?</h2>
+      <p class="muted">Während einer Behandlung kann ich nicht ans Telefon. Ich rufe zurück, sobald ich frei bin.</p>
+      <div class="btn-row">
+        <a class="btn" href={`tel:${site.phoneHref}`}>Anrufen: {site.phone}</a>
+        <a class="btn btn--ghost" href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener" data-wa>WhatsApp schreiben</a>
+      </div>
+    </aside>
+  </section>
+</Base>
+
+<style>
+  .tf { max-width: 44rem; padding-top: var(--space-lg); display: grid; gap: var(--space-xl); }
+  .tf__kopf { display: grid; gap: var(--space-md); }
+  .tf__auswahl { background: var(--weiss); border-radius: 20px; padding: 0.6rem 1.2rem 1.1rem; }
+  .tf__auswahl[hidden], .tf__leer[hidden], .tf__abend[hidden] { display: none; }
+  .tf__leer { display: grid; gap: var(--space-md); }
+  .tf__label { margin-bottom: 0.6rem; font-weight: var(--strong-weight); }
+  .tf__abend { margin-top: 0.5rem; }
+  .tf__direkt { display: grid; gap: var(--space-md); padding-top: var(--space-lg); border-top: 1px solid var(--puder-3); }
+  .tf__direkt h2 { font-size: 1.7rem; }
+</style>
+
+<script>
+  import * as cart from '../lib/cart';
+  import { setupForm, telOk, mailOk } from '../lib/formular';
+  import site from '../data/site.json';
+  const form = document.querySelector<HTMLFormElement>('[data-termin-form]')!;
+  const q = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector<T>(s)!;
+  const f = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
+  let weissNicht = false;
+
+  function render() {
+    const c = cart.get();
+    q('[data-tf-auswahl]').hidden = !c.lines.length; q('[data-tf-leer]').hidden = !!c.lines.length;
+    q('[data-tf-liste]').replaceChildren(...c.lines.map((l) => {
+      const li = document.createElement('li');
+      const n = document.createElement('span'); n.textContent = l.name + (l.g === 'herren' ? ' (Herren)' : '');
+      const p = document.createElement('span'); p.className = 'preis'; p.textContent = l.gratis ? 'inklusive' : (l.ab ? 'ab ' : '') + cart.euro(l.preis);
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = '×'; b.setAttribute('aria-label', `${l.name} entfernen`);
+      b.addEventListener('click', () => cart.remove(l.id));
+      li.append(n, p, b); return li;
+    }));
+    q('[data-tf-summe]').textContent = (c.ab ? 'ab ' : '') + cart.euro(c.summe);
+    q('[data-tf-dauer]').textContent = c.min ? 'ca. ' + cart.dauer(c.min) : '';
+    if (c.lines.length) q('#err-auswahl').hidden = true;
+    const text = c.lines.length ? `Hallo, ich möchte einen Termin anfragen: ${c.lines.map((l) => l.name).join(', ')} (ca. ${cart.euro(c.summe)}).` : 'Hallo, ich möchte einen Termin anfragen.';
+    q<HTMLAnchorElement>('[data-wa]').href = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
+  }
+  addEventListener('zf:cart', render); render();
+
+  q('[data-weissnicht]').addEventListener('click', () => { weissNicht = true; q('#err-auswahl').hidden = true; const n = f('note'); if (!n.value) n.value = 'Ich weiß noch nicht genau, was ich brauche. Bitte beraten Sie mich.'; n.dispatchEvent(new Event('input', { bubbles: true })); n.focus(); });
+
+  // Abend nur Di/Do
+  const abend = form.querySelector<HTMLInputElement>('[data-abend]')!;
+  function abendCheck() {
+    const tage = [...form.querySelectorAll<HTMLInputElement>('input[name=tage]:checked')].map((i) => i.value);
+    const ok = !tage.length || tage.includes('Di') || tage.includes('Do');
+    abend.disabled = !ok; if (!ok) abend.checked = false;
+    q('[data-abend-hinweis]').hidden = ok;
+  }
+  form.addEventListener('change', abendCheck);
+
+  const ctrl = setupForm(form, {
+    extraValid: () => {
+      const leer = !cart.get().lines.length && !weissNicht && !f('note').value.trim();
+      q('#err-auswahl').hidden = !leer;
+      return leer ? q('[data-tf-leer] .btn') : null;
+    },
+    checks: () => [
+      [f('name'), () => f('name').value.trim().length > 1],
+      [f('tel'), () => telOk(f('tel').value)],
+      [f('email'), () => mailOk(f('email'))],
+      [f('privacy'), () => f('privacy').checked],
+    ],
+    onSubmit: () => {
+      const c = cart.get();
+      const rows: [string, string, string?][] = c.lines.map((l) => [l.name, l.gratis ? 'inklusive' : (l.ab ? 'ab ' : '') + cart.euro(l.preis)]);
+      if (c.lines.length) rows.push(['Summe, ca. ' + cart.dauer(c.min), (c.ab ? 'ab ' : '') + cart.euro(c.summe), 'summe']);
+      const tage = [...form.querySelectorAll<HTMLInputElement>('input[name=tage]:checked')].map((i) => i.value).join(', ');
+      const zeit = [...form.querySelectorAll<HTMLInputElement>('input[name=zeit]:checked')].map((i) => i.value).join(', ');
+      if (tage || zeit) rows.push(['Wunschzeit', [tage, zeit].filter(Boolean).join(' · ')]);
+      rows.push(['Name', f('name').value.trim()], ['Telefon', f('tel').value.trim()]);
+      if (form.querySelector<HTMLInputElement>('input[name=whatsapp]')!.checked) rows.push(['Antwort', 'per WhatsApp']);
+      q('[data-karte-liste]').replaceChildren(...rows.map(([k, v, cls]) => {
+        const d = document.createElement('div'); if (cls) d.className = cls;
+        const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v;
+        d.append(dt, dd); return d;
+      }));
+      form.hidden = true; const k = q('[data-karte]'); k.hidden = false; k.focus(); k.scrollIntoView({ block: 'start' });
+      ctrl.reset(); cart.clear();
+    },
+  });
+  abendCheck();
+</script>

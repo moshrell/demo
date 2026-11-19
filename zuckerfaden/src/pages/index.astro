@@ -1,0 +1,156 @@
+---
+import Base from '../layouts/Base.astro';
+import Foto from '../components/Foto.astro';
+import Zonenrechner from '../components/Zonenrechner.astro';
+import Finder from '../components/Finder.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const jahre = new Date().getFullYear() - site.since;
+const schritte = [
+  { t: 'Anfrage', d: 'Über das Formular, per WhatsApp oder am Telefon. Sagen Sie mir, was Sie möchten und wann es Ihnen passt.' },
+  { t: 'Rückruf', d: 'Ich melde mich, meist am selben Abend, und wir machen die Uhrzeit fest.' },
+  { t: 'Hautgespräch und Behandlung', d: 'Wir schauen zuerst gemeinsam auf Ihre Haut. Dann beginnt die Behandlung, in Ruhe und ohne Geräte.' },
+  { t: 'Pflegetipps für zu Hause', d: 'Sie bekommen zwei, drei Hinweise mit, die wirklich zu Ihrer Haut passen.' },
+];
+---
+<Base title="Kosmetik Zuckerfaden: Sugaring und Gesichtspflege in Ronnenberg" description="Sugaring mit warmer Zuckerpaste und Gesichtspflege ohne Geräte in Ronnenberg. Preise für Ihre Zonen sofort berechnen, Termin anfragen. Dienstag und Donnerstag bis 22 Uhr." aktiv="start">
+  <section class="held">
+    <div class="held__bild">
+      <Foto name="hero-9x16" fallback="haende-3x4" alt="Kosmetikerin trägt mit den Fingern warme Zuckerpaste auf die Haut auf" eager sizes="(min-width: 64rem) 55vw, 100vw" />
+    </div>
+    <div class="held__text wrap">
+      <h1>Sugaring und Gesichtspflege in Ronnenberg</h1>
+      <p class="lede">Ein Raum, eine Kosmetikerin, seit {site.since}. Ohne Geräte, mit warmer Zuckerpaste und Naturkosmetik.</p>
+      <div class="btn-row held__btns">
+        <a class="btn" href="#zonen">Preis für meine Zonen berechnen</a>
+        <a class="btn btn--ghost" href={`${base}termin/`}>Termin anfragen</a>
+      </div>
+      <p class="held__abend honig" data-honig>Dienstag und Donnerstag bis 22 Uhr</p>
+    </div>
+  </section>
+
+  <Zonenrechner />
+
+  <Finder />
+
+  <section class="ablauf section" aria-labelledby="ablauf-h">
+    <div class="wrap">
+      <h2 id="ablauf-h">So läuft Ihr erster Termin</h2>
+      <ol class="faden">
+        {schritte.map((s) => <li><h3>{s.t}</h3><p>{s.d}</p></li>)}
+      </ol>
+      <div class="vorher honig" data-honig>
+        <h3>Vor dem Sugaring</h3>
+        <ul>
+          <li>Haare 3 bis 5 mm lang wachsen lassen, etwa eine Woche nach dem Rasieren.</li>
+          <li>24 Stunden vorher kein Peeling.</li>
+          <li>Am Tag selbst keine Bodylotion auf die Zonen.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="ich section" aria-labelledby="ich-h">
+    <div class="wrap ich__grid">
+      <Foto name="kosmetikerin-3x4" alt={`${site.owner} in ihrem Behandlungsraum`} sizes="(min-width: 64rem) 30vw, 90vw" class="ich__foto" />
+      <div class="ich__text">
+        <h2 id="ich-h">Ich bin {site.owner.split(' ')[0]}</h2>
+        <p>Seit {jahre} Jahren behandle ich in meinem eigenen Raum, davor habe ich als Drogistin und Kosmetikerin gearbeitet. Ich arbeite mit den Händen, nicht mit Geräten, und nehme mir für jede Haut die Zeit, die sie braucht.</p>
+        <p>Viele meiner Kundinnen kommen seit über zehn Jahren. Neue sind genauso willkommen.</p>
+        <blockquote class="ich__satz">Behandle andere so, wie du behandelt werden möchtest.</blockquote>
+        <p><a href={`${base}ueber-mich/`}>Mehr über mich und meine Ausbildung</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="raum section" aria-labelledby="raum-h">
+    <div class="wrap raum__grid">
+      <Foto name="raum-4x3" alt="Heller Behandlungsraum mit Liege, Pflanze und Fenster" sizes="(min-width: 64rem) 60vw, 100vw" />
+      <div>
+        <h2 id="raum-h">Der Raum</h2>
+        <ul class="fakten">
+          <li>Ein Behandlungsraum, keine Wartezone: Sie sind allein mit mir.</li>
+          <li>Parkplatz vor dem Haus, ebenerdiger Eingang.</li>
+          <li>{site.address.street}, {site.address.zip} {site.address.city}. <a href={site.mapUrl} target="_blank" rel="noopener">Weg auf der Karte</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {site.gutscheinBlock && (
+    <section class="gs section" aria-labelledby="gs-h">
+      <div class="wrap">
+        <div class="gs__band honig" data-honig>
+          <Foto name="gutschein-1x1" alt="Gutscheinkarte im Umschlag mit Schleife" sizes="(min-width: 48rem) 22rem, 80vw" class="gs__foto" />
+          <div class="gs__text">
+            <h2 id="gs-h">Ein Gutschein zum Verschenken</h2>
+            <p>Für eine Behandlung oder einen Betrag Ihrer Wahl. Sie holen ihn bei mir ab oder ich schicke ihn per Post.</p>
+            <a class="btn" href={`${base}gutschein/`}>Gutschein anfragen</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="meinung section" aria-labelledby="meinung-h">
+    <div class="wrap meinung__wrap">
+      <h2 id="meinung-h">Sagen Sie mir, was Ihnen gefällt</h2>
+      <p class="lede">Und was ich besser machen kann. Ihre Rückmeldung nach der Behandlung ist mir wichtig, persönlich oder als Bewertung.</p>
+      <p><a class="btn btn--ghost" href={site.googleReviewsUrl === 'TODO' ? '#' : site.googleReviewsUrl} aria-disabled={site.googleReviewsUrl === 'TODO' ? 'true' : undefined}>Bewertungen auf Google lesen</a></p>
+      {site.googleReviewsUrl === 'TODO' && <p class="small muted">Demo: Hier steht beim echten Studio der Link zum Google-Profil.</p>}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .held { display: grid; }
+  .held__bild { margin: 0 var(--gutter); }
+  .held__bild :global(img) { width: 100%; height: min(62vh, 36rem); object-fit: cover; object-position: 50% 40%; border-radius: 22px; }
+  .held__text { padding-top: var(--space-lg); padding-bottom: var(--space-md); display: grid; gap: var(--space-md); }
+  .held__btns { margin-top: 0.4rem; }
+  .held__abend { justify-self: start; padding: 0.55rem 1.1rem; border-radius: 999px; font-weight: var(--strong-weight); }
+  @media (min-width: 64rem) {
+    .held { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); align-items: center; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); gap: var(--space-2xl); padding-block: var(--space-lg) var(--space-xl); }
+    .held__bild { order: 2; margin: 0; }
+    .held__bild :global(img) { height: min(78vh, 44rem); }
+    .held__text { padding: 0; }
+    .held h1 { font-size: min(var(--h1), 4.4vw); }
+  }
+
+  .faden { list-style: none; margin: var(--space-xl) 0 0; padding: 0; counter-reset: s; display: grid; gap: 0; }
+  .faden li { position: relative; counter-increment: s; padding: 0 0 var(--space-lg) 3.4rem; }
+  .faden li::before { content: counter(s); position: absolute; left: 0; top: -0.1rem; width: 2.3rem; height: 2.3rem; display: grid; place-items: center; border-radius: 50%; background: var(--kandis); color: var(--weiss); font-weight: var(--strong-weight); }
+  .faden li::after { content: ''; position: absolute; left: 1.1rem; top: 2.4rem; bottom: 0.2rem; width: 2px; background: linear-gradient(var(--bernstein-hl), var(--bernstein)); border-radius: 2px; }
+  .faden li:last-child::after { display: none; }
+  .faden h3 { margin-bottom: 0.3rem; }
+  .faden p { color: var(--kandis-2); max-width: 34rem; }
+  .vorher { margin-top: var(--space-lg); padding: 1.3rem 1.4rem; border-radius: 22px; max-width: 40rem; }
+  .vorher ul { margin: 0.6rem 0 0; padding-left: 1.2rem; display: grid; gap: 0.35rem; }
+  @media (min-width: 64rem) {
+    .faden { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-lg); }
+    .faden li { padding: 3.4rem 0 0; }
+    .faden li::after { left: 2.6rem; right: -1.2rem; top: 1.1rem; bottom: auto; width: auto; height: 2px; }
+  }
+
+  .ich__grid { display: grid; gap: var(--space-xl); }
+  .ich__grid :global(.ich__foto) { border-radius: 22px; max-width: 26rem; }
+  .ich__text { display: grid; gap: 0.2rem; align-content: start; }
+  .ich__text h2 { margin-bottom: 0.8rem; }
+  .ich__satz { margin: 1.4rem 0; font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.2rem); line-height: 1.2; letter-spacing: var(--display-tracking); max-width: 30rem; }
+  @media (min-width: 64rem) { .ich__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; } }
+
+  .raum__grid { display: grid; gap: var(--space-lg); }
+  .raum__grid :global(img) { border-radius: 22px; }
+  .fakten { list-style: none; padding: 0; margin: var(--space-md) 0 0; display: grid; gap: 0.7rem; }
+  .fakten li { padding-left: 1.4rem; position: relative; }
+  .fakten li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--bernstein); }
+  @media (min-width: 64rem) { .raum__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; gap: var(--space-2xl); } }
+
+  .gs__band { display: grid; gap: var(--space-lg); padding: clamp(1.2rem, 4vw, 2.4rem); border-radius: 28px; }
+  .gs__band :global(.gs__foto) { border-radius: 18px; max-width: 22rem; }
+  .gs__text { display: grid; gap: var(--space-md); align-content: center; }
+  .gs__text .btn { justify-self: start; }
+  @media (min-width: 48rem) { .gs__band { grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); align-items: center; gap: var(--space-xl); } }
+
+  .meinung__wrap { max-width: 46rem; display: grid; gap: var(--space-md); }
+</style>

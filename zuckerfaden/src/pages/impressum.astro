@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+---
+<Base title="Impressum | Kosmetik Zuckerfaden">
+  <main class="wrap recht">
+    <h1>Impressum</h1>
+    <p><strong>Demo-Hinweis:</strong> Dies ist eine Beispielseite von Kravets Webdesign. Betrieb und Personen sind erfunden, Bilder teils KI-erzeugt. Die Angaben zeigen, was bei einem echten Betrieb hier stehen muss.</p>
+    <h2>Angaben gemäß § 5 DDG</h2>
+    <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+    <h2>Kontakt</h2>
+    <p>Telefon: {site.phone}<br />E-Mail: {site.email}</p>
+    <h2>Umsatzsteuer</h2>
+    <p>TODO vom Kunden: Umsatzsteuer-Identifikationsnummer nach § 27a UStG oder Hinweis auf Kleinunternehmerregelung (§ 19 UStG).</p>
+    <h2>Berufsbezeichnung</h2>
+    <p>Kosmetikerin und Fußpflegerin. TODO vom Kunden: ggf. Kammer oder Verband.</p>
+    <h2>Verbraucherstreitbeilegung</h2>
+    <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+  </main>
+</Base>
+<style>
+  .recht { max-width: 46rem; padding-top: var(--space-lg); display: grid; gap: var(--space-md); }
+  .recht h2 { font-size: 1.5rem; margin-top: var(--space-md); }
+</style>

@@ -1,0 +1,29 @@
+{
+  "name": "Kosmetik Zuckerfaden",
+  "short": "Zuckerfaden",
+  "owner": "Birgit Ahlswede",
+  "legalName": "Kosmetik Zuckerfaden, Inh. Birgit Ahlswede (fiktiv)",
+  "address": {
+    "street": "Kirchwiese 7",
+    "zip": "30952",
+    "city": "Ronnenberg"
+  },
+  "mapUrl": "https://www.openstreetmap.org/search?query=Ronnenberg",
+  "phone": "05109 51 23 40",
+  "phoneHref": "+495109512340",
+  "mobile": "0151 23456789",
+  "whatsapp": "4915123456789",
+  "email": "hallo@zuckerfaden.example",
+  "since": 1999,
+  "openingHours": "Mo,We,Fr 09:00-13:00, 15:00-18:00; Tu,Th 09:00-13:00, 15:00-22:00",
+  "areaServed": [
+    "Ronnenberg",
+    "Empelde",
+    "Gehrden",
+    "Hannover-Badenstedt"
+  ],
+  "priceStand": "November 2026",
+  "fontSwitcher": true,
+  "gutscheinBlock": true,
+  "googleReviewsUrl": "TODO"
+}

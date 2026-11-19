@@ -1,0 +1,9 @@
+{
+  "default": "a",
+  "paare": [
+    { "id": "a", "name": "Gloock und Hanken Grotesk", "text": "Kontrastreiche Antiqua, ruhiger Text" },
+    { "id": "b", "name": "Young Serif und Rethink Sans", "text": "Weich und freundlich" },
+    { "id": "c", "name": "Bricolage Grotesque", "text": "Modern, eine Familie" },
+    { "id": "d", "name": "Literata", "text": "Wie ein gutes Buch, am besten lesbar" }
+  ]
+}

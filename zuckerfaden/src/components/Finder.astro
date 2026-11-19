@@ -1,0 +1,108 @@
+---
+/** Подбор ухода за лицом: три вопроса чипами → 1–2 процедуры с ценой и кнопкой «в заявку». */
+import data from '../data/behandlungen.json';
+import site from '../data/site.json';
+const { id = 'finder', titel = 'Welche Gesichtsbehandlung passt zu mir?', mehr = true } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const fragen = [
+  { key: 'haut', text: 'Was wünscht sich Ihre Haut?' },
+  { key: 'zeit', text: 'Wie viel Zeit haben Sie?' },
+  { key: 'art', text: 'Was mögen Sie lieber?' },
+];
+---
+<section class="fi section" id={id} aria-labelledby={`${id}-h`} data-finder>
+  <div class="wrap fi__wrap">
+    <h2 id={`${id}-h`}>{titel}</h2>
+    <p class="lede fi__lede">Drei Fragen, dann sehen Sie die passende Behandlung mit Preis.</p>
+    <div class="fi__form">
+      {fragen.map((f, n) => (
+        <fieldset class="fi__frage">
+          <legend><span class="fi__nr">{n + 1}</span>{f.text}</legend>
+          <div class="chips">
+            {data.fragen[f.key].map((o) => (
+              <label class="chip"><input type="radio" name={`${id}-${f.key}`} value={o.id} data-key={f.key} /><span>{o.label}</span></label>
+            ))}
+          </div>
+        </fieldset>
+      ))}
+    </div>
+    <div class="fi__ergebnis" data-ergebnis hidden tabindex="-1" aria-live="polite">
+      <p class="fi__titel" data-ergebnis-titel></p>
+      <ul class="fi__liste" data-ergebnis-liste></ul>
+      <p class="fi__tel" data-ergebnis-tel hidden>Am besten besprechen wir das kurz am Telefon: <a href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+    </div>
+    {mehr && <p class="fi__mehr"><a href={`${base}gesicht/`}>Alle Gesichtsbehandlungen und Preise</a></p>}
+  </div>
+</section>
+
+<style>
+  .fi__wrap { max-width: 52rem; }
+  .fi__lede { margin-top: 0.8rem; }
+  .fi__form { display: grid; gap: var(--space-lg); margin-top: var(--space-xl); }
+  .fi__frage { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .fi__frage legend { display: flex; align-items: baseline; gap: 0.7rem; padding: 0; margin-bottom: 0.8rem; font-weight: var(--strong-weight); font-size: var(--text-lg); }
+  .fi__nr { display: inline-grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 50%; background: var(--kandis); color: var(--weiss); font-size: 0.95rem; flex: none; transform: translateY(-0.1rem); }
+  .fi__ergebnis { margin-top: var(--space-xl); outline: none; }
+  .fi__ergebnis[hidden] { display: none; }
+  .fi__titel { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.6rem; line-height: 1.2; }
+  .fi__liste { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.9rem; }
+  .fi__liste :global(li) { display: grid; gap: 0.5rem; padding: 1.1rem 1.2rem; background: var(--weiss); border-radius: 18px; animation: auf 0.28s ease-out; }
+  .fi__liste :global(li:first-child) { border-left: 6px solid var(--bernstein); }
+  @keyframes auf { from { opacity: 0; transform: translateY(8px); } }
+  .fi__liste :global(.fi__kopf) { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap; }
+  .fi__liste :global(.fi__preis) { font-weight: var(--strong-weight); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .fi__liste :global(.fi__linie) { font-size: 0.95rem; color: var(--kandis-2); }
+  .fi__liste :global(.btn) { justify-self: start; margin-top: 0.3rem; }
+  .fi__tel { margin-top: 1rem; }
+  .fi__tel[hidden] { display: none; }
+  .fi__mehr { margin-top: var(--space-lg); }
+</style>
+
+<script>
+  import data from '../data/behandlungen.json';
+  import * as cart from '../lib/cart';
+  const linie = Object.fromEntries(data.linien.map((l) => [l.id, l.name]));
+  const zeitOk = (min: number, z: string) => (z === 'kurz' ? min <= 45 : z === 'mittel' ? min === 60 : min >= 90);
+  document.querySelectorAll<HTMLElement>('[data-finder]').forEach((root) => {
+    const erg = root.querySelector<HTMLElement>('[data-ergebnis]')!;
+    const liste = root.querySelector<HTMLElement>('[data-ergebnis-liste]')!;
+    function wahl() {
+      const v: Record<string, string> = {};
+      root.querySelectorAll<HTMLInputElement>('input[data-key]:checked').forEach((i) => (v[i.dataset.key!] = i.value));
+      return v;
+    }
+    function rechnen(scroll: boolean) {
+      const v = wahl();
+      if (!v.haut || !v.zeit || !v.art) return;
+      const ranked = data.behandlungen
+        .filter((b) => b.id !== 'z-mann' || v.haut === 'entspannen' || v.haut === 'frische')
+        .map((b) => ({ b, p: (b.haut.includes(v.haut) ? 3 : 0) + (zeitOk(b.min, v.zeit) ? 2 : 0) + (v.art === 'egal' ? 1 : b.art === v.art ? 2 : 0), d: Math.abs(b.min - (v.zeit === 'kurz' ? 40 : v.zeit === 'mittel' ? 60 : 95)) }))
+        .sort((a, b) => b.p - a.p || a.d - b.d);
+      const best = ranked.filter((r) => r.p >= 5).slice(0, 2);
+      const show = best.length ? best : ranked.slice(0, 1);
+      root.querySelector<HTMLElement>('[data-ergebnis-titel]')!.textContent = best.length ? (show.length > 1 ? 'Das passt zu Ihnen' : 'Das passt am besten') : 'Am nächsten kommt das';
+      root.querySelector<HTMLElement>('[data-ergebnis-tel]')!.hidden = best.length > 0;
+      liste.replaceChildren(...show.map(({ b }) => {
+        const li = document.createElement('li');
+        const kopf = document.createElement('div'); kopf.className = 'fi__kopf';
+        const h = document.createElement('h3'); h.textContent = b.name;
+        const p = document.createElement('span'); p.className = 'fi__preis'; p.textContent = `${cart.dauer(b.min)} · ${cart.euro(b.preis)}`;
+        kopf.append(h, p);
+        const l = document.createElement('p'); l.className = 'fi__linie'; l.textContent = linie[b.linie];
+        const t = document.createElement('p'); t.textContent = b.text;
+        const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'btn btn--ghost';
+        const upd = () => { btn.textContent = cart.has(b.id) ? 'In der Anfrage ✓' : 'In die Anfrage übernehmen'; btn.setAttribute('aria-pressed', String(cart.has(b.id))); };
+        btn.addEventListener('click', () => { cart.toggle(b.id); upd(); });
+        addEventListener('zf:cart', upd); upd();
+        li.append(kopf, l, t, btn); return li;
+      }));
+      const wasHidden = erg.hidden; erg.hidden = false;
+      if (scroll && wasHidden) {
+        const r = erg.getBoundingClientRect();
+        if (r.top > innerHeight * 0.6) erg.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+      }
+    }
+    root.addEventListener('change', () => rechnen(true));
+    rechnen(false);
+  });
+</script>

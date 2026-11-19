@@ -14,7 +14,7 @@ const fragen = [
 ---
 <section class="fi section" id={id} aria-labelledby={`${id}-h`} data-finder>
   <div class={`wrap fi__wrap ${foto ? 'fi__wrap--foto' : ''}`}>
-    {foto && <div class="fi__foto"><Foto name="pflege-1x1" alt="Glas mit Zuckerpaste, Pflegefläschchen und Handtuch auf Leinen" sizes="(min-width: 64rem) 30rem, 0px" /></div>}
+    {foto && <div class="fi__foto"><Foto name={typeof foto === 'string' ? foto : 'gesicht-3x4'} alt="Kundin mit Handtuch im Haar bei einer ruhigen Gesichtsbehandlung" sizes="(min-width: 64rem) 30rem, 92vw" /></div>}
     <div class="fi__karte">
       <h2 id={`${id}-h`}>{titel}</h2>
       <div class="fi__kopf">
@@ -48,7 +48,7 @@ const fragen = [
 </section>
 
 <style>
-  .fi__wrap { display: grid; gap: var(--space-xl); }
+  .fi__wrap { display: grid; gap: 0; }
   .fi__karte { position: relative; background: linear-gradient(160deg, #FBF6F0 0%, #F1E6DB 100%); border-radius: 28px; padding: clamp(1.3rem, 4.5vw, 2.8rem); box-shadow: 0 1px 0 #fff inset, 0 30px 60px -40px rgba(80, 40, 10, 0.45); overflow: hidden; }
   .fi__karte h2 { font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem); }
   .fi__kopf { display: grid; gap: 0.7rem; margin-top: var(--space-lg); }
@@ -59,7 +59,7 @@ const fragen = [
   .fi__faden i { position: absolute; left: 7px; top: 4px; height: 6px; border-radius: 6px; width: 0; max-width: calc(100% - 14px); background: linear-gradient(180deg, #FFD983, #E49B1F); box-shadow: 0 0 8px rgba(227, 162, 31, 0.6); transition: width 0.45s cubic-bezier(0.3, 0.9, 0.3, 1); }
   .fi__faden b { position: relative; width: 14px; height: 14px; border-radius: 50%; background: #F4EADF; border: 2px solid #CDB9A6; transition: background 0.3s, border-color 0.3s; }
   .fi__faden b.an { background: radial-gradient(circle at 35% 30%, #FFE9AE, #E49B1F 70%); border-color: #C98410; }
-  .fi__buehne { margin-top: var(--space-lg); min-height: 17rem; }
+  .fi__buehne { margin-top: var(--space-lg); }
   .fi__frage { border: 0; padding: 0; margin: 0; min-width: 0; animation: schritt 0.34s cubic-bezier(0.2, 0.9, 0.3, 1); }
   .fi__frage[hidden], .fi__ergebnis[hidden] { display: none; }
   .fi__rueck .fi__frage { animation-name: schrittzu; }
@@ -88,14 +88,15 @@ const fragen = [
   .fi__tel { margin-top: 1rem; }
   .fi__tel[hidden] { display: none; }
   .fi__mehr { margin-top: var(--space-md); }
-  .fi__foto { display: none; }
+  .fi__foto { margin-bottom: -2.4rem; }
+  .fi__foto :global(img) { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: 50% 35%; border-radius: 28px 28px 0 0; }
   @media (min-width: 48rem) {
     .fi__opt--haut { grid-template-columns: 1fr 1fr; }
     .fi__opt--haut .fi__karteopt:last-child { grid-column: 1 / -1; }
   }
   @media (min-width: 64rem) {
     .fi__wrap--foto { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: var(--space-2xl); }
-    .fi__foto { display: block; }
+    .fi__foto { margin-bottom: 0; }
     .fi__foto :global(img) { border-radius: 999px 999px 28px 28px; aspect-ratio: 3 / 4; object-fit: cover; box-shadow: 0 30px 60px -36px rgba(80, 40, 10, 0.6); }
     .fi__wrap:not(.fi__wrap--foto) { max-width: 52rem; }
   }

@@ -2,7 +2,7 @@
 /** Калькулятор зон: фигура лежит на кушетке (вид сверху), зоны заливаются мёдом, цена подписью у зоны.
  *  Фигуры — готовые SVG (src/lib/koerper.mjs, MIT). Лицо — отдельная вкладка «Gesicht». Один экран: заголовок, переключатели, фигура, быстрые чипы. */
 import { ANSICHTEN } from '../lib/koerper.mjs';
-import { figur, GESICHT, GESICHT_LINIEN } from '../lib/figur.mjs';
+import { GESICHTER, GESICHT_VB } from '../lib/gesicht.mjs';
 import { euro, dauer } from '../lib/fmt.mjs';
 import zonenData from '../data/zonen.json';
 const { titel = 'Was soll glatt werden?', id = 'zonen', mehr = true } = Astro.props;
@@ -11,17 +11,18 @@ const Z = Object.fromEntries(zonenData.zonen.map((z) => [z.id, z]));
 const label = (zid) => `${Z[zid].name}, ${Z[zid].ab ? 'ab ' : ''}${euro(Z[zid].preis)}`;
 const liste = (g) => zonenData.zonen.filter((z) => z.g === g);
 const extras = (g) => zonenData.zonen.filter((z) => z.seite === 'liste' && z.g === g);
-const gesichtListe = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id === 'd-gesicht');
-const F = figur('damen', 'vorne');
-const FACE_VB = '84 4 132 168';
+const istGesicht = (z) => z.seite === 'gesicht' || z.id === 'd-gesicht';
+const gesichtListe = (g) => zonenData.zonen.filter((z) => z.g === g && istGesicht(z));
 const anchors = {};
 ANSICHTEN.forEach((v) => v.zonen.forEach((z) => { anchors[`${v.key}:${z.zone}`] = { a: z.a, s: z.s }; }));
 anchors['damen-vorne:gesicht'] = { a: [330, 150], s: 'r' };
-GESICHT.forEach((z) => { anchors[`gesicht:${z.zone}`] = { a: z.anchor, s: z.side }; });
-anchors['gesicht:d-hals'] = { a: [162, 104], s: 'r' };
-anchors['gesicht:d-gesicht'] = { a: [156, 83], s: 'r' };
+anchors['herren-vorne:gesicht'] = { a: [376, 228], s: 'r' };
+Object.entries(GESICHTER).forEach(([g, F]) => F.zonen.forEach((z) => { anchors[`gesicht-${g}:${z.zone}`] = { a: z.a, s: z.s }; }));
+anchors['gesicht-damen:d-gesicht'] = { a: GESICHTER.damen.gesamt, s: 'r' };
+// Kopf antippen → Gesicht (Mittelpunkt und Radius in der jeweiligen viewBox)
+const KOPF_HIT = { 'damen-vorne': [320, 150, 62], 'herren-vorne': [364, 226, 58] };
 const kurz = Object.fromEntries(zonenData.zonen.map((z) => [z.id, z.kurz]));
-const gesichtIds = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id === 'd-gesicht').map((z) => z.id);
+const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
 ---
 <section class="zr dunkel" id={id} aria-labelledby={`${id}-h`} data-zr data-anchors={JSON.stringify(anchors)} data-kurz={JSON.stringify(kurz)} data-gesicht-ids={JSON.stringify(gesichtIds)}>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -52,7 +53,7 @@ const gesichtIds = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id =
         <div class="seg" role="radiogroup" aria-label="Ansicht">
           <label><input type="radio" name={`${id}-s`} value="vorne" checked /><span>Vorne</span></label>
           <label><input type="radio" name={`${id}-s`} value="hinten" /><span>Hinten</span></label>
-          <label data-nur="damen"><input type="radio" name={`${id}-s`} value="gesicht" /><span>Gesicht</span></label>
+          <label><input type="radio" name={`${id}-s`} value="gesicht" /><span>Gesicht</span></label>
         </div>
       </div>
 
@@ -80,8 +81,9 @@ const gesichtIds = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id =
                 </g>
                 {v.haar.map((d) => <path d={d} class="haar" />)}
               </g>
-              {v.zonen.map((z) => (
-                <g class="zone" data-zone={z.zone} role="checkbox" aria-checked="false" tabindex="-1" aria-label={label(z.zone)}>
+              {KOPF_HIT[v.key] && <circle class="zr__kopf" data-zum-gesicht cx={KOPF_HIT[v.key][0]} cy={KOPF_HIT[v.key][1]} r={KOPF_HIT[v.key][2]} role="button" tabindex="-1" aria-label="Gesicht: Zonen zeigen" />}
+              {v.zonen.map((z, i) => (
+                <g class="zone" data-zone={z.zone} role="checkbox" aria-checked="false" tabindex="-1" aria-label={label(z.zone)} style={`--i:${i}`}>
                   <g class="zone__glanz" clip-path={`url(#${id}-${v.key}-rand)`}>
                     <g filter={`url(#${id}-glanz)`}><use href={`#${id}-${v.key}-${z.zone}`} fill={`url(#${id}-honig)`} stroke={`url(#${id}-honig)`} stroke-width="40" stroke-linejoin="round" /></g>
                   </g>
@@ -92,57 +94,71 @@ const gesichtIds = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id =
           );
         })}
 
-        <svg class="fig" viewBox={FACE_VB} data-view="gesicht" data-on="0" role="group" aria-label="Gesicht: Zonen auswählen">
-          <defs>
-            <clipPath id={`${id}-gk`}><path d={F.body} /></clipPath>
-            <linearGradient id={`${id}-gp`} x1="0" x2="1"><stop offset="0" stop-color="#C7B19E" /><stop offset="0.5" stop-color="#F6EEE6" /><stop offset="1" stop-color="#C7B19E" /></linearGradient>
-            {GESICHT.map((z, i) => <clipPath id={`${id}-g${i}`}><path d={z.area} /></clipPath>)}
-            <clipPath id={`${id}-ghals`}><path d="M128 86H172V117H128Z" /></clipPath>
-          </defs>
-          <rect x="88" y="96" width="124" height="80" rx="24" opacity="0" fill={`url(#${id}-liege2)`} />
-          <g fill={`url(#${id}-gp)`}><path d={F.body} /><path d={F.face} /></g>
-          <path class="haar" d={F.haar} />
-          <path class="gesicht__linien" d={GESICHT_LINIEN} />
-          <g class="zone" data-zone="d-hals" role="checkbox" aria-checked="false" tabindex="-1" aria-label={label('d-hals')}>
-            <g class="zone__glanz" clip-path={`url(#${id}-gk)`}><g clip-path={`url(#${id}-ghals)`}><rect x="120" y="80" width="60" height="44" fill={`url(#${id}-honig)`} /></g></g>
-            <rect class="zone__hit" x="124" y="86" width="52" height="32" />
-          </g>
-          {GESICHT.map((z, i) => (
-            <g class="zone" data-zone={z.zone} role="checkbox" aria-checked="false" tabindex="-1" aria-label={label(z.zone)}>
-              <g class="zone__glanz"><g clip-path={`url(#${id}-g${i})`}><circle cx="150" cy="60" r="60" fill={`url(#${id}-honig)`} /></g><path d={z.area} fill="none" stroke="#FFD98A" stroke-width="1.6" /></g>
-              <path class="zone__umriss" d={z.area} />
-              <path class="zone__hit" d={z.hit} />
-            </g>
-          ))}
-        </svg>
+        {(['damen', 'herren'] as const).map((g) => {
+          const F = GESICHTER[g];
+          return (
+            <svg class="fig fig--gesicht" viewBox={GESICHT_VB} data-view={`gesicht-${g}`} data-on="0" role="group" aria-label={`Gesicht ${g === 'damen' ? 'Damen' : 'Herren'}: Zonen auswählen`}>
+              <defs>
+                <clipPath id={`${id}-${g}-hals`}><path d={F.hals} /></clipPath>
+                <linearGradient id={`${id}-${g}-gp`} x1="0" x2="1"><stop offset="0" stop-color="#C9B3A0" /><stop offset="0.5" stop-color="#F6EEE6" /><stop offset="1" stop-color="#C9B3A0" /></linearGradient>
+              </defs>
+              <g aria-hidden="true">
+                <path d={F.haarHinten} class="haar haar--hinten" />
+                <path d={F.hals} fill={`url(#${id}-${g}-gp)`} />
+                <path d={F.ohren} class="g__ohr" />
+                <path d={F.kopf} fill={`url(#${id}-${g}-gp)`} />
+                {F.wangen && <path d={F.wangen} class="g__wange" />}
+                <path d={F.haarVorne} class="haar" />
+                <path d={F.straehnen} class="g__straehne" />
+                <path d={F.brauen} class="g__braue" />
+                {F.lippen && <path d={F.lippen} class="g__lippe" />}
+                <path d={F.linien} class="g__linie" />
+              </g>
+              {F.zonen.map((z, i) => (
+                <g class="zone" data-zone={z.zone} role="checkbox" aria-checked="false" tabindex="-1" aria-label={label(z.zone)} style={`--i:${i}`}>
+                  <g class="zone__glanz" clip-path={z.clipHals ? `url(#${id}-${g}-hals)` : undefined}><path d={z.area} fill={`url(#${id}-honig)`} stroke="#FFE2A0" stroke-width="0.7" /></g>
+                  <path class="zone__umriss" d={z.area} clip-path={z.clipHals ? `url(#${id}-${g}-hals)` : undefined} />
+                  <path class="zone__hit" d={z.hit} />
+                </g>
+              ))}
+            </svg>
+          );
+        })}
 
         <svg class="zr__leitungen" data-leitungen aria-hidden="true"></svg>
         <div class="zr__labels" data-labels aria-hidden="true"></div>
-        <div class="kombi" data-kombi hidden role="status">
-          <p data-kombi-text></p>
-          <div class="kombi__btns"><button type="button" class="btn kombi__ja" data-kombi-ja>Übernehmen</button><button type="button" class="btn btn--ghost" data-kombi-nein>Nein danke</button></div>
-        </div>
         <p class="sr" data-info aria-live="polite"></p>
       </div>
 
       <div class="zr__fuss">
+        <div class="kombi kombi--fuss" data-kombi hidden role="status">
+          <p data-kombi-text></p>
+          <button type="button" class="btn btn--klein" data-kombi-ja>Übernehmen</button>
+          <button type="button" class="kombi__x" data-kombi-nein aria-label="Nein danke">×</button>
+        </div>
         {['damen', 'herren'].map((g) => (
           <div class="zr__chips" data-fuss={g} hidden={g !== 'damen'}>
             {extras(g).map((z) => <button type="button" class="extra" data-toggle={z.id} aria-pressed="false">{z.name} <span class="preis">{z.ab ? 'ab ' : ''}{euro(z.preis)}</span></button>)}
           </div>
         ))}
-        <div class="zr__chips" data-fuss="gesicht" hidden>
-          {gesichtListe.map((z) => <button type="button" class="extra" data-toggle={z.id} aria-pressed="false">{z.kurz} <span class="preis">{euro(z.preis)}</span></button>)}
-        </div>
+        {['damen', 'herren'].map((g) => (
+          <div class="zr__chips" data-fuss={`gesicht-${g}`} hidden>
+            {gesichtListe(g).map((z) => <button type="button" class="extra" data-toggle={z.id} aria-pressed="false">{z.kurz} <span class="preis">{euro(z.preis)}</span></button>)}
+          </div>
+        ))}
       </div>
     </div>
 
     <div class="zr__seite">
-      <div class="zr__summe" data-summe>
+      <div class="zr__summe" data-summe data-pille-weg>
         <p class="zr__leer" data-leer>Noch keine Zone gewählt.</p>
         <div data-voll hidden>
           <p class="zr__zahl"><span data-n></span><strong class="num" data-s></strong></p>
           <p class="muted num" data-d></p>
+          <div class="kombi kombi--karte" data-kombi hidden role="status">
+            <p data-kombi-text></p>
+            <div class="kombi__btns"><button type="button" class="btn btn--klein" data-kombi-ja>Übernehmen</button><button type="button" class="btn btn--ghost btn--klein" data-kombi-nein>Nein danke</button></div>
+          </div>
           <a class="btn zr__weiter" href={`${base}termin/`}>Mit dieser Auswahl Termin anfragen</a>
         </div>
         <p class="small muted zr__hinweis">{zonenData.hinweis} Bei einer Gesichtsbehandlung ist die Haarentfernung im Gesicht inklusive.</p>
@@ -188,7 +204,19 @@ const gesichtIds = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id =
   .fig { position: absolute; inset: 0; height: 100%; width: 100%; overflow: visible; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .fig[data-on='0'] { display: none; }
   .fig[data-on='1'] { animation: ein 0.28s ease-out; }
-  .fig[data-view='gesicht'] { overflow: hidden; }
+  .fig--gesicht { overflow: hidden; }
+  .haar--hinten { fill: #5E4436; }
+  .g__ohr { fill: #E6D6C6; stroke: #B59C88; stroke-width: 0.6; }
+  .g__wange { fill: #E7B4A2; opacity: 0.35; }
+  .g__straehne { fill: none; stroke: #8A6A57; stroke-width: 0.7; }
+  .g__braue { fill: #6B4E3F; }
+  .g__lippe { fill: #C98F84; opacity: 0.7; }
+  .g__linie { fill: none; stroke: #5A4538; stroke-width: 0.9; stroke-linecap: round; stroke-linejoin: round; }
+  .zr__kopf { fill: transparent; cursor: pointer; outline: none; }
+  .zr__kopf:hover, .zr__kopf:focus-visible { fill: rgba(227, 162, 31, 0.14); }
+  /* Einladung: beim ersten Sichtbarwerden leuchten die Zonen einmal nacheinander auf */
+  :global(.zr.einladen .fig[data-on='1'] .zone[aria-checked='false'] .zone__glanz) { display: inline; animation: einladen 1.2s ease-in-out both; animation-delay: calc(var(--i) * 0.14s + 0.15s); }
+  @keyframes einladen { 0%, 100% { opacity: 0; } 45% { opacity: 0.55; } }
   @keyframes ein { from { opacity: 0; } }
   .haar { fill: #6E5243; }
   :global(.zone) { cursor: pointer; outline: none; }
@@ -198,8 +226,8 @@ const gesichtIds = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id =
   @keyframes glasur { from { opacity: 0; } }
   :global(.zone:hover .zone__hit) { fill: rgba(227, 162, 31, 0.16); stroke: rgba(227, 162, 31, 0.16); }
   :global(.zone:focus-visible .zone__hit) { fill: rgba(227, 162, 31, 0.3); stroke: rgba(227, 162, 31, 0.3); }
-  .gesicht__linien { fill: none; stroke: #5A4538; stroke-width: 0.55; stroke-linecap: round; }
-  :global(.zone__umriss) { fill: none; stroke: #A27A5F; stroke-width: 0.45; stroke-dasharray: 1 1; }
+  :global(.zone__umriss) { fill: rgba(227, 162, 31, 0.08); stroke: #C08A3E; stroke-width: 0.6; stroke-dasharray: 2 1.6; pointer-events: none; }
+  :global(.zone[aria-checked='true'] .zone__umriss) { display: none; }
   .zr__leitungen { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
   .zr__leitungen :global(line) { stroke: rgba(255, 210, 122, 0.75); stroke-width: 1; }
   .zr__leitungen :global(circle) { fill: var(--honig-hell); }
@@ -209,13 +237,17 @@ const gesichtIds = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id =
   .zr__labels :global(.lbl__n) { font-size: 0.8125rem; color: var(--licht); }
   .zr__labels :global(.lbl__p) { font-size: 1rem; font-weight: 700; color: var(--honig-hell); font-variant-numeric: tabular-nums; }
   @keyframes lbl { from { opacity: 0; transform: translateY(4px); } }
-  .kombi { position: absolute; left: 0; right: 0; bottom: 0.2rem; z-index: 4; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 0.8rem; padding: 0.7rem 0.9rem; border-radius: 18px; background: var(--weiss); color: var(--tinte); box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.7); animation: rein 0.25s ease-out; }
-  .kombi[hidden] { display: none; }
+  .kombi[hidden] { display: none !important; }
+  .kombi p { font-weight: 600; line-height: 1.3; }
+  .kombi--karte { margin-top: 1rem; padding: 0.8rem 0.9rem; border-radius: 14px; background: rgba(255, 210, 122, 0.12); border: 1px solid rgba(255, 210, 122, 0.4); display: grid; gap: 0.6rem; animation: rein 0.25s ease-out; }
+  .kombi__btns { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .kombi--karte .btn--ghost { color: var(--licht); border-color: rgba(246, 239, 231, 0.5); }
+  .zr__fuss { position: relative; }
+  .kombi--fuss { position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.45rem 0.45rem 0.9rem; border-radius: 18px; background: var(--weiss); color: var(--tinte); box-shadow: 0 16px 30px -18px rgba(0, 0, 0, 0.8); animation: rein 0.25s ease-out; }
+  .kombi--fuss p { flex: 1; font-size: 0.9rem; }
+  .kombi__x { flex: none; width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 1.5px solid var(--linie); background: none; font-size: 1.2rem; color: var(--tinte); cursor: pointer; }
   @keyframes rein { from { opacity: 0; transform: translateY(8px); } }
-  .kombi p { font-weight: 600; font-size: 0.95rem; line-height: 1.3; flex: 1 1 11rem; }
-  .kombi__btns { display: flex; gap: 0.4rem; }
-  .kombi__btns .btn { min-height: 2.6rem; padding: 0.4rem 0.9rem; font-size: 0.95rem; }
-  .kombi__btns .btn--ghost { color: var(--tinte); border-color: var(--tinte); }
+  @media (min-width: 64rem) { .kombi--fuss { display: none !important; } }
 
   .zr__summe { padding: 1.2rem 1.3rem; background: var(--nacht-2); border: 1px solid var(--nacht-3); border-radius: 20px; }
   .zr__leer { font-weight: 500; }
@@ -256,20 +288,18 @@ const gesichtIds = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id =
     const reduce = matchMedia('(prefers-reduced-motion: reduce)');
     let g = 'damen', s = 'vorne';
     const vib = () => { try { if (!reduce.matches) navigator.vibrate?.(8); } catch {} };
-    const key = () => (s === 'gesicht' ? 'gesicht' : `${g}-${s}`);
+    const key = () => (s === 'gesicht' ? `gesicht-${g}` : `${g}-${s}`);
     const activeSvg = () => $<SVGSVGElement>(`.fig[data-view="${key()}"]`);
 
     function view() {
-      if (g !== 'damen' && s === 'gesicht') s = 'vorne';
       $$('.fig').forEach((v) => {
         const on = v.dataset.view === key(); v.dataset.on = on ? '1' : '0';
-        v.querySelectorAll<SVGGElement>('.zone').forEach((z) => (z.tabIndex = on ? 0 : -1));
+        v.querySelectorAll<SVGElement>('.zone, .zr__kopf').forEach((z) => (z.tabIndex = on ? 0 : -1));
       });
-      $$<HTMLElement>('[data-nur]').forEach((l) => (l.hidden = l.dataset.nur !== g));
       $$<HTMLInputElement>('.seg input').forEach((r) => { if (r.name.endsWith('-g')) r.checked = r.value === g; if (r.name.endsWith('-s')) r.checked = r.value === s; });
       $$('.zr__liste ul').forEach((u) => (u.hidden = u.dataset.g !== g));
-      $$('[data-fuss]').forEach((c) => (c.hidden = c.dataset.fuss !== (s === 'gesicht' ? 'gesicht' : g)));
-      labelsRender();
+      $$('[data-fuss]').forEach((c) => (c.hidden = c.dataset.fuss !== (s === 'gesicht' ? `gesicht-${g}` : g)));
+      sync();
     }
 
     // Подписи у выбранных зон
@@ -287,7 +317,7 @@ const gesichtIds = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id =
         if (l.art !== 'zone' || l.g !== g) continue;
         const id = l.id;
         if (gesichtIds.includes(id)) {
-          if (s === 'gesicht') add(id, `gesicht:${id}`);
+          if (s === 'gesicht') add(id, `gesicht-${g}:${id}`);
           else { gesichtN++; if (!l.gratis) gesichtSum += l.preis; gesichtEin = id; }
           continue;
         }
@@ -295,7 +325,7 @@ const gesichtIds = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id =
         if (id.endsWith('-beine')) { add(id, `${k}:${g === 'damen' ? 'd' : 'h'}-oberschenkel`); continue; }
         add(id, `${k}:${id}`);
       }
-      if (gesichtN && k === 'damen-vorne') add(gesichtEin, 'damen-vorne:gesicht', gesichtN === 1 ? kurz[gesichtEin] : 'Gesicht', eur(gesichtSum));
+      if (gesichtN && k === `${g}-vorne`) add(gesichtEin, `${k}:gesicht`, gesichtN === 1 ? kurz[gesichtEin] : 'Gesicht', eur(gesichtSum));
 
       const svg = activeSvg();
       const m = svg.getScreenCTM(); const sr = stage.getBoundingClientRect();
@@ -337,9 +367,15 @@ const gesichtIds = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id =
         $('[data-s]').textContent = (c.ab ? 'ab ' : '') + eur(c.summe);
         $('[data-d]').textContent = 'Dauer ca. ' + cart.dauer(c.min);
       }
-      const k = cart.kombiHint(), kb = $('[data-kombi]');
-      if (k) { $('[data-kombi-text]').textContent = `${k.durch.name} ist günstiger: ${eur(k.durch.preis)} statt ${eur(k.durch.preis + k.spart)}.`; kb.dataset.id = k.durch.id; kb.hidden = false; }
-      else kb.hidden = true;
+      const k = cart.kombiHint();
+      $$('[data-kombi]').forEach((kb) => {
+        const hier = !kb.classList.contains('kombi--fuss') || (!!k && s !== 'gesicht' && cart.item(k.durch.id)?.g === g);
+        kb.hidden = !k || !hier; if (!k) return;
+        kb.dataset.id = k.durch.id;
+        kb.querySelector('[data-kombi-text]')!.textContent = kb.classList.contains('kombi--fuss')
+          ? `${k.durch.name} für ${eur(k.durch.preis)} statt ${eur(k.durch.preis + k.spart)}`
+          : `${k.durch.name} ist günstiger: ${eur(k.durch.preis)} statt ${eur(k.durch.preis + k.spart)}.`;
+      });
       labelsRender();
     }
     function toggle(id: string) {
@@ -353,14 +389,17 @@ const gesichtIds = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id =
       if (z) { toggle(z.dataset.zone!); return; }
       const b = t.closest<HTMLElement>('button[data-toggle]');
       if (b) { toggle(b.dataset.toggle!); return; }
-      if (t.closest('[data-kombi-ja]')) { cart.applyKombi($('[data-kombi]').dataset.id!); return; }
-      if (t.closest('[data-kombi-nein]')) { cart.dismissKombi($('[data-kombi]').dataset.id!); return; }
+      const kj = t.closest('[data-kombi-ja]'), kn = t.closest('[data-kombi-nein]');
+      if (kj) { cart.applyKombi(kj.closest<HTMLElement>('[data-kombi]')!.dataset.id!); return; }
+      if (kn) { cart.dismissKombi(kn.closest<HTMLElement>('[data-kombi]')!.dataset.id!); return; }
+      if (t.closest('[data-zum-gesicht]')) { s = 'gesicht'; view(); return; }
       if (t.closest('[data-herren-link]')) { g = 'herren'; s = 'hinten'; view(); }
     });
     root.addEventListener('keydown', (e) => {
       if (e.key !== 'Enter' && e.key !== ' ') return;
       const z = (e.target as Element).closest?.<SVGGElement>('.zone[data-zone]');
-      if (z) { e.preventDefault(); toggle(z.dataset.zone!); }
+      if (z) { e.preventDefault(); toggle(z.dataset.zone!); return; }
+      if ((e.target as Element).closest?.('[data-zum-gesicht]')) { e.preventDefault(); s = 'gesicht'; view(); }
     });
     root.addEventListener('change', (e) => {
       const i = e.target as HTMLInputElement;
@@ -369,7 +408,15 @@ const gesichtIds = zonenData.zonen.filter((z) => z.seite === 'gesicht' || z.id =
       if (i.name?.endsWith('-s')) { s = i.value; view(); }
     });
     addEventListener('zf:geschlecht', (e) => { g = (e as CustomEvent).detail; s = 'hinten'; view(); });
-    if (matchMedia('(min-width: 64rem)').matches) ($('[data-liste]') as HTMLDetailsElement).open = true;
+    // Einladung einmal, wenn der Rechner ins Bild kommt (nicht bei reduzierter Bewegung, nicht wenn schon etwas gewählt ist)
+    if (!reduce.matches) {
+      const io = new IntersectionObserver((es) => {
+        if (!es[0].isIntersecting) return; io.disconnect();
+        if (cart.get().lines.length) return;
+        root.classList.add('einladen'); setTimeout(() => root.classList.remove('einladen'), 2600);
+      }, { threshold: 0.45 });
+      io.observe(stage);
+    }
     new ResizeObserver(() => labelsRender()).observe(stage);
     addEventListener('zf:cart', sync);
     document.fonts?.ready.then(labelsRender);

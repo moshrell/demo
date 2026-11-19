@@ -236,6 +236,42 @@
       "kurz": "Bikinilinie"
     },
     {
+      "id": "h-brauen",
+      "g": "herren",
+      "seite": "gesicht",
+      "name": "Augenbrauen mit Zwischenraum",
+      "min": 10,
+      "preis": 12,
+      "kurz": "Augenbrauen"
+    },
+    {
+      "id": "h-nase",
+      "g": "herren",
+      "seite": "gesicht",
+      "name": "Nase und Ohren",
+      "min": 10,
+      "preis": 9,
+      "kurz": "Nase, Ohren"
+    },
+    {
+      "id": "h-wangen",
+      "g": "herren",
+      "seite": "gesicht",
+      "name": "Wangen (Bartkontur)",
+      "min": 10,
+      "preis": 12,
+      "kurz": "Bartkontur"
+    },
+    {
+      "id": "h-hals",
+      "g": "herren",
+      "seite": "gesicht",
+      "name": "Hals und Nacken",
+      "min": 10,
+      "preis": 14,
+      "kurz": "Hals, Nacken"
+    },
+    {
       "id": "h-intim",
       "g": "herren",
       "seite": "liste",

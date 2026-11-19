@@ -17,7 +17,7 @@ const schritte = [
 <Base title="Kosmetik Zuckerfaden: Sugaring und Gesichtspflege in Ronnenberg" description="Sugaring mit warmer Zuckerpaste und Gesichtspflege ohne Geräte in Ronnenberg. Preise für Ihre Zonen sofort berechnen, Termin anfragen. Dienstag und Donnerstag bis 22 Uhr." aktiv="start">
   <Held />
   <Zonenrechner />
-  <Finder />
+  <Finder foto="gesicht-3x4" />
 
   <section class="ablauf section" aria-labelledby="ablauf-h">
     <div class="wrap ablauf__grid">
@@ -81,8 +81,9 @@ const schritte = [
     <div class="wrap meinung__wrap">
       <h2 id="meinung-h">Sagen Sie mir, was Ihnen gefällt</h2>
       <p class="lede">Und was ich besser machen kann. Ihre Rückmeldung nach der Behandlung ist mir wichtig, persönlich oder als Bewertung.</p>
-      <p><a class="btn btn--ghost" href={site.googleReviewsUrl === 'TODO' ? '#' : site.googleReviewsUrl}>Bewertungen auf Google lesen</a></p>
-      {site.googleReviewsUrl === 'TODO' && <p class="small muted">Demo: Hier steht beim echten Studio der Link zum Google-Profil.</p>}
+      {site.googleReviewsUrl === 'TODO'
+        ? <p class="meinung__demo"><span class="btn btn--ghost is-aus" aria-disabled="true">Bewertungen auf Google lesen</span><span class="small muted">Demo: Beim echten Studio führt dieser Knopf zum Google-Profil.</span></p>
+        : <p><a class="btn btn--ghost" href={site.googleReviewsUrl} target="_blank" rel="noopener">Bewertungen auf Google lesen</a></p>}
     </div>
   </section>
 </Base>
@@ -128,4 +129,6 @@ const schritte = [
   @media (min-width: 48rem) { .gs__grid { grid-template-columns: minmax(0, 26rem) minmax(0, 1fr); align-items: center; gap: var(--space-xl); } }
 
   .meinung__wrap { max-width: 46rem; display: grid; gap: var(--space-md); }
+  .meinung__demo { display: grid; gap: 0.5rem; justify-items: start; }
+  .is-aus { opacity: 0.45; cursor: default; pointer-events: none; }
 </style>

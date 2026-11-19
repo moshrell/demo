@@ -65,22 +65,12 @@ const wa = `https://wa.me/${site.whatsapp}`;
   </head>
   <body data-leiste={leiste}>
     <a class="skip" href="#inhalt">Zum Inhalt</a>
-    {site.fontSwitcher && (
-      <div class="schrift" data-schrift>
-        <button type="button" class="schrift__knopf" data-schrift-knopf aria-expanded="false" aria-controls="schrift-panel" aria-label="Schrift wechseln (nur in der Demo)"><span aria-hidden="true">Aa</span></button>
-        <div class="schrift__panel" id="schrift-panel" role="group" aria-label="Schriftprobe (nur in der Demo)" hidden>
-          <p class="schrift__titel">Schrift testen <span>nur in der Demo</span></p>
-          {fonts.paare.map((p) => (
-            <label><input type="radio" name="schrift" value={p.id} /><span><b>{p.kurz}</b><i>{p.name}</i></span></label>
-          ))}
-        </div>
-      </div>
-    )}
     <header class="kopf dunkel">
       <div class="wrap kopf__in">
         <a class="kopf__name" href={base} aria-label={`${site.name}, Startseite`}>
           <span class="kopf__marke">Zuckerfaden</span>
           <span class="kopf__zeile">Kosmetik · {site.address.city}</span>
+          <span class="kopf__heute" data-heute></span>
         </a>
         <nav class="kopf__kapsel" aria-label="Hauptmenü">
           <div class="kopf__nav">
@@ -91,6 +81,17 @@ const wa = `https://wa.me/${site.whatsapp}`;
             : <a class="leiste__haupt" href={`${base}termin/`}>Termin anfragen</a>}
           <a class="kopf__tel" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg>{site.phone}</a>
         </nav>
+        {site.fontSwitcher && (
+          <div class="schrift" data-schrift>
+            <button type="button" class="schrift__knopf" data-schrift-knopf aria-expanded="false" aria-controls="schrift-panel" aria-label="Schrift wechseln (nur in der Demo)"><span aria-hidden="true">Aa</span></button>
+            <div class="schrift__panel" id="schrift-panel" role="group" aria-label="Schriftprobe (nur in der Demo)" hidden>
+              <p class="schrift__titel">Schrift testen <span>nur in der Demo</span></p>
+              {fonts.paare.map((p) => (
+                <label><input type="radio" name="schrift" value={p.id} /><span><b>{p.kurz}</b><i>{p.name}</i></span></label>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </header>
 
@@ -108,7 +109,7 @@ const wa = `https://wa.me/${site.whatsapp}`;
               <li><span>Telefon</span> <a href={tel}>{site.phone}</a></li>
               <li><span>Mobil</span> <a href={`tel:${site.mobile.replace(/\D/g, '').replace(/^0/, '+49')}`}>{site.mobile}</a></li>
               <li><span>WhatsApp</span> <a href={wa} target="_blank" rel="noopener">Nachricht schreiben</a></li>
-              <li><span>E-Mail</span> <a href={`mailto:${site.email}`}>{site.email}</a></li>
+              <li><span>E-Mail</span> <a class="karte__mail" href={`mailto:${site.email}`}>{site.email.split('@')[0]}<wbr />@{site.email.split('@')[1]}</a></li>
             </ul>
           </div>
           <div class="karte__zeiten">
@@ -154,6 +155,14 @@ const wa = `https://wa.me/${site.whatsapp}`;
         {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label === 'Gesicht' ? 'Gesichtspflege' : n.label}</a>)}
         <a href={`${base}termin/`}>Termin anfragen</a>
       </nav>
+      {site.fontSwitcher && (
+        <div class="sheet__schrift" role="group" aria-label="Schriftprobe (nur in der Demo)">
+          <p class="sheet__schrift-t">Schrift testen <span>nur in der Demo</span></p>
+          <div class="sheet__schrift-w">
+            {fonts.paare.map((p) => <label><input type="radio" name="schrift" value={p.id} /><span title={p.name}>{p.kurz}</span></label>)}
+          </div>
+        </div>
+      )}
       <div class="sheet__info">
         <p data-status></p>
         <p>{site.address.street}, {site.address.zip} {site.address.city} · <a href={site.mapUrl} target="_blank" rel="noopener">Karte</a></p>
@@ -163,6 +172,7 @@ const wa = `https://wa.me/${site.whatsapp}`;
     <dialog class="sheet" data-dialog="auswahl" aria-labelledby="auswahl-t">
       <div class="sheet__kopf"><p class="sheet__titel" id="auswahl-t">Ihre Auswahl</p><button type="button" class="sheet__zu" data-close aria-label="Auswahl schließen">Schließen</button></div>
       <ul class="auswahl" data-auswahl-liste></ul>
+      <div class="auswahl__kombi" data-auswahl-kombi hidden><p data-auswahl-kombi-text></p><button type="button" class="btn btn--klein" data-auswahl-kombi-ja>Übernehmen</button></div>
       <p class="auswahl__summe"><span>Summe <strong class="num" data-auswahl-summe></strong></span><span class="muted num" data-auswahl-dauer></span></p>
       <p class="small muted">Richtwert. Abgerechnet wird nach Zeit und Material.</p>
       <div class="btn-row sheet__aktion">
@@ -181,10 +191,10 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .skip { position: absolute; left: -999px; top: 0.5rem; background: var(--tinte); color: var(--weiss); padding: 0.6rem 1rem; border-radius: 999px; z-index: 100; }
   .skip:focus { left: 0.5rem; }
 
-  /* Переключатель шрифтов: выдвижной, только в демо */
-  .schrift { position: fixed; z-index: 60; top: calc(env(safe-area-inset-top, 0px) + 0.55rem); right: 0.6rem; font-family: 'Albert Sans Variable', system-ui, sans-serif; }
-  .schrift__knopf { width: 2.9rem; height: 2.9rem; border-radius: 50%; border: 1px solid rgba(246, 239, 231, 0.28); background: rgba(27, 17, 11, 0.86); color: var(--honig-hell); font: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
-  .schrift__panel { position: absolute; top: 3.5rem; right: 0; width: min(19rem, calc(100vw - 1.2rem)); display: grid; gap: 0.2rem; padding: 0.7rem; border-radius: 20px; background: #120B07; border: 1px solid var(--nacht-3); box-shadow: 0 24px 50px -20px #000; animation: hoch 0.2s ease-out; }
+  /* Проба шрифтов (только демо): кнопка в шапке, не плавает над страницей; на телефоне ещё и в меню */
+  .schrift { position: relative; flex: none; font-family: 'Albert Sans Variable', system-ui, sans-serif; }
+  .schrift__knopf { width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1px solid rgba(246, 239, 231, 0.28); background: transparent; color: var(--honig-hell); font: inherit; font-weight: 700; font-size: 0.95rem; cursor: pointer; }
+  .schrift__panel { position: absolute; z-index: 60; top: 3.3rem; right: 0; width: min(19rem, calc(100vw - 1.2rem)); display: grid; gap: 0.2rem; padding: 0.7rem; border-radius: 20px; background: #120B07; border: 1px solid var(--nacht-3); box-shadow: 0 24px 50px -20px #000; animation: hoch 0.2s ease-out; }
   .schrift__panel[hidden] { display: none; }
   .schrift__titel { color: var(--licht); font-weight: 600; padding: 0.3rem 0.5rem 0.5rem; font-size: 0.95rem; }
   .schrift__titel span { color: var(--licht-2); font-weight: 400; margin-left: 0.4rem; font-size: 0.85rem; }
@@ -196,13 +206,25 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .schrift input:checked + span { background: var(--honig); color: var(--tinte); }
   .schrift input:checked + span b { border-color: var(--tinte); }
   .schrift input:focus-visible + span { outline: 2px solid var(--honig); outline-offset: 2px; }
+  .sheet__schrift { margin-top: 1.1rem; padding: 0.8rem 0.9rem; border-radius: 16px; background: var(--grau); }
+  .sheet__schrift-t { font-weight: 600; font-size: 0.95rem; }
+  .sheet__schrift-t span { font-weight: 400; color: var(--tinte-2); margin-left: 0.3rem; }
+  .sheet__schrift-w { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+  .sheet__schrift-w label { position: relative; flex: 1; }
+  .sheet__schrift-w input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .sheet__schrift-w span { display: grid; place-items: center; min-height: 2.75rem; border-radius: 12px; border: 1.5px solid var(--linie); font-weight: 700; background: var(--weiss); cursor: pointer; }
+  .sheet__schrift-w input:checked + span { border-color: var(--tinte); background: var(--tinte); color: var(--weiss); }
+  .sheet__schrift-w input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
 
   /* Мёд-капсула: готовая текстура (tools/honig-textur.mjs), края по 32 px, середина растягивается */
   .leiste__bar, .pille, .kopf__kapsel { border: solid transparent; border-width: 0 var(--cap, 32px); border-image: var(--leisteBild) 0 96 fill / 0 var(--cap, 32px) / 0 stretch; border-radius: 999px; box-shadow: 0 14px 26px -12px rgba(0, 0, 0, 0.7), 0 2px 0 rgba(120, 60, 0, 0.5); }
 
   /* Шапка */
   .kopf { position: relative; z-index: 30; }
-  .kopf__in { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding-block: 0.9rem; padding-right: 4rem; }
+  .kopf__in { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding-block: 0.8rem; }
+  .kopf__heute { font-size: 0.875rem; color: var(--licht); margin-top: 0.45rem; white-space: nowrap; }
+  .kopf__heute:empty { display: none; }
+  .kopf__heute b { font-weight: 600; color: var(--honig-hell); }
   .kopf__name { display: grid; text-decoration: none; line-height: 1; }
   .kopf__marke { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.75rem; letter-spacing: var(--display-tracking); }
   .kopf__zeile { font-size: 0.8125rem; color: var(--licht-2); margin-top: 0.3rem; letter-spacing: 0.02em; }
@@ -211,7 +233,8 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .kopf__kapsel { display: none; }
   @media (min-width: 64rem) {
     .kopf { position: sticky; top: 0; background: rgba(27, 17, 11, 0.94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-    .kopf__in { padding-right: calc(var(--gutter) + 3.6rem); padding-block: 0.7rem; }
+    .kopf__in { padding-block: 0.7rem; }
+    .kopf__kapsel { margin-left: auto; }
     .kopf__kapsel { --cap: 28px; display: flex; align-items: center; gap: 0.3rem; height: 56px; padding: 0; color: var(--tinte); }
     .kopf__nav { display: flex; gap: 0.1rem; }
     .kopf__kapsel .kopf__nav a { display: inline-flex; align-items: center; white-space: nowrap; min-height: 2.6rem; padding: 0 0.8rem; border-radius: 999px; text-decoration: none; font-weight: 600; color: var(--tinte); }
@@ -230,7 +253,7 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .karte__wege { list-style: none; padding: 0; margin: var(--space-lg) 0 0; display: grid; gap: 0.2rem; }
   .karte__wege li { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 0.5rem; align-items: center; }
   .karte__wege span { color: var(--tinte-2); font-size: var(--text-sm); }
-  .karte__wege a { overflow-wrap: anywhere; min-height: 2.75rem; display: inline-flex; align-items: center; }
+  .karte__wege a { overflow-wrap: normal; word-break: normal; min-height: 2.75rem; display: inline-flex; align-items: center; }
   .karte__titel { font-weight: var(--strong-weight); font-size: var(--text-lg); }
   .karte__status { margin: 0.2rem 0 0.9rem; color: var(--tinte-2); }
   .karte__status .punkt { background: #3E8E44; box-shadow: none; }
@@ -252,7 +275,7 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .leiste__btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
   .leiste__haupt { display: inline-flex; align-items: center; min-height: 3.1rem; padding: 0 1.3rem; border-radius: 999px; background: var(--tinte); color: var(--weiss); text-decoration: none; font-weight: var(--strong-weight); white-space: nowrap; box-shadow: 0 6px 14px -6px rgba(60, 25, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
   .pille { --cap: 24px; pointer-events: auto; display: inline-flex; align-items: center; gap: 0.8rem; height: 48px; padding: 0; font: inherit; font-weight: var(--strong-weight); color: var(--tinte); cursor: pointer; transition: transform 0.4s cubic-bezier(0.3, 1.35, 0.5, 1), opacity 0.25s; }
-  .pille[hidden] { display: inline-flex; visibility: hidden; opacity: 0; transform: translateY(40px) scale(0.6); }
+  .pille[hidden], .pille.pille--weg { display: inline-flex; visibility: hidden; opacity: 0; transform: translateY(40px) scale(0.6); pointer-events: none; }
   .pille__n { font-weight: 500; }
   .pille__summe { font-size: 1.2rem; font-weight: 700; }
   @media (min-width: 64rem) { .leiste__bar { display: none; } .leiste { padding-bottom: calc(1.2rem + env(safe-area-inset-bottom)); } }
@@ -279,5 +302,9 @@ const wa = `https://wa.me/${site.whatsapp}`;
   .auswahl__summe strong { font-size: 1.7rem; margin-left: 0.3rem; }
   .auswahl__leer { color: var(--tinte-2); padding: 0.8rem 0; }
   .sheet__aktion { margin-top: 1rem; }
-  @media print { .faden, .leiste, .fuss__demo, .fuss__recht, .schrift, .kopf__kapsel { display: none !important; } }
+  .auswahl__kombi { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; margin-top: 0.8rem; padding: 0.7rem 0.9rem; border-radius: 14px; background: #FBEFD6; }
+  .auswahl__kombi[hidden] { display: none; }
+  .auswahl__kombi p { font-weight: 600; line-height: 1.3; }
+  .btn--klein { min-height: 2.6rem; padding: 0.3rem 0.9rem; font-size: 0.95rem; flex: none; }
+  @media print { .honigfaden, .leiste, .fuss__demo, .fuss__recht, .schrift, .kopf__kapsel { display: none !important; } }
 </style>

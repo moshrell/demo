@@ -28,6 +28,10 @@ document.addEventListener('click', (e) => {
 
 /* ---------- Пилюля и шторка «Ihre Auswahl» ---------- */
 const pille = $<HTMLButtonElement>('[data-pille]')!;
+// Пилюля прячется, пока на экране свой итог (карточка калькулятора, сводка в форме): сумма не дублируется и не закрывает кнопку
+const weg = new Set<Element>();
+const io = new IntersectionObserver((es) => { es.forEach((e) => (e.isIntersecting ? weg.add(e.target) : weg.delete(e.target))); pille.classList.toggle('pille--weg', weg.size > 0); }, { rootMargin: '0px 0px -40px 0px' });
+$$('[data-pille-weg]').forEach((e) => io.observe(e));
 function render() {
   const c = cart.get();
   const show = c.lines.length > 0;
@@ -46,11 +50,14 @@ function render() {
     b.addEventListener('click', () => cart.remove(l.id));
     li.append(n, p, b); return li;
   }) : [Object.assign(document.createElement('li'), { className: 'auswahl__leer', textContent: 'Noch nichts ausgewählt.' })]));
+  const k = cart.kombiHint(), kb = $('[data-auswahl-kombi]');
+  if (kb) { kb.hidden = !k; if (k) { $('[data-auswahl-kombi-text]')!.textContent = `${k.durch.name} ist günstiger: ${cart.euro(k.durch.preis)} statt ${cart.euro(k.durch.preis + k.spart)}.`; kb.dataset.id = k.durch.id; } }
   $('[data-auswahl-summe]')!.textContent = (c.ab ? 'ab ' : '') + cart.euro(c.summe);
   $('[data-auswahl-dauer]')!.textContent = c.min ? 'ca. ' + cart.dauer(c.min) : '';
   if (!c.lines.length) dlg('auswahl')?.close();
 }
 $('[data-leeren]')?.addEventListener('click', () => cart.clear());
+$('[data-auswahl-kombi-ja]')?.addEventListener('click', () => { const id = $('[data-auswahl-kombi]')?.dataset.id; if (id) cart.applyKombi(id); });
 window.addEventListener('zf:cart', render);
 render();
 
@@ -107,7 +114,7 @@ const aktuell = document.documentElement.dataset.font || 'a';
 // шрифты B–D подгружаются после загрузки страницы, чтобы переключение было мгновенным
 if (aktuell !== 'a') schriftLaden(); else addEventListener('load', () => setTimeout(schriftLaden, 1200));
 const sPanel = $<HTMLElement>('#schrift-panel'), sKnopf = $<HTMLButtonElement>('[data-schrift-knopf]');
-const sZu = () => { if (sPanel && sKnopf) { sPanel.hidden = true; sKnopf.setAttribute('aria-expanded', 'false'); } };
+const sZu = (): void => { if (sPanel && sKnopf) { sPanel.hidden = true; sKnopf.setAttribute('aria-expanded', 'false'); } };
 sKnopf?.addEventListener('click', () => { if (!sPanel) return; sPanel.hidden = !sPanel.hidden; sKnopf.setAttribute('aria-expanded', String(!sPanel.hidden)); });
 document.addEventListener('click', (e) => { if (sPanel && !sPanel.hidden && !(e.target as Element).closest('[data-schrift]')) sZu(); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') sZu(); });

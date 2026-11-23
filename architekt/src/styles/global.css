@@ -294,13 +294,16 @@ h3 { font-size: var(--text-xl); line-height: 1.2; }
 .buero__text { display: grid; gap: var(--space-lg); max-width: var(--measure); align-content: start; }
 .quote { margin-inline: 0; font-family: var(--font-display); font-size: var(--text-2xl); line-height: 1.15; font-weight: 300; max-width: 22ch; margin-block: var(--space-md); }
 .facts { display: grid; gap: var(--space-2xs); font-size: var(--text-sm); color: var(--color-muted); }
-.buero__imgs { display: grid; gap: var(--space-md); align-content: start; grid-template-columns: minmax(0, 1fr); }
-.buero__imgs img { width: 100%; height: auto; background: var(--color-paper-2); }
-@media (min-width: 40rem) and (max-width: 59.99rem) {
-  .buero__imgs { grid-template-columns: minmax(0, 3fr) minmax(0, 4fr); align-items: end; }
+.buero__imgs { align-self: start; }
+.buero__imgs img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 30%; background: var(--color-paper-2); }
+/* Ein Porträt neben dem Text, nicht höher als der Text: Handy bis 26rem breit, ab 40rem rechts daneben */
+@media (max-width: 39.99rem) { .buero__imgs { max-width: 26rem; } }
+@media (min-width: 40rem) {
+  .buero__grid.has-photo { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-xl); }
 }
 @media (min-width: 60rem) {
-  .buero__grid.has-photo { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: var(--space-2xl); }
+  .buero__grid.has-photo { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: var(--space-2xl); }
+  .buero__imgs { max-width: 24rem; justify-self: end; width: 100%; }
 }
 
 /* ---------- FAQ ---------- */

@@ -3,7 +3,7 @@
 import plan from '../data/plan.json';
 const base = import.meta.env.BASE_URL;
 const { w, h } = plan;
-// Maße: Haus liegt im Ausschnitt von x 70..730, y 70..543 (12,00 m × 7,80 m)
+// Maße: Haus liegt im Ausschnitt von x 70..730, y 70..543 (12,00 m × 8,60 m: 660 × 473 px, Maßstab in beiden Richtungen gleich)
 const L = 70, R = 730, T = 70, B = 543, o = 38;
 const cx = (L + R) / 2, cy = (T + B) / 2;
 ---
@@ -11,7 +11,7 @@ const cx = (L + R) / 2, cy = (T + B) / 2;
   <div class="plan__stage" style={`aspect-ratio:${w}/${h}`}>
     <img class="plan__photo" src={`${base}img/aerial-haus.jpg`} width={w} height={h} alt="Das Haus von oben, Dach abgenommen: Wohnbereich, Schlafzimmer, Bad, Küche und Treppe im Erdgeschoss" fetchpriority="high" decoding="async" />
     <svg class="plan__svg" viewBox={`0 0 ${w} ${h}`} role="img" aria-labelledby="plan-t" focusable="false">
-      <title id="plan-t">Grundriss eines Einfamilienhauses, Erdgeschoss, 12,00 mal 7,80 Meter</title>
+      <title id="plan-t">Grundriss eines Einfamilienhauses, Erdgeschoss, 12,00 mal 8,60 Meter</title>
       <g class="plan__draw">
         <path class="plan__fill" fill-rule="evenodd" d={plan.fill} />
         {plan.paths.map((p) => <path class="plan__line" pathLength="1" style={`--d:${Math.round(((p.x - 70) / 660) * 1500)}ms`} d={p.d} />)}
@@ -20,7 +20,7 @@ const cx = (L + R) / 2, cy = (T + B) / 2;
         <path d={`M${L} ${o} H${cx - 75} M${cx + 75} ${o} H${R} M${L} ${o - 10} V${o + 10} M${R} ${o - 10} V${o + 10}`} />
         <path d={`M${o} ${T} V${cy - 75} M${o} ${cy + 75} V${B} M${o - 10} ${T} H${o + 10} M${o - 10} ${B} H${o + 10}`} />
         <text x={cx} y={o + 11} text-anchor="middle">12,00 m</text>
-        <text x={o + 11} y={cy} text-anchor="middle" transform={`rotate(-90 ${o + 11} ${cy})`}>7,80 m</text>
+        <text x={o + 11} y={cy} text-anchor="middle" transform={`rotate(-90 ${o + 11} ${cy})`}>8,60 m</text>
       </g>
     </svg>
   </div>

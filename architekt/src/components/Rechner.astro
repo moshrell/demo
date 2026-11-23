@@ -1,5 +1,5 @@
 ---
-/** Honorar-Orientierung: vier Angaben, eine ehrliche Spanne. Formeln in src/data/rechner.json und src/scripts/calc.ts. Unverbindlich. */
+/** Honorar-Orientierung: vier Angaben, eine ehrliche Spanne nach HOAI-Honorartafel (Zone III), Leistungsphasen und Umbauzuschlag. Formeln in src/data/rechner.json und src/scripts/calc.ts. Unverbindlich. */
 import cfg from '../data/rechner.json';
 ---
 <section class="section section--m calc" id="honorar" aria-labelledby="honorar-h">
@@ -54,19 +54,24 @@ import cfg from '../data/rechner.json';
           ))}
         </div>
       </fieldset>
+      <div class="lph" aria-hidden="true">
+        {cfg.phasen.map(([name, w], i) => <span style={`flex:${w} 1 0`} data-n={i + 1} title={`${i + 1} ${name} · ${w} %`}><b>{i + 1}</b></span>)}
+      </div>
+      <p class="calc__lp" data-lp>–</p>
       <p class="calc__basis" data-antrag-note hidden>Beim Bauantrag rechnen wir die Genehmigungsplanung (Planung bis Bauantrag).</p>
 
       <div class="calc__out" aria-live="polite">
         <p class="calc__sum">
-          <span class="calc__label">Planungshonorar, Orientierung</span>
+          <span class="calc__label">Planungshonorar netto, Orientierung</span>
           <strong class="calc__range" data-range>–</strong>
           <span class="calc__basis" data-basis>–</span>
+          <span class="calc__basis calc__hint" data-hint hidden></span>
         </p>
         <button class="btn btn--primary" type="button" data-use>Mit diesen Angaben anfragen</button>
       </div>
     </form>
 
-    <p class="calc__fine">Orientierungswerte nach Erfahrung und HOAI-Logik (Honorarordnung für Architekten und Ingenieure). Das tatsächliche Honorar hängt vom Objekt ab und wird im Gespräch festgelegt. Netto-/Brutto-Angabe im Angebot.</p>
+    <p class="calc__fine">So rechnen wir: Baukosten (Kostengruppen 300 + 400) aus Fläche und Niveau, davon die anrechenbaren Kosten ohne Umsatzsteuer. Darauf die Honorartafel der HOAI 2021 (Honorarordnung für Architekten und Ingenieure, § 35, Honorarzone III, vom Basissatz bis zum oberen Satz) und der Anteil der gebuchten Leistungsphasen. Bei Umbau und Sanierung kommt ein Umbauzuschlag von 20 bis 33 % hinzu. Alle Werte netto, zuzüglich 19 % Umsatzsteuer und Nebenkosten. Das tatsächliche Honorar wird im Vertrag vereinbart.</p>
   </div>
 </section>
 
@@ -82,6 +87,9 @@ import cfg from '../data/rechner.json';
     const objektSet = q<HTMLElement>('[data-objekt]');
     const scopeSet = q<HTMLElement>('[data-scope]');
     const note = q<HTMLElement>('[data-antrag-note]');
+    const lpEl = q<HTMLElement>('[data-lp]');
+    const hintEl = q<HTMLElement>('[data-hint]');
+    const segs = [...form.querySelectorAll<HTMLElement>('.lph span')];
     const area = q<HTMLInputElement>('input[name=area]');
     const slider = q<HTMLInputElement>('input[name=area-range]');
     const radio = (n: string) => [...form.querySelectorAll<HTMLInputElement>(`input[name=${n}]`)];
@@ -103,7 +111,13 @@ import cfg from '../data/rechner.json';
       objektSet.hidden = !antrag; scopeSet.hidden = antrag; note.hidden = !antrag;
       const r = compute(s);
       rangeEl.textContent = rangeText(r);
-      basisEl.textContent = `bei Baukosten von ca. ${eur(r.baukosten)}`;
+      basisEl.textContent = `bei Baukosten von ca. ${eur(r.baukosten)} brutto (anrechenbar ca. ${eur(r.anrechenbar)} netto)`;
+      const last = Number(r.scope.lp.split('–')[1]);
+      segs.forEach((el) => el.classList.toggle('on', Number(el.dataset.n) <= last));
+      lpEl.textContent = `Leistungsphasen ${r.scope.lp} von 9: ${r.scope.share} % des vollen Honorars`;
+      const hints = [r.umbau && `inkl. Umbauzuschlag ${cfg.umbauZuschlag.lo}–${cfg.umbauZuschlag.hi} %`, r.klein && `unter ${eur(cfg.tafel[0][0])} anrechenbaren Kosten ist das Honorar frei vereinbar, Wert anteilig`].filter(Boolean);
+      hintEl.textContent = hints.join(' · ');
+      hintEl.hidden = !hints.length;
       save(s);
     };
 

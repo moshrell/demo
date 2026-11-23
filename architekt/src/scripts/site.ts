@@ -39,3 +39,11 @@ if (plan) {
     setTimeout(() => { if (plan.dataset.view === 'auto') btns.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.set === 'photo'))); }, 5700);
   }
 }
+
+// Links mit data-art (z. B. „Kaufberatung anfragen“): Projektart im Formular vorwählen
+document.querySelectorAll<HTMLAnchorElement>('a[data-art]').forEach((a) => a.addEventListener('click', () => {
+  const sel = document.querySelector<HTMLSelectElement>('#anfrage-art');
+  if (!sel) { console.error('[site] Projektart-Feld fehlt'); return; }
+  sel.value = a.dataset.art!;
+  sel.dispatchEvent(new Event('change', { bubbles: true }));
+}));

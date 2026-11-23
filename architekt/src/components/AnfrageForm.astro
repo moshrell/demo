@@ -9,7 +9,7 @@
  */
 import site from '../data/site.json';
 const base = import.meta.env.BASE_URL;
-const projektarten = ['Neubau', 'Umbau & Sanierung', 'Anbau & Aufstockung', 'Nur Bauantrag', 'Weiß ich noch nicht'];
+const projektarten = ['Neubau', 'Umbau & Sanierung', 'Anbau & Aufstockung', 'Nur Bauantrag', 'Kaufberatung vor dem Hauskauf', 'Weiß ich noch nicht'];
 const id = 'anfrage';
 ---
 <section class="of" aria-labelledby={`${id}-h`}>
@@ -48,13 +48,13 @@ const id = 'anfrage';
       </div>
       <div class="of__field">
         <label for={`${id}-tel`}>Telefon</label>
-        <input id={`${id}-tel`} name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 030 23125 123" required aria-describedby={`${id}-err-tel`} />
+        <input id={`${id}-tel`} name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 0511 1234567" required aria-describedby={`${id}-err-tel`} />
         <p class="of__err" id={`${id}-err-tel`} hidden>Bitte prüfen Sie die Telefonnummer.</p>
       </div>
       <div class="of__field">
         <label for={`${id}-mail`}>E-Mail <span class="of__opt">(optional)</span></label>
-        <input id={`${id}-mail`} name="email" type="email" autocomplete="email" inputmode="email" placeholder="z. B. max@example.com" aria-describedby={`${id}-err-mail`} />
-        <p class="of__err" id={`${id}-err-mail`} hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.</p>
+        <input id={`${id}-mail`} name="email" type="email" autocomplete="email" inputmode="email" placeholder="z. B. max@beispiel.de" aria-describedby={`${id}-err-mail`} />
+        <p class="of__err" id={`${id}-err-mail`} hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@beispiel.de.</p>
       </div>
     </fieldset>
 
@@ -126,6 +126,7 @@ const id = 'anfrage';
   .of__sum { font-weight: 600; }
   .of__demo { font-size: var(--text-sm); color: var(--muted); }
   @media (max-width: 30rem) { .of__bar { flex-wrap: wrap; } .of__btn { flex: 1 1 100%; } }
+  @media (min-width: 60rem) { .of__bar { position: static; } } /* на ПК форма короткая: липкая панель только мешала полям */
 </style>
 
 <script>
@@ -167,7 +168,7 @@ const id = 'anfrage';
         barValue.hidden = true;
       }
     };
-    const setUse = (v: boolean) => { useCalc = v; try { v ? sessionStorage.setItem(USE, '1') : sessionStorage.removeItem(USE); } catch {} showCalc(); };
+    const setUse = (v: boolean) => { useCalc = v; try { v ? sessionStorage.setItem(USE, '1') : sessionStorage.removeItem(USE); } catch (e) { console.error('[anfrage]', e); } showCalc(); };
 
     // Übernahme aus dem Rechner
     window.addEventListener('calc:use', () => {
@@ -195,7 +196,7 @@ const id = 'anfrage';
       const s = useCalc ? load() : null;
       if (s) {
         const r = compute(s);
-        rows.push(['Fläche, Niveau', `${s.area} m², ${r.levelLabel}`], ['Betreuung', r.scopeLabel], ['Orientierung Honorar', rangeText(r), true]);
+        rows.push(['Fläche, Niveau', `${s.area} m², ${r.levelLabel}`], ['Betreuung', `${r.scopeLabel}, LPH ${r.scope.lp}`], ['Orientierung Honorar (netto)', rangeText(r), true]);
       }
       rows.push(['Name', name.value.trim()], ['Telefon', tel.value.trim()]);
       list.replaceChildren(...rows.map(([k, v, strong]) => {
@@ -207,7 +208,7 @@ const id = 'anfrage';
         return d;
       }));
       form.hidden = true; done.hidden = false; done.focus();
-      try { sessionStorage.removeItem(FKEY); sessionStorage.removeItem(USE); sessionStorage.removeItem(KEY); } catch {}
+      try { sessionStorage.removeItem(FKEY); sessionStorage.removeItem(USE); sessionStorage.removeItem(KEY); } catch (e) { console.error('[anfrage]', e); }
     });
 
     // Eingaben nie verlieren: Zwischenspeicher in sessionStorage (nur dieser Tab, nichts wird gesendet).
@@ -221,7 +222,7 @@ const id = 'anfrage';
         saved().forEach((el) => { d[el.name] = el.value; });
         const untouched = !d.name && !d.tel && !d.email && !d.ort && !d.note && d.art === 'Weiß ich noch nicht';
         if (untouched) sessionStorage.removeItem(FKEY); else sessionStorage.setItem(FKEY, JSON.stringify(d));
-      } catch {}
+      } catch (e) { console.error('[anfrage]', e); }
     }
     try {
       const raw = sessionStorage.getItem(FKEY);
@@ -230,7 +231,7 @@ const id = 'anfrage';
         saved().forEach((el) => { if (el.name in d) el.value = String(d[el.name]); });
       }
       useCalc = sessionStorage.getItem(USE) === '1';
-    } catch {}
+    } catch (e) { console.error('[anfrage]', e); }
     form.addEventListener('input', saveForm);
     form.addEventListener('change', saveForm);
     showCalc();

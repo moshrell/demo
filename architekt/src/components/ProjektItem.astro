@@ -1,0 +1,29 @@
+---
+/** Eine Projektkarte: Foto, Ergebnis, Kosten Plan/Ist; aufklappbar Zahlen, Verlauf, zweites Foto. */
+const { p, lead = false } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const pct = ((p.budget.ist - p.budget.plan) / p.budget.plan) * 100;
+const pctText = `${Math.abs(pct).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`;
+const kosten = pct <= 0 ? `Kosten ${pctText} unter Plan` : `Kosten ${pctText} über Plan`;
+---
+<article class={`proj__item${lead ? ' proj__item--lead' : ''}`} id={p.id}>
+  <img class="proj__main" src={`${base}img/${p.images[0][0]}`} width={p.images[0][1]} height={p.images[0][2]} alt={p.images[0][3]} loading="lazy" decoding="async" />
+  <div class="proj__txt">
+    <p class="proj__type">{p.type} · {p.facts[0][1]}</p>
+    <h3>{p.title}</h3>
+    <p class="proj__res">{p.ergebnis}</p>
+    <p class={`proj__kosten${pct > 0 ? ' is-up' : ''}`}>{kosten}</p>
+    <details>
+      <summary>Zahlen und Verlauf</summary>
+      <dl class="proj__facts">{p.facts.map(([k, v]: [string, string]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+      <div class="proj__story">
+        <p><strong>Ausgangslage</strong>{p.ausgang}</p>
+        <p><strong>Lösung</strong>{p.loesung}</p>
+      </div>
+      <ol class="proj__verlauf" aria-label="Verlauf">
+        {p.verlauf.map(([d, t]: [string, string]) => <li><span>{d}</span>{t}</li>)}
+      </ol>
+      {p.images.length > 1 && <div class="proj__more">{p.images.slice(1).map(([f, w, h, alt]: [string, number, number, string]) => <img src={`${base}img/${f}`} width={w} height={h} alt={alt} loading="lazy" decoding="async" />)}</div>}
+    </details>
+  </div>
+</article>

@@ -9,12 +9,20 @@
         "168 m²"
       ],
       [
-        "Budget",
-        "mittel"
-      ],
-      [
         "Bauzeit",
         "14 Monate"
+      ],
+      [
+        "Kostenrahmen",
+        "540.000 €"
+      ],
+      [
+        "Schlussrechnung",
+        "531.000 €"
+      ],
+      [
+        "Niveau",
+        "mittel"
       ],
       [
         "Besonderheit",
@@ -37,6 +45,36 @@
         1200,
         "Wohnraum mit bodentiefer Verglasung, Holzboden und Treppe"
       ]
+    ],
+    "budget": {
+      "plan": 540000,
+      "ist": 531000
+    },
+    "verlauf": [
+      [
+        "03/2023",
+        "Erstgespräch"
+      ],
+      [
+        "06/2023",
+        "Entwurf und Kostenschätzung"
+      ],
+      [
+        "09/2023",
+        "Bauantrag eingereicht"
+      ],
+      [
+        "12/2023",
+        "Baugenehmigung"
+      ],
+      [
+        "03/2024",
+        "Baubeginn"
+      ],
+      [
+        "05/2025",
+        "Einzug, wie geplant"
+      ]
     ]
   },
   {
@@ -53,17 +91,25 @@
         "1912"
       ],
       [
-        "Budget",
-        "gehoben"
+        "Kostenrahmen",
+        "275.000 €"
+      ],
+      [
+        "Schlussrechnung",
+        "283.000 €"
       ],
       [
         "Bauzeit",
         "9 Monate"
+      ],
+      [
+        "Niveau",
+        "gehoben"
       ]
     ],
     "ausgang": "Wohnung im Gründerzeithaus mit feuchter Wand und alten Leitungen.",
     "loesung": "Bestandsaufnahme vor dem ersten Strich, Grundriss geöffnet, Stuck erhalten.",
-    "ergebnis": "Heller Grundriss, der Charakter des Hauses bleibt.",
+    "ergebnis": "Heller Grundriss, der Charakter des Hauses bleibt. Mehrkosten vorher angekündigt.",
     "images": [
       [
         "projekt-linden-altbau.jpg",
@@ -77,6 +123,36 @@
         1024,
         "Detail: historischer Stuck neben neuer weißer Wand"
       ]
+    ],
+    "budget": {
+      "plan": 275000,
+      "ist": 283000
+    },
+    "verlauf": [
+      [
+        "01/2023",
+        "Kaufberatung vor dem Kauf"
+      ],
+      [
+        "04/2023",
+        "Bestandsaufnahme"
+      ],
+      [
+        "06/2023",
+        "Planung und Ausschreibung"
+      ],
+      [
+        "09/2023",
+        "Baubeginn"
+      ],
+      [
+        "11/2023",
+        "Feuchte Wand: Mehrkosten angekündigt und freigegeben"
+      ],
+      [
+        "06/2024",
+        "Fertig"
+      ]
     ]
   },
   {
@@ -89,12 +165,20 @@
         "28 m²"
       ],
       [
-        "Budget",
-        "einfach"
-      ],
-      [
         "Bauzeit",
         "5 Monate"
+      ],
+      [
+        "Kostenrahmen",
+        "70.000 €"
+      ],
+      [
+        "Schlussrechnung",
+        "68.500 €"
+      ],
+      [
+        "Niveau",
+        "einfach"
       ],
       [
         "Ausrichtung",
@@ -111,6 +195,32 @@
         896,
         "Eingeschossiger Anbau mit Glasfront zum Garten"
       ]
+    ],
+    "budget": {
+      "plan": 70000,
+      "ist": 68500
+    },
+    "verlauf": [
+      [
+        "02/2024",
+        "Erstgespräch"
+      ],
+      [
+        "05/2024",
+        "Bauantrag eingereicht"
+      ],
+      [
+        "07/2024",
+        "Baugenehmigung"
+      ],
+      [
+        "09/2024",
+        "Baubeginn"
+      ],
+      [
+        "02/2025",
+        "Wohnküche in Betrieb"
+      ]
     ]
   },
   {
@@ -123,12 +233,20 @@
         "64 m²"
       ],
       [
-        "Budget",
-        "mittel"
-      ],
-      [
         "Bauzeit",
         "6 Monate"
+      ],
+      [
+        "Kostenrahmen",
+        "190.000 €"
+      ],
+      [
+        "Schlussrechnung",
+        "194.000 €"
+      ],
+      [
+        "Niveau",
+        "mittel"
       ],
       [
         "Besonderheit",
@@ -144,6 +262,36 @@
         1200,
         896,
         "Ausgebautes Dachgeschoss mit Dachflächenfenstern, sichtbaren Holzbalken und Galerie"
+      ]
+    ],
+    "budget": {
+      "plan": 190000,
+      "ist": 194000
+    },
+    "verlauf": [
+      [
+        "10/2023",
+        "Erstgespräch"
+      ],
+      [
+        "01/2024",
+        "Statik und Brandschutz geklärt"
+      ],
+      [
+        "03/2024",
+        "Bauantrag eingereicht"
+      ],
+      [
+        "05/2024",
+        "Genehmigt ohne Nachforderungen"
+      ],
+      [
+        "06/2024",
+        "Baubeginn"
+      ],
+      [
+        "12/2024",
+        "Fertig"
       ]
     ]
   }

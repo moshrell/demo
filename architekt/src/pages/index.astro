@@ -9,15 +9,10 @@ import site from '../data/site.json';
 import leistungen from '../data/leistungen.json';
 import ablauf from '../data/ablauf.json';
 import faq from '../data/faq.json';
-const zahlen = [
-  { id: 'deister-haus', n: '168', u: 'm²', t: 'Neubau am Deister, 14 Monate Bauzeit' },
-  { id: 'linden-altbau', n: '1912', u: '', t: 'Altbau in Linden, saniert in 9 Monaten' },
-  { id: 'isernhagen-anbau', n: '28', u: 'm²', t: 'Anbau in Isernhagen, 5 Monate' },
-  { id: 'list-dachausbau', n: '64', u: 'm²', t: 'Dachausbau in List, 6 Monate' },
-];
+const kb = site.kaufberatung;
 
 const base = import.meta.env.BASE_URL;
-const has = (f: string) => existsSync(new URL(`../../public/img/${f}`, import.meta.url));
+const has = (f: string) => existsSync(`${process.cwd()}/public/img/${f}`); // от корня проекта: import.meta.url в сборке указывает в dist, и фото не находились
 const photo = (f: string) => has(f);
 const portrait = photo('buero-portrait.jpg');
 const desk = photo('buero-schreibtisch.jpg');
@@ -58,11 +53,31 @@ const baustelle = photo('ablauf-baustelle.jpg');
       </div>
     </section>
 
+    <section class="section section--m kauf" id="kaufberatung" aria-labelledby="kauf-h">
+      <div class="wrap kauf__grid">
+        <div class="kauf__head">
+          <h2 id="kauf-h">Haus kaufen? Erst prüfen, dann unterschreiben.</h2>
+          <p class="sub">Kaufberatung zum Festpreis, bevor Sie beim Notar sitzen. Sie verhandeln mit Fakten statt mit Bauchgefühl.</p>
+          <p class="kauf__preis"><strong>{kb.preis}</strong><span>{kb.preisNote}</span></p>
+          <ul class="kauf__meta">
+            <li>Termin: {kb.termin}</li>
+            <li>Bericht: {kb.bericht}</li>
+            <li>Wird angerechnet, wenn Sie danach mit mir planen</li>
+          </ul>
+          <a class="btn btn--primary" href="#kontakt" data-art="Kaufberatung vor dem Hauskauf">Kaufberatung anfragen</a>
+        </div>
+        <div class="kauf__list">
+          <h3>Das prüfe ich vor Ort</h3>
+          <ul>{kb.punkte.map((t) => <li>{t}</li>)}</ul>
+        </div>
+      </div>
+    </section>
+
     <section class="section section--l band" id="projekte" aria-labelledby="projekte-h">
       <div class="wrap">
         <div class="section-head">
           <h2 id="projekte-h">Gebaute Beispiele</h2>
-          <p class="sub">Vier Projekte, jeweils mit Fläche, Budget und Bauzeit.</p>
+          <p class="sub">Vier Projekte mit Kostenrahmen, Schlussrechnung und Verlauf. Auch das eine, das teurer wurde.</p>
         </div>
         <Projekte />
       </div>
@@ -70,10 +85,10 @@ const baustelle = photo('ablauf-baustelle.jpg');
 
     <section class="section section--l zahlen" id="zahlen" aria-labelledby="zahlen-h">
       <div class="wrap">
-        <h2 id="zahlen-h">Vier Projekte, vier Größenordnungen</h2>
+        <h2 id="zahlen-h">Was sich nachprüfen lässt</h2>
         <ul class="zahlen__list">
-          {zahlen.map((z) => (
-            <li><a href={`#${z.id}`}><span class="zahlen__n">{z.n}<small>{z.u}</small></span><span class="zahlen__t">{z.t}</span></a></li>
+          {site.zahlen.map((z) => (
+            <li><span class="zahlen__n">{z.n}<small>{z.u}</small></span><span class="zahlen__t">{z.t}</span></li>
           ))}
         </ul>
       </div>
@@ -121,7 +136,7 @@ const baustelle = photo('ablauf-baustelle.jpg');
           <div class="buero__text">
             <p>Ich bin {site.owner}, Architekt in Hannover. Sie sprechen von der ersten Skizze bis zur Schlüsselübergabe mit mir und nicht mit einem Callcenter.</p>
             <p>Mir ist wichtig, dass Sie verstehen, was Sie bekommen und was es kostet, bevor Sie entscheiden.</p>
-            <blockquote class="quote">„Was ich nicht mache: Pläne, die Ihr Budget ignorieren."</blockquote>
+            <blockquote class="quote">„Was ich nicht mache: Pläne, die Ihr Budget ignorieren.“</blockquote>
             <ul class="facts">
               <li>Eingetragen in der {site.kammer}</li>
               <li>Berufshaftpflicht vorhanden</li>
@@ -135,6 +150,23 @@ const baustelle = photo('ablauf-baustelle.jpg');
             </div>
           )}
         </div>
+      </div>
+    </section>
+
+    <section class="section section--m band" id="stimmen" aria-labelledby="stimmen-h">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="stimmen-h">Was Bauherren sagen</h2>
+          <p class="sub">Beispielstimmen der Demo-Seite.</p>
+        </div>
+        <ul class="stimmen">
+          {site.stimmen.map((st) => (
+            <li>
+              <blockquote>„{st.q}“</blockquote>
+              <p>{st.wer} · <a href={`#${st.projekt}`}>{st.titel}</a></p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
 

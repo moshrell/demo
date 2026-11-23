@@ -3,10 +3,14 @@
   "short": "Hallbach",
   "legalName": "Hallbach Architekten, Inhaber Tilman Hallbach (fiktiv)",
   "owner": "Tilman Hallbach",
-  "address": { "street": "Podbielskistraße 0", "zip": "30177", "city": "Hannover" },
-  "email": "kontakt@example.com",
-  "phone": "030 23125 123",
-  "phoneHref": "+493023125123",
+  "address": {
+    "street": "Podbielskistraße 0",
+    "zip": "30177",
+    "city": "Hannover"
+  },
+  "email": "kontakt@beispiel.de",
+  "phone": "0511 1234567",
+  "phoneHref": "+495111234567",
   "hours": "Mo–Fr 9–17 Uhr",
   "sprechstunde": "Offene Sprechstunde: jeden 1. Donnerstag im Monat, 16–18 Uhr, ohne Anmeldung",
   "kammer": "Architektenkammer Niedersachsen",
@@ -17,5 +21,62 @@
     "title": "Architektur, die zu Ihrem Budget passt.",
     "lead": "Neubau, Umbau und Bauantrag in Hannover und Umgebung. Persönlich betreut, von der ersten Skizze bis zum Einzug.",
     "note": "Erstgespräch kostenlos und unverbindlich, 45 Minuten."
-  }
+  },
+  "kaufberatung": {
+    "preis": "490 €",
+    "preisNote": "pauschal, netto, im Raum Hannover",
+    "termin": "etwa 2 Stunden vor Ort",
+    "bericht": "schriftlich innerhalb von 3 Werktagen",
+    "punkte": [
+      "Keller, Feuchte und Abdichtung",
+      "Dach, Dachstuhl und oberste Geschossdecke",
+      "Tragwerk und Risse",
+      "Heizung, Elektro und Leitungen",
+      "Genehmigungslage von Anbauten und Ausbauten",
+      "Pflichten nach dem Gebäudeenergiegesetz (GEG) nach dem Kauf",
+      "grobe Kosten für die nötige Sanierung"
+    ]
+  },
+  "zahlen": [
+    {
+      "n": "17",
+      "u": "Jahre",
+      "t": "Büro in Hannover-List, seit 2009"
+    },
+    {
+      "n": "2,4",
+      "u": "%",
+      "t": "durchschnittliche Abweichung vom Kostenrahmen, letzte 20 Projekte"
+    },
+    {
+      "n": "61",
+      "u": "von 64",
+      "t": "Bauanträgen seit 2015 ohne Nachforderung genehmigt"
+    },
+    {
+      "n": "1",
+      "u": "Werktag",
+      "t": "bis zur Antwort auf Ihre Anfrage"
+    }
+  ],
+  "stimmen": [
+    {
+      "q": "Wir wussten bei jedem Schritt, was er kostet. Am Ende lagen wir unter dem Kostenrahmen.",
+      "wer": "Familie K.",
+      "projekt": "deister-haus",
+      "titel": "Haus am Deister"
+    },
+    {
+      "q": "Er hat sich das Haus vor dem Kauf angesehen und die feuchte Wand gefunden. Das hat unsere Verhandlung verändert.",
+      "wer": "Anna und Jonas M.",
+      "projekt": "linden-altbau",
+      "titel": "Altbau in Linden"
+    },
+    {
+      "q": "Genehmigt im ersten Anlauf, und die Handwerker hatten Pläne, mit denen sie arbeiten konnten.",
+      "wer": "Herr S.",
+      "projekt": "list-dachausbau",
+      "titel": "Dachausbau in List"
+    }
+  ]
 }

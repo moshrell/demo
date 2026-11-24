@@ -1,0 +1,11 @@
+{
+  "tage": [
+    { "kurz": "Mo", "name": "Montag",     "zeiten": [[9, 13], [15, 18]] },
+    { "kurz": "Di", "name": "Dienstag",   "zeiten": [[9, 13], [15, 22]] },
+    { "kurz": "Mi", "name": "Mittwoch",   "zeiten": [[9, 13], [15, 18]] },
+    { "kurz": "Do", "name": "Donnerstag", "zeiten": [[9, 13], [15, 22]] },
+    { "kurz": "Fr", "name": "Freitag",    "zeiten": [[9, 13], [15, 18]] },
+    { "kurz": "Sa", "name": "Samstag",    "zeiten": [], "hinweis": "nach Vereinbarung" },
+    { "kurz": "So", "name": "Sonntag",    "zeiten": [] }
+  ]
+}

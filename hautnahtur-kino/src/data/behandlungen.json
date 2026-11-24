@@ -1,0 +1,336 @@
+{
+  "linien": [
+    {
+      "id": "zucker",
+      "name": "Zucker dich schön!",
+      "text": "Individuelle Kosmetikbehandlungen mit Zuckerpaste und Produkten von Pandy’s Comfort Sugaring: biologisch hergestellt, pflanzlich konserviert, mit dem Siegel „Safe Kosmetik“ und nie an Tieren getestet."
+    },
+    {
+      "id": "natur",
+      "name": "atamé Gesundheitskosmetik",
+      "text": "Wirkstoff-Tonics und Cremes aus Kräuter- und Pflanzenextrakten. Die Tonics reinigen tief und bringen die Wirkstoffe gleichzeitig in die Haut. Für jeden Hauttyp, auch als Konzeptbehandlung bei Problemhaut."
+    },
+    {
+      "id": "klassisch",
+      "name": "Klassisch mit Mary Kay",
+      "text": "Die traditionelle Kosmetikbehandlung mit Produkten von Mary Kay Cosmetics, ohne Parfümstoffe und ohne Tierversuche, ebenfalls für Allergiker geeignet. Auch hier ohne Geräte wie Vapozone oder Frimator."
+    }
+  ],
+  "behandlungen": [
+    {
+      "id": "z-antirot",
+      "linie": "zucker",
+      "name": "Anti-Rot",
+      "text": "Couperose, Rosacea und empfindliche Haut werden entspannt und entstaut.",
+      "min": 60,
+      "preis": 49,
+      "haut": [
+        "ruhe"
+      ],
+      "art": "zucker"
+    },
+    {
+      "id": "z-regeneration",
+      "linie": "zucker",
+      "name": "Regenerationsbehandlung",
+      "text": "Regt die Mikrozirkulation und die Eigenaktivität Ihrer Haut an.",
+      "min": 60,
+      "preis": 49,
+      "haut": [
+        "frische"
+      ],
+      "art": "zucker"
+    },
+    {
+      "id": "z-aktiv",
+      "linie": "zucker",
+      "name": "Süß und Aktiv",
+      "text": "Bei träger, müder, schlecht durchbluteter, verhornter Haut.",
+      "min": 60,
+      "preis": 49,
+      "haut": [
+        "frische"
+      ],
+      "art": "zucker"
+    },
+    {
+      "id": "z-sommertraum",
+      "linie": "zucker",
+      "name": "Sommertraum",
+      "text": "Für unsere Sensibelchen.",
+      "min": 30,
+      "preis": 29.9,
+      "haut": [
+        "ruhe"
+      ],
+      "art": "zucker"
+    },
+    {
+      "id": "z-frisch",
+      "linie": "zucker",
+      "name": "Süß und Frisch",
+      "text": "Frischekick für jeden Hauttyp.",
+      "min": 60,
+      "preis": 49,
+      "haut": [
+        "frische",
+        "entspannen"
+      ],
+      "art": "zucker"
+    },
+    {
+      "id": "z-akne",
+      "linie": "zucker",
+      "name": "Akne-Stopp",
+      "text": "Für eine entzündliche Akne-Haut geeignet.",
+      "min": 60,
+      "preis": 49,
+      "haut": [
+        "klar"
+      ],
+      "art": "zucker"
+    },
+    {
+      "id": "z-rein",
+      "linie": "zucker",
+      "name": "Süß und Rein",
+      "text": "Für unsere unreinen Häute, jeden Alters.",
+      "min": 90,
+      "preis": 59,
+      "haut": [
+        "klar"
+      ],
+      "art": "zucker"
+    },
+    {
+      "id": "z-hydra60",
+      "linie": "zucker",
+      "name": "Turbo-Hydra-Deluxe, 60 Minuten",
+      "text": "Durchfeuchtung der anspruchsvollen Haut.",
+      "min": 60,
+      "preis": 49,
+      "haut": [
+        "feucht"
+      ],
+      "art": "zucker"
+    },
+    {
+      "id": "z-hydra90",
+      "linie": "zucker",
+      "name": "Turbo-Hydra-Deluxe, 90 Minuten",
+      "text": "Durchfeuchtung der anspruchsvollen Haut, ausführlicher.",
+      "min": 90,
+      "preis": 69,
+      "haut": [
+        "feucht"
+      ],
+      "art": "zucker"
+    },
+    {
+      "id": "z-hydra-intensiv",
+      "linie": "zucker",
+      "name": "Hydra-Intensiv",
+      "text": "Für die jugendliche, normale Haut. Hält die Haut in der Balance.",
+      "min": 45,
+      "preis": 35,
+      "haut": [
+        "feucht"
+      ],
+      "art": "zucker"
+    },
+    {
+      "id": "z-mann",
+      "linie": "zucker",
+      "name": "Behandlung für den Mann",
+      "text": "Verwöhn-Behandlung für den gestressten Mann, mit Entfernung überflüssiger Haare in Nase und an den Ohren.",
+      "min": 60,
+      "preis": 49,
+      "haut": [
+        "entspannen",
+        "frische"
+      ],
+      "art": "zucker"
+    },
+    {
+      "id": "z-mannohmann",
+      "linie": "zucker",
+      "name": "Mann-oh-mann",
+      "text": "Auch Männer bekommen Fältchen. Behandlung mit oder ohne Hyaluron.",
+      "min": 75,
+      "preis": 65,
+      "haut": [
+        "frische",
+        "feucht"
+      ],
+      "art": "zucker"
+    },
+    {
+      "id": "n-1",
+      "linie": "natur",
+      "name": "atamé Behandlung Nr. 1",
+      "text": "Wohltuende, Blockaden lösende Behandlung von Gesicht, Hals und Dekolleté: Hautdiagnose, Behandlung mit individuellem Tonic, abschließende Pflegecreme. Auf Wunsch werden die Augenbrauen korrigiert.",
+      "min": 45,
+      "preis": 39,
+      "haut": [
+        "ruhe",
+        "entspannen"
+      ],
+      "art": "natur"
+    },
+    {
+      "id": "n-2",
+      "linie": "natur",
+      "name": "atamé Behandlung Nr. 2",
+      "text": "Beginnt mit einem entspannenden Fußbad. Nacken und Schultern werden mit einem speziellen Tonic und dem „Meridian“ Resonanz-Kühl-Gel verwöhnt, danach wie bei Nr. 1.",
+      "min": 90,
+      "preis": 69,
+      "haut": [
+        "entspannen"
+      ],
+      "art": "natur"
+    },
+    {
+      "id": "n-3",
+      "linie": "natur",
+      "name": "atamé Behandlung Nr. 3",
+      "text": "Zusätzlich Abreiben mit dem atamé Fußpflege-Tonic und eine leichte Fußmassage mit der Fußpflege-Lotion.",
+      "min": 90,
+      "preis": 75,
+      "haut": [
+        "entspannen"
+      ],
+      "art": "natur"
+    },
+    {
+      "id": "n-4",
+      "linie": "natur",
+      "name": "atamé Behandlung Nr. 4",
+      "text": "Tiefenreinigung mit dem passenden Wirkstoff-Tonic, sanfte Glättung und Straffung. Stirn- und andere Gesichtsfalten werden sichtbar sanfter. Danach leichte Massage, zum Abschluss Tages- oder Nachtpflege.",
+      "min": 90,
+      "preis": 69,
+      "haut": [
+        "frische"
+      ],
+      "art": "natur"
+    },
+    {
+      "id": "n-5",
+      "linie": "natur",
+      "name": "atamé Behandlung Nr. 5",
+      "text": "Für großporige, fettige Haut mit Pickeln, Pusteln und Mitessern: porentief reinigendes Tonic, beruhigende Maske. Auch für den Rücken geeignet.",
+      "min": 60,
+      "preis": 49,
+      "haut": [
+        "klar"
+      ],
+      "art": "natur"
+    },
+    {
+      "id": "n-6",
+      "linie": "natur",
+      "name": "atamé Behandlung Nr. 6 (Schüler und Studenten)",
+      "text": "Die Pubertät bringt oft Hautunreinheiten mit sich. Die atamé Pflege-Produkte gleichen die junge Haut aus und weisen die Pickel in ihre Schranken. Auch am Rücken möglich.",
+      "min": 45,
+      "preis": 29.5,
+      "haut": [
+        "klar"
+      ],
+      "art": "natur"
+    },
+    {
+      "id": "k-kurz",
+      "linie": "klassisch",
+      "name": "Kurzbehandlung",
+      "text": "Abreinigen, peelen, Augenbrauen korrigieren, Maske oder Massage, Tages- oder Nachtpflege.",
+      "min": 60,
+      "preis": 49,
+      "haut": [
+        "frische",
+        "feucht"
+      ],
+      "art": "klassisch"
+    },
+    {
+      "id": "k-komfort",
+      "linie": "klassisch",
+      "name": "Komfortbehandlung",
+      "text": "Wie die Kurzbehandlung, jedoch mit Ausreinigung, Maske und Massage.",
+      "min": 90,
+      "preis": 69,
+      "haut": [
+        "klar",
+        "entspannen"
+      ],
+      "art": "klassisch"
+    },
+    {
+      "id": "k-lux",
+      "linie": "klassisch",
+      "name": "Luxusbehandlung",
+      "text": "Wie die Komfortbehandlung, jedoch mit Hals- und Handpackung, Augen- und Lippenmaske.",
+      "min": 120,
+      "preis": 98,
+      "haut": [
+        "entspannen",
+        "feucht"
+      ],
+      "art": "klassisch"
+    }
+  ],
+  "fragen": {
+    "haut": [
+      {
+        "id": "ruhe",
+        "label": "Ruhe bei Rötungen"
+      },
+      {
+        "id": "klar",
+        "label": "Klarheit bei Unreinheiten"
+      },
+      {
+        "id": "feucht",
+        "label": "Feuchtigkeit"
+      },
+      {
+        "id": "frische",
+        "label": "Frische und Glätte"
+      },
+      {
+        "id": "entspannen",
+        "label": "Einfach entspannen"
+      }
+    ],
+    "zeit": [
+      {
+        "id": "kurz",
+        "label": "bis 45 Min."
+      },
+      {
+        "id": "mittel",
+        "label": "60 Min."
+      },
+      {
+        "id": "lang",
+        "label": "90 Min. und mehr"
+      }
+    ],
+    "art": [
+      {
+        "id": "zucker",
+        "label": "Zuckerbehandlung"
+      },
+      {
+        "id": "natur",
+        "label": "atamé Kräuter-Tonics"
+      },
+      {
+        "id": "klassisch",
+        "label": "Klassisch (Mary Kay)"
+      },
+      {
+        "id": "egal",
+        "label": "Egal, beraten Sie mich"
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import Seitenkopf from '../components/Seitenkopf.astro';
+import site from '../data/site.json';
+---
+<Base title="Datenschutz | Hautnahtur Kosmetikstudio Gehrden">
+  <Seitenkopf titel="Datenschutz" />
+  <main class="wrap recht section">
+    <p><strong>Vorschau:</strong> In dieser Vorschau wird nichts gesendet oder gespeichert. Der Text muss vor der Veröffentlichung von der Inhaberin geprüft und bestätigt werden.</p>
+    <h2>Verantwortlich</h2>
+    <p>{site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}. E-Mail: {site.email}, Telefon: {site.phone}.</p>
+
+    <h2>Terminanfrage</h2>
+    <p><strong>Welche Daten:</strong> Name, Telefonnummer, E-Mail-Adresse (freiwillig), Nachricht (freiwillig), Ihre Auswahl an Behandlungen und Ihre Wunschzeiten.</p>
+    <p><strong>Wozu:</strong> Ich bearbeite Ihre Anfrage und rufe Sie zur Terminabsprache zurück. Sie willigen vor dem Absenden per Häkchen ein. Rechtsgrundlage ist die Anbahnung eines Vertrags (Art. 6 Abs. 1 lit. b DSGVO, die europäische Datenschutz-Grundverordnung).</p>
+    <p><strong>Wie lange:</strong> Ich lösche die Angaben, sobald die Anfrage erledigt ist, spätestens nach 30 Tagen, sofern keine gesetzliche Aufbewahrungspflicht besteht.</p>
+    <p><strong>Gesundheitsangaben:</strong> Schreiben Sie in die Nachricht bitte nur, was für die Behandlung wichtig ist (zum Beispiel empfindliche Haut). Solche Angaben nutze ich ausschließlich für Ihre Behandlung.</p>
+
+    <h2>Zwischenspeicher im Browser</h2>
+    <p>Damit Eingaben nicht verloren gehen, speichert die Seite Ihre Auswahl und Formulareingaben nur in diesem Browser-Tab (sessionStorage). Nach dem Absenden oder Schließen des Tabs wird das gelöscht, es wird nichts an mich übertragen. Das Einwilligungs-Häkchen wird nie gespeichert.</p>
+
+    <h2>Karte</h2>
+    <p>Die Seite bindet keine Inhalte anderer Anbieter ein. Der Link „Weg auf der Karte“ ist ein normaler Link: Erst wenn Sie darauf tippen, öffnen Sie Google Maps (Google Ireland Limited), für das dann dessen Datenschutzbestimmungen gelten.</p>
+
+    <h2>Schriften und Server</h2>
+    <p>Alle Schriften liegen auf diesem Server, es werden keine Schriften von Google oder anderen geladen. Es gibt keine Cookies, kein Tracking und keine Analyse-Werkzeuge. TODO vom Kunden: Angaben zum Hosting-Anbieter und zu Server-Logdateien.</p>
+
+    <h2>Ihre Rechte</h2>
+    <p>Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch und Datenübertragbarkeit (Art. 15 bis 21 DSGVO). Sie können eine Einwilligung jederzeit für die Zukunft widerrufen und sich bei der Landesbeauftragten für den Datenschutz Niedersachsen beschweren.</p>
+  </main>
+</Base>
+<style>
+  .recht { max-width: 46rem; padding-top: var(--space-xl); display: grid; gap: var(--space-md); }
+  .recht h2 { font-size: 1.5rem; margin-top: var(--space-md); }
+</style>

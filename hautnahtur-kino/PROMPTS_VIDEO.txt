@@ -1,0 +1,30 @@
+ВИДЕО ДЛЯ HAUTNAHTUR-KINO (Grok Imagine)
+Порядок: 1 → 2 → 3 → 4 → 5. Каждый промпт целиком, копировать как есть.
+Если Grok даёт выбор, ставить максимальную длину ролика и максимальное качество. Формат указан в заголовке.
+Файлы скинуть мне в чат или положить в папку проекта hautnahtur-kino\public\video\ под этими именами (mp4 как скачались, сжатие сделаю я).
+Если кадр понравился, но есть артефакты (лишние пальцы, «плывущая» масса), генерировать заново тот же промпт, а не править.
+
+====================================================================
+1) held-pc.mp4 — формат 16:9 (герой на ПК, фон под заголовком слева)
+====================================================================
+Cinematic macro shot in extreme slow motion: a thick ribbon of translucent amber sugaring paste slowly stretches and folds over itself, hanging from a polished steel spatula on the right side of the frame. Warm backlight shines through the paste so it glows like honey, with tiny air bubbles and soft golden highlights on its glossy surface. Background: deep warm brown-black, almost empty, with a faint soft bokeh of warm light. The left two thirds of the frame stay dark and calm, free for text. Very slow, smooth dolly-in camera movement, no cuts. Shallow depth of field, 100mm macro lens look, high-end beauty commercial, natural film grain, rich contrast. No people, no hands, no text, no logos, no labels. The motion should loop seamlessly: the last frame matches the first.
+
+====================================================================
+2) held-tel.mp4 — формат 9:16 (герой на телефоне)
+====================================================================
+Cinematic vertical macro shot in extreme slow motion: a thick ribbon of translucent amber sugaring paste slowly stretches and folds over itself, hanging from a polished steel spatula at the top of the frame and flowing down into the upper middle. Warm backlight shines through the paste so it glows like honey, with tiny air bubbles and soft golden highlights on its glossy surface. Background: deep warm brown-black, almost empty, with a faint soft bokeh of warm light. The lower half of the frame stays dark and calm, free for text and buttons. Very slow, smooth camera drift downward, no cuts. Shallow depth of field, 100mm macro lens look, high-end beauty commercial, natural film grain, rich contrast. No people, no hands, no text, no logos, no labels. The motion should loop seamlessly: the last frame matches the first.
+
+====================================================================
+3) zucker.mp4 — формат 16:9 (блок Sugaring)
+====================================================================
+Cinematic close-up in slow motion: gloved hands of a beautician, light beige nitrile gloves, gently knead a small ball of warm amber sugaring paste until it turns soft, glossy and slightly lighter in colour, then stretch it into a thin translucent sheet against warm backlight. Only the hands and forearms in a plain dark sleeve are visible, no face. Background: deep warm brown-black with soft amber bokeh. Calm, precise, unhurried movements, static camera with a very slight push-in, no cuts. Shallow depth of field, macro lens look, high-end beauty commercial, natural film grain. Hands anatomically correct with five fingers each. No text, no logos, no labels, no jewellery.
+
+====================================================================
+4) tonic.mp4 — формат 16:9 (блок Gesichtsbehandlungen, травяные тоники)
+====================================================================
+Cinematic macro shot in slow motion: a single drop of clear golden herbal tonic falls from a glass dropper into a small shallow glass bowl of the same liquid, sending soft concentric ripples outward. Next to the bowl lie a few fresh green herb leaves and a sprig of chamomile on a warm sand-coloured stone surface. Warm side light from the left creates caustic light patterns through the liquid. Background: deep warm brown-black, softly out of focus. Very slow, smooth camera arc around the bowl, no cuts. Shallow depth of field, 100mm macro lens look, high-end natural skincare commercial, natural film grain. No people, no hands, no text, no logos, no labels on the glass.
+
+====================================================================
+5) studio.mp4 — формат 16:9 (блок «Das Studio», атмосфера)
+====================================================================
+Cinematic slow-motion interior detail: a single white lily lies on neatly folded warm orange towels on a beauty treatment couch, a thin wisp of steam from a warm compress rises softly in the warm evening light coming through a window on the left. The light slowly shifts as if a curtain moves gently. Calm, quiet, empty room, no people. Very slow lateral camera slide from right to left, no cuts. Shallow depth of field, 50mm lens look, warm amber and soft orange tones against deep shadow, high-end spa commercial, natural film grain. No text, no logos, no labels, no brand names on any object.

@@ -1,5 +1,5 @@
 {
-  "hinweis": "Die angegebenen Preise sind eine Richtlinie. Berechnet werden die Zeit des reinen Zuckerns und der Materialverbrauch, im Durchschnitt 50 € pro Stunde.",
+  "hinweis": "Alle Preise sind Ab-Preise: Berechnet werden die Zeit des reinen Zuckerns und der Materialverbrauch, im Durchschnitt 50 € pro Stunde. Den genauen Preis besprechen wir beim Termin.",
   "zonen": [
     {
       "id": "d-achseln",
@@ -8,7 +8,8 @@
       "name": "Achseln",
       "min": 0,
       "preis": 18,
-      "kurz": "Achseln"
+      "kurz": "Achseln",
+      "ab": true
     },
     {
       "id": "d-arme",
@@ -17,7 +18,8 @@
       "name": "Arme",
       "min": 0,
       "preis": 20,
-      "kurz": "Arme"
+      "kurz": "Arme",
+      "ab": true
     },
     {
       "id": "d-unterschenkel",
@@ -26,7 +28,8 @@
       "name": "Unterschenkel inkl. Knie und Fuß",
       "min": 0,
       "preis": 35,
-      "kurz": "Unterschenkel"
+      "kurz": "Unterschenkel",
+      "ab": true
     },
     {
       "id": "d-oberschenkel",
@@ -35,7 +38,8 @@
       "name": "Oberschenkel",
       "min": 0,
       "preis": 35,
-      "kurz": "Oberschenkel"
+      "kurz": "Oberschenkel",
+      "ab": true
     },
     {
       "id": "d-bikini",
@@ -44,7 +48,8 @@
       "name": "Bikinilinie",
       "min": 0,
       "preis": 20,
-      "kurz": "Bikinilinie"
+      "kurz": "Bikinilinie",
+      "ab": true
     },
     {
       "id": "d-intim",
@@ -53,7 +58,8 @@
       "name": "Intimzone komplett, inkl. Po-Falte",
       "min": 0,
       "preis": 60,
-      "kurz": "Intimzone"
+      "kurz": "Intimzone",
+      "ab": true
     },
     {
       "id": "d-oberlippe",
@@ -62,7 +68,8 @@
       "name": "Oberlippe",
       "min": 0,
       "preis": 8,
-      "kurz": "Oberlippe"
+      "kurz": "Oberlippe",
+      "ab": true
     },
     {
       "id": "d-kinn",
@@ -71,7 +78,8 @@
       "name": "Kinn",
       "min": 0,
       "preis": 9,
-      "kurz": "Kinn"
+      "kurz": "Kinn",
+      "ab": true
     },
     {
       "id": "d-brauen",
@@ -80,7 +88,8 @@
       "name": "Augenbrauen säubern",
       "min": 0,
       "preis": 10,
-      "kurz": "Augenbrauen"
+      "kurz": "Augenbrauen",
+      "ab": true
     },
     {
       "id": "d-nase",
@@ -89,7 +98,8 @@
       "name": "Nase oder Ohr",
       "min": 0,
       "preis": 5,
-      "kurz": "Nase, Ohr"
+      "kurz": "Nase, Ohr",
+      "ab": true
     },
     {
       "id": "d-hals",
@@ -98,7 +108,8 @@
       "name": "Hals",
       "min": 0,
       "preis": 10,
-      "kurz": "Hals"
+      "kurz": "Hals",
+      "ab": true
     },
     {
       "id": "d-vellus",
@@ -107,7 +118,8 @@
       "name": "Vellushaar",
       "min": 0,
       "preis": 30,
-      "kurz": "Vellushaar"
+      "kurz": "Vellushaar",
+      "ab": true
     },
     {
       "id": "d-gesicht",
@@ -124,7 +136,8 @@
         "d-nase",
         "d-hals"
       ],
-      "regel": "summe"
+      "regel": "summe",
+      "ab": true
     },
     {
       "id": "h-achseln",
@@ -133,7 +146,8 @@
       "name": "Achseln",
       "min": 0,
       "preis": 20,
-      "kurz": "Achseln"
+      "kurz": "Achseln",
+      "ab": true
     },
     {
       "id": "h-arme",
@@ -142,7 +156,8 @@
       "name": "Arme",
       "min": 0,
       "preis": 25,
-      "kurz": "Arme"
+      "kurz": "Arme",
+      "ab": true
     },
     {
       "id": "h-unterschenkel",
@@ -151,7 +166,8 @@
       "name": "Unterschenkel inkl. Knie und Fuß",
       "min": 0,
       "preis": 40,
-      "kurz": "Unterschenkel"
+      "kurz": "Unterschenkel",
+      "ab": true
     },
     {
       "id": "h-oberschenkel",
@@ -160,7 +176,8 @@
       "name": "Oberschenkel",
       "min": 0,
       "preis": 40,
-      "kurz": "Oberschenkel"
+      "kurz": "Oberschenkel",
+      "ab": true
     },
     {
       "id": "h-brust",
@@ -169,7 +186,8 @@
       "name": "Brust",
       "min": 0,
       "preis": 25,
-      "kurz": "Brust"
+      "kurz": "Brust",
+      "ab": true
     },
     {
       "id": "h-bauch",
@@ -178,7 +196,8 @@
       "name": "Bauch",
       "min": 0,
       "preis": 20,
-      "kurz": "Bauch"
+      "kurz": "Bauch",
+      "ab": true
     },
     {
       "id": "h-schultern",
@@ -187,7 +206,8 @@
       "name": "Schultern",
       "min": 0,
       "preis": 15,
-      "kurz": "Schultern"
+      "kurz": "Schultern",
+      "ab": true
     },
     {
       "id": "h-ruecken",
@@ -196,7 +216,8 @@
       "name": "Rücken",
       "min": 0,
       "preis": 40,
-      "kurz": "Rücken"
+      "kurz": "Rücken",
+      "ab": true
     },
     {
       "id": "h-gesaess",
@@ -205,7 +226,8 @@
       "name": "Gesäß",
       "min": 0,
       "preis": 25,
-      "kurz": "Gesäß"
+      "kurz": "Gesäß",
+      "ab": true
     },
     {
       "id": "h-bikini",
@@ -214,7 +236,8 @@
       "name": "Bikinilinie",
       "min": 0,
       "preis": 20,
-      "kurz": "Bikinilinie"
+      "kurz": "Bikinilinie",
+      "ab": true
     },
     {
       "id": "h-intim",

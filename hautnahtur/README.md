@@ -3,6 +3,11 @@
 Просмотр: https://moshrell.github.io/demo/hautnahtur/ (noindex, не продвигать). Основа — демо `zuckerfaden/` (оно остаётся в портфолио как вымышленное, его не трогать).
 Источник данных: старый сайт клиентки http://hautnahtur-gehrden.de (страницы ueber, leistungen_alle, sugaring, kosmetik, zucker, atame, angebot, kontakt, galerie).
 
+## Статус после встречи (24.11.2026)
+- Клиентка согласна на новый сайт с нуля (старый на PHP, ей нужен безопасный вариант). Демо в целом понравилось, калькулятор тоже.
+- Даст новые тексты, фото, цены и часы работы. Работаем с материалами между Рождеством и Silvester (31.12): всё, что ниже взято со старого сайта, тогда заменить.
+- Цены Sugaring только «ab» (от): у разных людей разная густота волос. Все зоны помечены `ab: true` в `src/data/zonen.json`, сумма везде «ab … €».
+
 ## Что взято с её сайта (1:1)
 - Название, логотип (`public/img/logo.png`, на тёмном фоне `logo-hell.png` — тот же рисунок, тёмные части перекрашены в светлые), имя, контакты, часы, адрес, «с 1999», Ust.ID.
 - Цены: Sugaring Damen/Herren (все зоны), 12 процедур «Zucker dich schön!» (Turbo-Hydra-Deluxe — две строки 60/90 Мин.), 6 процедур atamé, 3 классических (Mary Kay), Maniküre/Naturnagelpflege/Fußpflege, Wimpern/Brauen, Make-up (24,50 / 34,50 €). Данные в `src/data/*.json`.

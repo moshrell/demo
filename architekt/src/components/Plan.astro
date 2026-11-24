@@ -1,7 +1,7 @@
 ---
 /** Hero: Grundriss (aus einer Referenzzeichnung vektorisiert, src/data/plan.json) zeichnet sich, dann übernimmt der Film
  *  „Vom Strich zum Haus" (film/, Remotion, 8 s): Wände wachsen aus dem Plan, Sonnenstudie mit Uhr, endet im Foto (erstes Bild = Plan, letztes = Foto).
- *  Ohne Film (Save-Data, Stromsparmodus, Fehler): Überblendung ins Foto desselben Hauses. Umschalter Grundriss / Modell / Foto. */
+ *  Ohne Film (Save-Data, Stromsparmodus, Fehler): Überblendung ins Foto desselben Hauses. Danach steht das Foto; Knopf „Modell" auf dem Bild spielt den Film erneut, beim Zurückscrollen in den Hero läuft er einmal von selbst. */
 import plan from '../data/plan.json';
 const base = import.meta.env.BASE_URL;
 const { w, h } = plan;
@@ -32,10 +32,9 @@ const cx = (L + R) / 2, cy = (T + B) / 2;
   </div>
   <div class="plan__bar">
     <p class="plan__cap" data-cap>Erdgeschoss, Einfamilienhaus (Beispiel)</p>
-    <div class="plan__toggle" role="group" aria-label="Ansicht wählen" hidden>
-      <button type="button" data-set="plan" aria-pressed="false">Grundriss</button>
-      <button type="button" data-set="film" aria-pressed="false">Modell</button>
-      <button type="button" data-set="photo" aria-pressed="true">Foto</button>
-    </div>
+    <button type="button" class="plan__replay" data-replay hidden aria-label="Film noch einmal abspielen: vom Grundriss zum Haus">
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 3.2v9.6L12.6 8z" /></svg><span>Modell</span>
+    </button>
+
   </div>
 </figure>

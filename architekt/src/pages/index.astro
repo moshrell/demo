@@ -169,9 +169,13 @@ const baustelle = photo('ablauf-baustelle.jpg');
     </section>
 
     <section class="section section--m" id="faq" aria-labelledby="faq-h">
-      <div class="wrap">
-        <div class="section-head">
+      <div class="wrap faq__grid">
+        <div class="section-head faq__head">
           <h2 id="faq-h">Häufige Fragen</h2>
+          <div class="faq__ask">
+            <p>Ihre Frage ist nicht dabei? Fragen Sie direkt, ich antworte in der Regel innerhalb eines Werktags.</p>
+            <p class="faq__links"><a class="btn" href={`tel:${site.phoneHref}`}>{site.phone}</a> <a class="btn btn--primary" href="#kontakt">Erstgespräch anfragen</a></p>
+          </div>
         </div>
         <div class="faq">
           {faq.map((f) => (

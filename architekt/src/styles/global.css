@@ -108,13 +108,6 @@ h3 { font-size: var(--text-xl); line-height: 1.2; }
 .plan__dims text { font-family: var(--font-mono); font-size: 32px; fill: var(--color-accent); }
 .plan__bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-sm); margin-top: var(--space-sm); }
 .plan__cap { font-size: var(--text-sm); color: var(--color-muted); }
-.plan__toggle { display: inline-flex; border: 1px solid var(--color-ink); border-radius: var(--radius); }
-.plan__toggle[hidden] { display: none; }
-.plan__toggle button { min-height: 2.75rem; padding: 0 var(--space-md); border: 0; background: transparent; cursor: pointer; font-size: var(--text-sm); font-weight: 600; }
-.plan__toggle button + button { border-left: 1px solid var(--color-ink); }
-.plan__toggle button[aria-pressed='true'] { background: var(--color-ink); color: var(--color-paper); }
-.js .plan__toggle { display: inline-flex; }
-/* Umschalter */
 .plan[data-view='plan'] .plan__draw { opacity: 1; animation: none; }
 .plan[data-view='plan'] .plan__fill, .plan[data-view='plan'] .plan__line { opacity: 1; animation: none; stroke-dashoffset: 0; }
 .plan[data-view='plan'] .plan__photo { opacity: 0; animation: none; }
@@ -362,3 +355,28 @@ h3 { font-size: var(--text-xl); line-height: 1.2; }
 .legal h1 { font-size: var(--text-2xl); margin-bottom: var(--space-lg); }
 .legal h2 { font-size: var(--text-xl); margin-top: var(--space-xl); margin-bottom: var(--space-sm); }
 .legal p { margin-bottom: var(--space-sm); max-width: var(--measure); }
+
+/* Hero: Knopf „Modell" auf dem Foto (Film erneut abspielen) */
+.plan__replay { display: inline-flex; flex: none; align-items: center; gap: var(--space-xs); min-height: 2.75rem; padding: 0 var(--space-md) 0 var(--space-sm); border: 1px solid var(--color-ink); border-radius: 999px; background: var(--color-paper); color: var(--color-ink); font: 600 var(--text-sm)/1 var(--font-body); cursor: pointer; opacity: 0; transform: translateY(4px); transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out); }
+.plan__replay svg { width: 1rem; height: 1rem; fill: currentColor; }
+.plan__replay[hidden] { display: none; }
+.plan__replay { pointer-events: none; }
+.plan[data-view='photo'] .plan__replay { opacity: 1; transform: none; pointer-events: auto; }
+.plan__replay:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
+@media (hover: hover) { .plan__replay:hover { background: var(--color-ink); color: var(--color-paper); } }
+
+/* Kleingedrucktes nach den ersten Worten einklappen */
+.more summary { list-style: none; cursor: pointer; }
+.more summary::-webkit-details-marker { display: none; }
+.more__btn { display: inline-block; margin-left: 0.25em; padding-block: 0.6rem; font-weight: 600; color: var(--color-ink); text-decoration: underline; text-underline-offset: 3px; }
+.more[open] .more__btn { display: none; }
+.more p { margin-top: var(--space-xs); }
+
+/* FAQ: Telefon-Hinweis unter der Überschrift; auf dem PC zwei Spalten, linke Spalte bleibt stehen */
+.faq__ask { margin-top: var(--space-md); color: var(--color-muted); max-width: 30rem; }
+.faq__links { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-md); }
+@media (min-width: 60rem) {
+  .faq__grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: var(--space-2xl); align-items: start; }
+  .faq__head { position: sticky; top: var(--space-xl); margin-bottom: 0; }
+  .faq__grid .faq { max-width: none; }
+}

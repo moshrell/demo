@@ -116,8 +116,8 @@ h3 { font-size: var(--text-xl); line-height: 1.2; }
 @media (prefers-reduced-motion: no-preference) {
   .plan[data-view='auto'] .plan__line { animation: draw 1300ms var(--ease-in-out) var(--d, 0ms) both; }
   .plan[data-view='auto'] .plan__fill { animation: fadein 600ms var(--ease-out) 1700ms both; }
-  .plan[data-view='auto'] .plan__draw { opacity: 1; animation: fadeout 1400ms var(--ease-in-out) 4300ms both; }
-  .plan[data-view='auto'] .plan__photo { animation: fadein 1400ms var(--ease-in-out) 4300ms both; }
+  .plan[data-view='auto'] .plan__draw { opacity: 1; animation: fadeout 700ms var(--ease-in-out) 3550ms both; }
+  .plan[data-view='auto'] .plan__photo { animation: fadein 700ms var(--ease-in-out) 3550ms both; }
   .plan__draw, .plan__photo { transition: opacity 500ms var(--ease-out); }
 }
 @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }

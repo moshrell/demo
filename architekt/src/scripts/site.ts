@@ -36,7 +36,7 @@ if (plan) {
   const mq = window.matchMedia('(prefers-reduced-motion: no-preference)');
   btns.forEach((x) => x.setAttribute('aria-pressed', String(!mq.matches && x.dataset.set === 'photo')));
   if (mq.matches) { // Automatik läuft: Knopf „Grundriss“ während der Zeichnung nicht gedrückt, nach der Überblendung „Foto“
-    setTimeout(() => { if (plan.dataset.view === 'auto') btns.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.set === 'photo'))); }, 5700);
+    setTimeout(() => { if (plan.dataset.view === 'auto') btns.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.set === 'photo'))); }, 4250);
   }
 }
 

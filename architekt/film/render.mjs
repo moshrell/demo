@@ -10,7 +10,7 @@ const composition = await selectComposition({ serveUrl, id: 'Haus', chromiumOpti
 if (mode === 'stills') {
   const frames = (process.argv[3] || '0,30,60,90,120,150,180,210,240,270,299').split(',').map(Number);
   for (const frame of frames) {
-    await renderStill({ serveUrl, composition, frame, output: `${out}/stills/f${String(frame).padStart(3, '0')}.jpg`, imageFormat: 'jpeg', jpegQuality: 90, chromiumOptions });
+    await renderStill({ serveUrl, composition, frame, output: `${out}/${process.env.STILLS || "stills"}/f${String(frame).padStart(3, '0')}.jpg`, imageFormat: 'jpeg', jpegQuality: 90, chromiumOptions });
     console.log('still', frame);
   }
 } else {

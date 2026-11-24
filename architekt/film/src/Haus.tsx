@@ -11,11 +11,13 @@ import * as THREE from 'three';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
 import '@fontsource/ibm-plex-mono/400.css';
 import plan from '../../src/data/plan.json';
+import haus from './haus.json';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 export const FILM = { w: 1200, h: 920, fps: 30, frames: 300 };
 
 // Farben (Papier = Weiß, Rest geteilt durch Papier #f9f6f1, damit nach multiply exakt die Seitenfarben entstehen)
-const C = { ink: '#1d1814', accent: '#a4431f', floor: '#f6f5f3', wall: '#ffffff', shadow: '#2b2218' };
+const C = { ink: '#1d1814', accent: '#a4431f', floor: '#f6f5f3', wall: '#ffffff', shadow: '#3a2a18' };
 
 // Plan: 800 × 613 px, Haus x 70..730, y 70..543 = 12,00 × 8,60 m → 55 px/m
 const PX = 55, WALL = 2.8 * PX, CX = 400, CY = 306.5;
@@ -36,79 +38,131 @@ function timeline(f: number) {
   return { up, tilt, svg, sun, drift };
 }
 
+const M = (m: number) => m * PX; // Meter → Plan-Pixel
+const OPEN = {
+  fenster: { sill: 0.9, top: 2.2, glass: true },
+  terrasse: { sill: 0, top: 2.3, glass: true },
+  haustuer: { sill: 0, top: 2.1, glass: false },
+  tuer: { sill: 0, top: 2.1, glass: false },
+} as const;
+
+/** Prisma auf Grundfläche (Plan-Koordinaten), Höhe y0..y1 in Weltpixeln */
+function boxGeo(o: { x0: number; x1: number; y0: number; y1: number }, y0: number, y1: number) {
+  const g = new THREE.BoxGeometry(o.x1 - o.x0, y1 - y0, o.y1 - o.y0);
+  g.translate((o.x0 + o.x1) / 2 - CX, (y0 + y1) / 2, (o.y0 + o.y1) / 2 - CY);
+  return g;
+}
+
 function useGeometry() {
   return useMemo(() => {
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="${plan.fill}"/></svg>`;
-    const data = new SVGLoader().parse(svg);
-    const shapes = data.paths.flatMap((p) => SVGLoader.createShapes(p));
-    const walls = new THREE.ExtrudeGeometry(shapes, { depth: 1, bevelEnabled: false, curveSegments: 4 });
+    const shapes = haus.walls.map((w) => {
+      const s = new THREE.Shape(w.outer.map(([x, y]) => new THREE.Vector2(x, y)));
+      s.holes = w.holes.map((h) => new THREE.Path(h.map(([x, y]) => new THREE.Vector2(x, y))));
+      return s;
+    });
+    const walls = new THREE.ExtrudeGeometry(shapes, { depth: 1, bevelEnabled: false });
     walls.translate(-CX, -CY, 0);
-    walls.rotateX(Math.PI / 2); // SVG y → Welt z, Extrusion nach unten (y = -1..0)
+    walls.rotateX(Math.PI / 2); // Plan-y → Welt-z, Extrusion nach unten (y = -1..0)
     walls.computeVertexNormals();
+
     const outer = SVGLoader.createShapes(new SVGLoader().parse(`<svg xmlns="http://www.w3.org/2000/svg"><path d="${plan.paths[0].d}"/></svg>`).paths[0]);
     const floor = new THREE.ShapeGeometry(outer, 4);
     floor.translate(-CX, -CY, 0);
     floor.rotateX(Math.PI / 2);
-    return { walls, floor };
+
+    // Linien des Plans (Möbel, Türbögen) als Zeichnung auf dem Boden
+    const pts: number[] = [];
+    const parsed = new SVGLoader().parse(`<svg xmlns="http://www.w3.org/2000/svg">${plan.paths.slice(1).map((p) => `<path d="${p.d}"/>`).join('')}</svg>`);
+    for (const path of parsed.paths) for (const sub of path.subPaths) {
+      const ps = sub.getPoints(6);
+      for (let i = 1; i < ps.length; i++) pts.push(ps[i - 1].x - CX, 0, ps[i - 1].y - CY, ps[i].x - CX, 0, ps[i].y - CY);
+    }
+    const lines = new THREE.BufferGeometry();
+    lines.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+
+    // Öffnungen: Brüstung, Sturz, Glas (Einheitshöhe 1, skaliert mit der Wandhöhe)
+    const solid: THREE.BufferGeometry[] = [], glass: THREE.BufferGeometry[] = [];
+    for (const o of haus.openings) {
+      const t = OPEN[o.kind as keyof typeof OPEN];
+      const H = 2.8;
+      if (t.sill > 0) solid.push(boxGeo(o, 0, t.sill / H));
+      solid.push(boxGeo(o, t.top / H, 1));
+      if (t.glass) {
+        const mid = (o.x1 - o.x0) > (o.y1 - o.y0) ? { ...o, y0: (o.y0 + o.y1) / 2 - 0.6, y1: (o.y0 + o.y1) / 2 + 0.6 } : { ...o, x0: (o.x0 + o.x1) / 2 - 0.6, x1: (o.x0 + o.x1) / 2 + 0.6 };
+        glass.push(boxGeo(mid, t.sill / H, t.top / H));
+      }
+    }
+    return { walls, floor, lines, solid: mergeGeometries(solid, true), glass: mergeGeometries(glass) };
   }, []);
 }
 
 function Szene({ f }: { f: number }) {
   const { camera } = useThree();
-  const { walls, floor } = useGeometry();
+  const { walls, floor, lines, solid, glass } = useGeometry();
   const t = timeline(f);
-  const h = Math.max(0.0001, t.up) * WALL;
+  const u = Math.max(0.0001, t.up);
+  const h = u * WALL;
 
   // Kamera: Kugelkoordinaten um die Hausmitte, ohne Rollen
-  const polar = t.tilt * 52 * Math.PI / 180;
-  const az = (-t.tilt * 32 - t.drift * 10 * (1 - k(f, 228, 282, 0, 1))) * Math.PI / 180;
-  const dist = DIST * (1 + t.tilt * 0.12);
-  const target = new THREE.Vector3(0, h * 0.3, t.tilt * 10);
+  const back = k(f, 228, 282, 0, 1);
+  const polar = t.tilt * 50 * Math.PI / 180;
+  const az = (-t.tilt * 28 - t.drift * 12 * (1 - back)) * Math.PI / 180;
+  const dist = DIST * (1 + t.tilt * 0.45);
+  const target = new THREE.Vector3(0, h * 0.2, t.tilt * 24);
   const dir = new THREE.Vector3(Math.sin(polar) * Math.sin(az), Math.cos(polar), Math.sin(polar) * Math.cos(az));
   camera.position.copy(target).addScaledVector(dir, dist);
   const upH = new THREE.Vector3(-Math.sin(az), 0, -Math.cos(az));
   camera.up.copy(upH.multiplyScalar(Math.cos(polar)).add(new THREE.Vector3(0, Math.sin(polar), 0))).normalize();
   camera.lookAt(target);
   (camera as THREE.PerspectiveCamera).fov = FOV;
-  camera.near = 50; camera.far = 6000;
+  camera.near = 50; camera.far = 8000;
   camera.updateProjectionMatrix();
 
-  // Sonne: Bogen von Ost (rechts unten) über Süd nach West
-  const sa = interpolate(t.sun, [0, 1], [118, 248]) * Math.PI / 180;
-  const se = (18 + 40 * Math.sin(t.sun * Math.PI)) * Math.PI / 180;
-  const sunPos = new THREE.Vector3(Math.cos(se) * Math.sin(sa), Math.sin(se), Math.cos(se) * Math.cos(sa)).multiplyScalar(1800);
+  // Sonne: morgens vorn rechts (Fassade im Licht), abends hinten (lange Schatten nach vorn), mittags am höchsten
+  const sa = interpolate(t.sun, [0, 1], [35, 205]) * Math.PI / 180;
+  const se = (30 + 28 * Math.sin(t.sun * Math.PI)) * Math.PI / 180;
+  const sunPos = new THREE.Vector3(Math.cos(se) * Math.sin(sa), Math.sin(se), Math.cos(se) * Math.cos(sa)).multiplyScalar(2000);
+  const lit = k(t.up, 0, 0.5, 0, 1);
 
-  const cap = new THREE.Color(C.ink).lerp(new THREE.Color(C.wall), k(t.up, 0, 0.35, 0, 1));
   return (
     <>
-      <ambientLight intensity={1.9} />
-      <hemisphereLight args={['#ffffff', '#e9e2d8', 0.6]} />
+      <ambientLight intensity={1.35} />
+      <hemisphereLight args={['#ffffff', '#d9cfc0', 0.38]} />
       <directionalLight
         position={sunPos.toArray()}
-        intensity={2.2 * t.up}
+        intensity={2.0 * lit}
         castShadow
         shadow-mapSize={[4096, 4096]}
-        shadow-camera-left={-800} shadow-camera-right={800} shadow-camera-top={800} shadow-camera-bottom={-800}
-        shadow-camera-near={100} shadow-camera-far={4000}
-        shadow-bias={-0.0004} shadow-normalBias={0.6} shadow-radius={5}
+        shadow-camera-left={-700} shadow-camera-right={700} shadow-camera-top={700} shadow-camera-bottom={-700}
+        shadow-camera-near={200} shadow-camera-far={4500}
+        shadow-bias={-0.0003} shadow-normalBias={0.4} shadow-radius={4}
       />
       {/* Papier */}
       <mesh rotation-x={-Math.PI / 2} position={[0, -0.5, 0]}>
-        <planeGeometry args={[8000, 8000]} />
+        <planeGeometry args={[10000, 10000]} />
         <meshBasicMaterial color="#ffffff" />
       </mesh>
       <mesh rotation-x={-Math.PI / 2} position={[0, -0.3, 0]} receiveShadow>
-        <planeGeometry args={[8000, 8000]} />
-        <shadowMaterial color={C.shadow} opacity={0.2 * t.up} transparent />
+        <planeGeometry args={[10000, 10000]} />
+        <shadowMaterial color={C.shadow} opacity={0.16 * lit} transparent />
       </mesh>
-      {/* Boden im Haus */}
-      <mesh geometry={floor} position={[0, 0.2, 0]} receiveShadow>
-        <meshStandardMaterial color={C.floor} transparent opacity={k(t.up, 0.1, 0.6, 0, 1)} roughness={1} />
+      {/* Boden im Haus + Zeichnung */}
+      <mesh geometry={floor} position={[0, 0.1, 0]} receiveShadow>
+        <meshStandardMaterial color={C.floor} emissive="#ffffff" emissiveIntensity={0.14} transparent opacity={lit} roughness={1} />
       </mesh>
-      {/* Wände */}
+      <lineSegments geometry={lines} position={[0, 0.4, 0]}>
+        <lineBasicMaterial color={C.ink} transparent opacity={0.45 * lit} />
+      </lineSegments>
+      {/* Wände: Schnittkante oben dunkel wie im Plan */}
       <mesh geometry={walls} position={[0, h, 0]} scale={[1, h, 1]} castShadow receiveShadow>
-        <meshStandardMaterial attach="material-0" color={cap} roughness={0.95} />
-        <meshStandardMaterial attach="material-1" color={C.wall} roughness={0.95} />
+        <meshBasicMaterial attach="material-0" color={C.ink} />
+        <meshStandardMaterial attach="material-1" color={C.wall} roughness={1} />
+      </mesh>
+      <mesh visible={u > 0.03} geometry={solid} scale={[1, WALL * u, 1]} castShadow receiveShadow>
+        <meshStandardMaterial color={C.wall} roughness={1} />
+      </mesh>
+      <mesh visible={u > 0.03} geometry={glass} scale={[1, WALL * u, 1]}>
+        <meshStandardMaterial color="#e4eaec" transparent opacity={0.35 * lit} roughness={0.2} metalness={0} />
       </mesh>
     </>
   );
@@ -118,6 +172,7 @@ function PlanSvg({ o }: { o: number }) {
   const L = 70, R = 730, T = 70, B = 543, d = 38, cx = (L + R) / 2, cy = (T + B) / 2;
   return (
     <svg viewBox="0 0 800 613" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: o }}>
+      <path d={plan.fill} fillRule="evenodd" fill={C.ink} />
       {plan.paths.map((p, i) => (
         <path key={i} d={p.d} fill="none" stroke={C.ink} strokeWidth={1.5} strokeLinejoin="round" />
       ))}
@@ -141,7 +196,7 @@ export const Haus = () => {
       <ThreeCanvas width={FILM.w} height={FILM.h} shadows flat camera={{ fov: FOV, position: [0, DIST, 0] }} gl={{ antialias: true, preserveDrawingBuffer: true }}>
         <Szene f={f} />
       </ThreeCanvas>
-      {/* Füllung des Plans liegt im 3D (Wandoberkanten), hier nur Linien und Maße */}
+      {/* Plan exakt wie auf der Seite (Füllung, Linien, Maße), blendet in das Modell über */}
       <PlanSvg o={t.svg} />
     </AbsoluteFill>
   );

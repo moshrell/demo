@@ -1,5 +1,7 @@
 ---
-/** Hero: Grundriss (aus einer Referenzzeichnung vektorisiert, src/data/plan.json) zeichnet sich, dann blendet er in das Foto desselben Hauses (Ansicht von oben, ohne Dach) über. Umschalter Grundriss/Foto. */
+/** Hero: Grundriss (aus einer Referenzzeichnung vektorisiert, src/data/plan.json) zeichnet sich, dann übernimmt der Film
+ *  „Vom Strich zum Haus" (film/, Remotion): Wände wachsen aus dem Plan, Sonnenstudie, zurück zum Plan (Schleife, erstes Bild = Plan).
+ *  Ohne Film (Save-Data, Stromsparmodus, Fehler): Überblendung ins Foto desselben Hauses. Umschalter Grundriss / Modell / Foto. */
 import plan from '../data/plan.json';
 const base = import.meta.env.BASE_URL;
 const { w, h } = plan;
@@ -10,6 +12,10 @@ const cx = (L + R) / 2, cy = (T + B) / 2;
 <figure class="plan" data-plan data-view="auto">
   <div class="plan__stage" style={`aspect-ratio:${w}/${h}`}>
     <img class="plan__photo" src={`${base}img/aerial-haus.jpg`} width={w} height={h} alt="Das Haus von oben, Dach abgenommen: Wohnbereich, Schlafzimmer, Bad, Küche und Treppe im Erdgeschoss" fetchpriority="high" decoding="async" />
+    <video class="plan__film" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback aria-label="Modell des Hauses: Die Wände wachsen aus dem Grundriss, die Sonne wandert über den Tag">
+      <source src={`${base}video/haus.webm`} type="video/webm" />
+      <source src={`${base}video/haus.mp4`} type="video/mp4" />
+    </video>
     <svg class="plan__svg" viewBox={`0 0 ${w} ${h}`} role="img" aria-labelledby="plan-t" focusable="false">
       <title id="plan-t">Grundriss eines Einfamilienhauses, Erdgeschoss, 12,00 mal 8,60 Meter</title>
       <g class="plan__draw">
@@ -28,6 +34,7 @@ const cx = (L + R) / 2, cy = (T + B) / 2;
     <p class="plan__cap">Erdgeschoss, Einfamilienhaus (Beispiel)</p>
     <div class="plan__toggle" role="group" aria-label="Ansicht wählen" hidden>
       <button type="button" data-set="plan" aria-pressed="false">Grundriss</button>
+      <button type="button" data-set="film" aria-pressed="false">Modell</button>
       <button type="button" data-set="photo" aria-pressed="true">Foto</button>
     </div>
   </div>

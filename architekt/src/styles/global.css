@@ -93,6 +93,13 @@ h3 { font-size: var(--text-xl); line-height: 1.2; }
 .plan__stage { position: relative; width: 100%; }
 .plan__photo, .plan__svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .plan__photo { mix-blend-mode: multiply; }
+/* Film: weißer Hintergrund + multiply = Papierfarbe, Rand unsichtbar */
+.plan__film { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; mix-blend-mode: multiply; opacity: 0; transition: opacity 500ms var(--ease-out); pointer-events: none; }
+.plan[data-view='film'] .plan__film { opacity: 1; }
+.plan[data-view='film'] .plan__draw, .plan[data-view='film'] .plan__photo { opacity: 0; animation: none; }
+.plan__dims { transition: opacity 500ms var(--ease-out); }
+.plan[data-view='film'] .plan__dims { opacity: 0; } /* Maße sind im Film selbst und blenden dort aus */
+.plan[data-view='plan'] .plan__film, .plan[data-view='photo'] .plan__film { opacity: 0; }
 .plan__svg { overflow: visible; }
 .plan__draw { opacity: 0; }
 .plan__fill { fill: var(--color-ink); }
@@ -119,6 +126,9 @@ h3 { font-size: var(--text-xl); line-height: 1.2; }
   .plan[data-view='auto'] .plan__draw { opacity: 1; animation: fadeout 700ms var(--ease-in-out) 3550ms both; }
   .plan[data-view='auto'] .plan__photo { animation: fadein 700ms var(--ease-in-out) 3550ms both; }
   .plan__draw, .plan__photo { transition: opacity 500ms var(--ease-out); }
+  /* Mit Film entscheidet das Skript, wann übergeblendet wird (Plan bleibt stehen, bis der Film spielt) */
+  .plan.has-film[data-view='auto'] .plan__draw { opacity: 1; animation: none; }
+  .plan.has-film[data-view='auto'] .plan__photo { opacity: 0; animation: none; }
 }
 @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }

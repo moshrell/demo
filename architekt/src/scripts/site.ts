@@ -24,19 +24,66 @@ if (dock && hideOn.length && 'IntersectionObserver' in window) {
   hideOn.forEach((el) => io2.observe(el));
 }
 
-// Hero: Umschalter Grundriss/Foto
+// Hero: Grundriss zeichnet sich → Film „Vom Strich zum Haus" (Schleife) → bei Problemen Foto. Umschalter Grundriss / Modell / Foto.
 const plan = document.querySelector<HTMLElement>('[data-plan]');
 if (plan) {
   const btns = plan.querySelectorAll<HTMLButtonElement>('[data-set]');
-  btns.forEach((b) => b.addEventListener('click', () => {
-    plan.dataset.view = b.dataset.set;
-    btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-  }));
+  const film = plan.querySelector<HTMLVideoElement>('.plan__film');
+  const press = (v: string | null) => btns.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.set === v)));
+  let visible = true;
+  const playFilm = () => {
+    if (!film) return Promise.reject(new Error('kein Video'));
+    if (film.preload === 'none') { film.preload = 'auto'; film.load(); }
+    return film.play();
+  };
+  const show = (v: string) => {
+    plan.dataset.view = v;
+    press(v);
+    if (!film) return;
+    if (v === 'film') {
+      playFilm().catch((err) => { console.error('[plan] Film startet nicht', err); show('photo'); });
+    } else film.pause();
+  };
+  btns.forEach((b) => b.addEventListener('click', () => show(b.dataset.set!)));
   plan.querySelector('.plan__toggle')?.removeAttribute('hidden');
-  const mq = window.matchMedia('(prefers-reduced-motion: no-preference)');
-  btns.forEach((x) => x.setAttribute('aria-pressed', String(!mq.matches && x.dataset.set === 'photo')));
-  if (mq.matches) { // Automatik läuft: Knopf „Grundriss“ während der Zeichnung nicht gedrückt, nach der Überblendung „Foto“
-    setTimeout(() => { if (plan.dataset.view === 'auto') btns.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.set === 'photo'))); }, 4250);
+
+  const motion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+  if (!motion) press('photo');
+  else if (!film || saveData) {
+    // Ohne Film: CSS blendet nach der Zeichnung ins Foto über
+    press(null);
+    setTimeout(() => { if (plan.dataset.view === 'auto') press('photo'); }, 4250);
+  } else {
+    plan.classList.add('has-film');
+    press(null);
+    film.preload = 'auto';
+    film.load();
+    const intro = new Promise<void>((r) => setTimeout(r, 2700)); // Linien + Füllung fertig gezeichnet
+    const ready = new Promise<void>((r, j) => {
+      if (film.readyState >= 3) r();
+      film.addEventListener('canplay', () => r(), { once: true });
+      film.addEventListener('error', () => j(new Error('Video-Fehler')), { once: true });
+      setTimeout(() => j(new Error('Video lädt zu lange')), 9000);
+    });
+    Promise.all([intro, ready])
+      .then(() => { if (plan.dataset.view === 'auto') return film.play().then(() => { plan.dataset.view = 'film'; press('film'); }); })
+      .catch((err) => { console.error('[plan] Film nicht verfügbar, zeige Foto', err); if (plan.dataset.view === 'auto') show('photo'); });
+  }
+
+  // Film nur abspielen, wenn er zu sehen ist (Akku)
+  if (film) {
+    new IntersectionObserver(([en]) => {
+      visible = en.isIntersecting;
+      if (plan.dataset.view !== 'film') return;
+      if (visible && !document.hidden) film.play().catch((err) => console.error('[plan] Fortsetzen fehlgeschlagen', err));
+      else film.pause();
+    }).observe(plan);
+    document.addEventListener('visibilitychange', () => {
+      if (plan.dataset.view !== 'film') return;
+      if (document.hidden || !visible) film.pause();
+      else film.play().catch((err) => console.error('[plan] Fortsetzen fehlgeschlagen', err));
+    });
   }
 }
 

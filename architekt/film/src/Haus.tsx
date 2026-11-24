@@ -3,7 +3,7 @@
  * Hintergrund weiß: auf der Seite liegt das Video mit mix-blend-mode: multiply auf dem Papier,
  * dadurch ist der Rand des Videos unsichtbar. Farben sind durch die Papierfarbe geteilt (siehe C).
  */
-import { AbsoluteFill, interpolate, Easing, useCurrentFrame } from 'remotion';
+import { AbsoluteFill, Img, interpolate, Easing, staticFile, useCurrentFrame } from 'remotion';
 import { ThreeCanvas } from '@remotion/three';
 import { useThree } from '@react-three/fiber';
 import { useMemo } from 'react';
@@ -14,7 +14,7 @@ import plan from '../../src/data/plan.json';
 import haus from './haus.json';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
-export const FILM = { w: 1200, h: 920, fps: 30, frames: 300 };
+export const FILM = { w: 1200, h: 920, fps: 30, frames: 240 };
 
 // Farben (Papier = Weiß, Rest geteilt durch Papier #f9f6f1, damit nach multiply exakt die Seitenfarben entstehen)
 const C = { ink: '#1d1814', accent: '#a4431f', floor: '#f6f5f3', wall: '#ffffff', shadow: '#3a2a18' };
@@ -28,14 +28,19 @@ const ease = Easing.bezier(0.65, 0, 0.35, 1);
 const k = (f: number, a: number, b: number, from: number, to: number) =>
   interpolate(f, [a, b], [from, to], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: ease });
 
-// Zeitplan (Frames bei 30 fps)
+// Zeitplan (Frames bei 30 fps, 8 s). Die Seite liest dieselben Zeiten (data-Attribute am <video>) für Uhr und Bildunterschrift.
+export const T = { svgOut: [14, 34], rise: [20, 80], sun: [78, 182], back: [174, 210], sink: [174, 208], photo: [204, 228], dimsIn: [214, 232] };
+const lin = (f: number, a: number, b: number) => interpolate(f, [a, b], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 function timeline(f: number) {
-  const up = f < 200 ? k(f, 30, 120, 0, 1) : k(f, 228, 282, 1, 0);           // Wandhöhe 0..1
-  const tilt = f < 200 ? k(f, 30, 120, 0, 1) : k(f, 228, 282, 1, 0);         // Kamera von oben → schräg
-  const svg = f < 200 ? k(f, 22, 46, 1, 0) : k(f, 268, 290, 0, 1);           // Plan-Linien
-  const sun = k(f, 96, 250, 0, 1);                                            // Tageslauf 0 = Morgen, 1 = Abend
-  const drift = k(f, 100, 240, 0, 1);
-  return { up, tilt, svg, sun, drift };
+  const back = k(f, T.back[0], T.back[1], 0, 1);
+  const up = k(f, T.rise[0], T.rise[1], 0, 1) * (1 - k(f, T.sink[0], T.sink[1], 0, 1)); // Wandhöhe 0..1
+  const tilt = k(f, T.rise[0], T.rise[1], 0, 1) * (1 - back);                         // Kamera von oben → schräg → oben
+  const svg = k(f, T.svgOut[0], T.svgOut[1], 1, 0);                                   // Plan (Füllung + Linien)
+  const dims = Math.max(svg, k(f, T.dimsIn[0], T.dimsIn[1], 0, 1));                   // Maßketten
+  const photo = k(f, T.photo[0], T.photo[1], 0, 1);
+  const sun = lin(f, T.sun[0], T.sun[1]);                                              // 07:00 → 19:00, linear wie die Uhr auf der Seite
+  const drift = k(f, T.rise[1], T.back[0], 0, 1);
+  return { up, tilt, svg, dims, photo, sun, drift, back };
 }
 
 const M = (m: number) => m * PX; // Meter → Plan-Pixel
@@ -104,10 +109,10 @@ function Szene({ f }: { f: number }) {
   const h = u * WALL;
 
   // Kamera: Kugelkoordinaten um die Hausmitte, ohne Rollen
-  const back = k(f, 228, 282, 0, 1);
+  const back = t.back;
   const polar = t.tilt * 50 * Math.PI / 180;
   const az = (-t.tilt * 28 - t.drift * 12 * (1 - back)) * Math.PI / 180;
-  const dist = DIST * (1 + t.tilt * 0.45);
+  const dist = DIST * (1 + t.tilt * 0.26);
   const target = new THREE.Vector3(0, h * 0.2, t.tilt * 24);
   const dir = new THREE.Vector3(Math.sin(polar) * Math.sin(az), Math.cos(polar), Math.sin(polar) * Math.cos(az));
   camera.position.copy(target).addScaledVector(dir, dist);
@@ -168,14 +173,17 @@ function Szene({ f }: { f: number }) {
   );
 }
 
-function PlanSvg({ o }: { o: number }) {
+function PlanSvg({ o, d: dimsO }: { o: number; d: number }) {
   const L = 70, R = 730, T = 70, B = 543, d = 38, cx = (L + R) / 2, cy = (T + B) / 2;
   return (
-    <svg viewBox="0 0 800 613" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: o }}>
+    <svg viewBox="0 0 800 613" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+      <g opacity={o}>
       <path d={plan.fill} fillRule="evenodd" fill={C.ink} />
       {plan.paths.map((p, i) => (
         <path key={i} d={p.d} fill="none" stroke={C.ink} strokeWidth={1.5} strokeLinejoin="round" />
       ))}
+      </g>
+      <g opacity={dimsO}>
       <g fill="none" stroke={C.accent} strokeWidth={2}>
         <path d={`M${L} ${d} H${cx - 75} M${cx + 75} ${d} H${R} M${L} ${d - 10} V${d + 10} M${R} ${d - 10} V${d + 10}`} />
         <path d={`M${d} ${T} V${cy - 75} M${d} ${cy + 75} V${B} M${d - 10} ${T} H${d + 10} M${d - 10} ${B} H${d + 10}`} />
@@ -183,6 +191,7 @@ function PlanSvg({ o }: { o: number }) {
       <g fontFamily="'IBM Plex Mono', monospace" fontSize={32} fill={C.accent}>
         <text x={cx} y={d + 11} textAnchor="middle">12,00 m</text>
         <text x={d + 11} y={cy} textAnchor="middle" transform={`rotate(-90 ${d + 11} ${cy})`}>8,60 m</text>
+      </g>
       </g>
     </svg>
   );
@@ -197,7 +206,11 @@ export const Haus = () => {
         <Szene f={f} />
       </ThreeCanvas>
       {/* Plan exakt wie auf der Seite (Füllung, Linien, Maße), blendet in das Modell über */}
-      <PlanSvg o={t.svg} />
+      {/* Weiche Ränder: lange Schatten laufen zum Bildrand aus statt hart abgeschnitten zu werden */}
+      <AbsoluteFill style={{ background: 'linear-gradient(to bottom, #fff, rgba(255,255,255,0) 9%, rgba(255,255,255,0) 88%, #fff), linear-gradient(to right, #fff, rgba(255,255,255,0) 7%, rgba(255,255,255,0) 93%, #fff)' }} />
+      {/* Ende: Foto desselben Hauses von oben, exakt im Rahmen des Plans (wie auf der Seite) */}
+      <Img src={staticFile('aerial-haus.jpg')} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: t.photo }} />
+      <PlanSvg o={t.svg} d={t.dims} />
     </AbsoluteFill>
   );
 };

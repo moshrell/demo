@@ -1,6 +1,6 @@
 ---
 /** Hero: Grundriss (aus einer Referenzzeichnung vektorisiert, src/data/plan.json) zeichnet sich, dann übernimmt der Film
- *  „Vom Strich zum Haus" (film/, Remotion): Wände wachsen aus dem Plan, Sonnenstudie, zurück zum Plan (Schleife, erstes Bild = Plan).
+ *  „Vom Strich zum Haus" (film/, Remotion, 8 s): Wände wachsen aus dem Plan, Sonnenstudie mit Uhr, endet im Foto (erstes Bild = Plan, letztes = Foto).
  *  Ohne Film (Save-Data, Stromsparmodus, Fehler): Überblendung ins Foto desselben Hauses. Umschalter Grundriss / Modell / Foto. */
 import plan from '../data/plan.json';
 const base = import.meta.env.BASE_URL;
@@ -12,7 +12,7 @@ const cx = (L + R) / 2, cy = (T + B) / 2;
 <figure class="plan" data-plan data-view="auto">
   <div class="plan__stage" style={`aspect-ratio:${w}/${h}`}>
     <img class="plan__photo" src={`${base}img/aerial-haus.jpg`} width={w} height={h} alt="Das Haus von oben, Dach abgenommen: Wohnbereich, Schlafzimmer, Bad, Küche und Treppe im Erdgeschoss" fetchpriority="high" decoding="async" />
-    <video class="plan__film" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback aria-label="Modell des Hauses: Die Wände wachsen aus dem Grundriss, die Sonne wandert über den Tag">
+    <video class="plan__film" muted playsinline data-sun="2.6 6.067" data-end="6.8" preload="none" disablepictureinpicture disableremoteplayback aria-label="Modell des Hauses: Die Wände wachsen aus dem Grundriss, die Sonne wandert über den Tag">
       <source src={`${base}video/haus.webm`} type="video/webm" />
       <source src={`${base}video/haus.mp4`} type="video/mp4" />
     </video>
@@ -31,7 +31,7 @@ const cx = (L + R) / 2, cy = (T + B) / 2;
     </svg>
   </div>
   <div class="plan__bar">
-    <p class="plan__cap">Erdgeschoss, Einfamilienhaus (Beispiel)</p>
+    <p class="plan__cap" data-cap>Erdgeschoss, Einfamilienhaus (Beispiel)</p>
     <div class="plan__toggle" role="group" aria-label="Ansicht wählen" hidden>
       <button type="button" data-set="plan" aria-pressed="false">Grundriss</button>
       <button type="button" data-set="film" aria-pressed="false">Modell</button>

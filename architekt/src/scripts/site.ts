@@ -24,7 +24,7 @@ if (dock && hideOn.length && 'IntersectionObserver' in window) {
   hideOn.forEach((el) => io2.observe(el));
 }
 
-// Hero: Grundriss zeichnet sich → Film „Vom Strich zum Haus" (Schleife) → bei Problemen Foto. Umschalter Grundriss / Modell / Foto.
+// Hero: Grundriss zeichnet sich → Film „Vom Strich zum Haus" → endet im Foto (bei Problemen gleich Foto). Umschalter Grundriss / Modell / Foto.
 const plan = document.querySelector<HTMLElement>('[data-plan]');
 if (plan) {
   const btns = plan.querySelectorAll<HTMLButtonElement>('[data-set]');
@@ -36,14 +36,41 @@ if (plan) {
     if (film.preload === 'none') { film.preload = 'auto'; film.load(); }
     return film.play();
   };
+  const cap = plan.querySelector<HTMLElement>('[data-cap]');
+  const capDefault = cap?.textContent ?? '';
+  const [sunA, sunB] = (film?.dataset.sun ?? '0 0').split(' ').map(Number);
+  const endAt = Number(film?.dataset.end ?? 0);
+  // Bildunterschrift läuft mit dem Film: Grundriss → Modell → Uhr der Sonnenstudie → Foto
+  const caption = () => {
+    if (!cap || !film) return;
+    const v = plan.dataset.view;
+    if (v === 'plan') { cap.textContent = 'Grundriss, Erdgeschoss (Beispiel)'; return; }
+    if (v === 'photo') { cap.textContent = 'So könnte es aussehen (Beispiel)'; return; }
+    if (v !== 'film') { cap.textContent = capDefault; return; }
+    const t = film.currentTime;
+    if (t < 0.67) cap.textContent = 'Grundriss, Erdgeschoss';
+    else if (t < sunA) cap.textContent = 'Modell, Wandhöhe 2,80 m';
+    else if (t < endAt) {
+      const q = Math.min(1, Math.max(0, (t - sunA) / (sunB - sunA)));
+      const min = Math.round((7 * 60 + q * 12 * 60) / 15) * 15;
+      cap.textContent = `Sonnenstand am 21. Juni, ${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')} Uhr`;
+    } else cap.textContent = 'So könnte es aussehen (Beispiel)';
+  };
+  let raf = 0;
+  const tick = () => { caption(); if (film && !film.paused) raf = requestAnimationFrame(tick); };
+  film?.addEventListener('play', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); });
   const show = (v: string) => {
     plan.dataset.view = v;
     press(v);
+    caption();
     if (!film) return;
     if (v === 'film') {
+      if (film.ended || film.currentTime >= film.duration - 0.05) film.currentTime = 0;
       playFilm().catch((err) => { console.error('[plan] Film startet nicht', err); show('photo'); });
     } else film.pause();
   };
+  // Am Ende steht das Foto (letztes Filmbild = Foto, Übergang unsichtbar)
+  film?.addEventListener('ended', () => { if (plan.dataset.view === 'film') show('photo'); });
   btns.forEach((b) => b.addEventListener('click', () => show(b.dataset.set!)));
   plan.querySelector('.plan__toggle')?.removeAttribute('hidden');
 
@@ -67,7 +94,7 @@ if (plan) {
       setTimeout(() => j(new Error('Video lädt zu lange')), 9000);
     });
     Promise.all([intro, ready])
-      .then(() => { if (plan.dataset.view === 'auto') return film.play().then(() => { plan.dataset.view = 'film'; press('film'); }); })
+      .then(() => { if (plan.dataset.view === 'auto') return film.play().then(() => { plan.dataset.view = 'film'; press('film'); caption(); }); })
       .catch((err) => { console.error('[plan] Film nicht verfügbar, zeige Foto', err); if (plan.dataset.view === 'auto') show('photo'); });
   }
 

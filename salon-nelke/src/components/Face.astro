@@ -1,0 +1,86 @@
+---
+// Иллюстрированный человек. Все причёски и бороды лежат в одном SVG,
+// нужные включаются атрибутами data-hair / data-beard (их меняет конструктор в Builder.astro).
+interface Props { hair?: string; color?: string; beard?: string; skin?: string; shirt?: string; live?: boolean; class?: string }
+const { hair = 'kurz', color = '#4a2f22', beard = 'none', skin = '#f0c8a8', shirt = '#1c2541', live = false, class: cls = '' } = Astro.props;
+
+// Кудри: кольцо кругов вокруг головы + ряд у линии роста волос
+const ring = Array.from({ length: 13 }, (_, i) => {
+  const ang = Math.PI + (i / 12) * Math.PI; // от левого уха через макушку к правому
+  return { x: 200 + Math.cos(ang) * 104, y: 214 + Math.sin(ang) * 104 * 1.05, r: 34 };
+});
+const sides = [[96, 250, 36], [104, 292, 34], [304, 250, 36], [296, 292, 34], [112, 332, 30], [288, 332, 30]];
+const front = Array.from({ length: 6 }, (_, i) => ({ x: 140 + i * 24, y: 150 - Math.sin((i / 5) * Math.PI) * 10, r: 24 }));
+---
+<svg class={`face ${cls}`} viewBox="0 0 400 480" role="img" aria-hidden="true" data-hair={hair} data-beard={beard} data-live={live ? '' : undefined}
+  style={`--hair:${color};--skin:${skin};--shirt:${shirt}`}>
+  <!-- волосы за головой -->
+  <g class="hg h-bob"><path d="M104 232 C90 116 148 96 200 96 C252 96 310 116 296 232 L298 312 C290 334 262 340 244 334 L156 334 C138 340 110 334 102 312Z" /></g>
+  <g class="hg h-lang"><path d="M100 232 C84 110 146 90 200 90 C254 90 316 110 300 232 L324 436 C282 458 118 458 76 436Z" /></g>
+  <g class="hg h-locken">
+    {ring.map((c) => <circle cx={c.x} cy={c.y} r={c.r} />)}
+    {sides.map(([x, y, r]) => <circle cx={x} cy={y} r={r} />)}
+  </g>
+
+  <!-- плечи, шея, фартук -->
+  <path class="shirt" d="M30 480 C30 396 108 364 200 366 C292 364 370 396 370 480Z" />
+  <path class="skin" d="M176 296 H224 V372 C214 392 186 392 176 372Z" />
+  <path class="collar" d="M160 372 L200 424 L240 372 C226 392 174 392 160 372Z" />
+  <path class="apron" d="M118 480 L132 410 C150 428 170 436 200 436 C230 436 250 428 268 410 L282 480Z" />
+
+  <!-- волосы длинные поверх плеч -->
+  <g class="hg h-lang"><path d="M108 244 L82 452 C108 466 142 460 154 440 L142 306Z M292 244 L318 452 C292 466 258 460 246 440 L258 306Z" /></g>
+
+  <!-- голова -->
+  <circle class="skin" cx="119" cy="226" r="16" /><circle class="skin" cx="281" cy="226" r="16" />
+  <path class="skin" d="M122 206 C122 132 278 132 278 206 C278 286 246 326 200 326 C154 326 122 286 122 206Z" />
+  <circle class="blush" cx="152" cy="264" r="13" /><circle class="blush" cx="248" cy="264" r="13" />
+
+  <!-- борода -->
+  <path class="bd b-stoppel" d="M123 236 C127 304 160 330 200 330 C240 330 273 304 277 236 C262 276 240 292 200 292 C160 292 138 276 123 236Z" />
+  <g class="bd b-voll"><path d="M121 226 C121 316 156 348 200 348 C244 348 279 316 279 226 C268 270 246 288 200 288 C154 288 132 270 121 226Z" /><path d="M166 276 C182 262 218 262 234 276 C218 288 182 288 166 276Z" /></g>
+
+  <!-- лицо -->
+  <g class="brows"><path d="M150 204 Q166 194 184 202" /><path d="M216 202 Q234 194 250 204" /></g>
+  <g class="eyes"><g class="eye"><circle cx="168" cy="226" r="6.5" /><circle cx="232" cy="226" r="6.5" /></g></g>
+  <path class="nose" d="M200 236 C196 252 190 258 199 262" />
+  <path class="mouth" d="M178 294 Q200 312 222 294" />
+
+  <!-- волосы перед головой -->
+  <g class="hg h-kurz"><path d="M116 218 C106 124 152 108 200 108 C248 108 294 124 284 218 C276 182 262 160 240 152 C214 166 170 166 150 152 C134 162 124 184 116 218Z" /></g>
+  <g class="hg h-bob"><path d="M112 226 C106 124 150 102 200 102 C250 102 294 124 288 226 C270 178 240 152 200 150 C160 152 130 178 112 226Z" /></g>
+  <g class="hg h-lang"><path d="M200 106 C150 106 116 150 110 236 C138 182 170 156 200 146 C230 156 262 182 290 236 C284 150 250 106 200 106Z" /></g>
+  <g class="hg h-locken">{front.map((c) => <circle cx={c.x} cy={c.y} r={c.r} />)}</g>
+  <g class="hg h-tolle">
+    <path d="M118 218 C108 136 148 118 200 118 C252 118 292 136 282 218 C274 182 256 160 236 152 C214 164 176 164 162 152 C142 160 126 182 118 218Z" />
+    <path d="M134 142 C126 80 204 46 272 80 C300 94 298 128 278 140 C252 120 170 112 134 142Z" />
+  </g>
+  <g class="hg h-glatze"><ellipse class="shine" cx="176" cy="150" rx="22" ry="9" transform="rotate(-24 176 150)" /></g>
+</svg>
+
+<style>
+  .face { display: block; width: 100%; height: auto; overflow: visible; }
+  .hg, .bd { display: none; }
+  .face[data-hair="kurz"] .h-kurz, .face[data-hair="bob"] .h-bob, .face[data-hair="lang"] .h-lang,
+  .face[data-hair="locken"] .h-locken, .face[data-hair="tolle"] .h-tolle, .face[data-hair="glatze"] .h-glatze { display: inline; }
+  .face[data-beard="stoppel"] .b-stoppel, .face[data-beard="voll"] .b-voll { display: inline; }
+  .hg path, .hg circle { fill: var(--hair); }
+  .hg .shine { fill: #fff; opacity: .45; }
+  .bd, .bd path { fill: var(--hair); }
+  .b-stoppel { opacity: .38; }
+  .skin { fill: var(--skin); }
+  .shirt { fill: var(--shirt); }
+  .collar { fill: #f3ecdf; }
+  .apron { fill: #e8705a; }
+  .blush { fill: #e8705a; opacity: .35; }
+  .brows path, .nose, .mouth { fill: none; stroke: #1c2541; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+  .nose { stroke-width: 4; opacity: .55; }
+  .eyes { transform: translate(var(--ex, 0px), var(--ey, 0px)); transition: transform .25s ease-out; }
+  .eye circle { fill: #1c2541; }
+  .eye { transform-origin: 200px 226px; animation: blink 6s infinite; }
+  @keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 96.5% { transform: scaleY(.08); } }
+  /* Волосы чуть качаются, как будто в салоне открыто окно */
+  .face[data-live] .hg { transform-box: fill-box; transform-origin: 50% 0; animation: sway 7s ease-in-out infinite; }
+  @keyframes sway { 50% { transform: rotate(.9deg); } }
+  @media (prefers-reduced-motion: reduce) { .eye, .face[data-live] .hg { animation: none; } .eyes { transition: none; } }
+</style>

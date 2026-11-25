@@ -1,0 +1,104 @@
+---
+import site from '../data/site.json';
+---
+<header class="nav" id="nav">
+  <div class="wrap bar">
+    <a class="logo" href="#intro" aria-label={`${site.legalName} – nach oben`}>{site.name}</a>
+    <nav class="links" aria-label="Hauptnavigation">
+      {site.nav.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+    <a class="btn btn--solid cta" href="#termin">Termin</a>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menü öffnen"><span></span><span></span></button>
+  </div>
+  <div class="menu" id="menu" hidden>
+    {site.nav.map((l, i) => <a href={l.href} style={`--i:${i}`}>{l.label}</a>)}
+    <a class="btn btn--solid" href="#termin" style={`--i:${site.nav.length}`}>Termin buchen</a>
+  </div>
+</header>
+<button class="to-top" id="to-top" type="button" aria-label="Nach oben"><span aria-hidden="true">↑</span></button>
+
+<style>
+  .nav { --nav-bg: var(--paper); --blade: 0; position: fixed; inset: 0 0 auto; z-index: 50; background: var(--nav-bg); color: var(--ink); transform: translateY(calc(-100% - 10px)); transition: transform .6s var(--ease), background-color .35s, color .35s; }
+  :global(body.intro-done) .nav, :global(body.past-intro) .nav { transform: none; }
+  /* Нижний край — ножевой блок машинки: зубцы цвета шапки «подстригают» всё, что уезжает под неё */
+  .nav::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 7px; background: var(--nav-bg); transition: background-color .35s;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 7'%3E%3Cpath d='M0 0H10L6.3 5.9Q5 7.2 3.7 5.9Z'/%3E%3C/svg%3E") calc(var(--blade) * 1px) 0 / 10px 7px repeat-x;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 7'%3E%3Cpath d='M0 0H10L6.3 5.9Q5 7.2 3.7 5.9Z'/%3E%3C/svg%3E") calc(var(--blade) * 1px) 0 / 10px 7px repeat-x;
+  }
+  .nav.dark { --nav-bg: var(--night); color: var(--cream); }
+  .nav.dark .btn { --b: var(--cream); --f: var(--ink); }
+  .bar { display: flex; align-items: center; gap: 28px; min-height: 70px; }
+  .logo { font-family: var(--serif); font-weight: 900; font-size: 1.5rem; letter-spacing: .02em; text-decoration: none; margin-right: auto; }
+  .links { display: flex; gap: 30px; }
+  .links a { position: relative; text-decoration: none; font-size: .78rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+  .links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px; background: var(--brass-deep); transform: scaleX(0); transform-origin: right; transition: transform .4s var(--ease); }
+  .nav.dark .links a::after { background: var(--brass); }
+  .links a:hover::after { transform: scaleX(1); transform-origin: left; }
+  .cta { min-height: 42px; padding: 0 20px; }
+  .burger { display: none; width: 44px; height: 44px; border: 0; background: none; cursor: pointer; position: relative; }
+  .burger span { position: absolute; left: 11px; right: 11px; height: 1.5px; background: currentColor; transition: transform .35s var(--ease); }
+  .burger span:first-child { top: 18px; } .burger span:last-child { top: 25px; }
+  .burger[aria-expanded="true"] span:first-child { transform: translateY(3.5px) rotate(45deg); }
+  .burger[aria-expanded="true"] span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
+  .menu { position: fixed; inset: 70px 0 0; background: var(--nav-bg); display: grid; align-content: start; gap: 10px; padding: 32px var(--gutter); }
+  .menu[hidden] { display: none; }
+  .menu a:not(.btn) { font-family: var(--serif); font-size: 2.3rem; text-decoration: none; line-height: 1.3; animation: in .5s var(--ease) both; animation-delay: calc(var(--i) * 60ms); }
+  .menu .btn { margin-top: 20px; justify-self: start; animation: in .5s var(--ease) both; animation-delay: calc(var(--i) * 60ms); }
+  @keyframes in { from { opacity: 0; transform: translateY(14px); } }
+  @media (max-width: 860px) { .links, .cta { display: none; } .burger { display: block; } }
+
+  /* Кнопка «наверх»: только после интро, ведёт на первый экран сайта, а не в начало 3D-сцены */
+  .to-top { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 55; width: 48px; height: 48px; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--cream); color: var(--ink); font-size: 1.15rem; cursor: pointer;
+    box-shadow: 0 10px 30px -12px rgba(29,20,16,.45); opacity: 0; transform: translateY(12px) scale(.9); pointer-events: none;
+    transition: opacity .35s, transform .45s var(--ease), background .3s, color .3s; }
+  .to-top.show { opacity: 1; transform: none; pointer-events: auto; }
+  .to-top:hover { background: var(--ink); color: var(--cream); }
+</style>
+
+<script>
+  const nav = document.getElementById('nav')!;
+  const burger = nav.querySelector<HTMLButtonElement>('.burger')!;
+  const menu = document.getElementById('menu')!;
+  const intro = document.getElementById('intro');
+  const darkZones = [...document.querySelectorAll<HTMLElement>('.section--dark, footer')];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const toTop = document.getElementById('to-top')!;
+  const services = document.getElementById('leistungen');
+  // Конец интро = первый экран сайта (а не начало 3D-сцены)
+  const siteStart = () => (intro ? intro.offsetTop + intro.offsetHeight - innerHeight : 0);
+  const goSiteStart = (e: Event) => { e.preventDefault(); setOpen(false); scrollTo({ top: siteStart(), behavior: reduce ? 'auto' : 'smooth' }); };
+  toTop.addEventListener('click', goSiteStart);
+  nav.querySelector('.logo')!.addEventListener('click', goSiteStart);
+  const setOpen = (open: boolean) => {
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+    menu.hidden = !open;
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+  };
+  burger.addEventListener('click', () => setOpen(menu.hidden));
+  menu.addEventListener('click', (e) => { if ((e.target as Element).closest('a')) setOpen(false); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) setOpen(false); });
+
+  let raf = 0;
+  const paint = () => {
+    raf = 0;
+    const y = nav.offsetHeight;
+    const past = intro ? intro.getBoundingClientRect().bottom < y : true;
+    document.body.classList.toggle('past-intro', past);
+    // Тёмная шапка над тёмными секциями
+    const dark = darkZones.some((z) => { const r = z.getBoundingClientRect(); return r.top <= y && r.bottom > y; });
+    nav.classList.toggle('dark', dark);
+    // «Нож машинки» чуть ходит при скролле
+    if (!reduce) nav.style.setProperty('--blade', String((scrollY * 0.4) % 10));
+    // Кнопка «наверх»: видна ниже первого экрана; на телефоне прячется, пока внизу висит чек услуг
+    let show = scrollY > siteStart() + innerHeight * 0.6;
+    if (show && services && innerWidth <= 960) { const r = services.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > innerHeight - 90) show = false; }
+    toTop.classList.toggle('show', show);
+  };
+  const req = () => { if (!raf) raf = requestAnimationFrame(paint); };
+  addEventListener('scroll', req, { passive: true });
+  addEventListener('resize', req);
+  paint();
+</script>

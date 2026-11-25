@@ -1,0 +1,368 @@
+{
+  "name": "Kamm",
+  "legalName": "Studio Kamm",
+  "city": "Hannover",
+  "district": "Linden",
+  "demoNotice": "Demo-Website · fiktiver Salon",
+  "credit": {
+    "label": "Konzept & Umsetzung: Kravets Webdesign",
+    "url": "https://kravets-webdesign.de",
+    "portfolio": "https://kravets-webdesign.de/arbeiten/"
+  },
+  "tagline": "Friseur in Hannover-Linden. Termin in einer Minute.",
+  "categories": [
+    {
+      "id": "schnitt",
+      "label": "Schnitt",
+      "sub": "Damen, Herren, Kinder",
+      "photo": "schnitt.jpg"
+    },
+    {
+      "id": "farbe",
+      "label": "Farbe",
+      "sub": "Ansatz, Balayage, Glossing",
+      "photo": "farbe.jpg"
+    },
+    {
+      "id": "pflege",
+      "label": "Styling & Pflege",
+      "sub": "Föhnen, Hochstecken, Masken",
+      "photo": "pflege.jpg"
+    },
+    {
+      "id": "bart",
+      "label": "Bart",
+      "sub": "Trimmen, Nassrasur",
+      "photo": "bart.jpg"
+    }
+  ],
+  "services": {
+    "eyebrow": "Leistungen & Preise",
+    "title": "Die Karte.",
+    "note": "Preise nach Haarlänge, nicht nach Geschlecht. Stellen Sie Ihre Auswahl zusammen: Der Bon rechnet mit.",
+    "lengths": [
+      {
+        "id": "kurz",
+        "label": "Kurz",
+        "hint": "bis 15 cm"
+      },
+      {
+        "id": "mittel",
+        "label": "Mittel",
+        "hint": "15–35 cm"
+      },
+      {
+        "id": "lang",
+        "label": "Lang",
+        "hint": "ab 35 cm"
+      }
+    ],
+    "categories": [
+      {
+        "id": "schnitt",
+        "label": "Schnitt",
+        "items": [
+          {
+            "name": "Schnitt & Föhnen",
+            "desc": "Beratung, Waschen, Schnitt, Styling",
+            "price": [
+              39,
+              49,
+              59
+            ],
+            "min": [
+              45,
+              60,
+              75
+            ]
+          },
+          {
+            "name": "Maschinenschnitt",
+            "desc": "Konturen und Übergänge mit der Maschine",
+            "price": 24,
+            "min": 30
+          },
+          {
+            "name": "Pony nachschneiden",
+            "desc": "Zwischen zwei Terminen",
+            "price": 10,
+            "min": 10
+          },
+          {
+            "name": "Kinderschnitt",
+            "desc": "Bis 12 Jahre",
+            "price": 22,
+            "min": 30
+          }
+        ]
+      },
+      {
+        "id": "farbe",
+        "label": "Farbe",
+        "items": [
+          {
+            "name": "Ansatzfarbe",
+            "desc": "Nachfärben bis 3 cm",
+            "price": 55,
+            "min": 60
+          },
+          {
+            "name": "Komplettfarbe",
+            "desc": "Eine Farbe vom Ansatz bis in die Spitzen",
+            "price": [
+              65,
+              79,
+              95
+            ],
+            "min": [
+              75,
+              90,
+              105
+            ],
+            "consult": true
+          },
+          {
+            "name": "Balayage",
+            "desc": "Freihand-Technik für weiche Verläufe",
+            "price": [
+              120,
+              150,
+              180
+            ],
+            "min": [
+              150,
+              180,
+              210
+            ],
+            "consult": true
+          },
+          {
+            "name": "Glossing",
+            "desc": "Glanz und Farbauffrischung",
+            "price": [
+              35,
+              42,
+              49
+            ],
+            "min": [
+              30,
+              30,
+              40
+            ]
+          }
+        ]
+      },
+      {
+        "id": "pflege",
+        "label": "Styling & Pflege",
+        "items": [
+          {
+            "name": "Waschen & Föhnen",
+            "desc": "Glatt, mit Volumen oder Wellen",
+            "price": [
+              25,
+              32,
+              39
+            ],
+            "min": [
+              30,
+              40,
+              50
+            ]
+          },
+          {
+            "name": "Hochsteckfrisur",
+            "desc": "Für Hochzeit, Abiball, Feier",
+            "price": 69,
+            "min": 60,
+            "consult": true
+          },
+          {
+            "name": "Intensivpflege",
+            "desc": "Maske mit Wärme, für trockenes Haar",
+            "price": 18,
+            "min": 15
+          },
+          {
+            "name": "Kopfmassage",
+            "desc": "Zehn Minuten nur für Sie",
+            "price": 12,
+            "min": 10
+          }
+        ]
+      },
+      {
+        "id": "bart",
+        "label": "Bart",
+        "items": [
+          {
+            "name": "Bart trimmen",
+            "desc": "Form, Kontur, Pflegeöl",
+            "price": 18,
+            "min": 20
+          },
+          {
+            "name": "Rasur mit heißem Tuch",
+            "desc": "Klassische Nassrasur",
+            "price": 28,
+            "min": 30
+          },
+          {
+            "name": "Schnitt & Bart",
+            "desc": "Kurzhaarschnitt plus Bartpflege",
+            "price": 55,
+            "min": 60
+          }
+        ]
+      }
+    ]
+  },
+  "team": [
+    {
+      "id": "lena",
+      "name": "Lena Hartmann",
+      "role": "Inhaberin",
+      "focus": "Farbe & Balayage",
+      "quote": "Gute Farbe sieht man nicht. Man sieht nur, dass es passt.",
+      "photo": "team-lena.jpg",
+      "skills": [
+        "farbe",
+        "schnitt",
+        "pflege"
+      ]
+    },
+    {
+      "id": "jonas",
+      "name": "Jonas Weber",
+      "role": "Stylist",
+      "focus": "Kurzhaar & Bart",
+      "quote": "Ein klarer Schnitt spart jeden Morgen zehn Minuten.",
+      "photo": "team-jonas.jpg",
+      "skills": [
+        "schnitt",
+        "bart"
+      ]
+    },
+    {
+      "id": "mira",
+      "name": "Mira Yilmaz",
+      "role": "Stylistin",
+      "focus": "Locken & Hochsteck",
+      "quote": "Locken wollen verstanden werden, nicht gebändigt.",
+      "photo": "team-mira.jpg",
+      "skills": [
+        "schnitt",
+        "pflege",
+        "farbe"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "photo": "arbeiten-1.jpg",
+      "label": "Kurzer Crop mit weichem Fade",
+      "by": "jonas"
+    },
+    {
+      "photo": "arbeiten-2.jpg",
+      "label": "Kinnlanger Bob, glatt",
+      "by": "lena"
+    },
+    {
+      "photo": "farbe.jpg",
+      "label": "Honigblonde Balayage",
+      "by": "lena"
+    },
+    {
+      "photo": "arbeiten-3.jpg",
+      "label": "Natürliche Locken, definiert",
+      "by": "mira"
+    },
+    {
+      "photo": "bart.jpg",
+      "label": "Bart in Form, Kontur mit der Schere",
+      "by": "jonas"
+    },
+    {
+      "photo": "arbeiten-4.jpg",
+      "label": "Kinderschnitt",
+      "by": "mira"
+    }
+  ],
+  "reviews": [
+    {
+      "text": "Endlich ein Salon, in dem niemand auf die Uhr schaut. Die Beratung war ehrlicher als alles, was ich vorher kannte.",
+      "name": "Anna K."
+    },
+    {
+      "text": "Meine Locken sehen zum ersten Mal so aus, wie ich sie mir immer vorgestellt habe.",
+      "name": "Selin T."
+    },
+    {
+      "text": "Schnitt und Bart in einer Stunde, und der Kaffee war auch gut.",
+      "name": "Markus B."
+    },
+    {
+      "text": "Die Balayage wächst so weich heraus, dass ich erst nach drei Monaten wiederkommen musste.",
+      "name": "Julia R."
+    },
+    {
+      "text": "Online gebucht, pünktlich drangekommen, mit gutem Gefühl gegangen.",
+      "name": "Tobias L."
+    }
+  ],
+  "contact": {
+    "street": "Kastanienhof 12",
+    "zip": "30449",
+    "city": "Hannover",
+    "phone": "0511 765 43 21",
+    "email": "hallo@studio-kamm.de",
+    "arrival": "Linden-Mitte, 3 Minuten vom Lindener Markt. Fahrradbügel vor der Tür."
+  },
+  "hours": [
+    {
+      "day": "Montag",
+      "short": "Mo",
+      "open": null
+    },
+    {
+      "day": "Dienstag",
+      "short": "Di",
+      "open": "09:00",
+      "close": "19:00"
+    },
+    {
+      "day": "Mittwoch",
+      "short": "Mi",
+      "open": "09:00",
+      "close": "19:00"
+    },
+    {
+      "day": "Donnerstag",
+      "short": "Do",
+      "open": "09:00",
+      "close": "20:00"
+    },
+    {
+      "day": "Freitag",
+      "short": "Fr",
+      "open": "09:00",
+      "close": "19:00"
+    },
+    {
+      "day": "Samstag",
+      "short": "Sa",
+      "open": "09:00",
+      "close": "15:00"
+    },
+    {
+      "day": "Sonntag",
+      "short": "So",
+      "open": null
+    }
+  ],
+  "booking": {
+    "slotMinutes": 30,
+    "maxDirect": 180
+  }
+}

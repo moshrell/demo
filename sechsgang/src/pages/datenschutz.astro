@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import DatenschutzForm from '../components/DatenschutzForm.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Datenschutz · Sechsgang (Demo)" description="Datenschutzhinweise der Demo-Seite Sechsgang.">
+  <div class="doc__top"><a href={base}>Sechsgang</a></div>
+  <main class="doc">
+    <h1>Datenschutz</h1>
+    <p><strong>Demo-Hinweis:</strong> Sechsgang ist eine Beispielseite von Kravets Webdesign. Betrieb, Anschrift und Personen sind erfunden. Es wird nichts gesendet oder gespeichert. Die Texte zeigen, was bei einem echten Betrieb hier stehen muss.</p>
+
+    <h2>Verantwortlicher</h2>
+    <p>{site.legalName}, {site.address.street}, {site.address.zip} {site.address.city} (fiktiv). E-Mail: {site.email}</p>
+    <!-- TODO vom Kunden: echte Angaben, ggf. Datenschutzbeauftragte(r) -->
+
+    <h2>Keine Cookies, keine Tracker</h2>
+    <p>Diese Seite setzt keine Cookies und bindet keine Analyse- oder Werbedienste ein. Schriftarten werden von unserem eigenen Server geladen, nicht von Google oder anderen Anbietern. Karten, Videos oder Social-Media-Schaltflächen von Dritten gibt es nicht.</p>
+
+    <h2>Server-Logfiles und Hosting</h2>
+    <p>Beim Aufruf speichert der Webserver technisch notwendige Daten (IP-Adresse, Zeitpunkt, aufgerufene Seite). Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am sicheren Betrieb).</p>
+    <!-- TODO vom Kunden: Hoster nennen, Auftragsverarbeitungsvertrag (AVV) prüfen, Speicherdauer der Logfiles -->
+
+    <DatenschutzForm
+      formName="Rückruf-Formular (Gang R)"
+      data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Nachricht (freiwillig), Thema und gewünschte Rückrufzeit sowie, wenn Sie den Preisrechner benutzt haben, Ihre dortige Auswahl und die Summe"
+      purpose="Wir rufen Sie zur gewünschten Zeit zurück und bearbeiten Ihre Anfrage."
+    />
+
+    <h2>Preisrechner (Gang 5)</h2>
+    <p>Die Berechnung läuft ausschließlich in Ihrem Browser. Ihre Eingaben werden nicht an uns übertragen. Damit nichts verloren geht, merkt sich Ihr Browser sie nur vorübergehend in diesem Tab (sessionStorage). Der Zwischenspeicher wird gelöscht, wenn Sie den Tab schließen.</p>
+
+    <h2>Aufsichtsbehörde</h2>
+    <p>Sie können sich bei der Datenschutzaufsicht beschweren, in Niedersachsen: Die Landesbeauftragte für den Datenschutz Niedersachsen.</p>
+    <!-- TODO vom Kunden: zuständige Aufsichtsbehörde und Anschrift prüfen -->
+
+    <p><a href={base}>← Zurück zur Startseite</a></p>
+  </main>
+</Base>

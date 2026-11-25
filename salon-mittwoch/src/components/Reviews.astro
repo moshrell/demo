@@ -1,0 +1,50 @@
+---
+import site from '../data/site.json';
+const r = site.reviews;
+---
+<section class="section section--dark reviews" id="stimmen">
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <p class="eyebrow reveal">{r.eyebrow}</p>
+        <h2 class="h2 reveal" style="--d:.08s">{r.title}</h2>
+      </div>
+      <div class="arrows reveal" style="--d:.16s">
+        <button type="button" class="prev" aria-label="Vorherige Stimme">←</button>
+        <button type="button" class="next" aria-label="Nächste Stimme">→</button>
+      </div>
+    </div>
+    <ul class="track" tabindex="0" aria-label="Stimmen von Gästen">
+      {r.items.map((it) => (
+        <li class="quote">
+          <span class="mark" aria-hidden="true">“</span>
+          <p>{it.text}</p>
+          <span class="who">{it.name}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="note">{r.note}</p>
+  </div>
+</section>
+
+<style>
+  .top { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 48px; }
+  .arrows { display: flex; gap: 10px; }
+  .arrows button { width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(246,239,228,.3); background: none; font-size: 1.2rem; cursor: pointer; transition: background .3s, color .3s; }
+  .arrows button:hover { background: var(--cream); color: var(--ink); }
+  .track { list-style: none; margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter) 8px; display: grid; grid-auto-flow: column; grid-auto-columns: min(78vw, 460px); gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; scroll-padding-inline: var(--gutter); }
+  .track::-webkit-scrollbar { display: none; }
+  .quote { scroll-snap-align: start; border: 1px solid rgba(246,239,228,.14); border-radius: var(--radius); padding: 30px 28px; display: grid; align-content: space-between; gap: 22px; min-height: 290px; background: rgba(246,239,228,.03); }
+  .mark { font-family: var(--serif); font-size: 5rem; line-height: .6; color: var(--brass); height: 34px; }
+  .quote p { margin: 0; font-family: var(--serif); font-size: clamp(1.2rem, 1.8vw, 1.45rem); line-height: 1.4; }
+  .who { font-size: .76rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; opacity: .6; }
+  .note { margin: 22px 0 0; font-size: .78rem; opacity: .45; }
+</style>
+
+<script>
+  const root = document.getElementById('stimmen')!;
+  const track = root.querySelector<HTMLElement>('.track')!;
+  const step = () => (track.querySelector('.quote') as HTMLElement).offsetWidth + 20;
+  root.querySelector('.prev')!.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+  root.querySelector('.next')!.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+</script>

@@ -1,0 +1,45 @@
+---
+import '@fontsource/playfair-display/400.css';
+import '@fontsource/playfair-display/400-italic.css';
+import '@fontsource/playfair-display/900.css';
+import '@fontsource-variable/manrope';
+import '../styles/global.css';
+import site from '../data/site.json';
+
+interface Props { title?: string; description?: string; dark?: boolean }
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { title = `${site.legalName} · ${site.type} in ${site.city}`, description = `${site.legalName}: Schnitt, Farbe und Pflege in ${site.city}. Online Termin buchen.`, dark = false } = Astro.props;
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content={dark ? '#0d0907' : '#f7f2ea'} />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+  </head>
+  <body>
+    <slot />
+    <a class="demo-pill" href={site.credit.portfolio}><span aria-hidden="true">←</span> Portfolio <small>· {site.demoNotice}</small></a>
+    <style>
+      .demo-pill {
+        position: fixed; left: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 60;
+        padding: 7px 13px; border-radius: 999px; font-size: .68rem; font-weight: 600; letter-spacing: .08em;
+        background: rgba(29, 20, 16, .85); color: #fbf8f3; text-decoration: none; backdrop-filter: blur(8px); display: inline-flex; gap: 6px; align-items: baseline;
+        border: 1px solid rgba(246, 239, 228, .14);
+      }
+      .demo-pill small { font-size: .62rem; font-weight: 500; opacity: .7; letter-spacing: .04em; }
+      @media (max-width: 480px) { .demo-pill small { display: none; } }
+    </style>
+    <script>
+      // Плавное появление блоков с классом .reveal
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      }, { rootMargin: '0px 0px -10% 0px' });
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>

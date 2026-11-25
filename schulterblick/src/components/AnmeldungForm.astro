@@ -1,0 +1,91 @@
+---
+/**
+ * Voranmeldung (Formular-Standard Kravets Webdesign, angepasst an die Route):
+ *  1. Jedes Feld: label, Platzhalter-Beispiel, autocomplete, type/inputmode.
+ *  2. Pflicht-Häkchen mit Zweck + Link auf datenschutz/ (base-Pfad), Fehlermeldung, wenn nicht gesetzt.
+ *  3. Die Summe kommt vom Zähler der Route (klebende Leiste / Zettel) und steht auch im Plan und in der Bestätigung.
+ *  4. Eingaben gehen nie verloren: sessionStorage-Zwischenspeicher (Logik in app.js), Häkchen wird nie gespeichert.
+ * Es wird nichts gesendet (Demo).
+ */
+import i18n from '../data/i18n.json';
+import site from '../data/site.json';
+const T = (k: string) => i18n[k as keyof typeof i18n].de;
+const base = import.meta.env.BASE_URL;
+const langs = [
+  { v: 'de', n: 'Deutsch' },
+  { v: 'en', n: 'English' },
+  { v: 'uk', n: 'Українська' },
+];
+---
+<section class="form-wrap" aria-labelledby="f-h">
+  <h3 class="sec__h" id="f-h" data-i="f_h">{T('f_h')}</h3>
+  <p class="stop__lead" data-i="f_lead">{T('f_lead')}</p>
+
+  <form class="form" id="anmeldung" novalidate data-form>
+    <div>
+      <h4 class="stop__q" data-i="f_plan_h">{T('f_plan_h')}</h4>
+      <dl class="plan" data-plan></dl>
+    </div>
+
+    <fieldset class="grp">
+      <legend class="stop__q" data-i="f_start_h">{T('f_start_h')}</legend>
+      <div class="opts opts--one">
+        <label class="opt"><input type="radio" name="start" value="call" checked /><span data-i="f_start_call">{T('f_start_call')}</span></label>
+        <label class="opt"><input type="radio" name="start" value="probe" /><span data-i="f_start_probe">{T('f_start_probe')}</span></label>
+        <label class="opt"><input type="radio" name="start" value="buero" /><span data-i="f_start_buero">{T('f_start_buero')}</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset class="grp">
+      <legend class="stop__q" data-i="f_lang_h">{T('f_lang_h')}</legend>
+      <div class="opts">
+        {langs.map((l, i) => (
+          <label class="opt"><input type="radio" name="blang" value={l.v} checked={i === 0} /><span lang={l.v}>{l.n}</span></label>
+        ))}
+      </div>
+    </fieldset>
+
+    <fieldset class="fs">
+      <legend data-i="f_data_h">{T('f_data_h')}</legend>
+      <div class="fld">
+        <label for="f-name" data-i="f_name">{T('f_name')}</label>
+        <input id="f-name" name="name" type="text" autocomplete="name" placeholder={T('f_name_ph')} data-i-ph="f_name_ph" required aria-describedby="f-err-name" />
+        <p class="err" id="f-err-name" data-i="f_name_err" hidden>{T('f_name_err')}</p>
+      </div>
+      <div class="fld">
+        <label for="f-tel" data-i="f_tel">{T('f_tel')}</label>
+        <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder={T('f_tel_ph')} data-i-ph="f_tel_ph" required aria-describedby="f-err-tel" />
+        <p class="err" id="f-err-tel" data-i="f_tel_err" hidden>{T('f_tel_err')}</p>
+      </div>
+      <div class="fld">
+        <label for="f-mail" data-i="f_mail">{T('f_mail')}</label>
+        <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" placeholder={T('f_mail_ph')} data-i-ph="f_mail_ph" aria-describedby="f-err-mail" />
+        <p class="err" id="f-err-mail" data-i="f_mail_err" hidden>{T('f_mail_err')}</p>
+      </div>
+      <div class="fld">
+        <label for="f-note" data-i="f_note">{T('f_note')}</label>
+        <textarea id="f-note" name="note" rows="3" autocomplete="off" placeholder={T('f_note_ph')} data-i-ph="f_note_ph"></textarea>
+      </div>
+    </fieldset>
+
+    <div class="consent">
+      <label class="check">
+        <input type="checkbox" name="privacy" required aria-describedby="f-err-privacy" />
+        <span lang="de">Ich bin einverstanden, dass {site.name} meine Angaben (Name, Telefon, E-Mail, Nachricht) und meine Auswahl aus der Rechnung zur Bearbeitung meiner Voranmeldung verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a></span>
+      </label>
+      <p class="consent__hint" data-i="f_consent_hint" hidden></p>
+      <p class="err" id="f-err-privacy" data-i="f_consent_err" hidden>{T('f_consent_err')}</p>
+    </div>
+
+    <div class="submit">
+      <button class="btn" type="submit" data-i="f_submit">{T('f_submit')}</button>
+      <p data-i="f_demo">{T('f_demo')}</p>
+    </div>
+  </form>
+
+  <div class="done" data-done tabindex="-1" hidden>
+    <h3 data-i="done_h">{T('done_h')}</h3>
+    <dl class="plan" data-done-list></dl>
+    <p class="done__demo" data-i="done_demo">{T('done_demo')}</p>
+  </div>
+</section>

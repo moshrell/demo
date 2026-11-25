@@ -1,0 +1,5 @@
+Artisanal: Foto-Dateien (alle 16:9, schwarzer Hintergrund). Kein Foto -> Seite zeigt eine Ersatzansicht.
+Ordner public/img:       croissant-raw, croissant-baked (Hero, Pixel-genau gleiche Position)
+Ordner public/products:  classic, choc, pistazie, brot, coffee
+Ordner public/photos:    hands, layers, oven, catering
+Endung egal (webp, jpg, png). Originale nach dem Umwandeln in _archive\artisanal-originals ablegen.

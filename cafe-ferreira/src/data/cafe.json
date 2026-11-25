@@ -1,0 +1,262 @@
+{
+  "name": "Tomás Ferreira",
+  "since": 2019,
+  "description": "Portugiesisches Kaffeehaus in Hannover: Bica, Galão und Pingado an der Theke, Fliesenwand aus Azulejos. Demo-Website.",
+  "address": {
+    "street": "Kachelgasse 7",
+    "zip": "30159",
+    "city": "Hannover"
+  },
+  "drinks": [
+    {
+      "id": "bica",
+      "name": "Bica",
+      "price": "1,90",
+      "de": "Der Espresso, kurz und kräftig. In Lissabon heißt er Bica, in Porto Cimbalino.",
+      "pt": "O expresso, curto e forte. Em Lisboa chama-se bica, no Porto cimbalino.",
+      "strength": 5,
+      "milk": 0,
+      "shape": "cup",
+      "layers": [
+        [
+          "coffee",
+          88
+        ],
+        [
+          "crema",
+          12
+        ]
+      ],
+      "label": "Bica: Espresso mit Crema",
+      "abbr": "Bic",
+      "shot": false
+    },
+    {
+      "id": "cheirinho",
+      "name": "Café com Cheirinho",
+      "price": "3,20",
+      "de": "Eine Bica mit einem Schuss Bagaço (Tresterbrand). Für kalte Morgen.",
+      "pt": "Uma bica com um pingo de bagaço. Para manhãs frias.",
+      "strength": 5,
+      "milk": 0,
+      "shape": "cup",
+      "layers": [
+        [
+          "spirit",
+          14
+        ],
+        [
+          "coffee",
+          74
+        ],
+        [
+          "crema",
+          12
+        ]
+      ],
+      "label": "Café com Cheirinho: Espresso über einem Schuss Tresterbrand",
+      "abbr": "Che",
+      "shot": true,
+      "twin": {
+        "of": "bica",
+        "de": "mit einem Schuss Bagaço",
+        "pt": "com um pingo de bagaço"
+      }
+    },
+    {
+      "id": "pingado",
+      "name": "Pingado",
+      "price": "2,10",
+      "de": "Espresso mit einem Tropfen heißer Milch. Der Klassiker für alle, die Milch nur ahnen wollen.",
+      "pt": "Expresso com uma gota de leite quente. O clássico para quem só quer adivinhar o leite.",
+      "strength": 4,
+      "milk": 1.5,
+      "shape": "cup",
+      "layers": [
+        [
+          "coffee",
+          80
+        ],
+        [
+          "milk",
+          12
+        ],
+        [
+          "foam",
+          8
+        ]
+      ],
+      "label": "Pingado: Espresso mit einem Tropfen Milch",
+      "abbr": "Pin",
+      "shot": false
+    },
+    {
+      "id": "abatanado",
+      "name": "Abatanado",
+      "price": "2,20",
+      "de": "Espresso mit mehr Wasser aufgegossen, im größeren Becher. Länger und milder.",
+      "pt": "Expresso com mais água, na chávena grande. Mais comprido e mais suave.",
+      "strength": 2.5,
+      "milk": 0,
+      "shape": "bigcup",
+      "layers": [
+        [
+          "coffee",
+          90
+        ],
+        [
+          "crema",
+          10
+        ]
+      ],
+      "label": "Abatanado: langer Espresso im großen Becher",
+      "abbr": "Aba",
+      "shot": false
+    },
+    {
+      "id": "meia",
+      "name": "Meia de Leite",
+      "price": "2,60",
+      "de": "Halb Kaffee, halb Milch, in der Tasse. Das Frühstücksgetränk.",
+      "pt": "Metade café, metade leite, na chávena. A bebida do pequeno-almoço.",
+      "strength": 2.5,
+      "milk": 2.5,
+      "shape": "mug",
+      "layers": [
+        [
+          "coffee",
+          48
+        ],
+        [
+          "milk",
+          42
+        ],
+        [
+          "foam",
+          10
+        ]
+      ],
+      "label": "Meia de Leite: je zur Hälfte Kaffee und Milch",
+      "abbr": "Mei",
+      "shot": false
+    },
+    {
+      "id": "galao",
+      "name": "Galão",
+      "price": "3,00",
+      "de": "Ein Viertel Kaffee, drei Viertel Milch, im hohen Glas. Zucker liegt daneben.",
+      "pt": "Um quarto de café, três quartos de leite, no copo alto. O açúcar fica ao lado.",
+      "strength": 1,
+      "milk": 4,
+      "shape": "glass",
+      "layers": [
+        [
+          "coffee",
+          25
+        ],
+        [
+          "milk",
+          60
+        ],
+        [
+          "foam",
+          15
+        ]
+      ],
+      "label": "Galão: ein Viertel Kaffee, drei Viertel Milch im Glas",
+      "abbr": "Gal",
+      "shot": false
+    }
+  ],
+  "phrases": [
+    {
+      "photo": "bica",
+      "alt": "Eine kleine weiße Tasse Bica auf der Theke vor blauen Fliesen",
+      "pt": "Uma bica, por favor.",
+      "de": "Einen Espresso, bitte.",
+      "sound": "úma BI-ka, pur fa-WOR"
+    },
+    {
+      "photo": "galao",
+      "alt": "Ein hohes Glas Galão auf einem gefliesten Tisch",
+      "pt": "Um galão, por favor.",
+      "de": "Einen Milchkaffee im Glas, bitte.",
+      "sound": "um ga-LÃU, pur fa-WOR"
+    },
+    {
+      "photo": "pastel",
+      "alt": "Zwei Pastéis de nata auf einem kleinen Teller neben einer Tasse",
+      "pt": "Dois pastéis de nata, por favor.",
+      "de": "Zwei Pastéis de nata, bitte.",
+      "sound": "dosch pasch-TÄISCH de NA-ta, pur fa-WOR"
+    },
+    {
+      "photo": "uebergabe",
+      "alt": "Hände reichen über die Theke eine Tasse Kaffee",
+      "pt": "Obrigado! Obrigada!",
+      "de": "Danke! Männer sagen obrigado, Frauen obrigada.",
+      "sound": "o-bri-GA-du, o-bri-GA-da"
+    }
+  ],
+  "food": [
+    {
+      "name": "Pastel de nata",
+      "price": "1,80",
+      "de": "Blätterteig, Vanillecreme, Zimt. Warm am besten.",
+      "pt": "Massa folhada, creme de baunilha, canela. Melhor quente."
+    },
+    {
+      "name": "Pastel de bacalhau",
+      "price": "2,60",
+      "de": "Kroketten mit Stockfisch und Kartoffel.",
+      "pt": "Croquetes de bacalhau com batata."
+    },
+    {
+      "name": "Tosta mista",
+      "price": "4,50",
+      "de": "Getoastetes Weißbrot mit Kochschinken und Käse.",
+      "pt": "Pão de forma torrado com fiambre e queijo."
+    },
+    {
+      "name": "Bolo de arroz",
+      "price": "2,20",
+      "de": "Kleiner Kuchen aus Reismehl, außen knusprig, innen weich.",
+      "pt": "Bolo pequeno de farinha de arroz, estaladiço por fora, macio por dentro."
+    },
+    {
+      "name": "Torrada com manteiga",
+      "price": "2,40",
+      "de": "Dick geschnittenes Weißbrot, geröstet, mit Butter.",
+      "pt": "Pão grosso torrado, com manteiga."
+    }
+  ],
+  "hours": [
+    {
+      "days": "1,2,3,4,5",
+      "from": "07:30",
+      "to": "18:00",
+      "de": "Montag bis Freitag",
+      "pt": "Segunda a sexta",
+      "time": "07:30 bis 18:00 Uhr",
+      "timePt": "07:30 às 18:00"
+    },
+    {
+      "days": "6",
+      "from": "08:00",
+      "to": "18:00",
+      "de": "Samstag",
+      "pt": "Sábado",
+      "time": "08:00 bis 18:00 Uhr",
+      "timePt": "08:00 às 18:00"
+    },
+    {
+      "days": "0",
+      "from": "09:00",
+      "to": "16:00",
+      "de": "Sonntag",
+      "pt": "Domingo",
+      "time": "09:00 bis 16:00 Uhr",
+      "timePt": "09:00 às 16:00"
+    }
+  ]
+}

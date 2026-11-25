@@ -1,0 +1,381 @@
+---
+import Base from '../layouts/Base.astro';
+import CallbackForm from '../components/CallbackForm.astro';
+import site from '../data/site.json';
+
+const base = import.meta.env.BASE_URL;
+const img = (n: string) => `${base}img/${n}.webp`;
+const euro = (c: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(c / 100);
+const g = (id: string) => site.gears.find((x) => x.id === id)!;
+
+// Hebel-Geometrie (viewBox 300 x 200): 4 Gassen, 3 Reihen. Muss zu src/scripts/gear.js passen.
+const COLS = [40, 113.33, 186.67, 260];
+const Y = [40, 100, 160];
+const labels = [
+  { k: 'R', x: COLS[0], y: 19 }, { k: '1', x: COLS[1], y: 19 }, { k: '3', x: COLS[2], y: 19 }, { k: '5', x: COLS[3], y: 19 },
+  { k: '2', x: COLS[1], y: 192 }, { k: '4', x: COLS[2], y: 192 }, { k: '6', x: COLS[3], y: 192 }, { k: 'N', x: 150, y: 127 },
+];
+const wdth: Record<string, number> = { '1': 78, '2': 86, '3': 94, '4': 102, '5': 110, '6': 118, R: 100, N: 100 };
+---
+<Base shell title="Sechsgang · Überführung, Fahrzeugsuche, Charter (Demo)" description="Demo-Seite: Fahrzeugdienste mit Schalthebel-Navigation. Betrieb und Personen erfunden.">
+  <nav class="nojs-nav" aria-label="Gänge">
+    {site.gears.map((x) => <a href={`#${x.id}`}>{x.key} {x.short}</a>)}
+  </nav>
+
+  <div class="cockpit" data-cockpit>
+    <header class="top">
+      <a class="brand" href={`${base}`} aria-label="Sechsgang, Startseite">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"><path d="M7 5v22M16 5v22M25 5v22M7 16h18"/></g><circle cx="25" cy="5" r="3" fill="#ff5a1f"/></svg>
+        Sechsgang
+      </a>
+      <div class="top__tools">
+        <a class="pill" href={`tel:${site.phoneHref}`} aria-label={`Anrufen: ${site.phone}`}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>
+          Anrufen
+        </a>
+      </div>
+      <div class="road" aria-hidden="true"><div class="rev" data-rev></div></div>
+    </header>
+
+    <main class="stage" id="main">
+      <div class="strip" data-strip>
+
+        <!-- R · Rückruf -->
+        <section class="panel panel--r" id="p-r" data-gear="R" role="tabpanel" aria-labelledby="t-r">
+          <div class="panel__in">
+            <header class="p-head">
+              <span class="p-num" aria-hidden="true">R</span>
+              <p class="eyebrow">Gang R · Rückruf</p>
+              <h2 class="p-title" style={`--w:${wdth.R}`}>Wir rufen Sie zurück.</h2>
+              <p class="lead">Sagen Sie uns kurz, worum es geht. Wir melden uns zur gewünschten Zeit und nennen Ihnen einen festen Preis.</p>
+            </header>
+            <CallbackForm
+              id="rueckruf"
+              title="Rückruf anfordern"
+              submitLabel="Rückruf anfordern"
+              purpose="Ihrer Rückruf-Anfrage"
+              groups={[
+                { name: 'topic', label: 'Worum geht es?', options: site.topics },
+                { name: 'when', label: 'Wann sollen wir anrufen?', options: site.callbackTimes },
+              ]}
+            />
+            <p class="legal"><a href={`${base}impressum/`} target="_blank" rel="noopener">Impressum</a> · <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutz</a></p>
+          </div>
+        </section>
+
+        <!-- N · Start -->
+        <section class="panel panel--n" id="p-n" data-gear="N" role="tabpanel" aria-labelledby="t-n">
+          <img class="p-bg" src={img('knob')} width="1200" height="896" alt="" fetchpriority="high" decoding="async" />
+          <div class="panel__in">
+            <p class="eyebrow">Fahrzeugdienste · Gehrden bei Hannover</p>
+            <h1 class="display">Sechs Gänge, <span>ein Ziel:</span> Ihr Fahrzeug kommt an.</h1>
+            <p class="lead">Überführung, Fahrzeugsuche, Chauffeur-Charter und die Papiere dazu. Legen Sie den Gang ein, den Sie brauchen.</p>
+            <p class="shifthint">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></svg>
+              <span class="shifthint__t">Ziehen Sie den Hebel unten durch die Schaltkulisse. Oder tippen Sie auf eine Karte.</span>
+            </p>
+            <ul class="cards">
+              {['1', '2', '3', '4', '5', '6', 'r'].map((id) => (
+                <li class={id === 'r' ? 'card--r' : ''}>
+                  <a class={`card ${id === 'r' ? 'card--r' : ''}`} href={`#${id}`} data-goto={id}>
+                    <span class="card__n">{g(id).key}</span>
+                    <span class="card__t">{g(id).title}</span>
+                    <span class="card__l">{g(id).line}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <p class="legal">Demo-Seite: Betrieb, Preise und Personen sind erfunden. <a href={`${base}impressum/`} target="_blank" rel="noopener">Impressum</a> · <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutz</a></p>
+          </div>
+        </section>
+
+        <!-- 1 · Überführung -->
+        <section class="panel" id="p-1" data-gear="1" role="tabpanel" aria-labelledby="t-1">
+          <div class="panel__in">
+            <header class="p-head">
+              <span class="p-num" aria-hidden="true">1</span>
+              <p class="eyebrow">Gang 1 · Überführung</p>
+              <h2 class="p-title" style={`--w:${wdth['1']}`}>Von A nach B, ohne dass Sie fahren.</h2>
+              <p class="lead">Wir bringen Ihr Fahrzeug dorthin, wo es gebraucht wird: für Autohäuser, Flotten, Leasing-Rückläufer und Privatkunden.</p>
+            </header>
+            <figure class="fig"><img src={img('verlad')} width="896" height="1200" alt="Dunkelgrauer Kleinwagen auf der Rampe eines Autotransporters" decoding="async" /></figure>
+
+            <div class="modes">
+              <input type="radio" name="mode" id="mode-a" checked />
+              <input type="radio" name="mode" id="mode-b" />
+              <div class="seg" role="presentation">
+                <label for="mode-a">Auf eigener Achse</label>
+                <label for="mode-b">Auf Anhänger</label>
+              </div>
+              <div class="mode mode--a">
+                <h3>Auf eigener Achse</h3>
+                <p>Ein geschulter Fahrer fährt das Fahrzeug selbst. Es muss verkehrssicher sein und eine gültige HU (Hauptuntersuchung, der TÜV) haben.</p>
+                <ul class="checks">
+                  <li>Mit Ihrem Kennzeichen oder mit Kurzzeitkennzeichen (gilt höchstens 5 Tage)</li>
+                  <li>Haftpflicht geklärt über die eVB-Nummer (elektronische Versicherungsbestätigung)</li>
+                  <li>Die Rückreise des Fahrers ist im Preis enthalten</li>
+                </ul>
+              </div>
+              <div class="mode mode--b">
+                <h3>Auf Anhänger</h3>
+                <p>Für Fahrzeuge ohne HU, ohne Zulassung, mit Defekt oder von besonderem Wert: Wir verladen, sichern mit Radgurten und fahren auf dem Anhänger.</p>
+                <ul class="checks">
+                  <li>Auch ohne Kennzeichen und ohne gültige HU</li>
+                  <li>Für Neuwagen, Oldtimer und Unfallfahrzeuge</li>
+                  <li>Abholung und Ziel auch auf Betriebshöfen und in Hallen</li>
+                </ul>
+              </div>
+            </div>
+
+            <section class="sec" aria-labelledby="proto-h">
+              <h3 id="proto-h">Übergabeprotokoll bei jeder Fahrt</h3>
+              <figure class="fig"><img src={img('uebergabe')} width="1200" height="896" alt="Autoschlüssel mit orangem Anhänger auf der Motorhaube" decoding="async" /></figure>
+              <ul class="checks">
+                {site.protocol.map((p) => <li>{p}</li>)}
+              </ul>
+              <p class="muted">Das Protokoll bekommen Sie per E-Mail, vor der Fahrt und nach der Ankunft.</p>
+            </section>
+            <div class="btns">
+              <a class="btn btn--primary" href="#5" data-goto="5">Preis berechnen</a>
+              <a class="btn" href="#r" data-goto="r">Rückruf</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2 · Fahrzeugsuche -->
+        <section class="panel" id="p-2" data-gear="2" role="tabpanel" aria-labelledby="t-2">
+          <div class="panel__in">
+            <header class="p-head">
+              <span class="p-num" aria-hidden="true">2</span>
+              <p class="eyebrow">Gang 2 · Fahrzeugsuche</p>
+              <h2 class="p-title" style={`--w:${wdth['2']}`}>Wir besorgen das Fahrzeug, das Sie beschreiben.</h2>
+              <p class="lead">Wir suchen, prüfen vor Ort und holen ab. Sie treffen die Entscheidung und kaufen selbst.</p>
+            </header>
+            <figure class="fig"><img src={img('suche')} width="896" height="1200" alt="Reihe gebrauchter Autos auf einem Händlerhof im Abendlicht" decoding="async" /></figure>
+            <ol class="steps">
+              {site.searchSteps.map((s) => <li><b>{s.t}</b><span>{s.d}</span></li>)}
+            </ol>
+            <p class="note">Wir verkaufen keine Fahrzeuge. Der Kaufvertrag besteht zwischen Ihnen und dem Verkäufer. Wir sind Ihre Augen, Ihre Füße und Ihr Fahrer.</p>
+            <div class="btns">
+              <a class="btn btn--primary" href="#5" data-goto="5">Suche kalkulieren</a>
+              <a class="btn" href="#r" data-goto="r">Rückruf</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3 · Charter -->
+        <section class="panel" id="p-3" data-gear="3" role="tabpanel" aria-labelledby="t-3">
+          <div class="panel__in">
+            <header class="p-head">
+              <span class="p-num" aria-hidden="true">3</span>
+              <p class="eyebrow">Gang 3 · Charter</p>
+              <h2 class="p-title" style={`--w:${wdth['3']}`}>Fahrzeug mit Fahrer für Ihren Anlass.</h2>
+              <p class="lead">Ihre Gäste steigen ein, wir kümmern uns um Route, Zeit und Parkplatz. Abgerechnet wird nach Stunden.</p>
+            </header>
+            <figure class="fig"><img src={img('charter')} width="896" height="1200" alt="Dunkler Van wartet abends vor einem Hoteleingang" decoding="async" /></figure>
+            <ul class="fleet">
+              {site.charter.vehicles.map((v) => (
+                <li class="veh">
+                  <b>{v.name}</b>
+                  <span class="veh__p">ab {euro(v.perHourCents)}/Std.</span>
+                  <small>{v.seats}. {v.note}</small>
+                </li>
+              ))}
+            </ul>
+            <p class="calc__fine">Mindestbuchung {site.charter.minHours} Stunden, Preise inkl. MwSt. (Demo, erfundene Preise).</p>
+            <section class="sec" aria-labelledby="uses-h">
+              <h3 id="uses-h">Wofür Kunden uns buchen</h3>
+              <ul class="tags">{site.charter.uses.map((u) => <li>{u}</li>)}</ul>
+            </section>
+            <div class="btns">
+              <a class="btn btn--primary" href="#5" data-goto="5">Charter kalkulieren</a>
+              <a class="btn" href="#r" data-goto="r">Rückruf</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4 · Papiere -->
+        <section class="panel" id="p-4" data-gear="4" role="tabpanel" aria-labelledby="t-4">
+          <div class="panel__in">
+            <header class="p-head">
+              <span class="p-num" aria-hidden="true">4</span>
+              <p class="eyebrow">Gang 4 · Papiere</p>
+              <h2 class="p-title" style={`--w:${wdth['4']}`}>Kennzeichen und Papiere: das Formelle klären wir.</h2>
+              <p class="lead">Ohne die richtigen Papiere rollt kein Fahrzeug. Hier steht, worauf es ankommt.</p>
+            </header>
+            <div class="acc">
+              {site.papers.map((p, i) => (
+                <details open={i === 0}>
+                  <summary>{p.t}</summary>
+                  <p>{p.d}</p>
+                </details>
+              ))}
+            </div>
+            <section class="sec" aria-labelledby="needs-h">
+              <h3 id="needs-h">Das brauchen wir von Ihnen</h3>
+              <ul class="checks">{site.needs.map((n) => <li>{n}</li>)}</ul>
+            </section>
+            <p class="calc__fine">Angaben ohne Gewähr, Stand Oktober 2026. Gebühren und Abläufe unterscheiden sich je nach Zulassungsbehörde.</p>
+            <div class="btns">
+              <a class="btn btn--primary" href="#r" data-goto="r">Papiere klären lassen</a>
+              <a class="btn" href="#5" data-goto="5">Preise</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5 · Preise -->
+        <section class="panel" id="p-5" data-gear="5" role="tabpanel" aria-labelledby="t-5">
+          <div class="panel__in">
+            <header class="p-head">
+              <span class="p-num" aria-hidden="true">5</span>
+              <p class="eyebrow">Gang 5 · Preise</p>
+              <h2 class="p-title" style={`--w:${wdth['5']}`}>Rechnen Sie selbst, die Summe läuft mit.</h2>
+              <p class="lead">Wählen Sie die Leistung. Der Preis steht sofort unten, ohne Anmeldung und ohne Anruf.</p>
+            </header>
+
+            <div class="calc" data-calc-root>
+              <fieldset>
+                <legend>Leistung</legend>
+                <div class="chips">
+                  <label class="chip"><input type="radio" name="svc" value="own" checked /><span>Überführung eigene Achse</span></label>
+                  <label class="chip"><input type="radio" name="svc" value="trailer" /><span>Überführung Anhänger</span></label>
+                  <label class="chip"><input type="radio" name="svc" value="charter" /><span>Charter mit Fahrer</span></label>
+                  <label class="chip"><input type="radio" name="svc" value="search" /><span>Fahrzeugsuche</span></label>
+                </div>
+              </fieldset>
+
+              <fieldset data-for="own trailer">
+                <legend>Strecke</legend>
+                <div class="kmrow">
+                  <input type="range" id="km-range" min="10" max="1500" step="10" value="150" aria-label="Entfernung in Kilometern" />
+                  <div class="field">
+                    <label for="km">Kilometer</label>
+                    <input class="num" id="km" type="number" inputmode="numeric" min="10" max="2000" step="1" value="150" placeholder="z. B. 240" />
+                  </div>
+                </div>
+                <p class="calc__fine">Entfernung zwischen Abholung und Ziel, grob nach Straße. Wir bestätigen die genaue Strecke im Rückruf.</p>
+              </fieldset>
+
+              <fieldset data-for="charter" hidden>
+                <legend>Fahrzeug</legend>
+                <div class="chips">
+                  {site.charter.vehicles.map((v, i) => (
+                    <label class="chip"><input type="radio" name="veh" value={v.id} checked={i === 0} /><span>{v.name}, {euro(v.perHourCents)}/Std.</span></label>
+                  ))}
+                </div>
+              </fieldset>
+              <fieldset data-for="charter" hidden>
+                <legend>Dauer</legend>
+                <div class="stepper" role="group" aria-label="Dauer in Stunden">
+                  <button type="button" data-hours="-1" aria-label="Eine Stunde weniger">−</button>
+                  <output id="hours" aria-live="polite">3 Std.</output>
+                  <button type="button" data-hours="1" aria-label="Eine Stunde mehr">+</button>
+                </div>
+                <p class="calc__fine">Mindestbuchung {site.charter.minHours} Stunden.</p>
+              </fieldset>
+
+              <fieldset>
+                <legend>Zusätze</legend>
+                {site.extras.map((e) => (
+                  <label class="opt" data-for={e.for.join(' ')}>
+                    <input type="checkbox" name="extra" value={e.id} />
+                    <span>{e.name}</span>
+                    <span>+{euro(e.cents)}</span>
+                  </label>
+                ))}
+                <p class="calc__fine" data-no-extras hidden>Für Charter gibt es keine Zusätze.</p>
+              </fieldset>
+
+              <section aria-labelledby="calc-h">
+                <h3 id="calc-h">Ihre Rechnung</h3>
+                <dl class="calc__rows" data-rows aria-live="polite"></dl>
+                <p class="calc__fine">Alle Preise inkl. 19 % MwSt., „ab“-Preise. Demo: Preise erfunden, Rechnung nur zur Vorführung.</p>
+              </section>
+
+              <figure class="fig"><img src={img('strasse')} width="896" height="1200" alt="Silberner Kombi auf leerer Autobahn in der Dämmerung" loading="lazy" decoding="async" /></figure>
+
+              <div class="sumbar">
+                <p class="sumbar__t"><span data-count>Noch nichts gewählt</span><span>Summe ab <strong data-total>–</strong></span></p>
+                <a class="btn btn--primary" href="#r" data-goto="r" data-cta>Anfragen</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6 · Über uns -->
+        <section class="panel" id="p-6" data-gear="6" role="tabpanel" aria-labelledby="t-6">
+          <div class="panel__in">
+            <header class="p-head">
+              <span class="p-num" aria-hidden="true">6</span>
+              <p class="eyebrow">Gang 6 · Über uns</p>
+              <h2 class="p-title" style={`--w:${wdth['6']}`}>Aus Gehrden, mit Blick auf die Straße.</h2>
+              <p class="lead">Sechsgang ist ein kleiner Betrieb am Deister, vor den Toren Hannovers. Wir fahren selbst, damit nichts auf dem Weg verloren geht.</p>
+            </header>
+            <figure class="fig"><img src={img('region')} width="896" height="1200" alt="Landstraße durch herbstliche Hügel in Niedersachsen" loading="lazy" decoding="async" /></figure>
+            <section class="sec" aria-labelledby="rules-h">
+              <h3 id="rules-h">Drei Regeln</h3>
+              <ol class="rules">
+                {site.rules.map((r) => <li><b>{r.t}</b><span>{r.d}</span></li>)}
+              </ol>
+            </section>
+            <section class="sec" aria-labelledby="area-h">
+              <h3 id="area-h">Einsatzgebiet</h3>
+              <ul class="tags">{site.areas.map((a) => <li>{a}</li>)}</ul>
+            </section>
+            <address class="contact">
+              <strong>{site.legalName}</strong>
+              <span>{site.address.street}, {site.address.zip} {site.address.city}</span>
+              <span>Telefon <a href={`tel:${site.phoneHref}`}>{site.phone}</a></span>
+              <span>E-Mail <a href={`mailto:${site.email}`}>{site.email}</a></span>
+              <span>{site.hours}</span>
+            </address>
+            <p class="demo-note">Demo: Betrieb, Adresse, Telefonnummer und Preise sind erfunden. Telefon und E-Mail sind absichtlich nicht erreichbar.</p>
+            <p class="legal"><a href={`${base}impressum/`} target="_blank" rel="noopener">Impressum</a> · <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutz</a></p>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <section class="dock" aria-label="Schalthebel zur Navigation">
+      <div class="gate" data-gate>
+        <svg class="gate__svg" viewBox="0 0 300 200" aria-hidden="true" focusable="false">
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <g stroke="#434850" stroke-width="30">
+              <path d={`M${COLS[0]} ${Y[1]}H${COLS[3]}`} /><path d={`M${COLS[0]} ${Y[0]}V${Y[1]}`} />
+              {[1, 2, 3].map((c) => <path d={`M${COLS[c]} ${Y[0]}V${Y[2]}`} />)}
+            </g>
+            <g stroke="#07080a" stroke-width="24">
+              <path d={`M${COLS[0]} ${Y[1]}H${COLS[3]}`} /><path d={`M${COLS[0]} ${Y[0]}V${Y[1]}`} />
+              {[1, 2, 3].map((c) => <path d={`M${COLS[c]} ${Y[0]}V${Y[2]}`} />)}
+            </g>
+          </g>
+          <circle cx="150" cy="100" r="3" fill="#ff5a1f" opacity="0.8" />
+          {labels.map((l) => <text class="gl" data-gl={l.k} x={l.x} y={l.y}>{l.k}</text>)}
+        </svg>
+        <button class="knob" type="button" data-knob aria-label="Schalthebel. Ziehen oder Pfeiltasten benutzen" aria-describedby="knob-help"><span class="knob__d" data-knob-d>N</span></button>
+      </div>
+
+      <div class="dock__info">
+        <p class="dock__big" data-big aria-hidden="true">N</p>
+        <p class="dock__name" data-name aria-live="polite">Leerlauf · Start</p>
+        <p class="dock__speed" data-speed>0 km/h</p>
+        <p class="dock__hint" id="knob-help">Hebel ziehen. Mit der Tastatur: Pfeil links/rechts wechselt den Gang, hoch/runter schaltet in der Gasse.</p>
+        <button class="dock__all" type="button" data-list-toggle aria-expanded="false" aria-controls="gear-list">Alle Gänge</button>
+      </div>
+
+      <button class="dock__open" type="button" data-dock-open aria-label="Schalthebel einblenden">Schalten</button>
+
+      <div class="gearlist" id="gear-list" role="tablist" aria-label="Gänge" data-list>
+        {site.gears.map((x) => (
+          <button class="gt" type="button" role="tab" id={`t-${x.id}`} aria-controls={`p-${x.id}`} aria-selected={x.key === 'N' ? 'true' : 'false'} data-tab={x.key} data-title={x.key === 'N' ? 'Leerlauf · Start' : x.title}><b>{x.key}</b><span>{x.key === 'N' ? 'Start' : x.title}</span></button>
+        ))}
+      </div>
+    </section>
+  </div>
+
+  <script>
+    import '../scripts/gear.js';
+    import '../scripts/calc.js';
+  </script>
+</Base>

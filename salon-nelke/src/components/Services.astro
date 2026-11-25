@@ -1,0 +1,192 @@
+---
+import site from '../data/site.json';
+const s = site.services;
+const arr = (v: number | number[]) => (Array.isArray(v) ? v : [v, v, v]);
+---
+<section class="section karte" id="karte">
+  <div class="wrap">
+    <header class="top">
+      <div>
+        <p class="eyebrow reveal">{s.eyebrow}</p>
+        <h2 class="h2" data-split>{s.title}</h2>
+      </div>
+      <p class="lead reveal" style="--d:.16s">{s.note}</p>
+    </header>
+
+    <div class="controls reveal" style="--d:.2s">
+      <div class="tabs" role="tablist" aria-label="Kategorie">
+        {s.categories.map((c, i) => (
+          <button type="button" role="tab" id={`tab-${c.id}`} aria-controls={`panel-${c.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>{c.label}</button>
+        ))}
+      </div>
+      <div class="lengths" role="radiogroup" aria-label="Haarlänge">
+        <span class="lbl">Haarlänge</span>
+        {s.lengths.map((l, i) => (
+          <button type="button" role="radio" data-len={i} aria-checked={i === 1 ? 'true' : 'false'}><span>{l.label}</span><small>{l.hint}</small></button>
+        ))}
+      </div>
+    </div>
+
+    <div class="layout">
+      <div class="panels">
+        {s.categories.map((c, ci) => (
+          <ul class="list" role="tabpanel" id={`panel-${c.id}`} aria-labelledby={`tab-${c.id}`} hidden={ci !== 0}>
+            {c.items.map((it, ii) => (
+              <li class="item" data-key={`${c.id}-${ii}`} data-name={it.name} data-consult={(it as any).consult ? '1' : undefined} data-price={JSON.stringify(arr(it.price))} data-min={JSON.stringify(arr(it.min))}>
+                <div class="txt">
+                  <h3>{it.name}{(it as any).consult && <span class="badge">mit Beratung</span>}</h3>
+                  <p>{it.desc}</p>
+                </div>
+                <span class="leader" aria-hidden="true"></span>
+                <span class="dur"></span>
+                <span class="price"></span>
+                <button type="button" class="add" aria-pressed="false" aria-label={`${it.name} zur Auswahl hinzufügen`}><span aria-hidden="true">+</span></button>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+
+      <aside class="summary" aria-live="polite">
+        <p class="eyebrow">Ihre Auswahl <span>· unverbindlich</span></p>
+        <ul class="picked"><li class="empty">Noch nichts gewählt. Tippen Sie auf +.</li></ul>
+        <div class="totals">
+          <span><small>Dauer</small><b class="t-min">0 Min.</b></span>
+          <span><small>Preis</small><b class="t-price">0 €</b></span>
+        </div>
+        <p class="hint-consult" hidden>Mit Beratung: Sie nennen Wunschtage, wir rufen zurück und schlagen einen Termin vor.</p>
+        <a class="btn btn--solid go" href="#termin" aria-disabled="true"><span class="go-label">Mit Auswahl buchen</span> <span class="arr">→</span></a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .karte { background: var(--paper); }
+  .top { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: end; margin-bottom: clamp(36px, 6vh, 64px); }
+  .top .lead { margin: 0; }
+  .controls { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px; margin-bottom: 26px; }
+  .tabs, .lengths { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .lengths button { display: grid; justify-items: center; gap: 0; line-height: 1.15; padding: 7px 16px; }
+  .lengths button small { font-size: .62rem; font-weight: 500; opacity: .7; }
+  .tabs button, .lengths button { border: 2px solid var(--ink); background: var(--cream); border-radius: 999px; padding: 9px 18px; min-height: 44px; font-size: .88rem; font-weight: 700; cursor: pointer; transition: transform .25s var(--pop), background .2s, box-shadow .2s; }
+  .tabs button:hover, .lengths button:hover { transform: translateY(-3px) rotate(-1.5deg); }
+  .tabs button[aria-selected="true"], .lengths button[aria-checked="true"] { background: var(--ink); color: var(--cream); box-shadow: 3px 3px 0 var(--coral); }
+  .lengths .lbl { font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; opacity: .65; margin-right: 6px; }
+
+  .layout { display: grid; grid-template-columns: 1fr 340px; gap: clamp(28px, 4vw, 64px); align-items: start; }
+  .panels { background: var(--cream); border: 2px solid var(--ink); border-radius: var(--radius); box-shadow: var(--shadow); padding: clamp(8px, 2vw, 22px) clamp(14px, 3vw, 36px); position: relative; }
+  .panels::before { content: ""; position: absolute; inset: 8px; border: 1px dashed var(--line); border-radius: calc(var(--radius) - 8px); pointer-events: none; }
+  .list { list-style: none; margin: 0; padding: 0; animation: swap .5s var(--ease); }
+  @keyframes swap { from { opacity: 0; transform: translateY(12px); } }
+  .item { display: grid; grid-template-columns: auto 1fr auto auto 46px; align-items: end; gap: 14px; padding: 20px 0; border-bottom: 1px dashed var(--line); transition: background .25s; }
+  .item:last-child { border-bottom: 0; }
+  .item h3 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: clamp(1.2rem, 2vw, 1.6rem); line-height: 1.15; font-variation-settings: "SOFT" 100; }
+  .item p { margin: 3px 0 0; font-size: .88rem; color: var(--ink-soft); }
+  .leader { align-self: end; margin-bottom: .55em; height: 0; border-bottom: 3px dotted rgba(28, 37, 65, .35); min-width: 16px; }
+  .dur { font-size: .82rem; color: var(--ink-soft); white-space: nowrap; margin-bottom: .2em; }
+  .price { font-family: var(--serif); font-size: clamp(1.3rem, 2vw, 1.7rem); font-weight: 700; white-space: nowrap; min-width: 4ch; text-align: right; font-variant-numeric: lining-nums tabular-nums; }
+  .add { align-self: center; width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--ink); background: var(--butter); cursor: pointer; font-size: 1.4rem; font-weight: 700; line-height: 1; display: grid; place-items: center; box-shadow: 2px 2px 0 var(--ink); transition: transform .3s var(--pop), background .2s; }
+  .add:hover { transform: scale(1.12) rotate(8deg); }
+  .add[aria-pressed="true"] { background: var(--coral); transform: rotate(135deg); }
+  .badge { display: inline-block; vertical-align: middle; margin-left: 10px; padding: 2px 9px; border-radius: 999px; background: var(--sky); border: 1.5px solid var(--ink); font-family: var(--sans); font-size: .62rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-variation-settings: normal; }
+
+  /* Bon: печатается построчно, снизу рваный край */
+  .summary { position: sticky; top: 96px; background: #fffdf6; border: 0; padding: 26px 24px 38px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .86rem; transform: rotate(1.2deg); filter: drop-shadow(5px 5px 0 var(--ink)); -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%; mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%; border-top: 6px solid var(--coral); }
+  .summary .eyebrow { margin-bottom: 14px; font-family: var(--sans); }
+  .summary .eyebrow::before { content: "✂"; color: var(--ink); }
+  .summary .eyebrow span { opacity: .6; letter-spacing: .06em; }
+  .picked { list-style: none; margin: 0 0 14px; padding: 0 0 14px; border-bottom: 2px dashed var(--ink); display: grid; gap: 8px; }
+  .picked :global(li) { display: flex; justify-content: space-between; gap: 14px; animation: print .45s var(--ease) both; }
+  @keyframes print { from { opacity: 0; transform: translateY(-14px); clip-path: inset(0 0 100% 0); } }
+  .picked :global(li span:last-child) { white-space: nowrap; }
+  .picked :global(.empty) { opacity: .55; }
+  .hint-consult { margin: 0 0 14px; font-family: var(--sans); font-size: .82rem; line-height: 1.45; color: var(--ink); background: var(--sky); padding: 8px 10px; border-radius: 8px; }
+  .totals { display: flex; justify-content: space-between; margin-bottom: 18px; }
+  .totals span { display: grid; }
+  .totals small { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; opacity: .6; }
+  .totals b { font-size: 1.5rem; font-weight: 700; }
+  .go { width: 100%; font-family: var(--sans); }
+  .go[aria-disabled="true"] { opacity: .35; pointer-events: none; }
+
+  @media (max-width: 960px) {
+    .top { grid-template-columns: 1fr; }
+    .layout { grid-template-columns: 1fr; }
+    .summary { position: sticky; top: auto; bottom: calc(60px + env(safe-area-inset-bottom)); transform: none; padding: 12px 16px 18px; display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; align-items: center; z-index: 6; mask: none; -webkit-mask: none; filter: none; border: 2px solid var(--ink); border-radius: 16px; box-shadow: 4px 4px 0 var(--ink); }
+    .summary .eyebrow, .picked { display: none; }
+    .totals { padding: 0; margin: 0; gap: 22px; justify-content: start; }
+    .totals b { font-size: 1.2rem; }
+    .go { width: auto; min-height: 44px; padding: 0 16px; font-size: .78rem; }
+    .hint-consult { grid-column: 1 / -1; margin: 0; font-size: .75rem; }
+  }
+  @media (max-width: 560px) {
+    .item { grid-template-columns: 1fr auto 46px; gap: 4px 12px; }
+    .leader { display: none; }
+    .dur { grid-column: 1; grid-row: 2; }
+    .price { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+    .add { grid-column: 3; grid-row: 1 / span 2; }
+  }
+  @media (prefers-reduced-motion: reduce) { .list, .picked :global(li) { animation: none; } }
+  @media (max-width: 560px) {
+    .lengths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .lengths .lbl { grid-column: 1 / -1; margin: 0; }
+    .lengths button { padding: 7px 6px; }
+  }
+</style>
+
+<script>
+  const root = document.getElementById('karte')!;
+  const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+  const lens = [...root.querySelectorAll<HTMLButtonElement>('[data-len]')];
+  const items = [...root.querySelectorAll<HTMLLIElement>('.item')];
+  const picked = root.querySelector('.picked')!, tMin = root.querySelector('.t-min')!, tPrice = root.querySelector('.t-price')!;
+  const go = root.querySelector<HTMLAnchorElement>('.go')!;
+  let len = 1;
+  const chosen = new Set<string>();
+  const eur = (n: number) => `${n} €`;
+  const mins = (n: number) => (n >= 60 ? `${Math.floor(n / 60)} Std.${n % 60 ? ` ${n % 60} Min.` : ''}` : `${n} Min.`);
+  const val = (li: HTMLElement, k: 'price' | 'min') => (JSON.parse(li.dataset[k]!) as number[])[len];
+
+  // Вкладки (с клавиатурой: стрелки)
+  const select = (i: number, focus = false) => {
+    tabs.forEach((t, j) => {
+      const on = i === j;
+      t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
+      (document.getElementById(t.getAttribute('aria-controls')!) as HTMLElement).hidden = !on;
+    });
+    if (focus) tabs[i].focus();
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(i));
+    t.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') select((i + 1) % tabs.length, true);
+      if (e.key === 'ArrowLeft') select((i - 1 + tabs.length) % tabs.length, true);
+    });
+  });
+
+  const render = () => {
+    for (const li of items) {
+      li.querySelector('.price')!.textContent = eur(val(li, 'price'));
+      li.querySelector('.dur')!.textContent = mins(val(li, 'min'));
+      li.querySelector('.add')!.setAttribute('aria-pressed', String(chosen.has(li.dataset.key!)));
+    }
+    const list = items.filter((li) => chosen.has(li.dataset.key!));
+    const sel = list.map((li) => ({ name: li.dataset.name!, price: val(li, 'price'), min: val(li, 'min'), consult: !!li.dataset.consult }));
+    picked.innerHTML = sel.length ? '' : '<li class="empty">Noch nichts gewählt. Tippen Sie auf +.</li>';
+    for (const s of sel) { const el = document.createElement('li'); el.innerHTML = `<span></span><span>${eur(s.price)}</span>`; el.firstElementChild!.textContent = s.name; picked.append(el); }
+    const total = sel.reduce((a, s) => a + s.price, 0), dur = sel.reduce((a, s) => a + s.min, 0);
+    tMin.textContent = mins(dur); tPrice.textContent = eur(total);
+    go.setAttribute('aria-disabled', String(!sel.length));
+    const request = sel.some((s) => s.consult) || dur > 180;
+    (root.querySelector('.hint-consult') as HTMLElement).hidden = !request;
+    root.querySelector('.go-label')!.textContent = request ? 'Termin anfragen' : 'Mit Auswahl buchen';
+    (window as any).__nelkeSelection = { items: sel, total, dur };
+    window.dispatchEvent(new CustomEvent('nelke:selection', { detail: { items: sel, total, dur } }));
+  };
+
+  lens.forEach((b, i) => b.addEventListener('click', () => { len = i; lens.forEach((x, j) => x.setAttribute('aria-checked', String(i === j))); render(); }));
+  items.forEach((li) => li.querySelector('.add')!.addEventListener('click', () => {
+    const k = li.dataset.key!; chosen.has(k) ? chosen.delete(k) : chosen.add(k); render();
+  }));
+  render();
+</script>

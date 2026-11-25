@@ -1,0 +1,85 @@
+NUANCE: ПРОМПТЫ ДЛЯ GEMINI (14 картинок, версия 2)
+
+Идея: 6 «Looks» (образы) сделаны креативно, как рекламная кампания колориста: цвет волос перетекает в
+глянцевые стеклянные сферы, как в фоне сайта. Цвет волос на каждом фото хорошо виден.
+Пары «до/после», команда и ателье сделаны реалистично: это доказательство работы, тут эффекты неуместны.
+
+Как работать:
+- Делай в одном чате Gemini, по порядку. Каждый промпт копируется целиком.
+- Формат кадра (кнопка соотношения сторон) указан в каждом блоке.
+- Сохрани файл с ТОЧНО таким именем (расширение любое: jpg, png или webp) в папку
+  D:\Webdesign\nuance\src\assets\img\
+- Пары ba1 и ba2 делай подряд, vorher (до) первым, потом nachher (после): так лицо и поза совпадут.
+- Пока файла нет, на сайте стоит цветная карточка «Foto folgt» (фото следует); когда файл появится, он подхватится сам.
+- Если захочешь ещё безумнее, допиши в конец любого промпта: «more surreal and dramatic».
+
+
+1. Файл: look-kupfer
+Формат: 3:4
+Промпт:
+Creative hair-colour campaign image: a woman seen from behind, long hair in a luminous apricot-copper balayage flowing through the air in a wide ribbon as if it were liquid copper, around it glossy translucent paint-drop spheres of different sizes floating in the air, like liquid glass pearls with soft white highlights and a faint colour glow in apricot and peach tones, the hair colour is clearly visible from darker roots to bright copper ends. Seamless warm cream backdrop (#faf6f1), soft diffused studio light, high-end editorial campaign photography, photorealistic, sharp detail, no text, no logos, no jewellery.
+
+2. Файл: look-magenta
+Формат: 3:4
+Промпт:
+Creative hair-colour campaign image: a woman in profile, a glossy shoulder-length bob in vivid magenta-rose captured mid-swing, a few strands lifting into liquid arcs that break into glossy translucent paint-drop spheres of different sizes floating in the air, like liquid glass pearls with soft white highlights and a faint colour glow in magenta and rose, the colour is saturated and even, face cropped at the nose. Seamless warm cream backdrop (#faf6f1), soft diffused studio light, high-end editorial campaign photography, photorealistic, sharp detail, no text, no logos, no jewellery.
+
+3. Файл: look-honig
+Формат: 3:4
+Промпт:
+Creative hair-colour campaign image: a woman seen from behind, wavy hair with honey-gold balayage, the golden strands at the ends stretch like pouring honey into the air and form glossy translucent paint-drop spheres of different sizes floating in the air, like liquid glass pearls with soft white highlights and a faint colour glow in gold and amber, warm golden light, the balayage transition is clearly visible. Seamless warm cream backdrop (#faf6f1), soft diffused studio light, high-end editorial campaign photography, photorealistic, sharp detail, no text, no logos, no jewellery.
+
+4. Файл: look-erdbeer
+Формат: 3:4
+Промпт:
+Creative hair-colour campaign image: a woman with smooth straight strawberry-blonde hair with a rosy tint falling over her shoulder, small glossy translucent paint-drop spheres of different sizes floating in the air, like liquid glass pearls with soft white highlights and a faint colour glow in blush pink and peach hovering close to the strands like pearls of pigment, soft luminous finish, face partly turned away. Seamless warm cream backdrop (#faf6f1), soft diffused studio light, high-end editorial campaign photography, photorealistic, sharp detail, no text, no logos, no jewellery.
+
+5. Файл: look-amethyst
+Формат: 3:4
+Промпт:
+Creative hair-colour campaign image: a woman with long pastel amethyst-lavender hair swirling weightlessly as if underwater, the ends dissolving into soft lavender ink clouds and glossy translucent paint-drop spheres of different sizes floating in the air, like liquid glass pearls with soft white highlights and a faint colour glow in lilac and violet, cool clear tones, face cropped below the eyes. Seamless warm cream backdrop (#faf6f1), soft diffused studio light, high-end editorial campaign photography, photorealistic, sharp detail, no text, no logos, no jewellery.
+
+6. Файл: look-salbei
+Формат: 3:4
+Промпт:
+Creative hair-colour campaign image: a woman seen from behind with soft loose curls in a calm sage-green colour, lighter at the tips, a few curls unwinding into liquid ribbons that turn into glossy translucent paint-drop spheres of different sizes floating in the air, like liquid glass pearls with soft white highlights and a faint colour glow in sage and mint green, muted and elegant rather than neon. Seamless warm cream backdrop (#faf6f1), soft diffused studio light, high-end editorial campaign photography, photorealistic, sharp detail, no text, no logos, no jewellery.
+
+7. Файл: ba1-vorher
+Формат: 3:4
+Промпт:
+BEFORE photo for a hair-colour transformation, realistic documentation style (no effects, no spheres): a woman photographed from behind in three-quarter view, shoulder-length straight hair in a flat, plain mid-brown colour with no highlights, neutral grey-beige backdrop, even soft light. No text, no logos.
+
+8. Файл: ba1-nachher
+Формат: 3:4
+Промпт:
+AFTER photo, directly following the previous image, realistic documentation style (no effects, no spheres): the same woman, same pose, same camera angle, same crop, same lighting and same backdrop as the image you just generated; only the hair has changed to a soft honey-blonde balayage with warm golden ribbons and a glossy finish, same length and cut. No text, no logos.
+
+9. Файл: ba2-vorher
+Формат: 3:4
+Промпт:
+BEFORE photo for a hair-colour transformation, realistic documentation style (no effects, no spheres): a woman photographed from behind in three-quarter view, shoulder-length dark brown hair with clearly visible grey regrowth at the roots, dull finish, neutral grey-beige backdrop, even soft light. No text, no logos.
+
+10. Файл: ba2-nachher
+Формат: 3:4
+Промпт:
+AFTER photo, directly following the previous image, realistic documentation style (no effects, no spheres): the same woman, same pose, same camera angle, same crop, same lighting and same backdrop as the image you just generated; only the hair has changed to an even, warm copper colour with the grey fully blended, glossy and healthy, same length and cut. No text, no logos.
+
+11. Файл: team-mara
+Формат: 1:1
+Промпт:
+A woman in her early forties, shoulder-length hair in a subtle honey-blonde balayage, relaxed warm smile. Friendly professional portrait, head and shoulders, soft light, plain light backdrop, natural skin texture, no text, no logos, looking at the camera, a hair colourist in a cream linen apron over a white shirt. 
+
+12. Файл: team-jule
+Формат: 1:1
+Промпт:
+A woman in her late twenties, short hair in a pastel lavender-pink colour, confident smile. Friendly professional portrait, head and shoulders, soft light, plain light backdrop, natural skin texture, no text, no logos, looking at the camera, a hair colourist in a cream linen apron over a white shirt. 
+
+13. Файл: team-selin
+Формат: 1:1
+Промпт:
+A woman in her mid thirties, long wavy hair in warm copper, calm smile. Friendly professional portrait, head and shoulders, soft light, plain light backdrop, natural skin texture, no text, no logos, looking at the camera, a hair colourist in a cream linen apron over a white shirt. 
+
+14. Файл: atelier
+Формат: 16:9
+Промпт:
+Interior of a bright, minimal hair-colour atelier with no people: a long oak colour-mixing station with glass bowls, brushes and a row of colour tubes, large windows with soft daylight, a few green plants, one salon chair, walls in cream and blush tones, calm and airy, wide shot, photorealistic, no text, no logos. 

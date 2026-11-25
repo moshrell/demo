@@ -1,0 +1,70 @@
+---
+import Face from './Face.astro';
+import site from '../data/site.json';
+const t = site.team;
+const suits = ['♥', '♠', '♦'];
+---
+<section class="section team" id="team">
+  <div class="wrap">
+    <p class="eyebrow reveal">{t.eyebrow}</p>
+    <h2 class="h2" data-split>{t.title}</h2>
+    <p class="hint reveal">Karten antippen, um die Handschrift zu sehen.</p>
+
+    <ul class="hand">
+      {t.people.map((p, i) => (
+        <li class="reveal" style={`--d:${i * 0.12}s; --r:${[-4, 0, 4][i]}deg`}>
+          <button type="button" class="card" aria-pressed="false" style={`--bg:${p.bg}`}>
+            <span class="inner">
+              <span class="front">
+                <span class="corner">{p.name.split(' ')[0].slice(0, 1)}<i>{suits[i]}</i></span>
+                <span class="pic"><Face hair={p.hair} color={p.color} beard={p.beard} skin={p.skin} shirt="#1c2541" /></span>
+                <span class="cap"><b>{p.name}</b><small>{p.role} · {p.focus}</small></span>
+              </span>
+              <span class="back">
+                <i class="big" aria-hidden="true">{suits[i]}</i>
+                <q class="serif">{p.quote}</q>
+                <small>{p.name}, {p.focus}</small>
+              </span>
+            </span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .team { background: var(--ink); color: var(--cream); overflow: hidden; }
+  .team .eyebrow::before { color: var(--butter); }
+  .team .h2 em { color: var(--butter); }
+  .hint { margin: 18px 0 0; font-size: .9rem; opacity: .7; }
+  .hand { list-style: none; margin: clamp(40px, 7vh, 72px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 3vw, 44px); align-items: start; perspective: 1400px; }
+  .hand li:nth-child(2) { margin-top: -22px; }
+  .card { all: unset; box-sizing: border-box; display: block; width: 100%; aspect-ratio: 5 / 7; cursor: pointer; transition: transform .5s var(--pop); }
+  .card:hover { transform: translateY(-12px) rotate(calc(var(--r, 0deg) * -.5)); }
+  .card:focus-visible { outline: 3px solid var(--butter); outline-offset: 6px; border-radius: 26px; }
+  .inner { display: block; position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .8s var(--pop); }
+  .card[aria-pressed="true"] .inner { transform: rotateY(180deg); }
+  .front, .back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 24px; border: 3px solid var(--cream); overflow: hidden; display: grid; }
+  .front { background: var(--bg); color: var(--ink); grid-template-rows: 1fr auto; box-shadow: 8px 8px 0 rgba(0, 0, 0, .35); }
+  .corner { position: absolute; left: 14px; top: 10px; display: grid; justify-items: center; font-family: var(--serif); font-weight: 700; font-size: 1.6rem; line-height: 1; z-index: 2; }
+  .corner i { font-style: normal; font-size: 1.1rem; }
+  .pic { display: block; padding: 28px 22px 0; align-self: end; }
+  .cap { display: grid; padding: 12px 18px 16px; background: var(--cream); border-top: 3px solid var(--ink); }
+  .cap b { font-family: var(--serif); font-size: 1.3rem; font-weight: 650; font-variation-settings: "SOFT" 100; }
+  .cap small { font-size: .82rem; color: var(--ink-soft); }
+  .back { transform: rotateY(180deg); background: var(--cream); color: var(--ink); align-content: center; justify-items: center; text-align: center; gap: 18px; padding: 28px; background-image: radial-gradient(rgba(28,37,65,.1) 1.2px, transparent 1.6px); background-size: 10px 10px; box-shadow: 8px 8px 0 rgba(0, 0, 0, .35); }
+  .back .big { font-style: normal; font-size: 3rem; color: var(--bg); text-shadow: 0 0 0 var(--ink); -webkit-text-stroke: 2px var(--ink); line-height: 1; }
+  .back q { font-style: italic; font-size: clamp(1.4rem, 2.4vw, 2rem); line-height: 1.15; quotes: "„" "“"; font-variation-settings: "SOFT" 100, "WONK" 1; }
+  .back small { font-size: .82rem; font-weight: 650; opacity: .7; }
+  @media (max-width: 860px) {
+    .hand { grid-template-columns: 1fr; max-width: 380px; margin-inline: auto; }
+    .hand li:nth-child(2) { margin-top: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .inner, .card { transition: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('#team .card').forEach((c) =>
+    c.addEventListener('click', () => c.setAttribute('aria-pressed', String(c.getAttribute('aria-pressed') !== 'true'))));
+</script>

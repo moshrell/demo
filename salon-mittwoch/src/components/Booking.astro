@@ -1,0 +1,394 @@
+---
+import site from '../data/site.json';
+const b = site.booking;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const all = site.services.categories.flatMap((c) => c.items.map((it: any) => ({
+  cat: c.label, name: it.name,
+  price: Array.isArray(it.price) ? it.price[1] : it.price,
+  min: Array.isArray(it.min) ? it.min[1] : it.min,
+  consult: !!it.consult,
+})));
+const cats = [...new Set(all.map((a) => a.cat))];
+---
+<section class="section booking" id="termin">
+  <div class="wrap grid">
+    <div class="head">
+      <p class="eyebrow reveal">{b.eyebrow}</p>
+      <h2 class="h2 reveal" style="--d:.08s">{b.title}</h2>
+      <p class="lead reveal" style="--d:.16s">Schnitt, Bart, Styling: Termin direkt wählen. Farbe und lange Termine: Wunschzeit nennen, wir rufen zurück.</p>
+      <p class="demo reveal" style="--d:.2s">{b.note}</p>
+    </div>
+
+    <div class="card reveal" style="--d:.12s" data-hours={JSON.stringify(site.hours)} data-slot={b.slotMinutes} data-max={b.maxDirect}>
+      <ol class="steps" aria-label="Fortschritt">
+        <li class="on">Leistung</li><li data-l="Tag" data-r="Wunschtage">Tag</li><li data-l="Uhrzeit" data-r="Tageszeit">Uhrzeit</li><li>Daten</li>
+      </ol>
+
+      <div class="panel" data-step="0">
+        <div class="from-calc" hidden>
+          <ul class="sel"></ul>
+          <a class="change" href="#leistungen">Auswahl ändern</a>
+        </div>
+        <label class="pick">
+          <span>Leistung wählen</span>
+          <select>
+            <option value="">Bitte wählen …</option>
+            {cats.map((c) => (
+              <optgroup label={c}>
+                {all.filter((a) => a.cat === c).map((a) => <option value={JSON.stringify(a)}>{a.name} · ab {a.price} €{a.consult ? ' · mit Beratung' : ''}</option>)}
+              </optgroup>
+            ))}
+          </select>
+        </label>
+        <p class="mode-note" hidden>Für Farbe und lange Termine planen wir gemeinsam: Sie nennen Wunschtage und Tageszeit, wir melden uns innerhalb von 24 Stunden mit einem Vorschlag.</p>
+      </div>
+
+      <div class="panel" data-step="1" hidden>
+        <p class="sub direct">Wählen Sie einen Tag.</p>
+        <p class="sub request">Bis zu drei Wunschtage wählen.</p>
+        <div class="days"></div>
+      </div>
+      <div class="panel" data-step="2" hidden>
+        <p class="sub direct">Freie Zeiten für ca. <b class="need"></b>.</p>
+        <p class="sub request">Wann passt es Ihnen? Mehrfachauswahl möglich.</p>
+        <div class="slots"></div>
+        <div class="windows">
+          <button type="button" data-w="Vormittag" aria-pressed="false"><b>Vormittag</b><small>9 – 12 Uhr</small></button>
+          <button type="button" data-w="Mittag" aria-pressed="false"><b>Mittag</b><small>12 – 15 Uhr</small></button>
+          <button type="button" data-w="Nachmittag" aria-pressed="false"><b>Nachmittag</b><small>ab 15 Uhr</small></button>
+        </div>
+      </div>
+
+      <form class="panel" data-step="3" hidden novalidate>
+        <div class="recap" aria-label="Ihre Auswahl">
+          <ul class="recap-list"></ul>
+          <p class="recap-sum"><span>Summe</span><strong></strong></p>
+        </div>
+        <label for="f-name"><span>Name</span>
+          <input id="f-name" name="name" autocomplete="name" placeholder="Vor- und Nachname" required aria-describedby="e-name" />
+          <small class="err" id="e-name" hidden>Bitte geben Sie Ihren Namen an.</small>
+        </label>
+        <label for="f-tel"><span>Telefon</span>
+          <input id="f-tel" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="z. B. 0511 1234567" required aria-describedby="e-tel" />
+          <small class="err" id="e-tel" hidden>Bitte geben Sie eine Telefonnummer an, unter der wir Sie erreichen.</small>
+        </label>
+        <label for="f-note"><span>Hinweis (optional)</span><textarea id="f-note" name="note" rows="2" autocomplete="off" placeholder="z. B. aktuelle Haarfarbe, Wunschergebnis"></textarea></label>
+        <div class="consent">
+          <label class="check" for="f-privacy"><input id="f-privacy" type="checkbox" name="privacy" required aria-describedby="e-privacy" /> <span>Ich bin einverstanden, dass meine Angaben (Name, Telefon, Hinweis) zur Bearbeitung meiner Anfrage und zur Terminvergabe verwendet werden. Hinweise zum <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutz</a>.</span></label>
+          <small class="err" id="e-privacy" hidden>Bitte stimmen Sie zu, sonst können wir Ihren Termin nicht vergeben.</small>
+        </div>
+      </form>
+
+      <div class="panel done" data-step="4" hidden>
+        <p class="eyebrow">Danke</p>
+        <h3 class="done-title"></h3>
+        <p class="summary"></p>
+        <p class="done-sum"><span>Summe</span><strong></strong></p>
+        <p class="demo">Demo: Es wurde nichts gesendet. Auf einer echten Website käme jetzt die Bestätigung per SMS oder E-Mail.</p>
+        <button type="button" class="btn restart">Neue Buchung</button>
+      </div>
+
+      <div class="foot">
+        <span class="info" aria-live="polite"></span>
+        <div class="btns">
+          <button type="button" class="btn back" hidden>Zurück</button>
+          <button type="button" class="btn btn--solid next" disabled>Weiter <span class="arr">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .booking { background: var(--paper-2); }
+  .grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .demo { font-size: .82rem; color: var(--brass-deep); }
+  .card { background: var(--cream); border-radius: calc(var(--radius) + 6px); padding: clamp(22px, 3vw, 36px); box-shadow: 0 40px 80px -50px rgba(29,20,16,.5); min-height: 480px; display: flex; flex-direction: column; }
+  .steps { list-style: none; margin: 0 0 28px; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; counter-reset: s; }
+  .steps li { counter-increment: s; font-size: .68rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); padding-top: 12px; border-top: 2px solid var(--line); transition: border-color .4s, color .4s; }
+  .steps li::before { content: counter(s) " "; color: var(--brass-deep); }
+  .steps li.on { border-color: var(--ink); color: var(--ink); }
+  .panel { flex: 1; display: grid; align-content: start; gap: 14px; animation: in .45s var(--ease); }
+  @keyframes in { from { opacity: 0; transform: translateX(12px); } }
+  .panel[hidden] { display: none; }
+  .sub { margin: 0; font-size: .92rem; color: var(--ink-soft); }
+  .card:not(.is-request) .request, .card.is-request .direct { display: none; }
+  .card:not(.is-request) .windows, .card.is-request .slots { display: none; }
+  .sel { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .sel :global(li) { display: flex; justify-content: space-between; gap: 16px; padding: 14px 16px; background: var(--paper); border-radius: 12px; }
+  .sel :global(li span:last-child) { white-space: nowrap; }
+  .change { font-size: .85rem; color: var(--brass-deep); }
+  .mode-note { margin: 4px 0 0; padding: 14px 16px; border-radius: 12px; background: rgba(165,42,36,.07); color: var(--brass-deep); font-size: .88rem; line-height: 1.5; }
+  label { display: grid; gap: 6px; font-size: .8rem; font-weight: 600; letter-spacing: .06em; }
+  select, input, textarea { font: inherit; font-size: 1rem; font-weight: 400; letter-spacing: 0; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); width: 100%; }
+  select:focus, input:focus, textarea:focus { outline: 2px solid var(--brass-deep); outline-offset: 1px; }
+  .err { font-size: .8rem; font-weight: 600; letter-spacing: 0; color: var(--brass-deep); }
+  .err[hidden] { display: none; }
+  input[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(--brass-deep); box-shadow: 0 0 0 1px var(--brass-deep); }
+  input::placeholder, textarea::placeholder { color: var(--ink-soft); opacity: .75; }
+  .consent { display: grid; gap: 6px; }
+  .check a { color: var(--brass-deep); text-underline-offset: 3px; }
+  .check a:focus-visible { outline: 2px solid var(--brass-deep); outline-offset: 2px; border-radius: 3px; }
+  .recap { padding: 14px 16px; background: var(--paper); border-radius: 12px; display: grid; gap: 8px; font-size: .92rem; }
+  .recap-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; color: var(--ink-soft); }
+  .recap-sum, .done-sum { margin: 0; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; font-weight: 600; }
+  .recap-sum { padding-top: 8px; border-top: 1px solid var(--line); }
+  .recap-sum strong, .done-sum strong, .info :global(.sum b) { font-family: var(--serif); font-weight: 400; font-size: 1.25rem; white-space: nowrap; }
+  .done-sum { max-width: 320px; padding-top: 10px; border-top: 1px solid var(--line); }
+  .info { display: grid; gap: 2px; }
+  .info :global(.sum) { display: flex; gap: 8px; align-items: baseline; color: var(--ink); font-weight: 600; }
+  .info :global(.meta) { font-size: .8rem; }
+  .check { grid-template-columns: auto 1fr; align-items: start; font-weight: 400; font-size: .85rem; letter-spacing: 0; color: var(--ink-soft); }
+  .check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--ink); }
+  .days, .slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
+  .windows { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .days :global(button), .slots :global(button), .windows button { border: 1px solid var(--line); background: var(--paper); border-radius: 12px; padding: 12px 6px; cursor: pointer; display: grid; gap: 2px; text-align: center; font-size: .95rem; transition: background .25s, color .25s, border-color .25s; }
+  .days :global(small), .windows small { font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+  .days :global(button[aria-selected="true"]), .slots :global(button[aria-selected="true"]), .windows button[aria-pressed="true"] { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+  .days :global(button[aria-selected="true"] small), .windows button[aria-pressed="true"] small { color: var(--brass); }
+  .slots :global(button:disabled) { opacity: .3; text-decoration: line-through; cursor: not-allowed; }
+  .foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+  .info { font-size: .85rem; color: var(--ink-soft); }
+  .foot[hidden] { display: none; }
+  .btns { display: flex; gap: 8px; margin-left: auto; }
+  .done-title { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 2rem; line-height: 1.15; }
+  .done .summary { font-size: 1.05rem; line-height: 1.7; margin: 0; }
+  .restart { justify-self: start; }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+    .foot { position: sticky; bottom: 0; z-index: 5; background: var(--cream); margin-inline: calc(-1 * clamp(22px, 3vw, 36px)); padding-inline: clamp(22px, 3vw, 36px); padding-bottom: 14px; box-shadow: 0 -14px 18px -14px rgba(29,20,16,.25); }
+  }
+  @media (max-width: 420px) { .windows { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  const card = document.querySelector<HTMLElement>('#termin .card')!;
+  const hours: { short: string; open: string | null; close?: string }[] = JSON.parse(card.dataset.hours!);
+  const SLOT = Number(card.dataset.slot), MAX_DIRECT = Number(card.dataset.max);
+  const panels = [...card.querySelectorAll<HTMLElement>('.panel')];
+  const stepsEl = [...card.querySelectorAll<HTMLElement>('.steps li')];
+  const next = card.querySelector<HTMLButtonElement>('.next')!, back = card.querySelector<HTMLButtonElement>('.back')!;
+  const info = card.querySelector('.info')!, foot = card.querySelector<HTMLElement>('.foot')!;
+  const fromCalc = card.querySelector<HTMLElement>('.from-calc')!, selList = card.querySelector('.sel')!;
+  const pick = card.querySelector<HTMLLabelElement>('.pick')!, select = pick.querySelector('select')!;
+  const modeNote = card.querySelector<HTMLElement>('.mode-note')!;
+  const daysEl = card.querySelector('.days')!, slotsEl = card.querySelector('.slots')!;
+  const winBtns = [...card.querySelectorAll<HTMLButtonElement>('.windows button')];
+  const form = card.querySelector<HTMLFormElement>('form')!;
+  const recapList = card.querySelector('.recap-list')!, recapSum = card.querySelector<HTMLElement>('.recap-sum strong')!;
+  const fields = [...form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[required]')];
+  const errOf = (f: HTMLElement) => form.querySelector<HTMLElement>(`#e-${f.id.replace('f-', '')}`)!;
+  const validate = (focusFirst: boolean) => {
+    let first: HTMLElement | null = null;
+    for (const f of fields) {
+      const bad = !f.checkValidity() || (f instanceof HTMLInputElement && f.type !== 'checkbox' && !f.value.trim());
+      f.setAttribute('aria-invalid', String(bad));
+      errOf(f).hidden = !bad;
+      if (bad && !first) first = f;
+    }
+    if (first && focusFirst) first.focus();
+    return !first;
+  };
+  fields.forEach((f) => f.addEventListener('input', () => { if (f.getAttribute('aria-invalid') === 'true') validate(false); }));
+  fields.forEach((f) => f.addEventListener('change', () => { if (f.getAttribute('aria-invalid') === 'true') validate(false); }));
+
+  type Item = { name: string; price: number; min: number; consult?: boolean };
+  const state = { items: [] as Item[], days: [] as Date[], time: null as string | null, windows: new Set<string>(), step: 0 };
+  // Автосохранение введённого (sessionStorage, только этот таб). Согласие (чекбокс) не сохраняется.
+  const KEY = 'form:' + location.pathname;
+  let ready = false;
+  const save = () => {
+    if (!ready) return;
+    try {
+      const f = { name: (form.elements.namedItem('name') as HTMLInputElement).value, tel: (form.elements.namedItem('tel') as HTMLInputElement).value, note: (form.elements.namedItem('note') as HTMLTextAreaElement).value };
+      if (state.step >= 4 || (!state.items.length && !f.name && !f.tel && !f.note)) { sessionStorage.removeItem(KEY); return; }
+      sessionStorage.setItem(KEY, JSON.stringify({ step: state.step, items: state.items, calc: !fromCalc.hidden, days: state.days.map((d) => d.getTime()), time: state.time, windows: [...state.windows], f }));
+    } catch { /* хранилище недоступно */ }
+  };
+  const toMin = (t: string) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+  const fmt = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+  const dayIdx = (d: Date) => (d.getDay() + 6) % 7;
+  const dur = () => state.items.reduce((a, i) => a + i.min, 0);
+  const total = () => state.items.reduce((a, i) => a + i.price, 0);
+  const mins = (n: number) => (n >= 60 ? `${Math.floor(n / 60)} Std.${n % 60 ? ` ${n % 60} Min.` : ''}` : `${n} Min.`);
+  const isRequest = () => state.items.some((i) => i.consult) || dur() > MAX_DIRECT;
+  const dateLong = (d: Date) => d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+  const dateShort = (d: Date) => d.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'numeric' });
+  // Демо-«занятость»: стабильная для каждого дня и времени, примерно треть слотов занята
+  const busy = (d: Date, m: number) => { let h = 2166136261; for (const c of `${d.toDateString()}|${m}`) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return ((h >>> 0) % 100) < 33; };
+
+  const ok = () => [
+    state.items.length > 0,
+    state.days.length > 0,
+    isRequest() ? state.windows.size > 0 : !!state.time,
+    true,
+  ][state.step];
+
+  const applyMode = () => {
+    const r = isRequest();
+    card.classList.toggle('is-request', r);
+    modeNote.hidden = !r || !state.items.length;
+    stepsEl.forEach((li) => { if (li.dataset.l) li.textContent = r ? li.dataset.r! : li.dataset.l; });
+  };
+
+  const go = (n: number) => {
+    state.step = n;
+    panels.forEach((p) => (p.hidden = Number(p.dataset.step) !== n));
+    stepsEl.forEach((s, i) => s.classList.toggle('on', i <= n));
+    back.hidden = n === 0 || n === 4;
+    foot.hidden = n === 4;
+    next.innerHTML = n === 3 ? `${isRequest() ? 'Anfrage senden' : 'Termin buchen'} <span class="arr">→</span>` : 'Weiter <span class="arr">→</span>';
+    if (n === 1) renderDays();
+    if (n === 2 && !isRequest()) renderSlots();
+    update();
+  };
+
+  const update = () => {
+    applyMode();
+    next.disabled = !ok();
+    const parts: string[] = [];
+    if (state.items.length) parts.push(`ca. ${mins(dur())}`);
+    if (state.days.length) parts.push(state.days.map(dateShort).join(', '));
+    if (!isRequest() && state.time) parts.push(`${state.time} Uhr`);
+    if (isRequest() && state.windows.size) parts.push([...state.windows].join(', '));
+    const sumTxt = `${isRequest() ? 'ab ' : ''}${total()} €`;
+    info.innerHTML = '';
+    if (state.items.length) {
+      const sum = document.createElement('span'); sum.className = 'sum';
+      sum.append('Summe ', Object.assign(document.createElement('b'), { textContent: sumTxt }));
+      info.append(sum);
+    }
+    info.append(Object.assign(document.createElement('span'), { className: 'meta', textContent: parts.join(' · ') }));
+    recapList.innerHTML = '';
+    for (const it of state.items) recapList.append(Object.assign(document.createElement('li'), { textContent: `${it.name} · ${it.price} €` }));
+    const when = isRequest() ? `Wunschtage: ${state.days.map(dateShort).join(', ')}${state.windows.size ? ', ' + [...state.windows].join(' / ') : ''}` : (state.days[0] && state.time ? `${dateShort(state.days[0])}, ${state.time} Uhr` : '');
+    if (when) recapList.append(Object.assign(document.createElement('li'), { textContent: when }));
+    recapSum.textContent = sumTxt;
+    save();
+    card.querySelector('.done-sum strong')!.textContent = sumTxt;
+  };
+
+  const setItems = (items: Item[], fromCalculator: boolean) => {
+    const wasRequest = isRequest();
+    state.items = items; state.time = null;
+    if (wasRequest !== isRequest()) { state.days = []; state.windows.clear(); }
+    fromCalc.hidden = !fromCalculator || !items.length;
+    pick.hidden = fromCalculator && items.length > 0;
+    selList.innerHTML = '';
+    for (const it of items) {
+      const li = document.createElement('li');
+      li.append(Object.assign(document.createElement('span'), { textContent: it.name }), Object.assign(document.createElement('span'), { textContent: `${it.price} €` }));
+      selList.append(li);
+    }
+    update();
+  };
+  select.addEventListener('change', () => setItems(select.value ? [JSON.parse(select.value)] : [], false));
+  window.addEventListener('mittwoch:selection', (e) => {
+    const d = (e as CustomEvent).detail;
+    if (state.step < 4) { setItems(d.items, true); if (state.step > 0) go(0); }
+  });
+  const pre = (window as any).__mittwochSelection; if (pre?.items?.length) setItems(pre.items, true);
+
+  function renderDays() {
+    daysEl.innerHTML = '';
+    const d = new Date(); d.setHours(0, 0, 0, 0);
+    const now = new Date(), nowMin = now.getHours() * 60 + now.getMinutes();
+    let added = 0;
+    for (let i = 0; added < 12 && i < 30; i++) {
+      const day = new Date(d); day.setDate(d.getDate() + i);
+      const h = hours[dayIdx(day)];
+      if (!h.open) continue;
+      if (i === 0 && (isRequest() || toMin(h.close!) - dur() <= nowMin + 30)) continue;
+      added++;
+      const b = document.createElement('button');
+      b.type = 'button';
+      const on = () => state.days.some((x) => x.toDateString() === day.toDateString());
+      b.setAttribute('aria-selected', String(on()));
+      b.innerHTML = `<small>${h.short}</small>${day.getDate()}.${day.getMonth() + 1}.`;
+      b.addEventListener('click', () => {
+        if (isRequest()) {
+          if (on()) state.days = state.days.filter((x) => x.toDateString() !== day.toDateString());
+          else if (state.days.length < 3) state.days.push(day);
+        } else {
+          state.days = [day]; state.time = null;
+        }
+        daysEl.querySelectorAll('button').forEach((x, k) => x.setAttribute('aria-selected', String(x === b ? on() : x.getAttribute('aria-selected') === 'true' && isRequest())));
+        update();
+      });
+      daysEl.append(b);
+    }
+  }
+  function renderSlots() {
+    slotsEl.innerHTML = '';
+    card.querySelector('.need')!.textContent = mins(dur());
+    const day = state.days[0], h = hours[dayIdx(day)];
+    const now = new Date(), isToday = day.toDateString() === now.toDateString();
+    for (let m = toMin(h.open!); m + dur() <= toMin(h.close!); m += SLOT) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = fmt(m);
+      b.disabled = busy(day, m) || (isToday && m < now.getHours() * 60 + now.getMinutes() + 30);
+      b.setAttribute('aria-selected', String(state.time === fmt(m)));
+      b.addEventListener('click', () => { state.time = fmt(m); slotsEl.querySelectorAll('button').forEach((x) => x.setAttribute('aria-selected', String(x === b))); update(); });
+      slotsEl.append(b);
+    }
+  }
+  winBtns.forEach((b) => b.addEventListener('click', () => {
+    const w = b.dataset.w!;
+    state.windows.has(w) ? state.windows.delete(w) : state.windows.add(w);
+    b.setAttribute('aria-pressed', String(state.windows.has(w)));
+    update();
+  }));
+
+  form.addEventListener('input', update);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  next.addEventListener('click', () => {
+    if (!ok()) return;
+    if (state.step === 3 && !validate(true)) return;
+    if (state.step === 3) {
+      const name = (form.elements.namedItem('name') as HTMLInputElement).value.trim();
+      const what = state.items.map((i) => i.name).join(' + ');
+      if (isRequest()) {
+        card.querySelector('.done-title')!.textContent = 'Ihre Anfrage ist da.';
+        card.querySelector('.summary')!.textContent = `${name}, ${what}. Wunschtage: ${state.days.map(dateLong).join(', ')}, ${[...state.windows].join(' / ')}. Wir rufen Sie innerhalb von 24 Stunden an und schlagen einen Termin vor (ca. ${mins(dur())}, ab ${total()} €).`;
+      } else {
+        card.querySelector('.done-title')!.textContent = 'Ihr Termin steht.';
+        card.querySelector('.summary')!.textContent = `${name}, ${what} am ${dateLong(state.days[0])} um ${state.time} Uhr (ca. ${mins(dur())}, ${total()} €).`;
+      }
+      go(4); return;
+    }
+    go(state.step + 1);
+  });
+  back.addEventListener('click', () => go(state.step - 1));
+  card.querySelector('.restart')!.addEventListener('click', () => {
+    try { sessionStorage.removeItem(KEY); } catch {}
+    setItems([], false); select.value = '';
+    form.reset(); fields.forEach((f) => { f.removeAttribute('aria-invalid'); errOf(f).hidden = true; }); state.days = []; state.time = null; state.windows.clear();
+    winBtns.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+    go(0);
+  });
+  const restore = () => {
+    try {
+      const raw = sessionStorage.getItem(KEY);
+      if (!raw || (window as any).__mittwochSelection?.items?.length) return 0;
+      const d = JSON.parse(raw);
+      if (Array.isArray(d.items) && d.items.length) {
+        setItems(d.items, !!d.calc);
+        if (!d.calc) select.value = JSON.stringify(d.items[0]);
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        state.days = (d.days || []).map((t: number) => new Date(t)).filter((x: Date) => x >= today);
+        if (!isRequest() && state.days.length) state.days = state.days.slice(0, 1);
+        state.time = !isRequest() && state.days.length ? d.time : null;
+        state.windows = new Set(isRequest() ? d.windows || [] : []);
+      }
+      for (const k of ['name', 'tel', 'note'] as const) { const el = form.elements.namedItem(k) as HTMLInputElement | null; if (el && d.f?.[k]) el.value = d.f[k]; }
+      let max = 0;
+      if (state.items.length) max = 1;
+      if (max === 1 && state.days.length) max = 2;
+      if (max === 2 && (isRequest() ? state.windows.size > 0 : !!state.time)) max = 3;
+      return Math.min(Number(d.step) || 0, max);
+    } catch { return 0; }
+  };
+  const startStep = restore();
+  ready = true;
+  go(startStep);
+</script>

@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/bakery.json';
+const base = import.meta.env.BASE_URL;
+const a = data.address;
+---
+<Base title={`Datenschutz | ${data.name}`}>
+  <main class="wrap legal" id="inhalt">
+    <h1>Datenschutz</h1>
+    <p>Diese Demo-Website setzt keine Cookies, nutzt kein Tracking und lädt keine Inhalte von Drittanbietern. Schriften, Bilder und Skripte liegen auf demselben Server.</p>
+    <h2>Vorbestell-Formular (Click &amp; Collect)</h2>
+    <p><strong>Demo-Hinweis:</strong> In dieser Beispielseite wird nichts gesendet oder gespeichert. Die folgenden Angaben zeigen, was bei einer echten Bäckerei hier stehen muss.</p>
+    <p><strong>Verantwortlicher:</strong> {data.legalName}, {a.street}, {a.zip} {a.city} (fiktiv). Kontakt: <a class="link" href={`mailto:${data.email}`}>{data.email}</a></p>
+    <p><strong>Welche Daten:</strong> Name, Telefonnummer, gewählte Artikel, Abholtag und Zeitfenster.</p>
+    <p><strong>Wozu:</strong> Wir bereiten Ihre Vorbestellung vor und rufen Sie bei Rückfragen oder zur Bestätigung an. Rechtsgrundlage ist die Vertragsanbahnung und -erfüllung (Art. 6 Abs. 1 lit. b DSGVO, die europäische Datenschutz-Grundverordnung).</p>
+    <p><strong>Wie lange:</strong> Wir löschen Ihre Angaben, sobald die Vorbestellung abgeholt ist, spätestens nach 7 Tagen, sofern keine gesetzliche Aufbewahrungspflicht besteht.</p>
+    <p><strong>Weitergabe:</strong> Keine Weitergabe an Dritte. Die Daten werden nicht für Werbung genutzt. Eine Online-Zahlung ist in dieser Demo nicht angebunden.</p>
+    <p><strong>Ihre Rechte:</strong> Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch und Datenübertragbarkeit (Art. 15 bis 21 DSGVO). Sie können sich außerdem bei der Datenschutzaufsichtsbehörde Ihres Bundeslandes beschweren.</p>
+    <p><strong>Freiwilligkeit:</strong> Die Angabe der Daten ist freiwillig. Ohne Name und Telefonnummer kann die Vorbestellung aber nicht angenommen werden.</p>
+    <p>Ihre Eingaben werden zur Sicherheit nur temporär im Browser dieses Tabs (sessionStorage) zwischengespeichert und nach dem Absenden oder Schließen des Tabs gelöscht; sie werden nicht an uns übertragen.</p>
+    <h2>Catering-Anfrage</h2>
+    <p>Die Schaltfläche „Catering anfragen“ öffnet nur Ihr eigenes E-Mail-Programm. Über diese Seite werden dabei keine Daten übertragen.</p>
+    <h2>Hosting</h2>
+    <p>Informationen zum Hosting und zu Server-Logdateien finden Sie in der <a class="link" href="https://kravets-webdesign.de/datenschutz/">Datenschutzerklärung von Kravets Webdesign</a>.</p>
+    <p class="legal__back"><a class="link" href={base}>Zurück zur Startseite</a></p>
+  </main>
+</Base>
+
+<style>
+  .legal { padding-block: 150px 100px; max-width: 820px; }
+  .legal h1 { font-size: clamp(48px, 7vw, 96px); margin-bottom: 40px; }
+  .legal h2 { font-size: clamp(26px, 3vw, 36px); margin: 44px 0 14px; }
+  .legal p { margin-top: 14px; color: var(--muted); }
+  .legal p strong { color: var(--paper); font-weight: 600; }
+  .legal .link { white-space: normal; }
+  .legal__back { margin-top: 40px; }
+</style>

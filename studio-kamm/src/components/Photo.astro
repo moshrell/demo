@@ -1,0 +1,18 @@
+---
+// Фото из src/assets/photos по имени файла. Если файла ещё нет — аккуратная заглушка с подписью,
+// чтобы было видно, какое фото куда положить. Новый файл с тем же именем подхватится при сборке.
+import { Image } from 'astro:assets';
+interface Props { file: string; alt: string; widths?: number[]; sizes?: string; class?: string; loading?: 'lazy' | 'eager'; [k: string]: any }
+const { file, alt, widths = [400, 800, 1200], sizes = '100vw', class: cls = '', loading = 'lazy', ...rest } = Astro.props;
+const all = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.{jpg,jpeg,png,webp,avif}', { eager: true });
+const base = file.replace(/\.[^.]+$/, '');
+const hit = Object.entries(all).find(([p]) => p.split('/').pop()!.replace(/\.[^.]+$/, '') === base)?.[1].default;
+---
+{hit
+  ? <Image src={hit} alt={alt} widths={widths.filter((w) => w <= hit.width)} sizes={sizes} class={cls} loading={loading} {...rest} />
+  : <span class={`ph ${cls}`} role="img" aria-label={alt} {...rest}><small>Foto folgt<br /><b>{file}</b></small></span>}
+
+<style>
+  .ph { display: grid; place-items: center; width: 100%; height: 100%; background: repeating-linear-gradient(135deg, #e4e1da 0 14px, #ebe8e2 14px 28px); color: rgba(18, 18, 18, .45); text-align: center; font: 500 .72rem/1.4 var(--mono); }
+  .ph b { font-weight: 600; color: rgba(18, 18, 18, .65); }
+</style>

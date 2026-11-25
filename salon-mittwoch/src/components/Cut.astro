@@ -1,0 +1,100 @@
+---
+import site from '../data/site.json';
+const g = site.gallery;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<section class="cut" id="cut" aria-labelledby="cut-title">
+  <div class="stage">
+    <div class="behind">
+      <p class="eyebrow">{g.eyebrow}</p>
+      <h2 class="h2" id="cut-title">{g.title}</h2>
+    </div>
+
+    <div class="curtain" aria-hidden="true" style={`--hair: url('${base}scene/hair.webp')`}>
+      <div class="fringe"></div>
+      <div class="slices"></div>
+    </div>
+
+    <div class="scissors" aria-hidden="true">
+      <img class="open" src={`${base}scene/scissors-open.webp`} alt="" width="520" height="218" />
+      <img class="closed" src={`${base}scene/scissors-closed.webp`} alt="" width="520" height="218" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .cut { position: relative; height: 240vh; height: 240svh; background: var(--paper); }
+  .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: clip; --cut: 32%; --sx: -20%; --gone: 0; }
+  .behind { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; padding: 24px; }
+  .behind .h2 { max-width: 14ch; font-size: clamp(2.4rem, 6.4vw, 5.4rem); }
+
+  /* Завеса из настоящих волос: верх (чёлка) целиком, низ нарезан на полоски */
+  .curtain { position: absolute; inset: 0; pointer-events: none; }
+  .fringe { position: absolute; left: 0; right: 0; top: 0; height: var(--cut); background: var(--hair) 0 0 / var(--W) var(--H) no-repeat;
+    transform: translateY(calc(var(--gone) * -100%)); opacity: calc(1 - var(--gone)); }
+  .slices { position: absolute; inset: 0; }
+  .slices :global(i) { position: absolute; top: var(--cut); height: calc(100% - var(--cut)); background-image: var(--hair); background-repeat: no-repeat; background-size: var(--W) var(--H); transform-origin: 50% 0; will-change: transform, opacity; }
+  /* падающая прядь: мягкие края, чтобы не было «полосок» */
+  .slices :global(i.f) { -webkit-mask: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent); mask: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent); }
+
+  .scissors { position: absolute; top: var(--cut); left: var(--sx); width: clamp(170px, 23vw, 360px); transform: translate(-51.6%, -48.4%); opacity: calc(1 - var(--gone) * 3); filter: drop-shadow(0 10px 18px rgba(29,20,16,.35)); }
+  .scissors img { display: block; width: 100%; height: auto; }
+  .scissors .closed { position: absolute; inset: 0; opacity: 0; }
+  .scissors.snip .open { opacity: 0; }
+  .scissors.snip .closed { opacity: 1; }
+</style>
+
+<script>
+  const sec = document.getElementById('cut')!;
+  const st = sec.querySelector<HTMLElement>('.stage')!;
+  const box = sec.querySelector<HTMLElement>('.slices')!;
+  const sc = sec.querySelector<HTMLElement>('.scissors')!;
+  const CUT = 0.32; // линия среза: доля высоты экрана
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (x: number) => Math.min(1, Math.max(0, x));
+  const sm = (a: number, b: number, x: number) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+
+  type Slice = { el: HTMLElement; x: number; dx: number; rot: number };
+  let slices: Slice[] = [], W = 0, H = 0;
+  let seed = 5;
+  const rnd = () => ((seed = Math.imul(seed ^ (seed >>> 15), 2246822507) + 0x9e3779b9 | 0) >>> 0) / 4294967296;
+
+  const build = () => {
+    W = st.clientWidth; H = st.clientHeight;
+    st.style.setProperty('--W', `${W}px`); st.style.setProperty('--H', `${H}px`); st.style.setProperty('--cut', `${CUT * 100}%`);
+    box.innerHTML = ''; slices = []; seed = 5;
+    const N = W < 700 ? 48 : 96, w = W / N;
+    for (let i = 0; i < N; i++) {
+      const el = document.createElement('i');
+      el.style.left = `${(i * w).toFixed(2)}px`;
+      el.style.width = `${(w + 1).toFixed(2)}px`; // +1px — без щелей между полосками
+      el.style.backgroundPosition = `${(-i * w).toFixed(2)}px ${(-CUT * H).toFixed(2)}px`;
+      box.append(el);
+      slices.push({ el, x: (i + 0.5) / N, dx: (rnd() - 0.5) * 70, rot: (rnd() - 0.5) * 26 });
+    }
+  };
+
+  let raf = 0;
+  const paint = () => {
+    raf = 0;
+    const r = sec.getBoundingClientRect();
+    const p = reduce ? 1 : clamp(-r.top / (r.height - innerHeight));
+    const cut = clamp((p - 0.04) / 0.6);
+    const sx = -0.2 + cut * 1.45;                  // ножницы: из-за левого края за правый
+    const tail = sm(0.6, 0.78, p);                 // в конце все отрезанные полоски гарантированно падают
+    st.style.setProperty('--sx', `${(sx * 100).toFixed(2)}%`);
+    st.style.setProperty('--gone', String(sm(0.74, 0.95, p)));
+    sc.classList.toggle('snip', cut > 0 && cut < 1 && Math.sin(cut * Math.PI * 22) > 0);
+    for (const s of slices) {
+      const f = Math.max(clamp((sx - s.x - 0.01) / 0.11), tail);
+      if (f <= 0) { if (s.el.classList.contains('f')) { s.el.classList.remove('f'); s.el.style.transform = ''; s.el.style.opacity = ''; } continue; }
+      s.el.classList.add('f');
+      s.el.style.transform = `translate(${(s.dx * f).toFixed(1)}px, ${(f * f * H * 1.5).toFixed(1)}px) rotate(${(s.rot * f).toFixed(2)}deg)`;
+      s.el.style.opacity = String(1 - Math.min(1, f * 1.9));
+    }
+  };
+  const req = () => { if (!raf) raf = requestAnimationFrame(paint); };
+  addEventListener('scroll', req, { passive: true });
+  addEventListener('resize', () => { build(); req(); });
+  build(); paint();
+</script>

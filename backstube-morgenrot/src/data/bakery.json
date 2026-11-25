@@ -1,0 +1,312 @@
+{
+  "name": "Backstube Morgenrot",
+  "short": "Morgenrot",
+  "city": "Hannover",
+  "description": "Ein Tag in der Backstube Morgenrot: von 4:30 Uhr bis Feierabend. Brot, Brötchen und Kuchen, und am Ende die Tüte für morgen zum Vorbestellen.",
+  "address": {
+    "street": "Mehlgasse 7",
+    "zip": "30159",
+    "city": "Hannover",
+    "note": "fiktive Adresse"
+  },
+  "contact": {
+    "phone": "0511 000 00 00",
+    "email": "hallo@backstube-morgenrot.example"
+  },
+  "hours": [
+    {
+      "label": "Montag bis Samstag",
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "open": "06:00",
+      "close": "18:00"
+    },
+    {
+      "label": "Sonntag",
+      "days": [
+        0
+      ],
+      "open": "07:00",
+      "close": "12:00"
+    }
+  ],
+  "hero": {
+    "title": "Ein Tag in der Backstube",
+    "lead": "Scrollen Sie von 4:30 Uhr bis Feierabend. Am Ende wartet die Tüte für morgen."
+  },
+  "slots": [
+    {
+      "id": "nacht",
+      "min": 270,
+      "time": "04:30",
+      "ladder": "04",
+      "title": "Der Ofen läuft schon.",
+      "text": "Draußen ist es noch dunkel, im Ofenraum brennt schon Licht. Der Teig ruht seit gestern, jetzt wird geformt.",
+      "now": "Die Backstube arbeitet, der Laden ist noch zu.",
+      "items": []
+    },
+    {
+      "id": "oeffnung",
+      "min": 360,
+      "time": "06:00",
+      "ladder": "06",
+      "title": "Die Tür geht auf.",
+      "text": "Das erste Brot kommt aus dem Ofen, die Brötchen sind noch warm. Wer früh da ist, bekommt die knusprigste Kruste.",
+      "now": "Frisches Brot und warme Brötchen.",
+      "items": [
+        {
+          "name": "Bauernbrot, 750 g",
+          "price": "4,80 €"
+        },
+        {
+          "name": "Roggenbrötchen",
+          "price": "0,70 €"
+        },
+        {
+          "name": "Laugenbrezel",
+          "price": "1,30 €"
+        }
+      ]
+    },
+    {
+      "id": "fruehstueck",
+      "min": 480,
+      "time": "08:00",
+      "ladder": "08",
+      "title": "Frühstück am Fenster.",
+      "text": "Das Licht fällt schräg durch die Eckfenster, an der Theke wird es voll, am Fenster steht der erste Kaffee.",
+      "now": "Frühstück am Fenster.",
+      "items": [
+        {
+          "name": "Brötchen mit Butter und Konfitüre",
+          "price": "2,90 €"
+        },
+        {
+          "name": "Frühstück „Morgenrot“",
+          "note": "2 Brötchen, Butter, Käse, Kaffee",
+          "price": "8,40 €"
+        },
+        {
+          "name": "Filterkaffee",
+          "price": "2,60 €"
+        }
+      ]
+    },
+    {
+      "id": "mittag",
+      "min": 660,
+      "time": "11:00",
+      "ladder": "11",
+      "title": "Mittags wird es herzhaft.",
+      "text": "Die Sonne steht hoch, die Auslage füllt sich mit Belegtem und Herzhaftem. Für alle, die zwischen zwei Terminen etwas Ordentliches wollen.",
+      "now": "Mittagstisch mit Belegtem und Suppe.",
+      "items": [
+        {
+          "name": "Belegtes Roggenbrot",
+          "note": "Käse, Gurke, Kresse",
+          "price": "5,20 €"
+        },
+        {
+          "name": "Suppe des Tages mit Brot",
+          "price": "6,40 €"
+        },
+        {
+          "name": "Quiche des Tages",
+          "price": "4,90 €"
+        }
+      ]
+    },
+    {
+      "id": "kuchen",
+      "min": 900,
+      "time": "15:00",
+      "ladder": "15",
+      "title": "Jetzt gibt es Kuchen.",
+      "text": "Die Sonne wird honigfarben, die Auslage zeigt Kuchen und Törtchen. Für Feiern backen wir auch auf Bestellung.",
+      "now": "Kuchen und Törtchen in der Auslage.",
+      "items": [
+        {
+          "name": "Apfelkuchen, ein Stück",
+          "price": "3,60 €"
+        },
+        {
+          "name": "Streuselschnecke",
+          "price": "2,40 €"
+        },
+        {
+          "name": "Torte auf Bestellung",
+          "note": "für Feiern, 3 Tage vorher",
+          "price": "ab 32 €"
+        }
+      ],
+      "link": {
+        "label": "Torte anfragen",
+        "href": "mailto:hallo@backstube-morgenrot.example?subject=Torte%20anfragen"
+      }
+    },
+    {
+      "id": "feierabend",
+      "min": 1110,
+      "time": "18:30",
+      "ladder": "18",
+      "title": "Feierabend. Morgen wieder.",
+      "text": "Das Regal ist fast leer, der Ofen kühlt ab. Was heute fehlt, bekommen Sie morgen früh: Legen Sie sich eine Tüte zurück.",
+      "now": "Das Regal ist fast leer. Für morgen vorbestellen.",
+      "items": [],
+      "cta": {
+        "label": "Tüte für morgen",
+        "href": "#tuete"
+      }
+    }
+  ],
+  "voices": {
+    "title": "Stimmen aus dem Viertel",
+    "items": [
+      {
+        "quote": "Ich komme seit dem Umzug jeden Morgen vorbei. Die Brötchen sind noch warm, wenn sie in die Tüte wandern.",
+        "name": "Katrin Brandt",
+        "place": "List"
+      },
+      {
+        "quote": "Die Vorbestellung hat mein Sonntagsfrühstück gerettet. Zehn Minuten, und alles war gepackt.",
+        "name": "Jonas Weidner",
+        "place": "Südstadt"
+      },
+      {
+        "quote": "Der Apfelkuchen ist ehrlich: nicht zu süß, mit richtigem Teig.",
+        "name": "Familie Özdemir",
+        "place": "Linden"
+      }
+    ]
+  },
+  "tuete": {
+    "title": "Die Tüte für morgen",
+    "text": "Wählen Sie, was morgen früh im Beutel liegen soll, und eine Abholzeit. Bezahlt wird im Laden.",
+    "bagAlt": "Eine schlichte Papiertüte mit Baguette, Brötchen und Brezel auf dem Tresen",
+    "items": [
+      {
+        "id": "broetchen",
+        "name": "Brötchen",
+        "cents": 70
+      },
+      {
+        "id": "roggen",
+        "name": "Roggenbrötchen",
+        "cents": 70
+      },
+      {
+        "id": "brezel",
+        "name": "Laugenbrezel",
+        "cents": 130
+      },
+      {
+        "id": "bauernbrot",
+        "name": "Bauernbrot, 750 g",
+        "cents": 480
+      },
+      {
+        "id": "apfelkuchen",
+        "name": "Apfelkuchen, ein Stück",
+        "cents": 360
+      },
+      {
+        "id": "schnecke",
+        "name": "Streuselschnecke",
+        "cents": 240
+      }
+    ],
+    "pickup": [
+      "06:00",
+      "06:30",
+      "07:00",
+      "07:30",
+      "08:00",
+      "08:30",
+      "09:00",
+      "09:30",
+      "10:00",
+      "10:30",
+      "11:00",
+      "11:30"
+    ]
+  },
+  "closing": "Morgen um 04:30 geht der Ofen wieder an. Ab 06:00 liegt Ihre Tüte bereit.",
+  "frames": [
+    {
+      "file": "f01-0430",
+      "min": 270,
+      "phase": 1,
+      "alt": "Die Backstube im Dunkeln, nur der Ofenraum leuchtet, der Bäcker formt Teig",
+      "pos": "40% 50%"
+    },
+    {
+      "file": "f02-0530",
+      "min": 330,
+      "phase": 1,
+      "alt": "Der Bäcker zieht Brote aus dem Ofen, im Laden brennt eine Lampe",
+      "pos": "45% 50%"
+    },
+    {
+      "file": "f03-0630",
+      "min": 390,
+      "phase": 2,
+      "alt": "Morgendämmerung, die Auslage wird bestückt, draußen wartet jemand",
+      "pos": "40% 50%"
+    },
+    {
+      "file": "f04-0800",
+      "min": 480,
+      "phase": 3,
+      "alt": "Frühstückszeit: Kundschaft an der Theke, Tram und Radfahrer draußen",
+      "pos": "55% 50%"
+    },
+    {
+      "file": "f05-0930",
+      "min": 570,
+      "phase": 3,
+      "alt": "Ruhiger Vormittag, jemand liest am Fenster",
+      "pos": "58% 50%"
+    },
+    {
+      "file": "f06-1100",
+      "min": 660,
+      "phase": 4,
+      "alt": "Mittag: Belegtes in der Auslage, Paare am Tisch",
+      "pos": "50% 50%"
+    },
+    {
+      "file": "f07-1300",
+      "min": 780,
+      "phase": 4,
+      "alt": "Helles Mittagslicht, eine kleine Schlange an der Theke",
+      "pos": "55% 50%"
+    },
+    {
+      "file": "f08-1500",
+      "min": 900,
+      "phase": 5,
+      "alt": "Kuchenzeit im goldenen Licht",
+      "pos": "58% 50%"
+    },
+    {
+      "file": "f09-1700",
+      "min": 1020,
+      "phase": 6,
+      "alt": "Feierabendandrang, die Straßenlaternen gehen an",
+      "pos": "42% 50%"
+    },
+    {
+      "file": "f10-1830",
+      "min": 1110,
+      "phase": 6,
+      "alt": "Blaue Stunde nach Ladenschluss, der Teig für morgen wird vorbereitet",
+      "pos": "50% 50%"
+    }
+  ]
+}

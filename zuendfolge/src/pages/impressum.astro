@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Impressum">
+  <main class="legal wrap">
+    <a class="back" href={base}>← Zurück zur Startseite</a>
+    <h1>Impressum</h1>
+    <p class="note">Beispielseite von Kravets Webdesign. {site.name} ist ein erfundener Betrieb. Alle Angaben unten sind Platzhalter und ein Muster für den echten Einsatz. Vor der Veröffentlichung mit den echten Daten füllen und rechtlich prüfen lassen.</p>
+
+    <h2>Angaben gemäß § 5 DDG</h2>
+    <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+
+    <h2>Kontakt</h2>
+    <p>Telefon: {site.phone}<br />E-Mail: {site.email}</p>
+
+    <h2>Berufsrechtliche Angaben</h2>
+    <ul>
+      <li>Berufsbezeichnung: Kraftfahrzeugtechniker-Meister, verliehen in Deutschland. <!-- TODO: vom Kunden bestätigen --></li>
+      <li>Zuständige Kammer: Handwerkskammer Hannover. <!-- TODO: vom Kunden bestätigen --></li>
+      <li>Eintragung in die Handwerksrolle: TODO vom Kunden.</li>
+    </ul>
+
+    <h2>Umsatzsteuer-ID</h2>
+    <p>Umsatzsteuer-Identifikationsnummer nach § 27a UStG: TODO vom Kunden.</p>
+
+    <h2>Verantwortlich für den Inhalt</h2>
+    <p>TODO vom Kunden (Name und Anschrift wie oben).</p>
+
+    <h2>Streitbeilegung</h2>
+    <p>Wir sind nicht bereit und nicht verpflichtet, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen. <!-- TODO: vom Kunden bestätigen --></p>
+
+    <h2>Hinweis zu dieser Demo</h2>
+    <p>{site.demoNote}</p>
+    <a class="back" href={base}>← Zurück zur Startseite</a>
+  </main>
+  <Footer />
+</Base>

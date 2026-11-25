@@ -1,0 +1,41 @@
+---
+import '@fontsource-variable/fraunces/full.css';
+import '@fontsource-variable/fraunces/full-italic.css';
+import '@fontsource-variable/dm-sans';
+import '../styles/global.css';
+import site from '../data/site.json';
+
+interface Props { title?: string; description?: string }
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { title = `${site.legalName} · Friseur in ${site.city}-${site.district}`, description = `${site.legalName}: Schnitt, Farbe und Pflege in ${site.city}-${site.district}. Look zusammenstellen und online Termin buchen.` } = Astro.props;
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#f3ecdf" />
+    <script is:inline>document.documentElement.classList.add('js')</script>
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+  </head>
+  <body>
+    <slot />
+    <a class="demo-pill" href={site.credit.portfolio}><span aria-hidden="true">←</span> Portfolio <small>· {site.demoNotice}</small></a>
+    <style>
+      .demo-pill {
+        position: fixed; left: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 80;
+        padding: 8px 14px; border-radius: 999px; font-size: .7rem; font-weight: 700; letter-spacing: .04em;
+        background: var(--cream); color: var(--ink); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+        text-decoration: none; display: inline-flex; gap: 6px; align-items: baseline;
+      }
+      .demo-pill small { font-size: .64rem; font-weight: 500; opacity: .75; }
+      @media (max-width: 480px) { .demo-pill small { display: none; } }
+    </style>
+    <script>
+      import '../scripts/motion.js';
+    </script>
+  </body>
+</html>

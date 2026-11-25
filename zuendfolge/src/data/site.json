@@ -1,0 +1,633 @@
+{
+  "name": "Zündfolge",
+  "claim": "Kfz-Meisterbetrieb",
+  "region": "Region Hannover",
+  "demoNote": "Demo: Betrieb, Preise und Zeiten sind erfunden.",
+  "legalName": "TODO vom Kunden",
+  "address": {
+    "street": "Musterweg 1",
+    "zip": "30989",
+    "city": "Gehrden",
+    "note": "Beispieladresse"
+  },
+  "email": "hallo@zuendfolge.example",
+  "phone": "05108 000 000",
+  "phoneHref": "+4951080000000",
+  "hours": {
+    "1": [
+      "07:30",
+      "17:30"
+    ],
+    "2": [
+      "07:30",
+      "17:30"
+    ],
+    "3": [
+      "07:30",
+      "17:30"
+    ],
+    "4": [
+      "07:30",
+      "17:30"
+    ],
+    "5": [
+      "07:30",
+      "17:30"
+    ],
+    "6": [
+      "08:00",
+      "12:00"
+    ],
+    "0": null
+  },
+  "hoursRows": [
+    {
+      "d": "Montag bis Freitag",
+      "t": "7:30 bis 17:30"
+    },
+    {
+      "d": "Samstag",
+      "t": "8:00 bis 12:00"
+    },
+    {
+      "d": "Sonntag",
+      "t": "geschlossen"
+    }
+  ],
+  "urgency": {
+    "go": {
+      "label": "Weiterfahren möglich",
+      "lamp": "green"
+    },
+    "soon": {
+      "label": "Bald prüfen lassen",
+      "lamp": "amber"
+    },
+    "stop": {
+      "label": "Nicht weiterfahren",
+      "lamp": "red"
+    },
+    "plan": {
+      "label": "Planbar",
+      "lamp": "blue"
+    }
+  },
+  "modes": [
+    {
+      "id": "leuchten",
+      "label": "Warnleuchten",
+      "icon": "lamp",
+      "intro": "Welche Lampe leuchtet?"
+    },
+    {
+      "id": "geraeusche",
+      "label": "Geräusche",
+      "icon": "wave",
+      "intro": "Was hörst du?"
+    },
+    {
+      "id": "gefuehl",
+      "label": "Fahrgefühl",
+      "icon": "wheel",
+      "intro": "Was fühlst du?"
+    },
+    {
+      "id": "faellig",
+      "label": "Fällig",
+      "icon": "cal",
+      "intro": "Was steht an?"
+    },
+    {
+      "id": "unfall",
+      "label": "Unfall und Lack",
+      "icon": "car",
+      "intro": "Was ist passiert?"
+    }
+  ],
+  "items": [
+    {
+      "id": "motor",
+      "mode": "leuchten",
+      "icon": "motor",
+      "lamp": "amber",
+      "label": "Motorkontrolle",
+      "hint": "Gelbe Lampe mit Motor-Symbol",
+      "urgency": "soon",
+      "was": "Die Motorelektronik hat einen Fehler gespeichert, meist bei Abgas, Zündung oder einem Sensor. Das Auto fährt oft normal weiter.",
+      "warn": "Blinkt die Lampe oder ruckelt der Motor stark, halte an. Sonst kann der Katalysator Schaden nehmen.",
+      "wir": [
+        "Fehlerspeicher auslesen",
+        "Ursache messen statt Teile raten",
+        "Fehler löschen und Probefahrt"
+      ],
+      "dauer": "ca. 1 Std.",
+      "preis": "ab 49 €",
+      "short": "Motor",
+      "ab": 49
+    },
+    {
+      "id": "oel",
+      "mode": "leuchten",
+      "icon": "oil",
+      "lamp": "red",
+      "label": "Öldruck",
+      "hint": "Rote Lampe mit Ölkännchen",
+      "urgency": "stop",
+      "was": "Der Motor bekommt zu wenig Öldruck. Schon wenige Minuten Fahrt können ihn zerstören. Eine gelbe Öl-Lampe meldet dagegen nur zu wenig Öl: bald nachfüllen.",
+      "warn": "Sofort anhalten und Motor aus. Ruf uns an, wir holen das Auto ab.",
+      "wir": [
+        "Ölstand und Öldruck messen",
+        "Ölpumpe, Filter und Sensor prüfen",
+        "Öl und Filter wechseln, wenn nötig"
+      ],
+      "dauer": "1 bis 3 Std.",
+      "preis": "ab 59 €",
+      "short": "Öl",
+      "ab": 59
+    },
+    {
+      "id": "bremse",
+      "mode": "leuchten",
+      "icon": "brake",
+      "lamp": "red",
+      "label": "Bremsen",
+      "hint": "Rote Lampe mit Ausrufezeichen im Kreis",
+      "urgency": "stop",
+      "was": "Rot heißt: Handbremse noch angezogen, zu wenig Bremsflüssigkeit oder ein Fehler im Bremssystem. Prüf zuerst die Handbremse.",
+      "warn": "Bleibt die Lampe an, fahr nicht weiter. Bremsflüssigkeit verliert man nicht ohne Grund.",
+      "wir": [
+        "Bremsflüssigkeit und Beläge prüfen",
+        "Leitungen und Sättel auf Undichtigkeit prüfen",
+        "Reparatur mit Bremsentest"
+      ],
+      "dauer": "1 bis 2 Std.",
+      "preis": "ab 39 €",
+      "short": "Bremse",
+      "ab": 39
+    },
+    {
+      "id": "batterie",
+      "mode": "leuchten",
+      "icon": "batt",
+      "lamp": "red",
+      "label": "Batterie und Ladung",
+      "hint": "Rote Lampe mit Batterie-Symbol",
+      "urgency": "soon",
+      "was": "Die Lichtmaschine lädt nicht mehr. Das Auto läuft nur noch auf der Batterie, meist ist nach einer halben Stunde Schluss.",
+      "warn": "Schalte Klima, Sitzheizung und Radio aus und fahr direkt zu uns. Motor nicht unterwegs abstellen, er springt vielleicht nicht wieder an.",
+      "wir": [
+        "Batterie, Lichtmaschine und Keilrippenriemen messen",
+        "Defektes Teil tauschen"
+      ],
+      "dauer": "ca. 1 Std.",
+      "preis": "ab 29 €",
+      "short": "Batterie",
+      "ab": 29
+    },
+    {
+      "id": "reifen",
+      "mode": "leuchten",
+      "icon": "tire",
+      "lamp": "amber",
+      "label": "Reifendruck",
+      "hint": "Gelbe Lampe mit Reifen-Querschnitt",
+      "urgency": "soon",
+      "was": "In mindestens einem Reifen ist der Druck zu niedrig, oder das System muss nach dem Reifenwechsel neu angelernt werden. Zu wenig Druck verlängert den Bremsweg und erhöht den Verbrauch.",
+      "wir": [
+        "Druck an allen vier Reifen einstellen",
+        "Reifen auf Nagel oder Riss prüfen",
+        "Kontrollsystem neu anlernen"
+      ],
+      "dauer": "ca. 30 Min.",
+      "preis": "ab 15 €",
+      "short": "Reifen",
+      "ab": 15
+    },
+    {
+      "id": "abs",
+      "mode": "leuchten",
+      "icon": "abs",
+      "lamp": "amber",
+      "label": "ABS und ESP",
+      "hint": "Gelbe Lampe mit ABS oder Schleuderauto",
+      "urgency": "soon",
+      "was": "Die Bremsen wirken weiter, aber ohne Blockierschutz und Schleuderschutz. Auf nasser oder glatter Straße wird der Bremsweg länger.",
+      "wir": [
+        "Raddrehzahlsensoren auslesen",
+        "Kabel und Stecker prüfen",
+        "Defekt beheben und testen"
+      ],
+      "dauer": "1 bis 2 Std.",
+      "preis": "ab 49 €",
+      "short": "ABS",
+      "ab": 49
+    },
+    {
+      "id": "kuehl",
+      "mode": "leuchten",
+      "icon": "cool",
+      "lamp": "red",
+      "label": "Kühlmittel und Temperatur",
+      "hint": "Rote Lampe mit Thermometer in Wellen",
+      "urgency": "stop",
+      "was": "Der Motor wird zu heiß, oder es fehlt Kühlmittel. Fährst du weiter, kann die Zylinderkopfdichtung Schaden nehmen. Das ist eine teure Reparatur.",
+      "warn": "Anhalten, Motor aus. Den heißen Ausgleichsbehälter nicht öffnen.",
+      "wir": [
+        "Kühlsystem abdrücken",
+        "Thermostat, Pumpe und Kühler prüfen",
+        "Kühlmittel auffüllen oder wechseln"
+      ],
+      "dauer": "1 bis 3 Std.",
+      "preis": "ab 59 €",
+      "short": "Kühlung",
+      "ab": 59
+    },
+    {
+      "id": "airbag",
+      "mode": "leuchten",
+      "icon": "airbag",
+      "lamp": "red",
+      "label": "Airbag",
+      "hint": "Rote oder gelbe Lampe mit Person und Kreis",
+      "urgency": "soon",
+      "was": "Im Airbag-System steckt ein Fehler. Möglich, dass die Airbags bei einem Unfall nicht auslösen. Das Auto selbst fährt normal.",
+      "wir": [
+        "Fehlerspeicher des Rückhaltesystems auslesen",
+        "Sitzmatte, Gurtstraffer und Stecker prüfen",
+        "Reparatur und Systemtest"
+      ],
+      "dauer": "1 bis 2 Std.",
+      "preis": "ab 49 €",
+      "short": "Airbag",
+      "ab": 49
+    },
+    {
+      "id": "quietschen",
+      "mode": "geraeusche",
+      "label": "Quietschen beim Bremsen",
+      "hint": "Sobald du aufs Pedal gehst",
+      "urgency": "soon",
+      "was": "Meist sind die Beläge abgenutzt. Viele haben einen Verschleißanzeiger, der absichtlich quietscht. Nach feuchten Nächten quietscht es auch mal harmlos, hält es an, lass nachsehen.",
+      "wir": [
+        "Beläge und Scheiben messen",
+        "Sättel gängig machen",
+        "Beläge oder Scheiben ersetzen"
+      ],
+      "dauer": "1 bis 2 Std.",
+      "preis": "ab 129 € je Achse",
+      "ab": 129,
+      "extra": "je Achse"
+    },
+    {
+      "id": "klopfen",
+      "mode": "geraeusche",
+      "label": "Klopfen oder Rattern im Motor",
+      "hint": "Im Leerlauf oder beim Gasgeben",
+      "urgency": "soon",
+      "was": "Mögliche Ursachen reichen von zu wenig Öl über verschlissene Stößel bis zu einem Lagerschaden. Je früher wir hinhören, desto günstiger bleibt es.",
+      "warn": "Wird es lauter oder geht die Öllampe an, Motor aus und stehen lassen.",
+      "wir": [
+        "Ölstand und Öldruck prüfen",
+        "Geräusch mit Stethoskop orten",
+        "Befund mit Kostenvoranschlag"
+      ],
+      "dauer": "ca. 1 Std.",
+      "preis": "ab 49 €",
+      "ab": 49
+    },
+    {
+      "id": "brummen",
+      "mode": "geraeusche",
+      "label": "Brummen oder Heulen mit dem Tempo",
+      "hint": "Wird mit der Geschwindigkeit lauter",
+      "urgency": "soon",
+      "was": "Klassisches Zeichen für ein verschlissenes Radlager, manchmal auch für ungleich abgefahrene Reifen. Ändert sich das Geräusch in Kurven, lässt sich die Seite eingrenzen.",
+      "wir": [
+        "Probefahrt mit Messung",
+        "Radlager auf Spiel prüfen",
+        "Radlager tauschen, Spur kontrollieren"
+      ],
+      "dauer": "ca. 2 Std.",
+      "preis": "ab 189 € je Seite",
+      "ab": 189,
+      "extra": "je Seite"
+    },
+    {
+      "id": "rasseln",
+      "mode": "geraeusche",
+      "label": "Rasseln unter dem Auto",
+      "hint": "Im Leerlauf oder auf Bodenwellen",
+      "urgency": "go",
+      "was": "Oft ein loses Hitzeschutzblech oder eine ausgeleierte Auspuffhalterung. Meist harmlos. Ein Auspuff, der abfällt, ist es nicht, also nicht ewig warten.",
+      "wir": [
+        "Auspuff, Bleche und Halter auf der Hebebühne prüfen",
+        "Festziehen oder Halter ersetzen"
+      ],
+      "dauer": "30 bis 60 Min.",
+      "preis": "ab 25 €",
+      "ab": 25
+    },
+    {
+      "id": "kreischen",
+      "mode": "geraeusche",
+      "label": "Kreischen oder Pfeifen beim Start",
+      "hint": "Vor allem bei Kälte oder Nässe",
+      "urgency": "soon",
+      "was": "Meist ist der Keilrippenriemen locker oder rissig, oder der Spanner ist müde. Reißt er, fällt die Lichtmaschine aus, bei manchen Autos auch die Servolenkung.",
+      "wir": [
+        "Riemen und Spannrolle prüfen",
+        "Riemen und Rollen ersetzen"
+      ],
+      "dauer": "ca. 1 Std.",
+      "preis": "ab 89 €",
+      "ab": 89
+    },
+    {
+      "id": "knacken",
+      "mode": "geraeusche",
+      "label": "Knacken in Kurven",
+      "hint": "Beim Einlenken, vor allem voll eingeschlagen",
+      "urgency": "soon",
+      "was": "Typisch für ein ausgeschlagenes Antriebswellengelenk. Oft ist vorher die Manschette gerissen und das Fett herausgetreten.",
+      "wir": [
+        "Manschetten und Gelenke prüfen",
+        "Manschette oder Antriebswelle ersetzen"
+      ],
+      "dauer": "ca. 2 Std.",
+      "preis": "ab 149 €",
+      "ab": 149
+    },
+    {
+      "id": "zieht",
+      "mode": "gefuehl",
+      "label": "Auto zieht zur Seite",
+      "hint": "Auf gerader Straße, ohne zu lenken",
+      "urgency": "soon",
+      "was": "Falscher Reifendruck, eine verstellte Spur oder eine Bremse, die hängt. Ungleicher Reifenverschleiß kostet dich Geld, also nicht aufschieben.",
+      "wir": [
+        "Reifendruck und Profil prüfen",
+        "Achsvermessung",
+        "Bremse auf Hängen prüfen"
+      ],
+      "dauer": "1 bis 1,5 Std.",
+      "preis": "ab 89 €",
+      "ab": 89
+    },
+    {
+      "id": "vibriert",
+      "mode": "gefuehl",
+      "label": "Lenkrad vibriert",
+      "hint": "Ab etwa 80 km/h oder beim Bremsen",
+      "urgency": "soon",
+      "was": "Bei Tempo sind es meist unwuchtige Räder, beim Bremsen verzogene Bremsscheiben. Beides lässt sich gut beheben.",
+      "wir": [
+        "Räder auswuchten",
+        "Bremsscheiben auf Schlag prüfen",
+        "Spurstangen und Querlenker kontrollieren"
+      ],
+      "dauer": "ca. 1 Std.",
+      "preis": "ab 39 €",
+      "ab": 39
+    },
+    {
+      "id": "ruckelt",
+      "mode": "gefuehl",
+      "label": "Motor ruckelt oder stottert",
+      "hint": "Beim Beschleunigen oder im Leerlauf",
+      "urgency": "soon",
+      "was": "Zündkerzen, Zündspulen, Einspritzung oder Luftmengenmesser. Oft meldet sich dazu die Motorlampe.",
+      "warn": "Blinkt die Motorlampe dazu, halte an.",
+      "wir": [
+        "Fehlerspeicher auslesen",
+        "Zündung und Einspritzung messen",
+        "Defekte Teile tauschen"
+      ],
+      "dauer": "1 bis 2 Std.",
+      "preis": "ab 49 €",
+      "ab": 49
+    },
+    {
+      "id": "weich",
+      "mode": "gefuehl",
+      "label": "Bremspedal fühlt sich weich an",
+      "hint": "Tief durchzutreten oder schwammig",
+      "urgency": "stop",
+      "was": "Luft oder zu wenig Flüssigkeit im System, eine undichte Leitung oder ein Sattel, oder verbrauchte Bremsflüssigkeit.",
+      "warn": "Fahr nicht weiter. Die Bremse kann nachlassen, wenn du sie am meisten brauchst.",
+      "wir": [
+        "Bremsflüssigkeit und Leitungen prüfen",
+        "System entlüften",
+        "Defekte Teile ersetzen, Bremsentest"
+      ],
+      "dauer": "1 bis 2 Std.",
+      "preis": "ab 69 €",
+      "ab": 69
+    },
+    {
+      "id": "startet",
+      "mode": "gefuehl",
+      "label": "Startet schlecht",
+      "hint": "Orgelt lange oder macht nur Klick",
+      "urgency": "soon",
+      "was": "Meist ist es die Batterie. Beim Diesel kommen Glühkerzen infrage, beim Benziner Zündung oder Kraftstoffpumpe.",
+      "wir": [
+        "Batterie und Anlasser messen",
+        "Glühkerzen oder Zündung prüfen",
+        "Teile tauschen"
+      ],
+      "dauer": "ca. 1 Std.",
+      "preis": "ab 29 €",
+      "ab": 29
+    },
+    {
+      "id": "hu",
+      "mode": "faellig",
+      "label": "TÜV und Abgas (HU)",
+      "hint": "Die Plakette läuft bald ab",
+      "urgency": "plan",
+      "was": "Pkw müssen alle 24 Monate zur Hauptuntersuchung, neue nach 36 Monaten. Wir machen vorab den Check, damit du die Plakette beim ersten Mal bekommst.",
+      "wir": [
+        "Vorab-Check nach HU-Katalog",
+        "Mängel beheben",
+        "Vorführung bei der Prüfstelle"
+      ],
+      "dauer": "1 bis 2 Std.",
+      "preis": "ab 89 €, Prüfgebühr extra",
+      "ab": 89,
+      "extra": "Prüfgebühr extra"
+    },
+    {
+      "id": "inspektion",
+      "mode": "faellig",
+      "label": "Inspektion",
+      "hint": "Nach Herstellervorgabe",
+      "urgency": "plan",
+      "was": "Wir arbeiten nach dem Wartungsplan deines Herstellers und stempeln das Serviceheft. Deine Garantie bleibt erhalten, auch wenn du nicht in der Vertragswerkstatt warst.",
+      "wir": [
+        "Öl und Filter wechseln",
+        "Bremsen, Flüssigkeiten, Licht und Reifen prüfen",
+        "Serviceheft abstempeln"
+      ],
+      "dauer": "2 bis 3 Std.",
+      "preis": "ab 149 €",
+      "ab": 149
+    },
+    {
+      "id": "raeder",
+      "mode": "faellig",
+      "label": "Reifenwechsel",
+      "hint": "Sommer auf Winter und zurück",
+      "urgency": "plan",
+      "was": "Räder wechseln, auswuchten, Luftdruck einstellen. Auf Wunsch lagern wir deinen zweiten Satz bei uns.",
+      "wir": [
+        "Räder wechseln und wuchten",
+        "Profil und Alter prüfen",
+        "Einlagerung auf Wunsch"
+      ],
+      "dauer": "ca. 45 Min.",
+      "preis": "ab 49 €",
+      "ab": 49
+    },
+    {
+      "id": "oelwechsel",
+      "mode": "faellig",
+      "label": "Ölwechsel",
+      "hint": "Anzeige oder Intervall erreicht",
+      "urgency": "plan",
+      "was": "Wir nehmen das Öl, das dein Hersteller freigibt, und setzen die Serviceanzeige zurück. Der Unterboden wird gleich mit angeschaut.",
+      "wir": [
+        "Öl und Filter wechseln",
+        "Serviceanzeige zurücksetzen",
+        "Sichtprüfung des Unterbodens"
+      ],
+      "dauer": "ca. 45 Min.",
+      "preis": "ab 69 € plus Öl",
+      "ab": 69,
+      "extra": "plus Öl"
+    },
+    {
+      "id": "klima",
+      "mode": "faellig",
+      "label": "Klima-Service",
+      "hint": "Kühlt nicht richtig oder riecht muffig",
+      "urgency": "plan",
+      "was": "Das Kältemittel verliert über die Jahre Druck, und der Innenraumfilter setzt sich zu. Ein Klima-Service bringt die Leistung zurück und nimmt den Geruch.",
+      "wir": [
+        "Druck und Dichtheit messen",
+        "Kältemittel auffüllen",
+        "Innenraumfilter tauschen"
+      ],
+      "dauer": "ca. 1 Std.",
+      "preis": "ab 79 €",
+      "ab": 79
+    },
+    {
+      "id": "winter",
+      "mode": "faellig",
+      "label": "Wintercheck",
+      "hint": "Vor der kalten Jahreszeit",
+      "urgency": "plan",
+      "was": "Batterie, Frostschutz, Licht, Wischer und Reifen. Wer vorher nachsieht, bleibt morgens nicht stehen.",
+      "wir": [
+        "Batterie und Lichtmaschine messen",
+        "Frostschutz und Scheibenreiniger prüfen",
+        "Licht, Wischer und Reifenprofil kontrollieren"
+      ],
+      "dauer": "ca. 45 Min.",
+      "preis": "ab 29 €",
+      "ab": 29
+    },
+    {
+      "id": "delle",
+      "mode": "unfall",
+      "label": "Parkrempler oder Delle",
+      "hint": "Ohne Lackschaden",
+      "urgency": "plan",
+      "was": "Kleine Dellen ohne gebrochenen Lack lassen sich oft ausbeulen, ohne zu lackieren. Das ist günstiger und erhält den Originallack.",
+      "wir": [
+        "Schaden ansehen",
+        "Ausbeulen ohne Lackieren, wenn es geht",
+        "Sonst spachteln und lackieren"
+      ],
+      "dauer": "2 Std. bis 2 Tage",
+      "preis": "Kostenvoranschlag gratis",
+      "ab": 0
+    },
+    {
+      "id": "kratzer",
+      "mode": "unfall",
+      "label": "Kratzer oder Lackschaden",
+      "hint": "Parkplatz, Steinschlag, Ast",
+      "urgency": "soon",
+      "was": "Oberflächliche Kratzer lassen sich polieren. Geht der Kratzer durch den Klarlack, fängt das Blech an zu rosten. Dann lieber bald lackieren.",
+      "wir": [
+        "Tiefe des Kratzers prüfen",
+        "Polieren oder Teillackierung",
+        "Farbton nach Farbcode mischen"
+      ],
+      "dauer": "1 bis 3 Tage",
+      "preis": "ab 149 €",
+      "ab": 149
+    },
+    {
+      "id": "scheibe",
+      "mode": "unfall",
+      "label": "Steinschlag in der Scheibe",
+      "hint": "Kleiner Einschlag oder Riss",
+      "urgency": "soon",
+      "was": "Ein kleiner Einschlag lässt sich oft mit Harz reparieren, bevor er zum Riss wird. Danach hilft nur noch der Tausch. Viele Teilkasko-Versicherungen zahlen die Reparatur ohne Selbstbeteiligung.",
+      "wir": [
+        "Einschlag beurteilen",
+        "Reparatur mit Harz oder Scheibentausch",
+        "Kamera neu kalibrieren, wenn nötig"
+      ],
+      "dauer": "30 Min. bis 3 Std.",
+      "preis": "ab 69 €",
+      "ab": 69
+    },
+    {
+      "id": "unfall",
+      "mode": "unfall",
+      "label": "Unfallschaden",
+      "hint": "Du hattest einen Unfall",
+      "urgency": "soon",
+      "was": "Lass vor der Reparatur ein Gutachten oder einen Kostenvoranschlag machen. Bei einem unverschuldeten Unfall zahlt in der Regel die gegnerische Versicherung, und du hast freie Werkstattwahl.",
+      "wir": [
+        "Schaden aufnehmen und fotografieren",
+        "Kostenvoranschlag oder Gutachter vermitteln",
+        "Reparatur und Lackierung"
+      ],
+      "dauer": "1 bis 10 Tage",
+      "preis": "Kostenvoranschlag gratis",
+      "ab": 0
+    }
+  ],
+  "protokoll": [
+    {
+      "punkt": "Meisterbetrieb",
+      "text": "Ein Kfz-Meister gibt jede Reparatur frei."
+    },
+    {
+      "punkt": "Garantie bleibt",
+      "text": "Inspektion nach Herstellervorgabe, mit Stempel im Serviceheft."
+    },
+    {
+      "punkt": "Preis vorher",
+      "text": "Du bekommst einen Kostenvoranschlag. Wird es teurer, rufen wir an, bevor wir weiterarbeiten."
+    },
+    {
+      "punkt": "Alte Teile zurück",
+      "text": "Auf Wunsch liegen die ausgebauten Teile bei der Abholung bereit."
+    },
+    {
+      "punkt": "Hol- und Bringservice",
+      "text": "Im Umkreis von 10 km, nach Absprache."
+    },
+    {
+      "punkt": "Ersatzwagen",
+      "text": "Bei Reparaturen über einen Tag, solange einer frei ist."
+    }
+  ],
+  "whatsapp": "",
+  "priceNote": "Alle Preise inkl. MwSt. und ohne Gewähr. Den genauen Preis nennen wir nach der Prüfung."
+}

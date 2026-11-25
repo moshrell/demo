@@ -1,0 +1,11 @@
+Zündfolge: 3 Bilder für Gemini. Jeden Prompt komplett kopieren, nacheinander im selben Gemini-Chat.
+Fertige Dateien in D:\Webdesign\zuendfolge\public\img\ ablegen, genau mit diesen Namen (jpg).
+
+=== 1. werkstatt.jpg (Format 3:2, quer) ===
+Photorealistic editorial photograph, aspect ratio 3:2, landscape. A compact unbranded silver-grey hatchback raised on a two-post lift in a tidy independent German car workshop bay, low front three-quarter angle, a wall of hand tools softly out of focus in the background. Cool daylight from skylights mixed with warm amber task lamps, clean concrete floor, palette of deep teal-navy, steel grey and small amber accents, natural film grain, shallow depth of field, calm and tidy. No people, no text, no logos, no brand badges, no readable license plates.
+
+=== 2. bremse.jpg (Format 4:3, quer) ===
+Photorealistic editorial photograph, aspect ratio 4:3, landscape. Macro close-up of a ventilated brake disc and a dark grey brake caliper on a wheel hub with the wheel removed, a torque wrench resting on the floor beside it, very shallow depth of field, in an independent German car workshop. Cool daylight mixed with warm amber task lamps, palette of deep teal-navy, steel grey and small amber accents, natural film grain. No people, no text, no logos, no brand badges.
+
+=== 3. diagnose.jpg (Format 4:3, quer) ===
+Photorealistic editorial photograph, aspect ratio 4:3, landscape. An open generic unbranded car engine bay lit from the side, a rugged tablet leaning on the fender showing an abstract glowing waveform graph without any readable text, a diagnostic cable plugged into the car, in a tidy independent German car workshop. Cool daylight mixed with warm amber task lamps, palette of deep teal-navy, steel grey and small amber accents, natural film grain, shallow depth of field. No people, no text, no logos, no brand badges.

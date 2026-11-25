@@ -1,0 +1,6 @@
+node_modules
+dist
+.astro
+hero/node_modules
+hero/out
+hero/frames

@@ -1,0 +1,19 @@
+---
+import Legal from '../layouts/Legal.astro';
+import site from '../data/site.json';
+---
+<Legal title="Datenschutz">
+  <p>Diese Demo-Website setzt keine Cookies, nutzt kein Tracking und lädt keine Inhalte von Drittanbietern. Schriften und Grafiken liegen auf demselben Server.</p>
+  <h2>Terminformular</h2>
+  <p><strong>Demo-Hinweis:</strong> In dieser Beispielseite wird nichts gesendet oder gespeichert. Die folgenden Angaben zeigen, was bei einem echten Salon hier stehen muss.</p>
+  <p><strong>Verantwortlicher:</strong> {site.legalName}, {site.contact.street}, {site.contact.zip} {site.contact.city} (fiktiv). Kontakt: {site.contact.email}</p>
+  <p><strong>Welche Daten:</strong> Name, Telefonnummer, gewählte Leistung, Wunschtag und Uhrzeit sowie ein freiwilliger Hinweis.</p>
+  <p><strong>Wozu:</strong> Wir vergeben Ihren Termin, bereiten ihn vor und rufen Sie bei Rückfragen an. Rechtsgrundlage ist die Vertragsanbahnung und -erfüllung (Art. 6 Abs. 1 lit. b DSGVO, die europäische Datenschutz-Grundverordnung).</p>
+  <p><strong>Wie lange:</strong> Wir löschen Ihre Angaben nach dem Termin, spätestens nach 30 Tagen, sofern keine gesetzliche Aufbewahrungspflicht besteht.</p>
+  <p><strong>Weitergabe:</strong> Keine Weitergabe an Dritte. Die Daten werden nicht für Werbung genutzt.</p>
+  <p><strong>Ihre Rechte:</strong> Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch und Datenübertragbarkeit (Art. 15 bis 21 DSGVO). Sie können sich außerdem bei der Datenschutzaufsichtsbehörde Ihres Bundeslandes beschweren.</p>
+  <p><strong>Freiwilligkeit:</strong> Die Angabe der Daten ist freiwillig. Ohne Name und Telefonnummer können wir den Termin aber nicht vergeben.</p>
+  <p><strong>Zwischenspeicherung:</strong> Ihre Eingaben werden zur Sicherheit nur temporär im Browser dieses Tabs (sessionStorage) zwischengespeichert und nach dem Absenden oder Schließen des Tabs gelöscht; sie werden nicht an uns übertragen.</p>
+  <h2>Hosting</h2>
+  <p>Informationen zum Hosting und zu Server-Logdateien finden Sie in der <a href={`${site.credit.url}/datenschutz/`}>Datenschutzerklärung von Kravets Webdesign</a>.</p>
+</Legal>

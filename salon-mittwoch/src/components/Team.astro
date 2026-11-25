@@ -1,0 +1,60 @@
+---
+import { Image } from 'astro:assets';
+import site from '../data/site.json';
+const t = site.team;
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/team/*.{jpg,jpeg,png,webp}', { eager: true });
+const photo = (f?: string) => (f ? photos[`../assets/team/${f}`]?.default : undefined);
+const initials = (n: string) => n.split(' ').map((w) => w[0]).join('');
+---
+<section class="section team" id="team">
+  <div class="wrap">
+    <p class="eyebrow reveal">{t.eyebrow}</p>
+    <h2 class="h2 reveal" style="--d:.08s">{t.title}</h2>
+    <ul class="cards">
+      {t.people.map((p, i) => (
+        <li class="card reveal" style={`--d:${0.1 + i * 0.1}s; --tone:${p.tone}`}>
+          {photo((p as any).photo)
+            ? <div class="pic"><Image src={photo((p as any).photo)!} alt={`${p.name}, ${p.role}`} widths={[400, 614]} sizes="(max-width: 860px) 90vw, 30vw" loading="lazy" /></div>
+            : <div class="mono" aria-hidden="true"><span>{initials(p.name)}</span></div>}
+          <div class="info">
+            <h3>{p.name}</h3>
+            <p class="role">{p.role} · {p.focus}</p>
+            <blockquote>„{p.quote}“</blockquote>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .cards { list-style: none; margin: 56px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2.4vw, 32px); perspective: 900px; }
+  .card { background: var(--cream); border-radius: var(--radius); overflow: hidden; box-shadow: 0 1px 0 var(--line), 0 30px 60px -40px rgba(34,26,20,.45); transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .5s var(--ease); }
+  .card.reveal.in { transition: opacity .9s var(--ease), transform .5s var(--ease); }
+  .mono { aspect-ratio: 4 / 3.4; display: grid; place-items: center; position: relative; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--tone) 55%, white), transparent 60%), linear-gradient(150deg, var(--tone), #241b15); }
+  .mono::after { content: ""; position: absolute; inset: 14px; border: 1px solid rgba(246,239,228,.35); border-radius: 12px; }
+  .mono span { font-family: var(--serif); font-style: italic; font-size: clamp(4rem, 9vw, 7rem); color: rgba(246,239,228,.92); transform: translate(calc(var(--ry, 0deg) * -1.2), calc(var(--rx, 0deg) * 1.2)); transition: transform .5s var(--ease); }
+  .pic { aspect-ratio: 4 / 5; overflow: hidden; background: var(--night); }
+  .pic img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; transform: scale(1.04) translate(calc(var(--ry, 0deg) * -0.6), calc(var(--rx, 0deg) * 0.6)); transition: transform .6s var(--ease); }
+  .card:hover .pic img { transform: scale(1.07) translate(calc(var(--ry, 0deg) * -0.6), calc(var(--rx, 0deg) * 0.6)); }
+  .info { padding: 24px 24px 28px; }
+  .info h3 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 1.5rem; }
+  .role { margin: 4px 0 16px; font-size: .74rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--brass-deep); }
+  blockquote { margin: 0; color: var(--ink-soft); font-size: .98rem; }
+  @media (max-width: 860px) { .cards { grid-template-columns: 1fr; max-width: 460px; } }
+</style>
+
+<script>
+  // Лёгкий 3D-наклон карточки за курсором (только мышь)
+  if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
+    document.querySelectorAll<HTMLElement>('#team .card').forEach((c) => {
+      c.addEventListener('pointermove', (e) => {
+        const r = c.getBoundingClientRect();
+        c.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - 0.5) * 10}deg`);
+        c.style.setProperty('--rx', `${-((e.clientY - r.top) / r.height - 0.5) * 8}deg`);
+      });
+      c.addEventListener('pointerleave', () => { c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg'); });
+    });
+  }
+</script>

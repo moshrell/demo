@@ -1,0 +1,222 @@
+---
+import Base from '../layouts/Base.astro';
+import Pic from '../components/Pic.astro';
+import bakery from '../data/bakery.json';
+
+const base = import.meta.env.BASE_URL;
+const toMin = (hhmm: string) => {
+  const [h, m] = hhmm.split(':').map(Number);
+  return h * 60 + m;
+};
+const hoursJson = JSON.stringify(bakery.hours.map((h) => ({ days: h.days, open: toMin(h.open), close: toMin(h.close) })));
+const slotsJson = JSON.stringify(bakery.slots.map((s) => ({ id: s.id, min: s.min, now: s.now })));
+const hoursText = bakery.hours.map((h) => `${h.label} ${h.open}–${h.close} Uhr`).join(' · ');
+const euro = (c: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(c / 100);
+---
+<Base>
+  <a class="skip" href="#inhalt">Zum Inhalt</a>
+
+  <header class="mast">
+    <div class="mast__row">
+      <div class="mast__who">
+        <a class="mast__back" href="https://kravets-webdesign.de/arbeiten/" aria-label="Zurück zum Portfolio (Demo-Website, fiktive Bäckerei)">
+          <span aria-hidden="true">←</span><span class="mast__back-text" aria-hidden="true">&nbsp;Portfolio · Demo</span>
+        </a>
+        <a class="mast__name" href="#top">{bakery.name}</a>
+      </div>
+      <nav class="ladder" aria-label="Tageszeiten">
+        {bakery.slots.map((s) => (
+          <a href={`#slot-${s.id}`} aria-label={`${s.time} Uhr`}>
+            <span class="t-hr" aria-hidden="true">{s.ladder}</span><span class="t-full" aria-hidden="true">{s.time}</span>
+          </a>
+        ))}
+      </nav>
+      <div class="mast__end">
+        <a class="btn btn--small mast__order" href="#tuete">Tüte bestellen</a>
+        <p class="clock" aria-hidden="true"><span class="clock__time" data-clock>04:30</span><span class="clock__unit">Uhr</span></p>
+      </div>
+    </div>
+  </header>
+
+  <main id="inhalt">
+    <section class="day" id="top" aria-label="Ein Tag in der Backstube">
+      <div class="stage" role="img" aria-label="Die Backstube Morgenrot im Lauf eines Tages: von der Nacht um 4:30 Uhr bis zur blauen Stunde nach Ladenschluss">
+        {bakery.frames.map((f, i) => (
+          <div class:list={['layer', { 'is-on': i === 0 }]} data-phase={f.phase} data-min={f.min} hidden={i > 2 ? true : undefined}>
+            <Pic name={f.file} pos={f.pos} sizes="max(100vw, 178svh)" widths={[640, 960, 1280, 1920, 2560]} priority={i === 0} />
+          </div>
+        ))}
+      </div>
+
+      <div class="track">
+        <div class="hero" data-i="-1">
+          <h1 class="hero__title reveal reveal--1">{bakery.hero.title}</h1>
+          <p class="hero__lead reveal reveal--2">{bakery.hero.lead}</p>
+          <p class="hero__status reveal reveal--3" data-status data-hours={hoursJson}>{hoursText}</p>
+          <p class="hero__now reveal reveal--3" data-now hidden></p>
+          <div class="hero__actions reveal reveal--4">
+            <a class="btn" href="#tuete">Morgen-Tüte bestellen</a>
+            <a class="link" href={`#slot-${bakery.slots[0].id}`} data-jump data-slots={slotsJson}>Tag ansehen</a>
+          </div>
+        </div>
+
+        {bakery.slots.map((s, i) => (
+          <section class:list={['slot', i % 2 === 0 ? 'slot--l' : 'slot--r']} id={`slot-${s.id}`} data-i={i} data-min={s.min} data-phase={i + 1} aria-labelledby={`h-${s.id}`}>
+            <div class="slot__in">
+              <article class:list={['card', { 'card--plain': s.items.length === 0 }]}>
+                <h2 class="card__title" id={`h-${s.id}`}>
+                  <span class="card__time">{s.time}</span>
+                  <span class="card__line">{s.title}</span>
+                </h2>
+                <div class="card__body">
+                  <p class="card__text">{s.text}</p>
+                  {s.link && <p class="card__action"><a class="link" href={s.link.href}>{s.link.label}</a></p>}
+                  {s.cta && <p class="card__action"><a class="btn" href={s.cta.href}>{s.cta.label}</a></p>}
+                </div>
+                {s.items.length > 0 && (
+                  <dl class="menu">
+                    {s.items.map((it) => (
+                      <div class="menu__row">
+                        <dt class="menu__name">
+                          {it.name}
+                          {it.note && <span class="menu__note">{it.note}</span>}
+                        </dt>
+                        <dd class="menu__price">{it.price}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+              </article>
+            </div>
+          </section>
+        ))}
+      </div>
+    </section>
+
+    <section class="voices" aria-labelledby="h-stimmen">
+      <div class="wrap">
+        <h2 class="voices__title" id="h-stimmen">{bakery.voices.title}</h2>
+        <div class="voices__grid">
+          {bakery.voices.items.map((v, i) => (
+            <figure class:list={['voice', { 'voice--lead': i === 0 }]}>
+              <blockquote class="voice__quote"><p>„{v.quote}“</p></blockquote>
+              <figcaption class="voice__who">{v.name} <span>· {v.place}</span></figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="tuete" id="tuete" data-phase="2" aria-labelledby="h-tuete">
+      <div class="wrap tuete__grid">
+        <div class="tuete__intro">
+          <h2 class="tuete__title" id="h-tuete">{bakery.tuete.title}</h2>
+          <p class="tuete__text">{bakery.tuete.text}</p>
+          <figure class="bag">
+            <Pic name="bag" pos="64% 60%" alt={bakery.tuete.bagAlt} widths={[480, 720, 960, 1280]} sizes="(min-width: 60rem) 34rem, 100vw" />
+          </figure>
+        </div>
+
+        <div class="order">
+          <form id="tuete-form" novalidate data-demo>
+            <div class="step" role="group" aria-labelledby="st-1">
+              <h3 class="step__title" id="st-1"><span class="step__n" aria-hidden="true">1</span>Was soll in die Tüte?</h3>
+              <ul class="order__list" data-items>
+                {bakery.tuete.items.map((it) => (
+                  <li class="order__row">
+                    <div>
+                      <span class="order__name" id={`n-${it.id}`}>{it.name}</span>
+                      <span class="order__unit">{euro(it.cents)}</span>
+                    </div>
+                    <div class="qty" role="group" aria-labelledby={`n-${it.id}`}>
+                      <button type="button" data-step="-1" aria-label={`${it.name}: eins weniger`} disabled>−</button>
+                      <input type="number" name={it.id} value="0" min="0" max="20" inputmode="numeric" data-cents={it.cents} aria-label={`${it.name}: Anzahl`} />
+                      <button type="button" data-step="1" aria-label={`${it.name}: eins mehr`}>+</button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="step" role="radiogroup" aria-labelledby="st-2">
+              <h3 class="step__title" id="st-2"><span class="step__n" aria-hidden="true">2</span>Wann holen Sie morgen ab?</h3>
+              <div class="chips">
+                {bakery.tuete.pickup.map((t, i) => (
+                  <label class="chip"><input type="radio" name="pickup" value={t} checked={i === 2} /><span>{t}</span></label>
+                ))}
+              </div>
+            </div>
+
+            <div class="step" role="group" aria-labelledby="st-3">
+              <h3 class="step__title" id="st-3"><span class="step__n" aria-hidden="true">3</span>Auf welchen Namen?</h3>
+              <div class="fields">
+                <div class="field">
+                  <label for="f-name">Name</label>
+                  <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname" required />
+                </div>
+                <div class="field">
+                  <label for="f-tel">Telefon</label>
+                  <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 0511 1234567" required />
+                </div>
+              </div>
+            </div>
+
+            <div class="order__foot">
+              <p class="order__msg" data-msg role="alert"></p>
+              <label class="consent">
+                <input type="checkbox" name="privacy" required />
+                <span>Ich habe die <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen. Name und Telefonnummer werden nur verwendet, um Ihre Tüte vorzubereiten und Sie bei Rückfragen zu erreichen.</span>
+              </label>
+            </div>
+
+            <div class="order__bar">
+              <p class="total"><span data-count>Noch nichts gewählt</span><strong data-total>{euro(0)}</strong></p>
+              <button class="btn" type="submit" data-submit>Tüte reservieren</button>
+            </div>
+            <p class="order__fine">Bezahlt wird im Laden. Die Bestätigung kommt per Telefon.</p>
+          </form>
+
+          <div class="done" data-done tabindex="-1" hidden>
+            <h3 data-done-title>Danke, Ihre Tüte ist reserviert.</h3>
+            <ul data-done-list></ul>
+            <p class="done__demo">Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <p class="foot__closing">{bakery.closing}</p>
+      <div class="foot__info">
+        <div>
+          <p class="foot__label">Adresse</p>
+          <p>{bakery.name}<br />{bakery.address.street}<br />{bakery.address.zip} {bakery.address.city}</p>
+        </div>
+        <div>
+          <p class="foot__label">Öffnungszeiten</p>
+          <dl class="foot__hours">
+            {bakery.hours.map((h) => (
+              <div><dt>{h.label}</dt><dd>{h.open}–{h.close} Uhr</dd></div>
+            ))}
+          </dl>
+        </div>
+        <div>
+          <p class="foot__label">Kontakt</p>
+          <p>{bakery.contact.phone}<br /><a href={`mailto:${bakery.contact.email}`}>{bakery.contact.email}</a></p>
+        </div>
+      </div>
+      <nav class="foot__legal" aria-label="Rechtliches">
+        <a href={`${base}impressum/`} target="_blank" rel="noopener">Impressum</a>
+        <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutz</a>
+        <a href="https://kravets-webdesign.de/arbeiten/">← Portfolio</a>
+      </nav>
+      <p class="foot__demo">Demo-Website für eine fiktive Bäckerei. Name, Adresse, Preise und Stimmen sind erfunden, die Bilder sind KI-generiert.</p>
+    </div>
+  </footer>
+</Base>
+
+<script>
+  import '../scripts/page.js';
+</script>

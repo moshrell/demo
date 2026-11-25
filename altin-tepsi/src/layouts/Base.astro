@@ -1,0 +1,30 @@
+---
+import '@fontsource/young-serif/index.css';
+import '@fontsource-variable/hanken-grotesk/index.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import shop from '../data/shop.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const { title = `${shop.name} | Baklava und Süßes in Hannover`, description = shop.description } = Astro.props;
+const dev = import.meta.env.DEV;
+---
+<!doctype html>
+<html lang="de" data-dev={dev ? '' : undefined}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#24150f" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2324150f'/%3E%3Cpath d='M16 4 28 16 16 28 4 16z' fill='%23e3a53b'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <a class="skip" href="#inhalt">Zum Inhalt springen</a>
+    <slot />
+  </body>
+</html>

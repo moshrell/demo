@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import cafe from '../data/cafe.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title={`Datenschutz · ${cafe.name}`}>
+  <main class="legal" id="inhalt">
+    <div class="legal__in">
+      <a class="back" href={base}>← Zurück zum Café</a>
+      <h1>Datenschutz</h1>
+      <p>Diese Demo-Website setzt keine Cookies, nutzt kein Tracking und lädt keine Inhalte von Drittanbietern. Schriften, Bilder und Skripte liegen auf demselben Server. Die Sprachwahl (DE/PT) und der Kaffee-Kompass laufen nur in Ihrem Browser und werden nicht gespeichert.</p>
+      <h2>Öffnungsstatus</h2>
+      <p>Ob das Café gerade geöffnet ist, berechnet Ihr Browser aus der aktuellen Uhrzeit. Es wird nichts übertragen.</p>
+      <h2>Hosting</h2>
+      <p>Informationen zum Hosting und zu Server-Logdateien finden Sie in der <a href="https://kravets-webdesign.de/datenschutz/">Datenschutzerklärung von Kravets Webdesign</a>.</p>
+    </div>
+  </main>
+</Base>

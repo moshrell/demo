@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Datenschutzerklärung">
+  <main class="legal wrap">
+    <a class="back" href={base}>← Zurück zur Startseite</a>
+    <h1>Datenschutzerklärung</h1>
+    <p class="note">Muster für die Demo. {site.name} ist ein erfundener Betrieb. Vor dem echten Einsatz mit den Daten des Kunden füllen und rechtlich prüfen lassen.</p>
+
+    <h2>1. Verantwortlicher</h2>
+    <p>{site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}<br />Telefon: {site.phone}, E-Mail: {site.email}</p>
+
+    <h2>2. Hosting und Server-Logfiles</h2>
+    <p>Beim Aufruf der Seite speichert der Server technisch notwendige Daten (IP-Adresse, Datum und Uhrzeit, aufgerufene Seite, Browser). Das ist nötig, um die Seite auszuliefern und sicher zu betreiben (Art. 6 Abs. 1 lit. f DSGVO). Hosting-Anbieter und Auftragsverarbeitungsvertrag: TODO vom Kunden. Die Logfiles werden nach kurzer Zeit gelöscht. TODO: Frist vom Hoster.</p>
+
+    <h2>3. Keine Cookies, kein Tracking</h2>
+    <p>Wir setzen keine Cookies, keine Analyse- oder Werbedienste ein. Schriften und Bilder kommen von unserem eigenen Server. Es gibt keine Verbindungen zu Google, Meta oder anderen Drittanbietern.</p>
+
+    <h2>4. Terminanfrage</h2>
+    <p>Wenn du eine Anfrage sendest, nutzen wir deinen Namen, deine Telefonnummer, deinen Auftrag und freiwillige Angaben (Fahrzeug, Wunschtermin, Hinweise), um dich zurückzurufen und den Termin zu planen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen) und deine Einwilligung. Das Kennzeichen fragen wir erst am Telefon, falls es nötig ist. Wir löschen die Daten spätestens 6 Monate nach Abschluss der Anfrage, sofern keine gesetzliche Aufbewahrungspflicht gilt. TODO: Frist mit dem Kunden abstimmen.</p>
+
+    <h2>5. Zwischenspeicher im Browser</h2>
+    <p>Damit deine Eingaben nicht verloren gehen, zum Beispiel wenn du diese Seite liest, speichert dein Browser sie im sessionStorage (Zwischenspeicher nur in diesem Tab). Die Daten verlassen dein Gerät nicht, bleiben bis zum Schließen des Tabs und werden nach dem Senden gelöscht.</p>
+
+    <h2>6. Empfänger</h2>
+    <p>Wir geben deine Daten nicht an Dritte weiter. Ausnahme: Der Hoster verarbeitet sie in unserem Auftrag.</p>
+
+    <h2>7. Deine Rechte</h2>
+    <ul>
+      <li>Auskunft über deine gespeicherten Daten (Art. 15 DSGVO)</li>
+      <li>Berichtigung (Art. 16) und Löschung (Art. 17)</li>
+      <li>Einschränkung der Verarbeitung (Art. 18) und Datenübertragbarkeit (Art. 20)</li>
+      <li>Widerspruch (Art. 21) und Widerruf deiner Einwilligung jederzeit mit Wirkung für die Zukunft (Art. 7 Abs. 3)</li>
+    </ul>
+    <p>Schreib uns dafür an {site.email}.</p>
+
+    <h2>8. Beschwerde bei der Aufsichtsbehörde</h2>
+    <p>Du kannst dich bei der Datenschutzaufsicht beschweren. Für Niedersachsen ist das die Landesbeauftragte für den Datenschutz Niedersachsen, Prinzenstraße 5, 30159 Hannover. TODO: Adresse vor Veröffentlichung prüfen.</p>
+
+    <p class="note">{site.demoNote}</p>
+    <a class="back" href={base}>← Zurück zur Startseite</a>
+  </main>
+  <Footer />
+</Base>

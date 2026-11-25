@@ -1,0 +1,89 @@
+{
+  "name": "Sechsgang",
+  "legalName": "Sechsgang Fahrzeugdienste GmbH (fiktiv)",
+  "tagline": "Fahrzeugdienste für Firmen und Privat",
+  "address": { "street": "Musterweg 1", "zip": "30989", "city": "Gehrden" },
+  "email": "kontakt@sechsgang.example",
+  "phone": "05108 000 000",
+  "phoneHref": "+49510800000",
+  "hours": "Mo bis Fr 7 bis 18 Uhr, Sa nach Absprache",
+  "gears": [
+    { "key": "R", "id": "r", "title": "Rückruf", "short": "Anfrage", "line": "Wir rufen Sie zurück." },
+    { "key": "N", "id": "n", "title": "Leerlauf", "short": "Start", "line": "" },
+    { "key": "1", "id": "1", "title": "Überführung", "short": "Überführung", "line": "Von A nach B, auf eigener Achse oder per Anhänger." },
+    { "key": "2", "id": "2", "title": "Fahrzeugsuche", "short": "Suche", "line": "Wir finden, prüfen und holen das Fahrzeug." },
+    { "key": "3", "id": "3", "title": "Charter", "short": "Charter", "line": "Fahrzeug mit Fahrer für Events und Transfers." },
+    { "key": "4", "id": "4", "title": "Papiere", "short": "Papiere", "line": "Kennzeichen, Versicherung, Zulassung." },
+    { "key": "5", "id": "5", "title": "Preise", "short": "Preise", "line": "Rechner mit laufender Summe." },
+    { "key": "6", "id": "6", "title": "Über uns", "short": "Über uns", "line": "Wer fährt, wo wir sitzen, wie wir arbeiten." }
+  ],
+  "transfer": {
+    "own": { "name": "Auf eigener Achse", "perKmCents": 69, "minCents": 11900 },
+    "trailer": { "name": "Auf Anhänger", "perKmCents": 119, "minCents": 21900 }
+  },
+  "charter": {
+    "minHours": 3,
+    "maxHours": 12,
+    "vehicles": [
+      { "id": "limo", "name": "Limousine", "seats": "bis 4 Personen", "perHourCents": 6200, "note": "Für Geschäftstermine und Empfänge." },
+      { "id": "van", "name": "Van", "seats": "bis 8 Personen", "perHourCents": 7400, "note": "Für Shuttle, Flughafen und Gruppen." },
+      { "id": "kasten", "name": "Transporter", "seats": "bis 3 Personen", "perHourCents": 5200, "note": "Für Material, Messebau und Umzüge." }
+    ],
+    "uses": ["Event-Shuttle", "Flughafen Hannover (HAJ)", "Messe und Kongress", "Mitarbeiterfahrten"]
+  },
+  "search": {
+    "baseCents": 49000,
+    "inspectCents": 14900
+  },
+  "extras": [
+    { "id": "clean", "name": "Wäsche und Innenreinigung", "cents": 3900, "for": ["own", "trailer"] },
+    { "id": "plate", "name": "Kurzzeitkennzeichen besorgen (Behördengebühr extra)", "cents": 4900, "for": ["own"] },
+    { "id": "express", "name": "Express: Abholung binnen 24 Stunden", "cents": 6900, "for": ["own", "trailer"] },
+    { "id": "inspect", "name": "Prüfung vor Ort beim Verkäufer", "cents": 14900, "for": ["search"] }
+  ],
+  "searchSteps": [
+    { "t": "Briefing", "d": "Sie beschreiben Fahrzeug, Budget und Einsatz. Wir fragen nach, bis das Profil eindeutig ist." },
+    { "t": "Suche", "d": "Wir sichten Händler, Börsen und Auktionen und schicken Ihnen eine kurze Auswahl mit Gründen." },
+    { "t": "Prüfung vor Ort", "d": "Wir sehen uns das Fahrzeug an, prüfen Serviceheft, Unfallspuren und Probefahrt und dokumentieren alles mit Fotos." },
+    { "t": "Kauf begleiten", "d": "Sie entscheiden und schließen den Kaufvertrag selbst mit dem Verkäufer. Wir begleiten die Übergabe." },
+    { "t": "Übergabe", "d": "Wir holen das Fahrzeug ab und bringen es zu Ihnen, mit Protokoll und Papieren." }
+  ],
+  "protocol": [
+    "Zustand rundum mit Fotos",
+    "Kilometerstand und Tankstand",
+    "Schlüssel und Zubehör",
+    "Unterschrift bei Abholung und bei Ankunft"
+  ],
+  "papers": [
+    {
+      "t": "Kurzzeitkennzeichen",
+      "d": "Für Fahrten innerhalb Deutschlands mit einem Fahrzeug ohne eigene Zulassung. Es gilt höchstens fünf Tage und hat einen gelben Streifen mit dem Ablaufdatum. Voraussetzung sind eine gültige HU (Hauptuntersuchung, TÜV) und eine Haftpflichtversicherung. Die Gebühren unterscheiden sich je nach Zulassungsbehörde."
+    },
+    {
+      "t": "Ausfuhrkennzeichen",
+      "d": "Wenn das Fahrzeug ins Ausland geht und dort nicht mit deutschem Kurzzeitkennzeichen fahren darf. Es gilt je nach Antrag von einem Monat bis zu einem Jahr. Zoll- und Einfuhrregeln des Ziellands prüfen wir vorab mit Ihnen."
+    },
+    {
+      "t": "Versicherung und eVB",
+      "d": "Ohne Haftpflicht kein Kennzeichen. Die eVB-Nummer (elektronische Versicherungsbestätigung) bekommt die Zulassungsbehörde von der Versicherung. Bei Fahrten ins Ausland führen wir die Grüne Karte mit."
+    },
+    {
+      "t": "HU und Verkehrssicherheit",
+      "d": "Fahrzeuge ohne gültige HU dürfen nicht regulär gefahren werden. Dann geht es auf dem Anhänger oder mit einem geeigneten Zugfahrzeug. Das klären wir vor der Buchung, nicht an der Haustür."
+    }
+  ],
+  "needs": [
+    "Zulassungsbescheinigung Teil I (Fahrzeugschein) als Foto",
+    "Vollmacht, wenn wir für Sie Kennzeichen oder Zulassung erledigen",
+    "Abholadresse mit Ansprechperson und Uhrzeit",
+    "Zieladresse mit Ansprechperson"
+  ],
+  "rules": [
+    { "t": "Wir melden uns, bevor Sie fragen.", "d": "Bei Abholung, bei Ankunft und bei jeder Verzögerung kommt eine kurze Nachricht." },
+    { "t": "Vorher und nachher wird fotografiert.", "d": "Jedes Fahrzeug, jede Fahrt, ohne Ausnahme. Das schützt Sie und uns." },
+    { "t": "Was wir nicht können, sagen wir sofort.", "d": "Dann nennen wir Ihnen jemanden, der es kann, statt zu raten." }
+  ],
+  "areas": ["Region Hannover", "Niedersachsen", "Bundesweit auf Anfrage", "EU auf Anfrage"],
+  "callbackTimes": ["So schnell wie möglich", "Heute Nachmittag", "Morgen Vormittag", "Zu einer Wunschzeit"],
+  "topics": ["Überführung", "Fahrzeugsuche", "Charter mit Fahrer", "Papiere und Kennzeichen", "Etwas anderes"]
+}

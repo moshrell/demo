@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Impressum · Nuance">
+  <main class="wrap legal">
+    <a class="back" href={base}>← Zurück zum Atelier</a>
+    <h1>Impressum</h1>
+    <p><strong>Nuance</strong> ist ein fiktives Colour Atelier. Diese Seite ist eine Demo-Website und zeigt, wie ein Internetauftritt für einen Salon aussehen kann. Alle Namen, Adressen und Preise sind erfunden.</p>
+    <h2>Verantwortlich für diese Website</h2>
+    <p>Die Angaben nach § 5 DDG finden Sie im Impressum von <a href="https://kravets-webdesign.de/impressum/">Kravets Webdesign</a>.</p>
+  </main>
+</Base>
+
+<style>
+  .legal { padding-block: 72px 120px; max-width: 720px; }
+  .back { font-size: 14px; color: var(--ink-soft); text-decoration: none; }
+  h1 { font-size: clamp(44px, 6vw, 64px); margin: 28px 0 24px; }
+  h2 { font-size: 28px; margin: 32px 0 8px; }
+  p { color: var(--ink); }
+</style>

@@ -1,0 +1,19 @@
+---
+import Logo from './Logo.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div>
+      <Logo />
+      <p class="foot-off">Motor aus. Danke fürs Vorbeischauen.</p>
+    </div>
+    <p class="foot-name">{site.name}, {site.claim}</p>
+    <nav aria-label="Rechtliches" class="foot-legal">
+      <a href={`${base}impressum/`}>Impressum</a>
+      <a href={`${base}datenschutz/`}>Datenschutz</a>
+    </nav>
+  </div>
+  <p class="wrap foot-demo">{site.demoNote}</p>
+</footer>

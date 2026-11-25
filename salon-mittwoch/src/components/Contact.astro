@@ -1,0 +1,91 @@
+---
+import site from '../data/site.json';
+const c = site.contact;
+---
+<section class="section contact" id="kontakt">
+  <div class="wrap grid">
+    <div>
+      <p class="eyebrow reveal">{c.eyebrow}</p>
+      <h2 class="h2 reveal" style="--d:.08s">{c.title}</h2>
+      <p class="status reveal" style="--d:.12s" data-hours={JSON.stringify(site.hours)}><i></i><span>Öffnungszeiten</span></p>
+      <address class="reveal" style="--d:.16s">
+        <span>{site.legalName}</span>
+        <span>{c.street}</span>
+        <span>{c.zip} {c.city}</span>
+      </address>
+      <p class="reveal lines" style="--d:.2s"><span>Telefon: {c.phone}</span><span>E-Mail: {c.email}</span></p>
+      <p class="reveal arrival" style="--d:.24s">{c.arrival}</p>
+      <a class="btn btn--solid reveal" style="--d:.28s" href="#termin">Termin buchen <span class="arr">→</span></a>
+    </div>
+
+    <div class="side">
+      <figure class="map reveal" aria-label={`Lageplan: ${c.street}, ${c.city}`}>
+        <svg viewBox="0 0 400 300" role="img" aria-hidden="true">
+          <rect width="400" height="300" fill="#efe8dd" />
+          <path d="M-10 210 C 90 180, 160 250, 260 200 S 380 150, 420 170" stroke="#dfe3e4" stroke-width="26" fill="none" />
+          <g stroke="#fbf8f3" stroke-width="10" fill="none" stroke-linecap="round">
+            <path d="M0 80 H400" /><path d="M0 150 H400" /><path d="M60 0 V300" /><path d="M170 0 V300" /><path d="M300 0 V300" /><path d="M0 20 L400 260" />
+          </g>
+          <g fill="#e4dbcf"><rect x="76" y="94" width="78" height="40" rx="4"/><rect x="186" y="94" width="98" height="40" rx="4"/><rect x="76" y="24" width="78" height="40" rx="4"/><rect x="316" y="94" width="70" height="40" rx="4"/><rect x="186" y="24" width="98" height="40" rx="4"/></g>
+          <text x="186" y="168" font-size="11" fill="#6b5a50" font-family="sans-serif" letter-spacing="2">MITTWOCHSWEG</text>
+          <circle class="pulse" cx="235" cy="150" r="10" fill="#a52a24" />
+          <circle cx="235" cy="150" r="9" fill="#1d1410" stroke="#fbf8f3" stroke-width="3" />
+        </svg>
+        <figcaption>{c.street} · {c.city}</figcaption>
+      </figure>
+      <table class="hours reveal" style="--d:.1s">
+        <caption class="sr-only">Öffnungszeiten</caption>
+        <tbody>
+          {site.hours.map((h, i) => (
+            <tr data-i={i}><th scope="row">{h.day}</th><td>{h.open ? `${h.open} – ${h.close}` : 'geschlossen'}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .status { display: inline-flex; align-items: center; gap: 10px; margin: 26px 0; padding: 8px 14px; border-radius: 999px; background: var(--cream); font-size: .85rem; font-weight: 600; }
+  .status i { width: 9px; height: 9px; border-radius: 50%; background: #9a8f84; }
+  .status.open i { background: #4d8a5b; box-shadow: 0 0 0 0 rgba(77,138,91,.5); animation: ping 2s infinite; }
+  @keyframes ping { 70% { box-shadow: 0 0 0 10px rgba(77,138,91,0); } 100% { box-shadow: 0 0 0 0 rgba(77,138,91,0); } }
+  address { font-style: normal; display: grid; font-family: var(--serif); font-size: 1.5rem; line-height: 1.35; margin-bottom: 18px; }
+  .lines { display: grid; margin: 0 0 14px; }
+  .arrival { color: var(--ink-soft); margin: 0 0 30px; max-width: 40ch; }
+  .map { margin: 0 0 28px; border-radius: var(--radius); overflow: hidden; background: #efe8dd; }
+  .map svg { display: block; width: 100%; height: auto; }
+  .map figcaption { padding: 12px 18px; font-size: .8rem; color: var(--ink-soft); background: var(--cream); }
+  .pulse { transform-origin: 235px 150px; animation: pulse 2.2s ease-out infinite; }
+  @keyframes pulse { from { transform: scale(1); opacity: .6; } to { transform: scale(3.2); opacity: 0; } }
+  .hours { width: 100%; border-collapse: collapse; }
+  .hours th, .hours td { padding: 12px 0; border-bottom: 1px solid var(--line); text-align: left; font-weight: 400; }
+  .hours td { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+  .hours tr.today th, .hours tr.today td { font-weight: 700; color: var(--ink); }
+  .hours tr.today th::after { content: " · heute"; color: var(--brass-deep); font-weight: 600; font-size: .8rem; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .pulse, .status.open i { animation: none; } }
+</style>
+
+<script>
+  const el = document.querySelector<HTMLElement>('#kontakt .status')!;
+  const hours: { open: string | null; close?: string }[] = JSON.parse(el.dataset.hours!);
+  const now = new Date(), i = (now.getDay() + 6) % 7, h = hours[i];
+  const m = now.getHours() * 60 + now.getMinutes();
+  const toMin = (t: string) => { const [a, b] = t.split(':').map(Number); return a * 60 + b; };
+  document.querySelector(`#kontakt tr[data-i="${i}"]`)?.classList.add('today');
+  const isOpen = !!h.open && m >= toMin(h.open) && m < toMin(h.close!);
+  let text = isOpen ? `Jetzt geöffnet · bis ${h.close} Uhr` : 'Gerade geschlossen';
+  if (!isOpen) {
+    for (let k = 0; k < 7; k++) {
+      const j = (i + k) % 7, d = hours[j];
+      if (!d.open || (k === 0 && m >= toMin(d.open))) continue;
+      const names = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+      text += ` · öffnet ${k === 0 ? 'heute' : k === 1 ? 'morgen' : names[j]} um ${d.open} Uhr`;
+      break;
+    }
+  }
+  el.classList.toggle('open', isOpen);
+  el.querySelector('span')!.textContent = text;
+</script>

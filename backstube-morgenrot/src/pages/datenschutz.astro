@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import bakery from '../data/bakery.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title={`Datenschutz · ${bakery.name}`}>
+  <main class="legal" id="inhalt">
+    <div class="legal__in">
+      <a class="back" href={base}>← Zurück zur Backstube</a>
+      <h1>Datenschutz</h1>
+      <p>Diese Demo-Website setzt keine Cookies, nutzt kein Tracking und lädt keine Inhalte von Drittanbietern. Schriften, Bilder und Skripte liegen auf demselben Server.</p>
+      <h2>Vorbestell-Formular „Die Tüte für morgen“</h2>
+      <p><strong>Demo-Hinweis:</strong> In dieser Beispielseite wird nichts gesendet oder gespeichert. Die folgenden Angaben zeigen, was bei einer echten Bäckerei hier stehen muss.</p>
+      <p><strong>Verantwortlicher:</strong> {bakery.name}, {bakery.address.street}, {bakery.address.zip} {bakery.address.city} (fiktiv). Kontakt: {bakery.contact.email}</p>
+      <p><strong>Welche Daten:</strong> Name, Telefonnummer, gewählte Artikel und Abholzeit.</p>
+      <p><strong>Wozu:</strong> Wir bereiten Ihre Bestellung vor und rufen Sie bei Rückfragen an. Rechtsgrundlage ist die Vertragsanbahnung und -erfüllung (Art. 6 Abs. 1 lit. b DSGVO, die europäische Datenschutz-Grundverordnung).</p>
+      <p><strong>Wie lange:</strong> Wir löschen Ihre Angaben, sobald die Bestellung abgeholt ist, spätestens nach 7 Tagen, sofern keine gesetzliche Aufbewahrungspflicht besteht.</p>
+      <p><strong>Weitergabe:</strong> Keine Weitergabe an Dritte. Die Daten werden nicht für Werbung genutzt.</p>
+      <p><strong>Ihre Rechte:</strong> Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch und Datenübertragbarkeit (Art. 15 bis 21 DSGVO). Sie können sich außerdem bei der Datenschutzaufsichtsbehörde Ihres Bundeslandes beschweren. Die Angabe der Daten ist freiwillig, ohne Name und Telefonnummer kann die Bestellung aber nicht angenommen werden.</p>
+      <p><strong>Zwischenspeicherung:</strong> Ihre Eingaben werden zur Sicherheit nur temporär im Browser dieses Tabs (sessionStorage) zwischengespeichert und nach dem Absenden oder Schließen des Tabs gelöscht; sie werden nicht an uns übertragen. Das Häkchen zur Einwilligung wird nie gespeichert.</p>
+      <h2>Hosting</h2>
+      <p>Informationen zum Hosting und zu Server-Logdateien finden Sie in der <a href="https://kravets-webdesign.de/datenschutz/">Datenschutzerklärung von Kravets Webdesign</a>.</p>
+    </div>
+  </main>
+</Base>

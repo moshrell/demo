@@ -1,0 +1,391 @@
+{
+  "name": "Mittwoch",
+  "legalName": "Salon Mittwoch",
+  "type": "Friseursalon",
+  "city": "Hannover",
+  "demoNotice": "Demo-Website · fiktiver Salon",
+  "credit": {
+    "label": "Konzept & Umsetzung: Kravets Webdesign",
+    "url": "https://kravets-webdesign.de",
+    "portfolio": "https://kravets-webdesign.de/arbeiten/"
+  },
+  "intro": {
+    "line": "Ihr Platz ist bereit.",
+    "word": "MITTWOCH",
+    "eyebrow": "Salon Mittwoch · Hannover",
+    "headline": "Schnitt, Farbe, Pflege.\nIn Ruhe gemacht.",
+    "cta": "Termin buchen",
+    "variant": "sit"
+  },
+  "nav": [
+    {
+      "label": "Salon",
+      "href": "#salon"
+    },
+    {
+      "label": "Leistungen",
+      "href": "#leistungen"
+    },
+    {
+      "label": "Arbeiten",
+      "href": "#arbeiten"
+    },
+    {
+      "label": "Team",
+      "href": "#team"
+    },
+    {
+      "label": "Kontakt",
+      "href": "#kontakt"
+    }
+  ],
+  "about": {
+    "eyebrow": "Der Salon",
+    "title": "Die Mitte der Woche. Ein Moment zum Durchatmen.",
+    "text": [
+      "Mittwoch ist der Tag, an dem man kurz innehält. Genau dieses Gefühl wollten wir in einen Salon übersetzen: kein Zeitdruck, kein Lärm, keine Fließbandarbeit.",
+      "Jeder Termin beginnt mit einem Gespräch. Wir schauen uns an, wie Ihr Haar fällt, wie Sie es tragen und wie viel Zeit Sie morgens investieren möchten. Erst dann greifen wir zur Schere."
+    ],
+    "facts": [
+      {
+        "value": "12",
+        "label": "Jahre Erfahrung"
+      },
+      {
+        "value": "3",
+        "label": "Stylisten im Team"
+      },
+      {
+        "value": "100 %",
+        "label": "vegane Pflegeprodukte"
+      }
+    ]
+  },
+  "services": {
+    "eyebrow": "Leistungen & Preise",
+    "title": "Preise nach Haarlänge, nicht nach Geschlecht.",
+    "note": "Der Preis richtet sich nach Länge und Aufwand. Stellen Sie Ihre Auswahl zusammen: einfache Termine buchen Sie direkt, Farbe und lange Termine planen wir gemeinsam.",
+    "lengths": [
+      {
+        "id": "kurz",
+        "label": "Kurz",
+        "hint": "bis 15 cm"
+      },
+      {
+        "id": "mittel",
+        "label": "Mittel",
+        "hint": "15–35 cm"
+      },
+      {
+        "id": "lang",
+        "label": "Lang",
+        "hint": "ab 35 cm"
+      }
+    ],
+    "categories": [
+      {
+        "id": "schnitt",
+        "label": "Schnitt",
+        "items": [
+          {
+            "name": "Schnitt & Föhnen",
+            "desc": "Beratung, Waschen, Schnitt, Styling",
+            "price": [
+              39,
+              49,
+              59
+            ],
+            "min": [
+              45,
+              60,
+              75
+            ]
+          },
+          {
+            "name": "Maschinenschnitt",
+            "desc": "Konturen und Übergänge mit der Maschine",
+            "price": 24,
+            "min": 30
+          },
+          {
+            "name": "Pony nachschneiden",
+            "desc": "Zwischen zwei Terminen",
+            "price": 10,
+            "min": 10
+          },
+          {
+            "name": "Kinderschnitt",
+            "desc": "Bis 12 Jahre",
+            "price": 22,
+            "min": 30
+          }
+        ]
+      },
+      {
+        "id": "farbe",
+        "label": "Farbe",
+        "items": [
+          {
+            "name": "Ansatzfarbe",
+            "desc": "Nachfärben bis 3 cm",
+            "price": 55,
+            "min": 60
+          },
+          {
+            "name": "Komplettfarbe",
+            "desc": "Eine Farbe vom Ansatz bis in die Spitzen",
+            "price": [
+              65,
+              79,
+              95
+            ],
+            "min": [
+              75,
+              90,
+              105
+            ],
+            "consult": true
+          },
+          {
+            "name": "Balayage",
+            "desc": "Freihand-Technik für weiche Verläufe",
+            "price": [
+              120,
+              150,
+              180
+            ],
+            "min": [
+              150,
+              180,
+              210
+            ],
+            "consult": true
+          },
+          {
+            "name": "Glossing",
+            "desc": "Glanz und Farbauffrischung",
+            "price": [
+              35,
+              42,
+              49
+            ],
+            "min": [
+              30,
+              30,
+              40
+            ]
+          }
+        ]
+      },
+      {
+        "id": "pflege",
+        "label": "Styling & Pflege",
+        "items": [
+          {
+            "name": "Waschen & Föhnen",
+            "desc": "Glatt, mit Volumen oder Wellen",
+            "price": [
+              25,
+              32,
+              39
+            ],
+            "min": [
+              30,
+              40,
+              50
+            ]
+          },
+          {
+            "name": "Hochsteckfrisur",
+            "desc": "Für Hochzeit, Abiball, Feier",
+            "price": 69,
+            "min": 60,
+            "consult": true
+          },
+          {
+            "name": "Intensivpflege",
+            "desc": "Maske mit Wärme, für trockenes Haar",
+            "price": 18,
+            "min": 15
+          },
+          {
+            "name": "Kopfmassage",
+            "desc": "Zehn Minuten nur für Sie",
+            "price": 12,
+            "min": 10
+          }
+        ]
+      },
+      {
+        "id": "bart",
+        "label": "Bart",
+        "items": [
+          {
+            "name": "Bart trimmen",
+            "desc": "Form, Kontur, Pflegeöl",
+            "price": 18,
+            "min": 20
+          },
+          {
+            "name": "Rasur mit heißem Tuch",
+            "desc": "Klassische Nassrasur",
+            "price": 28,
+            "min": 30
+          },
+          {
+            "name": "Schnitt & Bart",
+            "desc": "Kurzhaarschnitt plus Bartpflege",
+            "price": 55,
+            "min": 60
+          }
+        ]
+      }
+    ]
+  },
+  "gallery": {
+    "eyebrow": "Arbeiten",
+    "title": "Frisch aus dem Salon.",
+    "items": [
+      {
+        "file": "locken.webp",
+        "alt": "Lange Locken, mit dem Lockenstab gestylt"
+      },
+      {
+        "file": "schere-kamm.webp",
+        "alt": "Kurzhaarschnitt mit Schere und Kamm"
+      },
+      {
+        "file": "langhaar.webp",
+        "alt": "Gerader Schnitt an langem Haar"
+      },
+      {
+        "file": "bart.webp",
+        "alt": "Bart, mit der Schere in Form gebracht"
+      },
+      {
+        "file": "maschine.webp",
+        "alt": "Weiche Übergänge mit der Haarschneidemaschine"
+      },
+      {
+        "file": "kinderschnitt.webp",
+        "alt": "Kinderschnitt"
+      }
+    ]
+  },
+  "team": {
+    "eyebrow": "Team",
+    "title": "Drei Menschen, ein Anspruch.",
+    "people": [
+      {
+        "name": "Lena Hartmann",
+        "role": "Inhaberin",
+        "focus": "Farbe & Balayage",
+        "quote": "Gute Farbe sieht man nicht. Man sieht nur, dass es passt.",
+        "tone": "#a52a24",
+        "photo": "team-1.jpg"
+      },
+      {
+        "name": "Jonas Weber",
+        "role": "Stylist",
+        "focus": "Kurzhaar & Bart",
+        "quote": "Ein klarer Schnitt spart jeden Morgen zehn Minuten.",
+        "tone": "#3a2a22",
+        "photo": "team-2.jpg"
+      },
+      {
+        "name": "Mira Yilmaz",
+        "role": "Stylistin",
+        "focus": "Locken & Hochsteck",
+        "quote": "Locken wollen verstanden werden, nicht gebändigt.",
+        "tone": "#6b4a3e",
+        "photo": "team-3.jpg"
+      }
+    ]
+  },
+  "reviews": {
+    "eyebrow": "Stimmen",
+    "title": "Was Gäste sagen.",
+    "note": "Beispieltexte für die Demo-Website.",
+    "items": [
+      {
+        "text": "Endlich ein Salon, in dem niemand auf die Uhr schaut. Die Beratung war ehrlicher als alles, was ich vorher kannte.",
+        "name": "Anna K."
+      },
+      {
+        "text": "Meine Locken sehen zum ersten Mal so aus, wie ich sie mir immer vorgestellt habe.",
+        "name": "Selin T."
+      },
+      {
+        "text": "Schnitt und Bart in einer Stunde, und der Kaffee war auch gut.",
+        "name": "Markus B."
+      },
+      {
+        "text": "Die Balayage wächst so weich heraus, dass ich erst nach drei Monaten wiederkommen musste.",
+        "name": "Julia R."
+      },
+      {
+        "text": "Online gebucht, pünktlich drangekommen, mit gutem Gefühl gegangen.",
+        "name": "Tobias L."
+      }
+    ]
+  },
+  "booking": {
+    "eyebrow": "Termin",
+    "title": "Termin buchen.",
+    "note": "Demo: Es wird nichts gesendet und kein Termin gespeichert.",
+    "slotMinutes": 30,
+    "maxDirect": 180
+  },
+  "contact": {
+    "eyebrow": "Kontakt",
+    "title": "Wir freuen uns auf Sie.",
+    "street": "Mittwochsweg 3",
+    "zip": "30159",
+    "city": "Hannover",
+    "phone": "0511 123 45 67",
+    "email": "hallo@salon-mittwoch.de",
+    "arrival": "5 Minuten zu Fuß vom Kröpcke. Fahrradständer vor der Tür."
+  },
+  "hours": [
+    {
+      "day": "Montag",
+      "short": "Mo",
+      "open": null
+    },
+    {
+      "day": "Dienstag",
+      "short": "Di",
+      "open": "09:00",
+      "close": "19:00"
+    },
+    {
+      "day": "Mittwoch",
+      "short": "Mi",
+      "open": "09:00",
+      "close": "19:00"
+    },
+    {
+      "day": "Donnerstag",
+      "short": "Do",
+      "open": "09:00",
+      "close": "20:00"
+    },
+    {
+      "day": "Freitag",
+      "short": "Fr",
+      "open": "09:00",
+      "close": "19:00"
+    },
+    {
+      "day": "Samstag",
+      "short": "Sa",
+      "open": "09:00",
+      "close": "15:00"
+    },
+    {
+      "day": "Sonntag",
+      "short": "So",
+      "open": null
+    }
+  ]
+}

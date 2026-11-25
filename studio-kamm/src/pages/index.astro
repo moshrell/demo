@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import Stage from '../components/Stage.astro';
+import App from '../components/App.astro';
+import Sheets from '../components/Sheets.astro';
+---
+<Base>
+  <div class="shell">
+    <Stage />
+    <App />
+  </div>
+  <Sheets />
+</Base>
+
+<style>
+  /* Слева витрина с фото, справа запись. На телефоне — фото сверху, запись под ним. */
+  .shell { display: grid; grid-template-columns: minmax(360px, 45%) minmax(0, 1fr); min-height: 100svh; }
+  @media (max-width: 900px) { .shell { grid-template-columns: minmax(0, 1fr); } }
+</style>

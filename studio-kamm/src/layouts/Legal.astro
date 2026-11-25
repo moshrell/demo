@@ -1,0 +1,21 @@
+---
+import Base from './Base.astro';
+import site from '../data/site.json';
+interface Props { title: string }
+const { title } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<Base title={`${title} · ${site.legalName}`}>
+  <main class="legal wrap">
+    <a class="back" href={base}>← Zurück zum Studio</a>
+    <h1 class="title">{title}</h1>
+    <div class="txt"><slot /></div>
+  </main>
+  <style>
+    .legal { padding-block: clamp(64px, 12vh, 140px); width: min(100% - 40px, 760px); margin-inline: auto; }
+    .back { display: inline-block; margin-bottom: 40px; text-decoration: none; font-size: .85rem; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; }
+    .title { margin: 0; font-size: clamp(2.2rem, 6vw, 3.6rem); font-weight: 650; letter-spacing: -.04em; line-height: 1; }
+    .txt { margin-top: 32px; color: var(--ink-soft); }
+    .txt :global(h2) { font-weight: 600; letter-spacing: -.02em; color: var(--ink); font-size: 1.4rem; margin: 36px 0 8px; }
+  </style>
+</Base>

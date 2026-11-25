@@ -1,0 +1,50 @@
+---
+// Фото по имени файла из src/photos. Умеет srcset (webp). Нет файла — заглушка цвета блюда (tone).
+import { getImage } from 'astro:assets';
+import { photo } from '../lib/photos';
+
+interface Props {
+  name: string;
+  alt?: string;
+  widths?: number[];
+  sizes?: string;
+  pos?: string;
+  priority?: boolean;
+  tone?: string;
+  class?: string;
+}
+const { name, alt = '', widths = [480, 800, 1200, 1800], sizes = '100vw', pos = '50% 50%', priority = false, tone = 'sirup', class: cls = '' } = Astro.props;
+
+const meta = photo(name);
+let srcset = '';
+let src = '';
+let width = 0;
+let height = 0;
+if (meta) {
+  const usable = widths.filter((w) => w <= meta.width);
+  const list = usable.length ? usable : [meta.width];
+  const built = await Promise.all(list.map((w) => getImage({ src: meta, width: w, format: 'webp', quality: 78 })));
+  srcset = built.map((b, i) => `${b.src} ${list[i]}w`).join(', ');
+  const largest = built[built.length - 1];
+  src = largest.src;
+  width = Number(largest.attributes.width ?? meta.width);
+  height = Number(largest.attributes.height ?? meta.height);
+}
+---
+{meta ? (
+  <img
+    class={cls}
+    src={src}
+    srcset={srcset}
+    sizes={sizes}
+    width={width}
+    height={height}
+    alt={alt}
+    decoding="async"
+    loading={priority ? 'eager' : 'lazy'}
+    fetchpriority={priority ? 'high' : undefined}
+    style={`object-position:${pos}`}
+  />
+) : (
+  <span class:list={['pic-missing', `tone-${tone}`, cls]} data-name={name} role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : 'true'}></span>
+)}

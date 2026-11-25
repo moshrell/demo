@@ -1,0 +1,220 @@
+---
+import Face from './Face.astro';
+import site from '../data/site.json';
+const i = site.intro;
+const hairs = [
+  ['kurz', 'Kurz'], ['bob', 'Bob'], ['lang', 'Lang'], ['locken', 'Locken'], ['tolle', 'Tolle'], ['glatze', 'Glatze'],
+];
+const colors = [
+  ['#1f1d24', 'Schwarz'], ['#4a2f22', 'Dunkelbraun'], ['#b4562f', 'Kupfer'], ['#d9b45a', 'Blond'], ['#c9cdd6', 'Silber'], ['#e58aa0', 'Rosé'], ['#6a8be0', 'Blau'],
+];
+const beards = [['none', 'Ohne'], ['stoppel', 'Stoppeln'], ['voll', 'Vollbart']];
+// Для расчёта цены конструктор берёт услуги прямо из карты (site.json)
+const services = Object.fromEntries(site.services.categories.flatMap((c) => c.items.map((it: any) => [it.name, it])));
+---
+<section class="hero" id="top">
+  <!-- Маркиза над витриной -->
+  <svg class="awning" viewBox="0 0 1200 124" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+    <defs>
+      <pattern id="aw" width="144" height="124" patternUnits="userSpaceOnUse">
+        <path d="M0 0H72V92A36 36 0 0 1 0 92Z" fill="#e8705a" stroke="#1c2541" stroke-width="3" />
+        <path d="M72 0H144V92A36 36 0 0 1 72 92Z" fill="#fbf7ee" stroke="#1c2541" stroke-width="3" />
+      </pattern>
+    </defs>
+    <rect width="1200" height="124" fill="url(#aw)" />
+    <rect width="1200" height="22" fill="#1c2541" />
+  </svg>
+
+  <div class="window wrap">
+    <!-- Вывеска «Открыто» качается на шнурке -->
+    <div class="sign" data-open-sign data-hours={JSON.stringify(site.hours)} aria-live="polite">
+      <i></i>
+      <div class="board"><b>Geöffnet</b><small>…</small></div>
+    </div>
+
+    <div class="copy">
+      <p class="eyebrow reveal">{i.eyebrow}</p>
+      <h1 class="title" data-split>{i.title}</h1>
+      <p class="lead reveal" style="--d:.3s">{i.lead}</p>
+
+      <div class="ctl reveal" style="--d:.4s" data-services={JSON.stringify(services)} data-lengths={JSON.stringify(site.services.lengths)}>
+        <p class="hint"><span aria-hidden="true">↓</span> {i.hint}</p>
+        <div class="grp"><span class="lbl">Schnitt</span>
+          <div class="chips" role="radiogroup" aria-label="Schnitt">
+            {hairs.map(([v, l], k) => <button type="button" role="radio" data-hair={v} aria-checked={k === 1 ? 'true' : 'false'}>{l}</button>)}
+          </div>
+        </div>
+        <div class="grp"><span class="lbl">Farbe</span>
+          <div class="swatches" role="radiogroup" aria-label="Haarfarbe">
+            {colors.map(([c, l], k) => <button type="button" role="radio" data-color={c} aria-label={l} title={l} aria-checked={k === 1 ? 'true' : 'false'} style={`--c:${c}`}></button>)}
+          </div>
+        </div>
+        <div class="grp"><span class="lbl">Bart</span>
+          <div class="chips" role="radiogroup" aria-label="Bart">
+            {beards.map(([v, l], k) => <button type="button" role="radio" data-beard={v} aria-checked={k === 0 ? 'true' : 'false'}>{l}</button>)}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="display reveal" style="--d:.15s">
+      <div class="stage" style="--r:1.5deg">
+        <div class="glass" aria-hidden="true"><i></i><i></i></div>
+        <div class="figure" data-figure><Face hair="bob" color="#4a2f22" live /></div>
+        <div class="plinth" aria-hidden="true"></div>
+      </div>
+      <!-- Ценник стоит под витриной, а не поверх фигуры -->
+      <div class="tag" aria-live="polite">
+        <b class="look-name">Bob · Dunkelbraun</b>
+        <span class="look-meta"></span>
+        <span class="look-parts"></span>
+        <a class="btn btn--solid go" href="#termin" data-go>Diesen Look buchen <span class="arr">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; padding-bottom: clamp(60px, 10vh, 110px); background: var(--paper-2); }
+  .awning { display: block; width: 100%; height: clamp(84px, 11vw, 124px); filter: drop-shadow(0 6px 0 rgba(28, 37, 65, .18)); transform-origin: 50% 0; animation: drop 1.1s var(--pop) both; position: relative; z-index: 3; }
+  @keyframes drop { from { transform: scaleY(.2); } }
+
+  .window { position: relative; margin-top: -8px; padding: clamp(28px, 5vw, 64px); border: 3px solid var(--ink); border-top: 0; background: var(--paper); border-radius: 0 0 var(--radius) var(--radius); box-shadow: var(--shadow); display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(20px, 4vw, 56px); align-items: center; overflow: hidden; }
+  .window::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5; background-image: radial-gradient(rgba(28, 37, 65, .12) 1.2px, transparent 1.6px); background-size: 10px 10px; }
+  .copy, .stage, .display { position: relative; }
+
+  .title { margin: 0; font-family: var(--serif); font-weight: 700; font-size: clamp(3.2rem, 8.4vw, 7.4rem); line-height: .92; letter-spacing: -.035em; font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144; }
+  .lead { margin: 22px 0 28px; }
+
+  .ctl { display: grid; gap: 16px; }
+  .hint { margin: 0; display: flex; gap: 8px; align-items: baseline; font-size: .9rem; font-weight: 650; color: var(--ink); }
+  .hint span { color: var(--coral); font-size: 1.1rem; }
+  .grp { display: grid; grid-template-columns: 72px 1fr; align-items: center; gap: 12px; }
+  .lbl { font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; opacity: .7; }
+  .chips, .swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips button { min-height: 42px; padding: 0 16px; border-radius: 999px; border: 2px solid var(--ink); background: var(--cream); font-size: .9rem; font-weight: 650; cursor: pointer; transition: transform .25s var(--pop), background .2s, box-shadow .2s; }
+  .chips button:hover { transform: translateY(-3px) rotate(-2deg); }
+  .chips button[aria-checked="true"] { background: var(--ink); color: var(--cream); box-shadow: 3px 3px 0 var(--coral); transform: translate(-1px, -1px); }
+  .swatches button { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--ink); background: var(--c); cursor: pointer; transition: transform .3s var(--pop), box-shadow .2s; position: relative; }
+  .swatches button:hover { transform: scale(1.18) rotate(8deg); }
+  .swatches button[aria-checked="true"] { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink); transform: scale(1.08); }
+
+  .stage { aspect-ratio: 1 / 1.08; display: grid; place-items: end center; border: 3px solid var(--ink); border-radius: 200px 200px var(--radius) var(--radius); background: var(--bg, var(--butter)); overflow: hidden; transition: background .5s var(--ease); box-shadow: var(--shadow); }
+  .glass i { position: absolute; top: -10%; bottom: -10%; width: 14%; background: rgba(255, 255, 255, .28); transform: skewX(-18deg); animation: glare 9s ease-in-out infinite; }
+  .glass i:nth-child(1) { left: 14%; } .glass i:nth-child(2) { left: 34%; width: 5%; animation-delay: .4s; }
+  @keyframes glare { 0%, 100% { translate: -30px 0; opacity: .6; } 50% { translate: 40px 0; opacity: 1; } }
+  .figure { width: 74%; margin-bottom: -4%; position: relative; z-index: 1; transition: transform .35s ease-out; }
+  .figure.pop { animation: pop .55s var(--pop); }
+  @keyframes pop { 0% { transform: scale(.94) rotate(-1.5deg); } 100% { transform: none; } }
+  .figure :global(.face) { filter: drop-shadow(8px 8px 0 rgba(28, 37, 65, .22)); }
+  .plinth { position: absolute; left: 0; right: 0; bottom: 0; height: 12%; background: var(--ink); z-index: 2; }
+  .display { position: relative; display: grid; justify-items: center; }
+  .stage { width: 100%; transform: rotate(var(--r)); }
+  .tag { position: relative; margin-top: 14px; transform: rotate(-1.5deg); z-index: 3; width: min(88%, 380px); display: grid; gap: 2px; justify-items: center; text-align: center; padding: 14px 18px 16px; background: var(--cream); border: 2px solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); }
+  .look-name { font-family: var(--serif); font-size: 1.3rem; font-weight: 650; font-variation-settings: "SOFT" 100; }
+  .look-meta { font-size: .95rem; font-weight: 700; color: var(--ink); }
+  .look-parts { font-size: .74rem; color: var(--ink-soft); margin-bottom: 8px; text-wrap: balance; }
+  .go { min-height: 46px; padding: 0 20px; font-size: .88rem; }
+
+  .sign { position: absolute; right: clamp(16px, 4vw, 48px); top: 0; z-index: 5; transform-origin: 50% 0; animation: swing 4.5s ease-in-out infinite; }
+  .sign i { display: block; width: 2px; height: 26px; background: var(--ink); margin: 0 auto; }
+  .board { display: grid; justify-items: center; padding: 8px 16px 9px; border: 2px solid var(--ink); border-radius: 10px; background: var(--sage); box-shadow: 3px 3px 0 var(--ink); line-height: 1.15; }
+  .board b { font-size: .9rem; letter-spacing: .12em; text-transform: uppercase; }
+  .board small { font-size: .68rem; font-weight: 600; opacity: .8; }
+  .sign.closed .board { background: var(--coral); }
+  @keyframes swing { 0%, 100% { rotate: 3deg; } 50% { rotate: -3deg; } }
+
+  /* Телефон: заголовок → зеркало → кнопки → ценник. Зеркало стоит прямо над кнопками, листать не нужно */
+  @media (max-width: 900px) {
+    .window { grid-template-columns: 1fr; padding-top: 96px; gap: 16px; }
+    .copy, .display { display: contents; }
+    .eyebrow { order: 1; margin: 0; }
+    .title { order: 2; }
+    .lead { order: 3; margin: 0; }
+    .stage { order: 4; width: min(100%, 270px); justify-self: center; }
+    .tag { order: 5; margin-top: -4px; justify-self: center; width: min(100%, 380px); transform: none; }
+    .ctl { order: 6; }
+    .grp { grid-template-columns: 1fr; gap: 6px; }
+    .sign { right: 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .awning, .sign, .glass i, .figure.pop { animation: none; } }
+</style>
+
+<script>
+  import { openState } from '../scripts/open.js';
+  import { lookItems, sumOf, type Item } from '../scripts/pricing';
+  const root = document.getElementById('top')!;
+  const q = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+  const face = q<SVGElement>('.face'), figure = q<HTMLElement>('[data-figure]'), stage = q<HTMLElement>('.stage');
+  const ctl = q<HTMLElement>('.ctl');
+  const services: Record<string, any> = JSON.parse(ctl.dataset.services!);
+  const NAMES: Record<string, string> = { kurz: 'Kurz', bob: 'Bob', lang: 'Lang', locken: 'Locken', tolle: 'Tolle', glatze: 'Glatze' };
+  const CNAMES: Record<string, string> = { '#1f1d24': 'Schwarz', '#4a2f22': 'Dunkelbraun', '#b4562f': 'Kupfer', '#d9b45a': 'Blond', '#c9cdd6': 'Silber', '#e58aa0': 'Rosé', '#6a8be0': 'Blau' };
+  const BGS = ['#efcf7a', '#b7c8aa', '#c9d3ee', '#f2b8a2'];
+  const look = { hair: 'bob', color: '#4a2f22', beard: 'none' };
+  let current: Item[] = [];
+  const items = () => lookItems(services, look);
+
+  const mins = (n: number) => (n >= 60 ? `${Math.floor(n / 60)} Std.${n % 60 ? ` ${n % 60} Min.` : ''}` : `${n} Min.`);
+  const sync = (animate = true) => {
+    face.setAttribute('data-hair', look.hair); face.setAttribute('data-beard', look.beard);
+    (face as unknown as HTMLElement).style.setProperty('--hair', look.color);
+    root.querySelectorAll<HTMLElement>('[data-hair]:not(svg)').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.hair === look.hair)));
+    root.querySelectorAll<HTMLElement>('[data-color]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.color === look.color)));
+    root.querySelectorAll<HTMLElement>('[data-beard]:not(svg)').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.beard === look.beard)));
+    current = items();
+    const { total, dur, consult } = sumOf(current);
+    q('.look-name').textContent = `${NAMES[look.hair]} · ${CNAMES[look.color] ?? 'Eigene Farbe'}${look.beard !== 'none' ? ' · ' + (look.beard === 'voll' ? 'Vollbart' : 'Stoppeln') : ''}`;
+    q('.look-meta').textContent = `${consult ? 'ab ' : ''}${total} € · ca. ${mins(dur)}${consult ? ' · mit Beratung' : ''}`;
+    // Разбивка по позициям: видно, откуда берётся сумма (например, цвет добавляет к стрижке)
+    q('.look-parts').textContent = current.map((x) => `${x.name} ${x.consult ? 'ab ' : ''}${x.price} €`).join(' + ');
+    if (animate) { figure.classList.remove('pop'); void figure.offsetWidth; figure.classList.add('pop'); }
+  };
+
+  root.querySelectorAll<HTMLElement>('[data-hair]:not(svg)').forEach((b) => b.addEventListener('click', () => { look.hair = b.dataset.hair!; stage.style.setProperty('--bg', BGS[(BGS.indexOf(stage.style.getPropertyValue('--bg')) + 1) % BGS.length]); sync(); }));
+  root.querySelectorAll<HTMLElement>('[data-color]').forEach((b) => b.addEventListener('click', () => { look.color = b.dataset.color!; sync(); }));
+  root.querySelectorAll<HTMLElement>('[data-beard]:not(svg)').forEach((b) => b.addEventListener('click', () => { look.beard = b.dataset.beard!; sync(); }));
+
+  // «Диапазон» радио-кнопок: стрелки переключают внутри группы
+  root.querySelectorAll<HTMLElement>('[role="radiogroup"]').forEach((g) => g.addEventListener('keydown', (e) => {
+    const k = (e as KeyboardEvent).key; if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].includes(k)) return;
+    const bs = [...g.querySelectorAll<HTMLElement>('[role="radio"]')], i = bs.indexOf(document.activeElement as HTMLElement);
+    const n = bs[(i + (k === 'ArrowRight' || k === 'ArrowDown' ? 1 : -1) + bs.length) % bs.length]; n.focus(); n.click(); e.preventDefault();
+  }));
+
+  // Глаза следят за курсором, фигура чуть наклоняется
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (fine) addEventListener('pointermove', (e) => {
+    const r = face.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
+    const dx = (e.clientX - (r.left + r.width / 2)) / innerWidth, dy = (e.clientY - (r.top + r.height * 0.45)) / innerHeight;
+    face.style.setProperty('--ex', `${Math.max(-7, Math.min(7, dx * 22)).toFixed(1)}px`);
+    face.style.setProperty('--ey', `${Math.max(-5, Math.min(5, dy * 16)).toFixed(1)}px`);
+    figure.style.transform = `translate(${(dx * 10).toFixed(1)}px, ${(dy * 4).toFixed(1)}px)`;
+  });
+
+  // Кнопка «Diesen Look buchen»: передаём выбор в форму записи
+  const sendToBooking = () => {
+    const { total, dur } = sumOf(current);
+    const detail = { items: current, total, dur };
+    (window as any).__nelkeSelection = detail;
+    window.dispatchEvent(new CustomEvent('nelke:selection', { detail }));
+  };
+  q('[data-go]').addEventListener('click', sendToBooking);
+
+  // Look со «стены образов» загружается сюда
+  window.addEventListener('nelke:look', (e) => {
+    const d = (e as CustomEvent).detail; look.hair = d.hair; look.color = d.color; look.beard = d.beard;
+    if (d.bg) stage.style.setProperty('--bg', d.bg);
+    sync(); if (!d.noScroll) document.getElementById('top')!.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Вывеска
+  const sign = q<HTMLElement>('[data-open-sign]');
+  const st = openState(JSON.parse(sign.dataset.hours!));
+  sign.classList.toggle('closed', !st.open);
+  sign.querySelector('b')!.textContent = st.open ? 'Geöffnet' : 'Geschlossen';
+  sign.querySelector('small')!.textContent = st.text;
+
+  stage.style.setProperty('--bg', BGS[0]);
+  sync(false);
+</script>

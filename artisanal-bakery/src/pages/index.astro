@@ -1,0 +1,255 @@
+---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import Base from '../layouts/Base.astro';
+import data from '../data/bakery.json';
+const base = import.meta.env.BASE_URL;
+const eur = (n: number) => n.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+const { address: a } = data;
+const maps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${data.legalName} ${a.street} ${a.zip} ${a.city}`)}`;
+const orderable = data.items.filter((i) => i.order);
+const cater = `mailto:${data.email}?subject=${encodeURIComponent('Anfrage Firmen-Catering')}&body=${encodeURIComponent('Guten Tag,\n\nwir interessieren uns für eine Frühstücks-Platte für unser Büro.\n\nTermin:\nPersonenzahl:\nAdresse:\n\nVielen Dank!')}`;
+// Produktfotos: public/products/<id>.webp. Ohne Datei zeigt die Kachel nur den Namen auf warmem Licht.
+const find = (dir: string, id: string) => {
+  for (const ext of ['webp', 'jpg', 'jpeg', 'png']) if (existsSync(join(process.cwd(), 'public', dir, `${id}.${ext}`))) return `${base}${dir}/${id}.${ext}`;
+  return null;
+};
+const photo = (id: string) => find('products', id);
+// Fotos fuer die Karten: public/photos/hands.*, layers.*, oven.*; Catering: public/photos/catering.*
+const cardPhotos = ['hands', 'layers', 'oven'].map((n) => find('photos', n));
+const cateringPhoto = find('photos', 'catering');
+const crops = [
+  { src: 'croissant-baked.webp', x: '50%', y: '50%', z: 1.3, alt: 'Goldbraun gebackener Flügel eines Croissants in Nahaufnahme' },
+  { src: 'croissant-raw.webp', x: '55%', y: '40%', z: 2.2, alt: 'Geschichteter, roher Croissant-Teig in Nahaufnahme' },
+  { src: 'croissant-baked.webp', x: '78%', y: '42%', z: 1.7, alt: 'Rechter Flügel eines frisch gebackenen Croissants mit Krümeln' },
+];
+---
+<Base>
+  <header class="top">
+    <a class="top__logo" href={base}>{data.name}</a>
+    <nav aria-label="Hauptnavigation">
+      <a href="#unterschied">Handwerk</a>
+      <a href="#sortiment">Sortiment</a>
+      <a href="#catering">Catering</a>
+      <a class="btn btn--sm" href="#vorbestellen">Vorbestellen</a>
+    </nav>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="drawer" aria-label="Menü öffnen" data-burger><i></i><i></i></button>
+  </header>
+  <div class="scrim" data-scrim></div>
+  <nav class="drawer" id="drawer" aria-label="Menü" data-drawer>
+    <a href="#unterschied">Handwerk</a>
+    <a href="#sortiment">Sortiment</a>
+    <a href="#vorbestellen">Vorbestellen</a>
+    <a href="#catering">Catering</a>
+    <a href="#kontakt">Kontakt</a>
+    <span class="drawer__fine"><a href={`${base}impressum/`} target="_blank" rel="noopener">Impressum</a><a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutz</a></span>
+  </nav>
+
+  <main>
+    <!-- Hero: Teigling -> Croissant, gesteuert vom Scrollen -->
+    <section class="hero" data-bake data-hours="48" aria-label="Vom Teigling zum Croissant">
+      <div class="hero__stick">
+        <canvas data-bake-canvas data-a={`${base}img/croissant-raw.webp`} data-b={`${base}img/croissant-baked.webp`} role="img" aria-label="Ein Croissant verwandelt sich beim Scrollen vom rohen Teigling zum goldbraun gebackenen Gebäck"></canvas>
+        <div class="hero__fb" data-bake-fallback hidden>
+          <img src={`${base}img/croissant-raw.webp`} alt="Roher, geschichteter Croissant-Teigling" />
+          <img data-fb-baked src={`${base}img/croissant-baked.webp`} alt="Goldbraun gebackenes Croissant" />
+        </div>
+
+        <div class="hero__intro">
+          <h1>{data.headline}</h1>
+          <p>{data.sub}</p>
+          <div class="hero__cta"><a class="btn" href="#vorbestellen">Wochenende vorbestellen</a><a class="link" href="#sortiment">Sortiment ansehen</a></div>
+        </div>
+
+        <div class="hero__clock" aria-hidden="true"><b data-clock>00</b><span>von 48 Stunden Teigführung</span></div>
+        <div class="hero__progress" aria-hidden="true"><i></i></div>
+
+        <div class="hero__stages">
+          {data.stages.map((s, i) => (
+            <div class="stage" data-stage={i}>
+              <small>{s.t}</small>
+              <h2>{s.title}</h2>
+              <p>{s.text}</p>
+              {i === data.stages.length - 1 && <a class="btn" href="#vorbestellen">Jetzt vorbestellen</a>}
+            </div>
+          ))}
+        </div>
+
+        <div class="callout l" data-callout data-ix="430" data-iy="420"><i></i><em>{data.callouts.l}</em></div>
+        <div class="callout r" data-callout data-ix="700" data-iy="95"><i></i><em>{data.callouts.r}</em></div>
+        <div class="callout b" data-callout data-ix="800" data-iy="560"><i></i><em>{data.callouts.b}</em></div>
+
+        <div class="hero__end">
+          <ul class="chips">
+            <li>{data.callouts.l}</li><li>{data.callouts.r}</li><li>{data.callouts.b}</li>
+          </ul>
+          <a class="btn" href="#vorbestellen">Jetzt vorbestellen</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Unterschied -->
+    <section class="sec" id="unterschied">
+      <div class="wrap">
+        <div class="sec__head"><h2>{data.highlightsTitle}</h2></div>
+        <div class="bento">
+          {data.highlights.map((h, i) => (
+            <article class={`card card--${'abc'[i]}${cardPhotos[i] ? ' card--photo' : ''}`}>
+              {cardPhotos[i]
+                ? <img src={cardPhotos[i]} alt={crops[i].alt} loading="lazy" />
+                : <img src={`${base}img/${crops[i].src}`} alt={crops[i].alt} loading="lazy" style={`--x:${crops[i].x};--y:${crops[i].y};--z:${crops[i].z}`} />}
+              <div class="card__text"><h3>{h.title}</h3><p>{h.text}</p></div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Sortiment -->
+    <section class="sec" id="sortiment" style="padding-top:0">
+      <div class="wrap">
+        <div class="sec__head"><h2>Sortiment</h2></div>
+        <div class="tiles">
+          {data.items.map((it) => {
+            const img = photo(it.id) ?? (it.id === 'classic' ? `${base}img/croissant-baked.webp` : null);
+            return (
+              <article class={`tile${img ? '' : ' tile--text'}`}>
+                {img && <div class="tile__media"><img src={img} alt={`${it.name}, ${it.tag}`} loading="lazy" /></div>}
+                <div class="tile__body">
+                  <h3>{it.name}</h3>
+                  <span class="price">{it.priceText ?? eur(it.price as number)}</span>
+                  <span class="tag">{it.tag}</span>
+                  {it.order && <a class="link" href="#vorbestellen">Vorbestellen</a>}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+        <!-- TODO: Link zur Sortimentsliste mit Allergenen (PDF vom Kunden) -->
+        <p class="note">Die vollständige Sortimentsliste mit Allergenen liegt als PDF vor und wird hier verlinkt.</p>
+      </div>
+    </section>
+
+    <!-- Click & Collect -->
+    <section class="sec" id="vorbestellen" style="padding-top:0">
+      <div class="wrap">
+        <div class="sec__head">
+          <h2>Wochenende vorbestellen</h2>
+          <p>Samstag oder Sonntag abholen, ohne Schlange. Bestellung bis 18:00 Uhr am Vortag.</p>
+        </div>
+        <form class="order" data-order data-mail={data.email} novalidate>
+          <div>
+            <fieldset>
+              <legend>Abholtag</legend>
+              <div class="choices" data-days></div>
+            </fieldset>
+            <fieldset>
+              <legend>Zeitfenster</legend>
+              <div class="choices">
+                {data.slots.map((t, i) => (
+                  <label class="choice slot"><input type="radio" name="slot" value={t} checked={i === 0} /><span><b>{t}</b></span></label>
+                ))}
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Ihre Auswahl</legend>
+              <div class="rows">
+                {orderable.map((it) => (
+                  <div class="row" data-row data-id={it.id} data-name={it.name} data-price={it.price}>
+                    <div><b>{it.name}</b><small>{it.tag}</small></div>
+                    <span class="price">{eur(it.price as number)}</span>
+                    <div class="step" role="group" aria-label={`Menge ${it.name}`}>
+                      <button type="button" data-dec aria-label={`${it.name}: eins weniger`}>−</button>
+                      <output data-qty>0</output>
+                      <button type="button" data-inc aria-label={`${it.name}: eins mehr`}>+</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </fieldset>
+            <fieldset data-contact>
+              <legend>Ihre Daten</legend>
+              <div class="fields">
+                <label>Name<input name="name" autocomplete="name" placeholder="Vor- und Nachname" required /></label>
+                <label>Telefon<input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+49 151 23456789" required /></label>
+              </div>
+              <div class="consent">
+                <label class="consent__row">
+                  <input type="checkbox" name="consent" required aria-describedby="consent-err" />
+                  <span>Ich bin einverstanden, dass {data.name} meinen Namen und meine Telefonnummer zur Bearbeitung meiner Vorbestellung verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a></span>
+                </label>
+                <p class="consent__err" id="consent-err" data-consent-err hidden>Bitte stimmen Sie zu, sonst können wir Ihre Vorbestellung nicht bearbeiten.</p>
+              </div>
+            </fieldset>
+          </div>
+
+          <aside class="receipt" aria-live="polite">
+            <h3>Ihre Bestellung</h3>
+            <p class="when" data-when>Abholung: bitte Tag wählen</p>
+            <ul data-lines><li class="empty">Noch nichts gewählt.</li></ul>
+            <div class="sum"><span>Summe</span><b data-sum>0,00 €</b></div>
+            <p class="err" data-err role="alert"></p>
+            <button class="btn" type="submit">Vorbestellung senden</button>
+            <p class="fine">Demo: Die Bestellung wird nur angezeigt, nicht gesendet. Versand an die Bäckerei und Online-Zahlung (z. B. Stripe oder Mollie) werden beim Livegang angebunden.</p>
+          </aside>
+        </form>
+
+        <div class="done" data-done hidden>
+          <svg class="done__mark" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 25l7 7 13-15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3 tabindex="-1" data-done-title>Vielen Dank.</h3>
+          <p class="done__lead">Ihre Vorbestellung ist eingegangen. Wir bestätigen sie telefonisch unter <b data-done-phone></b>.</p>
+          <dl class="done__facts">
+            <div><dt>Bestellnummer</dt><dd data-done-no></dd></div>
+            <div><dt>Abholung</dt><dd data-done-when></dd></div>
+            <div><dt>Adresse</dt><dd>{data.legalName}, {a.street}, {a.zip} {a.city}</dd></div>
+          </dl>
+          <ul class="done__lines" data-done-lines></ul>
+          <div class="done__sum"><span>Summe</span><b data-done-sum></b></div>
+          <button class="btn btn--ghost" type="button" data-done-new>Neue Vorbestellung</button>
+          <p class="done__fine">Demo: Die Bestellung wird nicht übertragen. Beim Livegang geht sie direkt an die Bäckerei, dazu kommt die Online-Zahlung.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Catering -->
+    <section class="sec" id="catering" style="padding-top:0;padding-bottom:0">
+      <div class="wrap">
+        <div class={`panel${cateringPhoto ? ' panel--photo' : ''}`}>
+          <div class={cateringPhoto ? 'panel__txt' : undefined}>
+            <h2>{data.catering.title}</h2>
+            <p style="margin-top:20px">{data.catering.text}</p>
+            <a class="btn" href={cater}>Catering anfragen</a>
+          </div>
+          {cateringPhoto && <div class="panel__img"><img src={cateringPhoto} alt="Frühstücks-Platte mit Croissants, Brot und Kaffee" loading="lazy" /></div>}
+        </div>
+      </div>
+    </section>
+
+    <!-- Kontakt -->
+    <section id="kontakt">
+      <div class="wrap contact">
+        <div><h3>Adresse</h3><p>{data.legalName}<br />{a.street}<br />{a.zip} {a.city}</p></div>
+        <div><h3>Kontakt</h3><p><a href={`mailto:${data.email}`}>{data.email}</a></p></div>
+        <div><h3>Anfahrt</h3><p><a href={maps} target="_blank" rel="noopener">Route in Google Maps öffnen</a></p></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="cartbar" data-cartbar aria-live="polite">
+    <div class="cartbar__sum"><b data-cart-sum>0,00 €</b><small data-cart-count></small></div>
+    <button class="btn" type="button" data-cart-go>Weiter</button>
+  </div>
+
+  <footer class="foot">
+    <span>© {data.legalName}. Beispielseite von Kravets Webdesign, Betrieb erfunden. <a class="foot__more" href="/arbeiten/">Alle Beispiele</a></span>
+    <span><a href={`${base}impressum/`} target="_blank" rel="noopener">Impressum</a><a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutz</a></span>
+  </footer>
+</Base>
+
+<script>
+  import { initBake } from '../scripts/bake.js';
+  import { initPage } from '../scripts/page.js';
+  const hero = document.querySelector<HTMLElement>('[data-bake]');
+  if (hero) initBake(hero);
+  initPage();
+</script>

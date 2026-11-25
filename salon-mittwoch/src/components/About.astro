@@ -1,0 +1,65 @@
+---
+import site from '../data/site.json';
+const a = site.about;
+---
+<section class="section about" id="salon">
+  <div class="wrap grid">
+    <div class="head">
+      <p class="eyebrow reveal">{a.eyebrow}</p>
+      <h2 class="h2 reveal" style="--d:.08s">{a.title}</h2>
+    </div>
+    <div class="body">
+      {a.text.map((t, i) => <p class="lead reveal" style={`--d:${0.12 + i * 0.08}s`}>{t}</p>)}
+      <ul class="facts">
+        {a.facts.map((f, i) => {
+          const m = f.value.match(/^(\d+)(.*)$/);
+          return (
+            <li class="reveal" style={`--d:${0.2 + i * 0.1}s`}>
+              <strong data-count={m ? m[1] : undefined} data-suffix={m ? m[2] : undefined}>{f.value}</strong>
+              <span>{f.label}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about { padding-top: calc(var(--section) * .7); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 7vw, 110px); align-items: start; }
+  .head { position: sticky; top: 120px; }
+  .body .lead { margin: 0 0 22px; color: var(--ink); }
+  .body .lead + .lead { color: var(--ink-soft); }
+  .facts { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+  .facts li { padding: 26px 16px 0 0; display: grid; gap: 6px; }
+  .facts strong { font-family: var(--serif); font-weight: 400; font-size: clamp(2.2rem, 4vw, 3.4rem); line-height: 1; color: var(--brass-deep); font-variant-numeric: lining-nums tabular-nums; }
+  .facts span { font-size: .82rem; color: var(--ink-soft); line-height: 1.4; }
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+    .head { position: static; }
+  }
+  @media (max-width: 480px) { .facts { grid-template-columns: 1fr 1fr; } .facts li:last-child { grid-column: 1 / -1; } }
+</style>
+
+<script>
+  // Счётчики: число «добегает» до значения, когда блок появляется
+  const els = document.querySelectorAll<HTMLElement>('[data-count]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      io.unobserve(e.target);
+      const el = e.target as HTMLElement, to = Number(el.dataset.count), suf = el.dataset.suffix || '';
+      if (reduce) continue;
+      const t0 = performance.now(), dur = 1400;
+      const step = (t: number) => {
+        const k = Math.min(1, (t - t0) / dur), v = Math.round(to * (1 - Math.pow(1 - k, 3)));
+        el.textContent = v + suf;
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+  }, { threshold: .6 });
+  els.forEach((el) => io.observe(el));
+</script>

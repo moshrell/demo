@@ -1,0 +1,9 @@
+{
+  "outDir": "public/img",
+  "style": "Photorealistic editorial photograph of an independent German car workshop. Cool daylight from skylights mixed with warm amber task lamps, clean concrete floor, palette of deep teal-navy, steel grey and small amber accents, natural film grain, shallow depth of field, calm and tidy. No people, no text, no logos, no brand badges, no readable license plates.",
+  "images": [
+    { "file": "werkstatt.jpg", "aspect": "3:2", "prompt": "A compact unbranded silver-grey hatchback raised on a two-post lift in a tidy workshop bay, low front three-quarter angle, a wall of hand tools softly out of focus in the background." },
+    { "file": "bremse.jpg", "aspect": "4:3", "prompt": "Macro close-up of a ventilated brake disc and a dark grey brake caliper on a wheel hub with the wheel removed, a torque wrench resting on the floor beside it, very shallow depth of field." },
+    { "file": "diagnose.jpg", "aspect": "4:3", "prompt": "An open generic unbranded car engine bay lit from the side, a rugged tablet leaning on the fender showing an abstract glowing waveform graph without any readable text, a diagnostic cable plugged into the car." }
+  ]
+}

@@ -1,0 +1,31 @@
+---
+import '@fontsource-variable/bricolage-grotesque/wdth.css';
+import '@fontsource-variable/newsreader/opsz.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import bakery from '../data/bakery.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+  bare?: boolean; // Rechtstexte: ohne Kopfleiste
+}
+const { title = `${bakery.name} | Ein Tag in der Backstube`, description = bakery.description } = Astro.props;
+const dev = import.meta.env.DEV;
+---
+<!doctype html>
+<html lang="de" class="no-js" data-dev={dev ? '' : undefined}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#241d18" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23241d18'/%3E%3Cpath d='M4 22a12 12 0 0 1 24 0z' fill='%23e8743a'/%3E%3C/svg%3E" />
+    <script is:inline>document.documentElement.classList.remove('no-js');</script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

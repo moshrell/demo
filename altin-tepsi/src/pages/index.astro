@@ -1,0 +1,343 @@
+---
+import Base from '../layouts/Base.astro';
+import Pic from '../components/Pic.astro';
+import shop from '../data/shop.json';
+import { PIECES } from '../lib/pieces';
+
+const base = import.meta.env.BASE_URL;
+const eur = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
+// Startbelegung des Hero-Spiels (5 Spalten x 4 Reihen), ohne fertige Dreierreihe
+const heroGrid = [
+  ['pistazie', 'kadayif', 'kadayif', 'walnuss', 'pistazie'],
+  ['sarma', 'lokum', 'sarma', 'pistazie', 'walnuss'],
+  ['walnuss', 'kadayif', 'lokum', 'lokum', 'pistazie'],
+  ['pistazie', 'walnuss', 'walnuss', 'kadayif', 'sarma'],
+];
+const shortName = Object.fromEntries(shop.varieties.map((v) => [v.id, v.short]));
+const addr = shop.address;
+const mapUrl = `https://www.openstreetmap.org/search?query=${encodeURIComponent(`${addr.street}, ${addr.zip} ${addr.city}`)}`;
+const waBase = `https://wa.me/${shop.whatsapp}`;
+const tones: Record<string, string> = { pistazie: 'sirup', walnuss: 'nuss', sarma: 'sarma', kadayif: 'kadayif', lokum: 'lokum', halva: 'halva' };
+const presetPrice = (mix: Record<string, number>) =>
+  Object.entries(mix).reduce((s, [id, n]) => s + (shop.varieties.find((v) => v.id === id)?.price ?? 0) * n, 0);
+const presetCount = (mix: Record<string, number>) => Object.values(mix).reduce((a, b) => a + b, 0);
+---
+<Base>
+  <header class="mast">
+    <div class="wrap mast__in">
+      <a class="brand" href={base} aria-label={`${shop.name}, Startseite`}>
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 29 16 16 29 3 16z" fill="#e3a53b" /></svg>
+        {shop.name}
+      </a>
+      <nav class="nav" aria-label="Hauptmenü">
+        <a href="#sorten">Sorten</a>
+        <a href="#geschenke">Geschenke</a>
+        <a href="#firmen">Für Firmen</a>
+        <a href="#ueber-uns">Über uns</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+      <a class="mast__box" href="#box" aria-label="Zur Box, 0 von 12 Plätzen belegt">Box <span id="nav-box">0/12</span></a>
+      <details class="menu">
+        <summary>Menü</summary>
+        <div class="menu__list">
+          <a href="#sorten">Sorten</a>
+          <a href="#geschenke">Geschenke</a>
+          <a href="#firmen">Für Firmen</a>
+          <a href="#ueber-uns">Über uns</a>
+          <a href="#kontakt">Kontakt</a>
+        </div>
+      </details>
+    </div>
+  </header>
+
+  <main id="inhalt">
+    <!-- Hero: das Tablett füllt sich einmal -->
+    <section class="hero" aria-labelledby="h-hero">
+      <div class="hero__bg" aria-hidden="true">
+        <Pic name="hero-baklava" tone="sirup" priority sizes="100vw" widths={[800, 1280, 1920]} />
+      </div>
+      <div class="wrap hero__grid">
+        <div class="hero__text">
+          <h1 id="h-hero">Jeden Tag frisch gebacken.</h1>
+          <p class="lead muted">Baklava, Sarma, Kadayıf und Lokum aus der Backstube in Hannover. Du wählst die Stücke, wir packen deine Box.</p>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#sorten">Box zusammenstellen</a>
+            <a class="btn btn--ghost" href="#geschenke">Geschenkboxen</a>
+          </div>
+          <p class="status" data-status>Öffnungszeiten siehe Kontakt</p>
+        </div>
+        <div class="hero__game">
+          <div class="tray tray--hero is-intro" id="game" role="group" aria-label="Spiel: drei gleiche Stücke in einer Reihe">
+            <div class="tray__bed" id="game-bed">
+              {heroGrid.flat().map((id, i) => (
+                <button type="button" class="slot" tabindex="-1" data-id={id} aria-label={`${shortName[id]}, Reihe ${Math.floor(i / 5) + 1}, Spalte ${(i % 5) + 1}`}>
+                  <div class="piece" set:html={PIECES[id]} />
+                </button>
+              ))}
+            </div>
+          </div>
+          <p class="note game__hint">Zum Spielen: Tausche zwei Nachbarn. Drei gleiche in einer Reihe verschwinden. Gesammelt: <b id="game-score">0</b></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Box bauen, Teil 1: Größe und Sorten -->
+    <section class="sec sec--leaf" id="sorten" aria-labelledby="h-sorten">
+      <div class="wrap">
+        <div class="sechead">
+          <h2 id="h-sorten">Was heute auf dem Tablett liegt</h2>
+          <p class="lead muted">Erst die Größe, dann die Sorten. Die Box wächst von selbst mit, wenn du mehr wählst.</p>
+        </div>
+
+        <fieldset class="step">
+          <legend><span>1</span>Größe</legend>
+          <div class="sizes">
+            {shop.sizes.map((s) => (
+              <label class="size">
+                <input type="radio" name="size" value={s.id} checked={s.id === 'm'} />
+                <b>{s.slots} Stück</b>
+                <small>{s.label}</small>
+                <small class="size__g">ca. {s.grams}</small>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <div class="step" role="group" aria-labelledby="step-sorten">
+          <p class="step__title" id="step-sorten"><span>2</span>Sorten</p>
+          <p class="hint" id="box-hint" role="status"></p>
+          <ul class="dishes">
+            {shop.varieties.map((v) => (
+              <li class="dish" data-var={v.id}>
+                <div class="dish__pic frame">
+                  <Pic name={v.photo} alt={v.alt} tone={tones[v.id]} sizes="(min-width: 62rem) 30vw, (min-width: 40rem) 30vw, 48vw" widths={[360, 540, 720, 1024]} />
+                  <span class="dish__badge" data-badge hidden>0</span>
+                </div>
+                <div class="dish__body">
+                  <h3 class="dish__name">{v.name}</h3>
+                  <p class="dish__tag">{v.tag}</p>
+                  <p class="dish__desc">{v.desc}</p>
+                  <p class="dish__price">{eur.format(v.price)} <span class="dish__unit">{v.unit}</span></p>
+                  <div class="dish__buy">
+                    <button class="btn btn--dark dish__add" type="button" aria-label={`${v.short} in die Box legen`}>In die Box</button>
+                    <div class="stepper" hidden>
+                      <button type="button" data-act="minus" aria-label={`${v.short} entfernen`}>−</button>
+                      <output data-n aria-label={`Anzahl ${v.short}`}>0</output>
+                      <button type="button" data-act="plus" aria-label={`${v.short} hinzufügen`}>+</button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Box bauen, Teil 2: Tablett prüfen und bestellen -->
+    <section class="sec builder" id="box" aria-labelledby="box-title">
+      <div class="wrap">
+        <div class="sechead">
+          <h2 id="box-title" tabindex="-1">Deine Box</h2>
+          <p class="lead muted">So sieht deine Box aus. Stücke wählst oder entfernst du oben bei den <a class="link" href="#sorten">Sorten</a> mit + und −.</p>
+        </div>
+        <div class="box__grid">
+          <div class="box__a">
+            <div class="tray__head">
+              <h3 class="tray__count" id="box-sub">0 von 12 Plätzen</h3>
+              <span class="muted" id="box-size-label">Familienbox</span>
+            </div>
+            <div class="tray" id="tray">
+              <div class="tray__bed" id="tray-grid" role="img" aria-label="Dein Tablett"></div>
+            </div>
+            <ul class="legend" id="tray-legend" aria-label="Inhalt der Box"></ul>
+            <div class="tray__tools">
+              <button class="btn btn--ghost" type="button" id="box-fill">Rest mit Hausmischung füllen</button>
+              <button class="btn btn--ghost" type="button" id="box-clear">Leeren</button>
+            </div>
+          </div>
+
+          <form class="box__b" id="boxform" novalidate>
+            <fieldset class="step">
+              <legend><span>3</span>Abholung</legend>
+              <div class="field">
+                <label for="box-name">Dein Name</label>
+                <input id="box-name" name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname" aria-describedby="err-name" required />
+                <p class="field__err" id="err-name" hidden>Bitte gib deinen Namen an, damit wir die Box zuordnen können.</p>
+              </div>
+              <div class="field">
+                <label for="box-phone">Telefon (optional, für Rückfragen)</label>
+                <input id="box-phone" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 0511 1234567" />
+              </div>
+              <div class="field">
+                <label for="box-date">Abholung am</label>
+                <input id="box-date" name="date" type="date" aria-describedby="hint-date" />
+                <p class="field__hint" id="hint-date">Wähle den Tag über den Kalender, frühestens morgen.</p>
+              </div>
+              <div class="field"><label for="box-note">Hinweis (optional)</label><textarea id="box-note" name="note" autocomplete="off" placeholder="z. B. Geschenkkarte mit „Alles Gute, Elif“, Uhrzeit, ohne Nüsse"></textarea></div>
+              <label class="check"><input id="box-wrap" type="checkbox" /> Geschenkverpackung, plus {eur.format(shop.gift.wrapPrice)}</label>
+            </fieldset>
+            <fieldset class="step" id="step-order">
+              <legend><span>4</span>Bestellung</legend>
+              <div class="receipt" id="receipt"></div>
+              <div class="consent-wrap">
+                <label class="check check--consent">
+                  <input id="box-consent" name="privacy" type="checkbox" required aria-describedby="err-consent" />
+                  <span>Ich bin einverstanden, dass {shop.name} meine Angaben (Name, Telefon, Hinweis) zur Bearbeitung meiner Anfrage verwendet. <a class="link" href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a></span>
+                </label>
+                <p class="field__err" id="err-consent" hidden>Bitte stimme zu, sonst können wir deine Bestellung nicht bearbeiten.</p>
+              </div>
+              <p class="order__lead">Wie möchtest du bestellen? Die Nachricht ist schon geschrieben. Abgeschickt wird sie erst in deiner App.</p>
+              <div class="order">
+                <a class="btn btn--primary btn--wide" id="box-mail" data-order href="#sorten" aria-disabled="true">Per E-Mail bestellen</a>
+                <a class="btn btn--ghost btn--wide" id="box-send" data-order href="#sorten" aria-disabled="true">Per WhatsApp bestellen</a>
+                <a class="btn btn--ghost btn--wide" id="box-call" href={`tel:${shop.phone.replace(/\s/g, '')}`}>Anrufen: {shop.phoneLabel}</a>
+              </div>
+              <p class="hint" id="order-hint" role="status"></p>
+              <p class="note note--flush">Demo: E-Mail-Adresse und Telefonnummer sind Platzhalter. Bezahlt wird bei der Abholung. Deine Angaben werden nicht an uns übertragen, mehr in der <a class="link" href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutzerklärung</a>.</p>
+            </fieldset>
+            <div class="sumbar" id="sumbar" role="group" aria-label="Zwischenstand">
+              <span class="sumbar__l"><span id="sumbar-n">0 Stück</span></span>
+              <span class="sumbar__s">Summe <strong id="sumbar-sum">0,00 €</strong></span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    <div class="vh" id="box-live" aria-live="polite" role="status"></div>
+
+    <!-- Geschenke -->
+    <section class="sec sec--leaf" id="geschenke" aria-labelledby="h-gift">
+      <div class="wrap gift">
+        <div class="frame"><Pic name="gift-box" alt="Geöffnete Geschenkbox mit verschiedenem Baklava in Papierförmchen" tone="gift" sizes="(min-width: 62rem) 40vw, 100vw" /></div>
+        <div>
+          <div class="sechead">
+            <h2 id="h-gift">Zum Verschenken</h2>
+            <p class="lead muted">Zu Bayram, Hochzeit, Geburtstag oder als Dankeschön. Ein Klick lädt die Box in den Konfigurator, dort kannst du jedes Stück noch ändern.</p>
+          </div>
+          <ul>
+            {shop.presets.map((p) => (
+              <li class="preset">
+                <div class="preset__occ">{p.occasion}</div>
+                <h3>{p.name}</h3>
+                <p class="muted">{p.text}</p>
+                <div class="preset__row">
+                  <span class="preset__meta">{presetCount(p.mix)} Stück, {eur.format(presetPrice(p.mix))}</span>
+                  <button class="btn btn--dark" type="button" data-preset={p.id}>In den Konfigurator laden</button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Firmen -->
+    <section class="sec sec--night" id="firmen" aria-labelledby="h-b2b">
+      <div class="wrap b2b">
+        <div>
+          <h2 id="h-b2b">Süßes für Team, Kunden und Veranstaltungen</h2>
+          <p class="lead muted b2b__lead">Gemischte Platten für Besprechungen, Messen und Feiern. Auch als Kundengeschenk zum Jahresende.</p>
+          <ul class="facts">
+            <li>Eine Platte hat {shop.b2b.trayPieces} Stück, gemischt aus allen Sorten.</li>
+            <li>Bestellung {shop.b2b.lead} vorher.</li>
+            <li>Rechnung auf den Firmennamen.</li>
+          </ul>
+        </div>
+        <form class="calc" id="calc" novalidate>
+          <div class="calc__people">
+            <label for="b2b-people">Personen</label>
+            <output id="b2b-people-out" for="b2b-people">40</output>
+          </div>
+          <input id="b2b-people" type="range" min="10" max="200" step="5" value="40" />
+          <div class="field__label" id="b2b-pp-label">Stück pro Person</div>
+          <div class="seg" role="radiogroup" aria-labelledby="b2b-pp-label">
+            <label><input type="radio" name="b2b-pp" value="2" checked /> 2 Stück</label>
+            <label><input type="radio" name="b2b-pp" value="3" /> 3 Stück</label>
+          </div>
+          <dl class="calc__out">
+            <div><dt>Stück</dt><dd id="b2b-pieces">80</dd></div>
+            <div><dt>Platten</dt><dd id="b2b-trays">2</dd></div>
+            <div><dt>Richtwert</dt><dd id="b2b-price">168 €</dd></div>
+          </dl>
+          <div class="order">
+            <a class="btn btn--primary btn--wide" id="b2b-mail" href={`mailto:${shop.email}`}>Per E-Mail anfragen</a>
+            <a class="btn btn--ghost btn--wide" id="b2b-send" href={waBase} target="_blank" rel="noopener">Per WhatsApp anfragen</a>
+          </div>
+          <p class="note note--flush">Richtwert für eine gemischte Platte, kein Angebot. Den Preis bestätigen wir dir vor dem Backen.</p>
+        </form>
+      </div>
+    </section>
+
+    <!-- Über uns -->
+    <section class="sec sec--leaf" id="ueber-uns" aria-labelledby="h-about">
+      <div class="wrap about">
+        <div class="frame"><Pic name="baker-hands" alt="Hände streichen flüssige Butter auf dünne Teigschichten im Blech" tone="hands" sizes="(min-width: 62rem) 45vw, 100vw" /></div>
+        <div class="about__text">
+          <h2 id="h-about">Der Teig wird jeden Morgen von Hand ausgezogen</h2>
+          <p>Baklava besteht aus vielen hauchdünnen Teigschichten, zwischen denen jedes Mal Butter liegt. Das dauert, und man sieht es am Ergebnis: Der Rand bricht, die Mitte bleibt saftig.</p>
+          <p>Der Sirup kommt erst nach dem Backen über das Blech. So wird das Gebäck süß, ohne zu weichen. Was nicht am selben Tag verkauft wird, backen wir morgen nicht noch einmal auf, sondern verschenken es im Viertel.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kontakt -->
+    <section class="sec sec--deep" id="kontakt" aria-labelledby="h-contact">
+      <div class="wrap contact">
+        <div class="contact__info">
+          <h2 id="h-contact">Komm vorbei oder bestell vor</h2>
+          <address>{shop.name}<br />{addr.street}<br />{addr.zip} {addr.city}</address>
+          <dl class="hours">
+            {shop.hours.schedule.map((h) => (<><dt>{h.label}</dt><dd>{parseInt(h.from)} bis {parseInt(h.to)} Uhr</dd></>))}
+          </dl>
+          <p class="status" data-status>Öffnungszeiten werden geladen</p>
+          <div class="contact__links">
+            <a class="btn btn--primary" href={`tel:${shop.phone.replace(/\s/g, '')}`}>Anrufen: {shop.phoneLabel}</a>
+            <a class="btn btn--ghost" href={`mailto:${shop.email}`}>E-Mail schreiben</a>
+            <a class="btn btn--ghost" href={waBase} target="_blank" rel="noopener">WhatsApp</a>
+            <a class="btn btn--ghost" href={mapUrl} target="_blank" rel="noopener">Route in der Karte</a>
+          </div>
+        </div>
+        <div class="frame"><Pic name="shop-interior" alt="Gemütliche Konditorei mit Glastheke voller Baklava-Bleche und Messinglampen" tone="shop" sizes="(min-width: 62rem) 55vw, 100vw" /></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <p class="foot__claim">Jeden Tag frisch gebacken.</p>
+      <div class="foot__grid">
+        <div class="foot__col foot__col--info">
+          <p class="foot__h">{shop.name}</p>
+          <address>{addr.street}<br />{addr.zip} {addr.city}</address>
+        </div>
+        <nav class="foot__col" aria-label="Seiten">
+          <p class="foot__h">Seiten</p>
+          <ul>
+            <li><a href={`${base}#sorten`}>Sorten</a></li>
+            <li><a href={`${base}#geschenke`}>Geschenke</a></li>
+            <li><a href={`${base}#firmen`}>Für Firmen</a></li>
+            <li><a href={`${base}#kontakt`}>Kontakt</a></li>
+          </ul>
+        </nav>
+        <nav class="foot__col" aria-label="Rechtliches">
+          <p class="foot__h">Rechtliches</p>
+          <ul>
+            <li><a href={`${base}impressum/`} target="_blank" rel="noopener">Impressum</a></li>
+            <li><a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutz</a></li>
+          </ul>
+        </nav>
+      </div>
+      <p class="foot__demo">Demo-Website, Betrieb und Angaben sind erfunden.</p>
+    </div>
+  </footer>
+
+  <div class="boxbar" id="boxbar" hidden>
+    <span class="boxbar__txt" id="boxbar-txt">Deine Box</span>
+    <a class="btn btn--primary" href="#box">Zur Box</a>
+  </div>
+</Base>
+
+<script>
+  import '../scripts/page.js';
+</script>

@@ -1,0 +1,187 @@
+{
+  "name": "Altın Tepsi",
+  "claim": "Baklava und Süßes aus Hannover",
+  "description": "Baklava, Sarma, Kadayıf und Lokum, jeden Tag frisch gebacken. Box selbst zusammenstellen und abholen.",
+  "_hinweis": "DEMO: Betrieb, Preise, Adresse und Zeiten sind erfunden. TODO beim echten Kunden: alles ersetzen.",
+  "whatsapp": "491700000000",
+  "_todo_whatsapp": "TODO: echte WhatsApp-Nummer des Kunden (nur Ziffern, mit Landesvorwahl)",
+  "phone": "+49 511 0000000",
+  "address": {
+    "street": "Beispielstraße 1",
+    "zip": "30159",
+    "city": "Hannover"
+  },
+  "hours": {
+    "schedule": [
+      {
+        "days": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "from": "09:00",
+        "to": "19:00",
+        "label": "Montag bis Samstag"
+      },
+      {
+        "days": [
+          0
+        ],
+        "from": "11:00",
+        "to": "18:00",
+        "label": "Sonntag"
+      }
+    ]
+  },
+  "sizes": [
+    {
+      "id": "s",
+      "label": "Probierbox",
+      "slots": 6,
+      "cols": 3,
+      "grams": "250 g"
+    },
+    {
+      "id": "m",
+      "label": "Familienbox",
+      "slots": 12,
+      "cols": 4,
+      "grams": "500 g"
+    },
+    {
+      "id": "l",
+      "label": "Festbox",
+      "slots": 24,
+      "cols": 6,
+      "grams": "1 kg"
+    }
+  ],
+  "gift": {
+    "wrapPrice": 2.5
+  },
+  "varieties": [
+    {
+      "id": "pistazie",
+      "name": "Antep Fıstıklı Baklava",
+      "short": "Pistazien-Baklava",
+      "desc": "Der Klassiker: dünner Filo, viel gemahlene Pistazie, Sirup erst nach dem Backen.",
+      "price": 2.4,
+      "photo": "hero-baklava",
+      "alt": "Frisch gebackene Pistazien-Baklava auf einem Kupferblech",
+      "tag": "Pistazie, Sirup",
+      "unit": "pro Stück"
+    },
+    {
+      "id": "walnuss",
+      "name": "Cevizli Baklava",
+      "short": "Walnuss-Baklava",
+      "desc": "Mit Walnuss gefüllt, milder im Geschmack und mit knusprigem Rand.",
+      "price": 1.8,
+      "photo": "baklava-walnut",
+      "alt": "Ein Stück Walnuss-Baklava auf weißem Teller",
+      "tag": "Walnuss, knusprig",
+      "unit": "pro Stück"
+    },
+    {
+      "id": "sarma",
+      "name": "Sarma",
+      "short": "Sarma",
+      "desc": "Aufgerollter Filo mit Pistazie, an beiden Enden grün.",
+      "price": 2.6,
+      "photo": "sarma",
+      "alt": "Eine Reihe Sarma-Rollen mit grünen Pistazienenden",
+      "tag": "Gerollt, Pistazie",
+      "unit": "pro Stück"
+    },
+    {
+      "id": "kadayif",
+      "name": "Kadayıf",
+      "short": "Kadayıf",
+      "desc": "Fadenfeiner Teig, außen kross, innen Nuss. Kommt warm am besten.",
+      "price": 2.2,
+      "photo": "kadayif",
+      "alt": "Kadayıf-Nest aus feinen goldenen Teigfäden",
+      "tag": "Fadenteig, Nuss",
+      "unit": "pro Stück"
+    },
+    {
+      "id": "lokum",
+      "name": "Lokum",
+      "short": "Lokum",
+      "desc": "Türkisches Konfekt in Rose und Pistazie. Ein Platz in der Box sind zwei Würfel.",
+      "price": 1.6,
+      "photo": "lokum",
+      "alt": "Lokum-Würfel mit Puderzucker auf Messingteller",
+      "tag": "Rose und Pistazie",
+      "unit": "pro Platz, 2 Würfel"
+    },
+    {
+      "id": "halva",
+      "name": "Halva",
+      "short": "Halva",
+      "desc": "Sesam-Halva mit Pistazie. Bröselig, nicht zu süß, schmilzt auf der Zunge.",
+      "price": 1.5,
+      "photo": "halva",
+      "alt": "Scheibe Sesam-Halva mit Pistazienstückchen",
+      "tag": "Sesam, Pistazie",
+      "unit": "pro Scheibe"
+    }
+  ],
+  "presets": [
+    {
+      "id": "bayram",
+      "name": "Bayram-Box",
+      "occasion": "Für Zuckerfest und Opferfest",
+      "text": "Eine große Box zum Teilen, mit allem, was auf den Tisch gehört.",
+      "size": "l",
+      "mix": {
+        "pistazie": 8,
+        "walnuss": 6,
+        "sarma": 4,
+        "lokum": 4,
+        "halva": 2
+      }
+    },
+    {
+      "id": "dank",
+      "name": "Dankeschön-Box",
+      "occasion": "Für Team, Nachbarn und Gastgeber",
+      "text": "Zwölf Stücke, bunt gemischt und sofort zum Verschenken.",
+      "size": "m",
+      "mix": {
+        "pistazie": 4,
+        "walnuss": 3,
+        "sarma": 2,
+        "kadayif": 1,
+        "lokum": 2
+      }
+    },
+    {
+      "id": "probier",
+      "name": "Entdecker-Box",
+      "occasion": "Zum Kennenlernen",
+      "text": "Von jeder Sorte eins. So findest du heraus, was deine Lieblingssorte wird.",
+      "size": "s",
+      "mix": {
+        "pistazie": 1,
+        "walnuss": 1,
+        "sarma": 1,
+        "kadayif": 1,
+        "lokum": 1,
+        "halva": 1
+      }
+    }
+  ],
+  "b2b": {
+    "avgPrice": 2.1,
+    "trayPieces": 40,
+    "lead": "mindestens zwei Werktage"
+  },
+  "phoneLabel": "0511 0000000",
+  "_todo_phone": "TODO: echte Telefonnummer (phone im internationalen Format, phoneLabel zur Anzeige)",
+  "email": "bestellung@altin-tepsi.example",
+  "_todo_email": "TODO: echte E-Mail-Adresse des Kunden (hier eine reservierte Platzhalter-Domain)"
+}

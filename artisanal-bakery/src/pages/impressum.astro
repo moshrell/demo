@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/bakery.json';
+const base = import.meta.env.BASE_URL;
+const a = data.address;
+---
+<Base title={`Impressum | ${data.name}`}>
+  <main class="wrap" style="padding-block:150px 100px;max-width:820px">
+    <h1 style="font-size:clamp(48px,7vw,96px);margin-bottom:40px">Impressum</h1>
+    <p><b>Angaben gemäß § 5 DDG</b></p>
+    <p style="margin-top:14px">{data.legalName}<br />{a.street}<br />{a.zip} {a.city}</p>
+    <p style="margin-top:20px">Vertreten durch den Inhaber: {data.owner}</p>
+    <p style="margin-top:20px">E-Mail: <a class="link" href={`mailto:${data.email}`}>{data.email}</a></p>
+    <p style="margin-top:20px">Umsatzsteuer-Identifikationsnummer: {data.vat}</p>
+    <!-- TODO: Handelsregister (Amtsgericht, HRB-Nummer) und Telefon vom Kunden ergänzen -->
+    <p style="margin-top:40px"><a class="link" href={base}>Zurück zur Startseite</a></p>
+  </main>
+</Base>

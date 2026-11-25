@@ -1,0 +1,86 @@
+---
+import Face from './Face.astro';
+import site from '../data/site.json';
+import { lookItems, sumOf } from '../scripts/pricing';
+const services = Object.fromEntries(site.services.categories.flatMap((c) => c.items.map((it: any) => [it.name, it])));
+const priced = site.looks.map((l) => { const items = lookItems(services, l); return { ...sumOf(items), items }; });
+const g = site.gallery;
+const tilt = [-2.5, 1.8, -1.2, 2.6, -2, 1.4, -1.6];
+---
+<section class="section looks dots" id="looks">
+  <div class="wrap">
+    <header class="head">
+      <div>
+        <p class="eyebrow reveal">{g.eyebrow}</p>
+        <h2 class="h2" data-split>{g.title}</h2>
+      </div>
+      <p class="note reveal" style="--d:.2s">{g.note}</p>
+    </header>
+
+    <ul class="wall">
+      {site.looks.map((l, i) => (
+        <li class="reveal" style={`--d:${(i % 4) * 0.08}s; --r:${tilt[i % tilt.length]}deg`}>
+          <div class="card" style={`--bg:${l.bg}`} data-look={JSON.stringify({ hair: l.hair, color: l.color, beard: l.beard, bg: l.bg })} data-sel={JSON.stringify({ items: priced[i].items, total: priced[i].total, dur: priced[i].dur })}>
+            <button type="button" class="try" aria-label={`${l.name}: im Konstruktor ausprobieren`}>
+              <span class="pin" aria-hidden="true">✿</span>
+              <span class="pic"><Face hair={l.hair} color={l.color} beard={l.beard} skin={['#f0c8a8', '#e8bb98', '#c98f6b', '#f4d2b6'][i % 4]} shirt={['#1c2541', '#e8705a', '#1c2541', '#6a8be0'][i % 4]} /></span>
+              <span class="cap"><b>{l.name}</b><small>Ausprobieren →</small></span>
+            </button>
+            <div class="foot">
+              <span class="price">{priced[i].consult ? 'ab ' : ''}{priced[i].total} €</span>
+              <button type="button" class="book" aria-label={`${l.name} direkt buchen`}>Buchen →</button>
+            </div>
+          </div>
+        </li>
+      ))}
+      <li class="reveal outro" style="--d:.3s; --r:1.5deg">
+        <a href="#termin" class="card own"><span class="serif">Ihr eigener<br />Look?</span><small>Termin buchen →</small></a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .looks { background: var(--butter); overflow: clip; }
+  .head { display: flex; align-items: end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(36px, 6vh, 64px); }
+  .head .h2 { max-width: 14ch; }
+  .note { margin: 0; font-weight: 600; font-size: .9rem; }
+  .wall li, .wall .card { min-width: 0; }
+  .wall { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(16px, 2.4vw, 32px); }
+  .card { box-sizing: border-box; display: grid; grid-template-rows: 1fr auto; width: 100%; height: 100%; position: relative; background: var(--bg); border: 2px solid var(--ink); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; transition: transform .45s var(--pop), box-shadow .3s; }
+  .try { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-rows: 1fr auto; min-height: 0; position: relative; }
+  .try:focus-visible, .book:focus-visible { outline: 3px solid var(--coral); outline-offset: -3px; }
+  .foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px 8px 14px; background: var(--ink); color: var(--cream); }
+  .price { font-weight: 700; font-size: .92rem; white-space: nowrap; }
+  .book { border: 0; border-radius: 999px; padding: 7px 12px; min-height: 36px; background: var(--coral); color: var(--ink); font: inherit; font-size: .8rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: transform .25s var(--pop); }
+  .book:hover { transform: translateY(-2px) rotate(-2deg); }
+  .card:hover { transform: translateY(-8px) rotate(-1.5deg); box-shadow: 9px 12px 0 var(--ink); }
+  .pin { position: absolute; top: 10px; left: 50%; translate: -50% 0; font-size: 1.3rem; color: var(--ink); z-index: 2; }
+  .pic { padding: 26px 18px 0; display: block; }
+  .pic :global(.face) { transition: transform .5s var(--pop); transform-origin: 50% 80%; }
+  .card:hover .pic :global(.face) { transform: scale(1.06) rotate(2deg); }
+  .cap { display: grid; padding: 12px 16px 14px; background: var(--cream); border-top: 2px solid var(--ink); }
+  .cap b { font-family: var(--serif); font-size: 1.1rem; font-weight: 650; font-variation-settings: "SOFT" 100; }
+  .cap small { font-size: .78rem; font-weight: 650; color: var(--ink-soft); }
+  .own { cursor: pointer; place-content: center; justify-items: center; gap: 12px; background: var(--ink); color: var(--cream); text-align: center; text-decoration: none; padding: 24px; min-height: 100%; aspect-ratio: 4 / 5; grid-template-rows: auto auto; }
+  .own .serif { font-family: var(--serif); font-style: italic; font-size: clamp(1.8rem, 3vw, 2.6rem); line-height: 1; font-variation-settings: "SOFT" 100, "WONK" 1; }
+  .own small { color: var(--butter); font-weight: 700; }
+  @media (max-width: 1000px) { .wall { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 720px) { .wall { grid-template-columns: repeat(2, 1fr); gap: 14px; } .wall li { --r: 0deg !important; } }
+  @media (max-width: 420px) { .cap small { display: none; } .pic { padding: 24px 8px 0; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('#looks .card[data-look]').forEach((card) => {
+    const look = JSON.parse(card.dataset.look!), sel = JSON.parse(card.dataset.sel!);
+    // «Ausprobieren»: образ загружается в зеркало вверху страницы
+    card.querySelector('.try')!.addEventListener('click', () => window.dispatchEvent(new CustomEvent('nelke:look', { detail: look })));
+    // «Buchen»: образ и цена сразу уходят в форму записи, страница прокручивается к ней
+    card.querySelector('.book')!.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('nelke:look', { detail: { ...look, noScroll: true } }));
+      (window as any).__nelkeSelection = sel;
+      window.dispatchEvent(new CustomEvent('nelke:selection', { detail: sel }));
+      document.getElementById('termin')?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>

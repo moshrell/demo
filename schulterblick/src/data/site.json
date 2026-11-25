@@ -1,0 +1,114 @@
+{
+  "name": "Schulterblick Fahrschule",
+  "short": "Schulterblick",
+  "legalName": "Schulterblick Fahrschule Muster GmbH (fiktiv)",
+  "address": {
+    "street": "Musterweg 1",
+    "zip": "30989",
+    "city": "Gehrden"
+  },
+  "email": "info@schulterblick-fahrschule.example",
+  "phone": "05108 000 000",
+  "phoneHref": "+4951080000000",
+  "whatsapp": "",
+  "adacUrl": "https://www.adac.de/verkehr/rund-um-den-fuehrerschein/erwerb/fuehrerschein-kosten/",
+  "hours": {
+    "1": [
+      "15:00",
+      "19:00"
+    ],
+    "2": [
+      "15:00",
+      "19:00"
+    ],
+    "3": [
+      "10:00",
+      "13:00"
+    ],
+    "4": [
+      "15:00",
+      "19:00"
+    ]
+  },
+  "prices": {
+    "grundbetrag": 450,
+    "fahrstunde": 62,
+    "automatikAufpreis": 4,
+    "sonderfahrt": 75,
+    "sonderAnzahl": {
+      "ueberland": 5,
+      "autobahn": 4,
+      "nacht": 3
+    },
+    "lernpaket": 99,
+    "theorie": {
+      "schule": 90,
+      "pruefer": 25
+    },
+    "praxis": {
+      "schule": 220,
+      "pruefer": 130
+    },
+    "papiere": {
+      "sehtest": 7,
+      "erstehilfe": 60,
+      "foto": 12,
+      "antrag": 45
+    },
+    "auffrischung": 2
+  },
+  "fahrten": {
+    "min": 10,
+    "max": 40,
+    "default": 22,
+    "bandFrom": 15,
+    "bandTo": 25
+  },
+  "team": [
+    {
+      "id": "jana",
+      "name": "Jana Krüger",
+      "langs": [
+        "de",
+        "en"
+      ],
+      "img": "jana.webp",
+      "pos": 65
+    },
+    {
+      "id": "oleksandr",
+      "name": "Oleksandr Bondar",
+      "langs": [
+        "de",
+        "uk"
+      ],
+      "img": "oleksandr.webp",
+      "pos": 50
+    },
+    {
+      "id": "mehmet",
+      "name": "Mehmet Aydın",
+      "langs": [
+        "de",
+        "tr",
+        "en"
+      ],
+      "img": "mehmet.webp",
+      "pos": 45
+    }
+  ],
+  "cars": [
+    {
+      "id": "schalt",
+      "img": "auto-schaltung.webp"
+    },
+    {
+      "id": "auto",
+      "img": "auto-automatik.webp"
+    },
+    {
+      "id": "strom",
+      "img": "auto-elektro.webp"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+# Фото для «Backstube Morgenrot» (Gemini), версия 2: «Ecke» (угловая пекарня)
+
+Папка: **`src/photos/`**. Имена файлов точно как ниже, расширение любое. Нет файла: сайт показывает цвет света этого времени, ничего не ломается.
+Старые `s1…s6`, `d…` больше не нужны (положи их в `src/photos/_alt/`, сайт их не видит).
+
+## Идея
+Одна и та же уютная угловая пекарня в доме эпохи грюндерцайт (Hannover, Gründerzeit = дома конца XIX века) в 10 состояниях дня.
+Камера не двигается. Меняются свет, хлеб на полках, **люди** (видны только со спины или силуэтами) и жизнь за окном (велосипедисты, трамвай).
+Пекарь виден в окне-раздаче (pass-through = проём в пекарню) с самой ночи. Лица не нужны, поэтому нет «ИИ-лиц».
+
+## Порядок (важно)
+1. Сначала сделай **мастер-кадр `f04-0800`** (самый полный: всё помещение + люди). Крути, пока не понравится.
+2. Остальные 9 + пакет делай **в том же чате**, прикрепив мастер-кадр: `Use the attached image as the exact reference for room, camera and materials. Change only: …`
+3. Если комната «уплыла», не правь, а перегенерируй кадр.
+
+## Блок STYLE (вставляется в каждый запрос)
+```
+Photorealistic editorial interior photograph, 24mm lens, locked-off camera at eye height standing just inside the entrance, soft natural film grain, 16:9. A warm modern neighbourhood bakery in a Gründerzeit corner building in Hannover, Germany. Fixed elements that never change: left third, a light ash-wood counter with a pale grey stone top and a glass display case with a slim black steel frame, behind it an open pass-through window into the baking room with a stainless steel table, wooden racks and a stone oven door; centre, two tall arched windows with slim black steel frames meeting at the corner of the building, looking onto a street with Gründerzeit facades, linden trees, a bike lane and a tram stop pole without any text; right third, two small round oak tables with wooden chairs and a bench with a sage-green cushion, a potted olive tree by the window. Off-white lime-plaster walls, light oak herringbone floor, three opal-glass globe pendant lamps above the counter, sage-green ceramic cups, linen aprons. Absolutely no tile walls, no brass, no old-fashioned scales, no dark brown panelling, no menu boards, no text, no logos, no visible faces (people only from behind or as silhouettes).
+```
+
+## 10 кадров сцены (16:9)
+| Файл | Время | Что изменить (после STYLE) |
+|---|---|---|
+| `f01-0430` | 04:30 | `Time: 4:30 night. The shop is dark, the display case empty, deep blue night outside with warm street lamps and wet asphalt, one cyclist far away. Only the baking room is lit, warm and golden: a baker in a white linen shirt, seen from behind, shapes dough on the steel table; the oven door glows orange.` |
+| `f02-0530` | 05:30 | `Time: 5:30. Still dark blue outside. The baker pulls a tray of loaves from the oven, steam rises, racks behind him are filling. In the shop one low pendant lamp is on, the first loaves sit in the display case.` |
+| `f03-0630` | 06:30 | `Time: 6:30 dawn, cold blue-pink sky. All pendant lamps on, counter set up, a young employee in a linen apron, seen from behind, arranges rolls in the display. One person waits outside the door as a silhouette, a cyclist passes.` |
+| `f04-0800` | 08:00 | MASTER: `Time: 8:00 morning, low golden sun through the corner windows with long light stripes on the floor. Lively: three customers seen from behind at the counter, two people at a round table with coffee, display case full, a tram passes outside slightly blurred, two cyclists on the bike lane.` |
+| `f05-0930` | 09:30 | `Time: 9:30 bright clear light. Calmer: one person reading at the window table with a coffee, one customer at the counter, a woman with a pram outside, baskets of bread on the counter.` |
+| `f06-1100` | 11:00 | `Time: 11:00 high neutral daylight. Display now shows sandwiches and savoury pastries, two people at the counter, a couple sharing a table with soup, a delivery bike with a cargo box parked outside.` |
+| `f07-1300` | 13:00 | `Time: 13:00 bright noon, short shadows, sunlit street. A short queue of three people seen from behind, a child standing on tiptoe at the display case (from behind), shelves 70 percent full.` |
+| `f08-1500` | 15:00 | `Time: 15:00 warm golden light from the right. Cakes and tarts on stands in the display, two friends at a round table with cake and coffee seen from behind, a dog waiting by the door, soft long shadows.` |
+| `f09-1700` | 17:00 | `Time: 17:00 late afternoon, pink-orange sky, street lamps just switched on. After-work rush: four people seen from behind buying the last loaves, bikes with lights outside, a tram passing with lit windows. Shelves almost empty.` |
+| `f10-1830` | 18:30 | `Time: 18:30 blue hour after closing. Shop glows warm from the pendant lamps, display nearly empty, an employee wipes the counter seen from behind, chairs set on the table, street lamps lit, deep blue sky, wet asphalt reflecting light. The baker in the baking room is already preparing tomorrow's dough.` |
+
+## Пакет (4:5 или 16:9, одна картинка)
+| Файл | Запрос |
+|---|---|
+| `bag` | `Use the attached reference for the room. Close shot of the ash-wood counter with the grey stone top: a plain kraft paper bag tied with natural twine, a baguette, rolls and a pretzel peeking out, soft morning light from the corner windows, blurred bakery behind. Completely blank bag, no print.` |
+
+Итого 11 файлов. На сайте указано «Bilder sind KI-generiert».

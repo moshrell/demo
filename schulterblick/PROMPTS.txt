@@ -1,0 +1,27 @@
+Schulterblick Fahrschule: 8 Bilder für Gemini. Jeden Prompt komplett kopieren, nacheinander im selben Gemini-Chat.
+Fertige Dateien in D:\Webdesign\schulterblick\public\img\ ablegen, genau mit diesen Namen (jpg).
+(Ordner public\img noch nicht da? Einfach anlegen.)
+
+=== 1. jana.jpg (Format 4:5, hochkant) ===
+Photorealistic editorial portrait photograph, aspect ratio 4:5, portrait orientation. A friendly woman around 38, a driving instructor, shoulder-length chestnut hair, wearing a plain navy zip fleece jacket, standing next to a compact unbranded silver hatchback parked on a quiet residential street in a small town in Lower Saxony, Germany, one hand resting on the car roof, relaxed confident smile looking at the camera. Soft overcast daylight, muted natural colour grading with small accents of road-sign blue and signal yellow, shallow depth of field, brick houses softly out of focus behind her, natural film grain. No text, no logos, no brand badges, no readable license plates.
+
+=== 2. oleksandr.jpg (Format 4:5, hochkant) ===
+Photorealistic editorial portrait photograph, aspect ratio 4:5, portrait orientation. A calm man around 45 with short dark hair and a light stubble beard, a driving theory teacher, wearing a grey knit sweater over a collared shirt, standing in a bright small classroom with wooden desks, a projector screen showing an abstract blank road intersection diagram without any text behind him, friendly attentive expression looking at the camera. Soft window daylight, muted natural colour grading with small accents of road-sign blue and signal yellow, shallow depth of field, natural film grain. No text, no logos, no readable writing anywhere.
+
+=== 3. mehmet.jpg (Format 4:5, hochkant) ===
+Photorealistic editorial portrait photograph, aspect ratio 4:5, portrait orientation. A warm man around 52 with short grey-black hair and a trimmed moustache, a driving instructor, wearing a dark green quarter-zip sweater, sitting in the driver's seat of a compact unbranded car with the door open, one arm on the steering wheel, looking at the camera with a relaxed half smile. Soft overcast daylight, muted natural colour grading with small accents of road-sign blue and signal yellow, shallow depth of field, tree-lined street softly out of focus, natural film grain. No text, no logos, no brand badges, no readable license plates.
+
+=== 4. auto-schaltung.jpg (Format 3:2, quer) ===
+Photorealistic editorial photograph, aspect ratio 3:2, landscape. A compact unbranded silver hatchback driving-school car with a plain white blank rooftop sign (no lettering), parked at the kerb of a quiet German residential street, low front three-quarter angle, brick apartment buildings and bare autumn trees softly out of focus in the background. Soft overcast daylight, muted natural colour grading with small accents of road-sign blue and signal yellow, natural film grain, shallow depth of field. No people, no text, no logos, no brand badges, no readable license plates.
+
+=== 5. auto-automatik.jpg (Format 3:2, quer) ===
+Photorealistic editorial photograph, aspect ratio 3:2, landscape. Interior view from the rear seat of a compact unbranded driving-school car with automatic gearbox: a simple gear selector lever in the centre console, a steering wheel, an extra passenger-side mirror for the instructor, a quiet German street visible through the windscreen, softly out of focus. Soft overcast daylight, muted natural colour grading with small accents of road-sign blue and signal yellow, natural film grain, shallow depth of field. No people, no text, no logos, no brand badges, no readable writing on the dashboard.
+
+=== 6. auto-elektro.jpg (Format 3:2, quer) ===
+Photorealistic editorial photograph, aspect ratio 3:2, landscape. A small unbranded electric city car in light blue-grey with a plain white blank rooftop sign (no lettering), plugged into a simple wall-mounted charging box beside a brick garage wall in a small German town, low side angle, charging cable looping to the ground. Soft overcast daylight, muted natural colour grading with small accents of road-sign blue and signal yellow, natural film grain, shallow depth of field. No people, no text, no logos, no brand badges, no readable license plates.
+
+=== 7. haus.jpg (Format 3:2, quer) ===
+Photorealistic editorial photograph, aspect ratio 3:2, landscape. The ground-floor entrance of a small driving school in a 1960s brick apartment building in a small town in Lower Saxony, Germany: a large shop window with plain frosted glass and no lettering, a blue entrance door, a bicycle rack at the kerb, one unbranded compact car parked in front, bare autumn trees. Soft overcast daylight, muted natural colour grading with small accents of road-sign blue and signal yellow, natural film grain, shallow depth of field. No people, no text, no signs with writing, no logos, no readable license plates.
+
+=== 8. theorieraum.jpg (Format 3:2, quer) ===
+Photorealistic editorial photograph, aspect ratio 3:2, landscape. A tidy small classroom for driving theory lessons: eight light wooden desks with chairs in two rows, a ceiling projector, a pull-down projector screen showing an abstract blank road intersection diagram with no text or numbers, large window on the left letting in soft daylight, a small plant on the windowsill. Muted natural colour grading with small accents of road-sign blue and signal yellow, natural film grain, shallow depth of field. No people, no text, no logos, no readable writing anywhere.

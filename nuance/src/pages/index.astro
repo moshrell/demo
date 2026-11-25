@@ -1,0 +1,609 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import salon from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+
+// Fotos liegen in src/assets/img/<name>.jpg|png|webp (Namen: GEMINI-PROMPTS.txt). Fehlt eine Datei,
+// zeigt die Seite eine Farbkarte statt des Fotos; sobald die Datei da ist, erscheint sie von selbst.
+const files = import.meta.glob('../assets/img/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' }) as Record<string, any>;
+const img = (name: string) => Object.entries(files).find(([k]) => k.split('/').pop()!.replace(/\.\w+$/, '') === name)?.[1];
+const priceOf = (n: string) => Number(salon.services.find((s) => s.name === n)?.price.match(/\d+/)?.[0] ?? 0);
+const looks = salon.looks.map((l) => ({ ...l, preis: 'ab ' + l.services.reduce((a, n) => a + priceOf(n), 0) + ' €' }));
+---
+<Base>
+  <div class="bg" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="metadata" poster={`${base}paint-poster.webp`}>
+      <source src={`${base}paint.webm`} type="video/webm" />
+    </video>
+  </div>
+
+  <header class="nav glass">
+    <a class="brand" href="#top">{salon.name}</a>
+    <nav>
+      <a href="#looks">Looks</a>
+      <a href="#leistungen">Leistungen</a>
+      <a href="#team">Team</a>
+      <a href="#termin" class="pill">Termin anfragen</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap">
+      <div class="hero-text glass">
+        <p class="eyebrow">{salon.tagline} · {salon.city}</p>
+        <h1>Farbe, die <em>zu dir</em> gehört.</h1>
+        <p class="lead">Balayage, Blond und Glanz – individuell gemischt und schonend aufgetragen.</p>
+        <div class="cta">
+          <a href="#termin" class="btn">Termin anfragen</a>
+          <a href="#looks" class="link">Looks ansehen →</a>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="looks" class="block wrap">
+      <div class="head reveal">
+        <h2>Sechs Töne, sechs Formeln</h2>
+        <p class="lead">Tipp auf eine Farbe. Wir zeigen den Look und die Rezeptur dahinter.</p>
+      </div>
+      <div class="looks" data-looks>
+        <div class="tones" role="tablist" aria-label="Farbton wählen">
+          {looks.map((l, i) => (
+            <button type="button" class="tone" role="tab" id={`tab-${l.id}`} aria-controls={`panel-${l.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} style={`--c:${l.swatch}`}>
+              <span class="tone__ball" aria-hidden="true"></span>
+              <span class="tone__name">{l.name}</span>
+            </button>
+          ))}
+        </div>
+        {looks.map((l, i) => {
+          const im = img(`look-${l.id}`);
+          return (
+            <div class="look" role="tabpanel" id={`panel-${l.id}`} aria-labelledby={`tab-${l.id}`} hidden={false} data-i={i} style={`--c:${l.swatch}`}>
+              <figure class="arch">
+                {im ? <Image src={im} alt={l.alt} widths={[360, 560, 760]} sizes="(min-width: 900px) 420px, 80vw" quality={74} format="webp" loading="lazy" /> : <div class="ph" role="img" aria-label={`Foto folgt: ${l.alt}`}><span class="ph__ball"></span><small>Foto folgt</small></div>}
+              </figure>
+              <div class="recipe glass">
+                <h3>{l.name}</h3>
+                <p class="recipe__kurz">{l.kurz}</p>
+                <dl class="recipe__rows">
+                  <div><dt>Technik</dt><dd>{l.technik}</dd></div>
+                  <div><dt>Ausgangsbasis</dt><dd>{l.basis}</dd></div>
+                  <div><dt>Dauer</dt><dd>{l.dauer}</dd></div>
+                  <div><dt>Haltbarkeit</dt><dd>{l.halt}</dd></div>
+                  <div><dt>Passt zu</dt><dd>{l.passt}</dd></div>
+                  <div><dt>Pflege</dt><dd>{l.pflege}</dd></div>
+                </dl>
+                <div class="recipe__foot">
+                  <p class="recipe__price"><span>Preis</span><strong>{l.preis}</strong></p>
+                  <button type="button" class="btn" data-take={l.services.join('|')}>Diesen Look anfragen</button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+
+    <section id="vorher-nachher" class="block wrap">
+      <div class="head reveal">
+        <h2>Vorher, <em>nachher</em></h2>
+        <p class="lead">Schieb den Regler und sieh, was in einer Sitzung passiert.</p>
+      </div>
+      <div class="bas">
+        {salon.ba.map((b) => {
+          const v = img(`${b.id}-vorher`), n = img(`${b.id}-nachher`);
+          return (
+            <figure class="ba reveal" data-ba>
+              <div class="ba__stage" style="--p:50%">
+                <div class="ba__img ba__img--before">
+                  {v ? <Image src={v} alt={`${b.alt}: vorher`} widths={[360, 560, 760]} sizes="(min-width: 900px) 440px, 90vw" quality={74} format="webp" loading="lazy" /> : <div class="ph ph--flat" aria-hidden="true"></div>}
+                </div>
+                <div class="ba__img ba__img--after">
+                  {n ? <Image src={n} alt={`${b.alt}: nachher`} widths={[360, 560, 760]} sizes="(min-width: 900px) 440px, 90vw" quality={74} format="webp" loading="lazy" /> : <div class="ph ph--after" aria-hidden="true"><small>Foto folgt</small></div>}
+                </div>
+                <span class="ba__tag ba__tag--l glass">Vorher</span>
+                <span class="ba__tag ba__tag--r glass">Nachher</span>
+                <span class="ba__line" aria-hidden="true"><span class="ba__knob"></span></span>
+                <input class="ba__range" type="range" min="0" max="100" value="50" aria-label={`Vorher-Nachher-Regler: ${b.titel}`} />
+              </div>
+              <figcaption><strong>{b.titel}</strong><span>{b.meta}</span></figcaption>
+            </figure>
+          );
+        })}
+      </div>
+    </section>
+
+    <section id="leistungen" class="block wrap">
+      <div class="head reveal">
+        <h2>Alles rund um Haarfarbe</h2>
+      </div>
+      <ul class="services glass">
+        {salon.services.map((s) => (
+          <li class="reveal">
+            <span class="dot" style={`--c:${s.swatch}`}></span>
+            <div>
+              <h3>{s.name}</h3>
+              <p>{s.note}</p>
+            </div>
+            <span class="price">{s.price}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="fine reveal">Endpreis nach Haarlänge und -dichte, wir nennen ihn dir vor dem Start.</p>
+    </section>
+
+    <section id="ablauf" class="block soft">
+      <div class="wrap">
+        <div class="head reveal">
+          <h2>Drei Schritte zu deinem Ton</h2>
+        </div>
+        <ol class="steps">
+          {salon.steps.map((s, i) => (
+            <li class="reveal glass">
+              <span class="num">0{i + 1}</span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+
+    <section id="team" class="block wrap">
+      <div class="head reveal">
+        <h2>Wer deine Farbe mischt</h2>
+        <p class="lead">Drei Coloristinnen, ein Atelier. Jede Formel entsteht von Hand.</p>
+      </div>
+      {img('atelier') ? (
+        <figure class="atelier reveal"><Image src={img('atelier')} alt="Das Atelier in Hannover: heller Raum mit Farbstation und Waschplätzen" widths={[640, 960, 1280]} sizes="(min-width: 1320px) 1176px, 90vw" quality={72} format="webp" loading="lazy" /></figure>
+      ) : (
+        <div class="atelier atelier--ph reveal" role="img" aria-label="Foto folgt: das Atelier"><span class="ph__ball"></span><small>Foto folgt</small></div>
+      )}
+      <ul class="team">
+        {salon.team.map((m) => {
+          const im = img(`team-${m.id}`);
+          return (
+            <li class="member glass reveal">
+              <div class="member__pic">
+                {im ? <Image src={im} alt={`${m.name}, ${m.rolle}`} widths={[240, 400, 560]} sizes="(min-width: 900px) 240px, 60vw" quality={74} format="webp" loading="lazy" /> : <div class="ph ph--blob" role="img" aria-label={`Foto folgt: ${m.name}`}><small>Foto folgt</small></div>}
+              </div>
+              <h3>{m.name}</h3>
+              <p class="member__role">{m.rolle} · {m.spez}</p>
+              <p>{m.text}</p>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+
+    <section id="stimmen" class="block wrap">
+      <div class="head reveal"><h2>Was Kundinnen sagen</h2></div>
+      <ul class="quotes">
+        {salon.reviews.map((r) => (
+          <li class="glass reveal">
+            <blockquote>„{r.text}“</blockquote>
+            <p class="quotes__who"><strong>{r.wer}</strong> · {r.was}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="fine reveal">Beispieltexte für diese Demo.</p>
+    </section>
+
+    <section id="faq" class="block wrap">
+      <div class="head reveal"><h2>Gut zu wissen</h2></div>
+      <div class="faq">
+        {salon.faq.map((f) => (
+          <details class="glass reveal">
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section id="termin" class="block wrap booking">
+      <div class="head reveal glass hours-card">
+        <p class="eyebrow">Termin</p>
+        <h2>Wann dürfen wir <em>loslegen</em>?</h2>
+        <p class="lead">Schreib uns kurz, wir melden uns innerhalb eines Werktags.</p>
+        <dl class="hours">
+          {salon.hours.map((h) => (<div><dt>{h.days}</dt><dd>{h.time}</dd></div>))}
+        </dl>
+      </div>
+      <div class="bookwrap reveal">
+      <form id="booking" class="glass" novalidate>
+        <label class="field" for="f-name">Name
+          <input id="f-name" name="name" type="text" required autocomplete="name" placeholder="Vor- und Nachname" aria-describedby="e-name" />
+          <span class="err" id="e-name" data-err hidden>Bitte geben Sie Ihren Namen an.</span>
+        </label>
+        <div class="two">
+          <label class="field" for="f-tel">Telefon
+            <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 0511 1234567" aria-describedby="e-contact" />
+          </label>
+          <label class="field" for="f-mail">E-Mail
+            <input id="f-mail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@beispiel.de" aria-describedby="e-contact" />
+          </label>
+        </div>
+        <p class="err" id="e-contact" data-err hidden>Bitte geben Sie eine Telefonnummer oder eine gültige E-Mail-Adresse an, damit wir uns melden können.</p>
+
+        <fieldset class="svc" aria-describedby="svc-hint">
+          <legend>Leistung (Mehrfachauswahl möglich)</legend>
+          <ul class="svc__list">
+            {salon.services.map((s, i) => (
+              <li>
+                <label class="opt" for={`f-svc-${i}`}>
+                  <input id={`f-svc-${i}`} type="checkbox" name="service" value={s.name} data-amount={s.price.match(/\d+/)?.[0] ?? ''} data-price={s.price} />
+                  <span class="dot" style={`--c:${s.swatch}`}></span>
+                  <span class="opt__name">{s.name}</span>
+                  <span class="opt__price">{s.price}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+          <p class="fine" id="svc-hint">Endpreis nach Haarlänge und -dichte, wir nennen ihn dir vor dem Start.</p>
+        </fieldset>
+
+        <label class="field" for="f-when">Wunschtermin
+          <input id="f-when" name="when" type="text" autocomplete="off" placeholder="z. B. Samstag Vormittag" />
+        </label>
+
+        <div class="consent">
+          <label class="check" for="f-consent">
+            <input id="f-consent" name="consent" type="checkbox" required aria-describedby="e-consent" />
+            <span>Ich bin einverstanden, dass {salon.name} meinen Namen und meine Kontaktdaten zur Bearbeitung meiner Terminanfrage verwendet. <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Hinweise zum Datenschutz</a></span>
+          </label>
+          <p class="err" id="e-consent" data-err hidden>Bitte stimmen Sie zu, sonst können wir Ihre Anfrage nicht bearbeiten.</p>
+        </div>
+
+        <div class="bar glass">
+          <p class="sum" aria-live="polite"><span class="sum__label">Summe</span> <strong data-total>–</strong><span class="sum__note" data-note>Noch keine Leistung gewählt</span></p>
+          <button class="btn" type="submit">Anfrage senden</button>
+        </div>
+        <p class="fine">Demo: Die Anfrage wird nicht verschickt. Mehr unter <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutz</a>.</p>
+      </form>
+
+      <div class="done glass" id="booking-done" tabindex="-1" hidden>
+        <h3>Danke, <span data-d-name></span>.</h3>
+        <p>Das ist eine Demo, es wurde nichts verschickt. So würde Ihre Anfrage bei uns ankommen:</p>
+        <dl class="recap">
+          <div><dt>Leistung</dt><dd data-d-svc></dd></div>
+          <div><dt>Wunschtermin</dt><dd data-d-when></dd></div>
+          <div><dt>Kontakt</dt><dd data-d-contact></dd></div>
+          <div class="recap__sum"><dt>Summe</dt><dd><strong data-d-total></strong> <span data-d-note></span></dd></div>
+        </dl>
+        <button class="btn" type="button" data-reset>Neue Anfrage</button>
+      </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot glass">
+    <span>{salon.name} · {salon.address}</span>
+    <span><a href={`tel:${salon.phone.replace(/\s/g, '')}`}>{salon.phone}</a> · <a href={`${base}impressum/`} target="_blank" rel="noopener">Impressum</a> · <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutz</a></span>
+  </footer>
+
+  <script is:inline>
+    // Reveal on scroll
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold: 0.15});
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+    // Soft pointer parallax on the paint video
+    const vis = document.querySelector('.bg');
+    if (vis && !matchMedia('(prefers-reduced-motion: reduce)').matches && matchMedia('(pointer: fine)').matches) {
+      addEventListener('pointermove', (e) => {
+        const x = (e.clientX / innerWidth - 0.5) * -26;
+        const y = (e.clientY / innerHeight - 0.5) * -18;
+        vis.style.transform = `translate(${x}px, ${y}px)`;
+      });
+    }
+
+
+    // Looks: Tabs mit Kugeln; „Diesen Look anfragen“ füllt das Formular vor
+    (() => {
+      const root = document.querySelector('[data-looks]');
+      if (!root) return;
+      document.documentElement.classList.add('js');
+      const tabs = [...root.querySelectorAll('[role="tab"]')];
+      const panels = [...root.querySelectorAll('[role="tabpanel"]')];
+      const show = (i, focus) => {
+        tabs.forEach((t, k) => { t.setAttribute('aria-selected', k === i ? 'true' : 'false'); t.tabIndex = k === i ? 0 : -1; });
+        panels.forEach((p, k) => { p.hidden = k !== i; });
+        if (focus) tabs[i].focus();
+      };
+      show(0);
+      tabs.forEach((t, i) => {
+        t.addEventListener('click', () => show(i));
+        t.addEventListener('keydown', (e) => {
+          const k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+          if (k) { e.preventDefault(); show((i + k + tabs.length) % tabs.length, true); }
+          else if (e.key === 'Home') { e.preventDefault(); show(0, true); }
+          else if (e.key === 'End') { e.preventDefault(); show(tabs.length - 1, true); }
+        });
+      });
+      root.querySelectorAll('[data-take]').forEach((b) => b.addEventListener('click', () => {
+        const want = b.dataset.take.split('|');
+        const form = document.getElementById('booking');
+        const done = document.getElementById('booking-done');
+        if (done && !done.hidden) done.querySelector('[data-reset]')?.click();
+        form.querySelectorAll('input[name="service"]').forEach((c) => { c.checked = want.includes(c.value); });
+        form.dispatchEvent(new Event('change', { bubbles: true }));
+        document.getElementById('termin').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      }));
+    })();
+
+    // Vorher/Nachher-Regler
+    document.querySelectorAll('[data-ba]').forEach((el) => {
+      const stage = el.querySelector('.ba__stage'), r = el.querySelector('.ba__range');
+      const set = () => stage.style.setProperty('--p', r.value + '%');
+      r.addEventListener('input', set); set();
+    });
+
+    // Booking form: demo only, nothing is sent
+    (() => {
+      const form = document.getElementById('booking');
+      const done = document.getElementById('booking-done');
+      const $ = (sel, r = form) => r.querySelector(sel);
+      const fmt = (n) => n.toLocaleString('de-DE') + ' €';
+      const checks = () => [...form.querySelectorAll('input[name="service"]')];
+      const calc = () => {
+        const on = checks().filter((c) => c.checked);
+        const fixed = on.filter((c) => c.dataset.amount);
+        const open = on.filter((c) => !c.dataset.amount);
+        const sum = fixed.reduce((a, c) => a + Number(c.dataset.amount), 0);
+        let total = '–', note = 'Noch keine Leistung gewählt';
+        if (on.length) {
+          total = fixed.length ? 'ab ' + fmt(sum) : 'auf Anfrage';
+          note = open.length && fixed.length ? '+ ' + open.map((c) => c.value).join(', ') + ' auf Anfrage' : 'Endpreis nach Beratung';
+        }
+        return { on, total, note };
+      };
+      const showTotal = () => { const r = calc(); $('[data-total]').textContent = r.total; $('[data-note]').textContent = r.note; };
+      const setErr = (id, bad, input) => {
+        const e = document.getElementById(id); e.hidden = !bad;
+        (Array.isArray(input) ? input : [input]).forEach((i) => i.setAttribute('aria-invalid', bad ? 'true' : 'false'));
+      };
+      const validate = () => {
+        const name = $('#f-name'), tel = $('#f-tel'), mail = $('#f-mail'), cons = $('#f-consent');
+        const mailOk = mail.value.trim() !== '' && mail.checkValidity();
+        const telOk = tel.value.replace(/\D/g, '').length >= 5;
+        const bad = [];
+        const n = name.value.trim() === ''; setErr('e-name', n, name); if (n) bad.push(name);
+        const c = !(mailOk || telOk) || (mail.value.trim() !== '' && !mailOk); setErr('e-contact', c, [tel, mail]); if (c) bad.push(tel);
+        const k = !cons.checked; setErr('e-consent', k, cons); if (k) bad.push(cons);
+        return bad;
+      };
+      // Eingaben im Tab zwischenspeichern (sessionStorage), Einwilligung bewusst nicht
+      const KEY = 'nuance-form:' + location.pathname;
+      const save = () => { try { sessionStorage.setItem(KEY, JSON.stringify({ name: $('#f-name').value, tel: $('#f-tel').value, email: $('#f-mail').value, when: $('#f-when').value, svc: checks().filter((c) => c.checked).map((c) => c.value) })); } catch (e) {} };
+      const clearSaved = () => { try { sessionStorage.removeItem(KEY); } catch (e) {} };
+      const restore = () => {
+        try {
+          const d = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+          if (!d) return;
+          $('#f-name').value = d.name || ''; $('#f-tel').value = d.tel || ''; $('#f-mail').value = d.email || ''; $('#f-when').value = d.when || '';
+          checks().forEach((c) => { c.checked = (d.svc || []).includes(c.value); });
+        } catch (e) {}
+      };
+      restore();
+      $('#f-consent').checked = false;
+      addEventListener('pageshow', () => { $('#f-consent').checked = false; });
+      form.addEventListener('input', save);
+      form.addEventListener('change', () => { showTotal(); save(); });
+      showTotal();
+      form.addEventListener('input', (ev) => { if (ev.target.getAttribute('aria-invalid') === 'true') validate(); });
+      form.addEventListener('submit', (ev) => {
+        ev.preventDefault();
+        const bad = validate();
+        if (bad.length) { bad[0].focus(); return; }
+        const r = calc();
+        const contact = [$('#f-tel').value.trim(), $('#f-mail').value.trim()].filter(Boolean).join(' · ');
+        done.querySelector('[data-d-name]').textContent = $('#f-name').value.trim();
+        done.querySelector('[data-d-svc]').textContent = r.on.length ? r.on.map((c) => c.value + ' (' + c.dataset.price + ')').join(', ') : 'noch offen, wir beraten Sie';
+        done.querySelector('[data-d-when]').textContent = $('#f-when').value.trim() || 'nach Absprache';
+        done.querySelector('[data-d-contact]').textContent = contact;
+        done.querySelector('[data-d-total]').textContent = r.total === '–' ? 'wird nach Beratung genannt' : r.total;
+        done.querySelector('[data-d-note]').textContent = r.on.length ? r.note : '';
+        clearSaved();
+        form.hidden = true; done.hidden = false; done.focus();
+      });
+      done.querySelector('[data-reset]').addEventListener('click', () => {
+        clearSaved();
+        form.reset(); form.querySelectorAll('[data-err]').forEach((e) => (e.hidden = true));
+        form.querySelectorAll('[aria-invalid]').forEach((i) => i.removeAttribute('aria-invalid'));
+        showTotal(); done.hidden = true; form.hidden = false; $('#f-name').focus();
+      });
+    })();
+  </script>
+</Base>
+
+<style>
+  .nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px 10px 28px; border-radius: 999px; position: sticky; top: 14px; z-index: 5; width: min(1320px, calc(100% - 2 * var(--gutter))); margin: 18px auto 0; }
+  .brand { white-space: nowrap; font-family: var(--serif); font-size: 28px; text-decoration: none; letter-spacing: 0.02em; }
+  .nav nav { display: flex; gap: 28px; align-items: center; font-size: 14px; }
+  .nav nav a { text-decoration: none; color: var(--ink-soft); }
+  .nav nav a:hover { color: var(--ink); }
+  .pill { white-space: nowrap; background: var(--ink); color: var(--bg) !important; padding: 9px 20px; border-radius: 999px; }
+
+  .hero { display: flex; align-items: center; min-height: min(78vh, 760px); position: relative; padding-block: 40px 64px; }
+  .hero-text { position: relative; z-index: 2; padding: clamp(28px, 4vw, 56px); max-width: 680px; border-radius: 40px; }
+  h1 { font-size: clamp(48px, 7vw, 104px); margin: 22px 0 24px; letter-spacing: -0.01em; }
+  h1 em, h2 em { font-style: italic; color: var(--rose-ink); white-space: nowrap; }
+  .lead { font-size: 18px; color: var(--ink-soft); max-width: 30em; margin: 0; }
+  .cta { display: flex; gap: 28px; align-items: center; margin-top: 36px; flex-wrap: wrap; }
+  .btn { display: inline-block; background: var(--ink); color: var(--bg); padding: 15px 30px; border-radius: 999px; text-decoration: none; border: 0; font: inherit; font-size: 15px; cursor: pointer; transition: transform .3s, background-color .3s; white-space: nowrap; }
+  .btn:hover { background: var(--ink-hover); }
+  @media (prefers-reduced-motion: no-preference) { .btn:hover { transform: translateY(-2px); } }
+  .link { white-space: nowrap; text-decoration: none; font-size: 15px; color: var(--ink-soft); }
+  .link:hover { color: var(--ink); }
+
+  .bg { position: fixed; inset: -3%; z-index: -1; pointer-events: none; transition: transform .8s cubic-bezier(.2,.7,.2,1); will-change: transform; }
+  .bg video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  main, header, footer { position: relative; z-index: 1; }
+
+  .block { padding-block: clamp(72px, 11vw, 150px); }
+  .soft { background: none; }
+  .head { margin-bottom: clamp(36px, 6vw, 72px); }
+  h2 { font-size: clamp(36px, 4.6vw, 64px); margin-top: 14px; }
+
+  .services { list-style: none; margin: 0; padding: 8px clamp(20px, 4vw, 48px); }
+  .services li { display: grid; grid-template-columns: 28px 1fr auto; gap: 24px; align-items: center; padding: 24px 0; border-bottom: 1px solid var(--line-soft); }
+  .services li:last-child { border-bottom: 0; }
+  .services h3 { font-size: clamp(26px, 3vw, 36px); }
+  .services p { margin: 4px 0 0; color: var(--ink-soft); font-size: 15px; }
+  .dot { width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 32% 28%, var(--gloss), transparent 45%), var(--c); box-shadow: 0 6px 14px -6px var(--c); }
+  .price { font-family: var(--serif); font-size: 24px; white-space: nowrap; font-variant-numeric: lining-nums tabular-nums; font-feature-settings: 'lnum' 1, 'tnum' 1; }
+  .fine { font-size: 13px; color: var(--ink-soft); margin-top: 22px; }
+
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2.5vw, 32px); }
+  .steps li { padding: clamp(24px, 3vw, 40px); }
+  .num { font-family: var(--serif); font-size: 18px; color: var(--rose-ink); font-variant-numeric: lining-nums tabular-nums; }
+  .steps h3 { font-size: 34px; margin: 10px 0 12px; }
+  .steps p { color: var(--ink-soft); margin: 0; }
+
+  .booking { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .hours-card { padding: clamp(24px, 3.5vw, 44px); margin-bottom: 0 !important; }
+  .hours { margin: 36px 0 0; display: grid; gap: 6px; font-size: 15px; max-width: 320px; }
+  .hours div { display: flex; justify-content: space-between; border-bottom: 1px solid var(--line-soft); padding-bottom: 6px; }
+  .hours dt, .hours dd { margin: 0; }
+  .hours dd { font-variant-numeric: tabular-nums; }
+  form { display: grid; gap: 18px; padding: clamp(24px, 3.5vw, 44px); }
+  .field { display: grid; gap: 6px; font-size: 13px; color: var(--ink); }
+  input[type="text"], input[type="tel"], input[type="email"] { font: inherit; font-size: 16px; color: var(--ink); background: var(--glass-field); border: 1px solid var(--glass-edge); padding: 12px 14px; border-radius: 14px; min-width: 0; width: 100%; }
+  input::placeholder { color: var(--ink-soft); opacity: .7; }
+  input[aria-invalid="true"] { border-color: var(--rose-ink); box-shadow: 0 0 0 1px var(--rose-ink); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .err { margin: 0; font-size: 13px; color: var(--rose-ink); font-weight: 500; }
+  .err[hidden] { display: none; }
+  .svc { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .svc legend { font-size: 13px; padding: 0; margin-bottom: 8px; }
+  .svc__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .opt { display: grid; grid-template-columns: auto 22px 1fr auto; gap: 12px; align-items: center; padding: 10px 14px; min-height: 48px; border: 1px solid var(--glass-edge); background: var(--glass-field); border-radius: 14px; cursor: pointer; font-size: 15px; }
+  .opt:has(input:checked) { border-color: var(--rose-ink); box-shadow: 0 0 0 1px var(--rose-ink); }
+  .opt:has(input:focus-visible) { outline: 2px solid var(--rose-ink); outline-offset: 2px; }
+  .opt input, .check input { accent-color: var(--rose-ink); width: 20px; height: 20px; margin: 0; }
+  .opt__price { font-family: var(--serif); font-size: 20px; white-space: nowrap; font-variant-numeric: lining-nums tabular-nums; }
+  .svc .fine { margin-top: 10px; }
+  .check { display: grid; grid-template-columns: 20px 1fr; gap: 12px; align-items: start; font-size: 14px; line-height: 1.5; cursor: pointer; }
+  .check a { color: var(--rose-ink); }
+  .consent { display: grid; gap: 8px; }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 18px; border-radius: 22px; position: sticky; bottom: 12px; z-index: 6; background: var(--glass-solid); }
+  .bar .btn { flex: none; }
+  .sum { margin: 0; display: grid; gap: 0; line-height: 1.3; min-width: 0; flex: 1; }
+  .sum__label { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+  .sum strong { white-space: nowrap; font-family: var(--serif); font-weight: 500; font-size: 28px; font-variant-numeric: lining-nums tabular-nums; }
+  .sum__note { font-size: 12px; color: var(--ink-soft); }
+  .done { padding: clamp(24px, 3.5vw, 44px); display: grid; gap: 16px; justify-items: start; }
+  .done[hidden], form[hidden] { display: none; }
+  .done { scroll-margin-top: 110px; }
+  .done:focus { outline: none; }
+  .done:focus-visible { outline: 2px solid var(--rose-ink); outline-offset: 2px; }
+  .done h3 { font-size: clamp(32px, 4vw, 44px); }
+  .done p { margin: 0; color: var(--ink-soft); }
+  .recap { margin: 0; width: 100%; display: grid; gap: 8px; font-size: 15px; }
+  .recap div { display: grid; grid-template-columns: 8.5em 1fr; gap: 12px; border-bottom: 1px solid var(--line-soft); padding-bottom: 8px; }
+  .recap dt, .recap dd { margin: 0; overflow-wrap: anywhere; }
+  .recap dt { color: var(--ink-soft); }
+  .recap__sum strong { font-family: var(--serif); font-weight: 500; font-size: 24px; }
+
+  .foot { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 20px 32px; border-radius: 999px; width: min(1320px, calc(100% - 2 * var(--gutter))); margin: 0 auto 24px; font-size: 13px; color: var(--ink); }
+
+  @media (max-width: 860px) {
+    .hero { min-height: 70vh; }
+    .steps, .booking { grid-template-columns: 1fr; }
+    .two { grid-template-columns: 1fr; }
+    .bar { bottom: calc(60px + env(safe-area-inset-bottom)); padding: 10px 12px 10px 16px; gap: 10px; }
+    .bar .btn { padding: 13px 18px; }
+    .sum strong { font-size: 24px; }
+    .recap div { grid-template-columns: 1fr; gap: 2px; }
+    .nav nav a:not(.pill) { display: none; }
+    .foot { border-radius: 28px; }
+  }
+
+  /* ---------- Looks, Vorher/Nachher, Team, Stimmen, FAQ (mobile first) ---------- */
+  section[id] { scroll-margin-top: 96px; }
+  .head .lead { margin-top: 14px; }
+
+  .tones { display: none; grid-template-columns: repeat(3, 1fr); gap: 14px 8px; margin-bottom: 28px; max-width: 820px; margin-inline: auto; }
+  :global(.js) .tones { display: grid; }
+  .tone { background: none; border: 0; display: grid; justify-items: center; align-content: start; gap: 9px; padding: 6px 2px; min-height: 48px; cursor: pointer; font: inherit; color: var(--ink); border-radius: 18px; }
+  .tone__ball { width: 56px; height: 56px; border-radius: 50%; background: radial-gradient(circle at 32% 28%, var(--gloss), transparent 48%), var(--c); box-shadow: 0 10px 22px -8px var(--c); transition: transform .35s, box-shadow .35s; }
+  .tone[aria-selected="true"] .tone__ball { box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--ink), 0 10px 22px -8px var(--c); }
+  .tone__name { font-size: 13px; color: var(--ink-soft); line-height: 1.25; text-align: center; }
+  .tone[aria-selected="true"] .tone__name { color: var(--ink); font-weight: 600; }
+  @media (prefers-reduced-motion: no-preference) { .tone:hover .tone__ball { transform: scale(1.08); } }
+
+  .look { display: grid; gap: 24px; justify-items: center; }
+  .look[hidden] { display: none; }
+  @media (prefers-reduced-motion: no-preference) { .look { animation: lookin .6s ease both; } }
+  @keyframes lookin { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .arch { margin: 0; width: min(78%, 340px); aspect-ratio: 3 / 4; border-radius: 999px 999px 32px 32px; overflow: hidden; border: 1px solid var(--glass-edge); box-shadow: 0 24px 60px -24px var(--c), 0 12px 30px -16px var(--glass-shadow); background: var(--bg-soft); }
+  .arch :global(img), .ba__img :global(img), .member__pic :global(img), .atelier :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ph { width: 100%; height: 100%; position: relative; display: grid; place-items: center; background: linear-gradient(160deg, color-mix(in srgb, var(--c, #f2a58e) 50%, #fff), color-mix(in srgb, var(--c, #f2a58e) 85%, #fff)); overflow: hidden; }
+  .ph::before { content: ''; position: absolute; width: 46%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 32% 28%, var(--gloss), transparent 50%), var(--c, #f2a58e); box-shadow: 0 20px 40px -14px var(--c, #f2a58e); }
+  .ph small { position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; font-size: 12px; letter-spacing: .08em; color: var(--ink); }
+  .ph--flat { --c: #d9cfc6; background: linear-gradient(160deg, #cfc4bb, #e4dbd2); }
+  .ph--flat::before { display: none; }
+  .ph--blob { --c: #f2b5a6; }
+  .ph--blob::before { width: 52%; }
+  .ph__ball { display: none; }
+  .recipe { padding: clamp(22px, 3.5vw, 44px); width: 100%; background: linear-gradient(135deg, color-mix(in srgb, var(--c) 24%, #fff 62%), var(--glass-lo)); }
+  .recipe h3 { font-size: clamp(36px, 5vw, 52px); }
+  .recipe__kurz { margin: 6px 0 18px; color: var(--ink-soft); font-size: 17px; }
+  .recipe__rows { margin: 0; display: grid; }
+  .recipe__rows div { display: grid; gap: 2px; padding: 11px 0; border-top: 1px solid var(--line-soft); }
+  .recipe__rows dt { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+  .recipe__rows dd { margin: 0; font-size: 15px; }
+  .recipe__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: 20px; }
+  .recipe__price { margin: 0; display: grid; line-height: 1.1; }
+  .recipe__price span { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+  .recipe__price strong { font-family: var(--serif); font-weight: 500; font-size: 36px; font-variant-numeric: lining-nums tabular-nums; }
+  @media (min-width: 600px) { .tones { grid-template-columns: repeat(6, 1fr); } .recipe__rows div { grid-template-columns: 9.5em 1fr; gap: 16px; } }
+  @media (min-width: 900px) {
+    .look { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: center; justify-items: stretch; }
+    .arch { width: 100%; max-width: 420px; }
+  }
+
+  .bas { display: grid; gap: 44px; }
+  .ba { margin: 0; }
+  .ba__stage { --p: 50%; position: relative; aspect-ratio: 3 / 4; max-width: 460px; margin-inline: auto; border-radius: 32px; overflow: hidden; border: 1px solid var(--glass-edge); box-shadow: 0 24px 60px -28px var(--glass-shadow); touch-action: pan-y; background: var(--bg-soft); }
+  .ba__img { position: absolute; inset: 0; }
+  .ba__img--after { clip-path: inset(0 0 0 var(--p)); }
+  .ba__tag { position: absolute; top: 12px; padding: 4px 13px; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: .06em; pointer-events: none; background: var(--glass-solid); }
+  .ba__tag--l { left: 12px; }
+  .ba__tag--r { right: 12px; }
+  .ba__line { position: absolute; top: 0; bottom: 0; left: var(--p); width: 2px; margin-left: -1px; background: var(--glass-shine); pointer-events: none; box-shadow: 0 0 12px rgba(0, 0, 0, .18); }
+  .ba__knob { position: absolute; top: 50%; left: 50%; width: 46px; height: 46px; transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid #fff; background: radial-gradient(circle at 32% 28%, #fff, rgba(255, 255, 255, .45) 62%), rgba(255, 255, 255, .5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 10px 24px -8px var(--glass-shadow); display: grid; place-items: center; font-size: 15px; color: var(--ink); }
+  .ba__knob::before { content: '‹ ›'; letter-spacing: .1em; }
+  .ba__range { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; touch-action: pan-y; }
+  .ba__stage:has(.ba__range:focus-visible) { outline: 2px solid var(--rose-ink); outline-offset: 3px; }
+  .ba figcaption { margin-top: 16px; display: grid; gap: 2px; text-align: center; }
+  .ba figcaption strong { font-family: var(--serif); font-weight: 400; font-size: 26px; line-height: 1.15; }
+  .ba figcaption span { font-size: 14px; color: var(--ink-soft); }
+  @media (min-width: 900px) { .bas { grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 72px); } }
+
+  .atelier { margin: 0 0 clamp(24px, 4vw, 40px); aspect-ratio: 16 / 9; border-radius: 32px; overflow: hidden; border: 1px solid var(--glass-edge); box-shadow: 0 24px 60px -28px var(--glass-shadow); }
+  .atelier--ph { position: relative; display: grid; place-items: center; background: linear-gradient(160deg, color-mix(in srgb, #f2a58e 40%, #fff), color-mix(in srgb, #b7a3e3 55%, #fff)); }
+  .atelier--ph .ph__ball { display: block; width: 18%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 32% 28%, var(--gloss), transparent 50%), #d98aa6; box-shadow: 0 20px 40px -14px #d98aa6; }
+  .atelier--ph small { position: absolute; bottom: 14px; font-size: 12px; letter-spacing: .08em; color: var(--ink); }
+  .team, .quotes { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+  .member { padding: clamp(22px, 3vw, 34px); display: grid; gap: 8px; justify-items: start; align-content: start; }
+  .member__pic { width: 148px; aspect-ratio: 1; margin-bottom: 8px; border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%; overflow: hidden; border: 1px solid var(--glass-edge); box-shadow: 0 14px 30px -14px var(--glass-shadow); }
+  .member h3 { font-size: 34px; }
+  .member p { margin: 0; color: var(--ink-soft); font-size: 15px; }
+  .member .member__role { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+  .quotes li { padding: clamp(24px, 3vw, 36px); display: grid; gap: 18px; align-content: space-between; }
+  .quotes blockquote { margin: 0; font-family: var(--serif); font-size: clamp(22px, 2.4vw, 27px); line-height: 1.25; }
+  .quotes__who { margin: 0; font-size: 14px; color: var(--ink-soft); }
+  .quotes__who strong { color: var(--ink); font-weight: 600; }
+  .faq { display: grid; gap: 12px; max-width: 840px; }
+  .faq details { padding: 0; }
+  .faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 56px; padding: 14px 22px; font-size: 17px; font-weight: 500; border-radius: 28px; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: '+'; font-family: var(--serif); font-size: 30px; line-height: 1; color: var(--rose-ink); flex: none; }
+  .faq details[open] summary::after { content: '–'; }
+  .faq summary:focus-visible { outline: 2px solid var(--rose-ink); outline-offset: 2px; }
+  .faq details p { margin: 0; padding: 0 22px 20px; color: var(--ink-soft); max-width: 46em; }
+  @media (min-width: 900px) { .team, .quotes { grid-template-columns: repeat(3, 1fr); gap: clamp(18px, 2.5vw, 32px); } }
+</style>

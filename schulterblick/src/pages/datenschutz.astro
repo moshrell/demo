@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import DatenschutzForm from '../components/DatenschutzForm.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Datenschutz · Schulterblick Fahrschule" description="Datenschutzhinweise der Beispielseite">
+  <main class="legal" id="inhalt">
+    <h1>Datenschutz</h1>
+    <p><strong>Demo-Hinweis:</strong> {site.name} ist ein erfundener Betrieb. Diese Seite zeigt, welche Angaben bei einem echten Betrieb stehen müssen. <span class="todo">TODO vom Kunden</span>: Prüfung durch eine Rechtsberatung vor dem Livegang.</p>
+
+    <h2>Verantwortlicher</h2>
+    <p>{site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}. E-Mail: {site.email}. Telefon: {site.phone}. <span class="todo">TODO vom Kunden: echter Name, Anschrift, Datenschutzbeauftragter falls nötig</span></p>
+
+    <h2>Besuch der Seite</h2>
+    <p>Die Seite setzt keine Cookies, nutzt keine Analyse- und Werbedienste und lädt keine Schriften oder Skripte von fremden Servern. Beim Aufruf speichert der Server technisch notwendige Zugriffsdaten (IP-Adresse, Zeitpunkt, aufgerufene Seite) in Logdateien, um die Seite sicher auszuliefern. <span class="todo">TODO vom Kunden: Hoster, Auftragsverarbeitungsvertrag, Speicherdauer der Logs</span></p>
+
+    <h2>Zwischenspeicher im Browser</h2>
+    <p>Damit nichts verloren geht, merkt sich Ihr Browser in diesem Tab (sessionStorage) Ihre Auswahl auf der Route (zum Beispiel Getriebe und Anzahl der Fahrstunden), die gewählte Sprache und bereits eingetippte Formularangaben. Diese Daten bleiben auf Ihrem Gerät, werden nicht an uns übertragen und verschwinden, wenn Sie den Tab schließen oder die Voranmeldung abschicken. Das Einwilligungs-Häkchen wird nie gespeichert.</p>
+
+    <h2>Externer Link</h2>
+    <p>Die Seite verlinkt auf den ADAC (adac.de). Erst wenn Sie den Link anklicken, verlässt Ihr Browser diese Seite; es gilt dann die Datenschutzerklärung des ADAC.</p>
+
+    <DatenschutzForm
+      formName="Voranmeldung"
+      data="Name, Telefonnummer, E-Mail-Adresse (freiwillig), Nachricht (freiwillig), gewünschte Art des Starts, Beratungssprache und Ihre Auswahl aus der Rechnung (Getriebe, Anzahl der Fahrstunden, offene Papiere)"
+      purpose="Wir rufen Sie zurück, beraten Sie zur Fahrausbildung und bereiten Ihre Anmeldung vor."
+    />
+
+    <p><a href={base}>← Zurück zur Route</a></p>
+  </main>
+</Base>

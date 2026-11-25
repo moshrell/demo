@@ -1,0 +1,102 @@
+---
+import '@fontsource/cormorant-garamond/400.css';
+import '@fontsource/cormorant-garamond/500.css';
+import '@fontsource/cormorant-garamond/400-italic.css';
+import '@fontsource-variable/inter';
+import salon from '../data/site.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const base = import.meta.env.BASE_URL;
+const {title = `${salon.name} – ${salon.tagline} in ${salon.city}`, description = 'Haarfarbe, individuell gemischt: Balayage, Blond, Glossing und Farbkorrektur.'} = Astro.props;
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#faf6f1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="preload" as="image" href={`${base}paint-poster.webp`} fetchpriority="high" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='12' fill='%23f2a58e'/></svg>" />
+  </head>
+  <body>
+    <slot />
+    <a class="demo-pill glass" href="https://kravets-webdesign.de/arbeiten/"><span aria-hidden="true">←</span> Portfolio <small>· Demo-Website · fiktiver Salon</small></a>
+  </body>
+</html>
+
+<style is:global>
+  /* Hallmark audit 2026-10-02 · genre: atmospheric (glass panels over a looping paint-drop video)
+     contrast: pass (40-41) · tokens: pass (48) · responsive: pass (34, 49, 51) · icons: none
+     Open by the owner's decision: floating-orb background (critical tell, wanted), italic accent words,
+     eyebrow labels, scroll reveal, 3 equal step cards. */
+  :root {
+    --bg: #faf6f1;
+    --bg-soft: #f3ebe2;
+    --ink: #2b2523;
+    --ink-soft: #554a45;
+    --line: rgba(43, 37, 35, 0.12);
+    --peach: #f2a58e;
+    --rose: #d98aa6;
+    --lilac: #b7a3e3;
+    --rose-ink: #a84372; /* rose for text and focus rings: 5.4:1 on the glass panels */
+    --ink-hover: #46393a;
+    --line-soft: rgba(43, 37, 35, 0.14);
+    --glass-hi: rgba(255, 255, 255, 0.58);
+    --glass-lo: rgba(255, 255, 255, 0.30);
+    --glass-edge: rgba(255, 255, 255, 0.7);
+    --glass-field: rgba(255, 255, 255, 0.55);
+    --gloss: rgba(255, 255, 255, 0.6);
+    --glass-shadow: rgba(120, 70, 60, 0.28);
+    --glass-shine: rgba(255, 255, 255, 0.85);
+    --glass-solid: rgba(255, 250, 245, 0.96);
+    --serif: 'Cormorant Garamond', 'Times New Roman', serif;
+    --sans: 'Inter Variable', system-ui, sans-serif;
+    --gutter: clamp(20px, 5vw, 72px);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; overflow-x: clip; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.05; margin: 0; overflow-wrap: anywhere; min-width: 0; text-wrap: balance; }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid var(--rose-ink);
+    outline-offset: 2px;
+  }
+  .wrap { padding-inline: var(--gutter); max-width: 1320px; margin-inline: auto; }
+  .eyebrow { font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-soft); }
+  .glass {
+    background: linear-gradient(135deg, var(--glass-hi), var(--glass-lo));
+    backdrop-filter: blur(22px) saturate(1.5);
+    -webkit-backdrop-filter: blur(22px) saturate(1.5);
+    border: 1px solid var(--glass-edge);
+    border-radius: 28px;
+    box-shadow: 0 18px 50px -18px var(--glass-shadow), inset 0 1px 0 var(--glass-shine);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .glass { background: var(--glass-solid); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  }
+  .demo-pill { position: fixed; left: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 80; display: inline-flex; align-items: baseline; gap: 6px; padding: 9px 16px; border-radius: 999px; font-size: 12px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: .03em; background: var(--glass-solid); }
+  .demo-pill small { font-size: 11px; font-weight: 400; opacity: .75; }
+  @media (max-width: 600px) { .demo-pill small { display: none; } }
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .9s ease, transform .9s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>

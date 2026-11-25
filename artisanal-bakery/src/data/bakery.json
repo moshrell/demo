@@ -1,0 +1,98 @@
+{
+  "name": "Artisanal",
+  "legalName": "Artisanal Bäckerei & Croissanterie GmbH",
+  "owner": "Jan-Hendrik Weber",
+  "address": {
+    "street": "Osterstraße 42",
+    "zip": "30159",
+    "city": "Hannover"
+  },
+  "email": "kontakt@artisanal-croissants.de",
+  "vat": "DE312345678",
+  "headline": "Zwei Tage Geduld. Ein Croissant.",
+  "sub": "Handwerk ohne Fertigteiglinge und ohne Zusatzstoffe, gebacken in Hannover.",
+  "stages": [
+    {
+      "t": "Tag 1",
+      "title": "Teig",
+      "text": "Der Teig wird angesetzt, die Butter eingeschlagen und in Handarbeit tourieren gelassen. Tourieren heißt: Teig und Butter wechselnd falten und ausrollen."
+    },
+    {
+      "t": "Tag 2",
+      "title": "Reife",
+      "text": "48 Stunden ruht der Teig. In dieser Zeit schichtet sich die Butter perfekt, und das Gebäck wird später extrem bekömmlich."
+    },
+    {
+      "t": "Tag 3",
+      "title": "Ofen",
+      "text": "Goldbraun, dampfend, knusprig. Jedes Croissant kommt frisch aus dem Ofen in Ihre Hand."
+    }
+  ],
+  "items": [
+    {
+      "id": "classic",
+      "name": "Butter-Croissant",
+      "tag": "Klassik",
+      "price": 2.8,
+      "order": true
+    },
+    {
+      "id": "choc",
+      "name": "Pain au Chocolat",
+      "tag": "mit Valrhona-Schokolade",
+      "price": 3.4,
+      "order": true
+    },
+    {
+      "id": "pistazie",
+      "name": "Pistazien-Croissant",
+      "tag": "mit hausgemachter Creme",
+      "price": 4.6,
+      "order": true
+    },
+    {
+      "id": "brot",
+      "name": "Sauerteigbrot, 1 kg",
+      "tag": "48 Stunden Reifung",
+      "price": 6.8,
+      "order": true
+    },
+    {
+      "id": "coffee",
+      "name": "Specialty Coffee",
+      "tag": "Espresso oder Flat White",
+      "priceText": "2,60 bis 4,20 €",
+      "order": false
+    }
+  ],
+  "slots": [
+    "08:00 bis 09:00",
+    "09:00 bis 10:00",
+    "10:00 bis 11:00",
+    "11:00 bis 12:00"
+  ],
+  "catering": {
+    "title": "Frühstück für Ihr Büro.",
+    "text": "Hochwertige Frühstücks-Platten mit unserem Gebäck für Teams in der Nähe. Nennen Sie uns Termin und Personenzahl, wir senden Ihnen ein Angebot."
+  },
+  "highlightsTitle": "Das macht den Unterschied.",
+  "highlights": [
+    {
+      "title": "Echtes Handwerk",
+      "text": "Keine industriellen Fertigteiglinge, keine künstlichen Zusatzstoffe. Jedes Stück entsteht in unserer Backstube."
+    },
+    {
+      "title": "48 Stunden Teigführung",
+      "text": "Unser Croissant-Teig reift zwei Tage. Dadurch schichtet die Butter perfekt und das Gebäck wird extrem bekömmlich."
+    },
+    {
+      "title": "Gebäck wie ein Premiumprodukt",
+      "text": "Vom rohen, perfekt geschichteten Teigling zum goldbraunen, dampfenden Croissant: Wir zeigen, wie es entsteht."
+    }
+  ],
+  "callouts": {
+    "l": "Goldbraun und knusprig",
+    "r": "Dampfend frisch",
+    "b": "Schicht für Schicht"
+  }
+}

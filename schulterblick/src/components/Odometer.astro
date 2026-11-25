@@ -1,0 +1,14 @@
+---
+// Kilometerstand für Euro: vier Walzen. Der Startwert steht schon im HTML; app.js rollt die Walzen live.
+const { value = 0, digits = 4, name = '' } = Astro.props;
+const s = String(Math.min(Math.round(value), 10 ** digits - 1)).padStart(digits, '0');
+---
+<span class="odo" data-odo={name} translate="no" aria-hidden="true">
+  {[...s].map((d, i) => (
+    <>
+      {i === digits - 3 && <span class="odo__dot" data-odo-sep>.</span>}
+      <span class="odo__drum"><span class="odo__strip" style={`--d:${d};--i:${i}`}>{[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => <span>{n}</span>)}</span></span>
+    </>
+  ))}
+  <span class="odo__cur">€</span>
+</span>

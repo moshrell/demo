@@ -1,0 +1,164 @@
+---
+// Выезжающие панели: Preise, Arbeiten, Team, Salon & Kontakt. Всё содержание сайта, кроме записи, живёт здесь.
+import Photo from './Photo.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const c = site.contact;
+const q = encodeURIComponent(`${c.street}, ${c.zip} ${c.city}`);
+const gmaps = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
+const byId = Object.fromEntries(site.team.map((t) => [t.id, t]));
+---
+<dialog class="sheet" id="sheet-arbeiten" aria-labelledby="sh-arbeiten">
+  <header><h2 id="sh-arbeiten">Arbeiten</h2><button type="button" class="x" aria-label="Schließen">×</button></header>
+  <div class="body">
+    <ul class="works">
+      {site.works.map((w, i) => (
+        <li class={i % 3 === 0 ? 'wide' : ''}>
+          <figure>
+            <div class="wph"><Photo file={w.photo} alt={w.label} widths={[400, 800]} sizes="(max-width: 600px) 90vw, 280px" /></div>
+            <figcaption><span>{w.label}</span><button type="button" class="by" data-prefer={w.by}>Termin bei {byId[w.by].name.split(' ')[0]} →</button></figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="sheet-team" aria-labelledby="sh-team">
+  <header><h2 id="sh-team">Team</h2><button type="button" class="x" aria-label="Schließen">×</button></header>
+  <div class="body">
+    {site.team.map((p) => (
+      <article class="member">
+        <div class="mph"><Photo file={p.photo} alt={`${p.name}, ${p.role}`} widths={[400, 700]} sizes="(max-width: 600px) 90vw, 220px" /></div>
+        <div>
+          <h3>{p.name}</h3>
+          <p class="role">{p.role} · {p.focus}</p>
+          <blockquote>„{p.quote}“</blockquote>
+          <button type="button" class="btn btn--ghost" data-prefer={p.id}>Termin bei {p.name.split(' ')[0]} →</button>
+        </div>
+      </article>
+    ))}
+  </div>
+</dialog>
+
+<dialog class="sheet" id="sheet-salon" aria-labelledby="sh-salon">
+  <header><h2 id="sh-salon">Anfahrt & Kontakt</h2><button type="button" class="x" aria-label="Schließen">×</button></header>
+  <div class="body">
+    <address>
+      <b>{site.legalName}</b>
+      <span>{c.street}, {c.zip} {c.city}-{site.district}</span>
+      <a href={`tel:${c.phone.replace(/\s/g, '')}`}>{c.phone}</a>
+      <a href={`mailto:${c.email}`}>{c.email}</a>
+    </address>
+    <p class="note">{c.arrival}</p>
+    <a class="map" href={gmaps} target="_blank" rel="noopener" aria-label={`Route zu ${c.street} in Google Maps öffnen`}>
+      <svg viewBox="0 0 400 220" aria-hidden="true">
+        <rect width="400" height="220" fill="#e4e1da" />
+        <path d="M-10 170 C 90 140, 170 200, 270 160 S 380 120, 420 140" stroke="#cdd5f5" stroke-width="22" fill="none" />
+        <g stroke="#fbfaf7" stroke-width="9" fill="none" stroke-linecap="round"><path d="M0 70 H400" /><path d="M0 130 H400" /><path d="M70 0 V220" /><path d="M190 0 V220" /><path d="M310 0 V220" /></g>
+        <g fill="#d6d2c9"><rect x="84" y="82" width="92" height="36" rx="5" /><rect x="204" y="82" width="92" height="36" rx="5" /><rect x="84" y="14" width="92" height="42" rx="5" /><rect x="324" y="82" width="64" height="36" rx="5" /></g>
+        <text x="204" y="150" font-size="10" fill="#121212" font-family="monospace" letter-spacing="2">KASTANIENHOF</text>
+        <circle class="pulse" cx="250" cy="130" r="9" fill="#2f45d0" />
+        <circle cx="250" cy="130" r="9" fill="#2f45d0" stroke="#fbfaf7" stroke-width="3" />
+      </svg>
+      <span class="map-cta">Route planen ↗</span>
+    </a>
+    <div class="route">
+      <a class="btn btn--cobalt" href={gmaps} target="_blank" rel="noopener">Route in Google Maps</a>
+    </div>
+    <table class="hours" data-hours={JSON.stringify(site.hours)}>
+      <caption>Öffnungszeiten</caption>
+      <tbody>{site.hours.map((h, i) => <tr data-i={i}><th scope="row">{h.day}</th><td class="num">{h.open ? `${h.open}–${h.close}` : 'geschlossen'}</td></tr>)}</tbody>
+    </table>
+    <nav class="legal" aria-label="Rechtliches">
+      <a href={`${base}impressum/`} target="_blank" rel="noopener">Impressum</a><a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutz</a>
+      <a href={site.credit.url} target="_blank" rel="noopener">{site.credit.label}</a>
+    </nav>
+  </div>
+</dialog>
+
+<style>
+  .sheet { position: fixed; inset: 0 0 0 auto; margin: 0; width: min(560px, 100%); max-width: 100%; height: 100%; max-height: 100%; padding: 0; border: 0; background: var(--stone); color: var(--ink); overflow: hidden; display: none; flex-direction: column; }
+  .sheet[open] { display: flex; animation: slide .55s var(--ease); }
+  .sheet.closing { animation: slide-out .35s var(--ease) forwards; }
+  @keyframes slide { from { transform: translateX(100%); } }
+  @keyframes slide-out { to { transform: translateX(100%); } }
+  .sheet::backdrop { background: rgba(18, 18, 18, .4); backdrop-filter: blur(3px); animation: fade .4s; }
+  .sheet.closing::backdrop { opacity: 0; transition: opacity .3s; }
+  @keyframes fade { from { opacity: 0; } }
+  .sheet header { display: flex; justify-content: space-between; align-items: center; padding: 22px 26px; border-bottom: 1px solid var(--line); }
+  .sheet h2 { margin: 0; font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 650; letter-spacing: -.04em; }
+  .x { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--white); font-size: 1.6rem; line-height: 1; cursor: pointer; transition: transform .3s var(--spring), background .2s; }
+  .x:hover { transform: rotate(90deg); background: var(--ink); color: var(--white); }
+  .body { overflow-y: auto; padding: 22px 26px 40px; display: grid; gap: 26px; align-content: start; overscroll-behavior: contain; }
+  .note { margin: 0; color: var(--ink-soft); }
+
+  .works { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .works .wide { grid-column: 1 / -1; }
+  .works figure { margin: 0; }
+  .wph { aspect-ratio: 4 / 5; border-radius: 16px; overflow: hidden; background: var(--stone-2); }
+  .wide .wph { aspect-ratio: 16 / 11; }
+  .wph :global(img), .wph :global(.ph) { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+  .works li:hover .wph :global(img) { transform: scale(1.05); }
+  .works figcaption { display: grid; justify-items: start; gap: 2px; padding: 8px 2px 0; font-size: .85rem; line-height: 1.3; }
+  .works figcaption span { text-wrap: balance; }
+  .by { border: 0; background: none; padding: 4px 0; color: var(--cobalt); font-weight: 600; cursor: pointer; font-size: .8rem; }
+
+  .member { display: grid; grid-template-columns: 160px 1fr; gap: 20px; align-items: start; padding-bottom: 26px; border-bottom: 1px solid var(--line); }
+  .member:last-child { border-bottom: 0; }
+  .mph { aspect-ratio: 3 / 4; border-radius: 16px; overflow: hidden; background: var(--stone-2); }
+  .mph :global(img), .mph :global(.ph) { width: 100%; height: 100%; object-fit: cover; }
+  .member h3 { margin: 0; font-size: 1.4rem; font-weight: 600; letter-spacing: -.03em; }
+  .role { margin: 2px 0 14px; color: var(--ink-soft); font-size: .9rem; }
+  .member blockquote { margin: 0 0 16px; font-size: 1.15rem; line-height: 1.35; letter-spacing: -.01em; }
+  .member .btn { min-height: 44px; font-size: .88rem; }
+
+  address { font-style: normal; display: grid; gap: 2px; font-size: 1.1rem; }
+  address b { font-size: 1.5rem; letter-spacing: -.03em; }
+  address a { text-decoration: none; color: var(--cobalt); font-weight: 550; }
+  .map { position: relative; display: block; margin: 0; border-radius: 16px; overflow: hidden; }
+  .map-cta { position: absolute; right: 12px; bottom: 12px; padding: 9px 14px; border-radius: 999px; background: var(--ink); color: var(--white); font-size: .82rem; font-weight: 600; }
+  .route { display: flex; flex-wrap: wrap; gap: 10px; margin-top: -10px; }
+  .map svg { display: block; width: 100%; height: auto; }
+  .pulse { transform-origin: 250px 130px; animation: pulse 2.2s ease-out infinite; }
+  @keyframes pulse { from { transform: scale(1); opacity: .6; } to { transform: scale(3.4); opacity: 0; } }
+  .hours caption { text-align: left; font-weight: 600; font-size: 1.1rem; margin-bottom: 8px; }
+  .hours th, .hours td { padding: 9px 0; border-top: 1px solid var(--line); text-align: left; font-weight: 450; }
+  .hours td { text-align: right; color: var(--ink-soft); }
+  .hours tr.today th, .hours tr.today td { color: var(--cobalt); font-weight: 650; }
+  .legal { display: flex; flex-wrap: wrap; gap: 16px; font-size: .82rem; }
+  .legal a { color: var(--ink-soft); }
+
+  @media (max-width: 600px) {
+    .sheet { inset: auto 0 0 0; width: 100%; height: 92svh; border-radius: 22px 22px 0 0; }
+    @keyframes slide { from { transform: translateY(100%); } }
+    @keyframes slide-out { to { transform: translateY(100%); } }
+    .member { grid-template-columns: 1fr; }
+    .mph { max-width: 240px; }
+  }
+</style>
+
+<script>
+  const sheets = [...document.querySelectorAll<HTMLDialogElement>('dialog.sheet')];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const close = (d: HTMLDialogElement, then?: () => void) => {
+    if (!d.open) { then?.(); return; }
+    if (reduce) { d.close(); then?.(); return; }
+    d.classList.add('closing');
+    d.addEventListener('animationend', () => { d.classList.remove('closing'); d.close(); then?.(); }, { once: true });
+  };
+  const open = (id: string) => { const d = document.getElementById(`sheet-${id}`) as HTMLDialogElement | null; if (!d) return; sheets.forEach((s) => s.open && s.close()); d.showModal(); };
+  document.addEventListener('click', (e) => {
+    const t = (e.target as HTMLElement).closest<HTMLElement>('[data-sheet]');
+    if (t) open(t.dataset.sheet!);
+  });
+  for (const d of sheets) {
+    d.querySelector('.x')!.addEventListener('click', () => close(d));
+    d.addEventListener('click', (e) => { if (e.target === d) close(d); }); // клик по фону
+    d.addEventListener('cancel', (e) => { e.preventDefault(); close(d); }); // Esc
+  }
+  document.querySelectorAll<HTMLElement>('[data-prefer]').forEach((b) => b.addEventListener('click', () =>
+    close(b.closest('dialog')!, () => window.dispatchEvent(new CustomEvent('kamm:prefer', { detail: b.dataset.prefer })))));
+  const today = (new Date().getDay() + 6) % 7;
+  document.querySelector(`.hours tr[data-i="${today}"]`)?.classList.add('today');
+</script>

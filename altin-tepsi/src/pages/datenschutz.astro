@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import shop from '../data/shop.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title={`Datenschutz | ${shop.name}`}>
+  <main class="sec sec--deep legal" id="inhalt">
+    <div class="wrap legal__in">
+      <a class="back link" href={base}>Zurück zur Startseite</a>
+      <h1>Datenschutz</h1>
+      <p>Diese Demo-Website setzt keine Cookies, nutzt kein Tracking und lädt keine Inhalte von Drittanbietern. Schriften, Bilder und Skripte liegen auf demselben Server.</p>
+      <h2>Box-Konfigurator und Rechner</h2>
+      <p>Die Eingaben (Name, Telefon, Abholtag, Hinweis) bleiben in Ihrem Browser. Diese Seite speichert sie nicht und sendet sie nicht an einen Server. Erst wenn Sie auf „Per E-Mail bestellen“, „Per WhatsApp bestellen“ oder „Angebot anfragen“ klicken, öffnet sich Ihr E-Mail-Programm oder WhatsApp mit einer vorbereiteten Nachricht. Sie wird erst gesendet, wenn Sie sie dort selbst abschicken. Alternativ können Sie anrufen. In dieser Demo führen alle Wege zu Platzhaltern.</p>
+      <h2>Verarbeitung nach dem Absenden</h2>
+      <p><strong>Demo-Hinweis:</strong> In dieser Beispielseite wird nichts gesendet oder gespeichert. Die folgenden Angaben zeigen, was bei einem echten Betrieb hier stehen muss.</p>
+      <p><strong>Verantwortlicher:</strong> {shop.name}, {shop.address.street}, {shop.address.zip} {shop.address.city} (fiktiv). Kontakt: {shop.email}</p>
+      <p><strong>Welche Daten:</strong> Name, Telefonnummer (freiwillig), gewählte Stücke und Abholtag, Hinweis (freiwillig).</p>
+      <p><strong>Wozu:</strong> Wir bereiten Ihre Box vor und melden uns bei Rückfragen. Sie erteilen dafür vor dem Absenden Ihre Einwilligung per Häkchen. Rechtsgrundlage ist die Vertragsanbahnung und -erfüllung (Art. 6 Abs. 1 lit. b DSGVO, die europäische Datenschutz-Grundverordnung).</p>
+      <p><strong>Wie lange:</strong> Wir löschen Ihre Angaben, sobald die Box abgeholt ist, spätestens nach 14 Tagen, sofern keine gesetzliche Aufbewahrungspflicht besteht.</p>
+      <p><strong>Weitergabe:</strong> Keine Weitergabe an Dritte. Die Daten werden nicht für Werbung genutzt. Wählen Sie den Weg über WhatsApp, verarbeitet zusätzlich WhatsApp (Meta) die Nachricht nach eigenen Bedingungen; beim E-Mail-Weg Ihr E-Mail-Anbieter.</p>
+      <p><strong>Ihre Rechte:</strong> Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch und Datenübertragbarkeit (Art. 15 bis 21 DSGVO). Sie können die Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen und sich bei der Datenschutzaufsichtsbehörde Ihres Bundeslandes beschweren.</p>
+      <p><strong>Freiwilligkeit:</strong> Die Angabe der Daten ist freiwillig. Ohne Namen und Einwilligung können wir die Bestellung aber nicht annehmen; Sie können stattdessen anrufen oder im Laden bestellen.</p>
+      <p><strong>Zwischenspeicher:</strong> Deine Eingaben werden zur Sicherheit nur temporär im Browser dieses Tabs (sessionStorage) zwischengespeichert und nach dem Absenden oder Schließen des Tabs gelöscht; sie werden nicht an uns übertragen. Das Häkchen zur Einwilligung wird nie gespeichert.</p>
+      <h2>Firmen-Rechner</h2>
+      <p>Der Rechner für Teams und Veranstaltungen (Personen, Stück pro Person) erhebt keine personenbezogenen Daten. Er rechnet nur in Ihrem Browser. Die Buttons „Per E-Mail anfragen“ und „Per WhatsApp anfragen“ öffnen eine vorbereitete Nachricht, die Sie selbst abschicken.</p>
+      <h2>Hosting</h2>
+      <p>Informationen zum Hosting und zu Server-Logdateien finden Sie in der <a class="link" href="https://kravets-webdesign.de/datenschutz/">Datenschutzerklärung von Kravets Webdesign</a>.</p>
+    </div>
+  </main>
+</Base>

@@ -1,0 +1,30 @@
+---
+import site from '../data/site.json';
+const year = new Date().getFullYear();
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<footer class="footer">
+  <div class="wrap">
+    <p class="big" aria-hidden="true">{site.name}</p>
+    <div class="cols">
+      <p>{site.contact.street}<br />{site.contact.zip} {site.contact.city}</p>
+      <p>Di – Fr 9 – 19 Uhr<br />Do bis 20 Uhr · Sa 9 – 15 Uhr</p>
+      <nav aria-label="Rechtliches"><a href={`${base}impressum/`} target="_blank" rel="noopener">Impressum</a><a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutz</a></nav>
+    </div>
+    <div class="base">
+      <span>© {year} {site.legalName} · {site.demoNotice}</span>
+      <a href={site.credit.url} target="_blank" rel="noopener">{site.credit.label}</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--bg); color: var(--cream); padding: clamp(64px, 10vh, 120px) 0 calc(80px + env(safe-area-inset-bottom)); overflow: hidden; }
+  .big { margin: 0 0 40px; font-family: var(--serif); font-weight: 900; font-size: clamp(4rem, 17vw, 15rem); line-height: .85; letter-spacing: -.02em; color: transparent; -webkit-text-stroke: 1px rgba(247, 242, 234, .32); }
+  .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; padding-bottom: 36px; border-bottom: 1px solid rgba(246,239,228,.12); }
+  .cols p { margin: 0; opacity: .75; }
+  .cols nav { display: grid; justify-items: start; gap: 4px; }
+  .cols a, .base a { text-decoration: none; opacity: .75; } .cols a:hover, .base a:hover { opacity: 1; color: var(--brass); }
+  .base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-top: 24px; font-size: .8rem; opacity: .6; }
+  @media (max-width: 700px) { .cols { grid-template-columns: 1fr; } }
+</style>

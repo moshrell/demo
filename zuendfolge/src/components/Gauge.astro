@@ -1,0 +1,40 @@
+---
+// Rundinstrument als SVG. Nadel zeigt senkrecht nach oben und wird per CSS-Variable --v (0 bis 1) gedreht.
+const {
+  max = 8, major = 1, minor = 0.5, redFrom = null,
+  start = -135, sweep = 270, rest = 0, name = 'gauge',
+  labels = null, labelFactor = 1, unit = '', viewBox = '0 0 200 200', face = true, id = undefined, arcLine = false,
+} = Astro.props;
+const C = 100;
+const ang = (v) => start + (v / max) * sweep;
+const pt = (a, r) => { const t = ((a - 90) * Math.PI) / 180; return [C + r * Math.cos(t), C + r * Math.sin(t)]; };
+const f = (n) => n.toFixed(2);
+const arc = (a1, a2, r) => {
+  const [x1, y1] = pt(a1, r), [x2, y2] = pt(a2, r);
+  return `M${f(x1)} ${f(y1)}A${r} ${r} 0 ${a2 - a1 > 180 ? 1 : 0} 1 ${f(x2)} ${f(y2)}`;
+};
+const ticks = [];
+const n = Math.round(max / minor);
+for (let i = 0; i <= n; i++) {
+  const v = i * minor;
+  const isMajor = Math.abs(v / major - Math.round(v / major)) < 1e-6;
+  const a = ang(v);
+  const [x1, y1] = pt(a, 90), [x2, y2] = pt(a, isMajor ? 76 : 83);
+  ticks.push({ d: `M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`, isMajor, red: redFrom !== null && v >= redFrom - 1e-6 });
+}
+const nums = (labels ?? Array.from({ length: Math.round(max / major) + 1 }, (_, i) => [i * major, String(Math.round(i * major * labelFactor))]))
+  .map(([v, text]) => { const [x, y] = pt(ang(v), 62); return { x: f(x), y: f(y + 4.5), text }; });
+---
+<svg class={`gauge gauge--${name}`} viewBox={viewBox} role="img" aria-label={unit || name} id={id}>
+  {face && <circle cx={C} cy={C} r="97" class="gauge-face" />}
+  {face && <circle cx={C} cy={C} r="97" class="gauge-rim" />}
+  {arcLine && <path d={arc(ang(0), ang(max), 93)} class="gauge-baseline" />}
+  {redFrom !== null && <path d={arc(ang(redFrom), ang(max), 93)} class="gauge-redarc" />}
+  {ticks.map((t) => <path d={t.d} class={`tick${t.isMajor ? ' tick--major' : ''}${t.red ? ' tick--red' : ''}`} />)}
+  {nums.map((t) => <text x={t.x} y={t.y} class="gauge-num" text-anchor="middle">{t.text}</text>)}
+  {unit && face && <text x={C} y="132" class="gauge-unit" text-anchor="middle">{unit}</text>}
+  <g class="needle" data-rest={rest} data-start={start} data-sweep={sweep}>
+    <path d="M100 104 L98.4 98 L100 20 L101.6 98 Z" class="needle-blade" />
+    <circle cx={C} cy={C} r="7" class="needle-hub" />
+  </g>
+</svg>

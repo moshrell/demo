@@ -1,0 +1,301 @@
+---
+import Base from '../layouts/Base.astro';
+import Gauge from '../components/Gauge.astro';
+import Icon from '../components/Icon.astro';
+import Logo from '../components/Logo.astro';
+import Footer from '../components/Footer.astro';
+import site from '../data/site.json';
+
+const lamps = site.items.filter((i) => i.mode === 'leuchten');
+const byMode = (id) => site.items.filter((i) => i.mode === id);
+const U = site.urgency;
+const ring = (k) => k % 12;
+const base = import.meta.env.BASE_URL;
+const wa = site.whatsapp ? `https://wa.me/${site.whatsapp.replace(/\D/g, '')}` : '';
+---
+<Base description="Kfz-Meisterbetrieb (Beispielseite): Sag uns, was dein Auto zeigt, hört oder fühlt, und sieh sofort, wie dringend es ist und was es kostet.">
+
+  <!-- 1. Armaturenbrett -->
+  <header class="hero" id="top">
+    <div class="wrap topbar">
+      <a href="#top" class="logo-link" aria-label="Zündfolge, zum Seitenanfang"><Logo /></a>
+      <nav class="topnav" aria-label="Hauptmenü">
+        <a href="#diagnose" class="topnav-l">Diagnose</a>
+        <a href="#tuev" class="topnav-l">TÜV-Rechner</a>
+        <a href={`tel:${site.phoneHref}`} class="topnav-l">{site.phone}</a>
+        <a href="#termin" class="btn btn--small btn--amber">Termin</a>
+      </nav>
+    </div>
+
+    <div class="wrap cluster" id="cluster" data-state="test">
+      <div class="g g--speed" aria-hidden="true">
+        <Gauge name="speed" max={240} major={40} minor={20} unit="km/h" rest={0} />
+      </div>
+
+      <p class="tft-status"><i class="dot" aria-hidden="true"></i><span data-status aria-live="polite">Selbsttest</span></p>
+
+      <div class="tft">
+        <h1>Dein Auto meldet sich. Wir hören zu.</h1>
+        <p class="tft-sub">{site.claim}, {site.region}. Sag uns, was dein Auto zeigt, hört oder fühlt. Du siehst sofort, wie dringend es ist und was es kostet.</p>
+        <div class="tft-cta">
+          <a class="btn btn--amber" href="#termin">Termin anfragen</a>
+          <a class="btn btn--ghost" href="#diagnose">Symptom wählen</a>
+        </div>
+      </div>
+
+      <div class="lamps-wrap">
+        <p class="lamps-hint" id="lamps-hint">Welche Lampe leuchtet bei dir? Tippe sie an.</p>
+        <ul class="lamps" aria-labelledby="lamps-hint">
+          {lamps.map((l) => (
+            <li>
+              <button type="button" class="lamp" data-pick={l.id} data-lamp={l.lamp}>
+                <span class="lamp-ico"><Icon name={l.icon} size={32} /></span>
+                <span class="lamp-t">{l.short}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="g g--tacho" aria-hidden="true">
+        <Gauge name="tacho" max={8} major={1} minor={0.5} redFrom={6.5} unit="1/min x 1000" rest={0.1} />
+      </div>
+    </div>
+
+  </header>
+
+  <main>
+    <!-- 2. Bordcomputer / Diagnose -->
+    <section class="sec sec--panel" id="diagnose" aria-labelledby="dx-h">
+      <div class="wrap">
+        <header class="sec-head">
+          <h2 id="dx-h">Was ist los mit deinem Auto?</h2>
+          <p>Wähl im Bordcomputer, was dir auffällt. Du siehst, wie dringend es ist, was wir tun und was es kostet.</p>
+        </header>
+
+        <div class="dx">
+          <div class="modes" role="tablist" aria-orientation="horizontal" aria-label="Was ist dir aufgefallen?">
+            {site.modes.map((m) => (
+              <button type="button" role="tab" class="mode" id={`tab-${m.id}`} aria-controls={`panel-${m.id}`} aria-selected="false" data-mode={m.id}>
+                <Icon name={m.icon} size={22} /><span>{m.label}</span>
+              </button>
+            ))}
+          </div>
+
+          <div class="dx-body">
+            <div class="sym-col">
+              {site.modes.map((m) => (
+                <div class="sym-list" role="tabpanel" id={`panel-${m.id}`} aria-labelledby={`tab-${m.id}`} data-mode={m.id} hidden={m.id !== 'leuchten' ? true : undefined}>
+                  <p class="sym-intro">{m.intro}</p>
+                  <ul>
+                    {byMode(m.id).map((i) => (
+                      <li>
+                        <button type="button" class="sym" data-id={i.id} data-mode={m.id} data-urg={i.urgency} data-label={i.label} data-ab={i.ab} data-preis={i.preis} data-extra={i.extra ?? ''} aria-pressed="false">
+                          {i.icon && <span class="sym-ico" data-lamp={i.lamp}><Icon name={i.icon} size={30} /></span>}
+                          <span class="sym-t"><b>{i.label}</b><small>{i.hint}</small></span>
+                          <i class="sym-dot" aria-hidden="true"></i>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <!-- Befund: am Rechner Karte neben der Liste, am Telefon Bottom-Sheet -->
+            <dialog class="befund-col" id="befund" open aria-label="Befund">
+              <div class="sheet-bar">
+                <button type="button" class="sheet-close" aria-label="Befund schließen"><Icon name="x" size={22} /></button>
+              </div>
+              {site.items.map((i) => (
+                <article class="befund" id={`b-${i.id}`} data-urg={i.urgency} aria-labelledby={`bh-${i.id}`} hidden>
+                  <p class="ampel" data-urg={i.urgency}>
+                    <span class="ampel-lamps" aria-hidden="true">
+                      {i.urgency === 'plan'
+                        ? <i class="al al--blue"></i>
+                        : <><i class="al al--green"></i><i class="al al--amber"></i><i class="al al--red"></i></>}
+                    </span>
+                    <b>{U[i.urgency].label}</b>
+                  </p>
+                  <h3 id={`bh-${i.id}`}>{i.label}</h3>
+                  <p class="was">{i.was}</p>
+                  {i.warn && <p class="warn">{i.warn}</p>}
+                  <h4>Das machen wir</h4>
+                  <ul class="wir">{i.wir.map((w) => <li>{w}</li>)}</ul>
+                  <dl class="facts">
+                    <div><dt>Dauer</dt><dd>{i.dauer}</dd></div>
+                    <div><dt>Preis</dt><dd>{i.preis}</dd></div>
+                  </dl>
+                  <div class="befund-cta">
+                    <button type="button" class="btn btn--amber" data-add={i.id} aria-pressed="false"><span data-add-label>Zum Auftrag hinzufügen</span></button>
+                    <button type="button" class="btn btn--ghost" data-book={i.id}>Termin anfragen</button>
+                  </div>
+                  <p class="befund-total" data-total-line hidden></p>
+                </article>
+              ))}
+              <p class="fine befund-fine">{site.priceNote}</p>
+            </dialog>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. HU-Plakette -->
+    <section class="sec sec--paper" id="tuev" aria-labelledby="tuev-h">
+      <div class="wrap tuev">
+        <div class="tuev-head">
+          <h2 id="tuev-h">Wann ist dein TÜV dran?</h2>
+          <p>Schau auf die Plakette am hinteren Kennzeichen. Die Zahl oben ist der Monat, die Zahl in der Mitte das Jahr. Stell beides hier ein.</p>
+        </div>
+        <form class="plak-form" id="plakform" action="#">
+          <label class="fld fld--paper"><span>Monat</span><select id="pm" name="pm"></select></label>
+          <label class="fld fld--paper"><span>Jahr</span><select id="py" name="py"></select></label>
+        </form>
+        <div class="plak" id="plak" data-color="blau">
+          <svg viewBox="0 0 200 200" role="img" aria-labelledby="plak-cap">
+            <circle cx="100" cy="100" r="97" class="pl-disc" />
+            <g id="pl-nums" class="pl-nums">
+              {Array.from({ length: 12 }, (_, n) => n + 1).map((k) => (
+                <text x="100" y="27" text-anchor="middle" class="pl-n" data-k={k} transform={`rotate(${ring(k) * 30} 100 100)`}>{k}</text>
+              ))}
+            </g>
+            <circle cx="100" cy="100" r="52" class="pl-core" />
+            <text id="pl-year" x="100" y="119" text-anchor="middle" class="pl-year">26</text>
+          </svg>
+          <p class="plak-cap" id="plak-cap"></p>
+        </div>
+        <div class="plak-out" aria-live="polite">
+          <p class="plak-line" id="plak-line"></p>
+          <p class="plak-sub" id="plak-sub"></p>
+          <button type="button" class="btn btn--ink" data-book="hu">HU-Vorab-Check anfragen</button>
+        </div>
+        <p class="fine fine--paper tuev-fine">Rechenhilfe, keine Rechtsberatung. Stand der Fristen: Oktober 2026.</p>
+      </div>
+    </section>
+
+    <!-- 4. Prüfprotokoll -->
+    <section class="sec sec--paper2" id="protokoll" aria-labelledby="pr-h">
+      <div class="wrap">
+        <header class="sec-head sec-head--paper">
+          <h2 id="pr-h">So arbeiten wir</h2>
+          <p>Unsere Zusagen. Jede gilt für jedes Auto, das bei uns steht.</p>
+        </header>
+        <div class="proto-wrap">
+          <table class="proto">
+            <thead><tr><th scope="col">Zusage</th><th scope="col">Was das für dich heißt</th></tr></thead>
+            <tbody>
+              {site.protokoll.map((r) => (
+                <tr><th scope="row">{r.punkt}</th><td>{r.text}</td></tr>
+              ))}
+            </tbody>
+          </table>
+          <div class="shots">
+            <figure class="shot shot--wide"><img src={`${base}img/werkstatt.jpg`} alt="Ein Kleinwagen auf der Hebebühne in einer aufgeräumten Werkstatt" width="896" height="1200" loading="lazy" decoding="async" /></figure>
+            <figure class="shot"><img src={`${base}img/bremse.jpg`} alt="Bremsscheibe und Bremssattel bei abgenommenem Rad, daneben ein Drehmomentschlüssel" width="1200" height="900" loading="lazy" decoding="async" /></figure>
+            <figure class="shot"><img src={`${base}img/diagnose.jpg`} alt="Offener Motorraum mit angeschlossenem Diagnose-Tablet" width="1200" height="900" loading="lazy" decoding="async" /></figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Termin und Zeiten -->
+    <section class="sec sec--dark" id="termin" aria-labelledby="t-h">
+      <div class="wrap termin">
+        <div class="termin-main">
+          <h2 id="t-h">Termin anfragen</h2>
+          <p>Stell dir deinen Auftrag zusammen, trag deine Nummer ein, wir rufen dich innerhalb eines Werktags zurück.</p>
+
+          <form id="tform" novalidate autocomplete="on">
+            <fieldset class="order">
+              <legend>Dein Auftrag</legend>
+              <ul class="order-list" id="order-list"></ul>
+              <p class="order-empty" id="order-empty">Noch nichts gewählt. Such oben im Bordcomputer ein Symptom aus oder füge hier eine Leistung hinzu.</p>
+              <label class="fld"><span>Leistung hinzufügen</span>
+                <select id="add-select">
+                  <option value="">Bitte wählen</option>
+                  {site.modes.map((m) => (
+                    <optgroup label={m.label}>
+                      {byMode(m.id).map((i) => <option value={i.id}>{i.label}</option>)}
+                    </optgroup>
+                  ))}
+                </select>
+              </label>
+              <div class="order-total" aria-live="polite"><span>Richtwert gesamt</span><b id="order-sum">noch nichts gewählt</b></div>
+              <p class="fine" id="order-note" hidden>Preise mit „je Achse“, „je Seite“, „plus Öl“ oder „Prüfgebühr extra“ gelten pro Einheit oder kommen dazu.</p>
+              <p class="fine">{site.priceNote}</p>
+            </fieldset>
+
+            <fieldset class="contact">
+              <legend>Deine Daten</legend>
+              <div class="fld-row">
+                <label class="fld"><span>Name</span><input id="f-name" name="name" required autocomplete="name" placeholder="z. B. Anna Beispiel" /></label>
+                <label class="fld"><span>Telefon</span><input id="f-tel" name="tel" type="tel" inputmode="tel" required autocomplete="tel" placeholder="z. B. 0170 1234567" /></label>
+              </div>
+              <label class="fld"><span>Fahrzeug (freiwillig)</span><input name="auto" autocomplete="off" placeholder="z. B. VW Golf, Baujahr 2016" /></label>
+              <div class="fld-row">
+                <label class="fld"><span>Wunschtag (freiwillig)</span><input id="f-date" type="date" name="datum" /></label>
+                <label class="fld"><span>Wunschzeit</span>
+                  <select name="zeit">
+                    <option value="egal">Egal</option>
+                    <option value="vormittags">Vormittags</option>
+                    <option value="nachmittags">Nachmittags</option>
+                  </select>
+                </label>
+              </div>
+              <label class="fld fld--check"><input type="checkbox" name="holen" /><span>Bitte abholen und zurückbringen</span></label>
+              <label class="fld"><span>Noch etwas? (freiwillig)</span><textarea name="info" rows="3" placeholder="z. B. Das Geräusch tritt nur bei kaltem Motor auf."></textarea></label>
+
+              <label class="fld fld--check fld--consent">
+                <input type="checkbox" id="f-consent" name="consent" required />
+                <span>Ich habe die <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und bin einverstanden, dass {site.name} meine Angaben nutzt, um mich zurückzurufen.</span>
+              </label>
+              <p class="fine">Wir brauchen Name, Telefon und Auftrag nur für diese Anfrage (Art. 6 Abs. 1 lit. b DSGVO) und löschen sie spätestens 6 Monate nach Abschluss. Das Kennzeichen fragen wir erst am Telefon. Deine Eingaben bleiben bis zum Schließen des Tabs auf diesem Gerät, damit nichts verloren geht, wenn du die Datenschutzerklärung liest.</p>
+            </fieldset>
+
+            <p class="form-err" id="form-err" role="alert" hidden></p>
+            <button class="btn btn--amber btn--wide" type="submit">Anfrage senden</button>
+            <p class="fine">Demo: Es wird nichts gesendet.</p>
+          </form>
+
+          <div class="ticket" id="ticket" tabindex="-1" hidden>
+            <p class="ticket-head">Auftragszettel</p>
+            <dl id="ticket-list"></dl>
+            <p class="ticket-note">So sähe die Bestätigung für dich aus. In dieser Demo wurde nichts gesendet.</p>
+            <button type="button" class="btn btn--ghost" id="ticket-new">Neue Anfrage</button>
+          </div>
+        </div>
+
+        <aside class="zeiten" aria-label="Öffnungszeiten und Kontakt">
+          <figure class="tank" id="tank" data-hours={JSON.stringify(site.hours)}>
+            <Gauge name="tank" max={1} major={0.25} minor={0.125} start={-90} sweep={180} face={false} arcLine={true} viewBox="0 0 200 118" labels={[[0, 'E'], [1, 'F']]} unit="Öffnungszeit heute" rest={0} />
+            <figcaption>
+              <p class="tank-line"><i class="dot" id="tank-dot" aria-hidden="true"></i><span id="tank-line">Öffnungszeiten werden geladen</span></p>
+              <p class="tank-sub">Der Tank zeigt, wie viel vom Öffnungstag noch übrig ist.</p>
+            </figcaption>
+          </figure>
+          <dl class="hours">
+            {site.hoursRows.map((h) => <div><dt>{h.d}</dt><dd>{h.t}</dd></div>)}
+          </dl>
+          <address>
+            {site.address.street}<br />{site.address.zip} {site.address.city} <span class="dim">({site.address.note})</span><br />
+            <a href={`tel:${site.phoneHref}`}>{site.phone}</a><br />
+            {wa && <><a href={wa} rel="noopener">WhatsApp schreiben</a><br /></>}
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </address>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+
+  <div class="callbar" id="callbar">
+    <a class="btn btn--ghost" href={`tel:${site.phoneHref}`}>Anrufen</a>
+    {wa && <a class="btn btn--ghost" href={wa} rel="noopener">WhatsApp</a>}
+    <a class="btn btn--amber" href="#termin" id="callbar-termin">Termin anfragen</a>
+  </div>
+
+  <script>
+    import '../scripts/app.js';
+  </script>
+</Base>

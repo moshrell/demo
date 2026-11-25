@@ -1,0 +1,1007 @@
+{
+  "meta_title": {
+    "de": "Schulterblick Fahrschule Gehrden · Führerschein mit Preis-Zähler",
+    "en": "Schulterblick driving school, Gehrden · Licence with a live price counter",
+    "uk": "Автошкола Schulterblick, Герден · Права з лічильником вартості"
+  },
+  "meta_desc": {
+    "de": "Beispielseite einer Fahrschule: Der Weg zum Führerschein als Route. Jede Station zeigt Dauer und Kosten, der Zähler rechnet mit.",
+    "en": "Demo driving-school page: the road to your licence as a route. Every stop shows duration and cost, the counter adds it up.",
+    "uk": "Демо-сторінка автошколи: шлях до прав як маршрут. Кожна станція показує тривалість і вартість, лічильник рахує разом."
+  },
+  "skip": {
+    "de": "Zum Inhalt springen",
+    "en": "Skip to content",
+    "uk": "Перейти до змісту"
+  },
+  "lang_aria": {
+    "de": "Sprache wählen",
+    "en": "Choose language",
+    "uk": "Обрати мову"
+  },
+  "nav_call": {
+    "de": "Anrufen",
+    "en": "Call",
+    "uk": "Подзвонити"
+  },
+  "brand_tag": {
+    "de": "Fahrschule · Gehrden",
+    "en": "Driving school · Gehrden",
+    "uk": "Автошкола · Герден"
+  },
+  "hero_eyebrow": {
+    "de": "Fahrschule in Gehrden · Klasse B",
+    "en": "Driving school in Gehrden · class B",
+    "uk": "Автошкола в Гердені · категорія B"
+  },
+  "hero_h1_a": {
+    "de": "Führerschein.",
+    "en": "Your licence.",
+    "uk": "Права."
+  },
+  "hero_h1_b": {
+    "de": "Ohne Überraschungen.",
+    "en": "No surprises.",
+    "uk": "Без сюрпризів."
+  },
+  "hero_lead": {
+    "de": "Sieben Stationen bis zum Schein. Bei jeder siehst du, was sie dauert und kostet. Der Zähler rechnet mit.",
+    "en": "Seven stops to your licence. At each one you see how long it takes and what it costs. The counter adds it up as you go.",
+    "uk": "Сім станцій до прав. На кожній видно, скільки це триває й коштує. Лічильник рахує разом із тобою."
+  },
+  "hero_go": {
+    "de": "Route starten",
+    "en": "Start the route",
+    "uk": "Почати маршрут"
+  },
+  "hero_call": {
+    "de": "Anrufen",
+    "en": "Call us",
+    "uk": "Подзвонити"
+  },
+  "hero_langs": {
+    "de": "Wir unterrichten auf Deutsch, Englisch und Ukrainisch.",
+    "en": "We teach in German, English and Ukrainian.",
+    "uk": "Навчаємо німецькою, англійською та українською."
+  },
+  "ctr_label": {
+    "de": "Dein Führerschein kostet",
+    "en": "Your licence costs",
+    "uk": "Твої права коштують"
+  },
+  "ctr_hint": {
+    "de": "Beispielrechnung mit Musterpreisen. Alles auf der Route stellst du selbst ein.",
+    "en": "Sample calculation with sample prices. Everything on the route is yours to set.",
+    "uk": "Зразковий розрахунок зі зразковими цінами. Усе на маршруті налаштовуєш ти."
+  },
+  "bar_meta": {
+    "de": "Gesamt · Station {n}/7",
+    "en": "Total · stop {n}/7",
+    "uk": "Разом · станція {n}/7"
+  },
+  "bar_beleg": {
+    "de": "Rechnung",
+    "en": "Bill",
+    "uk": "Рахунок"
+  },
+  "bar_cta": {
+    "de": "Anmelden",
+    "en": "Sign up",
+    "uk": "Записатись"
+  },
+  "sr_total": {
+    "de": "Gesamtkosten {x}",
+    "en": "Total cost {x}",
+    "uk": "Загальна вартість {x}"
+  },
+  "beleg_title": {
+    "de": "Deine Rechnung",
+    "en": "Your bill",
+    "uk": "Твій рахунок"
+  },
+  "beleg_g_school": {
+    "de": "An die Fahrschule",
+    "en": "To the driving school",
+    "uk": "Автошколі"
+  },
+  "beleg_g_extern": {
+    "de": "Direkt an Amt, TÜV/DEKRA und Co.",
+    "en": "Paid directly to the office, TÜV/DEKRA and others",
+    "uk": "Напряму відомству, TÜV/DEKRA та іншим"
+  },
+  "beleg_total": {
+    "de": "Gesamt",
+    "en": "Total",
+    "uk": "Разом"
+  },
+  "beleg_split": {
+    "de": "Davon an uns {school}. Den Rest zahlst du direkt an Dritte.",
+    "en": "Of this, {school} comes to us. You pay the rest directly to third parties.",
+    "uk": "З них нам — {school}. Решту платиш напряму третім сторонам."
+  },
+  "beleg_note": {
+    "de": "Musterpreise der Beispielseite. Der ADAC nennt für Deutschland 2025 etwa 2.500 bis 4.500 €.",
+    "en": "Sample prices for this demo page. For Germany the ADAC quotes roughly €2,500 to €4,500 (2025).",
+    "uk": "Зразкові ціни демо-сторінки. ADAC називає для Німеччини (2025) приблизно 2 500–4 500 €."
+  },
+  "beleg_adac": {
+    "de": "ADAC: Führerschein-Kosten",
+    "en": "ADAC: licence costs",
+    "uk": "ADAC: вартість прав"
+  },
+  "sheet_close": {
+    "de": "Schließen",
+    "en": "Close",
+    "uk": "Закрити"
+  },
+  "sheet_cta": {
+    "de": "Zur Voranmeldung",
+    "en": "To pre-registration",
+    "uk": "До попереднього запису"
+  },
+  "l_grund": {
+    "de": "Grundbetrag",
+    "en": "Basic fee",
+    "uk": "Базовий внесок"
+  },
+  "l_fahrt": {
+    "de": "{n} × Übungsfahrt (45 Min.)",
+    "en": "{n} × practice lesson (45 min)",
+    "uk": "{n} × практичний урок (45 хв)"
+  },
+  "l_sonder": {
+    "de": "12 × Sonderfahrt (45 Min.)",
+    "en": "12 × special drive (45 min)",
+    "uk": "12 × спец. поїздка (45 хв)"
+  },
+  "l_lern": {
+    "de": "Lernpaket (App und Buch)",
+    "en": "Study pack (app and book)",
+    "uk": "Навчальний пакет (застосунок і книга)"
+  },
+  "l_theorie": {
+    "de": "Theorieprüfung, Vorstellung",
+    "en": "Theory exam, registration",
+    "uk": "Теоретичний іспит, подання"
+  },
+  "l_theorie_x": {
+    "de": "Theorieprüfung, Gebühr TÜV/DEKRA",
+    "en": "Theory exam, TÜV/DEKRA fee",
+    "uk": "Теоретичний іспит, збір TÜV/DEKRA"
+  },
+  "l_praxis": {
+    "de": "Praxisprüfung, Vorstellung und Fahrzeug",
+    "en": "Practical exam, registration and car",
+    "uk": "Практичний іспит, подання й авто"
+  },
+  "l_praxis_x": {
+    "de": "Praxisprüfung, Gebühr TÜV/DEKRA",
+    "en": "Practical exam, TÜV/DEKRA fee",
+    "uk": "Практичний іспит, збір TÜV/DEKRA"
+  },
+  "l_sehtest": {
+    "de": "Sehtest",
+    "en": "Eye test",
+    "uk": "Перевірка зору"
+  },
+  "l_erstehilfe": {
+    "de": "Erste-Hilfe-Kurs",
+    "en": "First-aid course",
+    "uk": "Курс першої допомоги"
+  },
+  "l_foto": {
+    "de": "Biometrisches Passfoto",
+    "en": "Biometric photo",
+    "uk": "Біометричне фото"
+  },
+  "l_antrag": {
+    "de": "Antrag, Führerscheinstelle",
+    "en": "Application fee, licensing office",
+    "uk": "Заява, Führerscheinstelle"
+  },
+  "l_retry_t": {
+    "de": "Puffer: Theorie wiederholen",
+    "en": "Buffer: retake theory",
+    "uk": "Запас: перескласти теорію"
+  },
+  "l_retry_t_x": {
+    "de": "Puffer: Gebühr TÜV/DEKRA (Theorie)",
+    "en": "Buffer: TÜV/DEKRA fee (theory)",
+    "uk": "Запас: збір TÜV/DEKRA (теорія)"
+  },
+  "l_retry_p": {
+    "de": "Puffer: Praxis wiederholen und auffrischen",
+    "en": "Buffer: retake practical and refresh",
+    "uk": "Запас: перескласти практику й повторити"
+  },
+  "l_retry_p_x": {
+    "de": "Puffer: Gebühr TÜV/DEKRA (Praxis)",
+    "en": "Buffer: TÜV/DEKRA fee (practical)",
+    "uk": "Запас: збір TÜV/DEKRA (практика)"
+  },
+  "st_eyebrow": {
+    "de": "Station {n} von 7",
+    "en": "Stop {n} of 7",
+    "uk": "Станція {n} з 7"
+  },
+  "st_sum": {
+    "de": "Diese Station",
+    "en": "This stop",
+    "uk": "Ця станція"
+  },
+  "st_none": {
+    "de": "ohne Kosten",
+    "en": "no cost",
+    "uk": "без вартості"
+  },
+  "s1_t": {
+    "de": "Anmeldung",
+    "en": "Sign-up",
+    "uk": "Запис"
+  },
+  "s1_lead": {
+    "de": "Drei Fragen, dann steht dein Startpreis.",
+    "en": "Three questions, then your starting price is set.",
+    "uk": "Три запитання — і початкова ціна готова."
+  },
+  "s1_q_alter": {
+    "de": "Wie alt bist du?",
+    "en": "How old are you?",
+    "uk": "Скільки тобі років?"
+  },
+  "s1_a17": {
+    "de": "17, mit Begleitperson",
+    "en": "17, with an accompanying adult",
+    "uk": "17, із супроводжувачем"
+  },
+  "s1_a18": {
+    "de": "18 oder älter",
+    "en": "18 or older",
+    "uk": "18 або старше"
+  },
+  "s1_alter_note": {
+    "de": "Mit 17 fährst du mit Begleitperson, ab 18 allein. Mit der Ausbildung darfst du schon mit 16½ starten.",
+    "en": "At 17 you drive with an accompanying adult, from 18 on your own. You can start training at 16½.",
+    "uk": "У 17 їздиш із супроводжувачем, з 18 — самостійно. Навчання можна почати вже у 16½."
+  },
+  "s1_q_getriebe": {
+    "de": "Schaltung oder Automatik?",
+    "en": "Manual or automatic?",
+    "uk": "Механіка чи автомат?"
+  },
+  "s1_schalt": {
+    "de": "Schaltung",
+    "en": "Manual",
+    "uk": "Механіка"
+  },
+  "s1_auto": {
+    "de": "Automatik",
+    "en": "Automatic",
+    "uk": "Автомат"
+  },
+  "s1_note_schalt": {
+    "de": "Mit Schaltung darfst du später jedes Auto fahren.",
+    "en": "With a manual licence you can drive any car later on.",
+    "uk": "З механікою потім можна водити будь-яке авто."
+  },
+  "s1_note_auto": {
+    "de": "Automatik: Im Führerschein steht „nur Automatik“. Auf Schaltung erweitern kannst du später. Aufpreis: {x} pro Fahrstunde.",
+    "en": "Automatic: your licence will say “automatic only”. You can extend it to manual later. Surcharge: {x} per lesson.",
+    "uk": "Автомат: у правах буде позначка «лише автомат». Розширити на механіку можна пізніше. Доплата: {x} за урок."
+  },
+  "s1_q_sprache": {
+    "de": "In welcher Sprache möchtest du lernen?",
+    "en": "Which language do you want to learn in?",
+    "uk": "Якою мовою хочеш навчатись?"
+  },
+  "s1_sprache_note": {
+    "de": "Theorie und Fahrstunden gibt es in allen drei Sprachen. Die Prüfung läuft bei TÜV oder DEKRA; welche Sprachen dort möglich sind, klären wir vor der Anmeldung.",
+    "en": "Theory and driving lessons are available in all three languages. The exams are held by TÜV or DEKRA; which languages they offer, we clarify before you sign up.",
+    "uk": "Теорія й уроки водіння доступні всіма трьома мовами. Іспити проводить TÜV або DEKRA; які там мови можливі, з’ясуємо до запису."
+  },
+  "s2_t": {
+    "de": "Papiere",
+    "en": "Paperwork",
+    "uk": "Документи"
+  },
+  "s2_lead": {
+    "de": "Vier Dinge brauchst du, bevor es losgeht. Was du schon hast, schaltest du aus.",
+    "en": "You need four things before you start. Switch off what you already have.",
+    "uk": "Перед стартом потрібно чотири речі. Що вже є — вимкни."
+  },
+  "s2_have": {
+    "de": "habe ich schon",
+    "en": "already have it",
+    "uk": "вже є"
+  },
+  "s2_extern": {
+    "de": "zahlst du direkt",
+    "en": "you pay directly",
+    "uk": "платиш напряму"
+  },
+  "p_sehtest_t": {
+    "de": "Sehtest",
+    "en": "Eye test",
+    "uk": "Перевірка зору (Sehtest)"
+  },
+  "p_sehtest_d": {
+    "de": "Beim Optiker oder Augenarzt, dauert wenige Minuten.",
+    "en": "At an optician or eye doctor, takes a few minutes.",
+    "uk": "В оптиці або в окуліста, кілька хвилин."
+  },
+  "p_erstehilfe_t": {
+    "de": "Erste-Hilfe-Kurs",
+    "en": "First-aid course",
+    "uk": "Курс першої допомоги (Erste-Hilfe-Kurs)"
+  },
+  "p_erstehilfe_d": {
+    "de": "Ein Tag, bei einem Anbieter deiner Wahl.",
+    "en": "One day, with a provider of your choice.",
+    "uk": "Один день, в обраного тобою організатора."
+  },
+  "p_foto_t": {
+    "de": "Biometrisches Passfoto",
+    "en": "Biometric passport photo",
+    "uk": "Біометричне фото на документи"
+  },
+  "p_foto_d": {
+    "de": "35 × 45 mm, vom Fotografen oder Automaten.",
+    "en": "35 × 45 mm, from a photographer or photo booth.",
+    "uk": "35 × 45 мм, у фотографа або у фотоавтоматі."
+  },
+  "p_antrag_t": {
+    "de": "Antrag bei der Führerscheinstelle",
+    "en": "Application at the licensing office",
+    "uk": "Заява у відомстві (Führerscheinstelle)"
+  },
+  "p_antrag_d": {
+    "de": "Wir füllen ihn mit dir aus, du gibst ihn ab.",
+    "en": "We fill it in with you, you hand it in.",
+    "uk": "Заповнюємо разом, подаєш ти."
+  },
+  "s2_note": {
+    "de": "Dieses Geld geht nicht an uns, sondern an Optiker, Kursanbieter, Fotograf und Amt.",
+    "en": "This money goes to the optician, course provider, photographer and office, not to us.",
+    "uk": "Ці гроші йдуть не нам, а в оптику, організатору курсу, фотографу та відомству."
+  },
+  "s3_t": {
+    "de": "Theorie",
+    "en": "Theory",
+    "uk": "Теорія"
+  },
+  "s3_lead": {
+    "de": "12 Lektionen Grundstoff plus 2 für Klasse B, je 90 Minuten. Einsteigen kannst du jede Woche.",
+    "en": "12 core lessons plus 2 for class B, 90 minutes each. You can join any week.",
+    "uk": "12 уроків основного матеріалу й 2 для категорії B, по 90 хвилин. Долучитись можна щотижня."
+  },
+  "s3_plan_h": {
+    "de": "Wochenplan, jeweils 18:30 Uhr",
+    "en": "Weekly plan, each at 6:30 pm",
+    "uk": "Розклад тижня, щоразу о 18:30"
+  },
+  "s3_plan": {
+    "de": "Mo und Do Deutsch · Di Englisch · Mi Ukrainisch",
+    "en": "Mon and Thu German · Tue English · Wed Ukrainian",
+    "uk": "Пн і Чт німецькою · Вт англійською · Ср українською"
+  },
+  "s3_lern_t": {
+    "de": "Lernpaket",
+    "en": "Study pack",
+    "uk": "Навчальний пакет"
+  },
+  "s3_lern_d": {
+    "de": "Alle Prüfungsfragen als App und Buch zum Üben.",
+    "en": "All exam questions as an app and a book for practice.",
+    "uk": "Усі екзаменаційні питання у застосунку й книзі для тренування."
+  },
+  "s3_pruef": {
+    "de": "Die Prüfungsgebühren für die Theorie stehen bei Station 6.",
+    "en": "The theory exam fees are at stop 6.",
+    "uk": "Збори за теоретичний іспит — на станції 6."
+  },
+  "q_h": {
+    "de": "Probier eine Frage",
+    "en": "Try one question",
+    "uk": "Спробуй одне питання"
+  },
+  "q1_q": {
+    "de": "Eine Kreuzung ohne Schilder und ohne Ampel. Von rechts kommt ein Auto. Wer darf zuerst fahren?",
+    "en": "A junction with no signs and no traffic lights. A car comes from the right. Who goes first?",
+    "uk": "Перехрестя без знаків і без світлофора. Справа їде авто. Хто їде першим?"
+  },
+  "q1_a": {
+    "de": "Ich, ich bin schneller.",
+    "en": "I do, I’m faster.",
+    "uk": "Я, бо їду швидше."
+  },
+  "q1_b": {
+    "de": "Das Auto von rechts.",
+    "en": "The car from the right.",
+    "uk": "Авто справа."
+  },
+  "q1_c": {
+    "de": "Wer zuerst hupt.",
+    "en": "Whoever honks first.",
+    "uk": "Хто перший посигналить."
+  },
+  "q_ok": {
+    "de": "Richtig.",
+    "en": "Correct.",
+    "uk": "Правильно."
+  },
+  "q_no": {
+    "de": "Nicht ganz.",
+    "en": "Not quite.",
+    "uk": "Не зовсім."
+  },
+  "q1_why": {
+    "de": "Rechts vor links: Ohne Schilder und Ampel hat Vorfahrt, wer von rechts kommt.",
+    "en": "Right before left: with no signs or lights, whoever comes from the right has priority.",
+    "uk": "Правило правої руки: без знаків і світлофора перевагу має той, хто їде справа."
+  },
+  "q_again": {
+    "de": "Nochmal",
+    "en": "Again",
+    "uk": "Ще раз"
+  },
+  "s4_t": {
+    "de": "Fahrstunden",
+    "en": "Driving lessons",
+    "uk": "Уроки водіння"
+  },
+  "s4_lead": {
+    "de": "Wie viele du brauchst, weiß vorher niemand genau. Stell deine Schätzung ein. Nach der zehnten Stunde sagen wir dir ehrlich, ob sie passt.",
+    "en": "Nobody knows in advance how many you will need. Set your estimate. After the tenth lesson we tell you honestly whether it fits.",
+    "uk": "Скільки знадобиться, наперед не знає ніхто. Постав свою оцінку. Після десятого уроку чесно скажемо, чи вона реальна."
+  },
+  "s4_q": {
+    "de": "Übungsfahrten à 45 Minuten",
+    "en": "Practice lessons of 45 minutes",
+    "uk": "Практичні уроки по 45 хвилин"
+  },
+  "s4_minus": {
+    "de": "eine weniger",
+    "en": "one fewer",
+    "uk": "на одну менше"
+  },
+  "s4_plus": {
+    "de": "eine mehr",
+    "en": "one more",
+    "uk": "на одну більше"
+  },
+  "s4_band": {
+    "de": "Der ADAC rechnet mit 15 bis 25.",
+    "en": "The ADAC (German motoring club) assumes 15 to 25.",
+    "uk": "ADAC (німецький автоклуб) орієнтується на 15–25."
+  },
+  "s4_hours": {
+    "de": "{n} Fahrstunden sind {h} Stunden am Steuer.",
+    "en": "{n} lessons are {h} hours behind the wheel.",
+    "uk": "{n} уроків — це {h} год за кермом."
+  },
+  "s4_price": {
+    "de": "{p} pro Fahrstunde",
+    "en": "{p} per lesson",
+    "uk": "{p} за урок"
+  },
+  "s5_t": {
+    "de": "Sonderfahrten",
+    "en": "Special drives",
+    "uk": "Спеціальні поїздки"
+  },
+  "s5_lead": {
+    "de": "Zwölf Pflichtfahrten, für alle gleich: fünf Überland, vier Autobahn, drei bei Dämmerung oder Dunkelheit.",
+    "en": "Twelve compulsory drives, the same for everyone: five on rural roads, four on the motorway, three at dusk or in the dark.",
+    "uk": "Дванадцять обов’язкових поїздок, однакових для всіх: п’ять за містом, чотири автобаном, три в сутінках чи темряві."
+  },
+  "s5_ueber": {
+    "de": "Überland",
+    "en": "Rural roads",
+    "uk": "За містом"
+  },
+  "s5_bahn": {
+    "de": "Autobahn",
+    "en": "Motorway",
+    "uk": "Автобан"
+  },
+  "s5_nacht": {
+    "de": "Dämmerung und Dunkelheit",
+    "en": "Dusk and darkness",
+    "uk": "Сутінки й темрява"
+  },
+  "s5_tip": {
+    "de": "Tipp: Im Winter wird es früh dunkel. Die Nachtfahrten sind dann schnell erledigt.",
+    "en": "Tip: it gets dark early in winter, so the night drives are done quickly.",
+    "uk": "Порада: взимку темніє рано, тож нічні поїздки проходять швидко."
+  },
+  "s5_each": {
+    "de": "12 Fahrten à {p}",
+    "en": "12 drives at {p} each",
+    "uk": "12 поїздок по {p}"
+  },
+  "s6_t": {
+    "de": "Prüfung",
+    "en": "Exams",
+    "uk": "Іспит"
+  },
+  "s6_lead": {
+    "de": "Erst Theorie, dann Praxis. Beides legst du bei TÜV oder DEKRA ab. Wir begleiten dich.",
+    "en": "Theory first, then practice. Both are held by TÜV or DEKRA. We go with you.",
+    "uk": "Спочатку теорія, потім практика. Обидва іспити приймає TÜV або DEKRA. Ми поруч."
+  },
+  "s6_f_theorie": {
+    "de": "Theorie: 30 Fragen am Computer, bis zu 10 Fehlerpunkte erlaubt",
+    "en": "Theory: 30 questions on a computer, up to 10 error points allowed",
+    "uk": "Теорія: 30 питань на комп’ютері, дозволено до 10 штрафних балів"
+  },
+  "s6_f_praxis": {
+    "de": "Praxis: rund 45 Minuten Fahrt mit Prüferin oder Prüfer",
+    "en": "Practice: about 45 minutes of driving with an examiner",
+    "uk": "Практика: близько 45 хвилин їзди з екзаменатором"
+  },
+  "s6_plan_h": {
+    "de": "Ehrlich planen",
+    "en": "Plan honestly",
+    "uk": "Планувати чесно"
+  },
+  "s6_rt": {
+    "de": "Theorieprüfung einmal wiederholen",
+    "en": "Retake the theory exam once",
+    "uk": "Перескласти теорію один раз"
+  },
+  "s6_rp": {
+    "de": "Praxisprüfung einmal wiederholen, mit zwei Auffrischungsstunden",
+    "en": "Retake the practical exam once, with two refresher lessons",
+    "uk": "Перескласти практику один раз, з двома додатковими уроками"
+  },
+  "s6_note": {
+    "de": "Ein zweiter Anlauf ist nichts Peinliches. Wer ihn einplant, wird von der Rechnung nicht überrascht.",
+    "en": "A second attempt is nothing to be embarrassed about. If you plan for it, the bill will not surprise you.",
+    "uk": "Друга спроба — не ганьба. Хто її закладає, того рахунок не здивує."
+  },
+  "s7_t": {
+    "de": "Ziel",
+    "en": "Finish",
+    "uk": "Фініш"
+  },
+  "s7_lead": {
+    "de": "Geschafft: Dein Führerschein startet mit zwei Jahren Probezeit. Vorher melde dich kurz bei uns.",
+    "en": "Done: your licence starts with a two-year probation period. Before that, get in touch with us.",
+    "uk": "Готово: права починаються з двох років випробувального терміну. А перед тим — напиши нам."
+  },
+  "f_h": {
+    "de": "Voranmeldung",
+    "en": "Pre-registration",
+    "uk": "Попередній запис"
+  },
+  "f_lead": {
+    "de": "Wir rufen dich innerhalb eines Werktags zurück. Du legst dich damit auf nichts fest.",
+    "en": "We call you back within one working day. You are not committing to anything.",
+    "uk": "Передзвонимо протягом робочого дня. Це ні до чого не зобов’язує."
+  },
+  "f_plan_h": {
+    "de": "Dein Plan",
+    "en": "Your plan",
+    "uk": "Твій план"
+  },
+  "f_start_h": {
+    "de": "Wie möchtest du starten?",
+    "en": "How would you like to start?",
+    "uk": "Як хочеш почати?"
+  },
+  "f_start_call": {
+    "de": "Rückruf zur Beratung",
+    "en": "Call back for advice",
+    "uk": "Дзвінок для консультації"
+  },
+  "f_start_probe": {
+    "de": "Probefahrstunde",
+    "en": "Trial lesson",
+    "uk": "Пробний урок водіння"
+  },
+  "f_start_buero": {
+    "de": "Termin im Büro",
+    "en": "Appointment at the office",
+    "uk": "Зустріч в офісі"
+  },
+  "f_lang_h": {
+    "de": "Beratung auf",
+    "en": "Advice in",
+    "uk": "Консультація мовою"
+  },
+  "f_data_h": {
+    "de": "Deine Angaben",
+    "en": "Your details",
+    "uk": "Твої дані"
+  },
+  "f_name": {
+    "de": "Name",
+    "en": "Name",
+    "uk": "Ім’я"
+  },
+  "f_name_ph": {
+    "de": "Vor- und Nachname",
+    "en": "First and last name",
+    "uk": "Ім’я та прізвище"
+  },
+  "f_name_err": {
+    "de": "Bitte gib deinen Namen an.",
+    "en": "Please enter your name.",
+    "uk": "Вкажи, будь ласка, своє ім’я."
+  },
+  "f_tel": {
+    "de": "Telefon",
+    "en": "Phone",
+    "uk": "Телефон"
+  },
+  "f_tel_ph": {
+    "de": "z. B. 0511 1234567",
+    "en": "e.g. 0511 1234567",
+    "uk": "напр. 0511 1234567"
+  },
+  "f_tel_err": {
+    "de": "Bitte gib eine Nummer an, unter der wir dich erreichen.",
+    "en": "Please enter a number where we can reach you.",
+    "uk": "Вкажи номер, за яким до тебе можна додзвонитись."
+  },
+  "f_mail": {
+    "de": "E-Mail (optional)",
+    "en": "Email (optional)",
+    "uk": "E-mail (необов’язково)"
+  },
+  "f_mail_ph": {
+    "de": "name@beispiel.de",
+    "en": "name@example.com",
+    "uk": "name@example.com"
+  },
+  "f_mail_err": {
+    "de": "Bitte prüfe die E-Mail-Adresse, z. B. name@beispiel.de.",
+    "en": "Please check the email address, e.g. name@example.com.",
+    "uk": "Перевір адресу e-mail, напр. name@example.com."
+  },
+  "f_note": {
+    "de": "Nachricht (optional)",
+    "en": "Message (optional)",
+    "uk": "Повідомлення (необов’язково)"
+  },
+  "f_note_ph": {
+    "de": "z. B. Wunschtermin, Fragen, Vorkenntnisse",
+    "en": "e.g. preferred time, questions, prior experience",
+    "uk": "напр. зручний час, питання, досвід"
+  },
+  "f_consent_hint": {
+    "de": "",
+    "en": "You agree that we use your details and your choices from the bill for this pre-registration. Details are in the privacy notice (German only).",
+    "uk": "Ти погоджуєшся, що ми використаємо твої дані та вибір із рахунку для цього запису. Деталі — у політиці конфіденційності (лише німецькою)."
+  },
+  "f_consent_err": {
+    "de": "Bitte stimme zu, sonst können wir dich nicht zurückrufen.",
+    "en": "Please agree, otherwise we cannot call you back.",
+    "uk": "Потрібна згода, інакше ми не зможемо тобі передзвонити."
+  },
+  "f_submit": {
+    "de": "Voranmelden",
+    "en": "Pre-register",
+    "uk": "Записатись"
+  },
+  "f_demo": {
+    "de": "Es wird nichts gesendet (Demo).",
+    "en": "Nothing is sent (demo).",
+    "uk": "Нічого не надсилається (демо)."
+  },
+  "f_sum": {
+    "de": "Summe",
+    "en": "Total",
+    "uk": "Разом"
+  },
+  "done_h": {
+    "de": "Danke, deine Voranmeldung ist angekommen.",
+    "en": "Thanks, your pre-registration has arrived.",
+    "uk": "Дякуємо, твій запис отримано."
+  },
+  "done_demo": {
+    "de": "Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.",
+    "en": "Demo: this form is a demonstration. Nothing was sent or stored.",
+    "uk": "Демо: ця форма — лише показ. Нічого не надіслано й не збережено."
+  },
+  "r_start": {
+    "de": "Start",
+    "en": "Start",
+    "uk": "Старт"
+  },
+  "r_alter": {
+    "de": "Alter",
+    "en": "Age",
+    "uk": "Вік"
+  },
+  "r_getriebe": {
+    "de": "Getriebe",
+    "en": "Gearbox",
+    "uk": "Коробка"
+  },
+  "r_sprache": {
+    "de": "Unterricht auf",
+    "en": "Lessons in",
+    "uk": "Навчання мовою"
+  },
+  "r_fahrten": {
+    "de": "Übungsfahrten",
+    "en": "Practice lessons",
+    "uk": "Практичні уроки"
+  },
+  "r_open": {
+    "de": "Papiere noch zu besorgen",
+    "en": "Paperwork still to get",
+    "uk": "Документів ще потрібно"
+  },
+  "r_puffer": {
+    "de": "Wiederholungs-Puffer",
+    "en": "Retake buffer",
+    "uk": "Запас на перездачу"
+  },
+  "r_none": {
+    "de": "keiner",
+    "en": "none",
+    "uk": "немає"
+  },
+  "r_theorie": {
+    "de": "Theorie",
+    "en": "theory",
+    "uk": "теорія"
+  },
+  "r_praxis": {
+    "de": "Praxis",
+    "en": "practical",
+    "uk": "практика"
+  },
+  "rest_t": {
+    "de": "Rastplatz",
+    "en": "Rest stop",
+    "uk": "Зона відпочинку"
+  },
+  "rest_lead": {
+    "de": "Wer fährt mit dir, womit, und wo findest du uns.",
+    "en": "Who rides along with you, in what, and where to find us.",
+    "uk": "Хто їде з тобою, на чому і де нас знайти."
+  },
+  "team_h": {
+    "de": "Fahrlehrerin und Fahrlehrer",
+    "en": "Your instructors",
+    "uk": "Інструктори"
+  },
+  "team_jana_role": {
+    "de": "Inhaberin, Klasse B und Automatik",
+    "en": "Owner, class B and automatic",
+    "uk": "Власниця, категорія B і автомат"
+  },
+  "team_jana_q": {
+    "de": "Vor jeder Stunde sage ich dir, was wir üben und warum.",
+    "en": "Before every lesson I tell you what we will practise and why.",
+    "uk": "Перед кожним уроком кажу, що відпрацьовуємо і навіщо."
+  },
+  "team_oleksandr_role": {
+    "de": "Theorie am Mittwoch, Klasse B",
+    "en": "Theory on Wednesdays, class B",
+    "uk": "Теорія по середах, категорія B"
+  },
+  "team_oleksandr_q": {
+    "de": "Die Theorie erkläre ich dir in deiner Sprache. Die Prüfungsfragen lernen wir gemeinsam.",
+    "en": "I explain the theory in your language. We learn the exam questions together.",
+    "uk": "Теорію пояснюю твоєю мовою. Екзаменаційні питання вчимо разом."
+  },
+  "team_mehmet_role": {
+    "de": "Autobahn und Nachtfahrten",
+    "en": "Motorway and night drives",
+    "uk": "Автобан і нічні поїздки"
+  },
+  "team_mehmet_q": {
+    "de": "Autobahn ist Übungssache. Wir fahren sie, bis sie langweilig wird.",
+    "en": "Motorway driving is a matter of practice. We drive it until it gets boring.",
+    "uk": "Автобан — це практика. Їздимо, поки не стане нудно."
+  },
+  "lg_de": {
+    "de": "Deutsch",
+    "en": "German",
+    "uk": "Німецька"
+  },
+  "lg_en": {
+    "de": "Englisch",
+    "en": "English",
+    "uk": "Англійська"
+  },
+  "lg_uk": {
+    "de": "Ukrainisch",
+    "en": "Ukrainian",
+    "uk": "Українська"
+  },
+  "lg_tr": {
+    "de": "Türkisch",
+    "en": "Turkish",
+    "uk": "Турецька"
+  },
+  "img_jana": {
+    "de": "Jana Krüger, Fahrlehrerin, vor dem Schulwagen",
+    "en": "Jana Krüger, driving instructor, next to the school car",
+    "uk": "Яна Крюґер, інструкторка, біля навчального авто"
+  },
+  "img_oleksandr": {
+    "de": "Oleksandr Bondar, Fahrlehrer, im Theorieraum",
+    "en": "Oleksandr Bondar, driving instructor, in the classroom",
+    "uk": "Олександр Бондар, інструктор, у класі"
+  },
+  "img_mehmet": {
+    "de": "Mehmet Aydın, Fahrlehrer, am Steuer",
+    "en": "Mehmet Aydın, driving instructor, at the wheel",
+    "uk": "Мехмет Айдин, інструктор, за кермом"
+  },
+  "cars_h": {
+    "de": "Unsere Autos",
+    "en": "Our cars",
+    "uk": "Наші авто"
+  },
+  "car_schalt": {
+    "de": "Kompakt, Schaltung",
+    "en": "Compact, manual",
+    "uk": "Компакт, механіка"
+  },
+  "car_auto": {
+    "de": "Kompakt, Automatik",
+    "en": "Compact, automatic",
+    "uk": "Компакт, автомат"
+  },
+  "car_strom": {
+    "de": "Kleinwagen, elektrisch",
+    "en": "Small car, electric",
+    "uk": "Малолітражка, електро"
+  },
+  "car_d_schalt": {
+    "de": "Die Wahl, wenn du später jedes Auto fahren willst.",
+    "en": "The choice if you want to drive any car later.",
+    "uk": "Вибір, якщо хочеш потім водити будь-яке авто."
+  },
+  "car_d_auto": {
+    "de": "Weniger Schalten, mehr Blick auf den Verkehr.",
+    "en": "Less shifting, more eyes on the traffic.",
+    "uk": "Менше перемикань, більше уваги на дорогу."
+  },
+  "car_d_strom": {
+    "de": "Leise und ohne Kupplung. Fährt sich wie eine Automatik.",
+    "en": "Quiet and no clutch. Drives like an automatic.",
+    "uk": "Тихо й без зчеплення. Їде як автомат."
+  },
+  "img_schalt": {
+    "de": "Kompaktwagen mit Schaltung als Schulwagen",
+    "en": "Compact manual-gearbox school car",
+    "uk": "Навчальне авто-компакт з механікою"
+  },
+  "img_auto": {
+    "de": "Kompaktwagen mit Automatik als Schulwagen",
+    "en": "Compact automatic school car",
+    "uk": "Навчальне авто-компакт з автоматом"
+  },
+  "img_strom": {
+    "de": "Elektrischer Kleinwagen als Schulwagen",
+    "en": "Small electric school car",
+    "uk": "Навчальна електро-малолітражка"
+  },
+  "visit_h": {
+    "de": "Büro und Theorieraum",
+    "en": "Office and classroom",
+    "uk": "Офіс і клас для теорії"
+  },
+  "visit_addr": {
+    "de": "Adresse",
+    "en": "Address",
+    "uk": "Адреса"
+  },
+  "visit_hours": {
+    "de": "Öffnungszeiten",
+    "en": "Opening hours",
+    "uk": "Години роботи"
+  },
+  "visit_hours_t": {
+    "de": "Mo, Di, Do 15–19 Uhr · Mi 10–13 Uhr",
+    "en": "Mon, Tue, Thu 3–7 pm · Wed 10 am–1 pm",
+    "uk": "Пн, Вт, Чт 15–19 · Ср 10–13"
+  },
+  "open_now": {
+    "de": "Jetzt geöffnet, bis {t} Uhr.",
+    "en": "Open now, until {t}.",
+    "uk": "Зараз відчинено, до {t}."
+  },
+  "closed_next": {
+    "de": "Jetzt geschlossen. Nächste Öffnung: {d}, {t} Uhr.",
+    "en": "Closed now. Opens next: {d}, {t}.",
+    "uk": "Зараз зачинено. Відчиняємось: {d}, {t}."
+  },
+  "visit_phone": {
+    "de": "Telefon",
+    "en": "Phone",
+    "uk": "Телефон"
+  },
+  "visit_mail": {
+    "de": "E-Mail",
+    "en": "Email",
+    "uk": "E-mail"
+  },
+  "img_haus": {
+    "de": "Eingang der Fahrschule im Erdgeschoss eines Wohnhauses",
+    "en": "Driving-school entrance on the ground floor of an apartment building",
+    "uk": "Вхід до автошколи на першому поверсі житлового будинку"
+  },
+  "img_theorie": {
+    "de": "Theorieraum mit Tischen und Beamer",
+    "en": "Classroom with desks and projector",
+    "uk": "Клас для теорії зі столами й проєктором"
+  },
+  "faq_h": {
+    "de": "Fragen vor der Anmeldung",
+    "en": "Questions before you sign up",
+    "uk": "Питання перед записом"
+  },
+  "faq1_q": {
+    "de": "Was kostet der Führerschein wirklich?",
+    "en": "What does the licence really cost?",
+    "uk": "Скільки насправді коштують права?"
+  },
+  "faq1_a": {
+    "de": "Das zeigt der Zähler. Den größten Unterschied macht die Zahl der Übungsfahrten. Die Preise hier sind Musterwerte der Beispielseite.",
+    "en": "The counter shows it. The number of practice lessons makes the biggest difference. The prices here are sample values for this demo page.",
+    "uk": "Це показує лічильник. Найбільше значення має кількість практичних уроків. Ціни тут — зразкові, для демо-сторінки."
+  },
+  "faq2_q": {
+    "de": "Kann ich mit 17 anfangen?",
+    "en": "Can I start at 17?",
+    "uk": "Чи можна почати у 17?"
+  },
+  "faq2_a": {
+    "de": "Ja. Die Ausbildung darf schon mit 16½ beginnen. Mit 17 fährst du mit Begleitperson, ab 18 allein.",
+    "en": "Yes. Training may start as early as 16½. At 17 you drive with an accompanying adult, from 18 on your own.",
+    "uk": "Так. Навчання можна почати вже у 16½. У 17 їздиш із супроводжувачем, з 18 — самостійно."
+  },
+  "faq3_q": {
+    "de": "Was passiert, wenn ich durchfalle?",
+    "en": "What if I fail?",
+    "uk": "Що, якщо я не складу?"
+  },
+  "faq3_a": {
+    "de": "Du kannst wiederholen. Wir besprechen vorher, was schiefging, und planen Auffrischungsstunden. Auf der Rechnung kannst du den Puffer einschalten.",
+    "en": "You can retake it. We first go through what went wrong and plan refresher lessons. On the bill you can switch on the buffer.",
+    "uk": "Можна перескласти. Спершу розберемо, що пішло не так, і заплануємо додаткові уроки. У рахунку можна ввімкнути запас."
+  },
+  "faq4_q": {
+    "de": "Muss ich alles im Voraus bezahlen?",
+    "en": "Do I have to pay everything up front?",
+    "uk": "Чи треба платити все наперед?"
+  },
+  "faq4_a": {
+    "de": "Nein. Bei der Anmeldung zahlst du den Grundbetrag, danach Fahrstunde für Fahrstunde. (Beispielregel dieser Demo.)",
+    "en": "No. At sign-up you pay the basic fee, afterwards lesson by lesson. (Sample rule of this demo.)",
+    "uk": "Ні. Під час запису платиш базовий внесок, далі — урок за уроком. (Зразкове правило цього демо.)"
+  },
+  "faq5_q": {
+    "de": "Gibt es Unterricht auf Ukrainisch?",
+    "en": "Do you teach in Ukrainian?",
+    "uk": "Чи є навчання українською?"
+  },
+  "faq5_a": {
+    "de": "Ja. Die Theorie läuft mittwochs, Fahrstunden gibt es bei Oleksandr Bondar. Die Prüfung läuft bei TÜV oder DEKRA; welche Sprachen dort möglich sind, klären wir vor der Anmeldung.",
+    "en": "Yes. Theory runs on Wednesdays and driving lessons are with Oleksandr Bondar. The exams are held by TÜV or DEKRA; which languages they offer, we clarify before you sign up.",
+    "uk": "Так. Теорія — по середах, уроки водіння — в Олександра Бондаря. Іспити проводить TÜV або DEKRA; які там мови можливі, з’ясуємо до запису."
+  },
+  "ft_imp": {
+    "de": "Impressum",
+    "en": "Imprint (Impressum)",
+    "uk": "Імпресум (Impressum)"
+  },
+  "ft_dat": {
+    "de": "Datenschutz",
+    "en": "Privacy (Datenschutz)",
+    "uk": "Конфіденційність (Datenschutz)"
+  },
+  "ft_note": {
+    "de": "Beispielseite. Rechtstexte nur auf Deutsch.",
+    "en": "Demo page. Legal texts in German only.",
+    "uk": "Демо-сторінка. Юридичні тексти лише німецькою."
+  }
+}

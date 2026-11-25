@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Impressum · Schulterblick Fahrschule" description="Impressum der Beispielseite">
+  <main class="legal" id="inhalt">
+    <h1>Impressum</h1>
+    <p><strong>Demo-Hinweis:</strong> Beispielseite von Kravets Webdesign. Betrieb, Personen und Adresse sind erfunden. Die Pflichtangaben unten zeigen die Struktur für einen echten Betrieb.</p>
+
+    <h2>Angaben nach § 5 DDG</h2>
+    <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+    <p>Telefon: {site.phone}<br />E-Mail: {site.email}</p>
+    <p><span class="todo">TODO vom Kunden</span>: Vertretungsberechtigte Person, Handelsregister und -nummer, Umsatzsteuer-Identifikationsnummer, Fahrschulerlaubnis (erteilende Behörde und Datum), zuständige Aufsichtsbehörde.</p>
+
+    <h2>Verantwortlich für den Inhalt</h2>
+    <p><span class="todo">TODO vom Kunden</span>: Name und Anschrift.</p>
+
+    <h2>Beispielseite</h2>
+    <p>Gestaltung und Umsetzung: Kravets Webdesign. Preise, Zeiten und Personen auf dieser Seite sind Musterwerte. Bilder sind teils KI-erzeugt.</p>
+
+    <p><a href={base}>← Zurück zur Route</a></p>
+  </main>
+</Base>

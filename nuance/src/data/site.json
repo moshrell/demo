@@ -1,0 +1,253 @@
+{
+  "name": "Nuance",
+  "tagline": "Colour Atelier",
+  "city": "Hannover",
+  "address": "Beispielstraße 1, 30159 Hannover",
+  "phone": "+49 511 0000000",
+  "email": null,
+  "hours": [
+    {
+      "days": "Di – Fr",
+      "time": "09:30 – 18:30"
+    },
+    {
+      "days": "Sa",
+      "time": "09:00 – 15:00"
+    },
+    {
+      "days": "So, Mo",
+      "time": "geschlossen"
+    }
+  ],
+  "services": [
+    {
+      "name": "Ansatzfärbung",
+      "note": "Auswachsen unsichtbar machen",
+      "price": "ab 65 €",
+      "swatch": "#ee8f72"
+    },
+    {
+      "name": "Komplettfärbung",
+      "note": "Ein Ton, vom Ansatz bis in die Spitzen",
+      "price": "ab 85 €",
+      "swatch": "#d2699a"
+    },
+    {
+      "name": "Balayage",
+      "note": "Von Hand gemalte, weiche Übergänge",
+      "price": "ab 140 €",
+      "swatch": "#e6b04f"
+    },
+    {
+      "name": "Blondierung",
+      "note": "Aufhellen mit Bond-Schutz",
+      "price": "ab 160 €",
+      "swatch": "#f2b5a6"
+    },
+    {
+      "name": "Glossing",
+      "note": "Glanz und Farbauffrischung",
+      "price": "ab 45 €",
+      "swatch": "#9d83de"
+    },
+    {
+      "name": "Farbkorrektur",
+      "note": "Nach Beratung, mit festem Angebot",
+      "price": "auf Anfrage",
+      "swatch": "#86bb9c"
+    }
+  ],
+  "steps": [
+    {
+      "title": "Beratung",
+      "text": "Wir schauen auf Hautton, Haarstruktur und Alltag. Erst dann wird eine Farbe gewählt."
+    },
+    {
+      "title": "Mischung",
+      "text": "Dein Ton wird einzeln gemischt – kein Standard-Rezept, sondern deine Formel."
+    },
+    {
+      "title": "Auftrag & Pflege",
+      "text": "Schonend aufgetragen, mit Pflege im Prozess und einer Routine für zu Hause."
+    }
+  ],
+  "looks": [
+    {
+      "id": "kupfer",
+      "name": "Apricot-Kupfer",
+      "swatch": "#ee8f72",
+      "kurz": "Warmes Kupfer mit Pfirsichglanz",
+      "technik": "Balayage + Glossing",
+      "basis": "Naturbraun, Stufe 4–6",
+      "dauer": "ca. 3 Std.",
+      "halt": "8–10 Wochen",
+      "pflege": "Sulfatfreies Shampoo, lauwarm waschen, einmal pro Woche Farbmaske.",
+      "passt": "Warme Hauttöne, Sommersprossen, Braun- und Dunkelblond-Basis.",
+      "services": [
+        "Balayage",
+        "Glossing"
+      ],
+      "alt": "Lange Wellen in Apricot-Kupfer, von Hand gemalte Balayage"
+    },
+    {
+      "id": "magenta",
+      "name": "Magenta-Rosé",
+      "swatch": "#d2699a",
+      "kurz": "Kräftiges Rosé, das leuchtet",
+      "technik": "Blondierung + Komplettfärbung",
+      "basis": "Hellblond (wir hellen vor)",
+      "dauer": "ca. 4 Std.",
+      "halt": "4–6 Wochen, Auffrischen mit Farbmaske",
+      "pflege": "Kühl waschen, Farbmaske in Rosé, Hitzeschutz beim Föhnen.",
+      "passt": "Kühle bis neutrale Hauttöne, wer Farbe als Statement trägt.",
+      "services": [
+        "Blondierung",
+        "Komplettfärbung"
+      ],
+      "alt": "Schulterlanges Haar in leuchtendem Magenta-Rosé"
+    },
+    {
+      "id": "honig",
+      "name": "Honiggold",
+      "swatch": "#e6b04f",
+      "kurz": "Sonnig, weich, ganz natürlich",
+      "technik": "Balayage",
+      "basis": "Mittelbraun bis Dunkelblond",
+      "dauer": "ca. 3 Std.",
+      "halt": "3–4 Monate, Ansatz wächst weich aus",
+      "pflege": "Violettes Shampoo alle zwei Wochen, Haaröl für die Längen.",
+      "passt": "Fast jeder Hautton; die pflegeleichteste Wahl für alle, die selten kommen wollen.",
+      "services": [
+        "Balayage"
+      ],
+      "alt": "Welliges Haar mit Honiggold-Balayage im Sonnenlicht"
+    },
+    {
+      "id": "erdbeer",
+      "name": "Erdbeerblond",
+      "swatch": "#f2b5a6",
+      "kurz": "Zartes Blond mit rosigem Hauch",
+      "technik": "Komplettfärbung + Glossing",
+      "basis": "Hellblond bis Mittelblond",
+      "dauer": "ca. 2,5 Std.",
+      "halt": "6–8 Wochen",
+      "pflege": "Sulfatfrei, Glossing alle sechs Wochen, UV-Schutz im Sommer.",
+      "passt": "Helle und neutrale Hauttöne, für einen weichen Look ohne harte Kontraste.",
+      "services": [
+        "Komplettfärbung",
+        "Glossing"
+      ],
+      "alt": "Glattes Haar in zartem Erdbeerblond"
+    },
+    {
+      "id": "amethyst",
+      "name": "Amethyst",
+      "swatch": "#9d83de",
+      "kurz": "Pastelliges Violett, kühl und klar",
+      "technik": "Blondierung + Glossing",
+      "basis": "Hellblond (wir hellen vor)",
+      "dauer": "ca. 3,5 Std.",
+      "halt": "4–6 Wochen, Pastell verblasst schnell",
+      "pflege": "Violette Farbmaske, kaltes Wasser, selten waschen.",
+      "passt": "Kühle Hauttöne, wer gerne wechselt und Pastell mag.",
+      "services": [
+        "Blondierung",
+        "Glossing"
+      ],
+      "alt": "Haar in pastelligem Amethyst-Violett"
+    },
+    {
+      "id": "salbei",
+      "name": "Salbei",
+      "swatch": "#86bb9c",
+      "kurz": "Ruhiges Grün, fast ein Neutralton",
+      "technik": "Blondierung + Komplettfärbung, 2 Sitzungen",
+      "basis": "Hellblond (wir hellen vor)",
+      "dauer": "2 × ca. 3 Std.",
+      "halt": "4–5 Wochen",
+      "pflege": "Sulfatfrei, Pflegekur nach jeder Wäsche, Chlor meiden.",
+      "passt": "Wer Mut hat und etwas Ungewöhnliches will, das trotzdem elegant bleibt.",
+      "services": [
+        "Blondierung",
+        "Komplettfärbung"
+      ],
+      "alt": "Haar in sanftem Salbeigrün"
+    }
+  ],
+  "ba": [
+    {
+      "id": "ba1",
+      "titel": "Von Mittelbraun zu Honigblond",
+      "meta": "Balayage + Glossing · ca. 4 Std.",
+      "alt": "Haar vor und nach der Balayage"
+    },
+    {
+      "id": "ba2",
+      "titel": "Vom grauen Ansatz zu warmem Kupfer",
+      "meta": "Komplettfärbung + Glossing · ca. 2,5 Std.",
+      "alt": "Haar vor und nach der Kupferfärbung"
+    }
+  ],
+  "team": [
+    {
+      "id": "mara",
+      "name": "Mara Eilers",
+      "rolle": "Colour Director",
+      "spez": "Balayage, Blond, Farbkorrektur",
+      "text": "Gründerin des Ateliers. Mischt jede Formel selbst, wenn es um Blond geht."
+    },
+    {
+      "id": "jule",
+      "name": "Jule Okafor",
+      "rolle": "Colorist",
+      "spez": "Pastell, Vivid, Glossing",
+      "text": "Zuständig für alles, was leuchtet: Rosé, Violett, Salbei."
+    },
+    {
+      "id": "selin",
+      "name": "Selin Aydın",
+      "rolle": "Colorist",
+      "spez": "Kupfer, Ansatz, Gray Blending",
+      "text": "Macht Auswachsen unsichtbar und Grau zu einem Teil des Looks."
+    }
+  ],
+  "reviews": [
+    {
+      "text": "Ich kam mit einem Foto und einem Bauchgefühl. Mara hat mir erklärt, was mit meinem Haar geht, und das Ergebnis ist genau das.",
+      "wer": "Lena K.",
+      "was": "Balayage"
+    },
+    {
+      "text": "Endlich ein Salon, der ehrlich sagt, wie lange etwas hält und was es kostet. Der Preis stand vorher fest.",
+      "wer": "Sophie R.",
+      "was": "Magenta-Rosé"
+    },
+    {
+      "text": "Nach zwei Sitzungen Salbei sieht das Haar gesünder aus als vorher. Das hätte ich nicht gedacht.",
+      "wer": "Aylin D.",
+      "was": "Farbwechsel"
+    }
+  ],
+  "faq": [
+    {
+      "q": "Wie lange hält eine knallige Farbe?",
+      "a": "Pastell und Vivid-Töne verblassen in vier bis sechs Wochen, Kupfer und Gold halten länger. Mit Farbmaske und kühlem Wasser verlängerst du das deutlich. Wir geben dir vorab eine ehrliche Spanne."
+    },
+    {
+      "q": "Schadet Blondieren meinem Haar?",
+      "a": "Aufhellen greift die Haarstruktur an, das lässt sich nicht wegzaubern. Wir arbeiten mit Bond-Schutz im Prozess und sagen dir offen, wenn dein Haar eine Pause braucht."
+    },
+    {
+      "q": "Kann ich ein Foto mitbringen?",
+      "a": "Unbedingt. Ein Foto zeigt uns, was du meinst. Wir sagen dir dann, was auf deiner Basis möglich ist und wie viele Sitzungen es braucht."
+    },
+    {
+      "q": "Was kostet eine Farbkorrektur?",
+      "a": "Das hängt vom Ausgangszustand ab. Nach einer Beratung bekommst du ein festes Angebot, bevor wir anfangen."
+    },
+    {
+      "q": "Brauche ich vorher einen Haarschnitt?",
+      "a": "Nicht zwingend. Spliss färbt sich ungleichmäßig, deshalb empfehlen wir bei langen Haaren, die Spitzen vorher zu kürzen. Das besprechen wir in der Beratung."
+    }
+  ]
+}

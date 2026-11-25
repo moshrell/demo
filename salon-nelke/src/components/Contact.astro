@@ -1,0 +1,102 @@
+---
+import site from '../data/site.json';
+const c = site.contact;
+const route = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${c.street}, ${c.zip} ${c.city}`)}`;
+---
+<section class="section contact" id="kontakt">
+  <div class="wrap grid">
+    <div>
+      <p class="eyebrow reveal">{c.eyebrow}</p>
+      <h2 class="h2" data-split>{c.title}</h2>
+      <p class="status reveal" style="--d:.12s" data-hours={JSON.stringify(site.hours)}><i></i><span>Öffnungszeiten</span></p>
+      <address class="reveal" style="--d:.16s">
+        <span>{site.legalName}</span>
+        <span>{c.street}</span>
+        <span>{c.zip} {c.city}</span>
+      </address>
+      <p class="reveal lines" style="--d:.2s"><span>Telefon: <a href={`tel:${c.phone.replace(/\s/g, '')}`}>{c.phone}</a></span><span>E-Mail: <a href={`mailto:${c.email}`}>{c.email}</a></span></p>
+      <p class="reveal arrival" style="--d:.24s">{c.arrival}</p>
+      <div class="acts reveal" style="--d:.28s"><a class="btn btn--solid" href="#termin">Termin buchen <span class="arr">→</span></a><a class="btn" href={route} target="_blank" rel="noopener">Route planen ↗</a></div>
+    </div>
+
+    <div class="side">
+      <a class="map reveal" href={route} target="_blank" rel="noopener" aria-label={`Route zu ${c.street}, ${c.city} in Google Maps öffnen`}>
+        <svg viewBox="0 0 400 300" role="img" aria-hidden="true">
+          <rect width="400" height="300" fill="#eadfca" />
+          <path d="M-10 210 C 90 180, 160 250, 260 200 S 380 150, 420 170" stroke="#c9d3ee" stroke-width="26" fill="none" />
+          <g stroke="#fbf7ee" stroke-width="10" fill="none" stroke-linecap="round">
+            <path d="M0 80 H400" /><path d="M0 150 H400" /><path d="M60 0 V300" /><path d="M170 0 V300" /><path d="M300 0 V300" /><path d="M0 20 L400 260" />
+          </g>
+          <g fill="#d9ccb2"><rect x="76" y="94" width="78" height="40" rx="4"/><rect x="186" y="94" width="98" height="40" rx="4"/><rect x="76" y="24" width="78" height="40" rx="4"/><rect x="316" y="94" width="70" height="40" rx="4"/><rect x="186" y="24" width="98" height="40" rx="4"/></g>
+          <text x="186" y="168" font-size="11" fill="#1c2541" font-family="sans-serif" letter-spacing="2">NELKENWEG</text>
+          <circle class="pulse" cx="235" cy="150" r="10" fill="#e8705a" />
+          <circle cx="235" cy="150" r="9" fill="#1c2541" stroke="#fbf7ee" stroke-width="3" />
+        </svg>
+        <span class="cap">{c.street} · {c.city} <b>Route planen ↗</b></span>
+      </a>
+      <table class="hours reveal" style="--d:.1s">
+        <caption class="sr-only">Öffnungszeiten</caption>
+        <tbody>
+          {site.hours.map((h, i) => (
+            <tr data-i={i}><th scope="row">{h.day}</th><td>{h.open ? `${h.open} – ${h.close}` : 'geschlossen'}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<style>
+  .acts { display: flex; flex-wrap: wrap; gap: 12px; }
+  .lines a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .contact { background: var(--paper); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .status { display: inline-flex; align-items: center; gap: 10px; margin: 26px 0; padding: 9px 16px; border-radius: 999px; background: var(--cream); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); font-size: .85rem; font-weight: 700; }
+  .status i { width: 10px; height: 10px; border-radius: 50%; background: var(--coral); }
+  .status.open i { background: #3f9a5a; animation: ping 2s infinite; }
+  @keyframes ping { 70% { box-shadow: 0 0 0 10px rgba(63,154,90,0); } 100% { box-shadow: 0 0 0 0 rgba(63,154,90,0); } }
+  address { font-style: normal; display: grid; font-family: var(--serif); font-weight: 600; font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.15; margin-bottom: 18px; font-variation-settings: "SOFT" 100; }
+  address span:first-child { font-style: italic; color: var(--coral); }
+  .lines { display: grid; margin: 0 0 14px; font-weight: 600; }
+  .arrival { color: var(--ink-soft); margin: 0 0 30px; max-width: 40ch; }
+  .map { margin: 0 0 28px; border-radius: var(--radius); overflow: hidden; border: 2px solid var(--ink); box-shadow: var(--shadow); background: var(--paper-2); }
+  .map svg { display: block; width: 100%; height: auto; }
+  .map { display: block; color: inherit; text-decoration: none; transition: transform .35s var(--pop), box-shadow .3s; }
+  .map:hover { transform: translate(-2px, -3px); box-shadow: 8px 9px 0 var(--ink); }
+  .map .cap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 18px; font-size: .82rem; font-weight: 650; background: var(--cream); border-top: 2px solid var(--ink); }
+  .map .cap b { color: var(--coral); }
+  .pulse { transform-origin: 235px 150px; animation: pulse 2.2s ease-out infinite; }
+  @keyframes pulse { from { transform: scale(1); opacity: .8; } to { transform: scale(3.2); opacity: 0; } }
+  .hours { width: 100%; border-collapse: collapse; background: var(--cream); border: 2px solid var(--ink); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .hours th, .hours td { padding: 12px 20px; border-bottom: 1px dashed var(--line); text-align: left; font-weight: 450; }
+  .hours tr:last-child th, .hours tr:last-child td { border-bottom: 0; }
+  .hours td { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+  .hours tr.today { background: var(--butter); }
+  .hours tr.today th, .hours tr.today td { font-weight: 750; color: var(--ink); }
+  .hours tr.today th::after { content: " · heute"; font-weight: 700; font-size: .8rem; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .pulse, .status.open i { animation: none; } }
+</style>
+
+
+<script>
+  const el = document.querySelector<HTMLElement>('#kontakt .status')!;
+  const hours: { open: string | null; close?: string }[] = JSON.parse(el.dataset.hours!);
+  const now = new Date(), i = (now.getDay() + 6) % 7, h = hours[i];
+  const m = now.getHours() * 60 + now.getMinutes();
+  const toMin = (t: string) => { const [a, b] = t.split(':').map(Number); return a * 60 + b; };
+  document.querySelector(`#kontakt tr[data-i="${i}"]`)?.classList.add('today');
+  const isOpen = !!h.open && m >= toMin(h.open) && m < toMin(h.close!);
+  let text = isOpen ? `Jetzt geöffnet · bis ${h.close} Uhr` : 'Gerade geschlossen';
+  if (!isOpen) {
+    for (let k = 0; k < 7; k++) {
+      const j = (i + k) % 7, d = hours[j];
+      if (!d.open || (k === 0 && m >= toMin(d.open))) continue;
+      const names = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+      text += ` · öffnet ${k === 0 ? 'heute' : k === 1 ? 'morgen' : names[j]} um ${d.open} Uhr`;
+      break;
+    }
+  }
+  el.classList.toggle('open', isOpen);
+  el.querySelector('span')!.textContent = text;
+</script>

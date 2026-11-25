@@ -1,0 +1,88 @@
+---
+import { Image, getImage } from 'astro:assets';
+import site from '../data/site.json';
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/gallery/*.{jpg,jpeg,png,webp,avif}', { eager: true });
+const alts: Record<string, string> = Object.fromEntries((site.gallery as any).items.map((i: any) => [i.file, i.alt]));
+// Подпись: из site.json, а если фото новое — из имени файла («balayage-lang.jpg» → «Balayage lang»)
+const nice = (f: string) => { const t = f.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim(); return t.charAt(0).toUpperCase() + t.slice(1); };
+const order = (site.gallery as any).items.map((i: any) => i.file);
+const items = await Promise.all(
+  Object.entries(files)
+    .map(([path, mod]) => ({ file: path.split('/').pop()!, img: mod.default }))
+    .sort((a, b) => ((order.indexOf(a.file) + 1 || 999) - (order.indexOf(b.file) + 1 || 999)) || a.file.localeCompare(b.file))
+    .map(async (it) => ({ ...it, alt: alts[it.file] ?? nice(it.file), full: (await getImage({ src: it.img, width: Math.min(1600, it.img.width) })).src })),
+);
+---
+<section class="section gallery" id="arbeiten" aria-label={site.gallery.title}>
+  <div class="wrap">
+    <ul class="grid">
+      {items.map((it, i) => (
+        <li class="reveal" style={`--d:${(i % 3) * 0.08}s`}>
+          <figure>
+            <button type="button" class="open" data-full={it.full} aria-label={`Bild vergrößern: ${it.alt}`}>
+              <Image src={it.img} alt={it.alt} widths={[400, 800]} sizes="(max-width: 700px) 50vw, 33vw" loading="lazy" />
+            </button>
+            <figcaption>{it.alt}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <dialog class="lightbox" aria-label="Bildansicht">
+    <figure class="big">
+      <img alt="" />
+      <figcaption></figcaption>
+    </figure>
+    <button type="button" class="nav prev" aria-label="Vorheriges Bild">←</button>
+    <button type="button" class="nav next" aria-label="Nächstes Bild">→</button>
+    <button type="button" class="close" aria-label="Schließen">×</button>
+  </dialog>
+</section>
+
+<style>
+  .gallery { padding-top: clamp(16px, 3vh, 40px); }
+  /* Колонки «кирпичиками»: любое число фото и любые пропорции, ничего не налезает */
+  .grid { list-style: none; margin: 0; padding: 0; columns: 3 260px; column-gap: clamp(14px, 2vw, 26px); }
+  .grid li { break-inside: avoid; margin-bottom: clamp(18px, 2.4vw, 32px); }
+  figure { margin: 0; }
+  .open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; overflow: hidden; border-radius: var(--radius); }
+  .open img { width: 100%; height: auto; transition: transform 1.1s var(--ease); }
+  .open:hover img { transform: scale(1.04); }
+  .grid figcaption { margin-top: 10px; font-size: .82rem; line-height: 1.4; color: var(--ink-soft); }
+  @media (max-width: 560px) { .grid { columns: 2; column-gap: 12px; } .grid figcaption { font-size: .72rem; } }
+
+  .lightbox { width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(8, 5, 4, .97); color: var(--cream); }
+  .lightbox::backdrop { background: rgba(8, 5, 4, .9); backdrop-filter: blur(6px); }
+  .lightbox[open] { display: grid; place-items: center; animation: fade .35s var(--ease); }
+  @keyframes fade { from { opacity: 0; } }
+  .big { display: grid; gap: 14px; justify-items: center; padding: 64px 16px; }
+  .big img { max-width: min(92vw, 1000px); max-height: 80vh; width: auto; border-radius: 10px; object-fit: contain; }
+  .big figcaption { font-size: .9rem; opacity: .7; text-align: center; }
+  .lightbox button { position: absolute; width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(251,248,243,.25); background: rgba(8,5,4,.6); font-size: 1.3rem; cursor: pointer; }
+  .close { top: 16px; right: 16px; }
+  .prev { left: 16px; top: 50%; transform: translateY(-50%); }
+  .next { right: 16px; top: 50%; transform: translateY(-50%); }
+</style>
+
+<script>
+  const root = document.getElementById('arbeiten')!;
+  const dlg = root.querySelector('dialog')!;
+  const img = dlg.querySelector('img')!, cap = dlg.querySelector('figcaption')!;
+  const thumbs = [...root.querySelectorAll<HTMLButtonElement>('.open')];
+  let i = 0;
+  const show = (n: number) => {
+    i = (n + thumbs.length) % thumbs.length;
+    const t = thumbs[i];
+    img.src = t.dataset.full!; img.alt = t.querySelector('img')!.alt; cap.textContent = img.alt;
+  };
+  thumbs.forEach((b, n) => b.addEventListener('click', () => { show(n); dlg.showModal(); }));
+  dlg.querySelector('.prev')!.addEventListener('click', () => show(i - 1));
+  dlg.querySelector('.next')!.addEventListener('click', () => show(i + 1));
+  dlg.querySelector('.close')!.addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') show(i - 1); if (e.key === 'ArrowRight') show(i + 1); });
+  let x0 = 0;
+  dlg.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  dlg.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1)); });
+</script>

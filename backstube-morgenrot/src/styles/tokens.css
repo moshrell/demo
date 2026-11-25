@@ -1,0 +1,123 @@
+/* tokens.css — alle Farben, Schriften, Abstände und Bewegungen dieser Seite (Hallmark: Tokens zuerst, nie inline).
+ * Die sechs [data-phase]-Blöcke sind die Lichtzustände des Tages. */
+
+:root {
+  /* Marken-Palette (OKLCH, alles zum Backstuben-Orange hin getönt) */
+  --color-oven: oklch(19% 0.025 50);
+  --color-oven-muted: oklch(78% 0.025 70);
+  --color-oven-rule: oklch(32% 0.03 50);
+  --color-flour: oklch(96.5% 0.012 85);
+  --color-flour-2: oklch(92.5% 0.018 82);
+  --color-ink: oklch(21% 0.02 60);
+  --color-muted: oklch(42% 0.03 60);
+  --color-rule: oklch(82% 0.02 80);
+  --color-ember: oklch(60% 0.15 48);
+  --color-ember-press: oklch(58.5% 0.15 48);
+  --color-ember-ink: oklch(13% 0.03 50);
+  --color-focus: oklch(50% 0.17 45);
+  --color-focus-light: oklch(88% 0.1 75);
+  --color-alert: oklch(46% 0.15 28);
+  --color-night: oklch(16% 0.035 255);
+  --scrim: oklch(14% 0.035 255 / 0.84);
+
+  /* Typografie */
+  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Fallback', ui-sans-serif, sans-serif;
+  --font-body: 'Newsreader Variable', 'Newsreader Fallback', ui-serif, Georgia, serif;
+  --text-sm: 0.8125rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.5625rem;
+  --text-xl: clamp(1.95rem, 3.2vw + 1rem, 3.05rem);
+  --text-display: clamp(2.75rem, min(5vw + 1rem, 9svh), 5.25rem);
+
+  /* Abstände (4-pt-Skala) */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-smd: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: clamp(4.5rem, 10vw, 8rem);
+  --gutter: clamp(1.25rem, 5vw, 4.5rem);
+  --mast-h: 5.25rem;
+
+  /* Bewegung */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+  --dur-fade: 1400ms;
+
+  /* Ebenen */
+  --z-stage: 0;
+  --z-track: 1;
+  --z-mast: 40;
+
+  /* Standard-Phase (wird pro Abschnitt überschrieben) */
+  --p-paper: var(--color-flour);
+  --p-ink: var(--color-ink);
+  --p-muted: var(--color-muted);
+  --p-rule: var(--color-rule);
+  --p-edge: oklch(50% 0.04 70);
+  --p-sky-a: oklch(86% 0.07 85);
+  --p-sky-b: oklch(94% 0.04 90);
+}
+
+/* ---------- Die sechs Lichtzustände des Tages ---------- */
+[data-phase='1'] { /* 04:30 Nacht */
+  --p-paper: oklch(20% 0.035 255);
+  --p-ink: oklch(94% 0.012 85);
+  --p-muted: oklch(78% 0.02 250);
+  --p-rule: oklch(38% 0.035 255);
+  --p-edge: oklch(66% 0.03 255);
+  --p-sky-a: oklch(15% 0.04 262);
+  --p-sky-b: oklch(27% 0.07 40);
+}
+[data-phase='2'] { /* 06:00 Morgengrauen */
+  --p-paper: oklch(90% 0.03 235);
+  --p-ink: oklch(21% 0.04 255);
+  --p-muted: oklch(40% 0.04 250);
+  --p-rule: oklch(76% 0.03 240);
+  --p-edge: oklch(48% 0.045 250);
+  --p-sky-a: oklch(68% 0.06 240);
+  --p-sky-b: oklch(86% 0.07 62);
+}
+[data-phase='3'] { /* 08:00 Morgen */
+  --p-paper: oklch(96% 0.035 92);
+  --p-ink: oklch(22% 0.03 60);
+  --p-muted: oklch(40% 0.04 65);
+  --p-rule: oklch(82% 0.045 85);
+  --p-edge: oklch(48% 0.05 70);
+  --p-sky-a: oklch(86% 0.08 88);
+  --p-sky-b: oklch(95% 0.04 92);
+}
+[data-phase='4'] { /* 11:00 Mittag */
+  --p-paper: oklch(97% 0.012 100);
+  --p-ink: oklch(21% 0.02 70);
+  --p-muted: oklch(40% 0.02 70);
+  --p-rule: oklch(85% 0.02 95);
+  --p-edge: oklch(50% 0.03 80);
+  --p-sky-a: oklch(90% 0.035 232);
+  --p-sky-b: oklch(97% 0.015 98);
+}
+[data-phase='5'] { /* 15:00 Nachmittag */
+  --p-paper: oklch(91% 0.07 82);
+  --p-ink: oklch(24% 0.045 55);
+  --p-muted: oklch(40% 0.06 60);
+  --p-rule: oklch(78% 0.07 75);
+  --p-edge: oklch(47% 0.07 65);
+  --p-sky-a: oklch(78% 0.1 75);
+  --p-sky-b: oklch(90% 0.07 72);
+}
+[data-phase='6'] { /* 18:00 Abend */
+  --p-paper: oklch(30% 0.075 22);
+  --p-ink: oklch(95% 0.02 70);
+  --p-muted: oklch(82% 0.04 45);
+  --p-rule: oklch(46% 0.08 25);
+  --p-edge: oklch(70% 0.07 40);
+  --p-sky-a: oklch(36% 0.12 20);
+  --p-sky-b: oklch(70% 0.14 55);
+}
+

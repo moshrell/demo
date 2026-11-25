@@ -1,0 +1,35 @@
+---
+import site from '../data/site.json';
+const links = [
+  { label: 'Look', href: '#top' },
+  { label: 'Karte', href: '#karte' },
+  { label: 'Looks', href: '#looks' },
+  { label: 'Team', href: '#team' },
+  { label: 'Kontakt', href: '#kontakt' },
+];
+---
+<header class="nav" data-nav>
+  <a class="logo" href="#top" aria-label={`${site.legalName}, nach oben`}><span class="flower" aria-hidden="true">✿</span> Nelke</a>
+  <nav class="links" aria-label="Hauptmenü">
+    {links.map((l) => <a href={l.href}>{l.label}</a>)}
+  </nav>
+  <a class="book" href="#termin">Termin buchen</a>
+</header>
+
+<style>
+  .nav { position: fixed; inset: 0 0 auto 0; z-index: 70; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 12px var(--gutter); transition: transform .5s var(--ease), background .3s, box-shadow .3s; }
+  .nav.is-scrolled { background: var(--paper); box-shadow: 0 2px 0 var(--ink); }
+  .nav.is-hidden { transform: translateY(-110%); }
+  .logo { display: inline-flex; align-items: center; gap: 8px; font-family: var(--serif); font-weight: 700; font-size: 1.6rem; letter-spacing: -.02em; text-decoration: none; font-variation-settings: "SOFT" 100, "WONK" 1; padding: 4px 14px 4px 10px; border-radius: 999px; background: var(--paper); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+  .flower { color: var(--coral); display: inline-block; transition: transform .8s var(--pop); }
+  .logo:hover .flower { transform: rotate(180deg) scale(1.2); }
+  .links { display: flex; gap: 4px; margin-left: auto; background: var(--paper); border: 2px solid var(--ink); border-radius: 999px; padding: 4px; box-shadow: 3px 3px 0 var(--ink); }
+  .links a { text-decoration: none; font-size: .88rem; font-weight: 600; padding: 7px 14px; border-radius: 999px; transition: background .25s, transform .3s var(--pop); }
+  .links a:hover { background: var(--butter); transform: scale(1.06); }
+  .book { padding: 10px 20px; border-radius: 999px; background: var(--coral); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); font-size: .88rem; font-weight: 700; text-decoration: none; transition: transform .25s var(--pop), box-shadow .25s var(--pop); white-space: nowrap; }
+  .book:hover { transform: translate(-2px, -2px) rotate(-2deg); box-shadow: 5px 5px 0 var(--ink); }
+  @media (max-width: 860px) {
+    .links { display: none; }
+    .book { margin-left: auto; }
+  }
+</style>

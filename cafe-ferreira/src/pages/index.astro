@@ -1,0 +1,281 @@
+---
+import Base from '../layouts/Base.astro';
+import Pic from '../components/Pic.astro';
+import Cup from '../components/Cup.astro';
+import { photo } from '../lib/photos';
+import cafe from '../data/cafe.json';
+
+const base = import.meta.env.BASE_URL;
+const word1 = [...'TOMÁS'];
+const word2 = [...'FERREIRA'];
+// Auswahl-Werte liegen auf derselben Skala wie die Getränke in cafe.json (Stärke 1–5, Milch 0–4)
+const strengthOpts = [
+  { v: 1.5, de: 'mild', pt: 'suave' },
+  { v: 3, de: 'mittel', pt: 'médio' },
+  { v: 4.5, de: 'kräftig', pt: 'forte' },
+];
+const milkOpts = [
+  { v: 0, de: 'keine', pt: 'nenhum' },
+  { v: 1.5, de: 'ein Schuss', pt: 'um pouco' },
+  { v: 2.5, de: 'halb', pt: 'metade' },
+  { v: 4, de: 'viel', pt: 'muito' },
+];
+---
+<Base>
+  <a class="skip" href="#karte">Zum Inhalt</a>
+
+  <header class="top">
+    <div class="top__in">
+      <a class="brand" href="#top">{cafe.name}</a>
+      <div class="lang" role="group" aria-label="Sprache / Língua">
+        <button type="button" data-lang="de" aria-pressed="true" lang="de">DE</button>
+        <button type="button" data-lang="pt" aria-pressed="false" lang="pt">PT</button>
+      </div>
+      <nav class="nav" aria-label="Hauptmenü">
+        <a href="#karte" data-pt="Carta">Karte</a>
+        <a href="#bestellen" data-pt="Pedir">Bestellen</a>
+        <a href="#dazu" data-pt="Acompanhar">Dazu</a>
+        <a href="#tomas">Tomás</a>
+        <a href="#besuch" data-pt="Visita">Besuch</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- 1. Die Wand: Name aus Fliesen -->
+    <div class="hero">
+      <div class="wall">
+        <h1 class="wall__h1">
+          <span class="sr">{cafe.name}</span>
+          <span class="word word--1" aria-hidden="true">
+            {word1.map((c) => (
+              <span class="tile"><span class="tile__intro"><span class="tile__hov">
+                <span class="face face--letter">{c}</span><span class="face face--pat"></span>
+              </span></span></span>
+            ))}
+          </span>
+          <span class="word word--2" aria-hidden="true">
+            {word2.map((c) => (
+              <span class="tile"><span class="tile__intro"><span class="tile__hov">
+                <span class="face face--letter">{c}</span><span class="face face--pat"></span>
+              </span></span></span>
+            ))}
+          </span>
+        </h1>
+
+        <p class="chip chip--cafe" aria-hidden="true">Café</p>
+        <p class="chip chip--status status" data-status>
+          <span class="dot" aria-hidden="true"></span>
+          <span class="status__text" data-pt="Öffnungszeiten unten">Öffnungszeiten unten</span>
+        </p>
+
+        <div class="window">
+          <Pic name="hero-cafe" alt="Das Café von innen: Wände ganz in blau-weißen Azulejos, dunkle Holztheke, Espressomaschine" priority sizes="(min-width: 900px) 40vw, 100vw" widths={[640, 960, 1280, 1600]} />
+        </div>
+      </div>
+    </div>
+
+    <section class="intro" aria-label="Willkommen">
+      <div class="intro__in">
+        <p class="lede" data-pt="Ein Kaffee wie in Lissabon, mitten in Hannover.">Ein Kaffee wie in Lissabon, mitten in Hannover.</p>
+        <div class="intro__side">
+          <p data-pt="Bica, Galão, Pingado: an der Theke getrunken, wie es sich gehört. Ein Pastel de nata gibt es dazu, wenn du magst. Seit 2019.">Bica, Galão, Pingado: an der Theke getrunken, wie es sich gehört. Ein Pastel de nata gibt es dazu, wenn du magst. Seit 2019.</p>
+          <p class="cta">
+            <a class="btn" href="#karte" data-pt="Zur Karte">Zur Karte</a>
+            <a class="btn btn--ghost" href="#besuch" data-pt="Öffnungszeiten">Öffnungszeiten</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="frieze" aria-hidden="true"></div>
+
+    <!-- 2. Die Karte: alle sechs auf einen Blick, Auswahl hebt den passenden hervor -->
+    <section class="sec karte" id="karte" aria-labelledby="h-karte">
+      <div class="sec__in">
+        <div class="karte__top">
+          <div class="karte__head">
+            <h2 id="h-karte" data-pt="A carta">Die Karte</h2>
+            <p class="karte__intro" data-pt="Tudo começa com um expresso. O resto é saber quanto leite queres.">Alles beginnt mit einem Espresso. Der Rest ist die Frage, wie viel Milch du magst.</p>
+          </div>
+
+          <form class="kompass" aria-label="Welcher Kaffee passt zu dir?" data-pt-aria="Que café é o teu?" onsubmit="return false">
+            <div class="kompass__foot">
+              <p class="kompass__result" id="k-result" aria-live="polite">Welcher Kaffee passt zu dir? Tippe, was du magst.</p>
+              <button type="button" class="link" id="k-reset" hidden data-pt="Limpar escolha">Auswahl löschen</button>
+            </div>
+            <div class="kompass__group" role="group" aria-labelledby="k-s-l">
+              <span class="kompass__label" id="k-s-l" data-pt="Força">Stärke</span>
+              <div class="opts">
+                {strengthOpts.map((o) => <button type="button" class="opt" data-axis="s" data-v={o.v} aria-pressed="false" data-pt={o.pt}>{o.de}</button>)}
+              </div>
+            </div>
+            <div class="kompass__group" role="group" aria-labelledby="k-m-l">
+              <span class="kompass__label" id="k-m-l" data-pt="Leite">Milch</span>
+              <div class="opts">
+                {milkOpts.map((o) => <button type="button" class="opt" data-axis="m" data-v={o.v} aria-pressed="false" data-pt={o.pt}>{o.de}</button>)}
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <ol class="drinks">
+          {cafe.drinks.map((d) => (
+            <li class="drink" data-id={d.id} data-strength={d.strength} data-milk={d.milk} data-price={d.price} data-twin={d.twin?.of} data-twin-de={d.twin?.de} data-twin-pt={d.twin?.pt}>
+              <span class="drink__tag" data-pt="o teu café">passt zu dir</span>
+              <div class="drink__media">
+                {photo(`drink-${d.id}`)
+                  ? <Pic name={`drink-${d.id}`} alt={d.label} widths={[240, 480]} sizes="(min-width: 900px) 120px, 45vw" />
+                  : <Cup id={d.id} shape={d.shape as 'cup' | 'bigcup' | 'mug' | 'glass'} layers={d.layers as [string, number][]} label={d.label} />}
+              </div>
+              <div class="drink__body">
+                <div class="drink__head">
+                  <h3 class="drink__name">{d.name}</h3>
+                  <p class="drink__price"><span class="sr">Preis: </span>{d.price} €</p>
+                </div>
+                <p class="drink__desc" data-pt={d.pt}>{d.de}</p>
+                <p class="drink__note"><span class="drink__hint"></span></p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <div class="dock" id="k-dock" hidden>
+          <button type="button" class="dock__btn" id="k-dock-btn"><span id="k-dock-text"></span> <span aria-hidden="true">↓</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. So bestellst du: Fliesen zum Umdrehen -->
+    <section class="sec bestellen" id="bestellen" aria-labelledby="h-bestellen">
+      <div class="sec__in">
+        <div class="bestellen__head">
+          <h2 id="h-bestellen" data-pt="Como pedir">So bestellst du</h2>
+          <p data-pt="Não precisas de saber português. Mas uma frase ao balcão alegra a manhã ao Tomás.">Du musst kein Portugiesisch können. Aber ein Satz an der Theke macht Tomás den Morgen.</p>
+          <p class="hint" data-pt="Toca num cartão para o virar.">Tippe auf eine Karte, um sie umzudrehen.</p>
+        </div>
+        <ul class="cards">
+          {cafe.phrases.map((p) => (
+            <li>
+              <button type="button" class="card" aria-pressed="false">
+                <span class="card__in">
+                  <span class="card__f">
+                    <Pic name={p.photo} alt="" widths={[480, 800, 1100]} sizes="(min-width: 900px) 25vw, (min-width: 560px) 45vw, 92vw" />
+                    <span class="card__phrase" lang="pt">{p.pt}</span>
+                  </span>
+                  <span class="card__b">
+                    <span class="card__de" lang="de">{p.de}</span>
+                    <span class="card__sound" lang="de"><span class="card__sound-l">Aussprache:</span> {p.sound}</span>
+                  </span>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- 4. Dazu -->
+    <section class="sec dazu" id="dazu" aria-labelledby="h-dazu">
+      <div class="sec__in dazu__in">
+        <figure class="frame frame--tall">
+          <Pic name="dazu-tisch" alt="Tosta mista und ein Kaffee auf einem gefliesten Tisch" widths={[480, 800, 1100]} sizes="(min-width: 960px) 40vw, 92vw" />
+        </figure>
+        <div class="dazu__text">
+          <h2 id="h-dazu" data-pt="Para acompanhar">Dazu</h2>
+          <p class="dazu__intro" data-pt="Pequenas coisas que combinam com o café. Acabadas de sair do forno, enquanto houver.">Kleine Sachen, die zum Kaffee passen. Frisch aus dem Ofen, solange der Vorrat reicht.</p>
+          <ul class="menu">
+            {cafe.food.map((f) => (
+              <li>
+                <div class="menu__row">
+                  <h3 class="menu__name">{f.name}</h3>
+                  <span class="menu__lead" aria-hidden="true"></span>
+                  <span class="menu__price"><span class="sr">Preis: </span>{f.price} €</span>
+                </div>
+                <p class="menu__desc" data-pt={f.pt}>{f.de}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="frieze" aria-hidden="true"></div>
+
+    <!-- 5. Tomás und die Fliesen -->
+    <section class="sec tomas" id="tomas" aria-labelledby="h-tomas">
+      <div class="sec__in tomas__in">
+        <div class="tomas__photos">
+          <figure class="frame frame--tall frame--left">
+            <Pic name="owner" alt="Tomás Ferreira in der Barista-Schürze hinter seiner Theke, hinter ihm die Fliesenwand" widths={[480, 800, 1100]} sizes="(min-width: 960px) 36vw, 80vw" />
+          </figure>
+        </div>
+        <div class="tomas__text">
+          <h2 id="h-tomas" data-pt="O Tomás e os azulejos">Tomás und die Fliesen</h2>
+          <p data-pt="O Tomás Ferreira cresceu em Aveiro, uma cidade onde fachadas inteiras são feitas de azulejo. Em 2009 veio para Hanôver estudar Engenharia Mecânica e sentiu falta de uma coisa acima de todas: o café ao balcão da esquina.">Tomás Ferreira wuchs in Aveiro auf, einer Stadt, in der ganze Hausfassaden aus Fliesen bestehen. 2009 kam er für ein Maschinenbau-Studium nach Hannover und vermisste vor allem eines: den Kaffee an der Theke um die Ecke.</p>
+          <p data-pt="Em 2019 construiu esse balcão com as próprias mãos. Os azulejos das paredes vieram de uma pequena fábrica perto de Aveiro e foram pintados à mão. Cada um é um pouco diferente. Quem olhar com atenção, encontra aquele que está ao contrário.">2019 hat er sich diese Theke selbst gebaut. Die Fliesen an den Wänden stammen aus einer kleinen Manufaktur bei Aveiro und sind von Hand bemalt. Jede ist ein bisschen anders. Wer genau hinschaut, findet die eine, die verkehrt herum sitzt.</p>
+          <blockquote class="quote">
+            <p data-pt="Em Lisboa bebe-se o café de pé e fala-se à mesma uma hora.">In Lissabon trinkt man den Kaffee im Stehen und redet trotzdem eine Stunde.</p>
+            <footer>Tomás Ferreira</footer>
+          </blockquote>
+          <figure class="detail">
+            <Pic name="tiles-detail" alt="Nahaufnahme einer handbemalten blau-weißen Azulejo-Fliese mit kleinen Unregelmäßigkeiten in der Glasur" widths={[480, 800]} sizes="(min-width: 960px) 24vw, 60vw" />
+            <figcaption data-pt="Handbemalt, mit kleinen Fehlern in der Glasur.">Handbemalt, mit kleinen Fehlern in der Glasur.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <div class="frieze" aria-hidden="true"></div>
+
+    <!-- 6. Besuch -->
+    <section class="sec besuch" id="besuch" aria-labelledby="h-besuch">
+      <div class="sec__in besuch__in">
+        <div class="besuch__main">
+          <h2 id="h-besuch" data-pt="Passa por cá">Komm vorbei</h2>
+          <p class="status status--big" data-status>
+            <span class="dot" aria-hidden="true"></span>
+            <span class="status__text" data-pt="Horário em baixo">Öffnungszeiten unten</span>
+          </p>
+          <table class="hours">
+            <caption class="sr" data-pt="Horário">Öffnungszeiten</caption>
+            <tbody>
+              {cafe.hours.map((h) => (
+                <tr data-days={h.days} data-from={h.from} data-to={h.to}>
+                  <th scope="row" data-pt={h.pt}>{h.de}</th>
+                  <td data-pt={h.timePt}>{h.time}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div class="besuch__side">
+          <h3 data-pt="Onde">Wo</h3>
+          <address>
+            {cafe.name}<br />
+            {cafe.address.street}<br />
+            {cafe.address.zip} {cafe.address.city}
+          </address>
+          <p data-pt="De metro ligeiro até Kröpcke, depois três minutos a pé.">Mit der Stadtbahn bis Kröpcke, von dort drei Minuten zu Fuß.</p>
+          <h3 data-pt="Reservar?">Reservieren?</h3>
+          <p data-pt="Não é preciso. Entra, escolhe um lugar ao balcão e pede uma bica.">Nicht nötig. Komm herein, such dir einen Platz an der Theke und bestell eine Bica.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="foot__in">
+      <p>{cafe.name} · {cafe.address.street}, {cafe.address.zip} {cafe.address.city}</p>
+      <p><a href={`${base}impressum/`}>Impressum</a> · <a href={`${base}datenschutz/`}>Datenschutz</a></p>
+    </div>
+  </footer>
+
+  <button type="button" class="to-top" aria-label="Nach oben" data-pt-aria="Voltar ao topo">
+    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 19V6M5.5 12.5 12 6l6.5 6.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"/></svg>
+  </button>
+
+  <script>
+    import '../scripts/page.js';
+  </script>
+</Base>

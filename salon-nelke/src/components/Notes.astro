@@ -1,0 +1,65 @@
+---
+import site from '../data/site.json';
+const r = site.reviews;
+const colors = ['var(--butter)', 'var(--cream)', 'var(--sage)', '#f2b8a2', 'var(--butter)'];
+const tilts = [-3, 2, -1.5, 3, -2.5];
+---
+<section class="section notes" aria-labelledby="notes-title">
+  <div class="wrap">
+    <header class="head">
+      <div>
+        <p class="eyebrow reveal">{r.eyebrow}</p>
+        <h2 class="h2" id="notes-title" data-split>Zettel am Spiegel.</h2>
+      </div>
+      <p class="note reveal">{r.note} Die Zettel lassen sich verschieben.</p>
+    </header>
+
+    <div class="mirror reveal">
+      <ul class="board">
+        {r.items.map((it, i) => (
+          <li class="note-card" style={`--bgc:${colors[i % colors.length]}; --rot:${tilts[i % tilts.length]}deg`} tabindex="0">
+            <span class="tape" aria-hidden="true"></span>
+            <blockquote>„{it.text}“</blockquote>
+            <p><i aria-hidden="true">★★★★★</i> {it.name}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .notes { background: var(--sky); }
+  .head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(32px, 6vh, 64px); }
+  .note { margin: 0; font-size: .85rem; font-weight: 600; }
+  .mirror { border: 3px solid var(--ink); border-radius: 220px 220px var(--radius) var(--radius); background: linear-gradient(115deg, rgba(255,255,255,.55) 0 18%, rgba(255,255,255,.2) 18% 24%, rgba(255,255,255,.4) 24% 100%), #e9eef9; box-shadow: var(--shadow), inset 0 0 0 10px #f6f1e4, inset 0 0 0 13px var(--ink); padding: clamp(60px, 9vw, 120px) clamp(28px, 5vw, 72px) clamp(32px, 5vw, 64px); }
+  .board { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(18px, 3vw, 36px); }
+  .note-card { position: relative; background: var(--bgc); border: 2px solid var(--ink); padding: 30px 22px 20px; box-shadow: 4px 5px 0 rgba(28, 37, 65, .85); transform: translate(var(--x, 0px), var(--y, 0px)) rotate(var(--rot)); transition: transform .35s var(--pop), box-shadow .3s; cursor: grab; touch-action: none; user-select: none; display: grid; gap: 16px; align-content: space-between; }
+  .note-card:nth-child(4) { grid-column: 1 / span 1; }
+  .note-card:hover { --rot: 0deg; box-shadow: 7px 9px 0 rgba(28, 37, 65, .85); }
+  .note-card.drag { transition: none; cursor: grabbing; z-index: 10; box-shadow: 10px 14px 0 rgba(28, 37, 65, .85); }
+  .tape { position: absolute; top: -13px; left: 50%; width: 76px; height: 24px; translate: -50% 0; rotate: -3deg; background: rgba(255, 255, 255, .6); border: 1.5px dashed rgba(28, 37, 65, .35); }
+  blockquote { margin: 0; font-family: var(--serif); font-size: clamp(1.1rem, 1.6vw, 1.35rem); line-height: 1.25; font-weight: 500; font-variation-settings: "SOFT" 100; }
+  .note-card p { margin: 0; font-size: .85rem; font-weight: 700; }
+  .note-card i { font-style: normal; letter-spacing: .08em; color: var(--coral); margin-right: 6px; -webkit-text-stroke: .6px var(--ink); }
+  @media (max-width: 900px) { .board { grid-template-columns: 1fr 1fr; } .mirror { border-radius: 120px 120px var(--radius) var(--radius); } }
+  @media (max-width: 560px) { .board { grid-template-columns: 1fr; } .note-card { cursor: default; touch-action: auto; } }
+</style>
+
+<script>
+  // Zettel verschieben (Maus, Stift, Finger auf größeren Bildschirmen)
+  document.querySelectorAll<HTMLElement>('.note-card').forEach((n) => {
+    let sx = 0, sy = 0, ox = 0, oy = 0, on = false;
+    n.addEventListener('pointerdown', (e) => {
+      if (innerWidth <= 560) return;
+      on = true; n.classList.add('drag'); n.setPointerCapture(e.pointerId);
+      sx = e.clientX; sy = e.clientY; ox = parseFloat(n.style.getPropertyValue('--x')) || 0; oy = parseFloat(n.style.getPropertyValue('--y')) || 0;
+    });
+    n.addEventListener('pointermove', (e) => {
+      if (!on) return;
+      n.style.setProperty('--x', `${ox + e.clientX - sx}px`); n.style.setProperty('--y', `${oy + e.clientY - sy}px`);
+    });
+    const end = () => { on = false; n.classList.remove('drag'); };
+    n.addEventListener('pointerup', end); n.addEventListener('pointercancel', end);
+  });
+</script>

@@ -1,0 +1,18 @@
+{
+  "name": "studio-kamm",
+  "type": "module",
+  "version": "2.0.0",
+  "private": true,
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node scripts/ki-hinweis.mjs && node scripts/htaccess.mjs",
+    "preview": "astro preview",
+    "publish": "npm run build && node scripts/publish.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist": "^5.2.0",
+    "@fontsource-variable/geist-mono": "^5.2.0",
+    "astro": "^7.3.5"
+  }
+}

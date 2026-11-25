@@ -1,0 +1,30 @@
+---
+import '@fontsource/gloock/latin-400.css';
+import '@fontsource-variable/hanken-grotesk/wght.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import cafe from '../data/cafe.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const { title = `${cafe.name} | Café in Hannover`, description = cafe.description } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const dev = import.meta.env.DEV;
+---
+<!doctype html>
+<html lang="de" data-dev={dev ? '' : undefined}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#f2f5f8" />
+    <link rel="icon" type="image/svg+xml" href={`${base}img/favicon.svg`} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,24 @@
+/* Café Tomás Ferreira: alle Farben und Schriften nur hier. Der Rest benutzt var(--…). */
+:root {
+  --glaze: #f2f5f8;        /* Glasur, Wandfarbe */
+  --glaze-deep: #e1e8f1;   /* leicht getönte Fliese */
+  --cobalt: #1d43a0;       /* Azulejo-Blau */
+  --ink: #0d1a44;          /* Tiefblau für Text und Linien */
+  --ochre: #e3a82b;        /* Ocker: nur als Fläche mit --ink-Text */
+
+  --coffee: #7a4a2b;
+  --crema: #c9945f;
+  --milk: #fbfaf6;
+  --foam: #efe3d0;
+
+  --on-dark: var(--glaze);
+  --line: color-mix(in srgb, var(--ink) 28%, transparent);
+  --line-dark: color-mix(in srgb, var(--glaze) 28%, transparent);
+  --bevel: color-mix(in srgb, var(--ink) 45%, transparent);
+
+  --font-display: 'Gloock', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Hanken Grotesk Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --gutter: clamp(20px, 5vw, 72px);
+  --measure: 62ch;
+}

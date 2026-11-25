@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import shop from '../data/shop.json';
+const base = import.meta.env.BASE_URL;
+---
+<Base title={`Impressum | ${shop.name}`}>
+  <main class="sec sec--deep legal" id="inhalt">
+    <div class="wrap legal__in">
+      <a class="back link" href={base}>Zurück zur Startseite</a>
+      <h1>Impressum</h1>
+      <p><strong>{shop.name}</strong> ist eine fiktive Konditorei. Diese Seite ist eine Demo-Website und zeigt, wie ein Internetauftritt für eine Baklava-Konditorei aussehen kann. Alle Namen, Adressen, Preise und Öffnungszeiten sind erfunden, die Bilder sind KI-generiert.</p>
+      <h2>Verantwortlich für diese Website</h2>
+      <p>Die Angaben nach § 5 DDG finden Sie im Impressum von <a class="link" href="https://kravets-webdesign.de/impressum/">Kravets Webdesign</a>.</p>
+    </div>
+  </main>
+</Base>

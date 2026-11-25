@@ -1,0 +1,9 @@
+---
+import Legal from '../layouts/Legal.astro';
+import site from '../data/site.json';
+---
+<Legal title="Impressum">
+  <p><strong>{site.legalName}</strong> ist ein fiktives Friseurstudio. Diese Seite ist eine Demo-Website und zeigt, wie ein Internetauftritt für einen Salon aussehen kann. Alle Namen, Adressen, Preise und Stimmen sind erfunden.</p>
+  <h2>Verantwortlich für diese Website</h2>
+  <p>Die Angaben nach § 5 DDG finden Sie im Impressum von <a href={`${site.credit.url}/impressum/`}>Kravets Webdesign</a>.</p>
+</Legal>

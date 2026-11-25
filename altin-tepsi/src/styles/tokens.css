@@ -1,0 +1,75 @@
+/* tokens.css — Farben, Schriften, Abstände, Bewegung. Alles andere verweist nur hierher (Hallmark: Tokens zuerst).
+ * Thema: Sirup, Pistazie, Kakao. Hell = blasses Pistaziengrün (kein Creme), dunkel = Kakao. */
+
+:root {
+  /* Kakao (dunkle Flächen) */
+  --color-cacao: #24150f;
+  --color-cacao-2: #34211a;
+  --color-cacao-deep: #1a0f0a;
+  --color-cacao-rule: #54382c;
+  --color-on-dark: #f3ead4;
+  --color-on-dark-muted: #cdbfa6;
+
+  /* Pistazienblatt (helle Flächen) */
+  --color-leaf: #e9ecd3;
+  --color-leaf-2: #dce2bd;
+  --color-ink: #24150f;
+  --color-muted: #55443a;
+  --color-rule: #bcc49a;
+
+  /* Sirup (Akzent) */
+  --color-sirup: #e3a53b;
+  --color-sirup-deep: #b9791b;
+  --color-sirup-light: #f3cf7a;
+
+  /* Pistazie, Rose, Nuss, Halva, Kupfer */
+  --color-pistazie: #8da23f;
+  --color-pistazie-light: #bccb7b;
+  --color-pistazie-deep: #4b5e1b;
+  --color-pistazie-night: #27320f;
+  --color-pistazie-night-2: #34421a;
+  --color-rose: #c4566f;
+  --color-nuss: #7a4a26;
+  --color-halva: #cdb48a;
+  --color-halva-line: #a58b60;
+  --color-copper-hi: #e2a36a;
+  --color-copper: #a9622f;
+  --color-copper-lo: #6d3b1c;
+  --color-dust: #fff7e6;
+  --color-shadow: rgb(15 7 3 / 0.5);
+  --color-alert: #9b2c1d;
+
+  /* Schrift: ein Serif mit Charakter für Überschriften, eine ruhige Grotesk für Text */
+  --font-display: 'Young Serif', ui-serif, Georgia, serif;
+  --font-body: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: clamp(1.9rem, 2.6vw + 1rem, 3rem);
+  --text-display: clamp(2.8rem, 5.4vw + 0.9rem, 5.6rem);
+
+  /* Abstände (4-pt-Skala) */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-smd: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: clamp(4rem, 9vw, 7.5rem);
+  --gutter: clamp(1.25rem, 5vw, 4.5rem);
+  --mast-h: 4rem;
+  --radius: 0.375rem;
+  --radius-tray: 1.25rem;
+
+  /* Bewegung */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 520ms;
+
+  /* Ebenen */
+  --z-mast: 40;
+  --z-bar: 50;
+}

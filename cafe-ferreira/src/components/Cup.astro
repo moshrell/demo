@@ -1,0 +1,104 @@
+---
+// Getränk im Schnitt: Schichten von unten nach oben, Höhe = Anteil. Die Form des Gefäßes ist Teil der Information.
+// Farben kommen aus global.css (Klassen .cup__* und .l-*), hier stehen nur Geometrie und Anteile.
+interface Props {
+  id: string;
+  shape: 'cup' | 'bigcup' | 'mug' | 'glass';
+  layers: [string, number][];
+  label: string;
+}
+const { id, shape, layers, label } = Astro.props;
+
+// viewBox 0 0 120 120. cav = Innenraum (clip), bottom/top = Füllhöhe, cx/half = Mitte und halbe Breite für Details.
+const shapes = {
+  cup: {
+    body: 'M24 44 H88 L82 80 Q80 94 66 94 H46 Q32 94 30 80 Z',
+    cav: 'M29 48 H83 L78.5 79 Q77 90 65 90 H47 Q35 90 33.5 79 Z',
+    bottom: 90, top: 53, cx: 56, half: 24,
+    handle: 'M86 54 Q108 52 105 68 Q102 82 80 80',
+    saucer: { cx: 56, cy: 99, rx: 40, ry: 7 },
+    hl: 'M33 54 L36 76',
+    steam: ['M46 36 q-6 -7 0 -13 q6 -6 0 -12', 'M62 36 q-6 -7 0 -13 q6 -6 0 -12'],
+  },
+  bigcup: {
+    body: 'M22 38 H88 L82 86 Q80 98 66 98 H44 Q30 98 28 86 Z',
+    cav: 'M27 42 H83 L78 85.5 Q76.5 94 65 94 H45 Q33.5 94 32 85.5 Z',
+    bottom: 94, top: 48, cx: 55, half: 26,
+    handle: 'M87 48 Q113 46 110 68 Q107 88 80 85',
+    saucer: { cx: 56, cy: 103, rx: 44, ry: 7 },
+    hl: 'M27 48 L31 80',
+    steam: ['M44 30 q-6 -7 0 -13 q6 -6 0 -12', 'M62 30 q-6 -7 0 -13 q6 -6 0 -12'],
+  },
+  mug: {
+    body: 'M16 40 H92 V84 Q92 100 74 100 H34 Q16 100 16 84 Z',
+    cav: 'M21 44 H87 V83 Q87 95 73 95 H35 Q21 95 21 83 Z',
+    bottom: 95, top: 50, cx: 54, half: 33,
+    handle: 'M91 52 H100 Q114 52 114 68 Q114 84 98 84 H91',
+    saucer: { cx: 58, cy: 104, rx: 46, ry: 6 },
+    hl: 'M21 52 V80',
+    steam: ['M42 32 q-6 -7 0 -13 q6 -6 0 -12', 'M66 32 q-6 -7 0 -13 q6 -6 0 -12'],
+  },
+  glass: {
+    body: 'M34 14 H86 L80 100 Q80 108 72 108 H48 Q40 108 40 100 Z',
+    cav: 'M38.5 18 H81.5 L76.5 97 Q76.5 103 71 103 H49 Q43.5 103 43.5 97 Z',
+    bottom: 103, top: 26, cx: 60, half: 21,
+    handle: 'M82 60 Q106 58 106 78 Q106 98 80 98',
+    saucer: null,
+    hl: 'M39 22 L43 92',
+    steam: [],
+    holder: ['M37 58 H83 V68 H38.5 Z', 'M41 96 H79 V106 Q79 110 74 110 H46 Q41 110 41 106 Z'],
+  },
+};
+const s = shapes[shape];
+const usable = s.bottom - s.top;
+let y = s.bottom;
+const rects = layers.map(([kind, pct], i) => {
+  const h = (pct / 100) * usable;
+  y -= h;
+  return { kind, y, h, top: i === layers.length - 1 };
+});
+// kleine Poren in Crema und Bläschen im Schaum: feste Positionen, kein Zufall
+const dots = rects.flatMap((r) => {
+  if (r.kind !== 'crema' && r.kind !== 'foam') return [];
+  const k = s.half / 24;
+  return [-0.7, -0.15, 0.4, 0.75].map((f, i) => ({
+    kind: r.kind, cx: s.cx + f * s.half, cy: r.y + r.h * (0.35 + 0.3 * ((i * 7) % 3) / 2), r: r.kind === 'foam' ? 1.4 * k : 1.1 * k,
+  }));
+});
+const waveL = s.cx - s.half - 6;
+const waveR = s.cx + s.half + 6;
+---
+<svg class="cup" viewBox="0 0 120 120" role="img" aria-label={label}>
+  <defs><clipPath id={`cl-${id}`}><path d={s.cav} /></clipPath></defs>
+
+  {s.steam.map((d) => <path class="cup__steam" d={d} />)}
+  {s.saucer && (
+    <>
+      <ellipse class="cup__saucer" cx={s.saucer.cx} cy={s.saucer.cy} rx={s.saucer.rx} ry={s.saucer.ry} />
+      <ellipse class="cup__saucer-in" cx={s.saucer.cx} cy={s.saucer.cy - 0.5} rx={s.saucer.rx * 0.55} ry={s.saucer.ry * 0.5} />
+    </>
+  )}
+  <path class="cup__handle-o" d={s.handle} />
+  <path class="cup__handle-i" d={s.handle} />
+  <path class="cup__body" d={s.body} />
+  <path class="cup__cav" d={s.cav} />
+
+  <g clip-path={`url(#cl-${id})`}>
+    {rects.map((r) =>
+      r.top ? (
+        <path
+          class={`l-${r.kind}`}
+          d={`M${waveL} ${(s.bottom + 2).toFixed(1)} H${waveR} V${r.y.toFixed(1)} H${(s.cx + s.half).toFixed(1)} Q${s.cx} ${(r.y - 3.2).toFixed(1)} ${(s.cx - s.half).toFixed(1)} ${r.y.toFixed(1)} H${waveL} Z`}
+        />
+      ) : (
+        <rect class={`l-${r.kind}`} x={waveL} width={waveR - waveL} y={r.y.toFixed(1)} height={(r.h + 0.6).toFixed(1)} />
+      ),
+    )}
+    {rects.slice(0, -1).map((r) => <line class="cup__sep" x1={waveL} x2={waveR} y1={r.y.toFixed(1)} y2={r.y.toFixed(1)} />)}
+    {dots.map((d) => <circle class={`cup__dot cup__dot--${d.kind}`} cx={d.cx.toFixed(1)} cy={d.cy.toFixed(1)} r={d.r.toFixed(1)} />)}
+  </g>
+
+  {s.holder && s.holder.map((d) => <path class="cup__holder" d={d} />)}
+  <path class="cup__line" d={s.body} />
+  <path class="cup__hl" d={s.hl} />
+</svg>

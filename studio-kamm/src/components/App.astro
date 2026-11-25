@@ -1,0 +1,379 @@
+---
+// Правая часть: сама запись, как в приложении. Шаги: услуги → мастер → время → данные → билет.
+import Photo from './Photo.astro';
+import site from '../data/site.json';
+const s = site.services;
+const arr = (v: number | number[]) => (Array.isArray(v) ? v : [v, v, v]);
+const cats = site.categories.map((c) => ({ ...c, items: s.categories.find((x) => x.id === c.id)!.items }));
+const steps = ['Leistung', 'Stylist', 'Termin', 'Daten'];
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<main class="app" data-app data-team={JSON.stringify(site.team)} data-hours={JSON.stringify(site.hours)} data-slot={site.booking.slotMinutes} data-max={site.booking.maxDirect} data-route={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${site.contact.street}, ${site.contact.zip} ${site.contact.city}`)}`} data-addr={`${site.contact.street}, ${site.contact.zip} ${site.contact.city}`}>
+  <header class="head">
+    <button type="button" class="back" aria-label="Zurück" hidden>←</button>
+    <ol class="progress" aria-label="Fortschritt">
+      {steps.map((st, i) => <li class={i === 0 ? 'on' : ''}><span class="sr-only">Schritt {i + 1}: </span>{st}</li>)}
+    </ol>
+    <span class="stepnum num" aria-hidden="true">1/4</span>
+  </header>
+
+  <div class="views">
+    <!-- 0 · Leistung -->
+    <section class="view" data-view="0" aria-labelledby="v0">
+      <p class="kicker">{site.legalName} · {site.city}-{site.district}</p>
+      <h1 id="v0">Was darf’s sein?</h1>
+      <p class="sub">Leistungen antippen, Stylist und Zeit wählen, fertig. Preise nach Haarlänge, nicht nach Geschlecht.</p>
+      <p class="pref" hidden><span>Ihr Wunsch: <b class="pref-name"></b></span><button type="button" class="pref-x" aria-label="Stylist-Wunsch entfernen">×</button></p>
+
+      <div class="len" role="radiogroup" aria-label="Ihre Haarlänge">
+        <span class="lbl">Ihre Haarlänge</span>
+        {s.lengths.map((l, i) => (
+          <button type="button" role="radio" data-len={i} aria-checked={i === 1 ? 'true' : 'false'}>{l.label} <small>{l.hint}</small></button>
+        ))}
+      </div>
+
+      <div class="cats">
+        {cats.map((c, ci) => (
+          <div class="cat" data-cat={c.id}>
+            <button type="button" class="cat-head" aria-expanded={ci === 0 ? 'true' : 'false'} aria-controls={`cat-${c.id}`}>
+              <span class="thumb"><Photo file={c.photo} alt="" widths={[160, 320]} sizes="80px" /></span>
+              <span class="cat-txt"><b>{c.label}</b><small>{c.sub}</small></span>
+              <span class="count num" aria-label="gewählt"></span>
+              <span class="chev" aria-hidden="true"></span>
+            </button>
+            <div class="cat-body" id={`cat-${c.id}`}>
+              <ul>
+                {c.items.map((it: any, ii) => (
+                  <li>
+                    <button type="button" class="svc" aria-pressed="false" data-cat={c.id} data-key={`${c.id}-${ii}`} data-name={it.name}
+                      data-price={JSON.stringify(arr(it.price))} data-min={JSON.stringify(arr(it.min))} data-consult={it.consult ? '1' : undefined}>
+                      <span class="svc-txt"><b>{it.name}</b><small>{it.desc}{it.consult && <em> · mit Beratung</em>}</small></span>
+                      <span class="svc-meta num"><span class="price"></span><small class="dur"></small></span>
+                      <span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 1 · Stylist -->
+    <section class="view" data-view="1" aria-labelledby="v1" hidden>
+      <h2 id="v1">Bei wem?</h2>
+      <p class="sub">Alle drei können Ihre Auswahl. Oder Sie nehmen den ersten freien Termin.</p>
+      <div class="people">
+        <button type="button" class="person any" data-person="any" aria-pressed="false">
+          <span class="ava any-ava" aria-hidden="true">✶</span>
+          <span class="p-txt"><b>Egal, wer zuerst frei ist</b><small>Schnellster Termin</small></span>
+          <span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
+        </button>
+        {site.team.map((p) => (
+          <button type="button" class="person" data-person={p.id} data-skills={p.skills.join(' ')} aria-pressed="false">
+            <span class="ava"><Photo file={p.photo} alt="" widths={[160, 320]} sizes="72px" /></span>
+            <span class="p-txt"><b>{p.name}</b><small>{p.role} · {p.focus}</small><small class="no">Für diese Auswahl nicht verfügbar</small></span>
+            <span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
+          </button>
+        ))}
+      </div>
+      <button type="button" class="link" data-sheet="team">Mehr über das Team →</button>
+    </section>
+
+    <!-- 2 · Termin -->
+    <section class="view" data-view="2" aria-labelledby="v2" hidden>
+      <h2 id="v2"><span class="direct">Wann passt es?</span><span class="request">Wann passt es ungefähr?</span></h2>
+      <p class="sub direct">Freie Zeiten bei <b class="who"></b> für ca. <b class="need"></b>.</p>
+      <p class="sub request">Farbe und lange Termine planen wir gemeinsam. Wählen Sie bis zu drei Wunschtage und eine Tageszeit, wir rufen innerhalb von 24 Stunden mit einem Vorschlag an.</p>
+      <div class="cal" role="group" aria-label="Tag wählen">
+        <div class="cal-head">
+          <button type="button" class="cal-nav" data-dir="-1" aria-label="Voriger Monat">←</button>
+          <b class="cal-title" aria-live="polite"></b>
+          <button type="button" class="cal-nav" data-dir="1" aria-label="Nächster Monat">→</button>
+        </div>
+        <div class="cal-dow" aria-hidden="true"><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span></div>
+        <div class="cal-grid"></div>
+        <p class="cal-hint request">Bis zu drei Wunschtage möglich.</p>
+      </div>
+      <div class="slots direct" role="group" aria-label="Uhrzeit"></div>
+      <div class="windows request" role="group" aria-label="Tageszeit">
+        <button type="button" data-w="Vormittag" aria-pressed="false"><b>Vormittag</b><small class="num">9–12 Uhr</small></button>
+        <button type="button" data-w="Mittag" aria-pressed="false"><b>Mittag</b><small class="num">12–15 Uhr</small></button>
+        <button type="button" data-w="Nachmittag" aria-pressed="false"><b>Nachmittag</b><small class="num">ab 15 Uhr</small></button>
+      </div>
+    </section>
+
+    <!-- 3 · Daten -->
+    <section class="view" data-view="3" aria-labelledby="v3" hidden>
+      <h2 id="v3">Fast fertig.</h2>
+      <p class="sub">Damit wir Sie erreichen, falls sich etwas ändert.</p>
+      <div class="recap" aria-label="Ihre Auswahl">
+        <ul class="recap-list"></ul>
+        <p class="recap-sum"><span>Summe</span><strong class="num"></strong></p>
+      </div>
+      <form class="form" novalidate>
+        <label for="f-name"><span>Name</span>
+          <input id="f-name" name="name" autocomplete="name" placeholder="Vor- und Nachname" required aria-describedby="e-name" />
+          <small class="err" id="e-name" hidden>Bitte geben Sie Ihren Namen an.</small>
+        </label>
+        <label for="f-tel"><span>Telefon</span>
+          <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 0511 1234567" required aria-describedby="e-tel" />
+          <small class="err" id="e-tel" hidden>Bitte geben Sie eine Telefonnummer an, unter der wir Sie erreichen.</small>
+        </label>
+        <label for="f-mail"><span>E-Mail <i>optional, für die Bestätigung</i></span>
+          <input id="f-mail" name="mail" type="email" autocomplete="email" inputmode="email" placeholder="name@beispiel.de" aria-describedby="e-mail" />
+          <small class="err" id="e-mail" hidden>Bitte geben Sie eine gültige E-Mail-Adresse an, z. B. name@beispiel.de.</small>
+        </label>
+        <label for="f-note"><span>Hinweis <i>optional</i></span><textarea id="f-note" name="note" rows="2" autocomplete="off" placeholder="z. B. aktuelle Haarfarbe, Wunschergebnis"></textarea></label>
+        <div class="consent">
+          <label class="check" for="f-privacy"><input id="f-privacy" type="checkbox" name="privacy" required aria-describedby="e-privacy" /> <span>Ich bin einverstanden, dass meine Angaben (Name, Telefon, E-Mail, Hinweis) zur Bearbeitung meiner Anfrage und zur Terminvergabe verwendet werden. Hinweise zum <a href={`${base}datenschutz/`} target="_blank" rel="noopener">Datenschutz</a>.</span></label>
+          <small class="err" id="e-privacy" hidden>Bitte stimmen Sie zu, sonst können wir Ihren Termin nicht vergeben.</small>
+        </div>
+      </form>
+      <p class="demo-note">Demo: Es wird nichts gesendet. Ihre Eingaben bleiben nur in diesem Browser-Tab.</p>
+    </section>
+
+    <!-- 4 · Fertig -->
+    <section class="view done" data-view="4" aria-labelledby="v4" hidden>
+      <h2 id="v4" class="done-title"></h2>
+      <div class="ticket-wrap"><div class="ticket">
+        <div class="t-main">
+          <p class="t-kicker num"></p>
+          <p class="t-when"></p>
+          <ul class="t-list"></ul>
+        </div>
+        <div class="t-side">
+          <span class="t-total-lbl">Summe</span>
+          <span class="num t-total"></span>
+          <span class="t-code num"></span>
+        </div>
+      </div></div>
+      <p class="sub t-note"></p>
+      <div class="done-actions">
+        <a class="btn btn--cobalt gcal" href="#" target="_blank" rel="noopener">Google Kalender</a>
+        <button type="button" class="btn btn--ghost ics">Apple · Outlook (.ics)</button>
+        <a class="btn btn--ghost route" href="#" target="_blank" rel="noopener">Route planen ↗</a>
+        <button type="button" class="btn btn--ghost restart">Neue Buchung</button>
+      </div>
+    </section>
+  </div>
+
+  <p class="toast" role="status" aria-live="polite"></p>
+
+  <footer class="dock">
+    <div class="sum">
+      <span class="sum-items">Noch nichts gewählt</span>
+      <span class="sum-val num"><span class="sum-lbl">Summe</span><b class="t-price">0 €</b><i>·</i><b class="t-min">0 Min.</b></span>
+    </div>
+    <button type="button" class="btn btn--cobalt next" disabled>Weiter <span aria-hidden="true">→</span></button>
+  </footer>
+</main>
+
+<style>
+  .app { position: relative; min-width: 0; min-height: 100svh; display: flex; flex-direction: column; background: var(--stone); }
+  .head { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 14px; padding: 16px clamp(20px, 4vw, 56px); background: rgba(239, 237, 232, .9); backdrop-filter: blur(12px); }
+  .back { width: 40px; height: 40px; flex: none; border-radius: 50%; border: 0; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--line); cursor: pointer; font-size: 1.1rem; transition: box-shadow .2s; }
+  .back:hover { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .progress { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; list-style: none; margin: 0; padding: 0; }
+  .progress li { position: relative; padding-top: 10px; font-size: .72rem; font-weight: 550; color: var(--ink-soft); }
+  .progress li::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 4px; background: var(--stone-2); }
+  .progress li::after { content: ""; position: absolute; top: 0; left: 0; height: 4px; width: 100%; border-radius: 4px; background: var(--cobalt); transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease); }
+  .progress li.on { color: var(--ink); }
+  .progress li.on::after { transform: scaleX(1); }
+  .stepnum { font-size: .8rem; color: var(--ink-soft); }
+
+  .views { flex: 1; min-width: 0; padding: clamp(20px, 5vh, 56px) clamp(20px, 4vw, 56px) 140px; max-width: 760px; width: 100%; }
+  .view { animation: in-r .55s var(--ease); }
+  .view.from-left { animation-name: in-l; }
+  @keyframes in-r { from { opacity: 0; transform: translateX(28px); } }
+  @keyframes in-l { from { opacity: 0; transform: translateX(-28px); } }
+  .kicker { margin: 0 0 14px; font-family: var(--mono); font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+  h1, h2 { margin: 0; font-weight: 650; letter-spacing: -.045em; line-height: .98; font-size: clamp(2.6rem, 5.4vw, 4.4rem); }
+  .sub { margin: 14px 0 28px; color: var(--ink-soft); max-width: 46ch; font-size: 1.05rem; }
+
+  .pref { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: -12px 0 18px; padding: 8px 8px 8px 16px; border-radius: 999px; background: var(--cobalt-soft); font-size: .92rem; }
+  .pref[hidden] { display: none; }
+  .pref-x { width: 32px; height: 32px; flex: none; border: 0; border-radius: 50%; background: var(--white); cursor: pointer; font-size: 1.2rem; line-height: 1; }
+  .svc.off { opacity: .4; cursor: not-allowed; }
+  .svc.off:hover { background: transparent; }
+
+  /* Длина волос */
+  .len { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 18px; padding: 5px; border-radius: 999px; background: var(--stone-2); width: fit-content; }
+  .len .lbl { font-size: .78rem; font-weight: 550; color: var(--ink-soft); padding: 0 8px 0 12px; }
+  .len button { border: 0; background: none; border-radius: 999px; padding: 8px 14px; font-size: .88rem; font-weight: 600; cursor: pointer; transition: background .25s, color .25s; }
+  .len button small { font-weight: 450; opacity: .6; margin-left: 2px; }
+  .len button[aria-checked="true"] { background: var(--white); box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 4px 14px -6px rgba(0,0,0,.2); }
+
+  /* Категории-аккордеон */
+  .cats { display: grid; gap: 10px; }
+  .cat { background: var(--white); border-radius: var(--radius); box-shadow: 0 1px 0 rgba(0,0,0,.04); overflow: hidden; transition: box-shadow .3s; }
+  .cat.off .cat-head { opacity: .5; }
+  .cat:has(.cat-head[aria-expanded="true"]) { box-shadow: 0 18px 40px -26px rgba(0,0,0,.35); }
+  .cat-head { all: unset; box-sizing: border-box; width: 100%; display: grid; grid-template-columns: 64px 1fr auto 24px; align-items: center; gap: 16px; padding: 12px 18px 12px 12px; cursor: pointer; }
+  .cat-head:focus-visible { outline: 2px solid var(--cobalt); outline-offset: -2px; border-radius: var(--radius); }
+  .thumb { width: 64px; height: 64px; border-radius: 14px; overflow: hidden; background: var(--stone-2); }
+  .thumb :global(img), .thumb :global(.ph) { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
+  .thumb :global(.ph small) { display: none; }
+  .cat-head:hover .thumb :global(img) { transform: scale(1.08); }
+  .cat-txt { display: grid; }
+  .cat-txt b { font-size: 1.2rem; font-weight: 600; letter-spacing: -.02em; }
+  .cat-txt small { color: var(--ink-soft); font-size: .86rem; }
+  .count { min-width: 26px; height: 26px; padding: 0 8px; border-radius: 999px; background: var(--cobalt); color: var(--white); font-size: .78rem; display: grid; place-items: center; transform: scale(0); transition: transform .4s var(--spring); }
+  .count.has { transform: scale(1); }
+  .chev { width: 24px; height: 24px; border-radius: 50%; position: relative; }
+  .chev::before { content: ""; position: absolute; inset: 7px 8px 9px; border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: rotate(45deg); transition: transform .4s var(--ease); }
+  .cat-head[aria-expanded="true"] .chev::before { transform: translateY(4px) rotate(-135deg); }
+  .cat-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .5s var(--ease); }
+  .cat-head[aria-expanded="true"] + .cat-body { grid-template-rows: 1fr; }
+  .cat-body ul { min-height: 0; overflow: hidden; list-style: none; margin: 0; padding: 0 10px; }
+  .cat-body li:last-child { padding-bottom: 10px; }
+  .svc { all: unset; box-sizing: border-box; width: 100%; display: grid; grid-template-columns: 1fr auto 30px; align-items: center; gap: 14px; padding: 14px 12px; border-radius: var(--radius-s); cursor: pointer; border-top: 1px solid var(--line); transition: background .2s; }
+  li:first-child > .svc { border-top-color: transparent; }
+  .svc:hover { background: var(--stone); }
+  .svc:focus-visible { outline: 2px solid var(--cobalt); outline-offset: -2px; }
+  .svc[aria-pressed="true"] { background: var(--cobalt-soft); border-top-color: transparent; }
+  .svc-txt { display: grid; }
+  .svc-txt b { font-weight: 600; }
+  .svc-txt small { color: var(--ink-soft); font-size: .85rem; }
+  .svc-txt em { font-style: normal; color: var(--cobalt); font-weight: 600; }
+  .svc-meta { display: grid; justify-items: end; }
+  .svc-meta .price { font-size: 1.05rem; font-weight: 600; }
+  .svc-meta small { font-size: .74rem; color: var(--ink-soft); }
+  .tick { width: 28px; height: 28px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--line); display: grid; place-items: center; transition: background .25s, box-shadow .25s, transform .35s var(--spring); }
+  .tick svg { width: 18px; height: 18px; fill: none; stroke: var(--white); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 24; stroke-dashoffset: 24; transition: stroke-dashoffset .35s var(--ease) .05s; }
+  [aria-pressed="true"] > .tick { background: var(--cobalt); box-shadow: none; transform: scale(1.08); }
+  [aria-pressed="true"] > .tick svg { stroke-dashoffset: 0; }
+
+  /* Мастера */
+  .people { display: grid; gap: 10px; margin-bottom: 18px; }
+  .person { all: unset; box-sizing: border-box; display: grid; grid-template-columns: 72px 1fr 30px; align-items: center; gap: 16px; padding: 12px 18px 12px 12px; background: var(--white); border-radius: var(--radius); cursor: pointer; transition: box-shadow .3s, transform .3s var(--ease), opacity .3s; }
+  .person:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -26px rgba(0,0,0,.35); }
+  .person:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
+  .person[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--cobalt); }
+  .person:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .ava { width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: var(--stone-2); }
+  .ava :global(img), .ava :global(.ph) { width: 100%; height: 100%; object-fit: cover; }
+  .ava :global(.ph small) { display: none; }
+  .any-ava { display: grid; place-items: center; background: var(--ink); color: var(--white); font-size: 1.6rem; }
+  .p-txt { display: grid; }
+  .p-txt b { font-size: 1.15rem; font-weight: 600; letter-spacing: -.02em; }
+  .p-txt small { color: var(--ink-soft); font-size: .86rem; }
+  .p-txt .no { display: none; color: var(--cobalt); }
+  .person:disabled .no { display: block; }
+  .link { border: 0; background: none; padding: 6px 0; font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
+  .link:hover { color: var(--cobalt); }
+
+  /* Время */
+  .app:not(.is-request) .request, .app.is-request .direct { display: none; }
+  .cal { margin-bottom: 22px; padding: 14px; border-radius: var(--radius); background: var(--white); }
+  .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .cal-title { font-size: 1.1rem; font-weight: 600; letter-spacing: -.02em; }
+  .cal-nav { width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--stone); font-size: 1.05rem; cursor: pointer; transition: background .2s, color .2s; }
+  .cal-nav:hover:not(:disabled) { background: var(--ink); color: var(--white); }
+  .cal-nav:disabled { opacity: .3; cursor: default; }
+  .cal-dow, .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+  .cal-dow span { text-align: center; font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); padding-bottom: 6px; }
+  .cal-grid :global(button) { aspect-ratio: 1; min-height: 40px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 12px; background: transparent; font-family: var(--mono); font-size: .98rem; font-weight: 550; color: var(--ink); cursor: pointer; transition: background .2s, color .2s, transform .3s var(--spring); }
+  .cal-grid :global(button:hover:not(:disabled)) { background: var(--stone); transform: translateY(-1px); }
+  .cal-grid :global(button:disabled) { color: rgba(18,18,18,.22); cursor: default; }
+  .cal-grid :global(button.today) { box-shadow: inset 0 0 0 1.5px var(--cobalt); }
+  .cal-grid :global(button[aria-pressed="true"]) { background: var(--ink); color: var(--white); }
+  .cal-grid :global(.pad) { visibility: hidden; }
+  .cal-hint { margin: 10px 2px 0; font-size: .8rem; color: var(--ink-soft); }
+  .slots { display: grid; gap: 18px; }
+  .slots :global(.grp) { display: grid; gap: 8px; }
+  .slots :global(.grp > span) { font-size: .78rem; font-weight: 600; color: var(--ink-soft); }
+  .slots :global(.grid) { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 8px; }
+  .slots :global(button) { padding: 12px 0; border: 0; border-radius: 12px; background: var(--white); font-family: var(--mono); font-size: .95rem; font-weight: 550; cursor: pointer; transition: background .2s, color .2s, transform .3s var(--spring); }
+  .slots :global(button:hover:not(:disabled)) { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .slots :global(button[aria-pressed="true"]) { background: var(--cobalt); color: var(--white); }
+  .slots :global(button:disabled) { background: transparent; color: rgba(18,18,18,.25); text-decoration: line-through; cursor: not-allowed; }
+  .slots :global(.empty) { margin: 0; padding: 18px; border-radius: 14px; background: var(--white); color: var(--ink-soft); }
+  .windows { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .windows button { display: grid; gap: 2px; padding: 16px 10px; border: 0; border-radius: 16px; background: var(--white); cursor: pointer; transition: background .2s, color .2s; }
+  .windows small { font-size: .78rem; color: var(--ink-soft); }
+  .windows button[aria-pressed="true"] { background: var(--ink); color: var(--white); }
+  .windows button[aria-pressed="true"] small { color: rgba(251,250,247,.7); }
+
+  /* Форма */
+  .form { display: grid; gap: 14px; }
+  .form label { display: grid; gap: 6px; font-size: .85rem; font-weight: 600; }
+  .form label i { font-style: normal; font-weight: 450; color: var(--ink-soft); }
+  .form input, .form textarea { font: inherit; font-size: 1rem; padding: 15px 16px; border-radius: 14px; border: 0; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--line); color: var(--ink); width: 100%; transition: box-shadow .2s; }
+  .form input:focus, .form textarea:focus { outline: none; box-shadow: inset 0 0 0 2px var(--cobalt); }
+  .form .invalid, .form [aria-invalid="true"] { box-shadow: inset 0 0 0 2px var(--err); }
+  .form .check { grid-template-columns: auto 1fr; align-items: start; font-weight: 450; color: var(--ink-soft); }
+  .form .check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--cobalt); box-shadow: none; padding: 0; }
+  .form .err { font-size: .82rem; font-weight: 600; color: var(--err); }
+  .form .err[hidden] { display: none; }
+  .form input::placeholder, .form textarea::placeholder { color: var(--ink-soft); opacity: .8; }
+  .form .consent { display: grid; gap: 6px; }
+  .form .check a { color: var(--ink); font-weight: 600; text-underline-offset: 3px; }
+  .form .check a:focus-visible, .form .check input:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; border-radius: 3px; }
+  .recap { margin-bottom: 18px; padding: 16px 18px; background: var(--white); border-radius: var(--radius-s); display: grid; gap: 8px; box-shadow: inset 0 0 0 1.5px var(--line); }
+  .recap-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; color: var(--ink-soft); font-size: .92rem; }
+  .recap-sum { margin: 0; padding-top: 10px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: baseline; gap: 16px; font-weight: 600; }
+  .recap-sum strong { font-size: 1.3rem; font-weight: 600; }
+  .demo-note { font-size: .8rem; color: var(--ink-soft); }
+
+  /* Билет */
+  .done-title { margin-bottom: 26px; }
+  .ticket-wrap { filter: drop-shadow(0 22px 30px rgba(0,0,0,.12)); animation: drop .8s var(--spring) both .1s; }
+  @keyframes drop { from { opacity: 0; transform: translateY(-30px) rotate(-2deg); } }
+  /* Вырезы делаем маской, а не наложенными кружками: через них виден фон и тень */
+  .ticket { --n: 12px; display: grid; grid-template-columns: 1fr 140px; background: var(--white); border-radius: var(--radius);
+    -webkit-mask: radial-gradient(circle var(--n) at calc(100% - 140px) 0, #0000 calc(var(--n) - .5px), #000 var(--n)), radial-gradient(circle var(--n) at calc(100% - 140px) 100%, #0000 calc(var(--n) - .5px), #000 var(--n));
+    -webkit-mask-composite: source-in;
+    mask: radial-gradient(circle var(--n) at calc(100% - 140px) 0, #0000 calc(var(--n) - .5px), #000 var(--n)), radial-gradient(circle var(--n) at calc(100% - 140px) 100%, #0000 calc(var(--n) - .5px), #000 var(--n));
+    mask-composite: intersect; }
+  .t-main { padding: 24px 26px; border-right: 2px dashed var(--line); margin-right: -1px; }
+  .t-kicker { margin: 0 0 6px; font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; color: var(--cobalt); }
+  .t-when { margin: 0 0 14px; font-size: 1.35rem; font-weight: 600; letter-spacing: -.02em; line-height: 1.2; }
+  .t-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; color: var(--ink-soft); font-size: .92rem; }
+  .t-side { display: grid; align-content: space-between; justify-items: center; padding: 24px 12px; text-align: center; }
+  .t-total-lbl { font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); }
+  .t-total { font-size: 1.5rem; font-weight: 600; }
+  .t-code { font-size: .7rem; color: var(--ink-soft); writing-mode: vertical-rl; letter-spacing: .2em; }
+  .t-note { margin-top: 22px; }
+  .done-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .done-actions .btn { min-height: 48px; padding: 0 20px; font-size: .9rem; }
+
+  /* Нижняя панель */
+  .dock { position: sticky; bottom: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: auto; padding: 14px clamp(20px, 4vw, 56px) calc(14px + env(safe-area-inset-bottom)); background: rgba(251, 250, 247, .92); backdrop-filter: blur(14px); box-shadow: 0 -1px 0 var(--line); }
+  .sum { display: grid; min-width: 0; }
+  .sum-items { font-size: .82rem; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sum-val { font-size: 1.15rem; }
+  .sum-val b { font-weight: 600; }
+  .sum-lbl { margin-right: 8px; font-family: var(--sans); font-size: .82rem; font-weight: 550; color: var(--ink-soft); }
+  .sum-val i { font-style: normal; margin: 0 8px; color: var(--ink-soft); }
+  .next { flex: none; }
+  .app.is-done .dock { display: none; }
+  .toast { position: fixed; left: 50%; bottom: 96px; z-index: 30; max-width: min(92vw, 440px); margin: 0; padding: 12px 18px; border-radius: 14px; background: var(--ink); color: var(--white); font-size: .9rem; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: opacity .3s, transform .4s var(--spring); }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (max-width: 560px) {
+    .len { width: auto; border-radius: 18px; }
+    .len .lbl { width: 100%; padding: 6px 10px 0; }
+    .cat-head { grid-template-columns: 52px 1fr auto 20px; gap: 12px; }
+    .thumb { width: 52px; height: 52px; }
+    .windows { grid-template-columns: 1fr; }
+    .ticket { grid-template-columns: 1fr;
+      -webkit-mask: radial-gradient(circle var(--n) at 0 calc(100% - 76px), #0000 calc(var(--n) - .5px), #000 var(--n)), radial-gradient(circle var(--n) at 100% calc(100% - 76px), #0000 calc(var(--n) - .5px), #000 var(--n));
+      -webkit-mask-composite: source-in;
+      mask: radial-gradient(circle var(--n) at 0 calc(100% - 76px), #0000 calc(var(--n) - .5px), #000 var(--n)), radial-gradient(circle var(--n) at 100% calc(100% - 76px), #0000 calc(var(--n) - .5px), #000 var(--n));
+      mask-composite: intersect; }
+    .t-main { border-right: 0; margin-right: 0; border-bottom: 2px dashed var(--line); }
+    .t-side { grid-auto-flow: column; justify-content: space-between; }
+    .t-code { writing-mode: horizontal-tb; }
+    .progress li { font-size: 0; }
+    .sum-val { white-space: nowrap; }
+    .sum-val .t-min, .sum-val i { display: none; }
+    .t-side { display: flex; align-items: center; gap: 10px; height: 76px; padding-block: 0; }
+    .t-total { margin-right: auto; }
+  }
+</style>
+
+<script>
+  import '../scripts/app.js';
+</script>

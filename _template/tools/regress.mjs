@@ -10,6 +10,7 @@
 //                    только аудит без сравнения:  node tools/regress.mjs --audit [outDir]
 // Настройка через переменные: REGRESS_BUILD (команда сборки, по умолчанию «npx astro build» с DEMO_BASE=/),
 //   REGRESS_DIST (папка сборки, по умолчанию dist), REGRESS_EXCLUDE (регэксп путей страниц, которые пропустить)
+//   или файл regress.config.json в папке проекта: { "build": "npm run build", "exclude": "^/vorschau/" }
 // Итог: <outDir>/report.md (+ PNG-вырезки). Смотреть вырезки по каждому изменению и решать: задумано или побочный эффект.
 // Нужен playwright-core (devDependency) и Chrome: CHROME=/путь (по умолчанию /usr/bin/google-chrome).
 import { chromium } from 'playwright-core';
@@ -21,9 +22,13 @@ const slug = path.basename(proj);
 const AUDIT_ONLY = process.argv[2] === '--audit';
 const ref = AUDIT_ONLY ? null : process.argv[2] || 'HEAD';
 const out = path.resolve(process.argv[3] || path.join(os.tmpdir(), `regress-${slug}`));
-const BUILD = process.env.REGRESS_BUILD || 'npx astro build';
-const DIST = process.env.REGRESS_DIST || 'dist';
-const EXCLUDE = process.env.REGRESS_EXCLUDE ? new RegExp(process.env.REGRESS_EXCLUDE) : null;
+// optional: regress.config.json im Projekt { "build": "...", "dist": "...", "exclude": "^/(vorschau|intern)/" }
+const CFG = fs.existsSync(path.join(proj, 'regress.config.json')) ? JSON.parse(fs.readFileSync(path.join(proj, 'regress.config.json'), 'utf8')) : {};
+const BUILD = process.env.REGRESS_BUILD || CFG.build || 'npx astro build';
+const DIST = process.env.REGRESS_DIST || CFG.dist || 'dist';
+const CLS_MS = +(process.env.REGRESS_CLS_MS || CFG.clsMs || 10000); // so lange auf Layout-Sprünge achten (Hero-Film, Animationen)
+const PAR = +(process.env.REGRESS_PAR || CFG.parallel || 2);         // Seiten gleichzeitig
+const EXCLUDE = (process.env.REGRESS_EXCLUDE || CFG.exclude) ? new RegExp(process.env.REGRESS_EXCLUDE || CFG.exclude) : null;
 const VIEWS = (process.env.VIEWS || '360x740,390x844,844x390,768x1024,1280x800').split(',').map((s) => s.split('x').map(Number));
 const sh = (cmd, cwd = proj) => execSync(cmd, { cwd, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, DEMO_BASE: '/' } }).toString();
 
@@ -119,9 +124,11 @@ async function capture(base, p, [W, H]) {
     return { items, H: document.documentElement.scrollHeight, W: document.documentElement.scrollWidth };
   });
   const audit = await page.evaluate(AUDIT, W);
+  // Scroll-Strecken mit klebendem Inhalt (Scrollytelling): dort sind leere Flächen im Ganzseiten-Screenshot normal
+  const tracks = await page.evaluate(() => { const t = []; document.querySelectorAll('body *').forEach((e) => { if (getComputedStyle(e).position === 'sticky' && e.parentElement) { const r = e.parentElement.getBoundingClientRect(); if (r.height > innerHeight * 1.2) t.push([Math.round(r.top + scrollY), Math.round(r.bottom + scrollY)]); } }); return t; });
   const shot = await page.screenshot({ fullPage: true });
   await ctx.close();
-  return { geo, shot, logs, audit };
+  return { geo, shot, logs, audit, tracks };
 }
 
 
@@ -129,7 +136,8 @@ async function capture(base, p, [W, H]) {
 const AUDIT = (W) => {
   const out = []; const phone = W < 600;
   // sichtbar = wird wirklich gezeichnet (auch nicht in geschlossenem <details>, nicht unsichtbar über Eltern), liegt nicht über dem Seitenanfang
-  const vis = (e) => { const r = e.getBoundingClientRect(); if (!(r.width > 0 && r.height > 0) || r.bottom + scrollY < 0) return false; if (e.checkVisibility && !e.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true, contentVisibilityAuto: true })) return false; return !e.closest('[aria-hidden="true"],[hidden],[inert]'); };
+  const srOnly = (e) => { for (let n = e; n && n !== document.body; n = n.parentElement) { const cs = getComputedStyle(n); const r = n.getBoundingClientRect(); if ((cs.clip && cs.clip !== 'auto') || /inset\(50%|inset\(100%/.test(cs.clipPath) || (cs.position === 'absolute' && (r.width <= 2 || r.height <= 2) && cs.overflow === 'hidden')) return true; } return false; };
+  const vis = (e) => { const r = e.getBoundingClientRect(); if (!(r.width > 0 && r.height > 0) || r.bottom + scrollY < 0 || srOnly(e)) return false; if (e.checkVisibility && !e.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true, contentVisibilityAuto: true })) return false; return !e.closest('[aria-hidden="true"],[hidden],[inert]'); };
   const name = (e) => `${e.tagName.toLowerCase()}${e.id ? '#' + e.id : e.classList[0] ? '.' + e.classList[0] : ''} «${(e.textContent || e.getAttribute('aria-label') || e.getAttribute('alt') || '').replace(/\s+/g, ' ').trim().slice(0, 40)}»`;
   const y = (e) => Math.round(e.getBoundingClientRect().top + scrollY);
   // 1. Text überlappt anderen Text
@@ -137,7 +145,7 @@ const AUDIT = (W) => {
   // klebende/feste Leisten liegen absichtlich über dem Inhalt: beim Überlappungstest auslassen
   const floating = (e) => { for (let n = e; n && n !== document.body; n = n.parentElement) { const p = getComputedStyle(n).position; if (p === 'sticky' || p === 'fixed') return true; } return false; };
   // Glyphen-Rechtecke des Textes (nicht die Box mit Innenabstand): Padding/Trefferflächen sind keine Überlappung
-  const textRects = (e) => { const r = document.createRange(); r.selectNodeContents(e); return [...r.getClientRects()].filter((q) => q.width > 1 && q.height > 1); };
+  const textRects = (e) => { const r = document.createRange(); r.selectNodeContents(e); return [...r.getClientRects()].filter((q) => q.width > 1 && q.height > 1).map((q) => { const cut = q.height * 0.22; return { left: q.left, right: q.right, top: q.top + cut, bottom: q.bottom - cut, width: q.width, height: q.height - 2 * cut }; }); };
   const rects = leaf.filter((e) => !floating(e)).map((e) => ({ e, rs: textRects(e) }));
   let ov = 0;
   for (let i = 0; i < rects.length && ov < 8; i++) for (let j = i + 1; j < rects.length && ov < 8; j++) {
@@ -158,7 +166,7 @@ const AUDIT = (W) => {
   let nf = 0; for (const e of leaf) { if (nf > 5) break; const fs = parseFloat(getComputedStyle(e).fontSize); if (fs < (phone ? 12 : 11)) { out.push(`мелкий шрифт ${fs}px: ${name(e)} (y ${y(e)})`); nf++; } }
   if (phone) document.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea').forEach((e) => { if (vis(e) && parseFloat(getComputedStyle(e).fontSize) < 16) out.push(`поле ввода со шрифтом < 16px (iPhone увеличит страницу при касании): ${name(e)}`); });
   // 5. Bilder: kaputt, ohne alt, unscharf (auf 2x-Bildschirmen)
-  document.querySelectorAll('img').forEach((im) => { if (!vis(im)) return; if (im.complete && !im.naturalWidth) out.push(`картинка не загрузилась: ${im.getAttribute('src')}`); if (!im.hasAttribute('alt')) out.push(`картинка без alt: ${im.getAttribute('src')}`); const r = im.getBoundingClientRect(); const fit = getComputedStyle(im).objectFit; const need = (fit === 'cover' ? Math.max(r.width / im.naturalWidth, r.height / im.naturalHeight) : r.width / im.naturalWidth) * 2; if (im.naturalWidth && need > 1.6 && !/\.svg/.test(im.currentSrc)) out.push(`картинка будет мутной на телефоне (показано ${Math.round(r.width)}px, файл ${im.naturalWidth}px): ${im.getAttribute('src')}`); });
+  document.querySelectorAll('img').forEach((im) => { if (!vis(im)) return; if (im.complete && !im.naturalWidth) out.push(`картинка не загрузилась: ${im.getAttribute('src')}`); if (!im.hasAttribute('alt')) out.push(`картинка без alt: ${im.getAttribute('src')}`); const r = im.getBoundingClientRect(); const fit = getComputedStyle(im).objectFit; const need = (fit === 'cover' ? Math.max(r.width / im.naturalWidth, r.height / im.naturalHeight) : r.width / im.naturalWidth) * 2; if (im.naturalWidth && need > 1.6 && !/\.svg/.test(im.currentSrc)) out.push(`картинка будет мутной на экранах 2× (файл ${im.naturalWidth}px мал для показанного размера): ${im.getAttribute('src')}`); });
   // 6. Überschriften
   const hs = [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].filter((h) => !h.closest('[hidden]'));
   const h1 = hs.filter((h) => h.tagName === 'H1').length; if (h1 !== 1) out.push(`заголовков h1 на странице: ${h1} (нужен ровно один)`);
@@ -176,14 +184,14 @@ async function logic(p) {
     const page = await ctx.newPage();
     // Layout-Sprünge (CLS) während der ersten 10 s mit echter Bewegung: Hero-Film, Animationen, nachladende Bilder/Schriften
     await page.addInitScript(() => { window.__shifts = []; new PerformanceObserver((l) => l.getEntries().forEach((e) => { if (e.hadRecentInput) return; window.__shifts.push({ t: Math.round(e.startTime), v: e.value, src: (e.sources || []).map((s) => { const n = s.node; return n && n.nodeType === 1 ? `${n.tagName.toLowerCase()}${n.id ? '#' + n.id : n.classList[0] ? '.' + n.classList[0] : ''} y ${Math.round(s.previousRect.y)}→${Math.round(s.currentRect.y)}` : ''; }).filter(Boolean) }); })).observe({ type: 'layout-shift', buffered: true }); });
-    await page.goto(A.url + p, { waitUntil: 'load' }); await page.waitForTimeout(10000);
+    await page.goto(A.url + p, { waitUntil: 'load' }); await page.waitForTimeout(CLS_MS);
     const shifts = await page.evaluate(() => window.__shifts);
     const cls = shifts.reduce((a, e) => a + e.v, 0);
-    if (cls > 0.01) res.push(`${W}px: прыгает вёрстка (CLS ${cls.toFixed(3)}): ` + shifts.filter((e) => e.v > 0.001).slice(0, 4).map((e) => `${(e.t / 1000).toFixed(1)} с: ${e.src.slice(0, 3).join(', ')}`).join(' | '));
+    if (cls > 0.02) res.push(`${W}px: прыгает вёрстка (CLS ${cls.toFixed(3)}): ` + shifts.filter((e) => e.v > 0.001).slice(0, 4).map((e) => `${(e.t / 1000).toFixed(1)} с: ${e.src.slice(0, 3).join(', ')}`).join(' | '));
     const r = await page.evaluate(() => {
       const bad = [];
       document.querySelectorAll('a[href^="#"]').forEach((a) => { const id = decodeURIComponent(a.getAttribute('href').slice(1)); if (id && !document.getElementById(id)) bad.push(`якорь без цели: ${a.getAttribute('href')} («${a.textContent.trim().slice(0, 30)}»)`); });
-      document.querySelectorAll('a,button,input,select,textarea,summary').forEach((e) => { const r = e.getBoundingClientRect(); if (!r.width || !r.height || getComputedStyle(e).visibility === 'hidden') return; if (r.right > innerWidth + 0.5 || r.left < -0.5) { let n = e.parentElement, inScroller = false; while (n && n !== document.body) { if (getComputedStyle(n).overflowX !== 'visible') { inScroller = true; break; } n = n.parentElement; } if (!inScroller) bad.push(`за краем экрана: «${(e.textContent || e.getAttribute('aria-label') || e.tagName).trim().slice(0, 30)}» ${Math.round(r.left)}..${Math.round(r.right)}`); } });
+      document.querySelectorAll('a,button,input,select,textarea,summary').forEach((e) => { const r = e.getBoundingClientRect(); if (!r.width || !r.height || getComputedStyle(e).visibility === 'hidden') return; if (r.right < -100 || /skip|sr-only|visually-hidden/i.test(e.className + ' ' + (e.parentElement?.className || ''))) return; if (r.right > innerWidth + 0.5 || r.left < -0.5) { let n = e.parentElement, inScroller = false; while (n && n !== document.body) { if (getComputedStyle(n).overflowX !== 'visible') { inScroller = true; break; } n = n.parentElement; } if (!inScroller) bad.push(`за краем экрана: «${(e.textContent || e.getAttribute('aria-label') || e.tagName).trim().slice(0, 30)}» ${Math.round(r.left)}..${Math.round(r.right)}`); } });
       document.querySelectorAll('h1,h2,h3,p,li,span,div,td,th,label,button,a').forEach((e) => { if (e.clientWidth && e.scrollWidth > e.clientWidth + 2 && getComputedStyle(e).overflow !== 'visible' && getComputedStyle(e).textOverflow !== 'ellipsis' && !/scroll|auto/.test(getComputedStyle(e).overflowX)) bad.push(`обрезан текст: ${e.tagName.toLowerCase()}.${e.classList[0] || ''} «${e.textContent.trim().slice(0, 30)}»`); });
       if (document.documentElement.scrollWidth > innerWidth + 1) bad.push(`горизонтальная прокрутка страницы: ${document.documentElement.scrollWidth} > ${innerWidth}`);
       document.querySelectorAll('form a[href*="datenschutz"],form a[href*="impressum"]').forEach((a) => { if (a.target !== '_blank') bad.push(`ссылка в форме откроется в той же вкладке (данные пропадут): ${a.getAttribute('href')}`); });
@@ -297,8 +305,10 @@ function geodiff(gb, ga) {
 // ---------- 3. Обход ----------
 const md = [AUDIT_ONLY ? `# Аудит ${slug} (текущая версия)` : `# Регресс ${slug}: ${ref} → рабочая папка`, '', `Страниц: ${pages.length}, экраны: ${VIEWS.map((v) => v.join('×')).join(', ')}`, ''];
 let nChanged = 0, nIssues = 0;
-for (const p of pages) {
-  if (!pagesA.includes(p)) { md.push(`## ${p}`, '', '- **страница пропала**', ''); nChanged++; continue; }
+const results = new Map();
+async function doPage(p) {
+  const md = [];
+  if (!pagesA.includes(p)) { md.push(`## ${p}`, '', '- **страница пропала**', ''); nChanged++; results.set(p, md); return; }
   const lg = await logic(p);
   const sec = [];
   if (!AUDIT_ONLY && !pagesB.includes(p)) sec.push('- новая страница (сравнивать не с чем)');
@@ -307,7 +317,7 @@ for (const p of pages) {
     const a = await capture(A.url, p, v);
     a.logs.forEach((l) => lg.push(`${v[0]}px консоль: ${l}`));
     a.audit.forEach((l) => lg.push(`${v.join('×')}: ${l}`));
-    (await emptyGaps(a.shot, v[1])).forEach(([y0, y1]) => lg.push(`${v.join('×')}: пустая полоса ${y1 - y0}px без содержимого (y ${y0}–${y1}), больше экрана`));
+    (await emptyGaps(a.shot, v[1])).filter(([y0, y1]) => !a.tracks.some(([t0, t1]) => y0 < t1 && y1 > t0)).forEach(([y0, y1]) => lg.push(`${v.join('×')}: пустая полоса ${y1 - y0}px без содержимого (y ${y0}–${y1}), больше экрана`));
     if (!pagesB.includes(p)) continue;
     const b = await capture(B.url, p, v);
     const g = geodiff(b.geo, a.geo);
@@ -325,9 +335,20 @@ for (const p of pages) {
     if (px.bands.length > 8) L.push(`- … ещё ${px.bands.length - 8} мест с изменениями`);
     sec.push(...L, '');
   }
-  if (lg.length) { nIssues += new Set(lg).size; sec.unshift('**Ошибки текущей версии (аудит, независимо от прошлой):**', ...[...new Set(lg)].map((l) => `- ${l}`), ''); }
+  if (lg.length) {
+    // gleiche Meldung auf mehreren Bildschirmen zusammenfassen; Positionsangaben (y …) ignorieren
+    const grp = new Map();
+    for (const l of lg) { const m = l.match(/^(\d+(?:×\d+|px)):? ?(.*)$/) || [null, '', l]; const key = m[2].replace(/\s*\(y \d+\)/, '').replace(/y \d+–\d+/, ''); const g = grp.get(key) || { scr: [], text: m[2] }; if (m[1]) g.scr.push(m[1]); grp.set(key, g); }
+    nIssues += grp.size;
+    sec.unshift('**Ошибки текущей версии (аудит, независимо от прошлой):**', ...[...grp.values()].map((g) => `- ${g.scr.length ? `[${[...new Set(g.scr)].join(', ')}] ` : ''}${g.text}`), '');
+  }
   if (sec.length) md.push(`## ${p}`, '', ...sec);
+  results.set(p, md);
+  console.log(`  ${p}: ${sec.length ? 'есть находки' : 'чисто'}`);
 }
+const queue = [...pages];
+await Promise.all(Array.from({ length: PAR }, async () => { while (queue.length) await doPage(queue.shift()); }));
+for (const p of pages) md.push(...(results.get(p) || []));
 md.splice(3, 0, `Итог: изменений в ${nChanged} комбинациях страница×экран, проблем: ${nIssues}.`, '');
 fs.writeFileSync(path.join(out, 'report.md'), md.join('\n'));
 console.log(md.slice(0, 4).join('\n'));

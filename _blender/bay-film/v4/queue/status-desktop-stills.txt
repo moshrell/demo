@@ -1,0 +1,2 @@
+desktop-stills | 2026-10-12 13:40
+ВСЁ ГОТОВО: camera.json, APPROVED.txt, box_dirty/box_clean, stations\ (7 + stations.json), masks\ (5), passes\ (4), hotspots.json. Пиксельные хэши облако/ноутбук совпали.

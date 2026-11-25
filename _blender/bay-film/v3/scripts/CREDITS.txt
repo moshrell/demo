@@ -1,0 +1,6 @@
+Модель автомобиля:
+"BMW E34 [stance style]" (https://skfb.ly/oIEuv) by Myedsu,
+licensed under Creative Commons Attribution 4.0 (http://creativecommons.org/licenses/by/4.0/).
+Изменения: удалены эмблема, номерные знаки, надписи на дисках; изменены материалы.
+
+Текстуры, HDRI и реквизит: Poly Haven (polyhaven.com), CC0.

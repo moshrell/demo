@@ -1,0 +1,14 @@
+{
+  "name": "bay-film",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "check": "node scripts/render.mjs check",
+    "video": "node scripts/render.mjs video --out out/bay-part1.mp4",
+    "sheet": "node scripts/render.mjs sheet --out out/sheet.png"
+  },
+  "devDependencies": {
+    "playwright": "1.56.0"
+  }
+}

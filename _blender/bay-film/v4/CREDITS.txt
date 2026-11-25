@@ -1,0 +1,8 @@
+Модель автомобиля:
+"BMW M6 E64 Cabrio (WIP)" (https://sketchfab.com/3d-models/bmw-m6-e64-cabrio-wip-64492fb4d53d46478135c678f83c3ba6) by obviously.csmx,
+licensed under Creative Commons Attribution 4.0 (http://creativecommons.org/licenses/by/4.0/).
+Изменения: удалены эмблема, номерные знаки, надписи на дисках; изменены материалы.
+
+Текстуры, HDRI и реквизит: Poly Haven (polyhaven.com), CC0.
+
+(Исправлено 24.10.2026: раньше здесь ошибочно стояла модель "BMW E34 [stance style]" by Myedsu — в финальных рендерах используется M6 E64.)

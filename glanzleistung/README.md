@@ -7,7 +7,7 @@
 - Исходники: GitHub `moshrell/demo/glanzleistung` (перенесены с ПК 25.11.2026 вместе с историей; папка `D:\Webdesign\glanzleistung` больше не используется). GitHub Pages: https://moshrell.github.io/demo/glanzleistung/
 - Живой адрес (с 24.10.2026 открытый, первое демо в «Auto & Mobilität»): https://kravets-webdesign.de/vorschau/auto/glanzleistung/
   → файлы: `kravets-site/public/vorschau/auto/glanzleistung` (`npm run publish`, в облаке `KRAVETS_SITE=/путь/к/kravets-site npm run publish`, затем `python3 scripts/demo-og.py glanzleistung` в kravets-site и push), карточка в `kravets-site\src\config\works.ts`, превью `kravets-site\public\works\glanzleistung.webp`. Закрытая копия `/p/gl-qo6jm6lj/` удалена; `npm run privat` остаётся для будущих закрытых показов. Выкладка — `D:\Webdesign\PUSH-SITE.bat` (запускает Степан).
-- Blender-пакеты: `D:\Webdesign\bay-film\v4` (актуальный: интро, цвета плёнки, десктоп; у каждой папки свой README) и `v3` (мобильный базовый набор)
+- Blender-пакеты: `_blender/bay-film/v4` в этом репозитории (раньше `D:\Webdesign\bay-film`) (актуальный: интро, цвета плёнки, десктоп; у каждой папки свой README) и `v3` (мобильный базовый набор)
 - Сценарий/решения v3: `D:\Webdesign\Deister autopflege\SZENARIO-v3.html`
 
 ---

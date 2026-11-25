@@ -1,0 +1,19 @@
+=== GPU === 
+name, memory.total [MiB], driver_version
+NVIDIA GeForce GTX 1650, 4096 MiB, 617.14
+=== CPU === 
+'wmic' is not recognized as an internal or external command,
+operable program or batch file.
+=== RAM bytes === 
+'wmic' is not recognized as an internal or external command,
+operable program or batch file.
+=== Free space D: === 
+'wmic' is not recognized as an internal or external command,
+operable program or batch file.
+=== Blender === 
+BLENDER 5.0.1
+BACKEND OPTIX [('NVIDIA GeForce GTX 1650', 'CUDA', True), ('Intel Core i5-10300H CPU @ 2.50GHz', 'CPU', False), ('NVIDIA GeForce GTX 1650', 'OPTIX', True)]
+BACKEND CUDA [('NVIDIA GeForce GTX 1650', 'CUDA', True), ('Intel Core i5-10300H CPU @ 2.50GHz', 'CPU', False), ('NVIDIA GeForce GTX 1650', 'OPTIX', True)]
+BACKEND HIP [('NVIDIA GeForce GTX 1650', 'CUDA', True), ('Intel Core i5-10300H CPU @ 2.50GHz', 'CPU', False), ('NVIDIA GeForce GTX 1650', 'OPTIX', True)]
+BACKEND ONEAPI [('NVIDIA GeForce GTX 1650', 'CUDA', True), ('Intel Core i5-10300H CPU @ 2.50GHz', 'CPU', False), ('NVIDIA GeForce GTX 1650', 'OPTIX', True)]
+done 

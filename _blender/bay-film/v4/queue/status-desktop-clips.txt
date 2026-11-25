@@ -1,0 +1,5 @@
+desktop-clips | 2026-10-12 16:00 | ГОТОВО (3 из 3)
+- out\desktop-clips\: box_to_lack / box_to_wheel / box_to_interior (.mp4 + _last_dirty.png + _last_clean.png).
+- 1280x720, 24 fps, 36 кадров (1,5 с), H.264 yuv420p faststart, 32 spp. Сверено: видео покадрово и PNG по пикселям идентичны рендеру в облаке (md5 файла на ноутбуке другой из-за блока метаданных моста).
+- Первый кадр каждого клипа против desktop box_dirty.png (2560x1440 -> 1280x720): средняя разница 3,3 из 255 (шум 32 spp против более высоких spp у box_dirty), камера та же (camera.json совпал по md5).
+- Скрипты и траектории: out\desktop-clips\scripts\ (clips_desktop.py, path_*.json).

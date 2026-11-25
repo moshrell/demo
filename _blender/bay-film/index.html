@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bay · предпросмотр</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #1b1b1d; color: #ddd; font: 13px ui-monospace, Consolas, monospace; overflow: hidden; }
+  #wrap { position: fixed; inset: 0; display: grid; place-items: center; }
+  canvas { height: 100vh; max-width: 100vw; aspect-ratio: 9 / 16; object-fit: contain; background: #ECE8DF; }
+  #hud { position: fixed; left: 12px; bottom: 12px; right: 12px; display: flex; gap: 12px; align-items: center; }
+  #bar { flex: 1; height: 6px; background: #444; border-radius: 3px; position: relative; cursor: pointer; }
+  #fill { position: absolute; left: 0; top: 0; bottom: 0; background: #FF2E6E; border-radius: 3px; width: 0; }
+  .tick { position: absolute; top: -4px; width: 1px; height: 14px; background: #888; }
+  body.hide #hud { display: none; }
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="c"></canvas></div>
+<div id="hud"><span id="time">0.00</span><div id="bar"><div id="fill"></div></div>
+  <span>space · ←/→ ±0.5с · , . кадр · [ ] такт · l петля · h скрыть</span></div>
+<script src="src/lib.js"></script>
+<script src="src/scene.js"></script>
+<script>
+  const q = new URLSearchParams(location.search);
+  const scale = parseFloat(q.get('scale') || '0.6667');
+  const cv = document.getElementById('c');
+  cv.width = Math.round(Film.W * scale); cv.height = Math.round(Film.H * scale);
+  let t = parseFloat(q.get('t') || '0'), playing = !q.has('t'), loop = false, last = performance.now();
+  const bar = document.getElementById('bar');
+  Film.marks.forEach((m) => { const d = document.createElement('div'); d.className = 'tick'; d.style.left = (m / Film.DURATION * 100) + '%'; bar.appendChild(d); });
+  function draw() {
+    Film.render(cv, t, { scale, sub: t >= 3.8 ? 3 : 1, shutter: 0.8 / Film.FPS });
+    document.getElementById('time').textContent = t.toFixed(2);
+    document.getElementById('fill').style.width = (t / Film.DURATION * 100) + '%';
+  }
+  function frame(now) {
+    const dt = (now - last) / 1000; last = now;
+    if (playing) { t += dt; if (t >= Film.DURATION) { if (loop || true) t = 0; } }
+    draw(); requestAnimationFrame(frame);
+  }
+  const step = 1 / Film.FPS;
+  addEventListener('keydown', (e) => {
+    if (e.code === 'Space') { playing = !playing; e.preventDefault(); }
+    else if (e.key === 'ArrowRight') t = Math.min(Film.DURATION, t + 0.5);
+    else if (e.key === 'ArrowLeft') t = Math.max(0, t - 0.5);
+    else if (e.key === '.') { playing = false; t = Math.min(Film.DURATION, t + step); }
+    else if (e.key === ',') { playing = false; t = Math.max(0, t - step); }
+    else if (e.key === ']') { t = Film.marks.find((m) => m > t + 0.01) ?? t; }
+    else if (e.key === '[') { const p = Film.marks.filter((m) => m < t - 0.01); t = p.length ? p[p.length - 1] : 0; }
+    else if (e.key === 'h') document.body.classList.toggle('hide');
+    else if (e.key === 'l') loop = !loop;
+  });
+  bar.addEventListener('click', (e) => { const r = bar.getBoundingClientRect(); t = ((e.clientX - r.left) / r.width) * Film.DURATION; });
+  window.__setT = (x) => { playing = false; t = x; draw(); };
+  requestAnimationFrame(frame);
+</script>
+</body>
+</html>

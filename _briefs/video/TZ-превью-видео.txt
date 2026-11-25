@@ -1,0 +1,30 @@
+ТЗ: ПРЕВЬЮ-РОЛИКИ, ЧТО ОСТАЛОСЬ СНЯТЬ (kravets-webdesign.de, «Arbeiten»)
+================================================================================
+Версия 2 от 13.11.2026. Только недостающие и пересъёмка по замечаниям Степана. Остальные ролики готовы.
+Инструмент: D:\Webdesign\salon-mittwoch\tour\. Правила и формат: 1280×800, 24 к/с, 12–17 с, ~1–2 МБ, без звука, только горизонтальный.
+Темп: на фишке стоять 1,5–3 с, где показывать нечего, быстро дальше; фон-картинки листать этапами с паузой 0,7 с.
+
+ЗАПУСК ОДНОЙ КОМАНДОЙ:  D:\Webdesign\salon-mittwoch\VIDEO-ALLE.bat
+(снимает только список ниже, готовое кладёт в kravets-site\public\works\<slug>.mp4; один slug: VIDEO-ALLE.bat zinke; вообще всё: VIDEO-ALLE.bat --all)
+
+ПЕРЕСЪЁМКА ПО ЗАМЕЧАНИЯМ (3 штуки)
+ - glanzleistung: интро-фильм не пропускать (идёт покадрово), потом хотспот «Folie» и 3 смены цвета плёнки с паузами. Прошлый ролик был ускорен и без смены плёнки.
+ - zinke: мебель собирается скроллом, затем переход в конструктор (/konstruktor/?v=schrank): вкладка Maße (+ поле, шире), Holz (Nussbaum).
+ - backstube-morgenrot: день листать этапами по 1 с с паузой 0,7 с (фон успевает смениться), не до конца; затем заказ «Morgen-Tüte».
+
+ЕЩЁ НЕ СНЯТО / ПЕРЕСЪЁМКА (всего 5, они же в VIDEO-ALLE.bat)
+ - kupferlauf (Kehlenbrink, на сайте): главная, спуститься, перейти на /bad/, собрать ванную (размер L, душ, двойная раковина, плитка), цена бежит. Прошлый ролик 5,6 с, без перехода.
+ - wohlauf (Physiotherapie, на сайте): ночной hero → фигура спереди/сзади → Rezept-Kürzel (MT, KGG) → путь оплаты Kasse/Privat/Selbst.
+
+НЕ ПУБЛИКОВАНЫ НА САЙТЕ (не снимать): aufschluss, gartenjahr, rehfeld-winkler. Сценарии лежат в tour\ (VIDEO-ALLE.bat <slug>), пригодятся позже.
+Карта «Hannover bei Nacht»: на сайте уже есть своя карточка с видео, из списка убрана.
+Список карточек живого сайта (13.11.2026, 21 шт.) сверять по https://kravets-webdesign.de/arbeiten/, локальная папка kravets-site (ветка redesign) устарела.
+
+ГОТОВО И ПОДКЛЮЧЕНО В public\works (не снимать): altin-tepsi, artisanal-bakery, studio-kamm, schulterblick, sechsgang (прописан в works.ts), gegenlauf, fernpunkt, richtfest (файлы лежат, в works.ts записей нет: нужны категория и название), salon-mittwoch. Прежние ролики остальных демо (architekt, cafe-ferreira, nuance, salon-nelke, stromkreis, zuendfolge) остаются как есть.
+Без ролика: boxer-lab (лаборатория), elfstiele (нет сайта), scrunchie-shop (Shopify).
+
+ПРАВКИ НА САЙТАХ ПОД ЭТИ ЗАПИСИ
+ - backstube-morgenrot: слои фона лениво (hidden с третьего): предзагрузить и декодировать все после первого кадра, это улучшит и телефон.
+ - glanzleistung: прогревать webp плёнок сразу после интро, не через 1,2 с.
+ - kupferlauf, gegenlauf, fernpunkt, wohlauf, richtfest, hannover-karte: флаг window.__ready = true после первой отрисовки 3D/canvas, чтобы запись не начиналась на заставке.
+ - sechsgang: на старте должна быть заметная подсказка-анимация рычага (правило CLAUDE.md).

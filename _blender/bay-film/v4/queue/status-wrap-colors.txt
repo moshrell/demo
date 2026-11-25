@@ -1,0 +1,6 @@
+wrap-colors | ГОТОВО: мобильные hood+box 24+24, десктоп hood+box 24+24; ничего не идёт
+Шаг 1 ГОТОВ: скрипты в out\wrap\scripts\, README дополнен.
+Шаг 2 ИДЁТ: mobile box matt/satin, 0/16 (~23 мин/кадр).
+Шаг 3 В ОЧЕРЕДИ (стартует сам после шага 2): десктоп в out\wrap-desktop\: капот 24 (~4 мин), box glanz 8, затем matt/satin 16 (~17 мин).
+Камера десктопа сверена с out\desktop-clips\box_to_lack_last_clean.png: разница 0,42 из 255, сдвиг 0 px.
+Оценка: шаг 2 ~6 ч, шаг 3 ~9 ч.

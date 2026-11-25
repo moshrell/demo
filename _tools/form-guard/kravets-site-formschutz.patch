@@ -1,0 +1,577 @@
+From 4949f96de1b26dea38c465e55cf3239b579260b4 Mon Sep 17 00:00:00 2001
+From: Stepan Kravets <steven.dnepr@gmail.com>
+Date: Tue, 24 Nov 2026 10:43:19 +0100
+Subject: [PATCH] =?UTF-8?q?=D0=A4=D0=BE=D1=80=D0=BC=D1=8B:=20=D0=B7=D0=B0?=
+ =?UTF-8?q?=D1=89=D0=B8=D1=82=D0=B0=20=D0=BE=D1=82=20=D1=81=D1=81=D1=8B?=
+ =?UTF-8?q?=D0=BB=D0=BE=D0=BA=20=D0=B8=20=D1=81=D0=BF=D0=B0=D0=BC=D0=B0=20?=
+ =?UTF-8?q?(form-guard)=20=D0=B4=D0=BB=D1=8F=20Kontakt=20=D0=B8=20Fragebog?=
+ =?UTF-8?q?en?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- form-guard.php: общая библиотека защиты (мастер-копия в D:\Webdesign\_tools\form-guard)
+- ссылки в имени, названии и контакте не принимаются; в сообщении и анкете обезвреживаются
+  (hxxps[://]salon[.]de), чтобы адрес старого сайта клиента дошёл, но не кликался в почте
+- больше трёх ссылок в одной заявке считается спамом: «успех» без отправки
+- чистка скрытых символов (zero-width, смена направления текста, битый UTF-8)
+- лимит: 5 заявок в час и 20 в день с одного адреса (псевдоним IP, ключ меняется ежедневно)
+- POST только со своего сайта (Origin/Referer)
+- ответы сервера на языке страницы (de/en/uk), form.js показывает их на всех языках
+- maxlength у полей; Datenschutz: абзац про псевдоним и обезвреживание ссылок
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01DpHjGqdByJCRBe5sAh3EfH
+---
+ .gitignore                           |   3 +
+ public/form-guard.php                | 190 +++++++++++++++++++++++++++
+ public/form.php                      | 156 +++++++++++++++++-----
+ src/pages/[...lang]/fragebogen.astro |   8 +-
+ src/pages/[...lang]/kontakt.astro    |   8 +-
+ src/pages/datenschutz.astro          |   9 ++
+ src/scripts/pages/form.js            |   4 +-
+ 7 files changed, 335 insertions(+), 43 deletions(-)
+ create mode 100644 public/form-guard.php
+
+diff --git a/.gitignore b/.gitignore
+index 411d3ba..7871889 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -29,3 +29,6 @@ dist.zip
+ # Website-Check: Laufzeitdaten (Cache, Limits) und Schlüssel, entstehen nur auf dem Server bzw. beim Testen
+ public/website-check/_data/
+ public/website-check/wc-config.php
++
++# form-guard: счётчики лимита и ключ (создаёт сервер)
++public/_form-data/
+diff --git a/public/form-guard.php b/public/form-guard.php
+new file mode 100644
+index 0000000..f52c674
+--- /dev/null
++++ b/public/form-guard.php
+@@ -0,0 +1,190 @@
++<?php
++declare(strict_types=1);
++
++// form-guard: общая защита форм (Kravets Webdesign). Только функции, ничего не выводит.
++// Мастер-копия: D:\Webdesign\_tools\form-guard\form-guard.php — в проектах лежит копия, правки вносить в мастер.
++//
++// Что закрывает:
++//  - ссылки: fgHasLink() находит http(s)://, www., домены вида «name.de», «name[.]com», «t.me/…», IP-адреса;
++//    поле можно запретить (fgHasLink → отказ) или обезвредить (fgDefang: hxxps://name[.]de, не кликается в почте);
++//  - скрытые символы: управляющие, zero-width, смена направления текста (U+202E), битый UTF-8;
++//  - частота: fgRateLimit() считает отправки по псевдониму IP (HMAC с ежедневно меняющимся ключом, IP не хранится);
++//  - чужие сайты: fgSameOrigin() отклоняет POST, присланный со страницы другого домена.
++// Ловушка для ботов (поле website) и метка времени (ts) остаются в самой форме.
++
++if (realpath((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === __FILE__) {
++    http_response_code(404); // библиотеку нельзя вызвать напрямую
++    exit;
++}
++
++mb_internal_encoding('UTF-8');
++
++// Домены верхнего уровня, по которым ссылку узнаём и без http:// и www.
++// Короткие «словесные» (z. B. «.de» после имени) — сознательно: ссылку вида «salon-xy.de» тоже ловим.
++const FG_TLDS = 'de|com|net|org|info|biz|eu|at|ch|nl|be|fr|it|es|pl|cz|uk|us|ru|ua|by|kz|su|tr|cn|in|jp|io|co|me|ly|gl|gg|to|tv|cc|ws|tk|ml|ga|cf|gq'
++    . '|xyz|top|online|site|website|shop|store|app|link|click|live|pro|club|vip|win|bid|work|space|tech|fun|icu|cyou|buzz|rest|bond|sbs|cfd|lol|life|world|today|news|page|dev|ai'
++    . '|рф|укр|бел|срб|онлайн|сайт|рус';
++
++/** Регулярка ссылки: со схемой, с www., голый домен с известным TLD (не часть e-mail), IPv4. */
++function fgLinkPattern(): string
++{
++    static $re = null;
++    if ($re !== null) {
++        return $re;
++    }
++    // точка без пробелов, в том числе замаскированная: «name.de», «name[.]de», «name(dot)de»
++    $dot = '(?:\.|\s*\[\s*\.?\s*\]\s*|\s*\(\s*\.?\s*\)\s*|\s*\[dot\]\s*|\s*\(dot\)\s*)';
++    // «name . com» с пробелами — только для длинных TLD: иначе «Fr. De Vries», «Dr. Ai» или «Ende. Com» стали бы ссылкой (TLD строчными)
++    $spaced = '\s+\.\s*|\s*\.\s+';
++    $long = implode('|', array_filter(explode('|', FG_TLDS), static fn($t) => mb_strlen($t) >= 3));
++    $label = '[\p{L}\p{N}](?:[\p{L}\p{N}-]{0,62})';
++    return $re = '~(?:'
++        . '\b(?:h[tx]{2}ps?|ftp)\s*:\s*/\s*/\S*'                                          // https://…, hxxp://…
++        . '|\bwww' . $dot . '\S+'                                                           // www.…
++        . '|(?<![@\w.-])' . $label . '(?:' . $dot . '[\p{L}\p{N}-]{1,63})*' . $dot . '(?:' . FG_TLDS . ')\b(?:/\S*)?' // name.de/…
++        . '|(?<![@\w.-])' . $label . '(?:' . $spaced . ')(?-i:' . $long . ')\b'                // spam . com
++        . '|\b\d{1,3}(?:\.\d{1,3}){3}\b'                                                    // 192.0.2.1
++        . ')~iu';
++}
++
++function fgHasLink(string $value): bool
++{
++    return (bool) preg_match(fgLinkPattern(), $value);
++}
++
++function fgCountLinks(string $value): int
++{
++    return (int) preg_match_all(fgLinkPattern(), $value);
++}
++
++/** Обезвредить ссылки: схема → hxxp, точки → [.]. Текст остаётся читаемым, почта не делает его кликабельным. */
++function fgDefang(string $value): string
++{
++    return (string) preg_replace_callback(fgLinkPattern(), static function (array $m): string {
++        $s = preg_replace('~^h[tx]{2}p~i', 'hxxp', $m[0]) ?? $m[0];
++        $s = preg_replace('~\s*:\s*/\s*/~', '://', $s) ?? $s;
++        $s = str_replace('://', '[://]', $s);
++        return preg_replace('~\.(?!\])~', '[.]', $s) ?? $s;
++    }, $value);
++}
++
++/** Убрать битый UTF-8, управляющие и невидимые символы (zero-width, смена направления текста). */
++function fgStrip(string $value, bool $multiline): string
++{
++    if (!mb_check_encoding($value, 'UTF-8')) {
++        $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8'); // битые байты → «?»
++    }
++    $value = str_replace(["\r\n", "\r"], "\n", $value);
++    // \p{Cf}: U+200B…U+200F, U+202A…U+202E, U+2060…U+2064, U+FEFF и т. п.
++    $value = preg_replace('/\p{Cf}+/u', '', $value) ?? '';
++    $value = $multiline
++        ? (preg_replace('/[^\P{Cc}\n\t]+/u', '', $value) ?? '')
++        : (preg_replace('/\p{Cc}+/u', ' ', $value) ?? '');
++    return $value;
++}
++
++/** Однострочное поле: без переводов строк (защита заголовков письма), пробелы схлопнуты, длина ограничена. */
++function fgLine(string $value, int $max): string
++{
++    $value = fgStrip($value, false);
++    $value = trim(preg_replace('/\s+/u', ' ', $value) ?? '');
++    return mb_substr($value, 0, $max);
++}
++
++/** Многострочное поле: переводы строк сохраняются, больше двух пустых строк подряд не бывает. */
++function fgText(string $value, int $max): string
++{
++    $value = fgStrip($value, true);
++    $value = preg_replace("/[ \t]+\n/u", "\n", $value) ?? '';
++    $value = preg_replace("/\n{3,}/u", "\n\n", $value) ?? '';
++    return trim(mb_substr($value, 0, $max));
++}
++
++/** Запрос со страницы этого же сайта (или без Origin/Referer — так бывает при отправке без JS). */
++function fgSameOrigin(): bool
++{
++    $host = strtolower(preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? '')) ?? '');
++    foreach (['HTTP_ORIGIN', 'HTTP_REFERER'] as $h) {
++        $v = (string) ($_SERVER[$h] ?? '');
++        if ($v === '' || $v === 'null') {
++            continue;
++        }
++        $from = strtolower((string) parse_url($v, PHP_URL_HOST));
++        return $from !== '' && ($from === $host || $from === 'www.' . $host || 'www.' . $from === $host);
++    }
++    return true;
++}
++
++function fgDataDir(): ?string
++{
++    static $dir = false;
++    if ($dir !== false) {
++        return $dir;
++    }
++    $candidates = [__DIR__ . '/_form-data', rtrim(sys_get_temp_dir(), '/\\') . '/fg-' . substr(sha1(__DIR__), 0, 10)];
++    foreach ($candidates as $c) {
++        if (!is_dir($c)) {
++            @mkdir($c, 0700, true);
++        }
++        if (is_dir($c) && is_writable($c)) {
++            if (!is_file($c . '/.htaccess')) {
++                @file_put_contents($c . '/.htaccess', "Require all denied\nDeny from all\n");
++                @file_put_contents($c . '/index.html', '');
++            }
++            return $dir = $c;
++        }
++    }
++    return $dir = null;
++}
++
++/**
++ * Лимит отправок с одного адреса: true = можно. IP не хранится: только HMAC с ключом, который
++ * меняется каждый день; файлы старше двух дней удаляются. Если хранилище недоступно, форму не блокируем.
++ */
++function fgRateLimit(string $bucket, int $perHour, int $perDay): bool
++{
++    $dir = fgDataDir();
++    if ($dir === null) {
++        return true;
++    }
++    $keyFile = $dir . '/secret.key';
++    $secret = @file_get_contents($keyFile);
++    if (!is_string($secret) || strlen($secret) < 32) {
++        $secret = bin2hex(random_bytes(32));
++        @file_put_contents($keyFile, $secret, LOCK_EX);
++        @chmod($keyFile, 0600);
++    }
++    $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? '0');
++    $key = substr(hash_hmac('sha256', $ip, $secret . gmdate('Ymd')), 0, 24);
++    $file = $dir . '/rl-' . preg_replace('/[^a-z0-9]/', '', strtolower($bucket)) . '-' . $key . '.json';
++
++    // Уборка: изредка удаляем счётчики старше двух дней
++    if (random_int(1, 50) === 1) {
++        foreach ((array) glob($dir . '/rl-*.json') as $old) {
++            if (is_string($old) && @filemtime($old) < time() - 2 * 86400) {
++                @unlink($old);
++            }
++        }
++    }
++
++    $fp = @fopen($file, 'c+');
++    if ($fp === false) {
++        return true;
++    }
++    flock($fp, LOCK_EX);
++    $raw = stream_get_contents($fp);
++    $now = time();
++    $times = is_string($raw) && $raw !== '' ? (json_decode($raw, true) ?: []) : [];
++    $times = array_values(array_filter($times, static fn($t) => is_int($t) && $t > $now - 86400));
++    $hour = array_filter($times, static fn($t) => $t > $now - 3600);
++    $ok = count($times) < $perDay && count($hour) < $perHour;
++    if ($ok) {
++        $times[] = $now;
++    }
++    ftruncate($fp, 0);
++    rewind($fp);
++    fwrite($fp, json_encode($times));
++    flock($fp, LOCK_UN);
++    fclose($fp);
++    return $ok;
++}
+diff --git a/public/form.php b/public/form.php
+index 4a1beeb..abdf646 100644
+--- a/public/form.php
++++ b/public/form.php
+@@ -1,13 +1,80 @@
+ <?php
+ declare(strict_types=1);
+ 
+-mb_internal_encoding('UTF-8');
++require __DIR__ . '/form-guard.php';
+ 
+ // Держать в синхроне с src/config/site.ts (email)
+ const RECIPIENT_EMAIL = 'kontakt@kravets-webdesign.de';
+ const MIN_SECONDS_TO_FILL = 3;
+ const MAX_FIELD_LENGTH = 200;
+ const MAX_MESSAGE_LENGTH = 5000;
++const MAX_LINKS = 3;            // больше ссылок в одной заявке = спам, отвечаем «успехом» и не отправляем
++const LIMIT_PER_HOUR = 5;       // отправок с одного адреса
++const LIMIT_PER_DAY = 20;
++
++// Ссылки: в имени, названии и контакте запрещены (честному человеку они там не нужны);
++// в сообщении и анкете разрешены, потому что клиент присылает адрес своего сайта, но в письме
++// они обезврежены (hxxps://salon[.]de) и не кликаются.
++
++// Ответы на языке страницы (скрытое поле lang); Impressum/Datenschutz только немецкие
++const MESSAGES = [
++    'de' => [
++        'invalid' => 'Ungültige Anfrage.',
++        'required' => 'Bitte füllen Sie Name und Telefon oder E-Mail aus.',
++        'requiredFb' => 'Bitte füllen Sie Name, Betrieb und Telefon oder E-Mail aus.',
++        'contact' => 'Bitte geben Sie eine gültige Telefonnummer oder E-Mail-Adresse an.',
++        'links' => 'Bitte ohne Links in Name, Betrieb und Kontakt.',
++        'rate' => 'Gerade kamen zu viele Anfragen von Ihrem Anschluss. Bitte später noch einmal oder rufen Sie mich direkt an.',
++        'fail' => 'Der Versand hat gerade nicht geklappt. Rufen Sie mich gern direkt an.',
++        'ok' => 'Vielen Dank, ich melde mich innerhalb von 1–2 Werktagen.',
++        'okBot' => 'Vielen Dank, ich melde mich bei Ihnen.',
++        'hOk' => 'Danke, Ihre Anfrage ist da.',
++        'hErr' => 'Das hat nicht geklappt.',
++        'backKontakt' => 'Zurück zum Kontakt',
++        'backFb' => 'Zurück zum Fragebogen',
++    ],
++    'en' => [
++        'invalid' => 'Invalid request.',
++        'required' => 'Please enter your name and a phone number or email.',
++        'requiredFb' => 'Please enter your name, business and a phone number or email.',
++        'contact' => 'Please enter a valid phone number or email address.',
++        'links' => 'Please leave out links in name, business and contact.',
++        'rate' => 'Too many requests from your connection right now. Please try again later or call me directly.',
++        'fail' => 'Sending did not work just now. Feel free to call me directly.',
++        'ok' => 'Thank you, I will get back to you within 1–2 working days.',
++        'okBot' => 'Thank you, I will get back to you.',
++        'hOk' => 'Thank you, your request has arrived.',
++        'hErr' => 'That did not work.',
++        'backKontakt' => 'Back to contact',
++        'backFb' => 'Back to the questionnaire',
++    ],
++    'uk' => [
++        'invalid' => 'Некоректний запит.',
++        'required' => 'Будь ласка, вкажіть імʼя і телефон або e-mail.',
++        'requiredFb' => 'Будь ласка, вкажіть імʼя, назву бізнесу і телефон або e-mail.',
++        'contact' => 'Будь ласка, вкажіть дійсний номер телефону або e-mail.',
++        'links' => 'Будь ласка, без посилань в імені, назві та контакті.',
++        'rate' => 'Зараз надто багато запитів з вашого підключення. Спробуйте пізніше або зателефонуйте мені.',
++        'fail' => 'Зараз не вдалося надіслати. Зателефонуйте мені напряму.',
++        'ok' => 'Дякую, я відповім протягом 1–2 робочих днів.',
++        'okBot' => 'Дякую, я з вами звʼяжуся.',
++        'hOk' => 'Дякую, ваш запит отримано.',
++        'hErr' => 'Не вдалося.',
++        'backKontakt' => 'Назад до контактів',
++        'backFb' => 'Назад до анкети',
++    ],
++];
++
++function lang(): string
++{
++    $l = (string) ($_POST['lang'] ?? 'de');
++    return isset(MESSAGES[$l]) ? $l : 'de';
++}
++
++function msg(string $key): string
++{
++    return MESSAGES[lang()][$key];
++}
+ 
+ // Вопросы анкеты /fragebogen — синхронно с src/config/fragebogen.ts (поля frage1…frage10)
+ const FRAGEBOGEN = [
+@@ -44,15 +111,18 @@ function respond(bool $ok, string $message, int $status = 200): void
+     // Фолбэк без JS: самостоятельная страница ответа в палитре сайта (цвета из tokens.css).
+     // Блок стилей — без подстановок: его хэш при сборке попадает в CSP (scripts/csp.mjs)
+     header('Content-Type: text/html; charset=utf-8');
+-    $heading = $ok ? 'Danke, Ihre Anfrage ist da.' : 'Das hat nicht geklappt.';
++    $heading = htmlspecialchars(msg($ok ? 'hOk' : 'hErr'), ENT_QUOTES, 'UTF-8');
+     $state = $ok ? 'ok' : 'err';
+     $safeMessage = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
++    $prefix = lang() === 'de' ? '' : '/' . lang();
+     [$backHref, $backText] = formType() === 'fragebogen'
+-        ? ['/fragebogen', 'Zurück zum Fragebogen']
+-        : ['/kontakt', 'Zurück zum Kontakt'];
++        ? [$prefix . '/fragebogen', msg('backFb')]
++        : [$prefix . '/kontakt', msg('backKontakt')];
++    $backText = htmlspecialchars($backText, ENT_QUOTES, 'UTF-8');
++    $htmlLang = lang();
+     echo <<<HTML
+ <!doctype html>
+-<html lang="de">
++<html lang="{$htmlLang}">
+ <head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+@@ -80,57 +150,76 @@ HTML;
+     exit;
+ }
+ 
+-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+-    respond(false, 'Ungültige Anfrage.', 405);
++if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !fgSameOrigin()) {
++    respond(false, msg('invalid'), 405);
+ }
+ 
+ // Ловушка для ботов: поле скрыто через CSS в форме, для человека невидимо
+-if (trim($_POST['website'] ?? '') !== '') {
+-    respond(true, 'Vielen Dank, ich melde mich bei Ihnen.');
++if (trim((string) ($_POST['website'] ?? '')) !== '') {
++    respond(true, msg('okBot'));
+ }
+ 
+ // Метка времени обязательна (ставит form.js при загрузке): нет поля или отправка раньше
+ // 3 секунд — бот. Боту отвечаем «успехом», чтобы он не пробовал снова
+ $ts = (int) ($_POST['ts'] ?? 0);
+ if ($ts <= 0 || (time() - intdiv($ts, 1000)) < MIN_SECONDS_TO_FILL) {
+-    respond(true, 'Vielen Dank, ich melde mich bei Ihnen.');
++    respond(true, msg('okBot'));
+ }
+ 
+-function cleanField(string $key, int $maxLength): string
+-{
+-    $value = trim((string) ($_POST[$key] ?? ''));
+-    $value = str_replace(["\r", "\n"], ' ', $value);
+-    return mb_substr($value, 0, $maxLength);
++$name = fgLine((string) ($_POST['name'] ?? ''), MAX_FIELD_LENGTH);
++$betrieb = fgLine((string) ($_POST['betrieb'] ?? ''), MAX_FIELD_LENGTH);
++$kontakt = fgLine((string) ($_POST['kontakt'] ?? ''), MAX_FIELD_LENGTH);
++$nachricht = fgText((string) ($_POST['nachricht'] ?? ''), MAX_MESSAGE_LENGTH);
++$answers = [];
++if (formType() === 'fragebogen') {
++    foreach (FRAGEBOGEN as $key => $question) {
++        $answers[$key] = fgText((string) ($_POST[$key] ?? ''), MAX_MESSAGE_LENGTH);
++    }
+ }
+ 
+-$name = cleanField('name', MAX_FIELD_LENGTH);
+-$betrieb = cleanField('betrieb', MAX_FIELD_LENGTH);
+-$kontakt = cleanField('kontakt', MAX_FIELD_LENGTH);
+-$nachricht = trim(mb_substr((string) ($_POST['nachricht'] ?? ''), 0, MAX_MESSAGE_LENGTH));
+-
+ if ($name === '' || $kontakt === '') {
+-    respond(false, 'Bitte füllen Sie Name und Telefon oder E-Mail aus.', 422);
++    respond(false, msg('required'), 422);
+ }
+ if (formType() === 'fragebogen' && $betrieb === '') {
+-    respond(false, 'Bitte füllen Sie Name, Betrieb und Telefon oder E-Mail aus.', 422);
++    respond(false, msg('requiredFb'), 422);
+ }
+ 
+ $isEmail = filter_var($kontakt, FILTER_VALIDATE_EMAIL) !== false;
+ $isPhone = (bool) preg_match('/^[0-9+\/\-\s()]{6,}$/', $kontakt);
+ if (!$isEmail && !$isPhone) {
+-    respond(false, 'Bitte geben Sie eine gültige Telefonnummer oder E-Mail-Adresse an.', 422);
++    respond(false, msg('contact'), 422);
++}
++// e-mail в поле «Kontakt» — не ссылка; проверяем имя, название и контакт-телефон
++if (fgHasLink($name) || fgHasLink($betrieb) || (!$isEmail && fgHasLink($kontakt))) {
++    respond(false, msg('links'), 422);
+ }
+ 
+-// mail() verschickt Klartext — hier wird nicht HTML-escaped, das wäre für
+-// eine E-Mail falsch (würde z. B. "&" als "&amp;" zeigen). name/betrieb/kontakt
+-// sind durch cleanField() bereits von Zeilenumbrüchen befreit (Header-Injection).
++// Слишком много ссылок в тексте — рассылка спама: «успех» без отправки
++$links = fgCountLinks($nachricht);
++foreach ($answers as $a) {
++    $links += fgCountLinks($a);
++}
++if ($links > MAX_LINKS) {
++    respond(true, msg('okBot'));
++}
++
++if (!fgRateLimit(formType(), LIMIT_PER_HOUR, LIMIT_PER_DAY)) {
++    respond(false, msg('rate'), 429);
++}
++
++// mail() verschickt Klartext — nicht HTML-escapen. Einzeilige Felder sind durch fgLine()
++// von Zeilenumbrüchen befreit (Header-Injection). Links im Text werden entschärft.
+ // Префикс [Kontakt] / [Fragebogen]; тема кодируется (RFC 2047), иначе умлауты ломаются
+ $prefix = formType() === 'fragebogen' ? '[Fragebogen]' : '[Kontakt]';
+-$subject = $prefix . ' Anfrage von ' . $name . ($betrieb !== '' ? ' — ' . $betrieb : '');
+-$subject = str_replace(["\r", "\n"], ' ', $subject);
++$subject = $prefix . ' Anfrage von ' . $name . ($betrieb !== '' ? ' · ' . $betrieb : '');
+ $subject = mb_encode_mimeheader($subject, 'UTF-8', 'B', "\r\n");
+ 
+-$body = "Name: {$name}\n"
++$body = '';
++if ($links > 0) {
++    $body .= "Hinweis: Links in dieser Nachricht wurden automatisch entschärft (hxxps[://]name[.]de).\n"
++        . "Nur öffnen, wenn Sie den Absender erwarten.\n\n";
++}
++$body .= "Name: {$name}\n"
+     . "Betrieb: {$betrieb}\n"
+     . "Kontakt: {$kontakt}\n\n";
+ 
+@@ -138,13 +227,14 @@ if (formType() === 'fragebogen') {
+     // Анкета: «вопрос — ответ»; пустой ответ — «—»
+     $number = 1;
+     foreach (FRAGEBOGEN as $key => $question) {
+-        $answer = trim(mb_substr((string) ($_POST[$key] ?? ''), 0, MAX_MESSAGE_LENGTH));
++        $answer = fgDefang($answers[$key]);
+         $body .= "{$number}. {$question}\n" . ($answer !== '' ? $answer : '—') . "\n\n";
+         $number++;
+     }
+ } else {
+-    $body .= "Nachricht:\n{$nachricht}\n";
++    $body .= "Nachricht:\n" . fgDefang($nachricht) . "\n";
+ }
++$body .= "\n--\nGesendet über das Formular auf kravets-webdesign.de (Sprache: " . lang() . ")\n";
+ 
+ $headers = [
+     'From: ' . RECIPIENT_EMAIL,
+@@ -155,7 +245,7 @@ $headers = [
+ $sent = mail(RECIPIENT_EMAIL, $subject, $body, implode("\r\n", $headers));
+ 
+ if (!$sent) {
+-    respond(false, 'Der Versand hat gerade nicht geklappt. Rufen Sie mich gern direkt an.', 500);
++    respond(false, msg('fail'), 500);
+ }
+ 
+-respond(true, 'Vielen Dank, ich melde mich innerhalb von 1–2 Werktagen.');
++respond(true, msg('ok'));
+diff --git a/src/pages/[...lang]/fragebogen.astro b/src/pages/[...lang]/fragebogen.astro
+index 1cfb7a0..bbe94bd 100644
+--- a/src/pages/[...lang]/fragebogen.astro
++++ b/src/pages/[...lang]/fragebogen.astro
+@@ -31,15 +31,15 @@ const t = T[lang]
+       <input type="hidden" name="lang" value={lang}>
+       <div class="fb-req">
+         <div class="fl">
+-          <input type="text" id="name" name="name" autocomplete="name" required placeholder=" ">
++          <input type="text" id="name" name="name" maxlength="200" autocomplete="name" required placeholder=" ">
+           <label for="name">{t.name}</label>
+         </div>
+         <div class="fl">
+-          <input type="text" id="betrieb" name="betrieb" autocomplete="organization" required placeholder=" ">
++          <input type="text" id="betrieb" name="betrieb" maxlength="200" autocomplete="organization" required placeholder=" ">
+           <label for="betrieb">{t.betrieb}</label>
+         </div>
+         <div class="fl">
+-          <input type="text" id="kontakt" name="kontakt" required placeholder=" ">
++          <input type="text" id="kontakt" name="kontakt" maxlength="200" required placeholder=" ">
+           <label for="kontakt">{t.kontakt}</label>
+         </div>
+       </div>
+@@ -47,7 +47,7 @@ const t = T[lang]
+         {fb.questions.map((question, i) => (
+           <li class="fb-q">
+             <label for={`frage${i + 1}`}><span class="fb-n">{String(i + 1).padStart(2, '0')}</span>{question}</label>
+-            <textarea id={`frage${i + 1}`} name={`frage${i + 1}`} rows="3"></textarea>
++            <textarea maxlength="5000" id={`frage${i + 1}`} name={`frage${i + 1}`} rows="3"></textarea>
+           </li>
+         ))}
+       </ol>
+diff --git a/src/pages/[...lang]/kontakt.astro b/src/pages/[...lang]/kontakt.astro
+index 61bb66b..c9c5eb1 100644
+--- a/src/pages/[...lang]/kontakt.astro
++++ b/src/pages/[...lang]/kontakt.astro
+@@ -94,19 +94,19 @@ const rings = [5, 10].map(r => ({ r, R: r * PX_PER_KM }))
+       <input type="hidden" name="form" value="kontakt">
+       <input type="hidden" name="lang" value={lang}>
+       <div class="fl">
+-        <input type="text" id="name" name="name" autocomplete="name" required placeholder=" ">
++        <input type="text" id="name" name="name" maxlength="200" autocomplete="name" required placeholder=" ">
+         <label for="name">{t.name}</label>
+       </div>
+       <div class="fl">
+-        <input type="text" id="betrieb" name="betrieb" autocomplete="organization" placeholder=" ">
++        <input type="text" id="betrieb" name="betrieb" maxlength="200" autocomplete="organization" placeholder=" ">
+         <label for="betrieb">{t.betrieb}</label>
+       </div>
+       <div class="fl">
+-        <input type="text" id="kontakt" name="kontakt" required placeholder=" ">
++        <input type="text" id="kontakt" name="kontakt" maxlength="200" required placeholder=" ">
+         <label for="kontakt">{t.kontakt}</label>
+       </div>
+       <div class="fl">
+-        <textarea id="nachricht" name="nachricht" rows="5" placeholder=" "></textarea>
++        <textarea maxlength="5000" id="nachricht" name="nachricht" rows="5" placeholder=" "></textarea>
+         <label for="nachricht">{t.msg}</label>
+       </div>
+       <!-- ловушка для ботов: скрыта через CSS, не type=hidden -->
+diff --git a/src/pages/datenschutz.astro b/src/pages/datenschutz.astro
+index 90b56e6..7ea7368 100644
+--- a/src/pages/datenschutz.astro
++++ b/src/pages/datenschutz.astro
+@@ -52,6 +52,15 @@ import { site } from '../config/site'
+     statt. Ich lösche die Daten, sobald sie für die Bearbeitung Ihrer
+     Anfrage nicht mehr erforderlich sind.
+   </p>
++  <p>
++    Zum Schutz vor Spam und Missbrauch zähle ich bei Kontaktformular und
++    Fragebogen die Anfragen pro Besucher. Dafür speichere ich keine
++    IP-Adresse im Klartext, sondern nur ein Pseudonym, das sich täglich
++    ändert; es wird nach spätestens zwei Tagen gelöscht. Links in Ihrer
++    Nachricht werden vor dem Versand an mich unschädlich gemacht.
++    Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO: mein berechtigtes
++    Interesse, die Formulare vor Missbrauch zu schützen.
++  </p>
+ 
+   <h2>Fragebogen</h2>
+   <p>
+diff --git a/src/scripts/pages/form.js b/src/scripts/pages/form.js
+index a7ed03b..242e498 100644
+--- a/src/scripts/pages/form.js
++++ b/src/scripts/pages/form.js
+@@ -35,8 +35,8 @@ try {
+           showStatus(form.dataset.success, true);
+         } else {
+           button.disabled = false;
+-          // сообщения сервера немецкие — на en/uk показываем общий текст на языке страницы
+-          showStatus(document.documentElement.lang === 'de' ? data.message : form.dataset.error, false);
++          // form.php отвечает на языке страницы (скрытое поле lang); общий текст только если ответа нет
++          showStatus(data.message || form.dataset.error, false);
+         }
+       } catch (error) {
+         console.error('[pages/form]', error);
+-- 
+2.43.0
+

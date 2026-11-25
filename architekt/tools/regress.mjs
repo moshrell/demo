@@ -26,6 +26,8 @@ const out = path.resolve(process.argv[3] || path.join(os.tmpdir(), `regress-${sl
 const CFG = fs.existsSync(path.join(proj, 'regress.config.json')) ? JSON.parse(fs.readFileSync(path.join(proj, 'regress.config.json'), 'utf8')) : {};
 const BUILD = process.env.REGRESS_BUILD || CFG.build || 'npx astro build';
 const DIST = process.env.REGRESS_DIST || CFG.dist || 'dist';
+// bewusst akzeptierte Befunde: Liste regulärer Ausdrücke in regress.config.json → "ignore": [{ "re": "...", "why": "..." }]
+const IGNORE = (CFG.ignore || []).map((i) => ({ re: new RegExp(i.re), why: i.why }));
 const CLS_MS = +(process.env.REGRESS_CLS_MS || CFG.clsMs || 10000); // so lange auf Layout-Sprünge achten (Hero-Film, Animationen)
 const PAR = +(process.env.REGRESS_PAR || CFG.parallel || 2);         // Seiten gleichzeitig
 const EXCLUDE = (process.env.REGRESS_EXCLUDE || CFG.exclude) ? new RegExp(process.env.REGRESS_EXCLUDE || CFG.exclude) : null;
@@ -91,6 +93,10 @@ const CALM = '*,*::before,*::after{animation-duration:0s!important;animation-del
 async function capture(base, p, [W, H]) {
   const ctx = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 1, isMobile: W < 900, hasTouch: W < 900, reducedMotion: 'reduce' });
   const page = await ctx.newPage(); const logs = [];
+  // gleiche Uhrzeit, gleicher Zufall und gleiche Timer in «до» und «после»: Playwright-Uhr steuert Date, setTimeout, setInterval, rAF.
+  // Live-Effekte (Chat-Animation, Lauftexte, Öffnungsstatus) stehen so in beiden Läufen am selben Punkt.
+  await page.clock.install({ time: new Date('2026-11-25T10:30:00') });
+  await page.addInitScript(() => { let s = 42; Math.random = () => ((s = (s * 16807) % 2147483647) - 1) / 2147483646; });
   page.on('console', (m) => { if (m.type() === 'error') logs.push(m.text()); });
   page.on('pageerror', (e) => logs.push('PAGEERROR ' + e.message));
   page.on('requestfailed', (r) => logs.push('REQUEST FAILED ' + r.url().replace(base, '')));
@@ -98,11 +104,14 @@ async function capture(base, p, [W, H]) {
   await page.goto(base + p, { waitUntil: 'load' });
   await page.addStyleTag({ content: CALM });
   await page.evaluate(() => document.fonts.ready);
-  // einmal durchscrollen (Lazy-Bilder, Beobachter), dann nach oben
+  await page.clock.runFor(1500);
+  // einmal durchscrollen (Lazy-Bilder, Beobachter), dann nach oben; Zeit läuft nur über die Playwright-Uhr
   const h0 = await page.evaluate(() => document.documentElement.scrollHeight);
-  for (let y = 0; y < h0; y += Math.round(H * 0.8)) { await page.evaluate((y) => scrollTo(0, y), y); await page.waitForTimeout(60); }
-  await page.evaluate(() => { scrollTo(0, 0); document.querySelectorAll('video').forEach((v) => { v.pause(); }); });
-  await page.waitForTimeout(500);
+  for (let y = 0; y < h0 + H; y += Math.round(H * 0.5)) { await page.evaluate((y) => scrollTo(0, y), y); await page.waitForTimeout(90); await page.clock.runFor(250); await page.waitForTimeout(30); }
+  // alle Bilder wirklich geladen (sonst fehlt mal eins und es sieht nach Änderung aus)
+  await page.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 8000 }).catch(() => logs.push('не все картинки загрузились за 8 с'));
+  await page.evaluate(() => { scrollTo(0, 0); document.querySelectorAll('video').forEach((v) => { v.pause(); v.currentTime = 0; }); });
+  await page.waitForTimeout(150); await page.clock.runFor(30000); await page.waitForTimeout(150);
   const geo = await page.evaluate(() => {
     const sel = 'header,nav,main,section,footer,form,figure,h1,h2,h3,h4,p,ul,ol,dl,details,button,a.btn,.btn,input,select,textarea,label,img,video,svg[class],[id],[class*="card"],[class*="grid"]';
     const seen = new Map(); const items = [];
@@ -166,7 +175,7 @@ const AUDIT = (W) => {
   let nf = 0; for (const e of leaf) { if (nf > 5) break; const fs = parseFloat(getComputedStyle(e).fontSize); if (fs < (phone ? 12 : 11)) { out.push(`мелкий шрифт ${fs}px: ${name(e)} (y ${y(e)})`); nf++; } }
   if (phone) document.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea').forEach((e) => { if (vis(e) && parseFloat(getComputedStyle(e).fontSize) < 16) out.push(`поле ввода со шрифтом < 16px (iPhone увеличит страницу при касании): ${name(e)}`); });
   // 5. Bilder: kaputt, ohne alt, unscharf (auf 2x-Bildschirmen)
-  document.querySelectorAll('img').forEach((im) => { if (!vis(im)) return; if (im.complete && !im.naturalWidth) out.push(`картинка не загрузилась: ${im.getAttribute('src')}`); if (!im.hasAttribute('alt')) out.push(`картинка без alt: ${im.getAttribute('src')}`); const r = im.getBoundingClientRect(); const fit = getComputedStyle(im).objectFit; const need = (fit === 'cover' ? Math.max(r.width / im.naturalWidth, r.height / im.naturalHeight) : r.width / im.naturalWidth) * 2; if (im.naturalWidth && need > 1.6 && !/\.svg/.test(im.currentSrc)) out.push(`картинка будет мутной на экранах 2× (файл ${im.naturalWidth}px мал для показанного размера): ${im.getAttribute('src')}`); });
+  document.querySelectorAll('img').forEach((im) => { if (!vis(im)) return; if (im.complete && !im.naturalWidth) out.push(`картинка не загрузилась: ${im.getAttribute('src')}`); if (!im.hasAttribute('alt')) out.push(`картинка без alt: ${im.getAttribute('src')}`); const r = im.getBoundingClientRect(); const fit = getComputedStyle(im).objectFit; const maxW = Math.max(im.naturalWidth, ...(im.getAttribute('srcset') || '').split(',').map((c) => parseInt((c.trim().split(/\s+/)[1] || '').replace('w', '')) || 0)); const k = maxW / im.naturalWidth; const need = (fit === 'cover' ? Math.max(r.width / im.naturalWidth, r.height / im.naturalHeight) : r.width / im.naturalWidth) * 2 / k; if (im.naturalWidth && need > 1.6 && !/\.svg/.test(im.currentSrc)) out.push(`картинка будет мутной на экранах 2× (файл ${im.naturalWidth}px мал для показанного размера): ${im.getAttribute('src')}`); });
   // 6. Überschriften
   const hs = [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].filter((h) => !h.closest('[hidden]'));
   const h1 = hs.filter((h) => h.tagName === 'H1').length; if (h1 !== 1) out.push(`заголовков h1 на странице: ${h1} (нужен ровно один)`);
@@ -212,7 +221,8 @@ async function logic(p) {
         const out = [];
         document.querySelectorAll('form').forEach((f) => { if (!f.querySelector('input[type=email],input[type=tel],[autocomplete=name]')) return;
         f.querySelectorAll('input[type=text], input[type=email], input[type=tel], input:not([type]), textarea').forEach((e, i) => {
-          if (e.disabled || e.readOnly) return;
+          // Honeypot-Felder (für Bots, unsichtbar) dürfen ruhig leer bleiben
+          if (e.disabled || e.readOnly || e.tabIndex < 0 || e.closest('[aria-hidden="true"]') || /^(website|url|homepage|hp|honeypot)$/i.test(e.name) || !e.checkVisibility?.({ checkOpacity: true, checkVisibilityCSS: true })) return;
           const v = e.type === 'email' ? `test${i}@example.com` : e.type === 'tel' ? '0511 123456' : e.type === 'number' ? '5' : e.type === 'date' ? '2027-05-04' : `Test ${i}`;
           e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true }));
           out.push([e.name || e.id || `#${i}`, v]);
@@ -321,8 +331,16 @@ async function doPage(p) {
     if (!pagesB.includes(p)) continue;
     const b = await capture(B.url, p, v);
     const g = geodiff(b.geo, a.geo);
+    // Rauschen: was sich schon zwischen zwei Läufen derselben Version unterscheidet (Live-Animationen, Tipp-Effekte, Videos), zählt nicht als Änderung
+    const a2 = await capture(A.url, p, v);
+    const gn = geodiff(a2.geo, a.geo); const noisyK = new Set([...gn.own.map((c) => c.k), ...gn.shifts.map((x) => x.from.k)]);
+    const noise = (await pixdiff(a.shot, a2.shot)).bands;
+    g.own = g.own.filter((c) => !noisyK.has(c.k)); g.shifts = g.shifts.filter((x) => !noisyK.has(x.from.k));
     const offs = [0, ...new Set(g.shifts.map((x) => x.dy)), ...new Set([...g.own].map((x) => x.dy).filter(Boolean))].slice(0, 6);
     const px = await pixdiff(a.shot, b.shot, offs);
+    const near = ([y0, y1]) => noise.some(([n0, n1]) => y0 < n1 + 30 && y1 > n0 - 30);
+    const keep = px.crops.filter((c) => !near([c.y0, c.y1])); px.crops = keep; px.bands = px.bands.filter((bd) => !near(bd)); if (!px.bands.length) px.total = 0;
+    if (noise.length) g.noise = noise.length;
     if (!px.total && !g.own.length && !g.shifts.length && !g.gone.length && !g.added.length) continue;
     nChanged++;
     const L = [`### ${v.join('×')}  (пикселей изменено ${px.pct} %, высота страницы ${g.dH >= 0 ? '+' : ''}${g.dH} px${g.dW ? `, ширина ${g.dW >= 0 ? '+' : ''}${g.dW} px` : ''})`];
@@ -335,6 +353,7 @@ async function doPage(p) {
     if (px.bands.length > 8) L.push(`- … ещё ${px.bands.length - 8} мест с изменениями`);
     sec.push(...L, '');
   }
+  for (let i = lg.length - 1; i >= 0; i--) if (IGNORE.some((g) => g.re.test(`${p} ${lg[i]}`))) lg.splice(i, 1);
   if (lg.length) {
     // gleiche Meldung auf mehreren Bildschirmen zusammenfassen; Positionsangaben (y …) ignorieren
     const grp = new Map();

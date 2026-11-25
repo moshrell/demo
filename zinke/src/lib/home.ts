@@ -1,3 +1,4 @@
+import { softwareGL } from './softgl';
 /** Startseite: Status offen/geschlossen, Montage-Szene nach Scroll, Werkstoff-Probe, PLZ-Prüfung, klebende Leiste. */
 import site from '../data/site.json';
 import { PRESETS, clone, normalize, width, type Cfg } from './model';
@@ -113,7 +114,7 @@ if (sz) {
   const wide = matchMedia('(min-aspect-ratio: 1/1)');
   let cur = prods[0], cfg: Cfg = normalize(clone(PRESETS[cur.preset]));
   const done = new Set<string>();   // schon einmal fertig gebaut: bleibt zusammengebaut, ohne neu scrollen
-  let scene: WerkScene | null = null, p = 0, photoOk = true, started = false, staticMode = reduced;
+  let scene: WerkScene | null = null, p = 0, photoOk = true, started = false, staticMode = reduced || softwareGL();
   const stickyEl = sz.querySelector<HTMLElement>('.sz__sticky')!;
   const link = capt.querySelector<HTMLAnchorElement>('[data-sz-link]')!;
 

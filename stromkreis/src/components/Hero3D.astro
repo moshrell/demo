@@ -85,6 +85,7 @@ const base = import.meta.env.BASE_URL;
 
 <script>
   import { createHero, ROOMS } from '../scripts/haus3d';
+  import { softwareGL } from '../scripts/softgl';
   const base = import.meta.env.BASE_URL;
   const q = <T extends Element>(s: string) => document.querySelector(s) as T;
   const sec = q<HTMLElement>('[data-h3]'), cv = q<HTMLCanvasElement>('[data-c]'), card = q<HTMLElement>('[data-card]'), hint = q<HTMLElement>('[data-hint]'), pin = q<HTMLElement>('.h3__pin');
@@ -98,6 +99,7 @@ const base = import.meta.env.BASE_URL;
   addEventListener('pageshow', (e) => { if (!e.persisted && !location.hash && navType !== 'back_forward') scrollTo(0, 0); });
   (async () => {
     let hero: Awaited<ReturnType<typeof createHero>>;
+    if (softwareGL()) { hint.textContent = ''; sec.setAttribute('data-fail', ''); return; } // ohne Grafikchip: schlanker Ersatz
     try { hero = await createHero(cv, base, [...order]); } catch (e) { console.error(e); hint.textContent = ''; sec.setAttribute('data-fail', ''); return; }
     sec.setAttribute('data-ready', ''); hero.resize();
     (window as any).__hero = hero;

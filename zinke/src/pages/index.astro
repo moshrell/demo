@@ -87,6 +87,11 @@ const preset: Record<string, string> = { einbauschrank: 'schrank', regal: 'regal
           </div>
         </div>
       </section>
+      <script is:inline>
+        /* Ohne Grafikchip (Software-WebGL) gleich die ruhige Fassung ohne 3D: sofort, damit die Seite nach dem Laden nicht springt */
+        (function () { try { var c = document.createElement('canvas'), g = c.getContext('webgl2') || c.getContext('webgl'), i = g && g.getExtension('WEBGL_debug_renderer_info');
+          if (i && /swiftshader|llvmpipe|softpipe|software|basic render/i.test(String(g.getParameter(i.UNMASKED_RENDERER_WEBGL)))) document.querySelector('[data-sz]').classList.add('sz--static'); } catch (e) { console.error('[zinke] GPU-Erkennung', e); } })();
+      </script>
 
       <!-- 3. Leistungen und Preise -->
       <Zinken from="var(--paper)" to="var(--paper-2)" />

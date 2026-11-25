@@ -116,3 +116,7 @@ Ventilspiel только 964/993, Fehlerdiagnose 89 € для всех. «Ander
 ## Развилки для Степана
 1. Машина C принята мной по стоп-кадрам; если на телефоне выглядит дёшево, скажи, что именно.
 2. Услуги старых моделей показаны на 992. Если нужна вторая машина (986/996), это запись в `fahrzeuge.json` + модель.
+
+## Performance (17.11.2026)
+- Ohne Grafikchip (Software-WebGL wie bei Messrobotern/PageSpeed, erkannt per WEBGL_debug_renderer_info) schlanker Ersatz statt 3D/Dauer-Animation; mit Grafikchip unverändert.
+- Bei neuen Änderungen: Lighthouse mobil prüfen (Ziel: TBT unter 200 ms, CLS unter 0,1). Nicht die GPU-Erkennung entfernen.

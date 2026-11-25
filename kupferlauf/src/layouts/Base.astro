@@ -1,6 +1,9 @@
 ---
 // SEO + KI-Sichtbarkeit (AIO). Demo: noindex (index = false). Beim Kundenstart: index = true setzen.
 import '../styles/global.css';
+import jost500 from '@fontsource/jost/files/jost-latin-500-normal.woff2?url';
+import figtree400 from '@fontsource/figtree/files/figtree-latin-400-normal.woff2?url';
+import figtree600 from '@fontsource/figtree/files/figtree-latin-600-normal.woff2?url';
 import site from '../data/site.json';
 const {
   title = site.name,
@@ -52,6 +55,9 @@ const nav = [
     <meta name="description" content={description} />
     <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
     <meta name="theme-color" content="#f6f9fa" />
+    <link rel="preload" href={jost500} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={figtree400} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={figtree600} as="font" type="font/woff2" crossorigin />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     <meta property="og:type" content="website" />

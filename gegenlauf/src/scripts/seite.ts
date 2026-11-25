@@ -182,7 +182,17 @@ function kader(zone: string | null) {
 }
 
 // ───────── Ленивая загрузка 3D после первой отрисовки ─────────
-function webgl() { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2')); } catch { return false; } }
+// WebGL2 vorhanden UND mit Grafikchip? Reine Software-Berechnung (Messroboter, sehr alte Geräte) bekommt die fertigen Standbilder statt eines Dauerlaufs.
+function webgl() {
+  try {
+    const gl = document.createElement('canvas').getContext('webgl2');
+    if (!gl) return false;
+    const info = gl.getExtension('WEBGL_debug_renderer_info');
+    const soft = !!info && /swiftshader|llvmpipe|softpipe|software|basic render/i.test(String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)));
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    return !soft;
+  } catch (err) { console.error('[gegenlauf/seite] WebGL-Erkennung', err); return false; }
+}
 async function ladeSzene() {
   const con = (navigator as any).connection;
   const langsam = con && (con.saveData || /(^|-)2g$/.test(con.effectiveType || ''));

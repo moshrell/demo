@@ -31,3 +31,7 @@
 - CSP для All-Inkl: в `scripts/htaccess.mjs` добавлено `'wasm-unsafe-eval'`; на живом хостинге с этим CSP камера не проверялась. Сжатие `.wasm` и кэш `/mp/` включены в `.htaccess` (нужны mod_deflate, mod_headers).
 - Фото с Unsplash (лицензия Unsplash, авторы на странице Impressum). При желании заменить своими кадрами под теми же именами в `public/img/`.
 - Цены условные.
+
+## Performance (17.11.2026)
+- Linse startet in CSS-Variablen an der Animationsposition (kein Sprung beim Laden).
+- Bei neuen Änderungen: Lighthouse mobil prüfen (Ziel: TBT unter 200 ms, CLS unter 0,1). Nicht die GPU-Erkennung entfernen.

@@ -1,3 +1,4 @@
+import { softwareGL } from './softgl';
 // Bad-Baukasten (three.js): Isometrie, «weißer Ton» + türkises Wasser + Kupfer-Armaturen.
 // Wird nur geladen, wenn die Bühne sichtbar ist (baukasten.ts). Steuerung läuft über DOM-Knöpfe; das 3D ist die Ansicht dazu.
 // Modelle: Kenney Furniture Kit (CC0), siehe public/models/LICENSE-kenney.txt. Ohne Echtzeit-Schatten (ein weicher Kontaktschatten je Teil).
@@ -90,6 +91,7 @@ function blobTexture(): CanvasTexture {
 
 // ---------- Hauptfunktion ----------
 export async function createBad(canvas: HTMLCanvasElement, opts: Opts): Promise<Handle | null> {
+  if (softwareGL()) return null; // ohne Grafikchip: schlanker Ersatz
   let renderer: WebGLRenderer;
   try {
     renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'low-power' });

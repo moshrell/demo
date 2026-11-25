@@ -103,3 +103,7 @@
 
 ## Лицензии
 - Texturen: Poly Haven, CC0. PLZ-координаты: GeoNames, CC BY 4.0 (упомянуть при реальном запуске). Шрифты: OFL (fontsource). three.js: MIT.
+
+## Performance (17.11.2026)
+- Ohne Grafikchip (Software-WebGL wie bei Messrobotern/PageSpeed, erkannt per WEBGL_debug_renderer_info) schlanker Ersatz statt 3D/Dauer-Animation; mit Grafikchip unverändert.
+- Bei neuen Änderungen: Lighthouse mobil prüfen (Ziel: TBT unter 200 ms, CLS unter 0,1). Nicht die GPU-Erkennung entfernen.

@@ -5,13 +5,17 @@
  *  2. Pflicht-Häkchen zur Einwilligung mit Zweck + Link auf datenschutz/ (base-Pfad), Fehlermeldung wenn nicht gesetzt.
  *  3. Preise/Auswahl: Summe läuft mit (mobil: klebende Leiste unten im Formular) und steht in der Bestätigung.
  *     Ohne Preise (items leer): keine Summe erfinden, die Bestätigung zeigt die Auswahl (Leistung, Datum/Zeit).
- * Es wird nichts gesendet (Demo). Beim echten Kunden: Backend/Mail-Weg anschließen und Datenschutz anpassen.
+ * Ohne endpoint wird nichts gesendet (Demo). Echter Kunde: server/form.php + server/form-guard.php nach public/ kopieren,
+ * dort Empfänger eintragen (TODO), hier endpoint="form.php" setzen, in DatenschutzForm live setzen.
+ * Schutz (form-guard): keine Links in Name/Auswahl, Links in der Nachricht abgelehnt oder entschärft, Bot-Falle,
+ * Mindestzeit, Limit pro Anschluss (Pseudonym), nur Anfragen von dieser Website, Klartext-Mail ohne Anhänge.
  *
  * Props:
  *   items   [{ id, name, cents }]  Positionen mit Preis (optional)
  *   options [string]               Auswahl ohne Preis, z. B. Leistungen oder Abholzeiten (optional)
  *   optionsLabel                   Überschrift der Auswahl, z. B. "Wann?"
  *   title, submitLabel, purpose    Texte; purpose = Zweck im Einwilligungssatz
+ *   endpoint                       z. B. "form.php" (relativ zur base); leer = Demo, nichts wird gesendet
  */
 import site from '../data/site.json';
 const {
@@ -22,14 +26,16 @@ const {
   submitLabel = 'Anfrage senden',
   purpose = 'meiner Anfrage',
   id = 'form',
+  endpoint = '',
 } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const euro = (c: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(c / 100);
 const hasPrices = items.length > 0;
+const live = endpoint !== '';
 ---
 <section class="of" aria-labelledby={`${id}-h`}>
   <h2 class="of__title" id={`${id}-h`}>{title}</h2>
-  <form class="of__form" id={id} novalidate data-of data-has-prices={hasPrices ? '1' : '0'} data-options-label={optionsLabel}>
+  <form class="of__form" id={id} novalidate data-of data-has-prices={hasPrices ? '1' : '0'} data-options-label={optionsLabel} action={live ? `${base}${endpoint}` : undefined} method={live ? 'post' : undefined}>
     {hasPrices && (
       <fieldset class="of__group">
         <legend>Was möchten Sie?</legend>
@@ -63,22 +69,22 @@ const hasPrices = items.length > 0;
       <legend>Ihre Angaben</legend>
       <div class="of__field">
         <label for={`${id}-name`}>Name</label>
-        <input id={`${id}-name`} name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname" required aria-describedby={`${id}-err-name`} />
+        <input id={`${id}-name`} name="name" type="text" autocomplete="name" placeholder="Vor- und Nachname" maxlength="200" required aria-describedby={`${id}-err-name`} />
         <p class="of__err" id={`${id}-err-name`} hidden>Bitte geben Sie Ihren Namen an.</p>
       </div>
       <div class="of__field">
         <label for={`${id}-tel`}>Telefon</label>
-        <input id={`${id}-tel`} name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 030 23125 123" required aria-describedby={`${id}-err-tel`} />
+        <input id={`${id}-tel`} name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="z. B. 030 23125 123" maxlength="40" required aria-describedby={`${id}-err-tel`} />
         <p class="of__err" id={`${id}-err-tel`} hidden>Bitte geben Sie eine Telefonnummer an, unter der wir Sie erreichen.</p>
       </div>
       <div class="of__field">
         <label for={`${id}-mail`}>E-Mail <span class="of__opt">(optional)</span></label>
-        <input id={`${id}-mail`} name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" aria-describedby={`${id}-err-mail`} />
+        <input id={`${id}-mail`} name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" maxlength="200" aria-describedby={`${id}-err-mail`} />
         <p class="of__err" id={`${id}-err-mail`} hidden>Bitte prüfen Sie die E-Mail-Adresse, z. B. name@example.com.</p>
       </div>
       <div class="of__field">
         <label for={`${id}-note`}>Nachricht <span class="of__opt">(optional)</span></label>
-        <textarea id={`${id}-note`} name="note" rows="3" autocomplete="off" placeholder="z. B. Wunschtermin, Hinweise, Fragen"></textarea>
+        <textarea id={`${id}-note`} name="note" rows="3" autocomplete="off" maxlength="3000" placeholder="z. B. Wunschtermin, Hinweise, Fragen"></textarea>
       </div>
     </fieldset>
 
@@ -90,11 +96,19 @@ const hasPrices = items.length > 0;
       <p class="of__err" id={`${id}-err-privacy`} hidden>Bitte stimmen Sie zu, sonst können wir Ihre Anfrage nicht bearbeiten.</p>
     </div>
 
+    {live && (
+      <>
+        <div class="of__hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
+        <input type="hidden" name="ts" value="" />
+        <input type="hidden" name="auswahl" value="" />
+      </>
+    )}
+    <p class="of__err" data-send-err role="alert" hidden></p>
     <div class="of__bar">
       {hasPrices ? (
         <p class="of__total"><span data-count>Noch nichts gewählt</span><span>Summe <strong data-total>{euro(0)}</strong></span></p>
       ) : (
-        <p class="of__total of__total--plain"><span>Es wird nichts gesendet (Demo).</span></p>
+        <p class="of__total of__total--plain"><span>{live ? 'Wir melden uns schnellstmöglich.' : 'Es wird nichts gesendet (Demo).'}</span></p>
       )}
       <button class="of__btn" type="submit">{submitLabel}</button>
     </div>
@@ -103,7 +117,7 @@ const hasPrices = items.length > 0;
   <div class="of__done" data-done tabindex="-1" hidden>
     <h3>Danke, Ihre Anfrage ist angekommen.</h3>
     <dl data-done-list></dl>
-    <p class="of__demo">Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.</p>
+    {!live && <p class="of__demo">Demo: Dieses Formular ist eine Vorführung. Es wurde nichts gesendet oder gespeichert.</p>}
   </div>
 </section>
 
@@ -135,6 +149,8 @@ const hasPrices = items.length > 0;
   .of__field input[aria-invalid='true'] { border-color: var(--alert); box-shadow: inset 0 0 0 1px var(--alert); }
   .of__err { margin: 0; font-size: var(--text-sm); font-weight: 600; color: var(--alert); }
   .of__err[hidden] { display: none; }
+  .of__hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  [data-send-err] { margin-bottom: var(--space-md); }
   .of__consent { display: grid; gap: var(--space-xs); margin-bottom: var(--space-lg); }
   .of__check { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-smd); align-items: start; font-size: var(--text-sm); line-height: 1.45; cursor: pointer; }
   .of__check input { width: 1.4rem; height: 1.4rem; margin: 0.1rem 0 0; accent-color: var(--accent); }
@@ -159,7 +175,7 @@ const hasPrices = items.length > 0;
 </style>
 
 <script>
-  // Demo-Logik: Summe, Prüfung, Bestätigung. Keine Anfragen, kein Speicher, keine Cookies.
+  // Summe, Prüfung, Bestätigung. Ohne action (Demo) wird nichts gesendet; mit action geht die Anfrage an form.php.
   const eur = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
   document.querySelectorAll<HTMLFormElement>('form[data-of]').forEach((form) => {
     const done = form.parentElement!.querySelector<HTMLElement>('[data-done]')!;
@@ -169,6 +185,11 @@ const hasPrices = items.length > 0;
     const totalEl = form.querySelector<HTMLElement>('[data-total]');
     const countEl = form.querySelector<HTMLElement>('[data-count]');
     const field = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
+    const KEY = `form:${location.pathname}:${form.id}`;
+    const live = form.hasAttribute('action');
+    const sendErr = form.querySelector<HTMLElement>('[data-send-err]')!;
+    const btn = form.querySelector<HTMLButtonElement>('.of__btn')!;
+    if (live) field('ts').value = String(Date.now());
     const err = (input: HTMLInputElement, show: boolean) => {
       const e = document.getElementById(input.getAttribute('aria-describedby') || '');
       if (e) e.hidden = !show;
@@ -224,31 +245,54 @@ const hasPrices = items.length > 0;
       const opt = form.querySelector<HTMLInputElement>('input[name=option]:checked');
       if (opt) rows.push([form.dataset.optionsLabel || 'Auswahl', opt.value]);
       rows.push(['Name', name.value.trim()], ['Telefon', tel.value.trim()]);
-      list.replaceChildren(...rows.map(([k, v, strong]) => {
-        const d = document.createElement('div');
-        const dt = document.createElement('dt'); dt.textContent = k;
-        const dd = document.createElement('dd'); dd.textContent = v;
-        if (strong) { dt.className = 'of__sum'; dd.className = 'of__sum'; }
-        d.append(dt, dd);
-        return d;
-      }));
-      form.hidden = true;
-      done.hidden = false;
-      done.focus();
+      const show = () => {
+        list.replaceChildren(...rows.map(([k, v, strong]) => {
+          const d = document.createElement('div');
+          const dt = document.createElement('dt'); dt.textContent = k;
+          const dd = document.createElement('dd'); dd.textContent = v;
+          if (strong) { dt.className = 'of__sum'; dd.className = 'of__sum'; }
+          d.append(dt, dd);
+          return d;
+        }));
+        form.hidden = true;
+        done.hidden = false;
+        done.focus();
+        try { sessionStorage.removeItem(KEY); } catch (error) { console.error('[OrderForm]', error); }
+      };
+      if (!live) { show(); return; }
+
+      // Auswahl als Text mitschicken (Server prüft sie wie jede Eingabe, Preise prüft der Betrieb)
+      // Vorbestellte Positionen und Summe; die Auswahl (option) und die Kontaktdaten kommen als eigene Felder
+      field('auswahl').value = rows.filter(([k]) => !['Name', 'Telefon', form.dataset.optionsLabel || 'Auswahl'].includes(k)).map(([k, v]) => `${k}: ${v}`).join('\n');
+      sendErr.hidden = true;
+      btn.disabled = true;
+      fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then((r) => r.json())
+        .then((data: { ok: boolean; message: string }) => {
+          btn.disabled = false;
+          if (data.ok) { show(); return; }
+          sendErr.textContent = data.message;
+          sendErr.hidden = false;
+          sendErr.focus?.();
+        })
+        .catch((error) => {
+          // Netz/Server weg: normaler POST, form.php antwortet mit eigener Seite
+          console.error('[OrderForm]', error);
+          form.submit();
+        });
     });
 
-    // Eingaben nie verlieren: Zwischenspeicher in sessionStorage (nur dieser Tab, nichts wird gesendet).
-    // Das Einwilligungs-Häkchen wird bewusst nicht gespeichert und nicht wiederhergestellt.
-    const KEY = `form:${location.pathname}:${form.id}`;
+    // Eingaben nie verlieren: Zwischenspeicher in sessionStorage (nur dieser Tab, wird nicht gesendet).
+    // Das Einwilligungs-Häkchen und die technischen Felder werden bewusst nicht gespeichert.
     const saved = () => [...form.elements].filter((el): el is HTMLInputElement => el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement)
-      .filter((el) => el.name && el.name !== 'privacy');
+      .filter((el) => el.name && !['privacy', 'website', 'ts', 'auswahl'].includes(el.name));
     const save = () => {
       try {
         const d: Record<string, string> = {};
         saved().forEach((el) => { if (el.type === 'radio') { if (el.checked) d[el.name] = el.value; } else d[el.name] = el.value; });
         const empty = Object.entries(d).every(([k, v]) => !v || v === '0' || k === 'option');
         if (empty) sessionStorage.removeItem(KEY); else sessionStorage.setItem(KEY, JSON.stringify(d));
-      } catch {}
+      } catch (error) { console.error('[OrderForm]', error); }
     };
     try {
       const raw = sessionStorage.getItem(KEY);
@@ -259,11 +303,10 @@ const hasPrices = items.length > 0;
           if (el.type === 'radio') el.checked = el.value === d[el.name]; else el.value = String(d[el.name]);
         });
       }
-    } catch {}
+    } catch (error) { console.error('[OrderForm]', error); }
     form.addEventListener('input', save);
     form.addEventListener('change', save);
     form.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('button[data-step]')) save(); });
-    form.addEventListener('submit', () => { try { if (form.hidden) sessionStorage.removeItem(KEY); } catch {} });
     update();
   });
 </script>

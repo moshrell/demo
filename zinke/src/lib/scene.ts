@@ -1,3 +1,4 @@
+import { softwareGL } from './softgl';
 /**
  * 3D-Werkbank: rendert Bauteile aus model.ts (parametrische Geometrie, CC0-Holztexturen von Poly Haven).
  * Zwei Betriebsarten: 'assembly' (Montage nach Scroll-Fortschritt, Startseite) und 'konstruktor' (Teile kommen einzeln dazu).
@@ -597,5 +598,5 @@ export async function createScene(o: SceneOpts): Promise<WerkScene> {
 
 /** WebGL verfügbar? (ohne Szene aufzubauen) */
 export function hasWebGL() {
-  try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; }
+  try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')) && !softwareGL(); } catch { return false; }
 }

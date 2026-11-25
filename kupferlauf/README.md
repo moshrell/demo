@@ -47,3 +47,7 @@ Astro-Projekt (Demo). Адрес на портфолио: `/vorschau/handwerk/ku
 
 ## Demo-Kontaktdaten (fiktiv)
 Telefon nur aus den offiziellen «Drama Numbers» der Bundesnetzagentur (z. B. Berlin `030 23125 000–999`, Hamburg `040 66969 000–999`, Köln `0221 4710 000–999`, München `089 99998 000–999`, Frankfurt `069 90009 000–999`), E-Mail nur `@example.com`. Keine Geschäftsdaten-Markup (LocalBusiness) in Demos: `index = false` unterdrückt sie, FAQPage bleibt. Demos bleiben `noindex`.
+
+## Performance (17.11.2026)
+- Ohne Grafikchip (Software-WebGL wie bei Messrobotern/PageSpeed, erkannt per WEBGL_debug_renderer_info) schlanker Ersatz statt 3D/Dauer-Animation; mit Grafikchip unverändert.
+- Bei neuen Änderungen: Lighthouse mobil prüfen (Ziel: TBT unter 200 ms, CLS unter 0,1). Nicht die GPU-Erkennung entfernen.

@@ -170,7 +170,7 @@ function init(root: HTMLElement) {
       hinted = false;
       placeRing();
     } catch (e) {
-      console.error('baukasten: 3D nicht verfügbar', e);
+      console.warn('baukasten: 3D nicht verfügbar', e);
       nogl.hidden = false;
       stage.classList.add('no3d');
     }

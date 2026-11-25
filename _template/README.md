@@ -17,6 +17,8 @@ Astro-Projekt (Demo). Адрес на портфолио: `/vorschau/__CATEGORY_
 4. Стили только через токены (`--muted`, `--alert`, `--focus`, `--space-*` в `global.css`: подогнать под дизайн проекта), доступность (focus-visible, aria-invalid, aria-describedby), проверка на 390px.
 5. Введённые данные не должны пропадать никогда: sessionStorage-автосохранение (уже встроено в `OrderForm.astro`; ключ `form:<pathname>:<id>`, всё в try/catch), ссылки на Datenschutz/Impressum открываются в новой вкладке (`target="_blank" rel="noopener"`), чекбокс согласия не сохраняется и не восстанавливается, после успешной отправки хранилище очищается. В Datenschutz есть предложение про Zwischenspeicher (уже в `DatenschutzForm.astro`).
 
+6. Настоящий клиент (форма должна отправлять): скопировать `server/form.php` и `server/form-guard.php` в `public/`, в `form.php` заполнить блок НАСТРОЙКИ (всё с `TODO`, отправитель на домене клиента), в `OrderForm` указать `endpoint="form.php"`, в `datenschutz.astro` поставить `<DatenschutzForm live />`, проверить отправку на хостинге. Защита (ссылки, скрытые символы, лимит, ловушка, чужие сайты) встроена, подробности в `_tools/form-guard/README.md` (в корне репозитория). Пока в настройках `TODO`, приёмник ничего не отправляет. В демо `server/` не публикуется.
+
 ## SEO & KI-Sichtbarkeit (AIO) — Standard in jedem Projekt
 `Base.astro` liefert: title, description, canonical, Open Graph, Schema.org-JSON-LD (`type`, Adresse, Öffnungszeiten, Preise als `prices`), FAQPage-Markup (`faq`). Checkliste pro Projekt:
 1. Ein `<h1>`, logische `<h2>`/`<h3>`, `alt` bei jedem Bild.

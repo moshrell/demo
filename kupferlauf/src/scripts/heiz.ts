@@ -82,7 +82,7 @@ function init(root: HTMLElement) {
       const h = await mod.createHeiz(canvas, { base: import.meta.env.BASE_URL, reduced, onPick });
       if (!h) throw new Error('kein WebGL');
       scene = h; h.set(st); stage.classList.add('is-3d'); hinted = false; placeRing();
-    } catch (e) { console.error('heiz: 3D nicht verfügbar', e); nogl.hidden = false; stage.classList.add('no3d'); }
+    } catch (e) { console.warn('heiz: 3D nicht verfügbar', e); nogl.hidden = false; stage.classList.add('no3d'); }
   };
   const idle = (fn: () => void) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(fn, { timeout: 900 }) : setTimeout(fn, 250));
   new IntersectionObserver((es) => { const on = es[0].isIntersecting; if (on) { idle(start); scene?.setActive(true); } else scene?.setActive(false); }, { rootMargin: '150px' }).observe(stage);

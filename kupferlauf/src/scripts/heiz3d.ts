@@ -1,3 +1,4 @@
+import { softwareGL } from './softgl';
 // Heizungs-Baukasten (three.js): Heizungsraum in Isometrie, «weißer Ton» + Kupferrohre mit fließendem Wasser.
 // Alles aus einfachen Körpern (Quader, Zylinder) gebaut, Maße sind Richtwerte. Wird nur geladen, wenn die Bühne sichtbar ist.
 import {
@@ -47,6 +48,7 @@ type P = [number, number, number];
 interface Path { pts: Vector3[]; len: number[]; total: number; hot: boolean }
 
 export async function createHeiz(canvas: HTMLCanvasElement, opts: Opts): Promise<Handle | null> {
+  if (softwareGL()) return null; // ohne Grafikchip: schlanker Ersatz
   let renderer: WebGLRenderer;
   try { renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'low-power' }); }
   catch (e) { console.error('heiz3d: WebGL nicht verfügbar', e); return null; }

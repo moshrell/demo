@@ -37,3 +37,4 @@ Every project lives in its own folder directly in `D:\Webdesign`. Never inside a
 - Windows may block writes to some folders; a running dev server locks files. If a step needs him to stop the dev server, say so, ask, WAIT, then continue.
 - Never run npm/node on the VM for his project (Linux binaries would corrupt `node_modules`); he runs `START.bat`. Build and test in the cloud sandbox copy (`/home/claude/<slug>`), then ship source (without node_modules/dist/.astro).
 - Never touch `D:\mizgin` (closed for good).
+- После правок уже готового сайта: `node tools/regress.mjs` (сравнение с последним коммитом: геометрия, пиксели, прыжки вёрстки, ссылки, формы; отчёт и вырезки в `/tmp/regress-<проект>/`). Каждое изменение из отчёта должно быть задуманным, иначе исправить до коммита.

@@ -4,7 +4,12 @@
 //   2) пиксели: где на странице что-то поменялось (вырезки «до | после | разница» по каждому месту);
 //   3) логику «после»: ошибки консоли, битые ссылки и якоря, выход за край экрана, обрезанный текст,
 //      формы (данные переживают перезагрузку, ссылки Datenschutz/Impressum в форме открываются в новой вкладке).
+// Плюс АУДИТ: ошибки текущей версии сами по себе, даже если они были и раньше (наложения текста, контраст,
+//   мелкие зоны нажатия, мелкий шрифт, размытые/битые картинки, заголовки, большие пустоты, прыжки вёрстки и т. д.).
 // Запуск из папки проекта:  node tools/regress.mjs [ref=HEAD] [outDir=/tmp/regress-<проект>]
+//                    только аудит без сравнения:  node tools/regress.mjs --audit [outDir]
+// Настройка через переменные: REGRESS_BUILD (команда сборки, по умолчанию «npx astro build» с DEMO_BASE=/),
+//   REGRESS_DIST (папка сборки, по умолчанию dist), REGRESS_EXCLUDE (регэксп путей страниц, которые пропустить)
 // Итог: <outDir>/report.md (+ PNG-вырезки). Смотреть вырезки по каждому изменению и решать: задумано или побочный эффект.
 // Нужен playwright-core (devDependency) и Chrome: CHROME=/путь (по умолчанию /usr/bin/google-chrome).
 import { chromium } from 'playwright-core';
@@ -13,8 +18,12 @@ import http from 'node:http'; import fs from 'node:fs'; import path from 'node:p
 
 const proj = process.cwd();
 const slug = path.basename(proj);
-const ref = process.argv[2] || 'HEAD';
+const AUDIT_ONLY = process.argv[2] === '--audit';
+const ref = AUDIT_ONLY ? null : process.argv[2] || 'HEAD';
 const out = path.resolve(process.argv[3] || path.join(os.tmpdir(), `regress-${slug}`));
+const BUILD = process.env.REGRESS_BUILD || 'npx astro build';
+const DIST = process.env.REGRESS_DIST || 'dist';
+const EXCLUDE = process.env.REGRESS_EXCLUDE ? new RegExp(process.env.REGRESS_EXCLUDE) : null;
 const VIEWS = (process.env.VIEWS || '360x740,390x844,844x390,768x1024,1280x800').split(',').map((s) => s.split('x').map(Number));
 const sh = (cmd, cwd = proj) => execSync(cmd, { cwd, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, DEMO_BASE: '/' } }).toString();
 
@@ -22,9 +31,11 @@ fs.rmSync(out, { recursive: true, force: true }); fs.mkdirSync(out, { recursive:
 
 // ---------- 1. Сборки «до» и «после» ----------
 console.log('build: после (рабочая папка)');
-sh('npx astro build');
-fs.cpSync(path.join(proj, 'dist'), path.join(out, 'after'), { recursive: true });
+sh(BUILD);
+fs.cpSync(path.join(proj, DIST), path.join(out, 'after'), { recursive: true });
+fs.mkdirSync(path.join(out, 'before'), { recursive: true });
 
+if (!AUDIT_ONLY) {
 const top = sh('git rev-parse --show-toplevel').trim();
 const rel = path.relative(top, proj);
 const wt = path.join(os.tmpdir(), `regress-wt-${slug}`);
@@ -35,10 +46,11 @@ try {
   const wproj = path.join(wt, rel);
   if (!fs.existsSync(wproj)) throw new Error(`в ${ref} нет папки ${rel}`);
   fs.symlinkSync(path.join(proj, 'node_modules'), path.join(wproj, 'node_modules'));
-  sh('npx astro build', wproj);
-  fs.cpSync(path.join(wproj, 'dist'), path.join(out, 'before'), { recursive: true });
+  sh(BUILD, wproj);
+  fs.cpSync(path.join(wproj, DIST), path.join(out, 'before'), { recursive: true });
 } finally {
   sh(`git worktree remove --force "${wt}"`, top);
+}
 }
 
 // ---------- 2. Сервер для обеих сборок ----------
@@ -61,7 +73,7 @@ const pagesIn = (root) => {
     if (e.isDirectory()) walk(p);
     else if (e.name === 'index.html') res.push('/' + path.relative(root, path.dirname(p)).split(path.sep).join('/') + (path.dirname(p) === root ? '' : '/'));
   });
-  walk(root); return res.map((p) => p.replace('//', '/')).sort();
+  walk(root); return res.map((p) => p.replace('//', '/')).filter((p) => !EXCLUDE || !EXCLUDE.test(p)).sort();
 };
 const pagesA = pagesIn(path.join(out, 'after')), pagesB = pagesIn(path.join(out, 'before'));
 const pages = [...new Set([...pagesA, ...pagesB])];
@@ -106,10 +118,55 @@ async function capture(base, p, [W, H]) {
     });
     return { items, H: document.documentElement.scrollHeight, W: document.documentElement.scrollWidth };
   });
+  const audit = await page.evaluate(AUDIT, W);
   const shot = await page.screenshot({ fullPage: true });
   await ctx.close();
-  return { geo, shot, logs };
+  return { geo, shot, logs, audit };
 }
+
+
+// ---------- Аудит одной страницы на одном экране (ошибки сами по себе, без сравнения) ----------
+const AUDIT = (W) => {
+  const out = []; const phone = W < 600;
+  // sichtbar = wird wirklich gezeichnet (auch nicht in geschlossenem <details>, nicht unsichtbar über Eltern), liegt nicht über dem Seitenanfang
+  const vis = (e) => { const r = e.getBoundingClientRect(); if (!(r.width > 0 && r.height > 0) || r.bottom + scrollY < 0) return false; if (e.checkVisibility && !e.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true, contentVisibilityAuto: true })) return false; return !e.closest('[aria-hidden="true"],[hidden],[inert]'); };
+  const name = (e) => `${e.tagName.toLowerCase()}${e.id ? '#' + e.id : e.classList[0] ? '.' + e.classList[0] : ''} «${(e.textContent || e.getAttribute('aria-label') || e.getAttribute('alt') || '').replace(/\s+/g, ' ').trim().slice(0, 40)}»`;
+  const y = (e) => Math.round(e.getBoundingClientRect().top + scrollY);
+  // 1. Text überlappt anderen Text
+  const leaf = [...document.querySelectorAll('h1,h2,h3,h4,h5,p,li,a,button,label,figcaption,dt,dd,th,td,summary,blockquote,small,strong,span')].filter((e) => vis(e) && e.textContent.trim() && ![...e.children].some((c) => c.textContent.trim() && getComputedStyle(c).display !== 'inline'));
+  // klebende/feste Leisten liegen absichtlich über dem Inhalt: beim Überlappungstest auslassen
+  const floating = (e) => { for (let n = e; n && n !== document.body; n = n.parentElement) { const p = getComputedStyle(n).position; if (p === 'sticky' || p === 'fixed') return true; } return false; };
+  // Glyphen-Rechtecke des Textes (nicht die Box mit Innenabstand): Padding/Trefferflächen sind keine Überlappung
+  const textRects = (e) => { const r = document.createRange(); r.selectNodeContents(e); return [...r.getClientRects()].filter((q) => q.width > 1 && q.height > 1); };
+  const rects = leaf.filter((e) => !floating(e)).map((e) => ({ e, rs: textRects(e) }));
+  let ov = 0;
+  for (let i = 0; i < rects.length && ov < 8; i++) for (let j = i + 1; j < rects.length && ov < 8; j++) {
+    const a = rects[i], b = rects[j]; if (a.e.contains(b.e) || b.e.contains(a.e)) continue;
+    for (const ra of a.rs) for (const rb of b.rs) { const ix = Math.min(ra.right, rb.right) - Math.max(ra.left, rb.left), iy = Math.min(ra.bottom, rb.bottom) - Math.max(ra.top, rb.top); if (ix > 4 && iy > 4 && ix * iy > 0.15 * Math.min(ra.width * ra.height, rb.width * rb.height)) { out.push(`текст налезает на текст: ${name(a.e)} и ${name(b.e)} (y ${y(a.e)})`); ov++; break; } }
+  }
+  // 2. Zielgröße für Finger (nur Telefon; Links im Fließtext ausgenommen)
+  if (phone) { let n = 0; document.querySelectorAll('a,button,summary,input:not([type=hidden]),select,[role=button]').forEach((e) => { if (n > 8 || !vis(e)) return; const r = e.getBoundingClientRect(); const inText = e.tagName === 'A' && e.closest('p,li,dd,td,small,label') && e.parentElement.textContent.trim().length > e.textContent.trim().length + 3; if (inText || e.type === 'checkbox' || e.type === 'radio') return; let hit = r; const after = getComputedStyle(e, '::after'); if (after.content !== 'none' && after.position === 'absolute') { const px = (v) => (parseFloat(v) || 0); hit = { height: r.height - Math.min(0, px(after.top)) - Math.min(0, px(after.bottom)), width: r.width - Math.min(0, px(after.left)) - Math.min(0, px(after.right)) }; } if (hit.height < 40 || hit.width < 40) { out.push(`маленькая зона нажатия ${Math.round(r.width)}×${Math.round(r.height)}: ${name(e)} (y ${y(e)})`); n++; } }); }
+  // 3. Kontrast (WCAG): Textfarbe gegen tatsächlichen Hintergrund
+  // beliebige CSS-Farbe (auch oklch/color-mix) über ein 1×1-Canvas in RGBA umrechnen
+  const cvs = document.createElement('canvas'); cvs.width = cvs.height = 1; const cx = cvs.getContext('2d', { willReadFrequently: true }); const cache = new Map();
+  const rgb = (c) => { if (cache.has(c)) return cache.get(c); cx.clearRect(0, 0, 1, 1); cx.fillStyle = '#000'; cx.fillStyle = c; cx.fillRect(0, 0, 1, 1); const d = cx.getImageData(0, 0, 1, 1).data; const v = [d[0], d[1], d[2], d[3] / 255]; cache.set(c, v); return v; };
+  const lum = ([r, g, b]) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
+  const bgOf = (e) => { let n = e; const stack = []; while (n && n.nodeType === 1) { const cs = getComputedStyle(n); if (cs.backgroundImage !== 'none' || cs.mixBlendMode !== 'normal') return null; const c = rgb(cs.backgroundColor); if ((c[3] ?? 1) > 0) { stack.push(c); if ((c[3] ?? 1) >= 0.99) break; } n = n.parentElement; } let base = [255, 255, 255]; for (const c of stack.reverse()) { const a = c[3] ?? 1; base = base.map((v, i) => v * (1 - a) + c[i] * a); } return base; };
+  let nc = 0;
+  for (const e of leaf) { if (nc > 8) break; const cs = getComputedStyle(e); if (e.closest('svg,video,canvas,picture')) continue; const bg = bgOf(e); if (!bg) continue; const fg = rgb(cs.color); const a = fg[3] ?? 1; const f = fg.slice(0, 3).map((v, i) => v * a + bg[i] * (1 - a) * (+cs.opacity < 1 ? 1 : 1)); const L1 = lum(f), L2 = lum(bg); const ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05) * 1; const op = (() => { let o = 1, n = e; while (n && n.nodeType === 1) { o *= +getComputedStyle(n).opacity; n = n.parentElement; } return o; })(); const eff = op < 1 ? 1 + (ratio - 1) * op : ratio; const big = parseFloat(cs.fontSize) >= 24 || (parseFloat(cs.fontSize) >= 18.6 && +cs.fontWeight >= 700); const need = big ? 3 : 4.5; if (eff < need && !e.disabled && !e.closest(':disabled')) { out.push(`слабый контраст ${eff.toFixed(1)}:1 (нужно ${need}): ${name(e)} (y ${y(e)})`); nc++; } }
+  // 4. Schriftgröße
+  let nf = 0; for (const e of leaf) { if (nf > 5) break; const fs = parseFloat(getComputedStyle(e).fontSize); if (fs < (phone ? 12 : 11)) { out.push(`мелкий шрифт ${fs}px: ${name(e)} (y ${y(e)})`); nf++; } }
+  if (phone) document.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea').forEach((e) => { if (vis(e) && parseFloat(getComputedStyle(e).fontSize) < 16) out.push(`поле ввода со шрифтом < 16px (iPhone увеличит страницу при касании): ${name(e)}`); });
+  // 5. Bilder: kaputt, ohne alt, unscharf (auf 2x-Bildschirmen)
+  document.querySelectorAll('img').forEach((im) => { if (!vis(im)) return; if (im.complete && !im.naturalWidth) out.push(`картинка не загрузилась: ${im.getAttribute('src')}`); if (!im.hasAttribute('alt')) out.push(`картинка без alt: ${im.getAttribute('src')}`); const r = im.getBoundingClientRect(); const fit = getComputedStyle(im).objectFit; const need = (fit === 'cover' ? Math.max(r.width / im.naturalWidth, r.height / im.naturalHeight) : r.width / im.naturalWidth) * 2; if (im.naturalWidth && need > 1.6 && !/\.svg/.test(im.currentSrc)) out.push(`картинка будет мутной на телефоне (показано ${Math.round(r.width)}px, файл ${im.naturalWidth}px): ${im.getAttribute('src')}`); });
+  // 6. Überschriften
+  const hs = [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].filter((h) => !h.closest('[hidden]'));
+  const h1 = hs.filter((h) => h.tagName === 'H1').length; if (h1 !== 1) out.push(`заголовков h1 на странице: ${h1} (нужен ровно один)`);
+  let prev = 1; hs.forEach((h) => { const l = +h.tagName[1]; if (l > prev + 1) out.push(`пропущен уровень заголовка: ${h.tagName.toLowerCase()} после h${prev} ${name(h)}`); prev = l; });
+  // 7. Sticky/fixed Elemente verdecken Inhalt beim Laden? (feste Leisten höher als 25 % des Bildschirms)
+  document.querySelectorAll('body *').forEach((e) => { const cs = getComputedStyle(e); if ((cs.position === 'fixed' || cs.position === 'sticky') && vis(e)) { const r = e.getBoundingClientRect(); if (cs.position === 'fixed' && r.height > innerHeight * 0.25 && r.width > innerWidth * 0.8) out.push(`фиксированный блок закрывает ${Math.round(100 * r.height / innerHeight)} % экрана: ${name(e)}`); } });
+  return [...new Set(out)];
+};
 
 // Logik nur für «после»
 async function logic(p) {
@@ -198,6 +255,19 @@ async function pixdiff(a, b, offs = [0]) {
   }, [a.toString('base64'), b.toString('base64'), offs]);
 }
 
+
+// große leere Flächen (mehr als ein Bildschirm ohne Inhalt) im Screenshot
+async function emptyGaps(png, H) {
+  return cmpPage.evaluate(async ([s, H]) => {
+    const i = await new Promise((r) => { const im = new Image(); im.onload = () => r(im); im.src = 'data:image/png;base64,' + s; });
+    const c = document.createElement('canvas'); c.width = i.width; c.height = i.height; const x = c.getContext('2d'); x.drawImage(i, 0, 0);
+    const d = x.getImageData(0, 0, i.width, i.height).data; const W = i.width; const res = []; let run = 0, start = 0;
+    for (let y = 0; y < i.height; y++) { let flat = true; const o = y * W * 4; for (let xx = 0; xx < W; xx += 3) { const k = o + xx * 4; if (Math.abs(d[k] - d[o]) + Math.abs(d[k + 1] - d[o + 1]) + Math.abs(d[k + 2] - d[o + 2]) > 18) { flat = false; break; } } if (flat) { if (!run) start = y; run++; } else { if (run > H * 0.9) res.push([start, start + run]); run = 0; } }
+    if (run > H * 0.9 && start > 0) res.push([start, start + run]);
+    return res;
+  }, [png.toString('base64'), H]);
+}
+
 // Geometrie vergleichen: was hat sich bewegt / verändert; Kaskaden (alles darunter um N px verschoben) zusammenfassen
 function geodiff(gb, ga) {
   const mb = new Map(gb.items.map((e) => [e.k, e])), ma = new Map(ga.items.map((e) => [e.k, e]));
@@ -225,17 +295,19 @@ function geodiff(gb, ga) {
 }
 
 // ---------- 3. Обход ----------
-const md = [`# Регресс ${slug}: ${ref} → рабочая папка`, '', `Страниц: ${pages.length}, экраны: ${VIEWS.map((v) => v.join('×')).join(', ')}`, ''];
+const md = [AUDIT_ONLY ? `# Аудит ${slug} (текущая версия)` : `# Регресс ${slug}: ${ref} → рабочая папка`, '', `Страниц: ${pages.length}, экраны: ${VIEWS.map((v) => v.join('×')).join(', ')}`, ''];
 let nChanged = 0, nIssues = 0;
 for (const p of pages) {
   if (!pagesA.includes(p)) { md.push(`## ${p}`, '', '- **страница пропала**', ''); nChanged++; continue; }
   const lg = await logic(p);
   const sec = [];
-  if (!pagesB.includes(p)) sec.push('- новая страница (сравнивать не с чем)');
+  if (!AUDIT_ONLY && !pagesB.includes(p)) sec.push('- новая страница (сравнивать не с чем)');
   for (const v of VIEWS) {
     const tag = `${p.replace(/\//g, '_') || '_'}${v.join('x')}`.replace(/^_+/, '') || 'root';
     const a = await capture(A.url, p, v);
     a.logs.forEach((l) => lg.push(`${v[0]}px консоль: ${l}`));
+    a.audit.forEach((l) => lg.push(`${v.join('×')}: ${l}`));
+    (await emptyGaps(a.shot, v[1])).forEach(([y0, y1]) => lg.push(`${v.join('×')}: пустая полоса ${y1 - y0}px без содержимого (y ${y0}–${y1}), больше экрана`));
     if (!pagesB.includes(p)) continue;
     const b = await capture(B.url, p, v);
     const g = geodiff(b.geo, a.geo);
@@ -253,7 +325,7 @@ for (const p of pages) {
     if (px.bands.length > 8) L.push(`- … ещё ${px.bands.length - 8} мест с изменениями`);
     sec.push(...L, '');
   }
-  if (lg.length) { nIssues += lg.length; sec.unshift('**Проблемы (после правки):**', ...[...new Set(lg)].map((l) => `- ${l}`), ''); }
+  if (lg.length) { nIssues += new Set(lg).size; sec.unshift('**Ошибки текущей версии (аудит, независимо от прошлой):**', ...[...new Set(lg)].map((l) => `- ${l}`), ''); }
   if (sec.length) md.push(`## ${p}`, '', ...sec);
 }
 md.splice(3, 0, `Итог: изменений в ${nChanged} комбинациях страница×экран, проблем: ${nIssues}.`, '');

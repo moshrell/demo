@@ -89,8 +89,8 @@ h1, h2, h3 { font-family: var(--font-hud); font-weight: 600; line-height: 1.15; 
 .neon__hours { list-style: none; margin: 36px 0 0; padding: 0; display: grid; gap: 4px; width: 600px; font: 600 54px/1.15 var(--font-hud); color: #effdff; text-shadow: 0 0 8px rgba(53, 242, 255, .9), 0 0 24px rgba(53, 242, 255, .45); }
 .neon__hours li { display: flex; justify-content: space-between; gap: 40px; }
 .ov--funk { padding: 34px 36px; font-family: var(--font-hud); color: #b9fbff; text-shadow: 0 0 8px rgba(53, 242, 255, .85); }
-.led__h { margin: 0 0 18px; font: 600 30px/1 var(--font-hud); letter-spacing: .08em; text-transform: uppercase; color: #ff9be6; text-shadow: 0 0 8px rgba(255, 63, 208, .8); }
-.led__t { margin: 0; font: 600 40px/1.18 var(--font-hud); display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+.led__h { margin: 0 0 18px; font: 600 26px/1 var(--font-hud); letter-spacing: .06em; white-space: nowrap; text-transform: uppercase; color: #ff9be6; text-shadow: 0 0 8px rgba(255, 63, 208, .8); }
+.led__t { margin: 0; font: 600 40px/1.18 var(--font-hud); overflow-wrap: anywhere; }
 .led__t.is-busy { animation: blink .5s steps(2) infinite; }
 @keyframes blink { 50% { opacity: .3; } }
 .ov--bon { padding: 30px 24px; font-family: var(--font-hud); color: #1b1d30; }
@@ -99,6 +99,8 @@ h1, h2, h3 { font-family: var(--font-hud); font-weight: 600; line-height: 1.15; 
 .bon__l { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font: 500 21px/1.15 var(--font-hud); }
 .bon__l li { display: flex; justify-content: space-between; gap: 10px; }
 .bon__l span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bon__disc { color: #6a2a4a; }
+.bon__l b { white-space: nowrap; }
 .bon__sum { display: flex; justify-content: space-between; margin: 18px 0 0; padding-top: 12px; border-top: 3px dashed rgba(27, 29, 48, .35); font: 700 30px/1 var(--font-hud); }
 .ov--page { padding: 34px 40px 0; color: #2a2846; font-family: var(--font-text); }
 .ov--page.is-flip > * { animation: ink 500ms var(--ease); }
@@ -292,7 +294,19 @@ h1, h2, h3 { font-family: var(--font-hud); font-weight: 600; line-height: 1.15; 
 .links { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 6px; }
 .links a, .links button { display: flex; align-items: center; width: 100%; min-height: 52px; padding: 0 14px; border: 0; border-radius: 12px; background: rgba(255, 255, 255, .04); box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); text-decoration: none; text-align: left; font: 600 15px/1.2 var(--font-hud); }
 .scroll-x { overflow-x: auto; }
-.prices { min-width: 420px; font-size: 14px; }
+.prices { font-size: 14.5px; }
+.prices thead th { color: var(--ink-dim); font-size: 13px; }
+.prices thead th:not(:first-child) { text-align: right; }
+.prices__req { color: var(--magenta); margin-left: 2px; }
+.ptab > p { margin: 10px 0 0; }
+/* Schmale Bildschirme: jede Leistung eine Zeile, darunter die vier Klassen mit Kürzel – keine abgeschnittene SUV-Spalte */
+@media (max-width: 560px) {
+  .prices thead { display: none; }
+  .prices tr { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--line); padding: 8px 0 6px; }
+  .prices tbody th { grid-column: 1 / -1; border: 0; padding: 0 0 4px; font-weight: 600; }
+  .prices td { border: 0; padding: 0; text-align: left; font-size: 14px; }
+  .prices td::before { content: attr(data-k); display: block; font: 500 11px/1.3 var(--font-text); color: var(--ink-dim); }
+}
 
 /* Auftrag: Ticket + Formular */
 .ticket ul { list-style: none; margin: 0; padding: 0; }
@@ -654,33 +668,163 @@ html.desk .hs.is-done:hover .hs__lbl b::after { color: #137a43; }
 
 /* niedrige Fenster (Handy quer): Panel näher an den Rand, damit mehr Platz bleibt */
 @media (max-height: 520px) {
-  html.desk .sheet, html.desk .sheet--cam[data-size] { inset: 64px 12px auto auto; max-height: calc(100svh - 76px); width: min(400px, 44vw); }
   html.desk .hud { padding: calc(8px + var(--safe-t)) 14px 0; }
   html.desk .hs__lbl { font-size: 12px; padding: 4px 8px 5px; }
 }
 
-/* Desktop: alle Knöpfe liegen gesammelt an der freien Wand rechts (Leistungen + Werkstatt), am Auto blinken nur die vier Punkte wie am Handy.
-   Öffnet sich ein Panel, blendet die Wand aus (das Panel sitzt an derselben Stelle). */
+/* ================= Desktop-Seitenleiste (html.desk) =================
+   Eigene Bedienung für große Bildschirme statt der gestreckten Handy-Oberfläche: rechts eine feste Seitenleiste
+   wie ein Konfigurator (Klasse, Leistungen mit Beschreibung und Preis, Werkstatt, Summe + Termin), links die Box.
+   Panels (Stationen, Auftrag) öffnen sich an derselben Stelle über der Leiste; Menü, Preise, Klasse als Fenster in der Mitte. */
 .wall { display: contents; }
-html.desk .wall { position: absolute; z-index: 9; right: 28px; top: 84px; width: min(440px, 38vw); display: grid; gap: 10px; padding: 12px; border-radius: 20px; background: rgba(14, 15, 19, .62); box-shadow: inset 0 0 0 1px var(--line), 0 24px 60px rgba(0, 0, 0, .45); transition: opacity 240ms, translate 300ms var(--ease); }
-html.desk .wall .svcs, html.desk .wall .dock { position: static; translate: none; width: auto; padding: 0; background: none; opacity: 1; pointer-events: auto; }
-html.desk .wall .svcs { grid-template-columns: repeat(3, minmax(0, 1fr)); --card-h: clamp(64px, 9.5svh, 84px); }
-html.desk .wall .dock { gap: 6px; border-top: 1px solid var(--line); padding-top: 10px; }
-html.desk .wall .dock button { min-height: 52px; }
-html.desk .at-station .wall, html.desk .has-cam-sheet .wall { opacity: 0; pointer-events: none; translate: 0 10px; }
-html.desk .at-station .wall .svcs, html.desk .at-station .wall .dock, html.desk .has-cam-sheet .wall .svcs, html.desk .has-cam-sheet .wall .dock { translate: none; }
+.dock button.dock__rd { display: none; }
+.side__head, .svc__s, .side__cta { display: none; }
+html.desk { --side: clamp(340px, 30vw, 500px); }
+html.desk .wall {
+  position: absolute; z-index: 9; top: 0; right: 0; bottom: 0; width: var(--side); display: flex; flex-direction: column; gap: 0;
+  padding: calc(26px + var(--safe-t)) 26px 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+  background: linear-gradient(180deg, rgba(13, 14, 18, .97), rgba(8, 9, 12, .98)); box-shadow: inset 1px 0 0 var(--line), -30px 0 60px rgba(0, 0, 0, .35);
+  transition: opacity 260ms var(--ease);
+}
+html.desk .side__head { display: block; }
+html.desk .side__brand { margin: 0; font: 700 25px/1.1 var(--font-hud); letter-spacing: .01em; }
+html.desk .side__tag { margin: 4px 0 22px; color: var(--ink-dim); font-size: 14px; }
+html.desk .side__l { margin: 0 0 8px; font: 600 13.5px/1.2 var(--font-hud); color: var(--ink-dim); }
+html.desk .side__l--svc { margin: 22px 0 4px; }
+html.desk .side__cls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+html.desk .side__cls button { min-height: 44px; padding: 0 4px; border: 0; border-radius: 12px; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); font: 600 14px/1 var(--font-hud); transition: background 160ms, color 160ms; }
+html.desk .side__cls button:hover { background: rgba(255, 255, 255, .1); }
+html.desk .side__cls button.is-on { background: var(--ink); color: #0b0c10; box-shadow: none; }
+html.desk .side__cls button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Leistungen als Liste mit Beschreibung */
+html.desk .wall .svcs { position: static; translate: none; width: auto; display: grid; grid-template-columns: 1fr; gap: 0; padding: 0; opacity: 1; pointer-events: auto; }
+html.desk .wall .svc { height: auto; display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; grid-template-rows: auto auto; column-gap: 12px; row-gap: 3px; align-items: center;
+  padding: 13px 10px; margin: 0 -10px; border-radius: 12px; background: transparent; box-shadow: none; animation: none; }
+html.desk .wall .svc + .svc { box-shadow: 0 -1px 0 var(--line); }
+html.desk .wall .svc:hover { background: rgba(255, 255, 255, .055); }
+html.desk .wall .svc:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+html.desk .wall .svc svg { grid-row: 1 / span 2; width: 24px; height: 24px; }
+html.desk .wall .svc__n { grid-column: 2; font-size: 16.5px; }
+html.desk .wall .svc__s { display: block; grid-column: 2; grid-row: 2; color: var(--ink-dim); font-size: 13.5px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html.desk .wall .svc__p { position: static; grid-column: 3; grid-row: 1; font: 600 15px/1 var(--font-hud); color: var(--ink); }
+html.desk .wall .svc .tick { position: static; grid-column: 3; grid-row: 2; justify-self: end; }
+
+/* Werkstatt: fünf Knöpfe, Termin steckt unten in der Summe */
+html.desk .wall .dock { position: static; translate: none; width: auto; opacity: 1; pointer-events: auto; background: none; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin: 20px 0 0; padding: 18px 0 0; border-top: 1px solid var(--line); }
+html.desk .wall .dock button { min-height: 66px; padding: 0 2px; border-radius: 12px; background: rgba(255, 255, 255, .04); color: var(--ink); font: 500 clamp(10px, .82vw, 12.5px)/1.1 var(--font-hud); letter-spacing: 0; }
+html.desk .wall .dock button:hover { background: rgba(255, 255, 255, .09); }
+html.desk .wall .dock button.dock__rd { display: grid; }
+html.desk .wall .dock .dock__cta { display: none; }
+
+/* Summe + Termin: klebt unten an der Leiste */
+html.desk .side__cta { position: sticky; bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: auto -26px 0; padding: 16px 26px calc(18px + var(--safe-b)); border: 0; background: #08090c; box-shadow: 0 -1px 0 var(--line); color: var(--ink); text-align: left; }
+html.desk .side__sum { display: grid; gap: 4px; }
+html.desk .side__sum small { font-size: 12.5px; color: var(--ink-dim); }
+html.desk .side__sum b { font: 700 24px/1 var(--font-hud); font-variant-numeric: tabular-nums; }
+html.desk .side__go { padding: 15px 20px; border-radius: 14px; background: var(--ink); color: #0b0c10; font: 600 15px/1 var(--font-hud); white-space: nowrap; transition: transform 140ms; }
+html.desk .side__cta:hover .side__go { transform: translateX(2px); }
+html.desk .side__cta:focus-visible .side__go { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+/* HUD nur über der Box (links), Klasse und Summe sitzen in der Leiste */
+html.desk .hud { left: 0; translate: none; width: calc(100vw - var(--side)); padding: calc(20px + var(--safe-t)) 26px 0; }
+html.desk .hud__car, html.desk .hud__sum, html.desk .hud__brand { display: none; }
+html.desk .toast, html.desk .has-cam-sheet .toast { left: 26px; width: min(440px, calc(100vw - var(--side) - 52px)); }
+
+/* Panels: Stationen/Auftrag an der Stelle der Leiste, volle Höhe */
+html.desk .sheet--cam, html.desk .sheet--cam[data-size] {
+  inset: 0 0 0 auto; margin: 0; width: var(--side); height: 100svh; max-height: 100svh; max-width: none; border-radius: 0; padding: 0 26px;
+  background: #0b0c10; box-shadow: inset 1px 0 0 var(--line), -30px 0 60px rgba(0, 0, 0, .35);
+}
+html.desk .sheet--cam .sheet__head { margin: 0 -26px 8px; padding: calc(22px + var(--safe-t)) 26px 12px; background: #0b0c10; }
+html.desk .sheet--cam .sheet__head h2 { font-size: 22px; }
+html.desk .sheet--cam.is-pre { translate: 24px 0; }
+html.desk #sheet-station[open] { display: flex; flex-direction: column; }
+html.desk [data-st-body] { flex: 1 0 auto; display: flex; flex-direction: column; }
+html.desk [data-st-body] .st__bar { margin-top: auto; }
+html.desk .swrow { flex-wrap: wrap; overflow: visible; }
+html.desk .sheet--cam .st__bar { position: sticky; bottom: 0; margin: 0 -26px; padding: 16px 26px calc(20px + var(--safe-b)); background: #0b0c10; box-shadow: 0 -1px 0 var(--line); }
+html.desk .at-station .wall, html.desk .has-cam-sheet .wall { opacity: 0; pointer-events: none; }
 html.desk .in-intro .wall { opacity: 0; pointer-events: none; }
-@media (max-height: 520px) {
-  html.desk .wall { top: 64px; right: 12px; gap: 6px; padding: 8px; width: min(400px, 44vw); }
-  html.desk .wall .svcs { --card-h: 52px; gap: 6px; }
-  html.desk .wall .svc { padding: 6px 8px; }
-  html.desk .wall .svc__n { font-size: 12.5px; }
-  html.desk .wall .dock { padding-top: 6px; }
+
+/* Fenster (Menü, Preise, Klasse, Fahrzeuge): in der Mitte, mit abgedunkeltem Hintergrund */
+html.desk .sheet:not(.sheet--cam) { inset: 0; margin: auto; width: min(680px, calc(100vw - 48px)); height: fit-content; max-height: 86svh; border-radius: 22px; padding: 0 24px 24px; }
+html.desk .sheet:not(.sheet--cam)::backdrop { background: rgba(4, 5, 8, .62); }
+@keyframes pop-d { from { opacity: 0; scale: .97; } }
+html.desk .sheet[open]:not(.sheet--cam) { animation-name: pop-d; }
+html.desk #sheet-preise { width: min(820px, calc(100vw - 48px)); }
+
+/* mittlere Höhe (Laptop 768–860 px, Tablet quer): Liste etwas dichter, damit alles ohne Scrollen passt */
+@media (min-height: 621px) and (max-height: 880px) {
+  html.desk .wall { padding-top: calc(20px + var(--safe-t)); }
+  html.desk .side__tag { margin-bottom: 14px; }
+  html.desk .side__l--svc { margin-top: 14px; }
+  html.desk .wall .svc { padding-top: 9px; padding-bottom: 9px; }
+  html.desk .wall .dock { margin-top: 12px; padding-top: 12px; }
+  html.desk .wall .dock button { min-height: 56px; }
+}
+/* niedrige Fenster (Handy quer, kleine Laptops): kompakte Leiste, Leistungen als Kacheln */
+@media (max-height: 620px) {
+  html.desk { --side: clamp(300px, 40vw, 420px); }
+  html.desk .wall { padding: calc(12px + var(--safe-t)) 16px 0; }
+  html.desk .side__brand { font-size: 18px; }
+  html.desk .side__tag { display: none; }
+  html.desk .side__head .side__l { display: none; }
+  html.desk .side__cls { margin-top: 8px; }
+  html.desk .side__cls button { min-height: 34px; font-size: 12.5px; }
+  html.desk .wall .svcs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
+  html.desk .wall .svc { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; row-gap: 2px; margin: 0; padding: 7px 9px; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px var(--line); }
+  html.desk .wall .svc + .svc { box-shadow: inset 0 0 0 1px var(--line); }
+  html.desk .wall .svc svg, html.desk .wall .svc__s { display: none; }
+  html.desk .wall .svc__n { grid-column: 1; grid-row: 1; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  html.desk .wall .svc__p { grid-column: 1; grid-row: 2; font-size: 11.5px; color: var(--ink-dim); }
+  html.desk .wall .svc .tick { position: absolute; top: 5px; right: 6px; width: 14px; height: 14px; line-height: 14px; font-size: 9px; }
+  html.desk .wall .dock { margin-top: 8px; padding-top: 8px; gap: 4px; }
   html.desk .wall .dock button { min-height: 40px; gap: 2px; font-size: 10.5px; }
-  html.desk .wall .dock svg { width: 18px; height: 18px; }
+  html.desk .wall .dock svg { width: 17px; height: 17px; }
+  html.desk .side__cta { margin: auto -16px 0; padding: 8px 16px calc(8px + var(--safe-b)); }
+  html.desk .side__sum b { font-size: 18px; }
+  html.desk .side__go { padding: 10px 14px; font-size: 13.5px; }
+  html.desk .sheet--cam, html.desk .sheet--cam[data-size] { padding: 0 16px; }
+  html.desk .sheet--cam .sheet__head { margin: 0 -16px 4px; padding: calc(10px + var(--safe-t)) 16px 8px; }
+  html.desk .sheet--cam .st__bar { margin: 0 -16px; padding: 10px 16px calc(10px + var(--safe-b)); }
+  html.desk .hud { padding: calc(10px + var(--safe-t)) 14px 0; }
+  html.desk .sheet:not(.sheet--cam) { max-height: 92svh; }
 }
 
-.dock button.dock__rd { display: none; }
-html.desk .wall .dock { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-html.desk .wall .dock button.dock__rd { display: grid; }
-@media (max-width: 1200px) { html.desk .wall .dock button { font-size: 10px; letter-spacing: 0; } html.desk .wall { width: min(440px, 42vw); } }
+/* ================= Tablet hochkant (Handy-Bühne, aber breit) =================
+   Die Box füllt die ganze Breite (statt schmaler Handy-Spalte mit Unschärfe-Rändern), bis 4:5; die Bedienung
+   wird größer und ruhiger: sechs Leistungen in einer Reihe, Dock mittig, Panels schweben als Karte über der Box. */
+@media (min-width: 700px) {
+  html:not(.desk) { --col: min(100vw, calc(100svh * 4 / 5)); --card-h: 104px; --dock-h: calc(88px + var(--safe-b)); }
+  html:not(.desk) .hud { padding: calc(20px + var(--safe-t)) 24px 0; }
+  html:not(.desk) .hud__icon, html:not(.desk) .hud__car, html:not(.desk) .hud__sum { min-height: 52px; }
+  html:not(.desk) .hud__icon { width: 52px; }
+  html:not(.desk) .hud__car { font-size: 16px; padding: 0 12px 0 18px; }
+  html:not(.desk) .hud__eur { font-size: 20px; }
+  html:not(.desk) .hud__glanz { font-size: 12.5px; }
+  html:not(.desk) .hud__sum { padding: 8px 16px 9px; }
+  html:not(.desk) .svcs { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; padding: 0 max(24px, calc((var(--col) - 980px) / 2)); bottom: calc(var(--dock-h) + 10px); }
+  html:not(.desk) .svc { padding: 14px 14px 13px; border-radius: 18px; }
+  html:not(.desk) .svc svg { width: 26px; height: 26px; }
+  html:not(.desk) .svc__n { font-size: 16.5px; }
+  html:not(.desk) .svc__p { position: static; align-self: end; margin-top: 4px; font-size: 13px; }
+  html:not(.desk) .svc { grid-template-rows: auto 1fr auto; }
+  html:not(.desk) .svc .tick { top: 12px; right: 12px; width: 20px; height: 20px; line-height: 20px; font-size: 11px; }
+  html:not(.desk) .dock { padding: 10px max(24px, calc((var(--col) - 760px) / 2)) calc(12px + var(--safe-b)); gap: 8px; }
+  html:not(.desk) .dock button { min-height: 66px; font-size: 13px; gap: 6px; }
+  html:not(.desk) .dock svg { width: 26px; height: 26px; }
+  html:not(.desk) .toast { bottom: calc(var(--dock-h) + var(--card-h) + 28px); width: min(520px, calc(var(--col) - 48px)); }
+  /* Panels als schwebende Karte */
+  html:not(.desk) .sheet { bottom: calc(20px + var(--safe-b)); width: min(640px, calc(100vw - 48px)); border-radius: 22px; padding: 0 22px 22px; box-shadow: inset 0 0 0 1px var(--line), 0 30px 80px rgba(0, 0, 0, .6); font-size: 17px; }
+  html:not(.desk) .sheet__head { margin: 0 -22px 10px; padding: 18px 22px 12px; }
+  html:not(.desk) .sheet__head h2 { font-size: 23px; }
+  html:not(.desk) .sheet--cam .sheet__head { padding: 12px 22px 6px; }
+  html:not(.desk) .sheet--cam .sheet__head h2 { font-size: 21px; }
+  html:not(.desk) .sheet--cam[data-size='s'] { max-height: 28svh; }
+  html:not(.desk) .sheet--cam[data-size='m'] { max-height: 36svh; }
+  html:not(.desk) .sheet--cam[data-size='f'] { max-height: 38svh; }
+  html:not(.desk) .sheet--cam[data-size='l'] { max-height: 58svh; }
+  html:not(.desk) #sheet-preise { width: min(760px, calc(100vw - 48px)); }
+  html:not(.desk) .st__bar { margin: 8px -22px 0; padding: 14px 22px; bottom: -22px; }
+}

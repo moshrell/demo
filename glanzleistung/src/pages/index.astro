@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Neon from '../components/Neon.astro';
+import PriceTable from '../components/PriceTable.astro';
 import site from '../data/site.json';
 import data from '../data/services.json';
 import content from '../data/content.json';
@@ -10,7 +11,8 @@ const m = `${base}media/`;
 const { W, H } = media.mobile; // Box-Bild Handy aus Blender: 1440 × 2560 (Desktop: 2560 × 1440, siehe media.json)
 const euro = (n: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
 const priceFor = (b: number, mult: number) => Math.ceil((b * mult) / 10) * 10 - 1;
-const fromPrice = (s: any) => Math.min(...s.levels.map((l: any) => l.base));
+// „ab“-Preis: nur Stufen, die man online wählen kann (Teilfolierung steht nur in der Preisliste)
+const fromPrice = (s: any) => Math.min(...s.levels.filter((l: any) => !l.onRequest).map((l: any) => priceFor(l.base, 1)));
 const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${site.address.street}, ${site.address.zip} ${site.address.city}`)}`;
 const days = site.hours;
 const icon = {
@@ -155,10 +157,20 @@ const stations = ['zeiten', 'anfahrt', 'funk', 'auftrag', 'gaestebuch', 'recht']
     </header>
 
     <div class="wall" data-wall>
+    <!-- Desktop-Seitenleiste: Kopf mit Klassenwahl (am Handy unsichtbar, dort Klasse oben im HUD) -->
+    <div class="side__head">
+      <p class="side__brand">{site.name}</p>
+      <p class="side__tag">{site.tagline} · {site.address.street}</p>
+      <p class="side__l" id="side-cls">Was fährst du?</p>
+      <div class="side__cls" role="group" aria-labelledby="side-cls">
+        {data.classes.map((c) => <button type="button" data-set-cls={c.id} aria-pressed="false" title={c.ex}>{c.short}</button>)}
+      </div>
+      <p class="side__l side__l--svc">Leistungen</p>
+    </div>
     <nav class="svcs" aria-label="Leistungen" data-svcs>
       {cards.map(([id, label], i) => {
         const sv = data.services.find((x) => x.id === id)!;
-        return <button type="button" class="svc" style={`--i:${i}`} data-station={id} data-rail={id}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={(icon as any)[id]} /></svg><span class="svc__n">{label}</span><span class="svc__p" data-from={id}>ab {euro(fromPrice(sv))}</span><i class="tick" aria-hidden="true">✓</i></button>;
+        return <button type="button" class="svc" style={`--i:${i}`} data-station={id} data-rail={id}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={(icon as any)[id]} /></svg><span class="svc__n">{label}</span><span class="svc__s">{sv.sub}</span><span class="svc__p" data-from={id}>ab {euro(fromPrice(sv))}</span><i class="tick" aria-hidden="true">✓</i></button>;
       })}
     </nav>
 
@@ -169,6 +181,7 @@ const stations = ['zeiten', 'anfahrt', 'funk', 'auftrag', 'gaestebuch', 'recht']
       <button type="button" class="dock__rd" data-open="recht"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={icon.recht} /></svg><span>Recht</span></button>
       <button type="button" class="dock__cta" data-open="auftrag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={icon.termin} /></svg><span>Termin</span><i class="badge" data-count hidden></i></button>
     </nav>
+    <button type="button" class="side__cta" data-open="auftrag"><span class="side__sum"><small>Summe (ab)</small><b data-sum-mirror>0 €</b></span><span class="side__go">Termin anfragen ›</span></button>
     </div>
 
     <p class="toast" data-toast role="status" aria-live="polite"></p>
@@ -249,23 +262,7 @@ const stations = ['zeiten', 'anfahrt', 'funk', 'auftrag', 'gaestebuch', 'recht']
 
   <dialog class="sheet" id="sheet-preise" aria-labelledby="h-preise">
     <div class="sheet__head"><h2 id="h-preise">Alle Preise</h2><button class="sheet__x" type="button" data-close aria-label="Schließen">✕</button></div>
-    <p class="muted small">Ab-Preise je Fahrzeugklasse. Den Festpreis gibt es nach einem kurzen Blick aufs Auto.</p>
-    <div class="scroll-x">
-      <table class="prices">
-        <thead><tr><th scope="col">Leistung</th>{data.classes.map((c) => <th scope="col">{c.short}</th>)}</tr></thead>
-        <tbody>
-          {data.services.flatMap((s) => [
-            ...s.levels.map((l) => (
-              <tr><th scope="row">{s.levels.length > 1 ? `${s.name}: ${l.name}` : s.name}</th>{data.classes.map((c) => <td>{euro(priceFor(l.base, c.mult))}</td>)}</tr>
-            )),
-            ...((s as any).addons ?? []).map((a: any) => (
-              <tr><th scope="row">+ {a.name}</th>{data.classes.map((c) => <td>{euro(priceFor(a.base, c.mult))}</td>)}</tr>
-            )),
-          ])}
-        </tbody>
-      </table>
-    </div>
-    <p class="muted small">Sonderfolien (Chamäleon, Chrom, Perlmutt): plus 30 %.</p>
+    <PriceTable />
   </dialog>
 
   <dialog class="sheet" id="sheet-menu" aria-labelledby="h-menu">
@@ -355,11 +352,17 @@ const stations = ['zeiten', 'anfahrt', 'funk', 'auftrag', 'gaestebuch', 'recht']
         <ul class="c-svc">
           {data.services.map((s) => (
             <li><h3>{s.name}</h3><p>{s.sub}</p>
-              <ul>{s.levels.map((l) => <li>{s.levels.length > 1 ? `${l.name}: ` : ''}{l.desc} · {l.dur} · ab {euro(l.base)}</li>)}</ul>
+              <ul>{s.levels.map((l: any) => <li>{s.levels.length > 1 ? `${l.name}: ` : ''}{l.desc} · {l.dur} · ab {euro(priceFor(l.base, 1))}{l.onRequest ? ' (auf Anfrage)' : ''}</li>)}</ul>
             </li>
           ))}
         </ul>
-        <p class="muted small">Ab-Preise für Kleinwagen. Größere Autos: Kompakt +15 %, Limousine/Kombi +30 %, SUV/Van +50 %.</p>
+        <p class="muted small">Ab-Preise für Kleinwagen. Preise für alle Fahrzeugklassen:</p>
+        <PriceTable />
+      </section>
+      <section aria-labelledby="c-termin">
+        <h2 id="c-termin">Termin</h2>
+        <p>Ruf uns an unter <a href={`tel:${site.phoneHref}`}>{site.phone}</a> oder stell dir deinen Auftrag online zusammen.</p>
+        <button class="btn js-only" type="button" data-classic-order>Termin online anfragen</button>
       </section>
       <section aria-labelledby="c-zeiten">
         <h2 id="c-zeiten">Öffnungszeiten</h2>

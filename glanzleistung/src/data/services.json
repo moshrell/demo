@@ -214,23 +214,25 @@
           "id": "streifen",
           "name": "Akzentstreifen",
           "desc": "ein Streifen über Haube und Heck",
-          "base": 190,
+          "base": 189,
           "dur": "3 Std.",
-          "points": 1
+          "points": 1,
+          "onRequest": true
         },
         {
           "id": "dach",
           "name": "Dach & Spiegel",
           "desc": "Kontrastfarbe für Dach und Spiegel",
-          "base": 390,
+          "base": 389,
           "dur": "1 Tag",
-          "points": 1
+          "points": 1,
+          "onRequest": true
         },
         {
           "id": "voll",
           "name": "Vollfolierung",
           "desc": "das ganze Auto in neuer Farbe",
-          "base": 2290,
+          "base": 2289,
           "dur": "3 Tage",
           "points": 1
         }

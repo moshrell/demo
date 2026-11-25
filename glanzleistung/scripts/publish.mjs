@@ -3,8 +3,10 @@
 import { cpSync, existsSync, rmSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const target = resolve('..', 'kravets-site', 'public', 'vorschau', 'auto', 'glanzleistung');
-if (!existsSync(resolve('..', 'kravets-site', 'public'))) {
+// Облако: KRAVETS_SITE=/путь/к/kravets-site (на ПК папка лежит рядом: D:\Webdesign\kravets-site)
+const site = process.env.KRAVETS_SITE || resolve('..', 'kravets-site');
+const target = resolve(site, 'public', 'vorschau', 'auto', 'glanzleistung');
+if (!existsSync(resolve(site, 'public'))) {
   console.error('[publish] не найдена папка kravets-site рядом с проектом');
   process.exit(1);
 }

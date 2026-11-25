@@ -19,11 +19,11 @@ const closeStation = (page) => page.evaluate(() => document.querySelector('[data
     ok(bad.length === 0, `${tag}: Etiketten überlappen nicht ${bad.join(', ')}`);
     const wall = await page.evaluate(() => { const w = document.querySelector('.wall').getBoundingClientRect(); const b = [...document.querySelectorAll('.wall button')].filter((x) => x.offsetParent).map((x) => x.getBoundingClientRect()); const car = [...document.querySelectorAll('.hs')].filter((h) => h.offsetParent)[0].querySelector('.hs__dot').getBoundingClientRect();
       return { n: b.length, left: w.left, right: w.right, top: w.top, bottom: w.bottom, inside: b.every((r) => r.left >= w.left - 1 && r.right <= w.right + 1 && r.top >= w.top - 1 && r.bottom <= w.bottom + 1), carX: car.x, carY: car.y, op: getComputedStyle(document.querySelector('.wall')).opacity }; });
-    ok(wall.n === 12 && wall.inside && wall.right <= vp.w && wall.bottom <= vp.h && wall.op === '1', `${tag}: Wand rechts mit 12 Knöpfen (6 Leistungen, 6 Werkstatt) im Fenster (${Math.round(wall.left)}–${Math.round(wall.right)} x ${Math.round(wall.top)}–${Math.round(wall.bottom)})`);
+    ok(wall.n === 16 && wall.inside && wall.right <= vp.w && wall.bottom <= vp.h && wall.op === '1', `${tag}: Seitenleiste mit 16 Knöpfen (4 Klassen, 6 Leistungen, 5 Werkstatt, Termin) im Fenster (${Math.round(wall.left)}–${Math.round(wall.right)} x ${Math.round(wall.top)}–${Math.round(wall.bottom)})`);
     ok(wall.carX < wall.left || wall.carY > wall.bottom, `${tag}: Wand verdeckt das Auto nicht (Punkt bei ${Math.round(wall.carX)} < ${Math.round(wall.left)})`);
     // Stationen: Panel rechts, Nahaufnahme geladen, nichts verdeckt die Mitte der Nahaufnahme
     for (const id of STATIONS) {
-      await page.click(id === 'auftrag' ? '.wall .dock__cta' : `.wall [data-open="${id}"]`); await sleep(2600);
+      await page.click(id === 'auftrag' ? '.wall .side__cta' : `.wall [data-open="${id}"]`); await sleep(2600);
       const r = await page.evaluate((id) => {
         const g = window.__gl; const d = document.querySelector('dialog.sheet--cam[open]'); const dr = d.getBoundingClientRect(); const fr = g.stage.frame.getBoundingClientRect();
         // Mitte der Fläche (Ecken aus media.json) auf dem Bildschirm: Station → Nahaufnahme-Koordinaten → Bildschirm

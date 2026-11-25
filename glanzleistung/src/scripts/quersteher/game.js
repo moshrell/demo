@@ -15,7 +15,7 @@ const CAR_COLORS = ['#34416b', '#6b3445', '#3f5f50', '#7d8190', '#6b5a37', '#2a3
 
 const fmt = (t) => t.toFixed(2).replace('.', ',');
 const lsGet = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
-const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { console.error('[quersteher]', e); } };
 
 /* ---------- Geist ---------- */
 function ghostAt(t, scale) {
@@ -170,7 +170,7 @@ export async function start(opts = {}) {
   const elCount = $('[data-count]'), elFlash = $('[data-flash]'), panel = $('[data-panel]');
   try { dlg.showModal(); } catch { dlg.setAttribute('open', ''); }
   window.__qsOpen = true;
-  try { history.pushState({ gl: 'qs' }, ''); } catch {}
+  try { history.pushState({ gl: 'qs' }, ''); } catch (e) { console.error('[quersteher]', e); }
 
   // Assets (optional): Blender-Renderings; ohne sie läuft die Notlösung
   const [baseImg, maskImg] = await Promise.all([loadImg(`${assetBase}car_base.png`), loadImg(`${assetBase}car_mask.png`)]);
@@ -216,7 +216,7 @@ export async function start(opts = {}) {
     input.l = l; input.r = r;
     zl.classList.toggle('is-on', l && !r); zr.classList.toggle('is-on', r && !l); zb.classList.toggle('is-on', l && r);
   }
-  pad.addEventListener('pointerdown', (e) => { if (state === 'intro' || state === 'done') return; try { pad.setPointerCapture(e.pointerId); } catch {} ptrs.set(e.pointerId, e.clientX - pad.getBoundingClientRect().left); readInput(); e.preventDefault(); });
+  pad.addEventListener('pointerdown', (e) => { if (state === 'intro' || state === 'done') return; try { pad.setPointerCapture(e.pointerId); } catch (e) { console.error('[quersteher]', e); } ptrs.set(e.pointerId, e.clientX - pad.getBoundingClientRect().left); readInput(); e.preventDefault(); });
   pad.addEventListener('pointermove', (e) => { if (ptrs.has(e.pointerId)) { ptrs.set(e.pointerId, e.clientX - pad.getBoundingClientRect().left); readInput(); } });
   const up = (e) => { ptrs.delete(e.pointerId); readInput(); };
   pad.addEventListener('pointerup', up); pad.addEventListener('pointercancel', up); pad.addEventListener('lostpointercapture', up);
@@ -236,7 +236,7 @@ export async function start(opts = {}) {
     cancelAnimationFrame(raf); ro?.disconnect();
     window.removeEventListener('keydown', kd); window.removeEventListener('keyup', ku); window.removeEventListener('blur', blur);
     document.removeEventListener('visibilitychange', vis);
-    try { dlg.close(); } catch {}
+    try { dlg.close(); } catch (e) { console.error('[quersteher]', e); }
     dlg.remove();
   }
   let closeP = null;
@@ -516,8 +516,8 @@ export async function start(opts = {}) {
         }
       }
       if (marks.length && tAll - marks[0].t > 5) marks.splice(0, 2);
-      if (car.hits !== lastHits) { lastHits = car.hits; try { navigator.vibrate?.(14); } catch {} }
-      if (car.wall && !lastWall) { try { navigator.vibrate?.(30); } catch {} }
+      if (car.hits !== lastHits) { lastHits = car.hits; try { navigator.vibrate?.(14); } catch (e) { console.error('[quersteher]', e); } }
+      if (car.wall && !lastWall) { try { navigator.vibrate?.(30); } catch (e) { console.error('[quersteher]', e); } }
       lastWall = car.wall;
       if ((car.respawned || 0) !== lastResp) { lastResp = car.respawned || 0; flash('Zurückgesetzt, +3 s', 1600); }
       const tn = car.t + car.penalty;

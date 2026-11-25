@@ -1,0 +1,25 @@
+---
+// Preistabelle je Fahrzeugklasse: im Menü „Alle Preise“ und in der klassischen Ansicht.
+// Handy: jede Leistung eine Zeile, darunter vier Zellen mit Klassen-Kürzel (keine abgeschnittene Spalte).
+import data from '../data/services.json';
+const euro = (n: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+const priceFor = (b: number, mult: number) => Math.ceil((b * mult) / 10) * 10 - 1;
+const hasRequest = data.services.some((s: any) => s.levels.some((l: any) => l.onRequest));
+---
+<div class="ptab">
+  <table class="prices">
+    <thead><tr><th scope="col">Leistung</th>{data.classes.map((c) => <th scope="col">{c.short}</th>)}</tr></thead>
+    <tbody>
+      {data.services.flatMap((s: any) => [
+        ...s.levels.map((l: any) => (
+          <tr><th scope="row">{s.levels.length > 1 ? `${s.name}: ${l.name}` : s.name}{l.onRequest && <span class="prices__req">*</span>}</th>{data.classes.map((c) => <td data-k={c.short}>{euro(priceFor(l.base, c.mult))}</td>)}</tr>
+        )),
+        ...(s.addons ?? []).map((a: any) => (
+          <tr><th scope="row">+ {a.name}</th>{data.classes.map((c) => <td data-k={c.short}>{euro(priceFor(a.base, c.mult))}</td>)}</tr>
+        )),
+      ])}
+    </tbody>
+  </table>
+  <p class="muted small">Ab-Preise je Fahrzeugklasse (Klein, Kompakt, Limousine/Kombi, SUV/Van). Den Festpreis gibt es nach einem kurzen Blick aufs Auto. Sonderfolien (Chamäleon, Chrom, Perlmutt): plus 30 %.</p>
+  {hasRequest && <p class="muted small"><span class="prices__req">*</span> Teilfolierung bitte bei der Terminanfrage in die Nachricht schreiben. Online wählbar ist die Vollfolierung.</p>}
+</div>

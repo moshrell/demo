@@ -32,8 +32,8 @@ const clsById = Object.fromEntries(data.classes.map((c) => [c.id, c]));
 const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const store = {
   get(k) { try { return JSON.parse(sessionStorage.getItem(k)); } catch { return null; } },
-  set(k, v) { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch {} },
-  del(k) { try { sessionStorage.removeItem(k); } catch {} },
+  set(k, v) { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) { console.error('[glanzleistung]', e); } },
+  del(k) { try { sessionStorage.removeItem(k); } catch (e) { console.error('[glanzleistung]', e); } },
 };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -108,6 +108,8 @@ function renderHud(animate = true) {
     };
     sumAnim = requestAnimationFrame(step);
   }
+  for (const m of $$('[data-sum-mirror]')) m.textContent = euro(target);
+  for (const b of $$('[data-set-cls]')) { const on = b.dataset.setCls === veh().cls; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', String(on)); }
   const gt = $('[data-glanz-text]');
   gt.textContent = 'Termin anfragen ›';
   for (const b of $$('[data-count]')) { b.textContent = t.count || ''; b.hidden = !t.count; }
@@ -119,13 +121,22 @@ function renderHud(animate = true) {
   for (const b of $$('[data-hs]')) b.classList.toggle('is-done', !!v.items[b.dataset.hs]);
   const mult = c?.mult ?? 1;
   for (const s of data.services) {
-    const from = Math.min(...s.levels.map((l) => priceFor(l.base, mult)));
+    const from = Math.min(...s.levels.filter((l) => !l.onRequest).map((l) => priceFor(l.base, mult)));
     for (const pe of $$(`[data-from="${s.id}"]`)) pe.textContent = `ab ${euro(from)}`;
     const st = $(`[data-state="${s.id}"]`); if (st) st.textContent = v.items[s.id] ? 'Eingebaut' : '';
   }
   renderBon();
 }
 
+// LED-Text im Boxenfunk: so groß wie möglich, aber immer vollständig sichtbar (das Display hat feste Größe)
+function fitLed(el) {
+  if (!el) return;
+  el.style.fontSize = '';
+  const box = el.parentElement; if (!box.clientHeight) return; // Station gerade versteckt: beim nächsten Text erneut
+  const room = box.clientHeight - el.offsetTop - parseFloat(getComputedStyle(box).paddingBottom);
+  let fs = parseFloat(getComputedStyle(el).fontSize);
+  while (fs > 22 && el.scrollHeight > room) { fs -= 2; el.style.fontSize = `${fs}px`; }
+}
 /* ================= Toast / Tipp ================= */
 let toastT = 0;
 function toast(text, action) {
@@ -324,7 +335,7 @@ function warmWraps() {
   const c = navigator.connection;
   if (c && (c.saveData || /(^|-)2g$/.test(c.effectiveType || ''))) return;
   const urls = folieSvc.colors.filter((x) => x.id !== 'original').map((x) => boxUrl(wrapOf({ color: x.id, finish: x.finish })));
-  const next = () => { const u = urls.shift(); if (u) fetch(u, { priority: 'low' }).then((r) => r.blob()).catch(() => {}).finally(() => setTimeout(next, 120)); };
+  const next = () => { const u = urls.shift(); if (u) fetch(u, { priority: 'low' }).then((r) => r.blob()).catch((e) => console.error('[glanzleistung] prefetch', e)).finally(() => setTimeout(next, 120)); };
   (window.requestIdleCallback || setTimeout)(next);
 }
 
@@ -336,6 +347,16 @@ let camToken = 0;
 const frameRect = () => stage.frame.getBoundingClientRect();
 // Handy: Bild mittig. Desktop: Bild links bündig (rechts liegt die dunkle Wand für das Panel; schmalere Fenster schneiden rechts ab)
 function cover(w, h, r) { const s = Math.max(r.width / w, r.height / h); return { s, tx: G.desk ? 0 : (r.width - w * s) / 2, ty: (r.height - h * s) / 2 }; }
+// Grundkamera der Box. Desktop: rechts steht die Seitenleiste; das Bild so weit nach links schieben, dass das Auto
+// mittig im freien Teil steht (nur so weit, wie das Bild rechts übersteht: nie ein Rand). Wichtig bei 4:3 und Tablet quer.
+function baseCam(r) {
+  const c = cover(W, H, r);
+  if (!G.desk || !M.zooms?.car) return c;
+  const wall = $('[data-wall]'); const side = wall ? wall.getBoundingClientRect().width : 0;
+  const free = r.width - side; const [x, , w] = M.zooms.car;
+  const want = free / 2 - (x + w / 2) * c.s;
+  return { ...c, tx: Math.min(0, Math.max(r.width - W * c.s, want)) };
+}
 // Das Bild muss immer die ganze Bühne decken, sonst blitzt unten ein grauer Streifen auf
 function clampCam(c, w, h, r) {
   const s = Math.max(c.s, r.width / w, r.height / h);
@@ -483,7 +504,7 @@ async function switchMode(desk) {
   stage.stImg = null; stage.stOp = 0; stage.stWorld.style.opacity = '0';
   stage.clipWorld.hidden = true; $('[data-clip-video]').pause();
   setMode(desk); applyStageMode(); sizeBg();
-  stage.base = cover(W, H, frameRect()); stage.cam = { ...stage.base };
+  stage.base = baseCam(frameRect()); stage.cam = { ...stage.base };
   boxes.url = ''; boxes.cur = null; boxes.from = null;
   await syncPaint(); layout(true); syncHud();
 }
@@ -491,7 +512,7 @@ function layout(instant) {
   if (stage.frame && matchMedia(DESK_Q).matches !== G.desk) { switchMode(!G.desk); return; }
   const r = frameRect();
   sizeBg();
-  stage.base = cover(W, H, r);
+  stage.base = baseCam(r);
   stage.clipBase = cover(CW, CH, r);
   if (view.kind === 'box' || instant) {
     if (view.kind === 'box') { stage.cam = { ...stage.base }; applyCam(); }
@@ -556,7 +577,7 @@ function warmClips() {
   for (const n of G.desk ? ['lack', 'wheel', 'interior'] : ['lack', 'interior']) {
     const u = clipSrc(n);
     if (warmClips[u]) continue;
-    warmClips[u] = true; fetch(u, { cache: 'force-cache' }).then((r) => r.blob()).catch(() => {});
+    warmClips[u] = true; fetch(u, { cache: 'force-cache' }).then((r) => r.blob()).catch((e) => console.error('[glanzleistung] prefetch', e));
   }
 }
 const once = (el, ev) => new Promise((r) => el.addEventListener(ev, r, { once: true }));
@@ -576,13 +597,15 @@ async function playClip(s, token) {
   let cleanImg = null, zoneImg = null;
   if (hasZone) { cleanImg = new Image(); cleanImg.src = `${base}${cv.still}-clean.webp`; zoneImg = new Image(); zoneImg.src = `${base}zone-${cv.zone}.png`; }
   stage.clipCam = { ...stage.clipBase }; applyClipCam();
+  // Desktop: die Box steht wegen der Seitenleiste verschoben; vor dem Clip (gerendert ab dem unverschobenen Bild) zurückgleiten
+  if (G.desk && stage.cam.tx !== cover(W, H, frameRect()).tx) camTo(cover(W, H, frameRect()), 420, token);
   const cw = stage.clipWorld;
   cw.hidden = false; cw.style.transition = 'none'; cw.style.opacity = '0';
   video.hidden = false; video.style.opacity = '1';
   let ready = false;
   if (!reduced() && !wrapSel) {
     if (video.dataset.name !== cv.clip) { video.src = clipSrc(cv.clip); video.dataset.name = cv.clip; }
-    try { video.currentTime = 0; } catch {}
+    try { video.currentTime = 0; } catch (e) { console.error('[glanzleistung]', e); }
     ready = await Promise.race([
       (async () => { if (video.readyState < 3) await once(video, 'canplay'); if (video.seeking) await once(video, 'seeked'); return true; })(),
       sleep(2200).then(() => false),
@@ -758,7 +781,7 @@ function softRecover() {
   const bg = boxes.cur;
   if (!bg || !bg.complete || !bg.naturalWidth) { const u = boxes.url; boxes.url = ''; boxes.cur = null; if (u) setBox(u, true); } else drawBg();
 }
-function recoverTextures() { if (!stage.world) return; softRecover(); try { syncPaint(); } catch {} }
+function recoverTextures() { if (!stage.world) return; softRecover(); try { syncPaint(); } catch (e) { console.error('[glanzleistung]', e); } }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') recoverTextures(); });
 window.addEventListener('pageshow', recoverTextures);
 window.addEventListener('popstate', () => { if (window.__qsOpen) return; if (skipPop) { skipPop = false; return; } if (current) closeSheet({ fromPop: true }); else if (view.kind !== 'box') goBox(); });
@@ -846,6 +869,7 @@ function bindSheets() {
   document.addEventListener('click', (e) => {
     const o = e.target.closest('[data-open],[data-pin-open]'); if (o) { openSheet(o.dataset.open || o.dataset.pinOpen); return; }
     if (e.target.closest('[data-close]')) { closeSheet(); return; }
+    const sc = e.target.closest('[data-set-cls]'); if (sc) { veh().cls = sc.dataset.setCls; save(); renderHud(); if (current === 'station' && stationId) renderStation(); return; }
     if (e.target.closest('[data-back]')) { if (current) closeSheet(); else goBox(); return; }
     const st = e.target.closest('[data-station],[data-hs]'); if (st) { openStation(st.dataset.station || st.dataset.hs); return; }
   });
@@ -869,7 +893,7 @@ function openStation(id) {
   draft = have ? JSON.parse(JSON.stringify(have)) : {
     level: s.levels[Math.min(1, s.levels.length - 1)].id, addons: [],
     ...(s.options ? { opt: s.options.default } : {}),
-    ...(id === 'folie' ? { color: 'nordlicht', finish: 'glanz', level: 'voll' } : {}),
+    ...(id === 'folie' ? { color: 'kirsch', finish: 'glanz', level: 'voll' } : {}), // Standard ohne Sonderfolien-Aufpreis: Preis = „ab“-Preis der Kachel
   };
   $('[data-st-title]').textContent = s.name;
   sheet('station').dataset.size = id === 'folie' ? 'f' : 'm';
@@ -893,7 +917,7 @@ function renderStation() {
     const cur = colorById(draft.color) ?? s.colors[0];
     h += `<div class="swrow" role="radiogroup" aria-label="Farbe">` +
       s.colors.map((col) => `<label class="swc"><input type="radio" name="st-color" value="${col.id}" ${draft.color === col.id ? 'checked' : ''}><i data-bg="${col.id}" aria-hidden="true"></i><span class="sr-only">${esc(col.name)}</span></label>`).join('') + `</div>` +
-      `<p class="sw__cap"><b>${esc(cur.name)}</b>${cur.special ? ' <em>+30 %</em>' : ''}</p>` +
+      `<p class="sw__cap">${wrap ? 'Vollfolierung · ' : ''}<b>${esc(cur.name)}</b>${cur.special ? ' <em>+30 %</em>' : ''}</p>` +
       `<div class="seg seg--tight">` + s.finishes.map((f) => `<label class="seg__opt"><input type="radio" name="st-finish" value="${f}" ${draft.finish === f ? 'checked' : ''}><span>${f}</span></label>`).join('') + `</div>`;
   }
   if (s.levels.length > 1 && !wrap) {
@@ -1017,9 +1041,11 @@ function renderBon() {
   const list = $('[data-bon-list]'); if (!list) return;
   const items = state.vehicles.flatMap((v) => lineItems(v));
   list.innerHTML = items.length
-    ? items.slice(0, 6).map((l) => `<li><span>${esc(l.label.replace(/^\+ /, '+'))}</span><b>${l.price}</b></li>`).join('') + (items.length > 6 ? `<li><span>… und ${items.length - 6} mehr</span></li>` : '')
+    ? items.slice(0, 5).map((l) => `<li><span>${esc(l.label.replace(/^\+ /, '+'))}</span><b>${euro(l.price)}</b></li>`).join('') + (items.length > 5 ? `<li><span>… und ${items.length - 5} mehr</span></li>` : '')
     : '<li><span>noch leer</span></li>';
-  $('[data-bon-sum]').textContent = euro(totals().total);
+  const t = totals();
+  if (t.discount) list.insertAdjacentHTML('beforeend', `<li class="bon__disc"><span>Rabatt</span><b>−${euro(t.discount)}</b></li>`);
+  $('[data-bon-sum]').textContent = euro(t.total);
 }
 function printBon(el) {
   el.classList.remove('is-print'); void el.offsetWidth; if (!reduced()) el.classList.add('is-print');
@@ -1064,7 +1090,8 @@ function bindOrder() {
   const f = $('[data-order]');
   const date = $('#o-date');
   const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
-  date.min = tomorrow.toISOString().slice(0, 10);
+  // lokales Datum (toISOString wäre UTC: zwischen 0 und 1 Uhr stünde sonst „heute“ als frühester Tag)
+  date.min = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
   const saved = store.get(FORM_KEY) || {};
   for (const [k, val] of Object.entries(saved)) {
     const el = f.elements[k]; if (!el || k === 'privacy') continue;
@@ -1123,7 +1150,7 @@ function claimCode(code) {
   inp.value = code; inp.dispatchEvent(new Event('input', { bubbles: true }));
   openSheet('auftrag');
   toast(`Code ${code} übernommen: −${site.discount.percent} % auf Pflegeleistungen.`);
-  setTimeout(() => { try { inp.scrollIntoView({ block: 'center', behavior: reduced() ? 'auto' : 'smooth' }); } catch {} }, 1500);
+  setTimeout(() => { try { inp.scrollIntoView({ block: 'center', behavior: reduced() ? 'auto' : 'smooth' }); } catch (e) { console.error('[glanzleistung]', e); } }, 1500);
 }
 let qsLoading = false;
 async function launchGame() {
@@ -1141,7 +1168,7 @@ function bindQs() {
   const hook = $('[data-qs-hook]'); if (!hook) return;
   let t = 0;
   const cancel = () => { clearTimeout(t); hook.classList.remove('is-press'); };
-  hook.addEventListener('pointerdown', (e) => { e.stopPropagation(); cancel(); hook.classList.add('is-press'); try { navigator.vibrate?.(10); } catch {} t = setTimeout(() => { hook.classList.remove('is-press'); try { navigator.vibrate?.([20, 40, 20]); } catch {} launchGame(); }, 1000); });
+  hook.addEventListener('pointerdown', (e) => { e.stopPropagation(); cancel(); hook.classList.add('is-press'); try { navigator.vibrate?.(10); } catch (e) { console.error('[glanzleistung]', e); } t = setTimeout(() => { hook.classList.remove('is-press'); try { navigator.vibrate?.([20, 40, 20]); } catch (e) { console.error('[glanzleistung]', e); } launchGame(); }, 1000); });
   for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) hook.addEventListener(ev, cancel);
   hook.addEventListener('contextmenu', (e) => e.preventDefault());
   hook.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); launchGame(); } });
@@ -1181,6 +1208,7 @@ function renderStatus() {
 /* ================= Boxenfunk ================= */
 function bindFunk() {
   const chat = $('[data-chat]'); const led = $('[data-led]');
+  fitLed(led);
   $('[data-chat-q]').addEventListener('click', (e) => {
     const b = e.target.closest('[data-q]'); if (!b || b.disabled) return;
     const f = content.faq[+b.dataset.q]; b.disabled = true;
@@ -1188,7 +1216,7 @@ function bindFunk() {
     const a = document.createElement('p'); a.className = 'msg msg--box'; a.innerHTML = `<b>Box:</b> <span class="typing">…</span>`; chat.append(a);
     a.scrollIntoView({ block: 'nearest', behavior: reduced() ? 'auto' : 'smooth' });
     led.textContent = 'Empfange …'; led.classList.add('is-busy');
-    setTimeout(() => { a.innerHTML = `<b>Box:</b> ${esc(f.a)}`; led.textContent = f.a; led.classList.remove('is-busy'); }, reduced() ? 0 : 650);
+    setTimeout(() => { a.innerHTML = `<b>Box:</b> ${esc(f.a)}`; led.textContent = f.a; led.classList.remove('is-busy'); fitLed(led); }, reduced() ? 0 : 650);
   });
 }
 
@@ -1235,7 +1263,7 @@ function intro() {
     document.body.classList.add('in-intro'); $('[data-stage]').setAttribute('inert', '');
     stage.mode = 'off';
     if (reduced()) { end(); return; }
-    try { v.currentTime = 0; } catch {}
+    try { v.currentTime = 0; } catch (e) { console.error('[glanzleistung]', e); }
     const p = v.play();
     if (p?.catch) p.catch(() => { play.hidden = false; });
   };
@@ -1254,6 +1282,7 @@ function intro() {
 function bindClassic() {
   document.addEventListener('click', (e) => {
     if (e.target.closest('[data-classic-on]')) { closeSheet(); document.documentElement.classList.add('mode-classic'); document.body.classList.replace('is-game', 'is-doc'); scrollTo(0, 0); }
+    if (e.target.closest('[data-classic-order]')) { document.documentElement.classList.remove('mode-classic'); document.body.classList.replace('is-doc', 'is-game'); layout(true); setTimeout(() => openSheet('auftrag'), 60); return; }
     if (e.target.closest('[data-classic-off]')) { document.documentElement.classList.remove('mode-classic'); document.body.classList.replace('is-doc', 'is-game'); layout(true); }
   });
 }

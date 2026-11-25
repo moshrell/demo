@@ -166,7 +166,7 @@ def area(name, loc, target, size, power, color=(1, 0.86, 0.68), sy=None):
 _, lb = area('back', (0.03, 0.20, 0.20), (0, 0, 0.04), 0.12, 7.0, sy=0.22); lb.spread = math.radians(35)      # контровой сверху-сзади: свет сквозь пасту
 area('kick', (-0.14, 0.12, 0.05), (0, 0, 0.02), 0.06, 2.0, (1, 0.78, 0.55)) # блик по краю кучки
 area('fill', (0.15, -0.28, 0.08), (0, 0, 0.04), 0.3, 0.22, (1, 0.9, 0.8))
-area('top', (-0.04, 0.0, 0.32), (0, 0, 0.0), 0.06, 0.5, (1, 0.88, 0.72))
+area('top', (-0.04, 0.0, 0.32), (0, 0, 0.0), 0.06, 0.12, (1, 0.88, 0.72))   # слабый: сильный давал белые пятна на лужице
 w = sc.world or bpy.data.worlds.new('w'); sc.world = w; w.use_nodes = True
 bg = next(n for n in w.node_tree.nodes if n.type == 'BACKGROUND')
 bg.inputs['Color'].default_value = (0.010, 0.006, 0.0035, 1)
@@ -188,7 +188,7 @@ SEL = argv[4] if len(argv) > 4 else 'all'
 CAM = argv[5] if len(argv) > 5 else 'cam_pc'
 sc.camera = bpy.data.objects[CAM]
 sc.render.engine = 'CYCLES'; cy = sc.cycles
-cy.samples = SAMPLES; cy.use_adaptive_sampling = True; cy.adaptive_threshold = 0.015; cy.use_denoising = True
+cy.samples = SAMPLES; cy.use_adaptive_sampling = True; cy.adaptive_threshold = 0.03; cy.use_denoising = True
 cy.max_bounces = 16; cy.transmission_bounces = 16; cy.glossy_bounces = 6; cy.volume_bounces = 2
 cy.caustics_refractive = True; cy.caustics_reflective = False; cy.blur_glossy = 0.8
 cy.seed = 0

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Salon Mittwoch</title>
+  <meta name="theme-color" content="#0b0807">
+  <link rel="preload" href="fonts/playfair-900.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {"imports": {"three": "./vendor/three.module.js", "three/addons/": "./vendor/addons/"}}
+  </script>
+</head>
+<body>
+  <section class="intro" id="intro" aria-label="Salon Mittwoch">
+    <div class="pin" id="pin">
+      <canvas id="stage" aria-hidden="true"></canvas>
+      <div id="veil"></div>
+
+      <p id="hint">Scrollen</p>
+      <p id="line">Ihr Platz ist bereit.</p>
+
+      <div id="field" aria-hidden="true">
+        <div class="field-bg"></div>
+      </div>
+      <svg id="art" aria-hidden="true" focusable="false">
+        <defs>
+          <clipPath id="gp-clip" clipPathUnits="userSpaceOnUse">
+            <text id="glyph" x="0" y="0">MITTWOCH</text>
+          </clipPath>
+        </defs>
+      </svg>
+      <p id="sub">Friseursalon</p>
+
+      <div id="welcome">
+        <p class="eyebrow">Salon Mittwoch</p>
+        <h2>Schnitt, Farbe, Pflege.<br>In Ruhe gemacht.</h2>
+        <a class="btn" href="#kontakt">Termin buchen</a>
+      </div>
+
+      <div id="loader"><span>Laden</span><i></i></div>
+    </div>
+  </section>
+
+  <main class="site">
+    <section class="block" id="ueber-uns">
+      <p class="eyebrow">Über uns</p>
+      <h2>Platzhalter: zwei, drei Sätze über den Salon.</h2>
+      <p>Hier kommen später Team, Leistungen, Preise und Fotos der Arbeiten.</p>
+    </section>
+    <section class="block" id="kontakt">
+      <p class="eyebrow">Kontakt</p>
+      <h2>Termin buchen</h2>
+      <p>Adresse, Öffnungszeiten und Karte folgen.</p>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

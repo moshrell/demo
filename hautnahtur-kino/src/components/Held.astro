@@ -1,17 +1,17 @@
 ---
-/** Главный экран: тёмная сцена, по верхнему краю — слой мёда с каплями (готовая текстура, капли падают CSS-анимацией).
- *  На телефоне без фото (чистая сцена), на ПК — арка с банкой сахарной пасты. Капли падают два раза и замирают. prefers-reduced-motion: капель нет. */
+/** Главный экран: фоновое видео (паста стекает кольцами, Blender, папка zuckerpaste/), бесшовная петля 7,5 с.
+ *  Телефон стоя: видео 9:16 (720×1280). Планшет стоя: видео 16:9, кучка по центру, текст ниже. в верхних ~60 % экрана, текст под ним на чёрном. ПК, планшет боком, телефон боком: видео 16:9 на весь экран, кучка справа, текст слева.
+ *  Пока видео грузится (и при prefers-reduced-motion, и в энергосбережении iOS) виден первый кадр картинкой. */
 import site from '../data/site.json';
-import Foto from './Foto.astro';
 const base = import.meta.env.BASE_URL;
 ---
 <section class="held dunkel" data-held>
-  <div class="held__bild" aria-hidden="true"><Foto name="pflege-1x1" alt="" sizes="(min-width: 64rem) 26rem, 1px" class="held__foto" /></div>
-  <div class="held__band" aria-hidden="true">
-    <i class="tr" style="--x:96px;--y:131px;--d:6.5s;--w:0.4s"></i>
-    <i class="tr" style="--x:790px;--y:207px;--d:7.5s;--w:1.6s"></i>
-    <i class="tr" style="--x:905px;--y:221px;--d:8s;--w:2.8s"></i>
-    <i class="tr" style="--x:1235px;--y:177px;--d:7s;--w:3.6s"></i>
+  <div class="held__film" aria-hidden="true">
+    <picture>
+      <source media="(orientation: portrait) and (max-width: 47.99rem)" srcset={`${base}video/paste-tel.jpg`} />
+      <img class="held__poster" src={`${base}video/paste-pc.jpg`} alt="" width="1920" height="1080" fetchpriority="high" />
+    </picture>
+    <video class="held__video" muted loop playsinline preload="none" data-film data-pc={`${base}video/paste-pc.mp4`} data-tel={`${base}video/paste-tel.mp4`}></video>
   </div>
   <div class="wrap held__in">
     <div class="held__text">
@@ -28,8 +28,18 @@ const base = import.meta.env.BASE_URL;
 </section>
 
 <style is:global define:vars={{ bandBild: `url(${import.meta.env.BASE_URL}img/honig-band.webp)`, tropfenBild: `url(${import.meta.env.BASE_URL}img/honig-tropfen.webp)` }}>
-  .held { --bs: 0.56; --honig-tief: calc(var(--bs) * 275px); position: relative; overflow: hidden; min-height: calc(100svh - 4.6rem); display: grid; align-items: end; isolation: isolate; background: radial-gradient(80% 60% at 78% 8%, rgba(227, 162, 31, 0.2), transparent 60%), var(--nacht); }
-  .held__bild { display: none; }
+  .held { --bs: 0.56; position: relative; overflow: hidden; min-height: calc(100svh - 4.6rem); display: grid; align-items: end; isolation: isolate; background: var(--nacht); }
+  .held__band, .tr, .held__bild { display: none !important; }
+  .held__film { position: absolute; inset: 0 0 auto 0; height: 47svh; z-index: -1; overflow: hidden; }
+  .held__film picture, .held__poster, .held__video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: 50% 100%; }
+  /* планшет стоя: чёткое видео 16:9, кучка в центре кадра, текст ниже */
+  @media (orientation: portrait) and (min-width: 48rem) and (max-width: 63.99rem) {
+    .held__film { height: 50svh; }
+    .held__film picture, .held__poster, .held__video { object-position: 64% 75%; }
+  }
+  .held__video { opacity: 0; transition: opacity 0.6s ease; }
+  .held__video.is-on { opacity: 1; }
+  .held__film::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 6, 4, 0.35) 0%, transparent 18%, transparent 70%, var(--nacht) 100%); }
   .held__bild picture, .held__bild img { width: 100%; height: 100%; }
   .held__band { position: absolute; left: 0; top: 0; width: calc(100% / var(--bs)); height: 320px; transform: scale(var(--bs)); transform-origin: 0 0; z-index: -1; background: var(--bandBild) 0 0 / 1600px 320px repeat-x; pointer-events: none; filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.45)); }
   .tr { position: absolute; left: var(--x); top: var(--y); width: 30px; height: 46px; margin-left: -15px; background: var(--tropfenBild) center / 100% 100% no-repeat; opacity: 0; transform-origin: 50% 0; animation: tropf var(--d) cubic-bezier(0.55, 0, 0.9, 0.6) var(--w) 2 both; }
@@ -41,19 +51,23 @@ const base = import.meta.env.BASE_URL;
     86%, 100% { opacity: 0; transform: translateY(min(68svh, 580px)) scale(0.9, 1.25); }
   }
   @media (prefers-reduced-motion: reduce) { .tr { display: none; } }
-  .held__in { position: relative; display: grid; width: 100%; min-width: 0; padding-top: calc(var(--honig-tief) + 1.4rem); padding-bottom: calc(var(--bar-h) + var(--bar-gap) + 1.6rem + env(safe-area-inset-bottom)); }
+  .held__in { position: relative; display: grid; width: 100%; min-width: 0; padding-top: 30svh; padding-bottom: calc(var(--bar-h) + var(--bar-gap) + 1.6rem + env(safe-area-inset-bottom)); }
   .held__ort, .held__abend, .held__btns .btn--ghost { display: none; }
   .held h1 { font-size: clamp(2.3rem, 1.2rem + 5vw, 6.2rem); }
   .held__lede { font-size: 1.05rem; }
   .nur-pc { display: none; }
+  @media (max-height: 700px) and (orientation: portrait) and (max-width: 63.99rem) { .held__lede { display: none; } }
   @media (max-height: 700px) and (max-width: 63.99rem) { .held h1.held__h1 { font-size: 2.15rem; } .held__lede { font-size: 0.98rem; line-height: 1.5; } .held__text { gap: 0.75rem; } }
   .held { min-height: min(calc(100svh - 5.8rem), 46rem); }
   /* Телефон боком: заголовок в две строки, текст слева, панель уходит вправо — ничего не прячется под ней */
   @media (orientation: landscape) and (max-height: 500px) and (max-width: 63.99rem) {
     .held { --bs: 0.5; }
-    .held__in { padding-bottom: 1.6rem; }
+    .held__in { padding-bottom: 1.6rem; padding-top: 4.5rem; }
+    .held__film { height: 100%; }
+    .held__film picture, .held__poster, .held__video { object-position: 65% 60%; }
+    .held__film::after { background: linear-gradient(90deg, var(--nacht) 0%, rgba(10, 6, 4, 0.7) 38%, transparent 70%); }
     .held h1.held__h1 { font-size: 2rem; max-width: 24ch; }
-    .held__text { max-width: min(30rem, 58vw); gap: 0.6rem; }
+    .held .held__text { max-width: min(30rem, 50vw); gap: 0.6rem; }
     .held__lede { font-size: 0.95rem; }
   }
   .held__text { min-width: 0; display: grid; gap: var(--space-md); max-width: 40rem; }
@@ -73,8 +87,26 @@ const base = import.meta.env.BASE_URL;
     .held__foto { width: 100%; height: 100%; object-fit: cover; object-position: 40% 60%; opacity: 1; filter: none; }
     .held__bild picture { display: block; height: 100%; }
     .held__bild::after { content: none; }
-    .held__in { padding-bottom: 4rem; }
+    .held__in { padding-bottom: 4rem; padding-top: 7rem; }
+    .held__film { height: 100%; }
+    .held__film picture, .held__poster, .held__video { object-position: 60% 55%; }
+    .held__film::after { background: linear-gradient(90deg, var(--nacht) 0%, rgba(10, 6, 4, 0.82) 30%, rgba(10, 6, 4, 0.2) 58%, transparent 75%), linear-gradient(0deg, var(--nacht) 0%, transparent 18%); }
     .held h1 { max-width: 12ch; font-size: clamp(3.4rem, 1rem + 4.2vw, 5.4rem); }
     .held__text { max-width: 36rem; }
   }
 </style>
+
+<script>
+  const v = document.querySelector<HTMLVideoElement>('[data-film]');
+  if (v && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const mq = matchMedia('(orientation: portrait) and (max-width: 47.99rem)');
+    const set = () => {
+      const src = mq.matches ? v.dataset.tel! : v.dataset.pc!;
+      if (v.getAttribute('src') === src) return;
+      v.classList.remove('is-on'); v.src = src;
+      v.play().catch(() => {}); // энергосбережение iOS запрещает автозапуск: остаётся картинка
+    };
+    v.addEventListener('playing', () => v.classList.add('is-on'));
+    set(); mq.addEventListener('change', set);
+  }
+</script>

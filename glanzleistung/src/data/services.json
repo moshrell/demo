@@ -1,0 +1,374 @@
+{
+  "classes": [
+    {
+      "id": "klein",
+      "name": "Kleinwagen",
+      "short": "Klein",
+      "mult": 1.0,
+      "ex": "z. B. Polo, Fiat 500"
+    },
+    {
+      "id": "kompakt",
+      "name": "Kompakt",
+      "short": "Kompakt",
+      "mult": 1.15,
+      "ex": "z. B. Golf, A3"
+    },
+    {
+      "id": "limo",
+      "name": "Limousine / Kombi",
+      "short": "Limo",
+      "mult": 1.3,
+      "ex": "z. B. Passat, 3er, Kombi"
+    },
+    {
+      "id": "suv",
+      "name": "SUV / Van",
+      "short": "SUV",
+      "mult": 1.5,
+      "ex": "z. B. Tiguan, X5, Bus"
+    }
+  ],
+  "services": [
+    {
+      "id": "lack",
+      "name": "Lack",
+      "sub": "Kratzer, Waschanlagen-Spuren, matter Glanz",
+      "hint": null,
+      "tip": "Waschanlagen-Kratzer sieht man erst im richtigen Licht. Deshalb polieren wir unter LED-Lampen.",
+      "hotspot": "hood",
+      "interaction": null,
+      "levels": [
+        {
+          "id": "I",
+          "name": "Pflege",
+          "desc": "Handwäsche, Kneten, Versiegelung",
+          "base": 129,
+          "dur": "3 Std.",
+          "points": 1
+        },
+        {
+          "id": "II",
+          "name": "Politur",
+          "desc": "Zusätzlich: einstufige Politur gegen leichte Kratzer und Waschanlagen-Spuren",
+          "base": 289,
+          "dur": "1 Tag",
+          "points": 2
+        },
+        {
+          "id": "III",
+          "name": "Komplett",
+          "desc": "Zusätzlich: mehrstufige Politur und Keramikversiegelung",
+          "base": 749,
+          "dur": "2 Tage",
+          "points": 3
+        }
+      ],
+      "addons": [
+        {
+          "id": "folienreste",
+          "name": "Folien- und Kleberreste entfernen",
+          "base": 49,
+          "dur": "+1 Std."
+        }
+      ],
+      "view": {
+        "clip": "lack",
+        "still": "lack",
+        "lamp": true,
+        "zone": "lack"
+      }
+    },
+    {
+      "id": "felgen",
+      "name": "Felgen & Reifen",
+      "sub": "Bremsstaub, graue Reifen",
+      "tip": "Bremsstaub frisst sich in die Felgen. Alle paar Monate reinigen lohnt sich.",
+      "hotspot": "front_wheel",
+      "interaction": null,
+      "levels": [
+        {
+          "id": "std",
+          "name": "Felgen & Reifen",
+          "desc": "Felgen innen und außen, Reifen gereinigt und gepflegt",
+          "base": 59,
+          "dur": "1 Std.",
+          "points": 1
+        }
+      ],
+      "options": {
+        "label": "Reifenglanz",
+        "values": [
+          "matt",
+          "seidig",
+          "glänzend"
+        ],
+        "default": "seidig"
+      },
+      "view": {
+        "zoom": {
+          "x": 630,
+          "y": 1440,
+          "yb": 1600,
+          "z": 2.6
+        }
+      },
+      "hint": null,
+      "viewD": {
+        "clip": "wheel",
+        "still": "wheel",
+        "zone": "wheel",
+        "wrapZoom": "wheel"
+      }
+    },
+    {
+      "id": "innenraum",
+      "name": "Innenraum",
+      "sub": "Flecken, Hundehaare, Sand, Staub",
+      "tip": "Hundehaare lösen wir mit Gummibürste und Druckluft. Der Staubsauger allein schafft das nicht.",
+      "hotspot": "seat",
+      "interaction": null,
+      "levels": [
+        {
+          "id": "I",
+          "name": "Frisch",
+          "desc": "Saugen, Kunststoff, Scheiben innen",
+          "base": 89,
+          "dur": "2 Std.",
+          "points": 1
+        },
+        {
+          "id": "II",
+          "name": "Gründlich",
+          "desc": "Zusätzlich: Polster und Teppiche nass gereinigt",
+          "base": 169,
+          "dur": "4 Std.",
+          "points": 2
+        },
+        {
+          "id": "III",
+          "name": "Komplett",
+          "desc": "Zusätzlich: Leder, Details und Tierhaare",
+          "base": 249,
+          "dur": "6 Std.",
+          "points": 3
+        }
+      ],
+      "view": {
+        "clip": "interior",
+        "still": "interior"
+      }
+    },
+    {
+      "id": "dachhimmel",
+      "name": "Dachhimmel",
+      "sub": "Nikotin, Flecken, verfärbt",
+      "tip": "Der Dachhimmel ist nur geklebt. Wir reinigen ihn mit Schaum statt nass, damit nichts herunterhängt.",
+      "hotspot": null,
+      "interaction": null,
+      "levels": [
+        {
+          "id": "std",
+          "name": "Dachhimmel",
+          "desc": "Reinigung mit Schaum, Flecken behandelt",
+          "base": 79,
+          "dur": "2 Std.",
+          "points": 1
+        }
+      ],
+      "view": {
+        "clip": "interior",
+        "still": "interior"
+      }
+    },
+    {
+      "id": "ozon",
+      "name": "Geruch & Ozon",
+      "sub": "Zigarettenrauch, Hund, muffig",
+      "tip": "Während der Behandlung ist niemand im Auto. Danach lüften wir, bis nichts mehr nach Ozon riecht.",
+      "hotspot": null,
+      "interaction": null,
+      "levels": [
+        {
+          "id": "std",
+          "name": "Ozonbehandlung",
+          "desc": "Ozon im geschlossenen Auto, danach lüften",
+          "base": 69,
+          "dur": "2 Std.",
+          "points": 1
+        }
+      ],
+      "view": {
+        "clip": "interior",
+        "still": "interior"
+      }
+    },
+    {
+      "id": "folie",
+      "name": "Folie",
+      "sub": "Neue Farbe, ohne neu zu lackieren",
+      "tip": "Folie schützt den Lack darunter. Kommt sie wieder runter, ist der Lack wie damals.",
+      "hotspot": "film_rack",
+      "levels": [
+        {
+          "id": "streifen",
+          "name": "Akzentstreifen",
+          "desc": "ein Streifen über Haube und Heck",
+          "base": 190,
+          "dur": "3 Std.",
+          "points": 1
+        },
+        {
+          "id": "dach",
+          "name": "Dach & Spiegel",
+          "desc": "Kontrastfarbe für Dach und Spiegel",
+          "base": 390,
+          "dur": "1 Tag",
+          "points": 1
+        },
+        {
+          "id": "voll",
+          "name": "Vollfolierung",
+          "desc": "das ganze Auto in neuer Farbe",
+          "base": 2290,
+          "dur": "3 Tage",
+          "points": 1
+        }
+      ],
+      "colors": [
+        {
+          "id": "original",
+          "name": "Original",
+          "css": "linear-gradient(135deg,#2a2d36,#0f1015)",
+          "special": false
+        },
+        {
+          "id": "nordlicht",
+          "name": "Nordlicht-Chamäleon",
+          "css": "linear-gradient(120deg,#19e6d3,#5b4bff 55%,#c43dff)",
+          "special": true,
+          "ramp": [
+            "#19e6d3",
+            "#5b4bff",
+            "#c43dff"
+          ],
+          "gloss": 1.0,
+          "metal": 0.5,
+          "finish": "glanz"
+        },
+        {
+          "id": "chromrose",
+          "name": "Chrom Rosé",
+          "css": "linear-gradient(120deg,#ffd9e6,#f29ab6 40%,#fff 52%,#d77d9c)",
+          "special": true,
+          "ramp": [
+            "#ffd9e6",
+            "#f29ab6",
+            "#d77d9c"
+          ],
+          "gloss": 1.5,
+          "metal": 1.0,
+          "finish": "glanz"
+        },
+        {
+          "id": "perlmutt",
+          "name": "Perlmutt Eis",
+          "css": "linear-gradient(120deg,#f4f7ff,#cfe3ff 50%,#ffe1f6)",
+          "special": true,
+          "ramp": [
+            "#f4f7ff",
+            "#cfe3ff",
+            "#ffe1f6"
+          ],
+          "gloss": 0.9,
+          "metal": 0.0,
+          "finish": "glanz"
+        },
+        {
+          "id": "pistazie",
+          "name": "Pistazie",
+          "css": "linear-gradient(120deg,#b8d8a0,#94bf7c)",
+          "special": false,
+          "ramp": [
+            "#a9cf8e"
+          ],
+          "gloss": 0.9,
+          "metal": 0.0,
+          "finish": "satin"
+        },
+        {
+          "id": "kirsch",
+          "name": "Candy Kirsch",
+          "css": "linear-gradient(120deg,#ff1f5a,#7a0026)",
+          "special": false,
+          "ramp": [
+            "#d0103f"
+          ],
+          "gloss": 1.0,
+          "metal": 0.15,
+          "finish": "glanz"
+        },
+        {
+          "id": "tiefsee",
+          "name": "Tiefsee",
+          "css": "linear-gradient(120deg,#0f4b55,#0a2e36)",
+          "special": false,
+          "ramp": [
+            "#0f4b55"
+          ],
+          "gloss": 0.9,
+          "metal": 0.0,
+          "finish": "matt"
+        },
+        {
+          "id": "giftgruen",
+          "name": "Giftgrün",
+          "css": "linear-gradient(120deg,#c6ff3d,#7cd400)",
+          "special": false,
+          "ramp": [
+            "#a8f02a"
+          ],
+          "gloss": 0.9,
+          "metal": 0.0,
+          "finish": "glanz"
+        },
+        {
+          "id": "graphit",
+          "name": "Graphit",
+          "css": "linear-gradient(120deg,#3a3d44,#22242a)",
+          "special": false,
+          "ramp": [
+            "#3a3d44"
+          ],
+          "gloss": 0.9,
+          "metal": 0.2,
+          "finish": "matt"
+        }
+      ],
+      "specialSurcharge": 0.3,
+      "finishes": [
+        "matt",
+        "satin",
+        "glanz"
+      ],
+      "view": {
+        "zoom": {
+          "x": 543,
+          "xr": 1180,
+          "y": 1381,
+          "yb": 1610,
+          "z": 1.0
+        }
+      },
+      "hint": "Farbe und Finish wählen, das Auto zeigt sie sofort.",
+      "finishGloss": {
+        "matt": 0.12,
+        "satin": 0.45,
+        "glanz": 1.0
+      },
+      "viewD": {
+        "zoom": "car"
+      }
+    }
+  ]
+}

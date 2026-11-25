@@ -1,0 +1,18 @@
+{
+  "reviews": [
+    { "text": "Mein Nachbar trägt jetzt eine Sonnenbrille, wenn ich parke.", "who": "Jürgen, 61, Kombi" },
+    { "text": "Der Hund war vier Jahre im Auto. Jetzt riecht es nach Neuwagen. Der Hund ist beleidigt.", "who": "Melanie, 38, SUV" },
+    { "text": "Hab das Auto nach der Politur nicht wiedererkannt und bin beim falschen eingestiegen.", "who": "Tobi, 24, Kompakt" },
+    { "text": "Ozon gegen zwanzig Jahre Zigarillo. Ozon hat gewonnen.", "who": "Horst, 70, Limousine" },
+    { "text": "Chamäleon-Folie. Meine Frau sagt, das Auto ist lila. Ich sage grün. Wir streiten seit drei Wochen.", "who": "Sven, 45, Cabrio" },
+    { "text": "Ich wollte nur kurz saugen lassen. Jetzt habe ich Keramik, Folie und einen neuen Lieblingsort.", "who": "Aylin, 33, Kleinwagen" }
+  ],
+  "faq": [
+    { "q": "Wie lange dauert das?", "a": "Von einer Stunde bis drei Tage. Die genaue Zeit steht auf deinem Auftrag." },
+    { "q": "Muss ich das Auto bringen?", "a": "Nein. Bis 10 km holen wir es kostenlos ab und bringen es zurück." },
+    { "q": "Ist Ozon schädlich?", "a": "Während der Behandlung sitzt niemand im Auto. Danach lüften wir, bis der Geruch weg ist. Dann ist es unbedenklich." },
+    { "q": "Geht die Folie wieder ab?", "a": "Ja, rückstandslos. Der Lack darunter bleibt geschützt." },
+    { "q": "Kann ich warten?", "a": "Bei kurzen Leistungen gern. Kaffee gibt es in der Box." },
+    { "q": "Was kostet es genau?", "a": "Die Preise gelten ab. Nach einem kurzen Blick aufs Auto bekommst du einen Festpreis, bevor wir anfangen." }
+  ]
+}

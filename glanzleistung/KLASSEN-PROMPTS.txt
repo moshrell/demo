@@ -1,0 +1,9 @@
+Gemini-Prompts für die Fahrzeugklassen (Seitenverhältnis 4:3, jeweils ein Bild)
+Gemeinsamer Stil: Dunkler Garagenboden, neon-türkise Kante, Auto im Profil von der Seite, Heck links, Front rechts, schwarzer Lack mit Glanz, keine Marke, kein Logo, kein Text, Studio-Licht, Hintergrund fast schwarz (#0e0f13).
+
+1) Klein: kleiner Stadtwagen / Kleinstwagen im Profil von der Seite, schwarz, dunkler Hintergrund, türkise Lichtkante.
+2) Kompakt: Kompaktwagen (Golf-Klasse) im Profil von der Seite, schwarz, dunkler Hintergrund, türkise Lichtkante.
+3) Limousine / Kombi: Limousine mittlere Größe im Profil von der Seite, schwarz, dunkler Hintergrund, türkise Lichtkante.
+4) SUV / Van: großer SUV im Profil von der Seite, schwarz, dunkler Hintergrund, türkise Lichtkante.
+
+Dateinamen: klein.webp, kompakt.webp, limo.webp, suv.webp -> in D:\Webdesign\glanzleistung\public\media\klassen\ legen, dann sage Bescheid.

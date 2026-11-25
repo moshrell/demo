@@ -215,4 +215,4 @@ for fr in frames:
     if os.path.exists(path): continue
     sc.frame_set(fr); sc.render.filepath = path
     bpy.ops.render.render(write_still=True)
-    print('FRAME', fr, flush=True)
+    print(f'FRAME {fr}  ===  Kadr {fr} iz {FRAMES} ({round(fr * 100 / FRAMES)} %)', flush=True)

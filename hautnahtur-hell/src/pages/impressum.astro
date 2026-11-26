@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import Seitenkopf from '../components/Seitenkopf.astro';
+import site from '../data/site.json';
+---
+<Base title="Impressum | Hautnahtur Kosmetikstudio Gehrden">
+  <Seitenkopf titel="Impressum" />
+  <main class="wrap recht section">
+    <p><strong>Vorschau:</strong> Diese Seite zeigt die neue Website in der Vorschau. Die Angaben stammen von der bisherigen Website und müssen vor der Veröffentlichung von der Inhaberin bestätigt werden.</p>
+    <h2>Angaben gemäß § 5 DDG</h2>
+    <p>{site.legalName}<br />{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+    <h2>Kontakt</h2>
+    <p>Telefon: {site.phone}<br />Mobil: {site.mobile}<br />E-Mail: {site.email}<br />Internet: {site.web}</p>
+    <h2>Umsatzsteuer</h2>
+    <p>Ust.ID.Nr.: {site.ustId}</p>
+    <p class="small muted">TODO vom Kunden: Nummer prüfen. Die Angabe stammt unverändert von der bisherigen Website; sie sieht wie eine Steuernummer aus, eine Umsatzsteuer-Identifikationsnummer nach § 27a UStG hat das Format DE und neun Ziffern.</p>
+    <h2>Berufsbezeichnung</h2>
+    <p>Kosmetikerin und Fußpflegerin (Bund deutscher Kosmetikerinnen, Ausbildung 1984). TODO vom Kunden: ggf. Angaben zu Kammer oder Verband.</p>
+    <h2>Verbraucherstreitbeilegung</h2>
+    <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+  </main>
+</Base>
+<style>
+  .recht { max-width: 46rem; padding-top: var(--space-xl); display: grid; gap: var(--space-md); }
+  .recht h2 { font-size: 1.5rem; margin-top: var(--space-md); }
+</style>

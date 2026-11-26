@@ -1,0 +1,115 @@
+---
+import Base from '../layouts/Base.astro';
+import Foto from '../components/Foto.astro';
+import Held from '../components/Held.astro';
+import Zonenrechner from '../components/Zonenrechner.astro';
+import Finder from '../components/Finder.astro';
+import zonen from '../data/zonen.json';
+import site from '../data/site.json';
+const base = import.meta.env.BASE_URL;
+const jahre = new Date().getFullYear() - site.since;
+const saeulen = [
+  { t: 'Natürliche, ganzheitlich wirkende Produkte', d: 'Gesundheitskosmetik von atamé, reine Zuckerpaste und Pflege von Pandy’s Comfort Sugaring, reine Farb-Öle von Maria Pieper.' },
+  { t: 'Behandlung ohne Apparate', d: 'Alle Behandlungen werden mit den Händen und ohne Geräte durchgeführt. Die Tonics reinigen sanft und bringen die Wirkstoffe gleichzeitig in die Haut.' },
+  { t: 'Ganz individuell', d: 'Ihr Wohlbefinden und Ihr Hautgefühl liegen mir am Herzen. Gemeinsam suchen wir die Behandlung heraus, die zu Ihnen passt, auch ganz klassisch mit Mary Kay.' },
+];
+const blick = [
+  ['studio-kabine', 'Behandlungsliege mit orangefarbenen Handtüchern und einer weißen Lilie'],
+  ['studio-empfang', 'Empfangstresen im orangefarbenen Eingangsbereich des Studios'],
+  ['studio-lampe', 'Lampe in Form einer Pusteblume an der Wand des Studios'],
+  ['studio-pandys', 'Reihe der Pflegeprodukte von Pandy’s Safe Cosmetic'],
+  ['studio-lilie', 'Weiße Lilie auf orangefarbenen Handtüchern'],
+  ['studio-regale', 'Orangefarbene Regale mit Pflegeprodukten'],
+];
+---
+<Base title="Hautnahtur Kosmetikstudio Gehrden: Sugaring und Kosmetik" description="Kosmetikstudio in Gehrden: Sugaring mit reiner Zuckerpaste, ganzheitliche Gesichtsbehandlungen mit atamé und Mary Kay, Maniküre, Fußpflege, Make-up. Preis für Ihre Zonen sofort berechnen." aktiv="start">
+  <Held />
+  <Zonenrechner />
+  <Finder foto="gesicht-3x4" />
+
+  <section class="ablauf section" aria-labelledby="ablauf-h">
+    <div class="wrap ablauf__grid">
+      <div>
+        <h2 id="ablauf-h">Die Säulen meiner Kosmetikbehandlung</h2>
+        <ol class="faden">
+          {saeulen.map((s) => <li><h3>{s.t}</h3><p>{s.d}</p></li>)}
+        </ol>
+      </div>
+      <aside class="vorher honig" data-honig aria-labelledby="vorher-h">
+        <h3 id="vorher-h">So rechne ich Sugaring ab</h3>
+        <ul>
+          <li>Die Preise sind eine Richtlinie.</li>
+          <li>Berechnet werden die Zeit des reinen Zuckerns und das Material, im Durchschnitt 50 € pro Stunde.</li>
+          <li>Bei einer Kosmetikbehandlung ist die Haarentfernung im Gesicht schon im Preis enthalten.</li>
+        </ul>
+        <a href={`${base}preise/`}>Zur Preisliste</a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="ich section" aria-labelledby="ich-h">
+    <div class="wrap ich__grid">
+      <Foto name="michaela" alt={`${site.owner}, Inhaberin von Hautnahtur`} sizes="(min-width: 64rem) 24rem, 70vw" class="ich__foto" />
+      <div class="ich__text">
+        <p class="muted">Selbstständig seit {site.since}, seit {jahre} Jahren</p>
+        <h2 id="ich-h">Ich bin {site.owner.split(' ')[0]}</h2>
+        <p class="lede">Ihre individuellen Wünsche sind mir wichtig. Deshalb biete ich neben Zucker und Kräuter-Tonics auch die klassische Kosmetikbehandlung an.</p>
+        <blockquote class="ich__satz">„Behandele andere so, wie auch du behandelt werden möchtest.“</blockquote>
+        <p><a href={`${base}ueber-mich/`}>Mehr über mich und meine Ausbildung</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="raum dunkel" aria-labelledby="raum-h">
+    <div class="wrap raum__text">
+      <h2 id="raum-h">Das Studio in Gehrden</h2>
+      <ul class="fakten">
+        <li>{site.address.street}, {site.address.zip} {site.address.city} · <a href={site.mapUrl} target="_blank" rel="noopener">Weg auf der Karte</a></li>
+        <li>Dienstag und Donnerstag bis 22 Uhr geöffnet</li>
+        <li>Samstags nach Terminabsprache</li>
+      </ul>
+    </div>
+    <ul class="blick" aria-label="Bilder aus dem Studio">
+      {blick.map(([n, alt]) => <li><Foto name={n} alt={alt} sizes="(min-width: 48rem) 33vw, 76vw" class="blick__foto" /></li>)}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .ablauf__grid { display: grid; gap: var(--space-xl); }
+  .faden { list-style: none; margin: var(--space-xl) 0 0; padding: 0; counter-reset: s; display: grid; }
+  .faden li { position: relative; counter-increment: s; padding: 0 0 var(--space-lg) 3.6rem; }
+  .faden li::before { content: counter(s); position: absolute; left: 0; top: -0.1rem; width: 2.4rem; height: 2.4rem; display: grid; place-items: center; border-radius: 50%; border: 1.5px solid var(--tinte); font-family: var(--font-display); font-size: 1.15rem; }
+  .faden li::after { content: ''; position: absolute; left: 1.15rem; top: 2.6rem; bottom: 0.3rem; width: 1.5px; background: var(--linie); }
+  .faden li:last-child::after { display: none; }
+  .faden h3 { margin-bottom: 0.3rem; }
+  .faden p { color: var(--tinte-2); max-width: 34rem; }
+  .vorher { padding: 1.5rem 1.6rem; border-radius: 26px; align-self: start; }
+  .vorher ul { margin: 0.7rem 0 1rem; padding-left: 1.2rem; display: grid; gap: 0.4rem; }
+  .vorher a { font-weight: 600; }
+  @media (min-width: 64rem) { .ablauf__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); align-items: end; gap: var(--space-2xl); } }
+
+  .ich { background: var(--grau); }
+  .ich__grid { display: grid; gap: var(--space-xl); }
+  .ich__grid :global(.ich__foto) { border-radius: 26px; max-width: 17rem; width: 100%; height: auto; }
+  .ich__text { display: grid; gap: 0.9rem; align-content: start; }
+  .ich__satz { margin: 0.6rem 0; font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem); line-height: 1.15; letter-spacing: var(--display-tracking); max-width: 28rem; }
+  @media (min-width: 64rem) { .ich__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; gap: var(--space-3xl); } }
+
+  .raum { padding-block: var(--space-2xl); }
+  .raum__text { display: grid; gap: var(--space-md); margin-bottom: var(--space-xl); }
+  .raum__text > * { max-width: 40rem; }
+  .fakten { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.6rem; color: var(--licht-2); }
+  .fakten li { padding-left: 1.4rem; position: relative; }
+  .fakten li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--honig); }
+  .fakten a { color: var(--honig-hell); }
+  .blick { list-style: none; margin: 0; padding: 0 var(--gutter) 0.4rem; display: grid; grid-auto-flow: column; grid-auto-columns: min(76vw, 20rem); gap: 0.8rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .blick::-webkit-scrollbar { display: none; }
+  .blick li { scroll-snap-align: start; }
+  .blick :global(.blick__foto) { width: 100%; height: auto; aspect-ratio: 9 / 7; object-fit: cover; border-radius: 18px; }
+  @media (min-width: 48rem) {
+    .blick { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; padding: 0; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); gap: 1rem; }
+  }
+
+
+</style>

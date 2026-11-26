@@ -1,27 +1,29 @@
-/* Hautnahtur — токены и база. Тёмная «медовая» сцена + чистый белый для чтения. Цвет и шрифт только через переменные. */
+/* Hautnahtur (вариант «кино»): светлый сайт, тёмный только герой с видео. Имена токенов исторические: --nacht = второй светлый фон,
+   --licht = текст на нём; герой переопределяет их на тёмные локально. Цвет и шрифт только через переменные. */
 :root {
-  --nacht: #1B110B;        /* тёмный фон (меласса) */
-  --nacht-2: #261811;      /* приподнятый тёмный */
-  --nacht-3: #3B281B;      /* линии на тёмном */
-  --licht: #F6EFE7;        /* текст на тёмном */
-  --licht-2: #C4B09D;      /* второстепенный на тёмном (8.9:1) */
+  --nacht: #F5F0EA;        /* второй светлый фон (секции) */
+  --nacht-2: #FFFFFF;      /* карточки на нём */
+  --nacht-3: #E3D9CF;      /* линии */
+  --licht: #2A1D16;        /* текст на втором фоне */
+  --licht-2: #6B5A4E;      /* второстепенный (6.3:1) */
   --weiss: #FFFFFF;
   --grau: #F4F1ED;         /* редкий второй светлый фон */
-  --tinte: #1B110B;        /* текст на белом */
-  --tinte-2: #5E4A3E;      /* второстепенный на белом (8.3:1) */
-  --linie: #E7DFD7;
-  --honig: #E3A21F;
-  --honig-hell: #FFD27A;
-  --honig-tief: #CF8A22;   /* низ медовых блоков: tinte ≥ 6:1 */
+  --tinte: #2A1D16;        /* текст на белом */
+  --tinte-2: #6B5A4E;      /* второстепенный на белом */
+  --linie: #E8E0D8;
+  --honig: #E08A1E;        /* оранжевый из логотипа: линии, точки, подсветка */
+  --honig-hell: #A9531F;   /* акцентный текст на светлом (5.4:1) */
+  --honig-tief: #B4482F;   /* ржавый из логотипа: основная кнопка (белый текст 5.2:1) */
+  --akzent: #B4482F;
   --porzellan: #EFE5DC;
   --alert: #B3261B;
-  --focus: #E3A21F;
+  --focus: #E08A1E;
 
-  --font-display: 'Gilda Display', Georgia, serif;
-  --font-text: 'Manrope Variable', system-ui, sans-serif;
-  --display-weight: 400;
-  --display-tracking: -0.01em;
-  --strong-weight: 650;
+  --font-display: 'Hanken Grotesk Variable', system-ui, sans-serif;
+  --font-text: 'Hanken Grotesk Variable', system-ui, sans-serif;
+  --display-weight: 300;
+  --display-tracking: -0.03em;
+  --strong-weight: 600;
   --lh: 1.55;
 
   --text-base: 1.125rem;
@@ -40,7 +42,7 @@
 @media (min-width: 64rem) { :root { --text-base: 1.1875rem; --text-sm: 1.0625rem; } }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { overflow-x: clip; -webkit-text-size-adjust: 100%; background: var(--nacht); }
+html { overflow-x: clip; -webkit-text-size-adjust: 100%; background: var(--weiss); }
 body { overflow-x: clip; margin: 0; background: var(--weiss); color: var(--tinte); font-family: var(--font-text); font-size: var(--text-base); line-height: var(--lh); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 img, svg, canvas { display: block; max-width: 100%; }
 h1, h2 { font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: var(--display-tracking); line-height: 1.04; margin: 0; font-style: normal; text-wrap: balance; overflow-wrap: break-word; hyphens: manual; min-width: 0; }
@@ -67,14 +69,15 @@ a:hover { text-decoration-thickness: 2px; }
 .dunkel .muted { color: var(--licht-2); }
 .dunkel a { color: var(--licht); }
 
-/* Кнопки: два вида. Основная — тёмная на белом и медовая на тёмном; вторичная — контур. */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5em; min-height: 3.25rem; padding: 0.8rem 1.5rem; border-radius: 999px; border: 1.5px solid var(--tinte); background: var(--tinte); color: var(--weiss); font: inherit; font-weight: var(--strong-weight); text-decoration: none; cursor: pointer; white-space: normal; text-align: center; line-height: 1.2; transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s; }
+/* Кнопки: основная — ржавая из логотипа (на тёмном герое — светлая), вторичная — контур. */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5em; min-height: 3.25rem; padding: 0.8rem 1.5rem; border-radius: 999px; border: 1.5px solid var(--akzent); background: var(--akzent); color: var(--weiss); font: inherit; font-weight: var(--strong-weight); text-decoration: none; cursor: pointer; white-space: normal; text-align: center; line-height: 1.2; transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s; }
 .btn:hover { text-decoration: none; transform: translateY(-1px); }
 .btn--ghost { background: transparent; color: var(--tinte); }
 .btn--ghost:hover { background: rgba(27, 17, 11, 0.05); }
-.dunkel .btn:not(.btn--ghost) { border-color: transparent; color: var(--tinte); background: linear-gradient(180deg, #FFD983 0%, #F0AE34 48%, #D58C1D 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), inset 0 -6px 12px rgba(150, 80, 0, 0.25), 0 10px 24px -12px rgba(227, 162, 31, 0.6); }
-.dunkel .btn--ghost { color: var(--licht); border-color: rgba(246, 239, 231, 0.55); }
-.dunkel .btn--ghost:hover { background: rgba(246, 239, 231, 0.08); }
+.btn:not(.btn--ghost):hover { background: #9C3C26; border-color: #9C3C26; }
+.nacht .btn:not(.btn--ghost) { border-color: #F4EEE8; background: #F4EEE8; color: #120C08; }
+.nacht .btn--ghost { color: #F4EEE8; border-color: rgba(244, 238, 232, 0.45); }
+.dunkel .btn--ghost { color: var(--licht); border-color: var(--licht); }
 .btn-row { display: flex; flex-wrap: wrap; gap: var(--space-smd); }
 @media (max-width: 26rem) { .btn-row .btn { flex: 1 1 100%; } }
 
@@ -131,3 +134,6 @@ a:hover { text-decoration-thickness: 2px; }
 .terminkarte dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
 .terminkarte .summe dt, .terminkarte .summe dd { color: var(--tinte); font-weight: var(--strong-weight); font-size: var(--text-lg); }
 .demo-hinweis { margin-top: 1rem; font-size: var(--text-sm); color: var(--tinte-2); }
+
+/* Отдельно стоящие текстовые ссылки: зона нажатия ≥ 44 px по высоте на телефоне */
+p > a:only-child, .fakten a, .vorher > a, .zr__links a, .fi__alle { display: inline-block; padding-block: 0.7rem; }

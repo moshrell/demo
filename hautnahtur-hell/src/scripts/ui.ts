@@ -1,6 +1,5 @@
-// Общая логика всех страниц: шторки, пилюля с итогом, часы работы, медовая нить.
+// Общая логика всех страниц: шторки, пилюля с итогом, часы работы.
 import * as cart from '../lib/cart';
-import { honig } from './honig';
 import zeiten from '../data/oeffnungszeiten.json';
 
 try { history.scrollRestoration = 'manual'; } catch {}
@@ -36,7 +35,7 @@ function render() {
   const c = cart.get();
   // на странице записи сводка уже в форме — пилюля не нужна и легла бы на поля
   const show = c.lines.length > 0 && document.body.dataset.leiste !== 'termin';
-  if (pille.hidden === show) { pille.hidden = !show; honig.pulse(); }
+  if (pille.hidden === show) pille.hidden = !show;
   if (show) {
     $('[data-pille-n]')!.textContent = cart.anzahl(c.lines.length);
     $('[data-pille-summe]')!.textContent = (c.ab ? 'ab ' : '') + cart.euro(c.summe);
@@ -92,4 +91,3 @@ function zeitenRender() {
 zeitenRender();
 setInterval(zeitenRender, 60_000);
 
-honig.start();

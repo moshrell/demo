@@ -1,5 +1,5 @@
 ---
-/** Подбор ухода за лицом: мастер по шагам. Один вопрос на экране, крупные карточки-ответы, медовая нить показывает прогресс,
+/** Подбор ухода за лицом: мастер по шагам. Один вопрос на экране, ответы строками с кружком, прогресс тремя точками,
  *  после третьего ответа — 1–2 процедуры с ценой и кнопкой «в заявку». */
 import data from '../data/behandlungen.json';
 import site from '../data/site.json';
@@ -14,7 +14,7 @@ const fragen = [
 ---
 <section class="fi section" id={id} aria-labelledby={`${id}-h`} data-finder>
   <div class={`wrap fi__wrap ${foto ? 'fi__wrap--foto' : ''}`}>
-    {foto && <div class="fi__foto"><Foto name={typeof foto === 'string' ? foto : 'gesicht-3x4'} alt="Kundin mit Handtuch im Haar bei einer ruhigen Gesichtsbehandlung" sizes="(min-width: 64rem) 30rem, 92vw" /></div>}
+    {foto && <div class="fi__foto"><Foto name={typeof foto === 'string' ? foto : 'gesicht-3x4'} alt="Kundin mit Handtuch im Haar bei einer ruhigen Gesichtsbehandlung" sizes="(min-width: 64rem) 30rem, (min-width: 48rem) 40vw, 92vw" /></div>}
     <div class="fi__karte">
       <h2 id={`${id}-h`}>{titel.replace("Gesichtsbehandlung", "Gesichts\u00ADbehandlung")}</h2>
       <div class="fi__kopf">
@@ -48,60 +48,60 @@ const fragen = [
 </section>
 
 <style>
-  .fi__wrap { display: grid; gap: 0; }
-  .fi__karte { min-width: 0; position: relative; background: linear-gradient(160deg, #FBF6F0 0%, #F1E6DB 100%); border-radius: 28px; padding: clamp(1.3rem, 4.5vw, 2.8rem); box-shadow: 0 1px 0 #fff inset, 0 30px 60px -40px rgba(80, 40, 10, 0.45); overflow: hidden; }
-  .fi__karte h2 { font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem); }
-  .fi__kopf { display: grid; gap: 0.7rem; margin-top: var(--space-lg); }
-  .fi__zaehler { font-size: var(--text-sm); color: var(--tinte-2); font-weight: 500; }
-  /* медовая нить: линия с тремя узлами, заполняется по шагам */
-  .fi__faden { position: relative; height: 14px; display: flex; justify-content: space-between; align-items: center; }
-  .fi__faden::before { content: ''; position: absolute; left: 7px; right: 7px; top: 6px; height: 2px; border-radius: 2px; background: #DCCBBB; }
-  .fi__faden i { position: absolute; left: 7px; top: 4px; height: 6px; border-radius: 6px; width: 0; max-width: calc(100% - 14px); background: linear-gradient(180deg, #FFD983, #E49B1F); box-shadow: 0 0 8px rgba(227, 162, 31, 0.6); transition: width 0.45s cubic-bezier(0.3, 0.9, 0.3, 1); }
-  .fi__faden b { position: relative; width: 14px; height: 14px; border-radius: 50%; background: #F4EADF; border: 2px solid #CDB9A6; transition: background 0.3s, border-color 0.3s; }
-  .fi__faden b.an { background: radial-gradient(circle at 35% 30%, #FFE9AE, #E49B1F 70%); border-color: #C98410; }
+  /* Вариант A: подбор на песке, ответы — белые строки с кружком, прогресс — три точки из отточия «карты» */
+  .fi { background: var(--sand); }
+  .fi__wrap { display: grid; gap: var(--space-lg); }
+  .fi__karte { min-width: 0; }
+  .fi__karte h2 { font-size: clamp(1.8rem, 1.3rem + 2.2vw, 3rem); max-width: 18ch; }
+  .fi__kopf { display: flex; align-items: center; gap: 1rem; margin-top: var(--space-lg); }
+  .fi__zaehler { font-size: var(--text-sm); color: var(--tinte-2); font-weight: 600; white-space: nowrap; }
+  .fi__faden { position: relative; flex: 1; height: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .fi__faden::before { content: ''; position: absolute; left: 6px; right: 6px; top: 50%; border-top: 2px dotted #D3C2B2; }
+  .fi__faden i { position: absolute; left: 6px; top: 50%; height: 2px; margin-top: -1px; width: 0; max-width: calc(100% - 12px); background: var(--orange); transition: width 0.4s cubic-bezier(0.3, 0.9, 0.3, 1); }
+  .fi__faden b { position: relative; width: 12px; height: 12px; border-radius: 50%; background: var(--sand); border: 2px solid #CDBBA9; transition: background 0.25s, border-color 0.25s; }
+  .fi__faden b.an { background: var(--orange); border-color: var(--orange); }
   .fi__buehne { margin-top: var(--space-lg); }
-  .fi__frage { border: 0; padding: 0; margin: 0; min-width: 0; animation: schritt 0.34s cubic-bezier(0.2, 0.9, 0.3, 1); }
+  .fi__frage { border: 0; padding: 0; margin: 0; min-width: 0; animation: schritt 0.3s cubic-bezier(0.2, 0.9, 0.3, 1); }
   .fi__frage[hidden], .fi__ergebnis[hidden] { display: none; }
   .fi__rueck .fi__frage { animation-name: schrittzu; }
-  @keyframes schritt { from { opacity: 0; transform: translateX(28px); } }
-  @keyframes schrittzu { from { opacity: 0; transform: translateX(-28px); } }
-  .fi__frage legend { padding: 0; margin-bottom: 1rem; font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2rem); letter-spacing: var(--display-tracking); line-height: 1.15; }
-  .fi__opt { display: grid; gap: 0.6rem; }
+  @keyframes schritt { from { opacity: 0; transform: translateX(24px); } }
+  @keyframes schrittzu { from { opacity: 0; transform: translateX(-24px); } }
+  .fi__frage legend { padding: 0; margin-bottom: 0.9rem; font-weight: 680; font-size: clamp(1.3rem, 1.1rem + 0.9vw, 1.75rem); letter-spacing: -0.02em; line-height: 1.2; }
+  .fi__opt { display: grid; gap: 0.5rem; }
   .fi__karteopt { position: relative; display: block; }
   .fi__karteopt input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-  .fi__karteopt span { display: flex; align-items: center; min-height: 3.5rem; padding: 0.7rem 1.2rem; border-radius: 18px; background: var(--weiss); border: 1.5px solid #E2D3C5; font-weight: 500; line-height: 1.3; cursor: pointer; transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s; }
-  .fi__karteopt:hover span { border-color: var(--honig-tief); transform: translateY(-1px); }
-  .fi__karteopt input:checked + span { border-color: var(--honig-tief); box-shadow: 0 0 0 2px var(--honig) inset, 0 10px 20px -14px rgba(160, 90, 0, 0.6); background: #FFF8E8; }
+  .fi__karteopt span { display: flex; align-items: center; gap: 0.75rem; min-height: 3.4rem; padding: 0.65rem 1.1rem; border-radius: 16px; background: var(--papier); border: 1.5px solid transparent; font-weight: 550; line-height: 1.3; cursor: pointer; transition: border-color 0.15s; }
+  .fi__karteopt span::before { content: ''; flex: none; width: 1.25rem; height: 1.25rem; border-radius: 50%; border: 1.5px solid #CDBFB2; transition: border-color 0.15s, box-shadow 0.15s; }
+  .fi__karteopt:hover span { border-color: var(--sand-2); }
+  .fi__karteopt input:checked + span { border-color: var(--orange); }
+  .fi__karteopt input:checked + span::before { border-color: var(--orange); box-shadow: inset 0 0 0 4px var(--papier), inset 0 0 0 10px var(--orange); }
   .fi__karteopt input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
   .fi__nav { display: flex; justify-content: space-between; gap: 1rem; min-height: 2.75rem; margin-top: var(--space-md); }
   .fi__link { min-height: 2.75rem; padding: 0 0.2rem; border: 0; background: none; font: inherit; font-weight: var(--strong-weight); color: var(--tinte); text-decoration: underline; text-underline-offset: 0.25em; cursor: pointer; }
   .fi__link[hidden] { display: none; }
-  /* на первом шаге обе ссылки скрыты — ряд не держит пустое место */
   .fi__nav:not(:has(.fi__link:not([hidden]))) { display: none; }
-  .fi__ergebnis { outline: none; animation: schritt 0.34s cubic-bezier(0.2, 0.9, 0.3, 1); }
-  .fi__titel { font-family: var(--font-display); font-weight: var(--display-weight); font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.2rem); line-height: 1.15; }
-  .fi__liste { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.9rem; }
-  .fi__liste :global(li) { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.5rem; overflow-wrap: anywhere; padding: 1.1rem 1.2rem; background: var(--weiss); border-radius: 20px; }
-  .fi__liste :global(li:first-child) { box-shadow: 0 0 0 2px var(--honig) inset; }
-  .fi__liste :global(.fi__kopf2) { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap; }
+  .fi__ergebnis { outline: none; animation: schritt 0.3s cubic-bezier(0.2, 0.9, 0.3, 1); }
+  .fi__titel { font-weight: 680; font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2rem); letter-spacing: -0.02em; line-height: 1.15; }
+  .fi__liste { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.7rem; }
+  .fi__liste :global(li) { display: grid; gap: 0.45rem; overflow-wrap: anywhere; padding: 1.1rem 1.2rem; background: var(--papier); border-radius: 18px; }
+  .fi__liste :global(li:first-child) { box-shadow: inset 0 0 0 2px var(--orange); }
+  .fi__liste :global(.fi__kopf2) { display: flex; justify-content: space-between; gap: 0.3rem 1rem; align-items: baseline; flex-wrap: wrap; }
+  .fi__liste :global(h3) { font-size: 1.15rem; }
   .fi__liste :global(.fi__preis) { font-weight: var(--strong-weight); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .fi__liste :global(.fi__linie) { font-size: 0.95rem; color: var(--tinte-2); }
+  .fi__liste :global(.fi__linie) { font-size: var(--text-sm); color: var(--orange-text); font-weight: 600; }
   .fi__liste :global(.btn) { justify-self: start; margin-top: 0.3rem; }
   .fi__tel { margin-top: 1rem; }
   .fi__tel[hidden] { display: none; }
   .fi__mehr { margin-top: var(--space-md); }
-  .fi__foto { margin-bottom: 0.9rem; }
-  .fi__foto :global(img) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 30%; border-radius: 28px; }
+  .fi__foto :global(img) { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: 50% 30%; border-radius: var(--radius); }
+  @media (min-width: 64rem) { .fi__opt--haut { grid-template-columns: 1fr 1fr; } .fi__opt--haut .fi__karteopt:last-child { grid-column: 1 / -1; } }
+  /* Tablet und Querformat: Foto links schmal, Fragen rechts (Datei 896 px reicht so auch auf 2×) */
   @media (min-width: 48rem) {
-    .fi__opt--haut { grid-template-columns: 1fr 1fr; }
-    .fi__opt--haut .fi__karteopt:last-child { grid-column: 1 / -1; }
+    .fi__wrap--foto { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: start; gap: var(--space-xl); }
+    .fi__foto { position: sticky; top: 7rem; }
+    .fi__foto :global(img) { aspect-ratio: 4 / 5; border-radius: 28px; }
   }
-  @media (min-width: 64rem) {
-    .fi__wrap--foto { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: var(--space-2xl); }
-    .fi__foto { margin-bottom: 0; }
-    .fi__foto :global(img) { border-radius: 999px 999px 28px 28px; aspect-ratio: 3 / 4; object-fit: cover; box-shadow: 0 30px 60px -36px rgba(80, 40, 10, 0.6); }
-    .fi__wrap:not(.fi__wrap--foto) { max-width: 52rem; }
-  }
+  @media (min-width: 48rem) and (max-height: 32rem) { .fi__foto { position: static; } .fi__foto :global(img) { aspect-ratio: 1; } }
 </style>
 
 <script>

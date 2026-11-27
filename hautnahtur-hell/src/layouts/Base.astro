@@ -1,6 +1,7 @@
 ---
 // SEO + KI-Sichtbarkeit. Vorschau: noindex. Beim Kundenstart: index = true.
 import '@fontsource-variable/figtree/wght.css';
+import schriftUrl from '@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2?url';
 import '../styles/global.css';
 import site from '../data/site.json';
 import zeiten from '../data/oeffnungszeiten.json';
@@ -45,8 +46,9 @@ const mob = `tel:${site.mobile.replace(/\D/g, '').replace(/^0/, '+49')}`;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#1B110B" />
+    <meta name="theme-color" content="#FFFFFF" />
     <link rel="icon" href={`${base}favicon.png`} type="image/png" />
+    <link rel="preload" href={schriftUrl} as="font" type="font/woff2" crossorigin />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={index ? 'index, follow' : 'noindex, nofollow'} />
@@ -64,73 +66,66 @@ const mob = `tel:${site.mobile.replace(/\D/g, '').replace(/^0/, '+49')}`;
   </head>
   <body data-leiste={leiste}>
     <a class="skip" href="#inhalt">Zum Inhalt</a>
-    <header class="kopf dunkel">
+    <header class="kopf">
       <div class="wrap kopf__in">
         <a class="kopf__name" href={base} aria-label={`${site.name}, Startseite`}>
           <img class="kopf__logo" src={`${base}img/logo.png`} alt={site.name} width="308" height="155" />
-          <span class="kopf__heute" data-heute></span>
         </a>
-        <nav class="kopf__kapsel" aria-label="Hauptmenü">
-          <div class="kopf__nav">
-            {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label}</a>)}
-          </div>
-          {leiste === 'termin'
-            ? <a class="leiste__haupt" href={tel}>Jetzt anrufen</a>
-            : <a class="leiste__haupt" href={`${base}termin/`}>Termin anfragen</a>}
-          <a class="kopf__tel" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg>{site.phone}</a>
+        <nav class="kopf__nav" aria-label="Hauptmenü">
+          {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label}</a>)}
         </nav>
+        <p class="kopf__heute" data-heute></p>
+        {leiste === 'termin'
+          ? <a class="btn kopf__cta" href={tel}>Jetzt anrufen</a>
+          : <a class="btn kopf__cta" href={`${base}termin/`}>Termin anfragen</a>}
+        <button type="button" class="kopf__menue" data-open="menue" aria-label="Menü öffnen"><span></span><span></span></button>
       </div>
     </header>
 
     <div id="inhalt"><slot /></div>
 
-    <footer class="fuss dunkel" aria-label="Kontakt und Öffnungszeiten">
-      <div class="wrap">
-        <div class="karte">
-          <div class="karte__kontakt">
-            <img class="karte__logo" src={`${base}img/logo.png`} alt={site.name} width="308" height="155" loading="lazy" />
-            <p class="karte__inh">{site.owner} · selbstständig seit {site.since}</p>
-            <p>{site.address.street}<br />{site.address.zip} {site.address.city}</p>
-            <p><a href={site.mapUrl} target="_blank" rel="noopener">Weg auf der Karte</a></p>
-            <ul class="karte__wege">
-              <li><span>Telefon</span> <a href={tel}>{site.phone}</a></li>
-              <li><span>Mobil</span> <a href={mob}>{site.mobile}</a></li>
-              <li><span>E-Mail</span> <a class="karte__mail" href={`mailto:${site.email}`}>{site.email.split('@')[0]}<wbr />@{site.email.split('@')[1]}</a></li>
-            </ul>
-          </div>
-          <div class="karte__zeiten">
-            <p class="karte__titel">Öffnungszeiten</p>
-            <p class="karte__status" data-status></p>
-            <dl class="woche">
-              {zeiten.tage.map((t, i) => (
-                <div data-tag={i}><dt>{t.name}</dt><dd>{t.zeiten.length ? <Fragment set:html={fmtZeit(t.zeiten)} /> : (t.hinweis ?? 'geschlossen')}</dd></div>
-              ))}
-            </dl>
-          </div>
+    <footer class="fuss" aria-label="Kontakt und Öffnungszeiten">
+      <div class="wrap fuss__in">
+        <div class="fuss__kontakt">
+          <img class="fuss__logo" src={`${base}img/logo.png`} alt={site.name} width="308" height="155" loading="lazy" />
+          <p class="muted">{site.owner} · Kosmetikerin, selbstständig seit {site.since}</p>
+          <p class="fuss__adresse">{site.address.street}<br />{site.address.zip} {site.address.city}</p>
+          <p><a class="pfeil" href={site.mapUrl} target="_blank" rel="noopener">Weg auf der Karte</a></p>
+          <ul class="fuss__wege">
+            <li><span>Telefon</span><a href={tel}>{site.phone}</a></li>
+            <li><span>Mobil</span><a href={mob}>{site.mobile}</a></li>
+            <li><span>E-Mail</span><a class="fuss__mail" href={`mailto:${site.email}`}>{site.email.split('@')[0]}<wbr />@{site.email.split('@')[1]}</a></li>
+          </ul>
         </div>
-        <p class="fuss__recht small">
-          <a href={`${base}impressum/`}>Impressum</a>
-          <a href={`${base}datenschutz/`}>Datenschutz</a>
-        </p>
+        <div class="fuss__zeiten">
+          <h2 class="fuss__titel">Öffnungszeiten</h2>
+          <p class="fuss__status" data-status></p>
+          <dl class="woche">
+            {zeiten.tage.map((t, i) => (
+              <div data-tag={i}><dt>{t.name}</dt><dd>{t.zeiten.length ? <Fragment set:html={fmtZeit(t.zeiten)} /> : (t.hinweis ?? 'geschlossen')}</dd></div>
+            ))}
+          </dl>
+        </div>
+      </div>
+      <div class="wrap fuss__unten">
+        <p class="fuss__recht small"><a href={`${base}impressum/`}>Impressum</a><a href={`${base}datenschutz/`}>Datenschutz</a></p>
         {!index && <p class="fuss__demo small">Vorschau der neuen Website, erstellt von Kravets Webdesign. Noch nicht veröffentlicht, Anfragen werden hier nicht gesendet.</p>}
       </div>
     </footer>
 
-    <!-- Нить к медовым блокам (SVG, рисуется только при прокрутке); панель и пилюля — готовая текстура мёда -->
-    <svg class="honigfaden" data-faden aria-hidden="true"><defs><linearGradient id="fg" x1="0" x2="1"><stop offset="0" stop-color="#E9A93A" /><stop offset="0.35" stop-color="#FFE29A" /><stop offset="1" stop-color="#E39A2A" /></linearGradient></defs><path data-faden-pfad fill="url(#fg)" d="" /></svg>
     <nav class="leiste" aria-label="Schnellzugriff">
       <button type="button" class="pille" data-pille data-open="auswahl" hidden>
         <span class="pille__n" data-pille-n></span>
         <span class="pille__summe num" data-pille-summe></span>
+        <span class="pille__auf" aria-hidden="true">Ansehen</span>
       </button>
       <div class="leiste__bar" data-bar>
-        <button type="button" class="leiste__btn leiste__menue" data-open="menue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16" /></svg><span>Menü</span></button>
+        {leiste === 'termin'
+          ? <a class="leiste__zweit" href={mob}>Mobil anrufen</a>
+          : <a class="leiste__zweit" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg>Anrufen</a>}
         {leiste === 'termin'
           ? <a class="leiste__haupt" href={tel}>Jetzt anrufen</a>
           : <a class="leiste__haupt" href={`${base}termin/`} data-termin>Termin anfragen</a>}
-        {leiste === 'termin'
-          ? <a class="leiste__btn" href={mob}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg><span>Mobil</span></a>
-          : <a class="leiste__btn leiste__tel" href={tel}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5l3 3.2-1.8 2.4a11 11 0 0 0 6.7 6.7l2.4-1.8 3.2 3-1.6 2.5C13 19.8 4.2 11 4.5 5.1z" /></svg><span>Anrufen</span></a>}
       </div>
     </nav>
 
@@ -138,12 +133,13 @@ const mob = `tel:${site.mobile.replace(/\D/g, '').replace(/^0/, '+49')}`;
       <div class="sheet__kopf"><p class="sheet__titel">Menü</p><button type="button" class="sheet__zu" data-close aria-label="Menü schließen">Schließen</button></div>
       <nav class="sheet__nav" aria-label="Seiten">
         <a href={base}>Start</a>
-        {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label === 'Gesicht' ? 'Gesichtspflege' : n.label}</a>)}
+        {nav.map((n) => <a href={base + n.href} aria-current={aktiv === n.id ? 'page' : undefined}>{n.label === 'Gesicht' ? 'Gesichtsbehandlungen' : n.label}</a>)}
         <a href={`${base}termin/`}>Termin anfragen</a>
       </nav>
       <div class="sheet__info">
         <p data-status></p>
         <p>{site.address.street}, {site.address.zip} {site.address.city} · <a href={site.mapUrl} target="_blank" rel="noopener">Karte</a></p>
+        <p><a href={tel}>{site.phone}</a></p>
       </div>
     </dialog>
 
@@ -152,7 +148,7 @@ const mob = `tel:${site.mobile.replace(/\D/g, '').replace(/^0/, '+49')}`;
       <ul class="auswahl" data-auswahl-liste></ul>
       <div class="auswahl__kombi" data-auswahl-kombi hidden><p data-auswahl-kombi-text></p><button type="button" class="btn btn--klein" data-auswahl-kombi-ja>Übernehmen</button></div>
       <p class="auswahl__summe"><span>Summe <strong class="num" data-auswahl-summe></strong></span><span class="muted num" data-auswahl-dauer></span></p>
-      <p class="small muted">Richtwert. Abgerechnet wird nach Zeit und Material.</p>
+      <p class="small muted">Richtwert. Sugaring wird nach Zeit und Material berechnet, im Durchschnitt 50 € pro Stunde.</p>
       <div class="btn-row sheet__aktion">
         <a class="btn" href={`${base}termin/`}>Mit dieser Auswahl anfragen</a>
         <button type="button" class="btn btn--ghost" data-leeren>Auswahl leeren</button>
@@ -166,117 +162,118 @@ const mob = `tel:${site.mobile.replace(/\D/g, '').replace(/^0/, '+49')}`;
 </html>
 
 <style is:global>
-  .skip { position: absolute; left: -999px; top: 0.5rem; background: var(--tinte); color: var(--weiss); padding: 0.6rem 1rem; border-radius: 999px; z-index: 100; }
+  .skip { position: absolute; left: -999px; top: 0.5rem; background: var(--tinte); color: #fff; padding: 0.6rem 1rem; border-radius: 999px; z-index: 100; }
   .skip:focus { left: 0.5rem; }
 
-  /* Мёд-капсула: готовая текстура (tools/honig-textur.mjs), края по 32 px, середина растягивается */
-  /* Нижняя панель и пилюля суммы: белое матовое стекло с тонкой рамкой */
-  .leiste__bar, .pille { background: rgba(255, 255, 255, 0.94); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); border: 1px solid rgba(42, 29, 22, 0.1); border-radius: 999px; box-shadow: 0 14px 30px -14px rgba(42, 29, 22, 0.45); }
-
-  /* Шапка */
-  .kopf { position: relative; z-index: 30; }
-  .kopf__in { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding-block: 0.8rem; }
-  .kopf__name { min-width: 0; }
-  .kopf__heute { font-size: 0.9375rem; color: var(--licht); margin-top: 0.45rem; }
-  .kopf__heute { min-height: 1.45em; }
-  .kopf__heute:empty { visibility: hidden; }  /* место держим заранее: часы вписывает скрипт, без прыжка шапки */
-  .kopf__heute b { font-weight: 600; color: var(--licht); }
-  .kopf__name { display: grid; text-decoration: none; line-height: 1; }
-  .kopf__logo { display: block; height: 3.4rem; width: auto; }
-  .karte__logo { display: block; height: 4.6rem; width: auto; margin-left: -0.2rem; }
-  .kopf__marke { overflow-wrap: anywhere; font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.75rem; letter-spacing: var(--display-tracking); }
-  .kopf__zeile { font-size: 0.875rem; color: var(--licht-2); margin-top: 0.3rem; letter-spacing: 0.02em; }
-  .punkt { display: inline-block; width: 0.5em; height: 0.5em; border-radius: 50%; background: #7BC47F; margin-right: 0.4em; vertical-align: 0.08em; box-shadow: 0 0 0 3px rgba(123, 196, 127, 0.18); }
-  .punkt--zu { background: var(--licht-2); box-shadow: none; }
-  .kopf__kapsel { display: none; }
+  /* ---------- Шапка: белая, логотип, на телефоне кнопка «Menü» справа; на ПК меню текстом и кнопка записи ---------- */
+  .kopf { position: sticky; top: 0; z-index: 30; background: rgba(255, 255, 255, 0.94); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+  .kopf__in { display: flex; align-items: center; gap: var(--space-md); min-height: 4.25rem; }
+  .kopf__name { display: block; flex: none; }
+  .kopf__logo { height: 2.9rem; width: auto; }
+  .kopf__nav { display: none; }
+  .kopf__heute { margin: 0 0 0 auto; font-size: 0.875rem; line-height: 1.25; color: var(--tinte-2); text-align: right; min-height: 1.25em; }
+  .kopf__heute:empty { visibility: hidden; }
+  .kopf__heute b { color: var(--tinte); font-weight: 600; white-space: nowrap; }
+  .kopf__cta { display: none; }
+  .kopf__menue { flex: none; width: 2.9rem; height: 2.9rem; display: grid; place-content: center; gap: 6px; border: 1.5px solid var(--linie); border-radius: 50%; background: var(--papier); cursor: pointer; }
+  .kopf__menue span { display: block; width: 18px; height: 2px; border-radius: 2px; background: var(--tinte); }
+  .punkt { display: inline-block; width: 0.5em; height: 0.5em; border-radius: 50%; background: #3E9A4A; margin-right: 0.4em; vertical-align: 0.08em; }
+  .punkt--zu { background: #A79A90; }
+  @media (max-width: 22.5rem) { .kopf__heute { font-size: 0.8125rem; } .kopf__logo { height: 2.5rem; } }
   @media (min-width: 64rem) {
-    .kopf { position: sticky; top: 0; background: rgba(255, 255, 255, 0.9); border-bottom: 1px solid var(--linie); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-    .kopf__in { padding-block: 0.55rem; }
-    .kopf__logo { height: 3.1rem; }
-    .kopf__kapsel { margin-left: auto; }
-    .kopf__heute { white-space: nowrap; }
-    .kopf__kapsel { display: flex; align-items: center; gap: 1.6rem; }
-    .kopf__nav { display: flex; gap: 0.2rem; }
-    .kopf__kapsel .kopf__nav a { position: relative; display: inline-flex; align-items: center; white-space: nowrap; min-height: 2.75rem; padding: 0 0.7rem; text-decoration: none; font-weight: 500; color: var(--licht); }
-    .kopf__nav a::after { content: ''; position: absolute; left: 0.7rem; right: 0.7rem; bottom: 0.45rem; height: 2px; border-radius: 2px; background: var(--honig); transform: scaleX(0); transition: transform 0.2s; }
-    .kopf__nav a:hover::after, .kopf__nav a[aria-current='page']::after { transform: scaleX(1); }
-    .kopf__nav a[aria-current='page'] { color: var(--honig-hell); }
-    .kopf__kapsel .leiste__haupt { min-height: 2.6rem; padding: 0 1.2rem; font-size: 0.95rem; box-shadow: none; }
-    .kopf__kapsel .kopf__tel { display: inline-flex; align-items: center; gap: 0.45rem; min-height: 2.75rem; text-decoration: none; font-weight: 600; color: var(--licht); white-space: nowrap; }
-    .kopf__kapsel .kopf__tel svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+    .kopf__in { min-height: 4.75rem; gap: var(--space-lg); }
+    .kopf__logo { height: 3.2rem; }
+    .kopf__nav { display: flex; gap: 0.15rem; margin-left: auto; }
+    .kopf__nav a { position: relative; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.85rem; text-decoration: none; font-weight: 500; border-radius: 999px; }
+    .kopf__nav a:hover { background: var(--sand); }
+    .kopf__nav a[aria-current='page'] { background: var(--sand); font-weight: 650; }
+    .kopf__heute { margin-left: 0.4rem; max-width: 9.5rem; }
+    .kopf__cta { display: inline-flex; min-height: 2.9rem; padding: 0.5rem 1.25rem; }
+    .kopf__menue { display: none; }
   }
 
-  /* Футер: белая карточка записи на тёмном */
-  .fuss { padding-top: var(--space-2xl); padding-bottom: calc(var(--bar-h) + var(--bar-gap) * 3 + env(safe-area-inset-bottom) + 3.5rem); }
-  .karte > * { min-width: 0; }
-  .karte__marke { overflow-wrap: anywhere; }
-  .karte { display: grid; gap: var(--space-xl); background: var(--weiss); color: var(--tinte); border-radius: 26px; padding: clamp(1.4rem, 4vw, 3rem); border: 1px solid var(--linie); }
-  .karte a { color: var(--tinte); }
-  .karte__marke { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 2.4rem; letter-spacing: var(--display-tracking); line-height: 1; }
-  .karte__inh { color: var(--tinte-2); margin: 0.5rem 0 1rem; }
-  .karte__wege { list-style: none; padding: 0; margin: var(--space-lg) 0 0; display: grid; gap: 0.2rem; }
-  .karte__wege li { display: flex; flex-wrap: wrap; column-gap: 0.75rem; align-items: center; }
-  .karte__wege li > span { flex: 0 0 5.5rem; }
-  .karte__wege li > a { white-space: nowrap; }
-  .karte__wege li > a.karte__mail { white-space: normal; }
-  .karte__wege span { color: var(--tinte-2); font-size: var(--text-sm); }
-  .karte__wege a { overflow-wrap: normal; word-break: normal; min-height: 2.75rem; display: inline-flex; align-items: center; }
-  .karte__titel { font-weight: var(--strong-weight); font-size: var(--text-lg); }
-  .karte__status { margin: 0.2rem 0 0.9rem; color: var(--tinte-2); }
-  .karte__status .punkt { background: #3E8E44; box-shadow: none; }
+  /* ---------- Подвал: два столбца, без карточек ---------- */
+  .fuss { background: var(--sand); padding-top: var(--space-2xl); padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + 2rem); margin-top: 0; }
+  .fuss__in { display: grid; gap: var(--space-xl); }
+  .fuss__in > * { min-width: 0; }
+  .fuss__logo { height: 4.2rem; width: auto; margin: 0 0 0.6rem -0.2rem; }
+  .fuss__adresse { margin-top: 0.9rem; font-size: var(--text-lg); }
+  .fuss__wege { list-style: none; padding: 0; margin: 0.6rem 0 0; display: grid; }
+  .fuss__wege li { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.75rem; border-top: 1px solid var(--sand-2); }
+  .fuss__wege li > span { flex: 0 0 5rem; color: var(--tinte-2); font-size: var(--text-sm); }
+  .fuss__wege a { display: inline-flex; align-items: center; min-height: 3rem; font-weight: 600; text-decoration: none; }
+  .fuss__mail { overflow-wrap: anywhere; }
+  .fuss__titel { font-size: 1.6rem; }
+  .fuss__status { margin: 0.4rem 0 0.8rem; color: var(--tinte-2); min-height: 1.5em; }
   .woche { margin: 0; display: grid; }
-  .woche > div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.1rem 0.75rem; padding: 0.55rem 0.75rem; border-radius: 10px; font-variant-numeric: tabular-nums; }
-  .woche dt { font-weight: 500; flex: 0 0 6.6rem; } .woche dd { margin: 0; flex: 1 1 7.6rem; min-width: 0; } .woche .zt { white-space: nowrap; }
-  .woche > div.heute { background: #FBEFD6; }
-  .woche > div.heute dt { font-weight: var(--strong-weight); }
-  .fuss__recht { display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; justify-content: center; margin-top: var(--space-lg); }
+  .woche > div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.1rem 0.75rem; padding: 0.6rem 0.75rem; border-top: 1px solid var(--sand-2); font-variant-numeric: tabular-nums; }
+  .woche dt { flex: 0 0 6.6rem; font-weight: 500; } .woche dd { margin: 0; flex: 1 1 7.4rem; min-width: 0; } .woche .zt { white-space: nowrap; }
+  .woche > div.heute { background: var(--papier); border-radius: 12px; border-top-color: transparent; }
+  .woche > div.heute dt { font-weight: 700; }
+  .woche > div.heute + div { border-top-color: transparent; }
+  .fuss__unten { margin-top: var(--space-xl); padding-top: var(--space-md); border-top: 1px solid var(--sand-2); display: grid; gap: 0.3rem; }
+  .fuss__recht { display: flex; flex-wrap: wrap; gap: 0.3rem 1.6rem; }
   .fuss__recht a { min-height: 2.75rem; display: inline-flex; align-items: center; }
-  .fuss__demo { text-align: center; color: var(--licht-2); max-width: 40rem; margin: 0.4rem auto 0; }
-  @media (min-width: 48rem) { .karte { grid-template-columns: 1fr 1fr; } }
+  .fuss__demo { color: var(--tinte-2); max-width: 44rem; }
+  @media (min-width: 48rem) { .fuss__in { grid-template-columns: 1fr 1fr; gap: var(--space-2xl); } }
+  @media (min-width: 64rem) { .fuss { padding-bottom: var(--space-2xl); } }
 
-  /* Нижняя панель (телефон) */
-  .honigfaden { display: none; }
-  .leiste { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; pointer-events: none; padding: 0 max(var(--bar-gap), env(safe-area-inset-left)) calc(var(--bar-gap) + env(safe-area-inset-bottom)); display: grid; justify-items: center; gap: 12px; transform: translateZ(0); }
-  .leiste__bar { pointer-events: auto; width: min(100%, 23rem); height: var(--bar-h); padding: 0 0.3rem; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; color: var(--tinte); }
-  .dunkel a.leiste__haupt { color: var(--weiss); }
-  .leiste__btn { min-width: 2.75rem; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-width: 2.75rem; min-height: 2.75rem; padding: 0 0.2rem; background: none; border: 0; color: var(--tinte); font: inherit; font-size: 0.8125rem; font-weight: 500; line-height: 1.1; text-decoration: none; cursor: pointer; border-radius: 999px; justify-self: center; }
-  .leiste__btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
-  .leiste__haupt { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: 0 1.05rem; font-size: 1rem; border-radius: 999px; background: var(--akzent); color: var(--weiss); text-decoration: none; font-weight: var(--strong-weight); white-space: nowrap; }
-  .pille { pointer-events: auto; display: inline-flex; align-items: center; gap: 0.7rem; height: 44px; padding: 0 1.1rem; font: inherit; font-weight: var(--strong-weight); color: var(--tinte); cursor: pointer; transition: transform 0.4s cubic-bezier(0.3, 1.35, 0.5, 1), opacity 0.25s; }
-  .pille[hidden], .pille.pille--weg { display: inline-flex; visibility: hidden; opacity: 0; transform: translateY(40px) scale(0.6); pointer-events: none; }
-  .pille__n { font-weight: 500; }
+  /* ---------- Нижняя панель телефона: прижата к краю, две кнопки; над ней пилюля «Ihre Auswahl» ---------- */
+  .leiste { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; pointer-events: none; display: grid; justify-items: center; gap: 10px; }
+  .leiste__bar { pointer-events: auto; width: 100%; display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 0.6rem; padding: 0.6rem max(var(--gutter), env(safe-area-inset-left)) calc(0.6rem + env(safe-area-inset-bottom)); background: rgba(255, 255, 255, 0.96); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-top: 1px solid var(--linie); }
+  .leiste__zweit, .leiste__haupt { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-height: 3rem; padding: 0 0.8rem; border-radius: 999px; font-weight: var(--strong-weight); text-decoration: none; white-space: nowrap; font-size: 1rem; }
+  .leiste__zweit { border: 1.5px solid var(--tinte); color: var(--tinte); background: var(--papier); }
+  .leiste__zweit svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .leiste__haupt { background: var(--rost); color: #fff; border: 1.5px solid var(--rost); }
+  .pille { pointer-events: auto; display: inline-flex; align-items: center; gap: 0.75rem; min-height: 46px; padding: 0 0.5rem 0 1.1rem; border-radius: 999px; border: 0; background: var(--tinte); color: #fff; font: inherit; font-weight: var(--strong-weight); cursor: pointer; box-shadow: 0 14px 30px -12px rgba(35, 24, 18, 0.55); transition: transform 0.35s cubic-bezier(0.3, 1.3, 0.5, 1), opacity 0.2s; }
+  .pille[hidden], .pille.pille--weg { display: inline-flex; position: absolute; bottom: 100%; visibility: hidden; opacity: 0; transform: translateY(30px); pointer-events: none; }
+  .pille__n { font-weight: 500; opacity: 0.85; }
   .pille__summe { font-size: 1.1rem; font-weight: 700; }
-  @media (orientation: landscape) and (max-height: 500px) and (max-width: 63.99rem) { .leiste { justify-items: end; } .leiste__bar { width: min(100%, 20rem); } }
-  @media (min-width: 64rem) { .leiste__bar { display: none; } .leiste { padding-bottom: calc(1.2rem + env(safe-area-inset-bottom)); } }
+  .pille__auf { padding: 0.35rem 0.8rem; border-radius: 999px; background: rgba(255, 255, 255, 0.16); font-size: 0.875rem; }
+  @media (orientation: landscape) and (max-height: 500px) and (max-width: 63.99rem) {
+    .leiste__bar { width: auto; justify-self: end; grid-template-columns: auto auto; border: 1px solid var(--linie); border-radius: 999px; margin: 0 var(--gutter) 0.6rem; padding: 0.4rem; }
+    .leiste { justify-items: end; }
+  }
+  @media (min-width: 64rem) { .leiste__bar { display: none; } .leiste { bottom: 1.4rem; } }
+  /* Планшет стоя: своя шапка с меню и кнопкой, нижней панели нет */
+  @media (min-width: 48rem) and (max-width: 63.99rem) and (min-height: 501px) {
+    .leiste__bar { display: none; } .leiste { bottom: 1.4rem; }
+    .kopf__in { min-height: 4.5rem; gap: var(--space-md); }
+    .kopf__nav { display: flex; gap: 0.1rem; margin-left: auto; }
+    .kopf__nav a { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.75rem; text-decoration: none; font-weight: 500; border-radius: 999px; }
+    .kopf__nav a[aria-current='page'] { background: var(--sand); font-weight: 650; }
+    .kopf__heute { display: none; }
+    .kopf__cta { display: inline-flex; min-height: 2.9rem; padding: 0.5rem 1.1rem; }
+    .kopf__menue { display: none; }
+    .fuss { padding-bottom: var(--space-2xl); }
+  }
 
-  /* Шторки */
-  .sheet { border: 0; padding: 0; margin: auto auto 0; width: 100%; max-width: 34rem; max-height: 88dvh; border-radius: 26px 26px 0 0; background: var(--weiss); color: var(--tinte); padding: 1.1rem var(--gutter) calc(1.4rem + env(safe-area-inset-bottom)); overflow: auto; overscroll-behavior: contain; }
-  .sheet::backdrop { background: rgba(18, 11, 7, 0.55); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
-  .sheet[open] { animation: hoch 0.26s cubic-bezier(0.2, 0.9, 0.3, 1); }
+  /* ---------- Шторки ---------- */
+  .sheet { border: 0; padding: 0; margin: auto auto 0; width: 100%; max-width: 34rem; max-height: 88dvh; border-radius: 24px 24px 0 0; background: var(--papier); color: var(--tinte); padding: 1.1rem var(--gutter) calc(1.4rem + env(safe-area-inset-bottom)); overflow: auto; overscroll-behavior: contain; }
+  .sheet::backdrop { background: rgba(35, 24, 18, 0.45); }
+  .sheet[open] { animation: hoch 0.25s cubic-bezier(0.2, 0.9, 0.3, 1); }
   @keyframes hoch { from { transform: translateY(40px); opacity: 0; } }
-  @media (min-width: 48rem) { .sheet { margin: auto; border-radius: 26px; } }
+  @media (min-width: 48rem) { .sheet { margin: auto; border-radius: 24px; } }
   .sheet__kopf { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.6rem; }
-  .sheet__titel { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.9rem; }
-  .sheet__zu { min-height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1.5px solid var(--tinte); background: none; font: inherit; font-weight: 500; cursor: pointer; color: var(--tinte); }
+  .sheet__titel { font-weight: var(--display-weight); font-size: 1.6rem; letter-spacing: var(--display-tracking); }
+  .sheet__zu { min-height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1.5px solid var(--linie); background: none; font: inherit; font-weight: 500; cursor: pointer; color: var(--tinte); }
   .sheet__nav { display: grid; }
-  .sheet__nav a { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.9rem; text-decoration: none; padding: 0.5rem 0; border-bottom: 1px solid var(--linie); }
-  .sheet__nav a[aria-current='page'] { color: var(--akzent); }
-  .sheet__info { display: grid; gap: 0.6rem; margin-top: 1.1rem; color: var(--tinte-2); }
-  .sheet__info .punkt { background: #3E8E44; box-shadow: none; }
-  /* «закрыто» — серая точка и в футере, и в меню (раньше зелёное правило выше по специфичности её перебивало) */
-  .karte__status .punkt.punkt--zu, .sheet__info .punkt.punkt--zu { background: #A79A90; }
+  .sheet__nav a { font-weight: 650; font-size: 1.6rem; letter-spacing: -0.02em; text-decoration: none; padding: 0.55rem 0; border-bottom: 1px solid var(--linie); }
+  .sheet__nav a[aria-current='page'] { color: var(--rost); }
+  .sheet__info { display: grid; gap: 0.5rem; margin-top: 1.1rem; color: var(--tinte-2); }
+  .sheet__info a { display: inline-flex; min-height: 2.75rem; align-items: center; }
   .auswahl { list-style: none; margin: 0.4rem 0 0; padding: 0; }
   .auswahl li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 0.75rem; align-items: center; padding: 0.55rem 0; border-bottom: 1px solid var(--linie); }
-  .auswahl .preis { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .auswahl .preis { font-weight: 600; }
   .auswahl button { width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1.5px solid var(--linie); background: none; cursor: pointer; color: var(--tinte); font-size: 1.1rem; }
   .auswahl__summe { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.2rem 1rem; margin: 0.9rem 0 0.2rem; font-size: var(--text-lg); }
   .auswahl__summe > span { white-space: nowrap; }
   .auswahl__summe strong { font-size: 1.7rem; margin-left: 0.3rem; }
   .auswahl__leer { color: var(--tinte-2); padding: 0.8rem 0; }
   .sheet__aktion { margin-top: 1rem; }
-  .auswahl__kombi { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; margin-top: 0.8rem; padding: 0.7rem 0.9rem; border-radius: 14px; background: #FBEFD6; }
+  .auswahl__kombi { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; margin-top: 0.8rem; padding: 0.7rem 0.9rem; border-radius: 14px; background: var(--sand); }
   .auswahl__kombi[hidden] { display: none; }
   .auswahl__kombi p { font-weight: 600; line-height: 1.3; }
-  .btn--klein { min-height: 2.6rem; padding: 0.3rem 0.9rem; font-size: 0.95rem; flex: none; }
-  @media print { .honigfaden, .leiste, .fuss__demo, .fuss__recht, .kopf__kapsel { display: none !important; } }
+  .btn--klein { min-height: 2.75rem; padding: 0.3rem 0.95rem; font-size: 0.95rem; flex: none; }
+  @media print { .leiste, .fuss__demo, .fuss__recht, .kopf__nav, .kopf__cta, .kopf__menue { display: none !important; } }
 </style>

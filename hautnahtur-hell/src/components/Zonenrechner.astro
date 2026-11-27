@@ -1,5 +1,5 @@
 ---
-/** Калькулятор зон: фигура лежит на кушетке (вид сверху), зоны заливаются мёдом, цена подписью у зоны.
+/** Калькулятор зон (вариант A): фигура без кушетки, выбранные зоны мягко светятся оранжевым из логотипа, цена подписью у зоны.
  *  Фигуры — готовые SVG (src/lib/koerper.mjs, MIT). Лицо — отдельная вкладка «Gesicht». Один экран: заголовок, переключатели, фигура, быстрые чипы. */
 import { ANSICHTEN } from '../lib/koerper.mjs';
 import { GESICHTER, GESICHT_VB } from '../lib/gesicht.mjs';
@@ -29,7 +29,7 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
 <section class="zr dunkel" id={id} aria-labelledby={`${id}-h`} data-zr data-anchors={JSON.stringify(anchors)} data-kurz={JSON.stringify(kurz)} data-gesicht-ids={JSON.stringify(gesichtIds)} data-gesicht-g={JSON.stringify(gesichtG)}>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <defs>
-      <linearGradient id={`${id}-honig`} x1="0" y1="0" x2="0.4" y2="1"><stop offset="0" stop-color="#F7C65A" /><stop offset="0.5" stop-color="#E49B1F" /><stop offset="1" stop-color="#A25C08" /></linearGradient>
+      <linearGradient id={`${id}-honig`} x1="0" y1="0" x2="0.4" y2="1"><stop offset="0" stop-color="#FFBE73" /><stop offset="0.55" stop-color="#F0943A" /><stop offset="1" stop-color="#D2691A" /></linearGradient>
       <filter id={`${id}-glanz`} x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
         <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="b" />
         <feSpecularLighting in="b" surfaceScale="5" specularConstant="0.6" specularExponent="26" lighting-color="#FFF6E2" result="s"><feDistantLight azimuth="235" elevation="52" /></feSpecularLighting>
@@ -177,10 +177,12 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
 </section>
 
 <style>
-  .zr { padding-block: 1rem var(--space-2xl); scroll-margin-top: 0; background: var(--nacht); }
+  .zr { padding-block: 1.2rem var(--space-2xl); scroll-margin-top: 4.25rem; background: var(--sand); }
+  .liege { display: none; }
+  .koerper { filter: drop-shadow(0 18px 22px rgba(35, 24, 18, 0.12)); }
   .zr__grid { display: grid; gap: var(--space-lg); }
-  .zr__app { display: grid; gap: 0.6rem; grid-template-rows: auto auto minmax(0, 1fr) auto; height: calc(100svh - 10.4rem); min-height: 31rem; }
-  .zr__kopf h2 { font-size: clamp(1.6rem, 1.2rem + 2vw, 3.2rem); }
+  .zr__app { display: grid; gap: 0.6rem; grid-template-rows: auto auto minmax(0, 1fr) auto; height: calc(100svh - 4.25rem - var(--bar-h) - 2.4rem); min-height: 31rem; }
+  .zr__kopf h2 { font-size: clamp(1.6rem, 1.2rem + 2vw, 3rem); }
   @media (max-height: 700px) and (max-width: 63.99rem) { .zr__lede { display: none; } .zr__app { gap: 0.45rem; } }
   .zr__lede { color: var(--licht-2); margin-top: 0.2rem; font-size: 1rem; }
   .zr__steuer { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
@@ -212,8 +214,9 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   .g__braue { fill: #6B4E3F; }
   .g__lippe { fill: #C98F84; opacity: 0.7; }
   .g__linie { fill: none; stroke: #5A4538; stroke-width: 0.9; stroke-linecap: round; stroke-linejoin: round; }
-  .zr__kopf { fill: transparent; cursor: pointer; outline: none; }
-  .zr__kopf:hover, .zr__kopf:focus-visible { fill: rgba(227, 162, 31, 0.14); }
+  /* Kopf antippen → Gesicht. Kreis liegt unter den Zonen, deshalb darf er groß sein (≥ 44 px auch auf 360 px) */
+  .zr__kopf { fill: transparent; cursor: pointer; outline: none; r: 140px; }
+  .zr__kopf:focus-visible { stroke: var(--orange); stroke-width: 3; }
   /* Einladung: beim ersten Sichtbarwerden leuchten die Zonen einmal nacheinander auf */
   :global(.zr.einladen .fig[data-on='1'] .zone[aria-checked='false']:not(:hover):not(:focus-visible) .zone__glanz) { display: inline; animation: einladen 1.2s ease-in-out both; animation-delay: calc(var(--i) * 0.14s + 0.15s); }
   @keyframes einladen { 0%, 100% { opacity: 0; } 45% { opacity: 0.32; } }
@@ -230,7 +233,7 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   :global(.zone[aria-checked='true']:hover .zone__glanz), :global(.zone[aria-checked='true']:focus-visible .zone__glanz) { opacity: 1; }
   /* Фокус с клавиатуры: светлое кольцо вокруг зоны, видно и на выбранной (медовой) зоне */
   :global(.zone:focus-visible) { filter: drop-shadow(0 0 1.5px #FFF6E2) drop-shadow(0 0 1.5px #FFF6E2) drop-shadow(0 0 5px rgba(255, 210, 122, 0.9)); }
-  :global(.zone__umriss) { fill: rgba(227, 162, 31, 0.08); stroke: #C08A3E; stroke-width: 0.6; stroke-dasharray: 2 1.6; pointer-events: none; }
+  :global(.zone__umriss) { fill: rgba(227, 134, 27, 0.07); stroke: #D59A5C; stroke-width: 0.6; stroke-dasharray: 2 1.6; pointer-events: none; }
   :global(.zone[aria-checked='true'] .zone__umriss) { display: none; }
   .zr__leitungen { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
   .zr__leitungen :global(line) { stroke: var(--honig); stroke-width: 1; }
@@ -251,10 +254,10 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
   .kombi--karte .btn--ghost { color: var(--licht); border-color: var(--licht); }
   @keyframes rein { from { opacity: 0; transform: translateY(8px); } }
 
-  .zr__summe { padding: 1.2rem 1.3rem; background: var(--nacht-2); border: 1px solid var(--nacht-3); border-radius: 20px; }
+  .zr__summe { padding: 1.2rem 1.3rem; background: var(--papier); border: 0; border-radius: var(--radius); }
   .zr__leer { font-weight: 500; }
   .zr__zahl { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; color: var(--licht-2); }
-  .zr__zahl strong { font-size: 2.4rem; font-family: var(--font-display); font-weight: var(--display-weight); color: var(--licht); }
+  .zr__zahl strong { font-size: 2.3rem; font-weight: var(--display-weight); letter-spacing: -0.02em; color: var(--tinte); }
   .zr__weiter { width: 100%; margin-top: 1rem; white-space: normal; text-align: center; }
   .zr__hinweis { margin-top: 0.9rem; }
   .zr__andere { margin-top: 0.6rem; padding: 0.55rem 0.8rem; border-radius: 12px; background: rgba(42, 29, 22, 0.05); color: var(--licht); font-size: 0.95rem; }
@@ -273,12 +276,13 @@ const gesichtIds = zonenData.zonen.filter(istGesicht).map((z) => z.id);
     .zr__kopf { grid-area: kopf; } .zr__steuer { grid-area: steuer; } .zr__fuss { grid-area: fuss; align-self: start; }
     .zr__buehne { grid-area: buehne; height: calc(100svh - var(--bar-h) - var(--bar-gap) - 1.6rem); }
   }
-  @media (min-width: 64rem) {
+  /* ПК и планшет стоя: фигура слева, управление справа */
+  @media (min-width: 64rem), (min-width: 48rem) and (min-height: 501px) {
     .zr { padding-block: var(--space-xl) var(--space-2xl); scroll-margin-top: 4.5rem; }
     .zr__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-areas: 'buehne kopf' 'buehne steuer' 'buehne fuss' 'buehne seite'; grid-template-rows: auto auto auto 1fr; column-gap: var(--space-2xl); row-gap: 1rem; align-items: start; }
     .zr__app { display: contents; }
     .zr__kopf { grid-area: kopf; } .zr__steuer { grid-area: steuer; } .zr__fuss { grid-area: fuss; } .zr__seite { grid-area: seite; }
-    .zr__buehne { grid-area: buehne; height: min(calc(100vh - 11rem), 50rem); min-height: 30rem; position: sticky; top: 5.5rem; }
+    .zr__buehne { grid-area: buehne; height: min(calc(100vh - 11rem), 46rem); min-height: 30rem; position: sticky; top: 5.5rem; }
   }
 </style>
 

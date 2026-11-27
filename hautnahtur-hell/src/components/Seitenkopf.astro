@@ -1,15 +1,13 @@
 ---
-/** Тёмная полоса-заголовок подстраниц (продолжает шапку). */
-const { titel, lede = '' } = Astro.props;
+/** Шапка подстраницы варианта A: белая, крупный заголовок, пояснение и (по желанию) строка фактов-«жетонов». */
+interface Props { titel: string; lede?: string; fakten?: string[] }
+const { titel, lede = '', fakten = [] } = Astro.props;
 ---
-<section class="seitenkopf dunkel">
+<section class="seitenkopf">
   <div class="wrap">
-    <h1>{titel}</h1>
+    <h1 set:html={titel} />
     {lede && <p class="lede">{lede}</p>}
+    {fakten.length > 0 && <ul class="fakten-reihe">{fakten.map((f) => <li>{f}</li>)}</ul>}
     <slot />
   </div>
 </section>
-<style>
-  .seitenkopf { background: radial-gradient(70% 120% at 85% 0%, rgba(227, 162, 31, 0.16), transparent 60%), var(--nacht); }
-  .seitenkopf h1 { font-size: clamp(2.4rem, 1.6rem + 3.6vw, 4.6rem); max-width: 22ch; hyphens: manual; }
-</style>

@@ -1,63 +1,71 @@
 ---
 import Base from '../layouts/Base.astro';
-import Seitenkopf from '../components/Seitenkopf.astro';
 import Foto from '../components/Foto.astro';
 import site from '../data/site.json';
 const base = import.meta.env.BASE_URL;
+const jahre = new Date().getFullYear() - site.since;
 const weg = [
-  { j: '1982', t: 'Drogistin', d: 'Abschluss nach der Berufsfachschule für Hauswirtschaft und Ernährung.' },
-  { j: '1984', t: 'Kosmetikerin und Fußpflegerin', d: 'Im Bund deutscher Kosmetikerinnen.' },
+  { j: '1982', t: 'Drogistin', d: 'nach der Berufsfachschule für Hauswirtschaft und Ernährung' },
+  { j: '1984', t: 'Kosmetikerin und Fußpflegerin', d: 'im Bund deutscher Kosmetikerinnen' },
   { j: '1985', t: 'Nail-Art-Ausbildung', d: '' },
-  { j: '1999', t: 'Selbstständig', d: 'Seitdem arbeite ich in meinem eigenen Studio.' },
+  { j: '1999', t: 'Selbstständig mit Hautnahtur', d: '' },
   { j: '2001', t: 'Naturnagelpflege-Ausbildung', d: '' },
-  { j: '2002', t: 'Visagistin', d: 'Make-up für Alltag, Abend und Hochzeit.' },
-  { j: 'bis 2003', t: 'Selbstständige Verkaufsdirektorin bei Mary Kay Cosmetics', d: 'Von hier stammt mein Grundsatz im Umgang mit Kundinnen und Kunden.' },
-  { j: '2008', t: 'Zertifizierte Anwenderin von Comfort Sugaring', d: 'Seitdem arbeite ich mit der reinen Zuckerpaste.' },
+  { j: '2002', t: 'Visagistin', d: '' },
+  { j: 'bis 2003', t: 'Selbstständige Verkaufsdirektorin bei Mary Kay Cosmetics', d: '' },
+  { j: '2008', t: 'Zertifizierte Anwenderin von Comfort Sugaring', d: '' },
 ];
 ---
 <Base title={`Über mich: ${site.owner} | Hautnahtur Kosmetikstudio Gehrden`} description={`${site.owner}, Kosmetikerin und Fußpflegerin, selbstständig seit ${site.since} in Gehrden. Ausbildung, Arbeitsweise und Grundsatz.`} aktiv="ueber">
-  <Seitenkopf titel="Über mich" lede={`Ich bin ${site.owner} und seit ${site.since} mit meinem Kosmetikstudio selbstständig.`} />
-  <section class="wrap um section">
-    <div class="um__intro">
-      <p>Alle Behandlungen führe ich ohne Apparate durch, mit natürlichen und ganzheitlich wirkenden Produkten. Ihr Wohlbefinden und Ihr Hautgefühl liegen mir am Herzen, deshalb sind mir Ihre individuellen Wünsche wichtig.</p>
-      <p>Darum biete ich auch weiterhin klassische Kosmetikbehandlungen an. Gemeinsam suchen wir die Behandlung heraus, die zu Ihnen passt.</p>
+  <section class="um">
+    <div class="wrap um__in">
+      <Foto name="michaela" alt={`${site.owner}, Inhaberin von Hautnahtur`} sizes="12rem" class="um__foto" eager />
+      <div class="um__text">
+        <h1>Über mich</h1>
+        <p class="lede">Ich bin {site.owner}, Kosmetikerin und Fußpflegerin. Seit {site.since}, also seit {jahre} Jahren, arbeite ich in meinem eigenen Studio in Gehrden.</p>
+        <p>Alle Behandlungen führe ich ohne Apparate durch, mit natürlichen und ganzheitlich wirkenden Produkten. Ihr Wohlbefinden und Ihr Hautgefühl liegen mir am Herzen, deshalb sind mir Ihre Wünsche wichtig. Darum biete ich neben Zucker und Kräuter-Tonics auch die klassische Kosmetikbehandlung an.</p>
+      </div>
     </div>
-    <Foto name="michaela" alt={`${site.owner}, Inhaberin von Hautnahtur`} sizes="(min-width: 64rem) 22rem, 70vw" class="um__foto" eager />
   </section>
 
-  <section class="section" aria-labelledby="weg-h">
-    <div class="wrap">
+  <section class="section sand" aria-labelledby="weg-h">
+    <div class="wrap weg__in">
       <h2 id="weg-h">Ausbildung und Weg</h2>
       <ol class="weg">
-        {weg.map((w) => <li><span class="weg__j num">{w.j}</span><div><h3>{w.t}</h3>{w.d && <p class="muted">{w.d}</p>}</div></li>)}
+        {weg.map((w) => <li><span class="weg__j num">{w.j}</span><span class="weg__t"><strong>{w.t}</strong>{w.d && <span class="muted"> {w.d}</span>}</span></li>)}
       </ol>
-      <p class="weg__mehr muted">Außerdem: Grundausbildung Gesundheits-Kinesiologie und Kurse zu Bachblüten, Reiki, Aura Soma und Farblehre.</p>
+      <p class="muted weg__mehr">Außerdem: Grundausbildung Gesundheits-Kinesiologie und Kurse zu Bachblüten, Reiki, Aura Soma und Farblehre.</p>
     </div>
   </section>
 
   <section class="section" aria-labelledby="satz-h">
     <div class="wrap satz">
       <h2 id="satz-h" class="sr">Mein Grundsatz</h2>
-      <blockquote>Behandele andere so, wie auch du behandelt werden möchtest.</blockquote>
-      <p class="lede">Diese goldene Regel von Mary Kay Ash versuche ich für mein Leben und mein kleines Unternehmen jeden Tag anzuwenden. Deshalb können Sie mir sagen, was Ihnen an der Behandlung, an den Produkten oder an mir gefällt und was ich für Sie verbessern kann.</p>
-      <Foto name="studio-arbeit" alt={`${site.owner} bei der Arbeit im Studio`} sizes="(min-width: 64rem) 22rem, 80vw" class="satz__foto" />
+      <blockquote>„Behandele andere so, wie auch du behandelt werden möchtest.“</blockquote>
+      <p class="lede">Diese goldene Regel von Mary Kay Ash versuche ich in meinem Leben und meinem kleinen Unternehmen jeden Tag anzuwenden. Sagen Sie mir gern, was Ihnen gefällt und was ich besser machen kann.</p>
+      <div class="satz__bild"><Foto name="studio-arbeit" alt={`${site.owner} bei der Arbeit im Studio`} sizes="(min-width: 64rem) 12rem, 45vw" class="satz__foto" /></div>
       <a class="btn" href={`${base}termin/`}>Termin anfragen</a>
     </div>
   </section>
 </Base>
 
 <style>
-  .um { display: grid; gap: var(--space-xl); padding-top: var(--space-xl); }
-  .um__intro { display: grid; gap: var(--space-md); align-content: start; max-width: 40rem; }
-  .um :global(.um__foto) { border-radius: 22px; max-width: 17rem; width: 100%; height: auto; }
-  @media (min-width: 64rem) { .um { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; } }
-  .weg { list-style: none; margin: var(--space-xl) 0 0; padding: 0; max-width: 46rem; border-left: 2px solid var(--honig); }
-  .weg li { display: grid; grid-template-columns: 5.2rem minmax(0, 1fr); gap: 1rem; padding: 0 0 var(--space-lg) 1.2rem; position: relative; }
-  .weg li::before { content: ''; position: absolute; left: -0.48rem; top: 0.45rem; width: 0.85rem; height: 0.85rem; border-radius: 50%; background: var(--honig); box-shadow: 0 0 0 4px var(--grau); }
-  .weg__j { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.35rem; line-height: 1.2; }
-  .weg__mehr { max-width: 46rem; margin-top: var(--space-md); }
-  .satz { display: grid; gap: var(--space-lg); max-width: 46rem; }
-  .satz blockquote { margin: 0; font-family: var(--font-display); font-weight: var(--display-weight); font-size: var(--h2); line-height: 1.12; letter-spacing: var(--display-tracking); }
-  .satz :global(.satz__foto) { border-radius: 22px; max-width: 22rem; }
-  .satz .btn { justify-self: start; }
+  .um { padding-block: var(--space-xl) var(--space-2xl); }
+  .um__in { display: grid; gap: var(--space-lg); }
+  .um__in :global(.um__foto) { width: 10rem; aspect-ratio: 249 / 322; border-radius: 999px 999px 18px 18px; }
+  .um__text { display: grid; gap: 1rem; max-width: 42rem; }
+  .um__text h1 { font-size: clamp(2.3rem, 1.5rem + 3.4vw, 4.2rem); }
+  @media (min-width: 48rem) { .um__in { grid-template-columns: auto minmax(0, 1fr); gap: var(--space-2xl); align-items: center; } .um__in :global(.um__foto) { width: 12rem; } }
+
+  .weg__in { display: grid; gap: var(--space-lg); }
+  .weg { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--sand-2); }
+  .weg li { display: grid; grid-template-columns: 5.6rem minmax(0, 1fr); gap: 1rem; padding-block: 0.9rem; border-bottom: 1px solid var(--sand-2); align-items: baseline; }
+  .weg__j { font-weight: 700; color: var(--orange-text); font-size: 1.1rem; }
+  .weg__t { overflow-wrap: anywhere; }
+  .weg__mehr { max-width: 44rem; }
+  @media (min-width: 64rem) { .weg__in { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--space-2xl); align-items: start; } .weg__mehr { grid-column: 2; } }
+
+  .satz { display: grid; gap: var(--space-lg); justify-items: start; max-width: 52rem; }
+  .satz blockquote { margin: 0; font-size: clamp(1.7rem, 1.2rem + 2.2vw, 2.9rem); font-weight: 680; letter-spacing: -0.025em; line-height: 1.12; }
+  .satz__bild { width: 10rem; }
+  .satz :global(.satz__foto) { aspect-ratio: 356 / 276; border-radius: 14px; }
 </style>

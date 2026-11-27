@@ -6,68 +6,86 @@ import beh from '../data/behandlungen.json';
 import zusatz from '../data/zusatz.json';
 import site from '../data/site.json';
 import { euro, dauer } from '../lib/fmt.mjs';
-const gruppen = [
-  { id: 'sugaring-damen', name: 'Sugaring Damen', items: zonen.zonen.filter((z) => z.g === 'damen') },
-  { id: 'sugaring-herren', name: 'Sugaring Herren', items: zonen.zonen.filter((z) => z.g === 'herren') },
-  ...beh.linien.map((l) => ({ id: l.id, name: `Gesicht: ${l.name}`, items: beh.behandlungen.filter((b) => b.linie === l.id) })),
-  ...zusatz.gruppen.map((g) => ({ id: g.id, name: g.name, items: g.items })),
+const kapitel = [
+  { id: 'sugaring', name: 'Sugaring', gruppen: [
+    { id: 'sugaring-damen', name: 'Damen', items: zonen.zonen.filter((z) => z.g === 'damen') },
+    { id: 'sugaring-herren', name: 'Herren', items: zonen.zonen.filter((z) => z.g === 'herren') },
+  ] },
+  { id: 'gesicht', name: 'Gesichtsbehandlungen', gruppen: beh.linien.map((l) => ({ id: l.id, name: l.name, items: beh.behandlungen.filter((b) => b.linie === l.id) })) },
+  ...zusatz.gruppen.map((g) => ({ id: g.id, name: g.name, gruppen: [{ id: `${g.id}-liste`, name: '', items: g.items }] })),
 ];
+const alle = kapitel.flatMap((k) => k.gruppen.flatMap((g) => g.items));
 ---
-<Base title="Preisliste | Hautnahtur Kosmetikstudio Gehrden" description="Alle Preise für Sugaring, Gesichtsbehandlungen, Maniküre, Fußpflege, Wimpern- und Brauenfärben und Make-up." aktiv="preise" prices={gruppen.flatMap((g) => g.items.map((i) => ({ name: i.name, price: i.preis })))}>
-  <Seitenkopf titel="Preisliste" lede="Sugaring, Gesichtsbehandlungen, Hände und Füße, Wimpern und Brauen, Make-up.">
-    <button type="button" class="btn btn--ghost pl__druck" data-druck>Preisliste drucken</button>
+<Base title="Preisliste | Hautnahtur Kosmetikstudio Gehrden" description="Alle Preise für Sugaring, Gesichtsbehandlungen, Maniküre, Fußpflege, Wimpern- und Brauenfärben und Make-up." aktiv="preise" prices={alle.map((i) => ({ name: i.name, price: i.preis }))}>
+  <Seitenkopf titel="Preisliste" lede="Alle Leistungen auf einer Karte. Sugaring-Preise sind Ab-Preise, den genauen Preis besprechen wir beim Termin.">
+    <button type="button" class="btn btn--ghost preise__druck" data-druck>Preisliste drucken</button>
   </Seitenkopf>
-  <section class="wrap pl">
-    <nav class="pl__sprung" aria-label="Zu einer Gruppe springen">
-      {gruppen.map((g) => <a href={`#${g.id}`}>{g.name.replace('Gesicht: ', '')}</a>)}
-    </nav>
-    {gruppen.map((g) => (
-      <section class="pl__gruppe" id={g.id} aria-labelledby={`${g.id}-h`}>
-        <h2 id={`${g.id}-h`}>{g.name}</h2>
-        <ul>
-          {g.items.map((i) => (
-            <li><span class="pl__n">{i.name}</span><span class="pl__punkte" aria-hidden="true"></span><span class="pl__m muted num">{dauer(i.min)}</span><span class="pl__p num">{i.ab ? 'ab ' : ''}{euro(i.preis)}</span></li>
+
+  <nav class="sprung" aria-label="Zu einem Kapitel springen">
+    <div class="wrap sprung__in">
+      {kapitel.map((k) => <a href={`#${k.id}`}>{k.name}</a>)}
+    </div>
+  </nav>
+
+  <div class="wrap preise">
+    {kapitel.map((k) => (
+      <section class="kap" id={k.id} aria-labelledby={`${k.id}-h`}>
+        <h2 id={`${k.id}-h`}>{k.name}</h2>
+        <div class="kap__gruppen">
+          {k.gruppen.map((g) => (
+            <div class="gr" id={g.id}>
+              {g.name && <h3>{g.name}</h3>}
+              <ul>
+                {g.items.map((i) => (
+                  <li>
+                    <span class="karte-zeile"><span class="name">{i.name}</span><span class="punkte" aria-hidden="true"></span><span class="preis">{i.ab ? <span class="ab">ab</span> : ''}{euro(i.preis)}</span></span>
+                    {i.min > 0 && <span class="gr__dauer num">{dauer(i.min)}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
       </section>
     ))}
-    <p class="small muted pl__fuss">{zonen.hinweis} Bei einer Kosmetikbehandlung ist eine gewünschte Haarentfernung im Gesicht im Behandlungspreis inbegriffen. Bei der Make-up-Beratung mit Produkten von Mary Kay Cosmetics ist die Beratung beim Kauf der Produkte kostenfrei.</p>
-    <p class="pl__druckadresse">{site.name} · {site.address.street} · {site.address.zip} {site.address.city} · {site.phone}</p>
-  </section>
+    <p class="small muted preise__fuss">{zonen.hinweis} Bei einer Kosmetikbehandlung ist eine gewünschte Haarentfernung im Gesicht im Behandlungspreis inbegriffen. Bei der Make-up-Beratung mit Produkten von Mary Kay Cosmetics ist die Beratung beim Kauf der Produkte kostenfrei.</p>
+    <p class="preise__adresse">{site.name} · {site.address.street} · {site.address.zip} {site.address.city} · {site.phone}</p>
+  </div>
 </Base>
 
+<script>
+  document.querySelector('[data-druck]')?.addEventListener('click', () => window.print());
+</script>
+
 <style>
-  .pl { padding-top: var(--space-xl); max-width: 52rem; }
-  .pl__kopf { display: grid; gap: 0.6rem; }
-  .pl__druck { justify-self: start; margin-top: 0.4rem; }
-  .pl__sprung { display: flex; gap: 0.5rem; overflow-x: auto; scroll-snap-type: x proximity; padding: var(--space-lg) 0 0.6rem; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scrollbar-width: none; }
-  .pl__sprung a { flex: none; scroll-snap-align: start; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; background: var(--grau); text-decoration: none; font-weight: 500; white-space: nowrap; }
-  @media (min-width: 48rem) { .pl__sprung { flex-wrap: wrap; overflow: visible; } }
-  .pl__gruppe { padding-top: var(--space-xl); scroll-margin-top: 1rem; }
-  .pl__gruppe h2 { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem); }
-  .pl__gruppe ul { list-style: none; margin: 0.8rem 0 0; padding: 0; }
-  .pl__gruppe li { display: grid; grid-template-columns: auto minmax(1rem, 1fr) auto auto; align-items: baseline; gap: 0.6rem; padding: 0.6rem 0; border-bottom: 1px solid var(--linie); }
-  .pl__n { min-width: 0; }
-  .pl__punkte { border-bottom: 1.5px dotted var(--linie); transform: translateY(-0.3em); }
-  .pl__m { font-size: 1rem; text-align: right; }
-  .pl__p { font-weight: var(--strong-weight); min-width: 4.4rem; text-align: right; }
-  @media (max-width: 30rem) {
-    .pl__gruppe li { grid-template-columns: minmax(0, 1fr) auto; }
-    .pl__punkte { display: none; }
-    .pl__m { grid-column: 1; grid-row: 2; text-align: left; }
-    .pl__p { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  .preise__druck { justify-self: start; }
+  .sprung { position: sticky; top: 4.25rem; z-index: 20; background: rgba(255, 255, 255, 0.96); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--linie); }
+  .sprung__in { display: flex; gap: 0.35rem; overflow-x: auto; scrollbar-width: none; padding-block: 0.5rem; }
+  .sprung__in::-webkit-scrollbar { display: none; }
+  .sprung a { flex: none; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; background: var(--sand); text-decoration: none; font-weight: 600; font-size: var(--text-sm); }
+  .preise { padding-block: var(--space-xl) var(--space-2xl); }
+  .kap { scroll-margin-top: 8.5rem; padding-block: var(--space-lg) var(--space-xl); border-bottom: 1px solid var(--linie); }
+  .kap h2 { font-size: clamp(1.7rem, 1.3rem + 1.6vw, 2.4rem); margin-bottom: var(--space-md); hyphens: auto; -webkit-hyphens: auto; }
+  .kap__gruppen { display: grid; gap: var(--space-lg); }
+  .gr { scroll-margin-top: 8.5rem; }
+  .gr h3 { font-size: 1.1rem; color: var(--orange-text); margin-bottom: 0.3rem; }
+  .gr ul { list-style: none; padding: 0; margin: 0; }
+  .gr li { display: grid; gap: 0.1rem; padding-block: 0.6rem; border-bottom: 1px dashed var(--linie); }
+  .gr li:last-child { border-bottom: 0; }
+  .gr .name { overflow-wrap: anywhere; }
+  .gr__dauer { font-size: var(--text-sm); color: var(--tinte-2); }
+  .preise__fuss { margin-top: var(--space-lg); max-width: 48rem; }
+  .preise__adresse { display: none; }
+  @media (min-width: 64rem) {
+    .kap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr); gap: var(--space-2xl); }
+    .kap h2 { position: sticky; top: 9rem; align-self: start; }
+    .kap__gruppen { grid-template-columns: 1fr 1fr; column-gap: var(--space-xl); }
+    .kap__gruppen:has(> .gr:only-child) { grid-template-columns: 1fr; max-width: 34rem; }
+    .sprung { top: 4.75rem; }
   }
-  .pl__fuss { margin-top: var(--space-xl); }
-  .pl__druckadresse { display: none; }
   @media print {
-    :global(.kopf), :global(.fuss), .pl__sprung, .pl__druck { display: none !important; }
-    .pl { max-width: none; padding: 0; font-size: 10.5pt; }
-    .pl__gruppe { padding-top: 10pt; break-inside: avoid; }
-    .pl__gruppe li { padding: 2pt 0; }
-    .pl__druckadresse { display: block; margin-top: 12pt; font-weight: 600; }
-    @page { size: A4; margin: 14mm; }
+    .sprung, .preise__druck { display: none !important; }
+    .kap { break-inside: avoid; padding-block: 0.6rem; }
+    .preise__adresse { display: block; margin-top: 1rem; font-weight: 600; }
   }
 </style>
-<script>
-  document.querySelector('[data-druck]')?.addEventListener('click', () => print());
-</script>

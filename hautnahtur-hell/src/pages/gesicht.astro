@@ -1,106 +1,114 @@
 ---
 import Base from '../layouts/Base.astro';
 import Seitenkopf from '../components/Seitenkopf.astro';
-import Foto from '../components/Foto.astro';
 import Finder from '../components/Finder.astro';
 import data from '../data/behandlungen.json';
 import { euro, dauer } from '../lib/fmt.mjs';
-const bilder = { zucker: ['leistung-massage', '', 'Sanfte Gesichtsmassage während einer Behandlung'], natur: ['leistung-atame', '', 'atamé Gesundheitskosmetik, Orchideen'], klassisch: ['studio-kabine', '', 'Behandlungsliege mit orangefarbenen Handtüchern und einer Lilie'] };
-const zeitTag = (m) => (m <= 45 ? 'kurz' : m === 60 ? 'mittel' : 'lang');
+const ab = Math.min(...data.behandlungen.map((b) => b.preis));
 ---
-<Base title="Gesichtsbehandlungen ohne Apparate in Gehrden | Hautnahtur Kosmetikstudio" description="Gesichtsbehandlungen mit Zuckerpaste, atamé Kräuter-Tonics oder klassisch mit Mary Kay, ohne Apparate. Passende Behandlung in drei Fragen finden, Preise ab 29,50 €." aktiv="gesicht" prices={data.behandlungen.map((b) => ({ name: b.name, price: b.preis }))}>
-  <Seitenkopf titel="Gesichts­behandlungen" lede="Alle Behandlungen werden ohne Apparate durchgeführt. Die Produkte sind für Allergiker geeignet. Eine gewünschte Haarentfernung im Gesicht ist im Behandlungspreis inbegriffen." />
+<Base title="Gesichtsbehandlungen ohne Apparate in Gehrden | Hautnahtur Kosmetikstudio" description={`Gesichtsbehandlungen mit Zuckerpaste, atamé Kräuter-Tonics oder klassisch mit Mary Kay, ohne Apparate. Passende Behandlung in drei Fragen finden, ab ${euro(ab)}.`} aktiv="gesicht" prices={data.behandlungen.map((b) => ({ name: b.name, price: b.preis }))}>
+  <Seitenkopf titel="Gesichts&shy;behandlungen" lede="Alle Behandlungen mache ich mit den Händen, ganz ohne Apparate. Die Produkte sind für Allergiker geeignet." fakten={[`ab ${euro(ab)}`, 'ohne Apparate', 'Haarentfernung im Gesicht inklusive']} />
 
-  <Finder titel="Welche passt zu Ihrer Haut?" mehr={false} foto={false} />
+  <Finder titel="Welche Behandlung passt zu Ihrer Haut?" mehr={false} foto="gesicht-3x4" />
 
-  <section class="section" aria-labelledby="alle-h" data-filterbar>
+  <section class="section" aria-labelledby="alle-h">
     <div class="wrap">
-      <h2 id="alle-h">Alle Behandlungen</h2>
-      <div class="filter" role="group" aria-label="Nach Dauer filtern">
-        <label class="chip"><input type="radio" name="zeit" value="alle" checked /><span>Alle</span></label>
-        <label class="chip"><input type="radio" name="zeit" value="kurz" /><span>bis 45 Min.</span></label>
-        <label class="chip"><input type="radio" name="zeit" value="mittel" /><span>60 Min.</span></label>
-        <label class="chip"><input type="radio" name="zeit" value="lang" /><span>90 Min. und mehr</span></label>
+      <div class="kopfzeile">
+        <h2 id="alle-h">Alle Behandlungen</h2>
+        <p class="lede">Drei Wege, ein Grundsatz: so viel Zeit, wie Ihre Haut braucht. Mit „+“ kommt eine Behandlung in Ihre Anfrage.</p>
       </div>
-      <div class="filter" role="group" aria-label="Nach Hautwunsch filtern">
-        <label class="chip"><input type="radio" name="haut" value="alle" checked /><span>Jeder Hautwunsch</span></label>
-        {data.fragen.haut.map((h) => <label class="chip"><input type="radio" name="haut" value={h.id} /><span>{h.label}</span></label>)}
+      <div class="reiter" role="tablist" aria-label="Behandlungslinien" data-reiter>
+        {data.linien.map((l, i) => <button type="button" role="tab" id={`tab-${l.id}`} aria-controls={`linie-${l.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>{l.id === 'zucker' ? 'Mit Zucker' : l.id === 'natur' ? 'atamé' : 'Klassisch'}</button>)}
       </div>
-      {data.linien.map((l) => (
-        <div class="linie" id={l.id}>
+      {data.linien.map((l, i) => (
+        <div class="linie" id={`linie-${l.id}`} role="tabpanel" aria-labelledby={`tab-${l.id}`} data-panel hidden={i > 0}>
           <div class="linie__kopf">
-            <h3 class="linie__name">{l.name}</h3>
+            <h3>{l.name}</h3>
             <p class="muted">{l.text}</p>
-            {bilder[l.id] && <Foto name={bilder[l.id][0]} fallback={bilder[l.id][1]} alt={bilder[l.id][2]} sizes="(min-width: 64rem) 22rem, 60vw" class="linie__foto" />}
           </div>
           <ul class="beh">
             {data.behandlungen.filter((b) => b.linie === l.id).map((b) => (
-              <li data-zeit={zeitTag(b.min)} data-haut={b.haut.join(' ')}>
-                <div class="beh__text"><h4>{b.name}</h4><p>{b.text}</p></div>
-                <p class="beh__preis num"><strong>{euro(b.preis)}</strong><span>{dauer(b.min)}</span></p>
-                <button type="button" class="beh__add" data-add={b.id} aria-pressed="false" aria-label={`${b.name} zur Anfrage hinzufügen`}>Hinzufügen</button>
+              <li>
+                <div class="beh__haupt">
+                  <p class="karte-zeile beh__zeile"><span class="name">{b.name}</span><span class="punkte" aria-hidden="true"></span><span class="preis">{euro(b.preis)}</span></p>
+                  <p class="beh__info"><span class="beh__dauer num">{dauer(b.min)}</span> {b.text}</p>
+                </div>
+                <button type="button" class="beh__add" data-add={b.id} aria-pressed="false" aria-label={`${b.name} zur Anfrage hinzufügen`}><span aria-hidden="true"></span></button>
               </li>
             ))}
           </ul>
         </div>
       ))}
-      <p class="leer muted" data-leer hidden>Keine Behandlung passt zu beiden Filtern. Am besten fragen Sie mich direkt.</p>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="farbe-h">
+  <section class="section sand" aria-labelledby="farbe-h">
     <div class="wrap farbe">
       <h2 id="farbe-h">Auf Wunsch mit Farbbegleitung</h2>
-      <p class="lede">Zu jeder meiner Behandlungen gehören individuell ausgesuchte reine Farb-Öle von Maria Pieper, im Kompressenwasser, unter der Maske oder Massagecreme und in der Duftlampe. Eine Farbklang-CD von akari begleitet die Behandlung im Hintergrund.</p>
-      <p>Die Farblichttherapie verstehe ich als zusätzlichen ganzheitlichen Effekt. Von einem Heilungseffekt bestehender Erkrankungen sehe ich ab. Wer zur Farbe keinen Zugang findet, genießt seine gewählte Behandlung auf seine Art.</p>
+      <div class="farbe__text">
+        <p class="lede">Zu jeder Behandlung gehören individuell ausgesuchte reine Farb-Öle von Maria Pieper: im Kompressenwasser, unter der Maske oder Massagecreme und in der Duftlampe. Eine Farbklang-CD von akari begleitet die Behandlung.</p>
+        <p class="muted">Die Farblichttherapie verstehe ich als zusätzlichen ganzheitlichen Effekt. Von einem Heilungseffekt bestehender Erkrankungen sehe ich ab. Wer zur Farbe keinen Zugang findet, genießt seine Behandlung auf seine Art.</p>
+      </div>
     </div>
   </section>
 </Base>
 
-<style>
-  .kopfsek { padding-top: var(--space-xl); display: grid; gap: var(--space-md); max-width: 52rem; margin-left: max(0px, calc((100vw - var(--maxw)) / 2)); }
-  .filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: var(--space-md) 0 0; }
-  .filter:first-of-type { margin-top: var(--space-lg); }
-  .linie { display: grid; gap: var(--space-md); padding-top: var(--space-xl); }
-  .linie[hidden] { display: none; }
-  .linie__kopf { display: grid; gap: 0.5rem; align-content: start; }
-  .linie__name { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 1.75rem; letter-spacing: var(--display-tracking); }
-  .linie__kopf :global(.linie__foto) { border-radius: 18px; max-width: 18rem; margin-top: 0.6rem; }
-  .beh { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--linie); }
-  .beh li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.4rem 1rem; padding: 1rem 0; border-bottom: 1px solid var(--linie); }
-  .beh li[hidden] { display: none; }
-  .beh h4 { margin: 0 0 0.2rem; font-size: var(--text-lg); font-weight: var(--strong-weight); }
-  .beh p { color: var(--tinte-2); }
-  .beh__preis { display: grid; align-content: start; justify-items: end; gap: 0.1rem; text-align: right; color: var(--tinte-2) !important; font-size: 1rem; white-space: nowrap; }
-  .beh__preis strong { line-height: 1.2; }
-  .beh__preis strong { color: var(--tinte); font-size: 1.2rem; }
-  .beh__add { grid-column: 1 / -1; justify-self: start; min-height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1.5px solid var(--tinte); background: none; font: inherit; font-weight: 500; color: var(--tinte); cursor: pointer; }
-  .beh__add[aria-pressed='true'] { background: linear-gradient(170deg, var(--honig-hell), var(--honig-tief)); border-color: #9A5D0B; }
-  @media (min-width: 64rem) {
-    .linie { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-2xl); }
-    .beh li { grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; }
-    .beh__add { grid-column: auto; }
-  }
-  .leer[hidden] { display: none; }
-  .farbe { max-width: 52rem; display: grid; gap: var(--space-md); }
-</style>
-
 <script>
   import * as cart from '../lib/cart';
   const sync = () => document.querySelectorAll<HTMLButtonElement>('[data-add]').forEach((b) => {
-    const on = cart.has(b.dataset.add!); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? 'In der Anfrage ✓' : 'Hinzufügen';
+    const on = cart.has(b.dataset.add!);
+    b.setAttribute('aria-pressed', String(on));
+    b.setAttribute('aria-label', `${b.closest('li')!.querySelector('.name')!.textContent}: ${on ? 'aus der Anfrage entfernen' : 'zur Anfrage hinzufügen'}`);
   });
   document.addEventListener('click', (e) => { const b = (e.target as Element).closest<HTMLButtonElement>('[data-add]'); if (b) cart.toggle(b.dataset.add!); });
   addEventListener('zf:cart', sync); sync();
-  const bar = document.querySelector('[data-filterbar]')!;
-  bar.addEventListener('change', (e) => {
-    if (!(e.target as HTMLInputElement).matches('[name=zeit], [name=haut]')) return;
-    const v = bar.querySelector<HTMLInputElement>('[name=zeit]:checked')!.value, h = bar.querySelector<HTMLInputElement>('[name=haut]:checked')!.value;
-    let any = false;
-    bar.querySelectorAll<HTMLElement>('.linie').forEach((l) => {
-      let n = 0; l.querySelectorAll<HTMLElement>('li[data-zeit]').forEach((li) => { const ok = (v === 'alle' || li.dataset.zeit === v) && (h === 'alle' || li.dataset.haut!.split(' ').includes(h)); li.hidden = !ok; if (ok) n++; });
-      l.hidden = n === 0; if (n) any = true;
-    });
-    bar.querySelector<HTMLElement>('[data-leer]')!.hidden = any;
+
+  // Reiter: Klick und Pfeiltasten
+  const leiste = document.querySelector<HTMLElement>('[data-reiter]')!;
+  const tabs = [...leiste.querySelectorAll<HTMLButtonElement>('[role=tab]')];
+  const zeige = (t: HTMLButtonElement, fokus = false) => {
+    tabs.forEach((x) => { const on = x === t; x.setAttribute('aria-selected', String(on)); x.tabIndex = on ? 0 : -1; document.getElementById(x.getAttribute('aria-controls')!)!.hidden = !on; });
+    if (fokus) t.focus();
+  };
+  leiste.addEventListener('click', (e) => { const t = (e.target as Element).closest<HTMLButtonElement>('[role=tab]'); if (t) zeige(t); });
+  leiste.addEventListener('keydown', (e) => {
+    const i = tabs.indexOf(document.activeElement as HTMLButtonElement); if (i < 0) return;
+    if (e.key === 'ArrowRight') zeige(tabs[(i + 1) % tabs.length], true);
+    if (e.key === 'ArrowLeft') zeige(tabs[(i - 1 + tabs.length) % tabs.length], true);
   });
+  // Link aus dem Finder oder von außen auf #zucker / #natur / #klassisch öffnet den passenden Reiter
+  const h = location.hash.replace('#', '');
+  const t0 = tabs.find((t) => t.id === `tab-${h}`); if (t0) zeige(t0);
 </script>
+
+<style>
+  .reiter { display: flex; gap: 0.4rem; max-width: 34rem; overflow-x: auto; scrollbar-width: none; margin-bottom: var(--space-lg); padding-bottom: 2px; }
+  .reiter::-webkit-scrollbar { display: none; }
+  .reiter button { flex: 1 1 auto; min-height: 2.9rem; padding: 0 0.8rem; white-space: nowrap; border-radius: 999px; border: 1.5px solid var(--linie); background: var(--papier); color: var(--tinte); font: inherit; font-weight: 600; cursor: pointer; }
+  .reiter button[aria-selected='true'] { background: var(--tinte); border-color: var(--tinte); color: #fff; }
+  .linie { display: grid; gap: var(--space-lg); }
+  .linie[hidden] { display: none; }
+  .linie__kopf { display: grid; gap: 0.5rem; max-width: 44rem; }
+  .linie__kopf h3 { font-size: 1.5rem; font-weight: 680; letter-spacing: -0.02em; }
+  .beh { list-style: none; padding: 0; margin: 0; display: grid; border-top: 1px solid var(--linie); }
+  .beh li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.9rem; align-items: start; padding-block: 1rem; border-bottom: 1px solid var(--linie); }
+  .beh__haupt { display: grid; gap: 0.3rem; min-width: 0; }
+  .beh__zeile { font-size: 1.1rem; font-weight: 600; }
+  .beh__zeile .name { overflow-wrap: anywhere; }
+  .beh__info { color: var(--tinte-2); font-size: var(--text-sm); }
+  .beh__dauer { color: var(--tinte); font-weight: 600; margin-right: 0.3rem; }
+  .beh__add { width: 2.9rem; height: 2.9rem; border-radius: 50%; border: 1.5px solid var(--tinte); background: var(--papier); cursor: pointer; display: grid; place-items: center; transition: background 0.15s; }
+  .beh__add span { position: relative; width: 14px; height: 14px; }
+  .beh__add span::before, .beh__add span::after { content: ''; position: absolute; left: 50%; top: 50%; width: 14px; height: 2px; background: var(--tinte); transform: translate(-50%, -50%); border-radius: 2px; }
+  .beh__add span::after { transform: translate(-50%, -50%) rotate(90deg); }
+  .beh__add[aria-pressed='true'] { background: var(--orange); border-color: var(--orange); }
+  .beh__add[aria-pressed='true'] span::before { width: 7px; background: #fff; transform: translate(-90%, -10%) rotate(45deg); }
+  .beh__add[aria-pressed='true'] span::after { width: 13px; background: #fff; transform: translate(-30%, -50%) rotate(-50deg); }
+  @media (min-width: 64rem) {
+    .linie { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--space-2xl); align-items: start; }
+    .linie__kopf { position: sticky; top: 7rem; }
+  }
+  .farbe { display: grid; gap: var(--space-lg); }
+  .farbe__text { display: grid; gap: 1rem; max-width: 44rem; }
+  @media (min-width: 64rem) { .farbe { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--space-2xl); } }
+</style>

@@ -1,127 +1,42 @@
 ---
-/** Главный экран (вариант «светлый»): видео в скруглённом окне на белом; ниже в стилях сначала раскладка «кино», затем переопределение.
- *  Исходно: фоновое видео (паста стекает кольцами, Blender, папка zuckerpaste/), бесшовная петля 7,5 с.
- *  Телефон стоя: видео 9:16 (720×1280). Планшет стоя: видео 16:9, кучка по центру, текст ниже. в верхних ~60 % экрана, текст под ним на чёрном. ПК, планшет боком, телефон боком: видео 16:9 на весь экран, кучка справа, текст слева.
- *  Пока видео грузится (и при prefers-reduced-motion, и в энергосбережении iOS) виден первый кадр картинкой. */
+/** Герой варианта A: видео пасты в скруглённом окне (zuckerpaste/, бесшовная петля 7,5 с), заголовок, кнопка к калькулятору
+ *  и три строки «карты процедур» с ценами «ab». Телефон стоя: окно сверху, высота подстраивается под экран, чтобы кнопка
+ *  была над панелью. ПК: текст слева, окно справа. Пока видео грузится (и при reduced-motion / энергосбережении iOS) виден первый кадр. */
 import site from '../data/site.json';
+import zonen from '../data/zonen.json';
+import beh from '../data/behandlungen.json';
+import zusatz from '../data/zusatz.json';
+import { euro } from '../lib/fmt.mjs';
 const base = import.meta.env.BASE_URL;
+const min = (a) => Math.min(...a.map((x) => x.preis));
+const zeilen = [
+  { name: 'Sugaring', preis: min(zonen.zonen), href: 'sugaring/' },
+  { name: 'Gesichtsbehandlung', preis: min(beh.behandlungen), href: 'gesicht/' },
+  { name: 'Hände, Füße, Make-up', preis: min(zusatz.gruppen.flatMap((g) => g.items)), href: 'preise/' },
+];
 ---
-<section class="held" data-held>
-  <div class="held__film" aria-hidden="true">
+<section class="held" aria-labelledby="held-h">
+  <div class="held__film">
     <picture>
       <source media="(orientation: portrait) and (max-width: 47.99rem)" srcset={`${base}video/paste-tel.jpg`} />
       <img class="held__poster" src={`${base}video/paste-pc.jpg`} alt="" width="1920" height="1080" fetchpriority="high" />
     </picture>
-    <video class="held__video" muted loop playsinline preload="none" data-film data-pc={`${base}video/paste-pc.mp4`} data-tel={`${base}video/paste-tel.mp4`}></video>
+    <video class="held__video" muted loop playsinline preload="none" aria-hidden="true" data-film data-pc={`${base}video/paste-pc.mp4`} data-tel={`${base}video/paste-tel.mp4`}></video>
   </div>
-  <div class="wrap held__in">
-    <div class="held__text">
-      <p class="held__ort">Hautnahtur Kosmetikstudio · selbstständig seit {site.since}</p>
-      <h1 class="held__h1">Sugaring und Kosmetik in {site.address.city}</h1>
-      <p class="lede held__lede">Die zuckersüße Methode zur perfekten Haarentfernung und Gesichtsbehandlungen ganz ohne Apparate, individuell auf Sie abgestimmt.</p>
-      <div class="btn-row held__btns">
-        <a class="btn" href="#zonen"><span class="nur-pc">Preis für meine Zonen berechnen</span><span class="nur-tel">Preis für meine Zonen</span></a>
-        <a class="btn btn--ghost" href={`${base}termin/`}>Termin anfragen</a>
-      </div>
-      <p class="held__abend">Dienstag und Donnerstag bis 22 Uhr geöffnet</p>
+  <div class="held__text">
+    <h1 id="held-h">Sugaring und Kosmetik in&nbsp;{site.address.city}</h1>
+    <p class="held__lede">Haarentfernung mit reiner Zuckerpaste und Gesichtsbehandlungen ganz ohne Apparate. Seit {site.since}, bei {site.owner.split(' ')[0]} in der {site.address.street}.</p>
+    <div class="held__btns">
+      <a class="btn" href={`${base}sugaring/#zonen`}>Preis für meine Zonen</a>
+      <a class="btn btn--ghost held__zweit" href={`${base}termin/`}>Termin anfragen</a>
     </div>
+    <ul class="held__karte" aria-label="Preise ab">
+      {zeilen.map((z) => (
+        <li><a class="karte-zeile" href={base + z.href}><span class="name">{z.name}</span><span class="punkte" aria-hidden="true"></span><span class="preis"><span class="ab">ab</span>{euro(z.preis)}</span></a></li>
+      ))}
+    </ul>
   </div>
 </section>
-
-<style is:global define:vars={{ bandBild: `url(${import.meta.env.BASE_URL}img/honig-band.webp)`, tropfenBild: `url(${import.meta.env.BASE_URL}img/honig-tropfen.webp)` }}>
-  .held { --bs: 0.56; position: relative; overflow: hidden; min-height: calc(100svh - 4.6rem); display: grid; align-items: end; isolation: isolate; background: var(--nacht); }
-  .held__band, .tr, .held__bild { display: none !important; }
-  .held__film { position: absolute; inset: 0 0 auto 0; height: 47svh; z-index: -1; overflow: hidden; }
-  .held__film picture, .held__poster, .held__video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: 50% 100%; }
-  /* планшет стоя: чёткое видео 16:9, кучка в центре кадра, текст ниже */
-  @media (orientation: portrait) and (min-width: 48rem) and (max-width: 63.99rem) {
-    .held__film { height: 50svh; }
-    .held__film picture, .held__poster, .held__video { object-position: 64% 75%; }
-  }
-  .held__video { opacity: 0; transition: opacity 0.6s ease; }
-  .held__video.is-on { opacity: 1; }
-  .held__film::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 6, 4, 0.35) 0%, transparent 18%, transparent 70%, var(--nacht) 100%); }
-  .held__bild picture, .held__bild img { width: 100%; height: 100%; }
-  .held__band { position: absolute; left: 0; top: 0; width: calc(100% / var(--bs)); height: 320px; transform: scale(var(--bs)); transform-origin: 0 0; z-index: -1; background: var(--bandBild) 0 0 / 1600px 320px repeat-x; pointer-events: none; filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.45)); }
-  .tr { position: absolute; left: var(--x); top: var(--y); width: 30px; height: 46px; margin-left: -15px; background: var(--tropfenBild) center / 100% 100% no-repeat; opacity: 0; transform-origin: 50% 0; animation: tropf var(--d) cubic-bezier(0.55, 0, 0.9, 0.6) var(--w) 2 both; }
-  @keyframes tropf {
-    0%, 12% { opacity: 0; transform: translateY(0) scale(0.25); }
-    22% { opacity: 1; transform: translateY(0) scale(1); animation-timing-function: ease-in; }
-    34% { opacity: 1; transform: translateY(2px) scale(0.95, 1.12); animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.5); }
-    80% { opacity: 1; transform: translateY(min(66svh, 560px)) scale(0.9, 1.25); }
-    86%, 100% { opacity: 0; transform: translateY(min(68svh, 580px)) scale(0.9, 1.25); }
-  }
-  @media (prefers-reduced-motion: reduce) { .tr { display: none; } }
-  .held__in { position: relative; display: grid; width: 100%; min-width: 0; padding-top: 30svh; padding-bottom: calc(var(--bar-h) + var(--bar-gap) + 1.6rem + env(safe-area-inset-bottom)); }
-  .held__ort, .held__abend, .held__btns .btn--ghost { display: none; }
-  .held h1 { font-size: clamp(2.3rem, 1.2rem + 5vw, 6.2rem); }
-  .held__lede { font-size: 1.05rem; }
-  .nur-pc { display: none; }
-  @media (max-height: 700px) and (orientation: portrait) and (max-width: 63.99rem) { .held__lede { display: none; } }
-  @media (max-height: 700px) and (max-width: 63.99rem) { .held h1.held__h1 { font-size: 2.15rem; } .held__lede { font-size: 0.98rem; line-height: 1.5; } .held__text { gap: 0.75rem; } }
-  .held { min-height: min(calc(100svh - 5.8rem), 46rem); }
-  /* Телефон боком: заголовок в две строки, текст слева, панель уходит вправо — ничего не прячется под ней */
-  @media (orientation: landscape) and (max-height: 500px) and (max-width: 63.99rem) {
-    .held { --bs: 0.5; }
-    .held__in { padding-bottom: 1.6rem; padding-top: 4.5rem; }
-    .held__film { height: 100%; }
-    .held__film picture, .held__poster, .held__video { object-position: 65% 60%; }
-    .held__film::after { background: linear-gradient(90deg, var(--nacht) 0%, rgba(10, 6, 4, 0.7) 38%, transparent 70%); }
-    .held h1.held__h1 { font-size: 2rem; max-width: 24ch; }
-    .held .held__text { max-width: min(30rem, 50vw); gap: 0.6rem; }
-    .held__lede { font-size: 0.95rem; }
-  }
-  .held__text { min-width: 0; display: grid; gap: var(--space-md); max-width: 40rem; }
-  .held__ort { color: var(--licht-2); font-size: var(--text-sm); }
-  .held h1 { font-size: clamp(2.6rem, 1.2rem + 6vw, 6.2rem); line-height: 1; max-width: 13ch; text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5); }
-  .held__lede { color: var(--licht); max-width: 34rem; }
-  .held__btns { margin-top: 0.6rem; }
-  .held__abend { color: var(--licht); font-size: var(--text-sm); margin-top: 0.4rem; }
-  @media (min-width: 64rem) {
-    .held { min-height: min(90svh, 58rem); align-items: center; }
-    .held { --bs: 0.66; }
-    .held__ort, .held__abend { display: block; }
-    .held__btns .btn--ghost { display: inline-flex; }
-    .held__lede { font-size: var(--text-lg); }
-    .nur-pc { display: inline; } .nur-tel { display: none; }
-    .held__bild { display: block; position: absolute; left: auto; right: max(var(--gutter), calc((100vw - var(--maxw)) / 2 + var(--gutter))); width: min(24rem, 26vw); inset-block: 13.5rem 4.5rem; border-radius: 999px 999px 28px 28px; overflow: hidden; box-shadow: 0 30px 60px -30px #000, 0 0 0 1px rgba(255, 210, 122, 0.25); z-index: -1; }
-    .held__foto { width: 100%; height: 100%; object-fit: cover; object-position: 40% 60%; opacity: 1; filter: none; }
-    .held__bild picture { display: block; height: 100%; }
-    .held__bild::after { content: none; }
-    .held__in { padding-bottom: 4rem; padding-top: 7rem; }
-    .held__film { height: 100%; }
-    .held__film picture, .held__poster, .held__video { object-position: 60% 55%; }
-    .held__film::after { background: linear-gradient(90deg, var(--nacht) 0%, rgba(10, 6, 4, 0.82) 30%, rgba(10, 6, 4, 0.2) 58%, transparent 75%), linear-gradient(0deg, var(--nacht) 0%, transparent 18%); }
-    .held h1 { max-width: 12ch; font-size: clamp(3.4rem, 1rem + 4.2vw, 5.4rem); }
-    .held__text { max-width: 36rem; }
-  }
-
-  /* ===== Вариант «светлый»: герой белый, видео в скруглённом окне (переопределяет раскладку «кино» выше) ===== */
-  .held { background: var(--weiss); color: var(--tinte); min-height: 0; align-items: start; display: flex; flex-direction: column; overflow: visible; }
-  .held__film { position: relative; inset: auto; order: 1; align-self: stretch; height: clamp(11rem, 100svh - 33.5rem, 30rem); margin: 0.2rem var(--gutter) 0; border-radius: 28px; box-shadow: 0 30px 60px -36px rgba(60, 30, 10, 0.6); }
-  .held__film::after { background: none; }
-  .held__film picture, .held__poster, .held__video { object-position: 50% 100%; }
-  .held .held__in { order: 2; padding-top: 1.4rem; padding-bottom: calc(var(--bar-h) + var(--bar-gap) + 1.4rem + env(safe-area-inset-bottom)); }
-  .held h1 { text-shadow: none; color: var(--tinte); }
-  .held__lede { color: var(--tinte-2); }
-  .held__ort, .held__abend { color: var(--tinte-2); }
-  @media (max-height: 700px) and (orientation: portrait) and (max-width: 63.99rem) { .held__film { height: clamp(11rem, 100svh - 26rem, 30rem); } }
-  @media (orientation: portrait) and (min-width: 48rem) and (max-width: 63.99rem) { .held__film { height: 46svh; } .held__film picture, .held__poster, .held__video { object-position: 64% 75%; } }
-  @media (orientation: landscape) and (max-height: 500px) and (max-width: 63.99rem) {
-    .held { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr); align-items: center; gap: 1rem; padding: 0.4rem var(--gutter) 1rem; }
-    .held__film { order: 2; height: calc(100svh - 6.5rem); margin: 0; }
-    .held .held__in { order: 1; padding: 0; }
-    .held__film picture, .held__poster, .held__video { object-position: 62% 60%; }
-    .held .held__text { max-width: none; }
-  }
-  @media (min-width: 64rem) {
-    .held { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: center; gap: clamp(2rem, 4vw, 4.5rem); max-width: var(--maxw); margin-inline: auto; padding: 2.5rem var(--gutter) 4rem; min-height: min(calc(100svh - 4.5rem), 50rem); }
-    .held__film { order: 2; height: auto; aspect-ratio: 5 / 6; max-height: calc(100svh - 9rem); margin: 0; border-radius: 32px; }
-    .held__film picture, .held__poster, .held__video { object-position: 64% 60%; }
-    .held .held__in { order: 1; padding: 0; }
-    .held h1 { font-size: clamp(3.2rem, 1rem + 3.8vw, 5rem); max-width: 11ch; }
-  }
-</style>
 
 <script>
   const v = document.querySelector<HTMLVideoElement>('[data-film]');
@@ -131,9 +46,56 @@ const base = import.meta.env.BASE_URL;
       const src = mq.matches ? v.dataset.tel! : v.dataset.pc!;
       if (v.getAttribute('src') === src) return;
       v.classList.remove('is-on'); v.src = src;
-      v.play().catch(() => {}); // энергосбережение iOS запрещает автозапуск: остаётся картинка
+      v.play().catch((e) => console.info('held: Autoplay blockiert, Standbild bleibt', e?.name));
     };
     v.addEventListener('playing', () => v.classList.add('is-on'));
     set(); mq.addEventListener('change', set);
   }
 </script>
+
+<style>
+  .held { display: grid; gap: 1.4rem; padding: 0.25rem var(--gutter) var(--space-xl); max-width: var(--maxw); margin-inline: auto; }
+  .held__film { position: relative; overflow: hidden; border-radius: var(--radius); height: clamp(11rem, 100svh - 35rem, 30rem); background: #0b0705; }
+  .held__film picture, .held__poster, .held__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; }
+  .held__video { opacity: 0; transition: opacity 0.6s; }
+  .held__video:global(.is-on) { opacity: 1; }
+  .held__text { display: grid; gap: 0.9rem; align-content: start; min-width: 0; }
+  .held h1 { font-size: clamp(2.35rem, 1.4rem + 4.4vw, 5rem); max-width: 12ch; }
+  .held__lede { color: var(--tinte-2); font-size: var(--text-lg); max-width: 34rem; }
+  .held__btns { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.3rem; }
+  .held__btns .btn { flex: 1 1 auto; }
+  .held__zweit { display: none; }
+  .held__karte { list-style: none; padding: 0; margin: 1.4rem 0 0; display: grid; border-top: 1px solid var(--linie); }
+  .held__karte li { border-bottom: 1px solid var(--linie); }
+  .held__karte a { min-height: 3.4rem; text-decoration: none; font-size: var(--text-lg); }
+  .held__karte a:hover .name { text-decoration: underline; text-underline-offset: 0.22em; }
+  @media (max-height: 700px) and (orientation: portrait) and (max-width: 47.99rem) {
+    .held__film { height: clamp(10rem, 100svh - 28rem, 30rem); }
+    .held__lede { display: none; }
+  }
+  /* планшет стоя: окно шире и ниже, видео 16:9 */
+  /* планшет стоя: две колонки, окно справа, цены под текстом */
+  @media (orientation: portrait) and (min-width: 48rem) and (max-width: 63.99rem) {
+    .held { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: center; gap: 2rem; padding-block: 1.5rem var(--space-2xl); }
+    .held__film { order: 2; height: auto; aspect-ratio: 4 / 5; border-radius: 24px; }
+    .held__film picture, .held__poster, .held__video { object-position: 50% 60%; }
+    .held h1 { font-size: 3.1rem; }
+    .held__zweit { display: inline-flex; }
+    .held__btns .btn { flex: 0 1 auto; }
+  }
+  /* телефон боком: текст слева, окно справа */
+  @media (orientation: landscape) and (max-height: 500px) and (max-width: 63.99rem) {
+    .held { grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr); align-items: start; gap: 1.4rem; padding-bottom: 5rem; }
+    .held__film { order: 2; height: calc(100svh - 6rem); position: sticky; top: 5rem; }
+    .held__film picture, .held__poster, .held__video { object-position: 62% 60%; }
+    .held h1 { font-size: 2.3rem; }
+    .held__lede { font-size: 1rem; }
+  }
+  @media (min-width: 64rem) {
+    .held { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(2.5rem, 5vw, 5.5rem); padding-block: 2rem var(--space-3xl); min-height: min(calc(100svh - 4.75rem), 54rem); }
+    .held__film { order: 2; height: auto; aspect-ratio: 5 / 6; max-height: calc(100svh - 8rem); border-radius: 28px; }
+    .held__film picture, .held__poster, .held__video { object-position: 64% 60%; }
+    .held__zweit { display: inline-flex; }
+    .held__btns .btn { flex: 0 1 auto; }
+  }
+</style>

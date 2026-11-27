@@ -4,80 +4,100 @@ import Seitenkopf from '../components/Seitenkopf.astro';
 import Foto from '../components/Foto.astro';
 import Zonenrechner from '../components/Zonenrechner.astro';
 import zonen from '../data/zonen.json';
+import { euro } from '../lib/fmt.mjs';
 const base = import.meta.env.BASE_URL;
 const vorteile = [
-  'Wir entfernen die Haare in Wuchsrichtung. Das vermindert den Schmerz und vermeidet Haarbruch.',
-  'Wir entfernen die Haare vollständig. Dadurch verändert sich der Charakter des Haarwuchses: Die Haare werden feiner und wachsen langsamer nach.',
-  'Wir zerstören langfristig die Haarbildungsstrukturen, was zu einem permanenten Resultat führt.',
-  'Wir arbeiten absolut sauber und hygienisch.',
-  'Wir verbessern das Hautbild durch sanftes Abtragen von Überverhornungen, ohne die lebenden Hautzellen zu verletzen.',
-  'Wir arbeiten natürlich: Sowohl bei der Haarentfernung als auch in der Vor- und Nachbehandlung verwenden wir ausschließlich natürliche Inhaltsstoffe.',
-  'Wir arbeiten physiologisch: Die Haut wird nicht durch hohe Temperaturen oder mechanische und chemische Reize belastet.',
+  ['In Wuchsrichtung', 'Das vermindert den Schmerz und vermeidet Haarbruch.'],
+  ['Vollständig', 'Die Haare werden feiner und wachsen langsamer nach.'],
+  ['Langfristig', 'Die Haarbildungsstrukturen werden langfristig zerstört, das führt zu einem permanenten Resultat.'],
+  ['Sauber und hygienisch', 'Ich arbeite absolut sauber und hygienisch.'],
+  ['Schöneres Hautbild', 'Überverhornungen werden sanft abgetragen, ohne lebende Hautzellen zu verletzen.'],
+  ['Natürlich', 'Bei der Haarentfernung und in der Vor- und Nachbehandlung nur natürliche Inhaltsstoffe.'],
+  ['Hautschonend', 'Keine hohen Temperaturen, keine mechanischen oder chemischen Reize.'],
 ];
 const ab = Math.min(...zonen.zonen.map((z) => z.preis));
+const gruppe = (g) => zonen.zonen.filter((z) => z.g === g && z.seite !== 'kombi');
+const kombi = zonen.zonen.filter((z) => z.seite === 'kombi');
 ---
-<Base title="Sugaring in Gehrden: Preise pro Zone berechnen | Hautnahtur Kosmetikstudio" description={`Pandy’s Comfort Sugaring in Gehrden: die zuckersüße Methode zur perfekten Haarentfernung für Damen und Herren, ab ${ab} €. Zonen antippen, Preis sofort sehen, Termin anfragen.`} aktiv="sugaring">
-  <Seitenkopf titel="Sugaring in Gehrden" lede="Die zuckersüße Methode zur perfekten Haarentfernung. Mit körperwarmen Zuckerpasten und Zuckergel werden von Kopf bis Zeh alle unerwünschten Haare sanft in Wuchsrichtung gelöst." />
+<Base title="Sugaring in Gehrden: Preise pro Zone berechnen | Hautnahtur Kosmetikstudio" description={`Pandy’s Comfort Sugaring in Gehrden: Haarentfernung mit reiner Zuckerpaste für Damen und Herren, ab ${euro(ab)}. Zonen antippen, Preis sofort sehen, Termin anfragen.`} aktiv="sugaring">
+  <Seitenkopf titel="Sugaring in Gehrden" lede="Körperwarme Zuckerpaste löst die Haare sanft in Wuchsrichtung, von Kopf bis Fuß. Tippen Sie die Zonen an, der Preis rechnet sofort mit." fakten={[`ab ${euro(ab)} pro Zone`, 'Damen und Herren', 'nach Zeit und Material, ca. 50 € pro Stunde']} />
 
   <Zonenrechner titel="Ihre Zonen, Ihr Preis" mehr={false} />
 
-  <section class="section" id="methode" aria-labelledby="vb-h">
-    <div class="wrap vb">
-      <Foto name="leistung-lippe" alt="Sugaring an der Oberlippe mit Zuckerpaste" sizes="(min-width: 64rem) 30rem, 92vw" class="vb__foto" />
-      <div class="vb__listen">
+  <section class="section" aria-labelledby="vb-h">
+    <div class="wrap methode">
+      <div class="methode__text">
         <h2 id="vb-h">So arbeite ich mit Zucker</h2>
-        <p>Ist Ihre Haut gut durchfeuchtet und entspannt, wird professionelles Sugaring mehr und mehr wie eine Massage. Deshalb wird Ihre Haut individuell vor- und nachbehandelt. Alle Zuckerprodukte sind ohne jegliche Beimengungen.</p>
-        <p>Ich verzichte bewusst auf alle Substanzen, die die Haut belasten können oder über die bisher keine Langzeitstudien vorliegen. Nach der Haarentfernung wird Ihre Haut entsprechend Ihres Hauttyps gepflegt und geschützt. Sie können sofort wieder unter die Leute gehen.</p>
+        <p class="lede">Ist die Haut gut durchfeuchtet und entspannt, wird professionelles Sugaring mehr und mehr wie eine Massage.</p>
+        <p>Deshalb behandle ich Ihre Haut vorher und nachher passend zu Ihrem Hauttyp. Alle Zuckerprodukte sind ohne Beimengungen, Substanzen ohne Langzeitstudien verwende ich bewusst nicht. Danach können Sie sofort wieder unter die Leute gehen.</p>
       </div>
+      <Foto name="leistung-lippe" alt="Sugaring an der Oberlippe mit Zuckerpaste" sizes="(min-width: 26rem) 23.5rem, 92vw" class="methode__foto" />
     </div>
   </section>
 
-  <section class="section" aria-labelledby="vorteile-h">
-    <div class="wrap vorteile">
-      <h2 id="vorteile-h">Alle Vorteile des Zuckerns auf einen Blick</h2>
-      <ul class="haken vorteile__liste">
-        {vorteile.map((v) => <li>{v}</li>)}
+  <section class="section sand" aria-labelledby="vort-h">
+    <div class="wrap">
+      <div class="kopfzeile"><h2 id="vort-h">Alle Vorteile des Zuckerns auf einen Blick</h2></div>
+      <ul class="vort">
+        {vorteile.map(([t, d]) => <li><h3>{t}</h3><p class="muted">{d}</p></li>)}
       </ul>
-      <Foto name="leistung-brauen" alt="Sugaring an der Augenbraue" sizes="(min-width: 64rem) 46rem, 92vw" class="vorteile__foto" />
     </div>
   </section>
 
-  <section class="section" id="herren" aria-labelledby="h-h">
-    <div class="wrap herren">
-      <h2 id="h-h">Sugaring auch für Herren</h2>
-      <p class="lede">Achseln, Arme, Beine, Brust, Schultern, Bauch, Rücken, Gesäß, Bikinilinie und Intimbereich. Die Preise stehen im Rechner unter „Herren“.</p>
-      <div class="btn-row"><a class="btn" href="#zonen" data-herren>Herren-Preise im Rechner zeigen</a><a class="btn btn--ghost" href={`${base}termin/`}>Termin anfragen</a></div>
+  <section class="section" id="preisliste" aria-labelledby="pl-h">
+    <div class="wrap">
+      <div class="kopfzeile">
+        <h2 id="pl-h">Preisliste Sugaring</h2>
+        <p class="lede">{zonen.hinweis}</p>
+      </div>
+      <div class="pl">
+        <div class="pl__spalte">
+          <h3>Damen</h3>
+          <ul class="pl__liste">
+            {gruppe('damen').map((z) => <li class="karte-zeile"><span class="name">{z.name}</span><span class="punkte" aria-hidden="true"></span><span class="preis"><span class="ab">ab</span>{euro(z.preis)}</span></li>)}
+            {kombi.map((z) => <li class="karte-zeile pl__kombi"><span class="name">{z.name}</span><span class="punkte" aria-hidden="true"></span><span class="preis"><span class="ab">ab</span>{euro(z.preis)}</span></li>)}
+          </ul>
+        </div>
+        <div class="pl__spalte" id="herren">
+          <h3>Herren</h3>
+          <ul class="pl__liste">
+            {gruppe('herren').map((z) => <li class="karte-zeile"><span class="name">{z.name}</span><span class="punkte" aria-hidden="true"></span><span class="preis"><span class="ab">ab</span>{euro(z.preis)}</span></li>)}
+          </ul>
+          <a class="btn btn--ghost pl__herren" href="#zonen" data-herren>Herren-Zonen im Rechner wählen</a>
+        </div>
+      </div>
     </div>
   </section>
 </Base>
 
-<style>
-  .kopfsek { padding-top: var(--space-xl); padding-bottom: 0; display: grid; gap: var(--space-md); max-width: 52rem; margin-left: max(0px, calc((100vw - var(--maxw)) / 2)); }
-  .vb { display: grid; gap: var(--space-xl); }
-  .vb :global(.vb__foto) { border-radius: 22px; max-width: 24rem; }
-  .vb__listen { display: grid; gap: var(--space-md); align-content: start; }
-  .vb__listen h2 { margin-bottom: 0.4rem; }
-  .vb__box { padding: 1.3rem 1.4rem; border-radius: 22px; }
-  .vb__box--hell { background: var(--weiss); }
-  .haken { list-style: none; padding: 0; margin: 0.7rem 0 0; display: grid; gap: 0.45rem; }
-  .haken li { position: relative; padding-left: 1.7rem; }
-  .haken li::before { content: ''; position: absolute; left: 0.15rem; top: 0.38em; width: 0.9rem; height: 0.5rem; border-left: 2.5px solid #3E8E44; border-bottom: 2.5px solid #3E8E44; transform: rotate(-45deg); }
-  .honig .haken li::before { border-color: var(--tinte); }
-  @media (min-width: 64rem) { .vb { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); } }
-  .vorteile { display: grid; gap: var(--space-lg); max-width: 52rem; }
-  .vorteile__liste { gap: 0.8rem; margin: 0; }
-  .vorteile :global(.vorteile__foto) { border-radius: 22px; width: 100%; max-width: 47rem; height: auto; }
-  .faq { max-width: 52rem; }
-  .faq__liste { margin-top: var(--space-lg); border-top: 1px solid var(--linie); }
-  .faq details { border-bottom: 1px solid var(--linie); }
-  .faq summary { cursor: pointer; list-style: none; min-height: 3.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-weight: var(--strong-weight); font-size: var(--text-lg); padding: 0.6rem 0; }
-  .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::after { content: '+'; font-size: 1.6rem; font-weight: 400; line-height: 1; transition: transform 0.2s; }
-  .faq details[open] summary::after { transform: rotate(45deg); }
-  .faq details p { padding: 0 0 1.1rem; max-width: 42rem; color: var(--tinte-2); }
-  .herren { display: grid; gap: var(--space-md); max-width: 52rem; }
-</style>
-
 <script>
-  document.querySelector('[data-herren]')?.addEventListener('click', () => dispatchEvent(new CustomEvent('zf:geschlecht', { detail: 'herren' })));
+  // «Herren-Zonen im Rechner wählen»: Rechner auf Herren umschalten, dann hinscrollen
+  document.querySelector('[data-herren]')?.addEventListener('click', () => {
+    const r = document.querySelector<HTMLInputElement>('#zonen input[value="herren"]');
+    if (r && !r.checked) { r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); }
+  });
 </script>
+
+<style>
+  .methode { display: grid; gap: var(--space-lg); }
+  .methode__text { display: grid; gap: 1rem; max-width: 40rem; }
+  /* Originalfoto ist ein Streifen 757×216: immer im eigenen Format und höchstens halb so breit wie die Datei, sonst unscharf */
+  .methode :global(.methode__foto) { aspect-ratio: 757 / 216; border-radius: 16px; width: 100%; max-width: 23.5rem; }
+  @media (min-width: 64rem) { .methode { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--space-2xl); align-items: center; } }
+
+  .vort { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; border-top: 1px solid var(--sand-2); }
+  .vort li { display: grid; gap: 0.2rem; padding: 1rem 0 1rem 1.6rem; border-bottom: 1px solid var(--sand-2); position: relative; }
+  .vort li::before { content: ''; position: absolute; left: 0; top: 1.45rem; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--orange); }
+  @media (min-width: 48rem) { .vort { grid-template-columns: 1fr 1fr; column-gap: var(--space-xl); } }
+  @media (min-width: 64rem) { .vort { grid-template-columns: repeat(3, 1fr); } }
+
+  .pl { display: grid; gap: var(--space-xl); }
+  .pl__spalte { display: grid; gap: 0.6rem; align-content: start; }
+  .pl__spalte h3 { font-size: 1.4rem; font-weight: 680; letter-spacing: -0.02em; }
+  .pl__liste { list-style: none; padding: 0; margin: 0; display: grid; }
+  .pl__liste li { min-height: 2.9rem; padding-block: 0.5rem; border-bottom: 1px solid var(--linie); }
+  .pl__liste .name { overflow-wrap: anywhere; }
+  .pl__kombi { font-weight: 600; }
+  .pl__herren { justify-self: start; margin-top: 0.8rem; }
+  @media (min-width: 48rem) { .pl { grid-template-columns: 1fr 1fr; gap: var(--space-2xl); } }
+</style>
